@@ -1,4 +1,4 @@
-package xyz.erupt.core.controller;
+package xyz.erupt.core.controller.vis;
 
 import jakarta.transaction.Transactional;
 import lombok.Getter;
@@ -9,15 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.Vis;
 import xyz.erupt.annotation.fun.PowerObject;
-import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.ReflectUtil;
-import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 
@@ -25,35 +24,31 @@ import java.lang.reflect.Field;
 
 /**
  * @author YuePeng
- * date 2025/11/15 00:25
+ * date 2026/6/2
  */
 @Slf4j
 @RestController
-@RequestMapping(EruptRestPath.ERUPT_DATA_MODIFY + "/board")
+@RequestMapping(EruptRestPath.ERUPT_DATA_MODIFY + "/calendar")
 @RequiredArgsConstructor
-public class EruptBoardController {
+public class EruptCalendarController {
 
-    @PostMapping("/{erupt}/update_group")
+    @PostMapping("/{erupt}/update_date")
     @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional
     @SneakyThrows
-    public R<Void> updateGroup(@PathVariable String erupt, @RequestBody VisBoardGroupCommand command) {
+    public R<Void> updateDate(@PathVariable String erupt, @RequestBody VisCalendarDateCommand command) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Erupts.powerLegal(eruptModel, PowerObject::isEdit);
         for (Vis vis : eruptModel.getErupt().vis()) {
             if (vis.code().equals(command.getVisCode())) {
                 Object obj = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, command.getPk());
-                Field groupField = ReflectUtil.findClassField(obj.getClass(), vis.boardView().groupField());
-                Object groupValue = command.getGroupValue();
-                EruptFieldModel groupFieldModel = eruptModel.getEruptFieldMap().get(vis.boardView().groupField());
-                if (groupFieldModel != null) {
-                    EditType editType = groupFieldModel.getEruptField().edit().type();
-                    if (editType == EditType.REFERENCE_TREE || editType == EditType.REFERENCE_TABLE) {
-                        EruptModel refModel = EruptCoreService.getErupt(groupFieldModel.getFieldReturnName());
-                        groupValue = DataProcessorManager.getEruptDataProcessor(refModel.getClazz()).findDataById(refModel, groupValue);
-                    }
+                Field dateField = ReflectUtil.findClassField(obj.getClass(), vis.calendarView().dateField());
+                dateField.set(obj, DateUtil.getDate(dateField.getType(), command.getDate()));
+                String endDateField = vis.calendarView().endDateField();
+                if (!endDateField.isEmpty() && command.getEndDate() != null) {
+                    Field endField = ReflectUtil.findClassField(obj.getClass(), endDateField);
+                    endField.set(obj, DateUtil.getDate(endField.getType(), command.getEndDate()));
                 }
-                groupField.set(obj, groupValue);
                 DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
                 DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).editData(eruptModel, obj);
                 DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterUpdate(obj)));
@@ -65,13 +60,15 @@ public class EruptBoardController {
 
     @Getter
     @Setter
-    public static class VisBoardGroupCommand {
+    public static class VisCalendarDateCommand {
 
         private String visCode;
 
         private Object pk;
 
-        private Object groupValue;
+        private String date;
+
+        private String endDate;
 
     }
 

@@ -8,6 +8,7 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Sort;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.vis.BoardView;
+import xyz.erupt.annotation.vis.CalendarView;
 import xyz.erupt.annotation.vis.CardView;
 import xyz.erupt.annotation.vis.GanttView;
 
@@ -51,6 +52,9 @@ public @interface Vis {
     @Match("#item.type().toString() == 'GANTT'")
     GanttView ganttView() default @GanttView(startDateField = "", endDateField = "");
 
+    @Match("#item.type().toString() == 'CALENDAR'")
+    CalendarView calendarView() default @CalendarView(dateField = "");
+
     @Match("#item.type().toString() == 'TPL'")
     Tpl tplView() default @Tpl(enable = false, path = "");
 
@@ -59,6 +63,7 @@ public @interface Vis {
         GANTT,
         CARD,
         BOARD,
+        CALENDAR,
         TPL
     }
 
