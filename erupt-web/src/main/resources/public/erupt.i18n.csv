@@ -76,6 +76,7 @@ table.sort.not_field,暂无排序字段,暫無排序欄位,No sort fields,Aucun 
 tree.base,基本信息,基本信息,Basic information,Les informations essentielles,基本情報,기본정보,Основная информация.,La información básica,Elementarste informationen.,A informação básica,Informasi dasar,المعلومات الأساسية
 tree.update,更新,更新,Update,Mise à jour,更新,업데이트,обновля,actualización,Aktualisiert.,actualização,update,تحديث
 tree.add_button,新增,新增,Add,nouveaux,追加,새로추가,нов,nuevos,hinzufügen,nova,baru,الإضافية
+tree.select_hint,从左侧选择一条数据,從左側選擇一條數據,Select an item from the left,Sélectionnez un élément à gauche,左側から項目を選択,왼쪽에서 항목 선택,Выберите элемент слева,Seleccione un elemento a la izquierda,Wählen Sie links ein Element aus,Selecione um item à esquerda,Pilih item dari kiri,حدد عنصراً من اليسار
 tree.expand_all,展开全部,展開全部,Expand all,Tout développer,すべて展開,모두 펼치기,Развернуть всё,Expandir todo,Alle aufklappen,Expandir tudo,Perluas semua,توسيع الكل
 tree.collapse_all,收起全部,收起全部,Collapse all,Tout réduire,すべて折りたたむ,모두 접기,Свернуть всё,Colapsar todo,Alle einklappen,Recolher tudo,Ciutkan semua,طي الكل
 tree.refresh,刷新,刷新,Refresh,Actualiser,更新,새로고침,Обновить,Actualizar,Aktualisieren,Atualizar,Segarkan,تحديث
@@ -427,6 +428,14 @@ global.density.middle,适中,適中,Medium,Moyen,中間,중간,Средний,Me
 global.density.large,宽松,寬鬆,Relaxed,Spacieux,ゆったり,넓게,Просторный,Espacioso,Geräumig,Espaçoso,Longgar,مريح
 setting.table-size,表格密度,表格密度,Table Density,Densité du tableau,テーブル密度,테이블 밀도,Плотность таблицы,Densidad de tabla,Tabellendichte,Densidade da tabela,Kepadatan tabel,كثافة الجدول
 table.column.ctrl,列显示,列顯示,Columns,Colonnes,列表示,열 표시,Столбцы,Columnas,Spalten,Colunas,Kolom,الأعمدة
+table.column.all,全选,全選,Select all,Tout sélectionner,全選択,전체 선택,Выбрать все,Seleccionar todo,Alle auswählen,Selecionar tudo,Pilih semua,تحديد الكل
+table.column.reset,重置列设置,重置列設置,Reset columns,Réinitialiser colonnes,列の設定をリセット,열 설정 초기화,Сбросить столбцы,Restablecer columnas,Spalten zurücksetzen,Redefinir colunas,Reset kolom,إعادة تعيين الأعمدة
+table.column.pin.left,固定到左侧,固定到左側,Pin left,Épingler à gauche,左に固定,왼쪽에 고정,Закрепить слева,Fijar a la izquierda,Links fixieren,Fixar à esquerda,Sematkan ke kiri,تثبيت على اليسار
+table.column.pin.right,固定到右侧,固定到右側,Pin right,Épingler à droite,右に固定,오른쪽에 고정,Закрепить справа,Fijar a la derecha,Rechts fixieren,Fixar à direita,Sematkan ke kanan,تثبيت على اليمين
+table.column.unpin,取消固定,取消固定,Unpin,Désépingler,固定解除,고정 해제,Открепить,Desfijar,Fixierung lösen,Soltar coluna,Lepas sematan,إلغاء التثبيت
+table.column.reset_width,重置列宽,重置列寬,Reset widths,Réinitialiser largeurs,列幅をリセット,열 너비 초기화,Сбросить ширину,Restablecer anchos,Breiten zurücksetzen,Redefinir larguras,Reset lebar kolom,إعادة ضبط العرض
+table.auto_refresh,自动刷新,自動刷新,Auto refresh,Actualisation auto,自動更新,자동 새로고침,Автообновление,Actualización auto,Auto-Aktualisierung,Atualização auto,Perbarui otomatis,التحديث التلقائي
+table.auto_refresh.off,关闭,關閉,Off,Désactivé,オフ,끄기,Выкл,Desactivado,Aus,Desativado,Nonaktif,إيقاف
 ai.chat.wide_mode,展开宽度,展開寬度,Expand Width,Élargir,幅を広げる,너비 확장,Расширить,Expandir ancho,Breite erweitern,Expandir largura,Perluas lebar,توسيع العرض
 ai.chat.narrow_mode,收窄宽度,收窄寬度,Narrow Width,Rétrécir,幅を狭める,너비 축소,Сузить,Reducir ancho,Breite verringern,Reduzir largura,Persempit lebar,تضييق العرض
 ai.chat.yesterday,昨天,昨天,Yesterday,Hier,昨日,어제,Вчера,Ayer,Gestern,Ontem,Kemarin,أمس
