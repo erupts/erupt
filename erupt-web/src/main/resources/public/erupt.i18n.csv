@@ -48,6 +48,7 @@ global.drag,拖拽,拖拽,Drag,Glisser,ドラッグ,드래그,Перетащит
 global.copy,复制,複製,Copy,Copier,コピー,복사,Копировать,Copiar,Kopieren,Copiar,Salin,نسخ
 global.download,下载,下載,Download,Télécharger,ダウンロード,다운로드,Скачать,Descargar,Herunterladen,Baixar,Unduh,تحميل
 global.refresh,刷新,刷新,Refresh,Actualiser,更新,새로고침,Обновить,Actualizar,Aktualisieren,Atualizar,Segarkan,تحديث
+board.unset,未设置,未設置,Unset,Non défini,未設定,미설정,Не задано,Sin definir,Nicht gesetzt,Não definido,Belum diatur,غير محدد
 
 
 component.attachment.upload_hint,单击或拖动文件到此区域上传,單擊或拖動文件到此區域上傳,Click or drag the file to this area to upload,Cliquez ou faites glisser les fichiers dans cette zone pour les télécharger,ファイルをクリックまたはドラッグしてアップロードします,파일을이 영역으로 업로드하려면 누르거나 드래그하십시오,Нажмите или перетащите файл в эту область,Haga clic o arrastre los archivos a esta área para subir,Klicken Oder ziehen sie die datei in diese region zum aufladen,Clique ou arraste os arquivos para esta área para fazer upload,Klik atau tarik berkas untuk diunggah ke area ini,انقر أو اسحب الملف لتحميل في هذه المنطقة
@@ -75,6 +76,9 @@ table.sort.not_field,暂无排序字段,暫無排序欄位,No sort fields,Aucun 
 tree.base,基本信息,基本信息,Basic information,Les informations essentielles,基本情報,기본정보,Основная информация.,La información básica,Elementarste informationen.,A informação básica,Informasi dasar,المعلومات الأساسية
 tree.update,更新,更新,Update,Mise à jour,更新,업데이트,обновля,actualización,Aktualisiert.,actualização,update,تحديث
 tree.add_button,新增,新增,Add,nouveaux,追加,새로추가,нов,nuevos,hinzufügen,nova,baru,الإضافية
+tree.expand_all,展开全部,展開全部,Expand all,Tout développer,すべて展開,모두 펼치기,Развернуть всё,Expandir todo,Alle aufklappen,Expandir tudo,Perluas semua,توسيع الكل
+tree.collapse_all,收起全部,收起全部,Collapse all,Tout réduire,すべて折りたたむ,모두 접기,Свернуть всё,Colapsar todo,Alle einklappen,Recolher tudo,Ciutkan semua,طي الكل
+tree.refresh,刷新,刷新,Refresh,Actualiser,更新,새로고침,Обновить,Actualizar,Aktualisieren,Atualizar,Segarkan,تحديث
 tree.add,保存,增加,Add,La conservation,増加,증가,сохран,guardar,Intakt?,conservação,simpan,حفظ
 tree.add_children,增加下级,增加下級,Add subordinate,Ajouter un sous-niveau,部下を増やす,하급자증가,Увеличить нижний уровень.,Añadir un subnivel,Junior high.,Adicionar um sub-nível,Meningkatkan junior,زيادة الرتب الدنيا
 tree.delete,删除,刪除,Delete,supprimé,削除,삭제,удал,borrar,Löschen.,apagar,hapus,حذف
@@ -419,6 +423,11 @@ cube.report.config.compare.current_label,当期标签,當期標籤,Current Perio
 cube.report.config.compare.compare_label,对比期标签,對比期標籤,Compare Period Label,Étiquette période comparée,比較期ラベル,비교 기간 레이블,Метка периода сравнения,Etiqueta período comparado,Vergleichsperiodenbezeichnung,Rótulo período comparado,Label periode pembanding,تسمية فترة المقارنة
 global.density,密度,密度,Density,Densité,密度,밀도,Плотность,Densidad,Dichte,Densidade,Kepadatan,الكثافة
 global.density.small,紧凑,緊湊,Compact,Compact,コンパクト,컴팩트,Компактный,Compacto,Kompakt,Compacto,Kompak,مضغوط
-global.density.middle,默认,預設,Default,Par défaut,デフォルト,기본,По умолчанию,Por defecto,Standard,Padrão,Default,افتراضي
+global.density.middle,适中,適中,Medium,Moyen,中間,중간,Средний,Medio,Mittel,Médio,Sedang,متوسط
 global.density.large,宽松,寬鬆,Relaxed,Spacieux,ゆったり,넓게,Просторный,Espacioso,Geräumig,Espaçoso,Longgar,مريح
 setting.table-size,表格密度,表格密度,Table Density,Densité du tableau,テーブル密度,테이블 밀도,Плотность таблицы,Densidad de tabla,Tabellendichte,Densidade da tabela,Kepadatan tabel,كثافة الجدول
+table.column.ctrl,列显示,列顯示,Columns,Colonnes,列表示,열 표시,Столбцы,Columnas,Spalten,Colunas,Kolom,الأعمدة
+ai.chat.wide_mode,展开宽度,展開寬度,Expand Width,Élargir,幅を広げる,너비 확장,Расширить,Expandir ancho,Breite erweitern,Expandir largura,Perluas lebar,توسيع العرض
+ai.chat.narrow_mode,收窄宽度,收窄寬度,Narrow Width,Rétrécir,幅を狭める,너비 축소,Сузить,Reducir ancho,Breite verringern,Reduzir largura,Persempit lebar,تضييق العرض
+ai.chat.yesterday,昨天,昨天,Yesterday,Hier,昨日,어제,Вчера,Ayer,Gestern,Ontem,Kemarin,أمس
+ai.chat.just_now,刚刚,剛剛,Just now,À l'instant,たった今,방금,Только что,Ahora mismo,Gerade eben,Agora mesmo,Baru saja,الآن

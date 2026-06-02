@@ -8,6 +8,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.Vis;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.vis.BoardView;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
@@ -35,6 +36,20 @@ import xyz.erupt.jpa.model.BaseModel;
                         title = "Detail View",
                         fieldVisibility = Vis.FieldVisibility.EXCLUDE,
                         fields = {"internalNote"}
+                ),
+                // 看板视图：按 status 分列，支持拖拽移动
+                @Vis(
+                        code = "board",
+                        title = "Kanban Board",
+                        type = Vis.Type.BOARD,
+                        boardView = @BoardView(
+                                groupField = "status",
+                                cardTitleField = "name",
+                                cardTagField = "category",
+                                draggable = true,
+                                showCount = true,
+                                wipLimit = 0
+                        )
                 ),
 //                @Vis(title = "Card",
 //                        type = Vis.Type.CARD,
