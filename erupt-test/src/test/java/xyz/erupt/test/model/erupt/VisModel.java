@@ -43,12 +43,7 @@ import xyz.erupt.jpa.model.BaseModel;
                         title = "Kanban Board",
                         type = Vis.Type.BOARD,
                         boardView = @BoardView(
-                                groupField = "status",
-                                cardTitleField = "name",
-                                cardTagField = "category",
-                                draggable = true,
-                                showCount = true,
-                                wipLimit = 0
+                                groupField = "status"
                         )
                 ),
 //                @Vis(title = "Card",
