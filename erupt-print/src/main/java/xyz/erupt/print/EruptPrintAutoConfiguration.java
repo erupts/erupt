@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.annotation.EruptScan;
+import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
@@ -32,6 +33,8 @@ public class EruptPrintAutoConfiguration implements EruptModule {
 
     public static final String ERUPT_PRINT = "erupt-print";
 
+    public static final String PRINT_CONFIG = "PRINT_CONFIG";
+
     static {
         EruptModuleInvoke.addEruptModule(EruptPrintAutoConfiguration.class);
     }
@@ -54,6 +57,7 @@ public class EruptPrintAutoConfiguration implements EruptModule {
         List<MetaMenu> menus = new ArrayList<>();
         menus.add(MetaMenu.createRootMenu("$print", "Print Manager", "fa fa-print", 110));
         menus.add(MetaMenu.createEruptClassMenu(EruptPrintTpl.class, menus.get(0), 10));
+        menus.add(MetaMenu.createSimpleMenu(PRINT_CONFIG, "Print Config", PRINT_CONFIG, menus.get(0), 20, MenuTypeEnum.BUTTON.getCode()));
         return menus;
     }
 }

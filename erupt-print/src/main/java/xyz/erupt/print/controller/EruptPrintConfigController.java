@@ -7,7 +7,9 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.print.EruptPrintAutoConfiguration;
 import xyz.erupt.print.model.EruptPrintConfig;
+import xyz.erupt.upms.annotation.EruptMenuAuth;
 
 import java.util.List;
 
@@ -25,24 +27,24 @@ public class EruptPrintConfigController {
                 .eq(EruptPrintConfig::getErupt, erupt).list());
     }
 
+    @EruptMenuAuth(EruptPrintAutoConfiguration.PRINT_CONFIG)
     @PostMapping("/{erupt}/add")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional
     public R<Void> add(@PathVariable String erupt, @RequestBody EruptPrintConfig printConfig) {
         eruptDao.persist(printConfig);
         return R.ok();
     }
 
+    @EruptMenuAuth(EruptPrintAutoConfiguration.PRINT_CONFIG)
     @PostMapping("/{erupt}/update")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional
-    public R<Void> update(@PathVariable String erupt, @RequestParam Long id, @RequestBody EruptPrintConfig printConfig) {
+    public R<Void> update(@PathVariable String erupt, @RequestBody EruptPrintConfig printConfig) {
         eruptDao.merge(printConfig);
         return R.ok();
     }
 
+    @EruptMenuAuth(EruptPrintAutoConfiguration.PRINT_CONFIG)
     @PostMapping("/{erupt}/delete")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional
     public R<Void> delete(@PathVariable String erupt, @RequestParam Long id) {
         eruptDao.lambdaQuery(EruptPrintConfig.class)

@@ -33,7 +33,8 @@ public class EruptPrintController {
 
     @PostMapping("/{erupt}/{id}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
-    public R<String> print(@PathVariable String erupt, @PathVariable String id, @RequestBody String content) {
+    public R<String> print(@PathVariable String erupt, @PathVariable String id, @RequestBody(required = false) String content) {
+        if (content == null) content = "";
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
         AtomicReference<String> contentReference = new AtomicReference<>(eruptPrintService.render(content, EruptUtil.generateEruptDataMap(eruptModel, data, true)));

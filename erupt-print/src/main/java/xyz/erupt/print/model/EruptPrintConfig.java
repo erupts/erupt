@@ -30,6 +30,7 @@ public class EruptPrintConfig extends HyperModelUpdateVo {
     )
     private String title;
 
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Content")
     )
