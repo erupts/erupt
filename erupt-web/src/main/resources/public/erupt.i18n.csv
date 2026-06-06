@@ -83,8 +83,13 @@ tree.refresh,刷新,刷新,Refresh,Actualiser,更新,새로고침,Обновит
 tree.add,保存,增加,Add,La conservation,増加,증가,сохран,guardar,Intakt?,conservação,simpan,حفظ
 tree.add_children,增加下级,增加下級,Add subordinate,Ajouter un sous-niveau,部下を増やす,하급자증가,Увеличить нижний уровень.,Añadir un subnivel,Junior high.,Adicionar um sub-nível,Meningkatkan junior,زيادة الرتب الدنيا
 tree.delete,删除,刪除,Delete,supprimé,削除,삭제,удал,borrar,Löschen.,apagar,hapus,حذف
+tree.search,搜索,搜尋,Search,Rechercher,検索,검색,Поиск,Buscar,Suchen,Pesquisar,Cari,بحث
 tree.validate.no_this_parent,不可以选择自己作为父级,不可以選擇自己作為父級,You cannot choose yourself as a parent,Vous ne pouvez pas vous sélectionner comme parent,自分を父親として選んではいけません。,부모로서자신을선택할수없습니다,Я не могу выбирать себя в качестве отца,No se puede seleccionar como padre,Du darfst dir das leben nicht zum vater aussuchen,Não é possível escolher-se como pai,Jangan memilih dirimu sebagai orang tua,لا يمكنك اختيار نفسك كأب
 tree.validate.no_this_children_parent,不可以选择自己的子级作为父级,不可以選擇自己的子級作為父級,You cannot select your own child as the parent,Vous ne pouvez pas choisir votre propre enfant comme parent,自分のサブを父親として選んではいけません。,자신의하위레벨을부모레벨로선택할수없습니다,Не может быть выбора собственного сына в качестве отца,No es posible seleccionar su propio hijo como padre,Man darf sich die eigene teilklasse als vater nicht aussuchen,Não é possível selecionar seu próprio filho como pai,Jangan memilih anakmu sendiri sebagai ayahmu,لا يمكنك اختيار مستوى الابن كأب
+tree.sort_asc,升序排列,升序排列,Sort ascending,Tri croissant,昇順で並べ替え,오름차순 정렬,Сортировать по возрастанию,Ordenar ascendente,Aufsteigend sortieren,Ordenar crescente,Urutkan naik,ترتيب تصاعدي
+tree.sort_desc,降序排列,降序排列,Sort descending,Tri décroissant,降順で並べ替え,내림차순 정렬,Сортировать по убыванию,Ordenar descendente,Absteigend sortieren,Ordenar decrescente,Urutkan turun,ترتيب تنازلي
+tree.sort_cancel,取消排序,取消排序,Cancel sort,Annuler le tri,並べ替えをキャンセル,정렬 취소,Отменить сортировку,Cancelar orden,Sortierung aufheben,Cancelar ordenação,Batalkan pengurutan,إلغاء الترتيب
+tree.locate,定位选中节点,定位選中節點,Locate selected node,Localiser le nœud sélectionné,選択ノードを定位,선택한 노드 위치 찾기,Найти выбранный узел,Localizar nodo seleccionado,Ausgewählten Knoten finden,Localizar nó selecionado,Temukan node yang dipilih,تحديد موقع العقدة المحددة
 change-pwd.original_password,原始密码,原始密碼,Original password,Le mot de passe original,元のパスワード,원본비밀번호,Оригинальный код.,La contraseña original,Der ursprüngliche code.,A senha original,Sandi asli,كلمة المرور الأصلية
 change-pwd.new_password,新密码,新密碼,New password,Nouveau mot de passe,新しいパスワードです,새 비밀번호,Новый пароль.,Una nueva contraseña,Neuer code.,Nova palavra-passe,Kata sandi baru,رمز جديد
 change-pwd.confirm_password,确认密码,確認密碼,Confirm password,Confirmer le mot de passe,パスワードを確認する,비밀번호확인,Подтвердите код.,Confirme su contraseña,Passwort bestätigt.,Confirme a senha,Konfirmasi sandi,تأكيد كلمة المرور
@@ -153,6 +158,10 @@ IN,包含于,包含於,Contains,Contient,含まれる,포함,Содержит,Co
 NOT_IN,不包含于,不包含於,Not contains,Ne contient pas,含まれない,포함하지 않음,Не содержит,No contiene,Enthält nicht,Não contém,Tidak mengandung,لا يحتوي على
 
 print.preview,打印预览,列印預覽,Print Preview,Aperçu avant impression,印刷プレビュー,인쇄 미리보기,Предпросмотр печати,Vista previa de impresión,Druckvorschau,Pré-visualizar impressão,Pratinjau Cetak,معاينة الطباعة
+print.layout,打印排版,列印排版,Print Layout,Mise en page,印刷レイアウト,인쇄 레이아웃,Макет печати,Diseño de impresión,Drucklayout,Layout de impressão,Tata Letak Cetak,تخطيط الطباعة
+print.select_layout,选择打印排版,選擇列印排版,Select Print Layout,Sélectionner la mise en page,印刷レイアウトを選択,인쇄 레이아웃 선택,Выберите макет печати,Seleccionar diseño,Drucklayout auswählen,Selecionar layout,Pilih Tata Letak,اختر تخطيط الطباعة
+print.input_title,请输入排版名称,請輸入排版名稱,Enter layout name,Nom de la mise en page,レイアウト名を入力,레이아웃 이름 입력,Введите название макета,Nombre del diseño,Layoutname eingeben,Nome do layout,Nama tata letak,أدخل اسم التخطيط
+print.default,默认排版,預設排版,Default Layout,Mise en page par défaut,デフォルトレイアウト,기본 레이아웃,Макет по умолчанию,Diseño predeterminado,Standardlayout,Layout padrão,Tata Letak Default,التخطيط الافتراضي
 
 [flow]
 VIEW_FLOW,查看流程,檢視流程,View Flow,Voir le flux,フローを見る,플로우 보기,Просмотр потока,Ver flujo,Fluss anzeigen,Ver fluxo,Lihat Aliran,عرض التدفق
