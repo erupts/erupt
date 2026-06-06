@@ -46,22 +46,16 @@ public class EruptMagicApiAutoConfiguration implements EruptModule {
     public List<MetaMenu> initMenus() {
         String menuKey = "magic-api";
         Map<Authorization, String> menus = new LinkedHashMap<>();
-        menus.put(Authorization.SAVE, "保存");
-        menus.put(Authorization.VIEW, "查看");
-        menus.put(Authorization.DELETE, "删除");
-        menus.put(Authorization.DOWNLOAD, "导出");
-        menus.put(Authorization.UPLOAD, "上传");
-        menus.put(Authorization.PUSH, "远程推送");
-        menus.put(Authorization.LOCK, "锁定");
-        menus.put(Authorization.UNLOCK, "解锁");
-        menus.put(Authorization.RELOAD, "资源重载");
+        for (Authorization value : Authorization.values()) {
+            menus.put(value, value.name());
+        }
         AtomicInteger sort = new AtomicInteger();
         List<MetaMenu> metaMenus = new ArrayList<>();
-        MetaMenu metaMenu = MetaMenu.createSimpleMenu(menuKey, "在线 IDE", MagicApiTpl.MAGIC_API_PERMISSION, null, 50, EruptTplService.TPL);
+        MetaMenu metaMenu = MetaMenu.createSimpleMenu(menuKey, "Online IDE", MagicApiTpl.MAGIC_API_PERMISSION, null, 50, EruptTplService.TPL);
         metaMenu.setIcon("fa fa-bullseye");
         metaMenus.add(metaMenu);
-        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + FUNCTION.toLowerCase(), "函数", MAGIC_API_MENU_PREFIX + FUNCTION.toUpperCase(), metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
-        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + DATASOURCE.toLowerCase(), "数据源", MAGIC_API_MENU_PREFIX + DATASOURCE.toUpperCase(), metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
+        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + FUNCTION.toLowerCase(), "Function", MAGIC_API_MENU_PREFIX + FUNCTION.toUpperCase(), metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
+        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + DATASOURCE.toLowerCase(), "Data Source", MAGIC_API_MENU_PREFIX + DATASOURCE.toUpperCase(), metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
         menus.forEach((key, value) -> metaMenus.add(MetaMenu.createSimpleMenu(
                 menuKey + "-" + key.name().toLowerCase(), value,
                 MAGIC_API_MENU_PREFIX + key.name(),
