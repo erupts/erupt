@@ -29,13 +29,13 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
 
     private transient Field field;
 
-    private transient String fieldReturnName;
-
     private transient AnnotationProxy<EruptField, Void> eruptFieldAnnotationProxy = new EruptFieldProxy();
 
     private transient boolean starting;
 
     private String fieldName;
+
+    private String fieldReturnName;
 
     private JsonObject eruptFieldJson;
 
