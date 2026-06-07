@@ -64,6 +64,10 @@ public class EruptJpaDao {
                     switch (condition.getExpression()) {
                         case EQ:
                         case NEQ:
+                        case GT:
+                        case GTE:
+                        case LT:
+                        case LTE:
                             countQuery.setParameter(condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, condition.getValue()));
                             query.setParameter(condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, condition.getValue()));
                             break;

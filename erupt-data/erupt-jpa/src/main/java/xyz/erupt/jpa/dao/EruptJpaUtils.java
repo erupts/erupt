@@ -141,6 +141,18 @@ public class EruptJpaUtils {
                         case NEQ:
                             hql.append(EruptJpaUtils.AND).append(_key).append("!=:").append(condition.getKey());
                             break;
+                        case GT:
+                            hql.append(EruptJpaUtils.AND).append(_key).append(">:").append(condition.getKey());
+                            break;
+                        case GTE:
+                            hql.append(EruptJpaUtils.AND).append(_key).append(">=:").append(condition.getKey());
+                            break;
+                        case LT:
+                            hql.append(EruptJpaUtils.AND).append(_key).append("<:").append(condition.getKey());
+                            break;
+                        case LTE:
+                            hql.append(EruptJpaUtils.AND).append(_key).append("<=:").append(condition.getKey());
+                            break;
                         case LIKE:
                             hql.append(EruptJpaUtils.AND).append(_key).append(" like :").append(condition.getKey());
                             break;
