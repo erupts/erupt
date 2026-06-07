@@ -63,10 +63,12 @@ public class EruptJpaDao {
                     condition.setKey(condition.getKey().replace(EruptConst.DOT, "_"));
                     switch (condition.getExpression()) {
                         case EQ:
+                        case NEQ:
                             countQuery.setParameter(condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, condition.getValue()));
                             query.setParameter(condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, condition.getValue()));
                             break;
                         case LIKE:
+                        case NOT_LIKE:
                             countQuery.setParameter(condition.getKey(), EruptJpaUtils.PERCENT + condition.getValue() + EruptJpaUtils.PERCENT);
                             query.setParameter(condition.getKey(), EruptJpaUtils.PERCENT + condition.getValue() + EruptJpaUtils.PERCENT);
                             break;
@@ -78,12 +80,16 @@ public class EruptJpaDao {
                             query.setParameter(EruptJpaUtils.R_VAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
                             break;
                         case IN:
+                        case NOT_IN:
                             List<Object> listIn = new ArrayList<>();
                             for (Object o : (List<?>) condition.getValue()) {
                                 listIn.add(EruptUtil.convertObjectType(eruptFieldModel, o));
                             }
                             countQuery.setParameter(condition.getKey(), listIn);
                             query.setParameter(condition.getKey(), listIn);
+                            break;
+                        case NULL:
+                        case NOT_NULL:
                             break;
                     }
                 }

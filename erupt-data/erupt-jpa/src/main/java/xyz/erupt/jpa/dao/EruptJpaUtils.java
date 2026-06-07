@@ -138,8 +138,14 @@ public class EruptJpaUtils {
                         case EQ:
                             hql.append(EruptJpaUtils.AND).append(_key).append("=:").append(condition.getKey());
                             break;
+                        case NEQ:
+                            hql.append(EruptJpaUtils.AND).append(_key).append("!=:").append(condition.getKey());
+                            break;
                         case LIKE:
                             hql.append(EruptJpaUtils.AND).append(_key).append(" like :").append(condition.getKey());
+                            break;
+                        case NOT_LIKE:
+                            hql.append(EruptJpaUtils.AND).append(_key).append(" not like :").append(condition.getKey());
                             break;
                         case RANGE:
                             hql.append(EruptJpaUtils.AND).append(_key).append(" between :")
@@ -148,6 +154,15 @@ public class EruptJpaUtils {
                             break;
                         case IN:
                             hql.append(EruptJpaUtils.AND).append(_key).append(" in (:").append(condition.getKey()).append(")");
+                            break;
+                        case NOT_IN:
+                            hql.append(EruptJpaUtils.AND).append(_key).append(" not in (:").append(condition.getKey()).append(")");
+                            break;
+                        case NULL:
+                            hql.append(EruptJpaUtils.AND).append(_key).append(" is null");
+                            break;
+                        case NOT_NULL:
+                            hql.append(EruptJpaUtils.AND).append(_key).append(" is not null");
                             break;
                     }
                 } else {
