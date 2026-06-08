@@ -39,3 +39,4 @@ build/
 .erupt
 */.DS_Store
 *.db
+.claude/settings.local.json
