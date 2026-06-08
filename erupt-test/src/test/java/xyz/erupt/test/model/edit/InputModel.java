@@ -78,7 +78,7 @@ public class InputModel extends BaseModel {
     @EruptField(
             views = @View(title = "Keyword"),
             edit = @Edit(title = "Keyword", type = EditType.INPUT,
-                    search = @Search(value = true, vague = true))
+                    search = @Search)
     )
     private String keyword;
 

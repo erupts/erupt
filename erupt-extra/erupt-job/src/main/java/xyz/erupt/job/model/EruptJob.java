@@ -55,7 +55,7 @@ public class EruptJob extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "Code", width = "100px"),
-            edit = @Edit(title = "Code", notNull = true, search = @Search(vague = true), readonly = @Readonly(add = false))
+            edit = @Edit(title = "Code", notNull = true, search = @Search, readonly = @Readonly(add = false))
     )
     private String code;
 
@@ -70,7 +70,7 @@ public class EruptJob extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "Job Name"),
-            edit = @Edit(title = "Job Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Job Name", notNull = true, search = @Search)
     )
     private String name;
 

@@ -31,7 +31,7 @@ public class EruptUserPostVo extends BaseModel {
 
     @EruptField(
             views = @View(title = "name", sortable = true),
-            edit = @Edit(title = "name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "name", notNull = true, search = @Search)
     )
     private String name;
 

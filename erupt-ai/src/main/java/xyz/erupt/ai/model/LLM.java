@@ -50,7 +50,7 @@ public class LLM extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "Model Name",width = "150px"),
-            edit = @Edit(title = "Model Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Model Name", notNull = true, search = @Search)
     )
     private String name;
 
@@ -69,7 +69,7 @@ public class LLM extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "Model Version"),
-            edit = @Edit(title = "Model Version", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Model Version", notNull = true, search = @Search)
     )
     private String model;
 

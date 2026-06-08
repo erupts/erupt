@@ -23,7 +23,7 @@ public class AutoCompleteModel extends BaseModel {
             views = @View(title = "City"),
             edit = @Edit(title = "City", type = EditType.AUTO_COMPLETE,
                     autoCompleteType = @AutoCompleteType(handler = TestAutoCompleteHandler.class),
-                    search = @Search(value = true, vague = true))
+                    search = @Search)
     )
     private String city;
 

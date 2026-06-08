@@ -45,7 +45,7 @@ public class NoticeLog extends HyperModelCreatorOnlyVo {
 
     @EruptField(
             views = @View(title = "title"),
-            edit = @Edit(title = "title", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "title", notNull = true, search = @Search)
     )
     private String title;
 
@@ -81,7 +81,7 @@ public class NoticeLog extends HyperModelCreatorOnlyVo {
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "content", type = ViewType.HTML),
-            edit = @Edit(title = "content", type = EditType.CODE_EDITOR, search = @Search(vague = true),
+            edit = @Edit(title = "content", type = EditType.CODE_EDITOR, search = @Search,
                     notNull = true, codeEditType = @CodeEditorType(language = "text"))
     )
     private String content;
@@ -94,7 +94,7 @@ public class NoticeLog extends HyperModelCreatorOnlyVo {
 
 //    @EruptField(
 //            views = @View(title = "Create Time", sortable = true),
-//            edit = @Edit(title = "Create Time",search = @Search(vague = true), readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
+//            edit = @Edit(title = "Create Time",search = @Search, readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
 //    )
 //    private Date createTime;
 

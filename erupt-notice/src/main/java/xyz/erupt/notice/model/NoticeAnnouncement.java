@@ -31,7 +31,7 @@ public class NoticeAnnouncement extends HyperModelCreatorOnlyVo {
 
     @EruptField(
             views = @View(title = "title"),
-            edit = @Edit(title = "title", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "title", notNull = true, search = @Search)
     )
     private String title;
 

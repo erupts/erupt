@@ -47,14 +47,14 @@ public class EruptLoginLog extends BaseModel {
     @Dimension(title = "User Name", sql = "user_name")
     @EruptField(
             views = @View(title = "Account"),
-            edit = @Edit(title = "Account", search = @Search(vague = true))
+            edit = @Edit(title = "Account", search = @Search)
     )
     private String userName;
 
     @Dimension(title = "Login Time", sql = "login_time")
     @EruptField(
             views = @View(title = "Login Time", sortable = true),
-            edit = @Edit(title = "Login Time", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "Login Time", search = @Search, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date loginTime;
 
@@ -69,7 +69,7 @@ public class EruptLoginLog extends BaseModel {
     @Dimension(title = "IP Region", sql = "region")
     @EruptField(
             views = @View(title = "IP Source", desc = "Country | Region | Province | City | ISP", width = "250px", template = "value&&value.replace(/\\|/g,' | ')"),
-            edit = @Edit(title = "IP Source", search = @Search(vague = true))
+            edit = @Edit(title = "IP Source", search = @Search)
     )
     private String region;
 

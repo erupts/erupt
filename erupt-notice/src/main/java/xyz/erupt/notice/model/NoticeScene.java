@@ -26,13 +26,13 @@ public class NoticeScene extends HyperModelUpdateVo {
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "code", sortable = true),
-            edit = @Edit(title = "code", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "code", notNull = true, search = @Search)
     )
     private String code;
 
     @EruptField(
             views = @View(title = "name", sortable = true),
-            edit = @Edit(title = "name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "name", notNull = true, search = @Search)
     )
     private String name;
 

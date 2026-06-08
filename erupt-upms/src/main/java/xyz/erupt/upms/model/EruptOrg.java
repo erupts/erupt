@@ -39,13 +39,13 @@ public class EruptOrg extends BaseModel {
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "Org Code", sortable = true),
-            edit = @Edit(title = "Org Code", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Org Code", notNull = true, search = @Search)
     )
     private String code;
 
     @EruptField(
             views = @View(title = "Org Name", sortable = true),
-            edit = @Edit(title = "Org Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Org Name", notNull = true, search = @Search)
     )
     private String name;
 

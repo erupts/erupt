@@ -32,13 +32,13 @@ public class CloudNodeGroup extends MetaModel {
     @Column(unique = true)
     @EruptField(
             views = @View(title = "Code", sortable = true),
-            edit = @Edit(title = "Code", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Code", notNull = true, search = @Search)
     )
     private String code;
 
     @EruptField(
             views = @View(title = "Name", sortable = true),
-            edit = @Edit(title = "Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Name", notNull = true, search = @Search)
     )
     private String name;
 

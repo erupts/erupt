@@ -59,7 +59,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     @Dimension(title = "Operate User", sql = "operate_user")
     @EruptField(
             views = @View(title = "Operator"),
-            edit = @Edit(title = "Operator", search = @Search(vague = true))
+            edit = @Edit(title = "Operator", search = @Search)
     )
     private String operateUser;
 
@@ -73,14 +73,14 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     @Dimension(title = "IP Region")
     @EruptField(
             views = @View(title = "IP Source", desc = "Country | Region | Province | City | ISP", template = "value&&value.replace(/\\|/g,' | ')"),
-            edit = @Edit(title = "IP Source", search = @Search(vague = true))
+            edit = @Edit(title = "IP Source", search = @Search)
     )
     private String region;
 
     @Dimension(title = "API Name", sql = "api_name")
     @EruptField(
             views = @View(title = "Function Name"),
-            edit = @Edit(title = "Function Name", search = @Search(vague = true))
+            edit = @Edit(title = "Function Name", search = @Search)
     )
     private String apiName;
 
@@ -107,14 +107,14 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     @Dimension(title = "Total Time", sql = "total_time")
     @EruptField(
             views = @View(title = "Req Time", template = "value && value+'ms'", sortable = true),
-            edit = @Edit(title = "Req Time", search = @Search(vague = true))
+            edit = @Edit(title = "Req Time", search = @Search)
     )
     private Long totalTime;
 
     @Dimension(title = "Create Time", sql = "create_time")
     @EruptField(
             views = @View(title = "Record Time", sortable = true),
-            edit = @Edit(title = "Record Time", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "Record Time", search = @Search, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date createTime;
 

@@ -59,13 +59,13 @@ public class EruptUser extends LookerSelf {
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "Account", sortable = true),
-            edit = @Edit(title = "Account", desc = "Login account", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Account", desc = "Login account", notNull = true, search = @Search)
     )
     private String account;
 
     @EruptField(
             views = @View(title = "Full Name", sortable = true),
-            edit = @Edit(title = "Full Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Full Name", notNull = true, search = @Search)
     )
     private String name;
 
@@ -85,19 +85,19 @@ public class EruptUser extends LookerSelf {
     private Boolean status = true;
 
     @EruptField(
-            edit = @Edit(title = "Phone", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.PHONE_REGEX))
+            edit = @Edit(title = "Phone", search = @Search, inputType = @InputType(regex = RegexConst.PHONE_REGEX))
     )
     private String phone;
 
     @EruptField(
-            edit = @Edit(title = "Email", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.EMAIL_REGEX))
+            edit = @Edit(title = "Email", search = @Search, inputType = @InputType(regex = RegexConst.EMAIL_REGEX))
     )
     private String email;
 
     @EruptField(
             views = @View(title = "Admin User", sortable = true),
             edit = @Edit(
-                    title = "Admin User", notNull = true, search = @Search(vague = true)
+                    title = "Admin User", notNull = true, search = @Search
             )
     )
     private Boolean isAdmin = false;

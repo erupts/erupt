@@ -56,13 +56,13 @@ public class CloudNode extends MetaModelUpdateVo {
     @Column(unique = true)
     @EruptField(
             views = @View(title = "Node Name", sortable = true),
-            edit = @Edit(title = "Node Name", desc = "NodeName", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Node Name", desc = "NodeName", notNull = true, search = @Search)
     )
     private String nodeName;
 
     @EruptField(
             views = @View(title = "Friendly Name", sortable = true),
-            edit = @Edit(title = "Friendly Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Friendly Name", notNull = true, search = @Search)
     )
     private String name;
 

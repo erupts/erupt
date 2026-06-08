@@ -19,7 +19,7 @@ public class RefTargetModel extends BaseModel {
     @EruptField(
             views = @View(title = "Name"),
             edit = @Edit(title = "Name", notNull = true,
-                    search = @Search(value = true, vague = true))
+                    search = @Search)
     )
     private String name;
 

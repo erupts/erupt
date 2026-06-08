@@ -59,7 +59,7 @@ public class EruptJobLog extends BaseModel {
 
     @EruptField(
             views = @View(title = "Start Time", type = ViewType.DATE_TIME),
-            edit = @Edit(title = "Exec Duration", search = @Search(vague = true))
+            edit = @Edit(title = "Exec Duration", search = @Search)
     )
     private Date startTime;
 

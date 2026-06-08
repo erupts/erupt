@@ -57,7 +57,7 @@ public class TagsModel extends BaseModel {
     @EruptField(
             views = @View(title = "Keywords"),
             edit = @Edit(title = "Keywords", type = EditType.TAGS,
-                    search = @Search(value = true, vague = true),
+                    search = @Search,
                     tagsType = @TagsType(joinSeparator = ","))
     )
     private String keywords;
