@@ -39,19 +39,19 @@ public class BiHistory extends BaseModel {
 
     @EruptField(
             views = @View(title = "来源", width = "120px"),
-            edit = @Edit(title = "来源", search = @Search(vague = true))
+            edit = @Edit(title = "来源", search = @Search)
     )
     private String mark;
 
     @EruptField(
             views = @View(title = "操作人"),
-            edit = @Edit(title = "操作人", search = @Search(vague = true))
+            edit = @Edit(title = "操作人", search = @Search)
     )
     private String operateBy;
 
     @EruptField(
             views = @View(title = "操作时间", sortable = true, width = "200"),
-            edit = @Edit(title = "操作时间", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "操作时间", search = @Search, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date operateTime;
 

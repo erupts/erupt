@@ -58,7 +58,7 @@ public class Bi extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "名称", sortable = true),
-            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "名称", notNull = true, search = @Search)
     )
     private String name;
 

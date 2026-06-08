@@ -35,13 +35,13 @@ public class BiFunction extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "编码", sortable = true, width = "120px"),
-            edit = @Edit(title = "编码", search = @Search(vague = true), show = false)
+            edit = @Edit(title = "编码", search = @Search, show = false)
     )
     private String code;
 
     @EruptField(
             views = @View(title = "名称", sortable = true),
-            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "名称", notNull = true, search = @Search)
     )
     private String name;
 
