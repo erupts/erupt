@@ -46,8 +46,8 @@ public class EruptControllerTest extends EruptApplicationTests {
     void setUp() {
         String account = eruptUpmsProp.getDefaultAccount();
         String pwd = MD5Util.digest(MD5Util.digest(eruptUpmsProp.getDefaultPassword()) + account);
-        ResponseEntity<Map> resp = rest.getForEntity(
-                "/erupt-api/login?account={a}&pwd={p}", Map.class, account, pwd);
+        Map<String, String> loginBody = Map.of("account", account, "pwd", pwd);
+        ResponseEntity<Map> resp = rest.postForEntity("/erupt-api/login", loginBody, Map.class);
         assertEquals(HttpStatus.OK, resp.getStatusCode(), "login must succeed");
         Map<String, Object> body = resp.getBody();
         assertNotNull(body);

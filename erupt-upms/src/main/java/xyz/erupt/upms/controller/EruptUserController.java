@@ -6,10 +6,7 @@ import com.wf.captcha.base.Captcha;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.i18n.I18nTranslate;
@@ -17,6 +14,8 @@ import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecretUtil;
 import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.upms.base.ChangePwdBody;
+import xyz.erupt.upms.base.LoginBody;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
@@ -70,12 +69,11 @@ public class EruptUserController {
      * @param verifyCodeMark Verification code identifier
      */
     @SneakyThrows
-    @GetMapping(value = "/login")
-    public LoginModel login(@RequestParam String account, @RequestParam String pwd,
-                            @RequestParam(required = false) String verifyCode,
-                            @RequestParam(required = false) String verifyCodeMark
-    ) {
-        if (!eruptUserService.checkVerifyCode(account, verifyCode, verifyCodeMark)) {
+    @PostMapping(value = "/login")
+    public LoginModel login(@RequestBody LoginBody loginBody) {
+        String account = loginBody.getAccount();
+        String pwd = loginBody.getPwd();
+        if (!eruptUserService.checkVerifyCode(account, loginBody.getVerifyCode(), loginBody.getVerifyCodeMark())) {
             return new LoginModel(false, I18nTranslate.$translate("upms.verify_code_error"), true);
         }
         if (eruptAppProp.getPwdTransferEncrypt()) {
@@ -114,12 +112,12 @@ public class EruptUserController {
         return loginModel;
     }
 
-    @GetMapping(value = "/change-pwd")
+    @PostMapping(value = "/change-pwd")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel changePwd(@RequestParam("pwd") String pwd, @RequestParam("newPwd") String newPwd, @RequestParam("newPwd2") String newPwd2) {
-        pwd = SecretUtil.decodeSecret(pwd, 3);
-        newPwd = SecretUtil.decodeSecret(newPwd, 3);
-        newPwd2 = SecretUtil.decodeSecret(newPwd2, 3);
+    public EruptApiModel changePwd(@RequestBody ChangePwdBody body) {
+        String pwd = SecretUtil.decodeSecret(body.getPwd(), 3);
+        String newPwd = SecretUtil.decodeSecret(body.getNewPwd(), 3);
+        String newPwd2 = SecretUtil.decodeSecret(body.getNewPwd2(), 3);
         return eruptUserService.changePwd(eruptUserService.getCurrentAccount(), pwd, newPwd, newPwd2);
     }
 
