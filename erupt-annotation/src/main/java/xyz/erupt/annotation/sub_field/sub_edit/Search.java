@@ -10,6 +10,7 @@ public @interface Search {
 
     boolean value() default true;
 
+    @Deprecated
     @Comment("Advanced search")
     boolean vague() default false;
 

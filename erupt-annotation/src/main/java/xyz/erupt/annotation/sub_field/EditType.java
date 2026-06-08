@@ -2,7 +2,6 @@ package xyz.erupt.annotation.sub_field;
 
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.JavaTypeEnum;
-import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 
 /**
@@ -12,27 +11,27 @@ import xyz.erupt.annotation.sub_field.sub_edit.*;
 public enum EditType {
     @EditTypeMapping(desc = "Auto-detected type by framework", allowType = {JavaTypeEnum.any})
     AUTO,
-    @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
+    @EditTypeSearch
     @EditTypeMapping(mapping = InputType.class, desc = "Text input", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     INPUT,
-    @EditTypeSearch(vagueMethod = QueryExpression.RANGE)
+    @EditTypeSearch
     @EditTypeMapping(mapping = NumberType.class, desc = "Number input", allowType = {JavaTypeEnum.number})
     NUMBER,
-    @EditTypeSearch(vagueMethod = QueryExpression.RANGE)
+    @EditTypeSearch
     @EditTypeMapping(mapping = SliderType.class, desc = "Number slider", allowType = {JavaTypeEnum.number})
     SLIDER,
     @EditTypeMapping(desc = "Color picker", allowType = {JavaTypeEnum.String})
     COLOR,
-    @EditTypeSearch(vagueMethod = QueryExpression.RANGE)
+    @EditTypeSearch
     @EditTypeMapping(mapping = RateType.class, desc = "Rating", allowType = {JavaTypeEnum.number})
     RATE,
-    @EditTypeSearch(vagueMethod = QueryExpression.RANGE)
+    @EditTypeSearch
     @EditTypeMapping(mapping = DateType.class, desc = "Date", allowType = {JavaTypeEnum.String, JavaTypeEnum.date})
     DATE,
     @EditTypeSearch
     @EditTypeMapping(mapping = BoolType.class, desc = "Boolean", allowType = {JavaTypeEnum.bool})
     BOOLEAN,
-    @EditTypeSearch(vagueMethod = QueryExpression.IN)
+    @EditTypeSearch
     @EditTypeMapping(mapping = ChoiceType.class, desc = "Single select", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     CHOICE,
     @EditTypeMapping(mapping = MultiChoiceType.class, desc = "Multi select", allowType = {JavaTypeEnum.object}, excelOperator = false)
@@ -40,16 +39,16 @@ public enum EditType {
     @EditTypeSearch
     @EditTypeMapping(mapping = TagsType.class, desc = "Tags selector", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     TAGS,
-    @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
+    @EditTypeSearch
     @EditTypeMapping(mapping = AutoCompleteType.class, desc = "Auto complete", allowType = {JavaTypeEnum.String})
     AUTO_COMPLETE,
-    @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
+    @EditTypeSearch
     @EditTypeMapping(desc = "Multi-line text area", allowType = {JavaTypeEnum.String}, nameInfer = {"remark"})
     TEXTAREA,
-    @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
+    @EditTypeSearch
     @EditTypeMapping(mapping = HtmlEditorType.class, desc = "Rich text editor", allowType = {JavaTypeEnum.String})
     HTML_EDITOR,
-    @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
+    @EditTypeSearch
     @EditTypeMapping(mapping = CodeEditorType.class, desc = "Code editor", allowType = {JavaTypeEnum.String})
     CODE_EDITOR,
     @EditTypeMapping(desc = "MarkDown editor", allowType = {JavaTypeEnum.String})

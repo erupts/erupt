@@ -260,21 +260,16 @@ public class EruptUtil {
                 if (null != eruptFieldModel) {
                     Edit edit = eruptFieldModel.getEruptField().edit();
                     EditTypeSearch editTypeSearch = AnnotationProcess.getEditTypeSearch(edit.type());
-                    if (null != editTypeSearch && editTypeSearch.value()) {
-                        if (edit.search().value() && null != condition.getValue()) {
-                            if (condition.getValue() instanceof Collection) {
-                                Collection<?> collection = (Collection<?>) condition.getValue();
-                                if (collection.isEmpty()) {
-                                    continue;
-                                }
+                    if (null != editTypeSearch && editTypeSearch.value() && edit.search().value()) {
+                        if (condition.getValue() instanceof Collection<?> collection) {
+                            if (collection.isEmpty()) {
+                                continue;
                             }
-                            if (edit.search().vague()) {
-                                condition.setExpression(editTypeSearch.vagueMethod());
-                            } else {
-                                condition.setExpression(QueryExpression.EQ);
-                            }
-                            legalConditions.add(condition);
                         }
+                        if (null == condition.getExpression()) {
+                            condition.setExpression(QueryExpression.EQ);
+                        }
+                        legalConditions.add(condition);
                     }
                 }
             }
