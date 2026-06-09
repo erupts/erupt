@@ -11,6 +11,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -37,7 +38,8 @@ import java.time.LocalDateTime;
         name = "Menu Management",
         orderBy = "EruptMenu.sort asc",
         tree = @Tree(pid = "parentMenu.id", expandLevel = 5),
-        dataProxy = EruptMenuService.class
+        dataProxy = EruptMenuService.class,
+        power = @Power(copy = false)
 )
 @EruptI18n
 @Getter
