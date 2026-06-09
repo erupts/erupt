@@ -19,7 +19,6 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Dynamic;
-import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.bi.constant.DBTypeEnum;
 import xyz.erupt.bi.handler.DriverChoice;
 import xyz.erupt.bi.service.BiDataSourceService;
@@ -67,7 +66,7 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
     private String type;
 
     @EruptField(
-            views = @View(title = "连接字符串",type = ViewType.HTML),
+            views = @View(title = "连接字符串", type = ViewType.HTML),
             edit = @Edit(title = "连接字符串", type = EditType.TEXTAREA, notNull = true)
     )
     private String url;
@@ -79,7 +78,7 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
     private String userName;
 
     @EruptField(
-            edit = @Edit(title = "密码", inputType = @InputType(type = "password"))
+            edit = @Edit(title = "密码", type = EditType.PASSWORD)
     )
     private String password;
 
@@ -91,7 +90,7 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
                     desc = "分页变量：\n" +
                             "@sql：sql语句\n" +
                             "@size：展示条数\n" +
-                            "@skip：跳过行数\n"+
+                            "@skip：跳过行数\n" +
                             "@sort：字段排序",
                     dynamic = @Dynamic(dependField = "type", condition = "value === 'Other'")
             )
