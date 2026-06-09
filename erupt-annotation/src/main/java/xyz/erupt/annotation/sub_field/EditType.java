@@ -15,6 +15,9 @@ public enum EditType {
     @EditTypeMapping(mapping = InputType.class, desc = "Text input", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     INPUT,
     @EditTypeSearch
+    @EditTypeMapping(desc = "Password input", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
+    PASSWORD,
+    @EditTypeSearch
     @EditTypeMapping(mapping = NumberType.class, desc = "Number input", allowType = {JavaTypeEnum.number})
     NUMBER,
     @EditTypeSearch
@@ -59,7 +62,7 @@ public enum EditType {
     MAP,
     @EditTypeMapping(desc = "Custom HTML template", allowType = {JavaTypeEnum.String}, excelOperator = false)
     TPL,
-    @EditTypeMapping(desc = "Horizontal divider with description", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
+    @EditTypeMapping(mapping = DivideType.class, desc = "Horizontal divider with description", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     DIVIDE,
     @EditTypeMapping(desc = "Hidden", allowType = {JavaTypeEnum.any}, excelOperator = false)
     HIDDEN,

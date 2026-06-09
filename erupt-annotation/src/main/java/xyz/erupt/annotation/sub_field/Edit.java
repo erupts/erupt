@@ -110,6 +110,9 @@ public @interface Edit {
     @Transient
     CheckboxType checkboxType() default @CheckboxType;
 
+    @Match("#item.type().toString()=='DIVIDE'")
+    DivideType divideType() default @DivideType;
+
     @Match("#item.type().toString()=='CODE_EDITOR'")
     CodeEditorType codeEditType() default @CodeEditorType(language = "text");
 

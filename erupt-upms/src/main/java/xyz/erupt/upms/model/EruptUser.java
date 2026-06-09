@@ -149,7 +149,9 @@ public class EruptUser extends LookerSelf {
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "Password", type = EditType.DIVIDE)
+            edit = @Edit(title = "Password", type = EditType.DIVIDE,
+                    divideType = @DivideType(fields = {"passwordA", "passwordB", "isMd5"})
+            )
     )
     private String pwdDivide;
 
@@ -157,13 +159,13 @@ public class EruptUser extends LookerSelf {
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "Password", readonly = @Readonly(add = false))
+            edit = @Edit(title = "Password", readonly = @Readonly(add = false), type = EditType.PASSWORD)
     )
     private String passwordA;
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "Confirm Password", readonly = @Readonly(add = false))
+            edit = @Edit(title = "Confirm Password", readonly = @Readonly(add = false), type = EditType.PASSWORD)
     )
     private String passwordB;
 
