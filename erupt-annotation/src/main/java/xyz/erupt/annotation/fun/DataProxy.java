@@ -53,6 +53,10 @@ public interface DataProxy<@Comment("Erupt object") MODEL> extends MetaProxy<MOD
     default void afterFetch(@Comment("query result") Collection<Map<String, Object>> list) {
     }
 
+    @Comment("Custom rendered HTML content; the returned HTML will be displayed in the view")
+    default String extraContent(List<Condition> conditions, Collection<Map<String, Object>> list) {
+        return null;
+    }
 
     @Comment("Add data behavior; can be used for initialization and similar operations")
     default void addBehavior(MODEL model) {
@@ -96,10 +100,6 @@ public interface DataProxy<@Comment("Erupt object") MODEL> extends MetaProxy<MOD
         return null;
     }
 
-    @Comment("Custom rendered HTML content; the returned HTML will be displayed in the view")
-    default String extraContent(List<Condition> conditions) {
-        return null;
-    }
 
     @Comment("Form view: called before rendering. Load data into model from your own source.")
     default void formViewBehavior(MODEL model) {
