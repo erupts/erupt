@@ -111,7 +111,7 @@ public @interface Edit {
     CheckboxType checkboxType() default @CheckboxType;
 
     @Match("#item.type().toString()=='GROUP'")
-    GroupType groupType() default @GroupType;
+    GroupType groupType() default @GroupType(fields = {});
 
     @Match("#item.type().toString()=='CODE_EDITOR'")
     CodeEditorType codeEditType() default @CodeEditorType(language = "text");

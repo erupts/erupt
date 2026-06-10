@@ -16,11 +16,13 @@ Query Item,查询项,查詢項,Query Item,Élément de requête,クエリ項目,
 Field Sort,字段排序,字段排序,Field Sort,Tri des champs,フィールドソート,필드 정렬,Сортировка полей,Ordenar campos,Feldsortierung,Ordenação de campos,Urutan Bidang,ترتيب الحقول
 Required,是否必填,是否必填,Required,Obligatoire,必須,필수,Обязательно,Obligatorio,Erforderlich,Obrigatório,Wajib,مطلوب
 Visible,是否显示,是否顯示,Visible,Visible,表示,표시,Видимый,Visible,Sichtbar,Visível,Terlihat,مرئي
+Auto Detect,自动识别,自動識別,Auto Detect,Détection automatique,自動検出,자동 감지,Автоопределение,Detección automática,Automatisch erkennen,Deteção automática,Deteksi Otomatis,اكتشاف تلقائي
 Text Input,文本输入,文本輸入,Text Input,Entrée de texte,テキスト入力,텍스트 입력,Текстовый ввод,Entrada de texto,Texteingabe,Entrada de texto,Input Teks,إدخال نصي
 Password Input,密码输入,密碼輸入,Password Input,Mot de passe,パスワード入力,비밀번호 입력,Ввод пароля,Entrada de contraseña,Passworteingabe,Entrada de senha,Input Kata Sandi,إدخال كلمة المرور
 Textarea,文本域,文本域,Textarea,Zone de texte,テキストエリア,텍스트 영역,Текстовое поле,Área de texto,Textbereich,Área de texto,Area Teks,منطقة نص
 Rich Text Editor,富文本编辑器,富文本編輯器,Rich Text Editor,Éditeur de texte enrichi,リッチテキストエディタ,리치 텍스트 에디터,Редактор форматированного текста,Editor de texto enriquecido,Rich-Text-Editor,Editor de texto rico,Editor Teks Kaya,محرر نص غني
 Code Editor,代码编辑器,代碼編輯器,Code Editor,Éditeur de code,コードエディタ,코드 에디터,Редактор кода,Editor de código,Code-Editor,Editor de código,Editor Kode,محرر الكود
+Markdown Editor,Markdown编辑器,Markdown編輯器,Markdown Editor,Éditeur Markdown,Markdownエディタ,Markdown 에디터,Редактор Markdown,Editor Markdown,Markdown-Editor,Editor Markdown,Editor Markdown,محرر Markdown
 Color Picker,颜色选择器,颜色選擇器,Color Picker,Sélecteur de couleurs,カラーピッカー,색상 선택기,Выбор цвета,Selector de color,Farbauswahl,Seletor de cores,Pemilih Warna,منتقي الألوان
 Number Input,数字输入,数字輸入,Number Input,Entrée numérique,数値入力,숫자 입력,Числовой ввод,Entrada de número,Zahleneingabe,Entrada de número,Input Angka,إدخال رقمي
 Slider,滑块,滑塊,Slider,Curseur,スライダー,슬라이더,Ползунок,Deslizador,Schiebelegler,Controle deslizante,Geser,منزلق
@@ -33,12 +35,15 @@ Month,月,月,Month,Mois,月,월,Месяц,Mes,Monat,Mês,Bulan,شهر
 Year,年,年,Year,Année,年,년,Год,Año,Jahr,Ano,Tahun,سنة
 Switch,开关,開關,Switch,Commutateur,スイッチ,스위치,Переключатель,Interruptor,Schalter,Interruptor,Saklar,مفتاح
 Dropdown,下拉选择,下拉選擇,Dropdown,Liste déroulante,ドロップダウン,ドロップダウン,Выпадающий список,Menú desplegable,Dropdown,Lista suspensa,Menu Tarik-turun,قائمة منسدلة
+Multi Select,多选下拉,多選下拉,Multi Select,Sélection multiple (dropdown),複数選択(ドロップダウン),다중 선택(드롭다운),Множественный выбор (список),Selección múltiple (desplegable),Mehrfachauswahl (Dropdown),Seleção múltipla (lista),Pilihan Ganda (Dropdown),اختيار متعدد (قائمة)
 Tags Selector,标签选择器,標籤選擇器,Tags Selector,Sélecteur de balises,タグセレクタ,태그 선택기,Выбор тегов,Selector de etiquetas,Tags-Auswahl,Seletor de tags,Pemilih Tag,منتقي العلامات
 Attachment,附件,附件,Attachment,Pièce jointe,添付ファイル,첨부 파일,Вложение,Adjunto,Anhang,Anexo,Lampiran,مرفق
 Image,图片,圖片,Image,Image,画像,이미지,Изображение,Imagen,Bild,Imagem,Gambar,صورة
 Auto Complete,自动完成,自動完成,Auto Complete,Saisie automatique,自動補完,자동 완성,Автозаполнение,Autocompletar,Autovervollständigung,Autocompletar,Lengkapi Otomatis,إكمال تلقائي
 Map,地图,地圖,Map,Carte,地図,지도,Карта,Mapa,Karte,Mapa,Peta,خريطة
+Signature Pad,签名板,簽名板,Signature Pad,Bloc de signature,署名パッド,서명 패드,Панель подписи,Panel de firma,Signaturfeld,Painel de assinatura,Papan Tanda Tangan,لوحة التوقيع
 Divider,分割线,分割線,Divider,Séparateur,分割線,구분선,Разделитель,Divisor,Trennlinie,Divisor,Pembagi,فاصل
+Field Group,字段分组,字段分組,Field Group,Groupe de champs,フィールドグループ,필드 그룹,Группа полей,Grupo de campos,Feldgruppe,Grupo de campos,Grup Bidang,مجموعة الحقول
 One-to-One Add,一对一添加,一對一添加,One-to-One Add,Ajout un à un,1对1追加,일대일 추가,Добавление один-к-одному,Agregar uno a uno,Eins-zu-eins hinzufügen,Adicionar um para um,Tambah Satu-ke-Satu,إضافة واحد لواحد
 Tree Reference,树引用,樹引用,Tree Reference,Référence d'arbre,ツリー参照,트리 참조,Древовидная ссылка,Referencia de árbol,Baumreferenz,Referência de árvore,Referensi Pohon,مرجع شجرة
 Table Reference,表格引用,表格引用,Table Reference,Référence de tableau,テーブル参照,テーブル参照,Табличная ссылка,Referencia de tabla,Tabellenreferenz,Referência de tabela,Referensi Tabel,مرجع جدول

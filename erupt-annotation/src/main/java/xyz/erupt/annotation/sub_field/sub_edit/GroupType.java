@@ -9,7 +9,7 @@ import xyz.erupt.annotation.config.Comment;
 public @interface GroupType {
 
     @Comment("Field names to be grouped")
-    String[] fields() default {};
+    String[] fields();
 
     @Comment("Whether the group is initially collapsed")
     boolean collapsed() default false;
