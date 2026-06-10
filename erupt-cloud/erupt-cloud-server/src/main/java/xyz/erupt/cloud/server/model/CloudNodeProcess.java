@@ -27,7 +27,7 @@ import java.util.function.Function;
  */
 @Component
 @Slf4j
-public class CloudNodeProcess implements DataProxy<CloudNode>, TagsFetchHandler, Tpl.TplHandler {
+public class CloudNodeProcess implements DataProxy<CloudNode>, TagsFetchHandler<CloudNode>, Tpl.TplHandler {
 
     @Resource
     private NodeManager nodeManager;
@@ -85,7 +85,7 @@ public class CloudNodeProcess implements DataProxy<CloudNode>, TagsFetchHandler,
     }
 
     @Override
-    public List<String> fetchTags(String[] params) {
+    public List<String> fetchTags(CloudNode cloudNode, String[] params) {
         return eruptDao.lambdaQuery(EruptUserVo.class).listSelect(EruptUserVo::getName);
     }
 

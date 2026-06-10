@@ -164,11 +164,6 @@ public class EruptUtil {
         return map;
     }
 
-    @SneakyThrows
-    public static Map<String, Object> generateEruptDataViewMap(EruptModel eruptModel, Object obj) {
-        return null;
-    }
-
     public static Map<String, String> getChoiceMap(EruptModel eruptModel, Edit edit) {
         Map<String, String> choiceMap = new LinkedHashMap<>();
         getChoiceList(eruptModel, edit).forEach(vl -> choiceMap.put(vl.getValue(), vl.getLabel()));
@@ -192,16 +187,16 @@ public class EruptUtil {
         return vls;
     }
 
-    public static List<VLModel> getChoiceListFilter(EruptModel eruptModel, Edit edit, Map<String, Object> formData) {
+    public static List<VLModel> getChoiceListFilter(EruptModel eruptModel, Edit edit, Object data) {
         List<VLModel> vls = new ArrayList<>();
         if (edit.type() == EditType.CHOICE) {
             vls.addAll(Stream.of(edit.choiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.color(), vl.disable())).toList());
             Stream.of(edit.choiceType().fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
-                    Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetchFilter(formData, edit.choiceType().fetchHandlerParams())).ifPresent(vls::addAll));
+                    Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetchFilter(data, edit.choiceType().fetchHandlerParams())).ifPresent(vls::addAll));
         } else if (edit.type() == EditType.MULTI_CHOICE) {
             vls.addAll(Stream.of(edit.multiChoiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.color(), vl.disable())).toList());
             Stream.of(edit.multiChoiceType().fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
-                    Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetchFilter(formData, edit.multiChoiceType().fetchHandlerParams())).ifPresent(vls::addAll));
+                    Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetchFilter(data, edit.multiChoiceType().fetchHandlerParams())).ifPresent(vls::addAll));
         }
         if (eruptModel.isI18n()) {
             vls.forEach(vl -> vl.setLabel(I18nTranslate.$translate(vl.getLabel())));
@@ -209,10 +204,10 @@ public class EruptUtil {
         return vls;
     }
 
-    public static List<String> getTagList(TagsType tagsType) {
+    public static List<String> getTagList(TagsType tagsType, Object data) {
         List<String> tags = new ArrayList<>(Arrays.asList(tagsType.tags()));
         Stream.of(tagsType.fetchHandler()).filter(clazz -> !clazz.isInterface())
-                .forEach(clazz -> tags.addAll(EruptSpringUtil.getBean(clazz).fetchTags(tagsType.fetchHandlerParams())));
+                .forEach(clazz -> tags.addAll(EruptSpringUtil.getBean(clazz).fetchTags(data, tagsType.fetchHandlerParams())));
         return tags;
     }
 

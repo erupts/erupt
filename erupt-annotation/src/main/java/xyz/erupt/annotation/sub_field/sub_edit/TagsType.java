@@ -24,7 +24,6 @@ public @interface TagsType {
     @Comment("This configuration is accessible from fetchHandler")
     String[] fetchHandlerParams() default {};
 
-    @Transient
     @Comment("Dynamically fetched list of selectable tags")
     Class<? extends TagsFetchHandler>[] fetchHandler() default {};
 }

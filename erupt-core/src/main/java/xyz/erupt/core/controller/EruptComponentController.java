@@ -1,11 +1,13 @@
 package xyz.erupt.core.controller;
 
+import com.google.gson.JsonObject;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.sub_edit.AutoCompleteType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -34,7 +36,7 @@ public class EruptComponentController {
      *
      * @param field    Auto-fill component fields
      * @param val      The value of the input box
-     * @param formData Complete form object
+     * @param data     Erupt form object
      * @return Association results
      */
     @PostMapping("/auto-complete/{erupt}/{field}")
@@ -42,14 +44,16 @@ public class EruptComponentController {
     public List<Object> autoCompleteValue(@PathVariable("erupt") String eruptName,
                                           @PathVariable("field") String field,
                                           @RequestParam("val") String val,
-                                          @RequestBody(required = false) Map<String, Object> formData) {
-        EruptFieldModel fieldModel = EruptCoreService.getErupt(eruptName).getEruptFieldMap().get(field);
+                                          @RequestBody JsonObject data) {
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
+        Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
         AutoCompleteType autoCompleteType = fieldModel.getEruptField().edit().autoCompleteType();
         if (val.length() < autoCompleteType.triggerLength()) {
             throw new EruptWebApiRuntimeException("char length must >= " + autoCompleteType.triggerLength());
         }
         try {
-            return EruptSpringUtil.getBean(autoCompleteType.handler()).completeHandler(formData, val, autoCompleteType.param());
+            return EruptSpringUtil.getBean(autoCompleteType.handler()).completeHandler(o, val, autoCompleteType.param());
         } catch (Exception e) {
             throw new EruptApiErrorTip(e.getMessage(), EruptApiModel.PromptWay.MESSAGE);
         }
@@ -69,10 +73,11 @@ public class EruptComponentController {
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<VLModel> choiceFilter(@PathVariable("erupt") String eruptName,
                                       @PathVariable("field") String field,
-                                      @RequestBody Map<String, Object> formData) {
+                                      @RequestBody JsonObject data) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
-        return EruptUtil.getChoiceListFilter(eruptModel, fieldModel.getEruptField().edit(), formData);
+        Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
+        return EruptUtil.getChoiceListFilter(eruptModel, fieldModel.getEruptField().edit(), o);
     }
 
     @GetMapping("/choice-trigger/{erupt}/{field}")
@@ -91,12 +96,16 @@ public class EruptComponentController {
     }
 
     //Gets the TAGS component data
-    @GetMapping("/tags-item/{erupt}/{field}")
+    @PostMapping("/tags-item/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<String> tagsItem(@PathVariable("erupt") String eruptName,
-                                 @PathVariable("field") String field) {
-        EruptFieldModel fieldModel = EruptCoreService.getErupt(eruptName).getEruptFieldMap().get(field);
-        return EruptUtil.getTagList(fieldModel.getEruptField().edit().tagsType());
+                                 @PathVariable("field") String field,
+                                 @RequestBody JsonObject data
+    ) {
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
+        Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
+        return EruptUtil.getTagList(fieldModel.getEruptField().edit().tagsType(), o);
     }
 
     //Gets the CodeEdit component hint data

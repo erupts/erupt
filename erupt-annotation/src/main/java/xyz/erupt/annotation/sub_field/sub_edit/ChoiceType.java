@@ -24,7 +24,6 @@ public @interface ChoiceType {
     @Comment("Accessible by the fetchHandler interface")
     String[] fetchHandlerParams() default {};
 
-    @Transient
     @Comment("Dynamically fetched dropdown list")
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
 
@@ -37,9 +36,6 @@ public @interface ChoiceType {
     @Comment("Action triggered when a selection is made")
     @Match("#item.trigger().getSimpleName() != 'ChoiceTrigger'")
     Class<? extends ChoiceTrigger> trigger() default ChoiceTrigger.class;
-
-    @Comment("When enabled, the dropdown list will be re-fetched during edit and similar operations")
-    boolean anewFetch() default false;
 
     //Linkage capability
     @Comment("Linkage capability; dependent field name")

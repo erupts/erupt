@@ -6,8 +6,8 @@ import java.util.List;
  * @author YuePeng
  * date 2019-07-25.
  */
-public interface TagsFetchHandler {
+public interface TagsFetchHandler<MODEL> {
 
-    List<String> fetchTags(String[] params);
+    List<String> fetchTags(MODEL model, String[] params);
 
 }

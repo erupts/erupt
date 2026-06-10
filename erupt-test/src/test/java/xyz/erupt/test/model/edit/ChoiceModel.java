@@ -73,8 +73,8 @@ public class ChoiceModel extends BaseModel {
             views = @View(title = "Category"),
             edit = @Edit(title = "Category", type = EditType.CHOICE,
                     choiceType = @ChoiceType(
-                            fetchHandler = {TestChoiceFetchHandler.class},
-                            anewFetch = true))
+                            fetchHandler = {TestChoiceFetchHandler.class}
+                    ))
     )
     private String category;
 }
