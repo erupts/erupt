@@ -111,7 +111,7 @@ public class CloudNode extends MetaModelUpdateVo {
     @EruptField(
             views = @View(title = "Duty", sortable = true),
             edit = @Edit(title = "Duty", type = EditType.TAGS,
-                    tagsType = @TagsType(fetchHandler = CloudNodeProcess.class), notNull = true)
+                    tagsType = @TagsType(fetchHandler = CloudNodeProcess.class))
     )
     private String duty;
 
