@@ -114,6 +114,14 @@ public class EruptUser extends LookerSelf {
     )
     private EruptMenu eruptMenu;
 
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Organization", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"eruptOrg", "eruptPost", "headOrg", "divisionOrg"})
+            )
+    )
+    private String orgGroup;
+
     @ManyToOne
     @EruptField(
             views = @View(title = "Org", column = "name"),
@@ -190,6 +198,14 @@ public class EruptUser extends LookerSelf {
 
     @Column(length = 20)
     private String encryptType;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Security", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"expireDate", "whiteIp"}, collapsed = true)
+            )
+    )
+    private String securityGroup;
 
     @EruptField(
             views = @View(title = "Account Expiry", sortable = true),
