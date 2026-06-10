@@ -24,7 +24,7 @@
 set -euo pipefail
 
 # ---------- config ----------
-CODE_DIR="${CODE_DIR:-$HOME/code}"
+CODE_DIR="${CODE_DIR:-$HOME/git}"
 MAIN_REPO="${MAIN_REPO:-erupt}"
 ERUPT_GROUP="${ERUPT_GROUP:-xyz.erupt}"
 VERSIONS_PLUGIN="${VERSIONS_PLUGIN:-org.codehaus.mojo:versions-maven-plugin:2.16.2}"
