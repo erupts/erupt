@@ -146,14 +146,13 @@ public class EruptUser extends LookerSelf {
     )
     private Set<Long> divisionOrg;
 
-
     @Transient
     @EruptField(
-            edit = @Edit(title = "Password", type = EditType.DIVIDE,
-                    divideType = @DivideType(fields = {"passwordA", "passwordB", "isMd5"})
+            edit = @Edit(title = "Password", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"passwordA", "passwordB", "isMd5"})
             )
     )
-    private String pwdDivide;
+    private String pwdGroup;
 
     private String password;
 

@@ -62,8 +62,10 @@ public enum EditType {
     MAP,
     @EditTypeMapping(desc = "Custom HTML template", allowType = {JavaTypeEnum.String}, excelOperator = false)
     TPL,
-    @EditTypeMapping(mapping = DivideType.class, desc = "Horizontal divider with description", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
+    @EditTypeMapping(desc = "Horizontal divider with description", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     DIVIDE,
+    @EditTypeMapping(mapping = GroupType.class, desc = "Field group", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
+    GROUP,
     @EditTypeMapping(desc = "Hidden", allowType = {JavaTypeEnum.any}, excelOperator = false)
     HIDDEN,
     @EditTypeMapping(desc = "Empty (still occupies component space)", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
