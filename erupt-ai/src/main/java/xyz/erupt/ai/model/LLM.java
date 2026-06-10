@@ -3,6 +3,7 @@ package xyz.erupt.ai.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.ai.core.LlmConfig;
@@ -84,6 +85,14 @@ public class LLM extends MetaModelUpdateVo {
             edit = @Edit(title = "API Key")
     )
     private String apiKey;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Advanced", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"maxContext", "config", "remark"}, collapsed = true)
+            )
+    )
+    private String advancedGroup;
 
     @EruptField(
             views = @View(title = "Context Memory Rounds"),
