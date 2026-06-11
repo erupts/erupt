@@ -2,7 +2,6 @@ package xyz.erupt.ai.service;
 
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
-import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
@@ -89,15 +88,14 @@ public class LLMService {
                 }
             }
         }
-        if (null != llmAgent) {
-            // Agent
-            if (null == llmAgent.getPromptHandler()) {
-                messages.add(SystemMessage.from(llmAgent.getPrompt()));
-            } else {
-                messages.add(SystemMessage.from(EruptSpringUtil.getBeanByPath(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt())));
-            }
-        }
         return messages;
+    }
+
+    @SneakyThrows
+    public String resolveAgentPrompt(LLMAgent llmAgent) {
+        if (null == llmAgent) return null;
+        if (null == llmAgent.getPromptHandler()) return llmAgent.getPrompt();
+        return EruptSpringUtil.getBeanByPath(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt());
     }
 
     @Async
@@ -105,14 +103,16 @@ public class LLMService {
     @SneakyThrows
     public void sendSse(MetaContext metaContext, Boolean autoToolCall, LLMAgent llmAgent, SseEmitter emitter,
                         LlmCore llm, LLM llmModel, AiChatMessage chatMessage,
-                        String userMessage,List<ChatMessage> chatContext) {
+                        String userMessage, List<ChatMessage> chatContext, String contextPrompt) {
         try {
             MetaContext.set(metaContext);
             LlmRequest llmRequest = llmModel.toLlmRequest();
             if (null != llmAgent) {
                 llmAgent.mergeToLLmRequest(llmModel);
+                llmRequest.setAgentPrompt(resolveAgentPrompt(llmAgent));
             }
             llmRequest.setAutoCallTool(autoToolCall);
+            llmRequest.setContextPrompt(contextPrompt);
             List<ToolCallRecord> toolCallList = new ArrayList<>();
             llm.chatSse(llmRequest, userMessage, chatContext, it -> {
                 if (null != it.getToolResult()) {

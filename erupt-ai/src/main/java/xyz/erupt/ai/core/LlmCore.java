@@ -87,6 +87,12 @@ public abstract class LlmCore {
             if (rolePrompt != null && !rolePrompt.isBlank()) {
                 systemPrompt.append("\n\n").append(rolePrompt);
             }
+            if (llmRequest.getAgentPrompt() != null && !llmRequest.getAgentPrompt().isBlank()) {
+                systemPrompt.append("\n\n").append(llmRequest.getAgentPrompt());
+            }
+            if (llmRequest.getContextPrompt() != null && !llmRequest.getContextPrompt().isBlank()) {
+                systemPrompt.append("\n\n").append(llmRequest.getContextPrompt());
+            }
             return systemPrompt.toString();
         });
         if (llmRequest.getAutoCallTool()) {

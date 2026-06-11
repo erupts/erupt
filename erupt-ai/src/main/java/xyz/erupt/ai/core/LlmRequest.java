@@ -30,4 +30,8 @@ public class LlmRequest {
 
     private ResponseFormat responseFormat = ResponseFormat.text;
 
+    private String agentPrompt;
+
+    private String contextPrompt;
+
 }

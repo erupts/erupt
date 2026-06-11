@@ -57,7 +57,8 @@ public class ChatController {
                            @RequestParam String message,
                            @RequestParam(required = false, defaultValue = "true") Boolean autoToolCall,
                            @RequestParam(required = false) Long llmId,
-                           @RequestParam(required = false) Long agentId
+                           @RequestParam(required = false) Long agentId,
+                           @RequestParam(required = false) String contextPrompt
     ) {
         LLM llmModel;
         if (llmId == null) {
@@ -92,7 +93,7 @@ public class ChatController {
                 llmAgent = eruptDao.find(LLMAgent.class, agentId);
             }
             llmService.sendSse(MetaContext.get(), autoToolCall, llmAgent, emitter, llm, llmModel, chatMessage,
-                    message, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()));
+                    message, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()), contextPrompt);
         }
 
         return emitter;
