@@ -16,7 +16,7 @@
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>17</java.version>
         <langchain4j.version>1.14.1</langchain4j.version>
-        <spring.boot.version>3.5.14</spring.boot.version>
+        <spring.boot.version>3.5.15</spring.boot.version>
     </properties>
 
     <modules>
