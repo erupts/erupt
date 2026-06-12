@@ -300,7 +300,7 @@ Claw shares the same Role-based Tool security as AI Harness — only whitelisted
 
 ---
 
-> 📌 **Core modules are permanently free and open source** — `erupt-core` / `erupt-annotation` / `erupt-web` / `erupt-jpa` / `erupt-upms` / `erupt-ai` and other core modules are licensed under Apache 2.0 forever — **no License restrictions · no project-count limits · no commercial restrictions** (see the [governance commitment →](./GOVERNANCE.md)). The commercial modules below are optional enterprise extensions that evolve independently from the open-source core.
+> 📌 **Core modules are permanently free and open source** — `erupt-core` / `erupt-annotation` / `erupt-web` / `erupt-jpa` / `erupt-upms` / `erupt-ai` and other core modules are licensed under Apache 2.0 forever — **no License restrictions · no project-count limits · no commercial restrictions** (see the [governance commitment →](./.github/GOVERNANCE.md)). The commercial modules below are optional enterprise extensions that evolve independently from the open-source core.
 
 ## 🔌 Commercial extension modules
 
@@ -323,7 +323,7 @@ Beyond the open-source core, 4 enterprise-grade modules are available — source
 
 Erupt is a free and open-source project. We welcome anyone to contribute — submitting code, reporting bugs, sharing ideas, or sharing your use cases. Blog posts and social-media coverage are equally welcome.
 
-To contribute code, please read our [contribution guidelines](./CONTRIBUTING.md) first, then open an [Issue](https://github.com/erupts/erupt/issues) or [Pull Request](https://github.com/erupts/erupt/pulls) on GitHub.
+To contribute code, please read our [contribution guidelines](./.github/CONTRIBUTING.md) first, then open an [Issue](https://github.com/erupts/erupt/issues) or [Pull Request](https://github.com/erupts/erupt/pulls) on GitHub.
 
 **Thanks to the following contributors:**
 

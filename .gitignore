@@ -37,6 +37,7 @@ build/
 
 # project
 .erupt
-*/.DS_Store
+.DS_Store
+.xcodemap/
 *.db
 .claude/settings.local.json
