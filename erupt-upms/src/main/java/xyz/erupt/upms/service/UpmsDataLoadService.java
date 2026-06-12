@@ -104,7 +104,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
                 if (eruptDao.lambdaQuery(EruptUser.class).eq(EruptUser::getIsAdmin, true).list().isEmpty()) {
                     EruptUser eruptUser = new EruptUser();
                     eruptUser.setIsAdmin(true);
-                    eruptUser.setIsMd5(true);
+                    eruptUser.setEncrypt(true);
                     eruptUser.setStatus(true);
                     eruptUser.setCreateTime(new Date());
                     eruptUser.setAccount(eruptUpmsProp.getDefaultAccount());

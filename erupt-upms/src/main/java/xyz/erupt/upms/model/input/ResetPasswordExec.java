@@ -29,8 +29,8 @@ public class ResetPasswordExec implements OperationHandler<EruptUser, ResetPassw
         EruptUser eruptUser = data.get(0);
         if (resetPassword.getPassword().equals(resetPassword.getPassword2())) {
             eruptUser.setResetPwdTime(null);
-            eruptUser.setIsMd5(resetPassword.getIsMd5());
-            if (resetPassword.getIsMd5()) {
+            eruptUser.setEncrypt(resetPassword.getEncrypt());
+            if (resetPassword.getEncrypt()) {
                 String salt = MD5Util.generateSalt();
                 eruptUser.setSalt(salt);
                 eruptUser.setEncryptType(EncryptType.SHA512);
@@ -49,7 +49,7 @@ public class ResetPasswordExec implements OperationHandler<EruptUser, ResetPassw
 
     @Override
     public ResetPassword eruptFormValue(List<EruptUser> data, ResetPassword resetPassword, String[] param) {
-        resetPassword.setIsMd5(data.get(0).getIsMd5());
+        resetPassword.setEncrypt(data.get(0).getEncrypt());
         return OperationHandler.super.eruptFormValue(data, resetPassword, param);
     }
 }

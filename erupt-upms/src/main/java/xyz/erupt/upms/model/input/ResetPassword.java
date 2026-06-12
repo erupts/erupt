@@ -39,6 +39,6 @@ public class ResetPassword extends BaseModel {
                     )
             )
     )
-    private Boolean isMd5 = true;
+    private Boolean encrypt = true;
 
 }

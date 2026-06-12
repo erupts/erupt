@@ -110,7 +110,7 @@ public class EruptUserService {
     }
 
     public boolean checkPwd(EruptUser eruptUser, String inputPwd) {
-        return checkPwd(eruptUser.getPassword(), eruptUser.getIsMd5(), eruptUser.getSalt(), eruptUser.getEncryptType(), inputPwd);
+        return checkPwd(eruptUser.getPassword(), eruptUser.getEncrypt(), eruptUser.getSalt(), eruptUser.getEncryptType(), inputPwd);
     }
 
     public boolean checkPwd(String storedPassword, Boolean encrypt, String salt, String encryptType, String inputPwd) {
@@ -171,7 +171,7 @@ public class EruptUserService {
             if (checkPwd(eruptUser, newPwd)) {
                 return EruptApiModel.errorMessageApi(I18nTranslate.$translate("upms.change_pwd_same_as_old"));
             }
-            if (eruptUser.getIsMd5()) {
+            if (eruptUser.getEncrypt()) {
                 String salt = MD5Util.generateSalt();
                 eruptUser.setSalt(salt);
                 eruptUser.setEncryptType(EncryptType.SHA512);

@@ -42,7 +42,7 @@ public class EruptUserDataProxy implements DataProxy<EruptUser> {
             throw new EruptApiErrorTip(EruptApiModel.Status.WARNING, I18nTranslate.$translate("upms.pwd_required"), EruptApiModel.PromptWay.MESSAGE);
         }
         if (eruptUser.getPasswordA().equals(eruptUser.getPasswordB())) {
-            if (eruptUser.getIsMd5()) {
+            if (eruptUser.getEncrypt()) {
                 String salt = MD5Util.generateSalt();
                 eruptUser.setSalt(salt);
                 eruptUser.setEncryptType(EncryptType.SHA512);

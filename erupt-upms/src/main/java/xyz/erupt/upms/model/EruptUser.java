@@ -157,7 +157,7 @@ public class EruptUser extends LookerSelf {
     @Transient
     @EruptField(
             edit = @Edit(title = "Password", type = EditType.GROUP,
-                    groupType = @GroupType(fields = {"passwordA", "passwordB", "isMd5"})
+                    groupType = @GroupType(fields = {"passwordA", "passwordB", "encrypt"})
             )
     )
     private String pwdGroup;
@@ -181,6 +181,7 @@ public class EruptUser extends LookerSelf {
     )
     private Date resetPwdTime;
 
+    @Column(name = "is_md5")
     @EruptField(
             edit = @Edit(
                     title = "Encrypt", type = EditType.BOOLEAN, notNull = true,
@@ -191,7 +192,7 @@ public class EruptUser extends LookerSelf {
                     )
             )
     )
-    private Boolean isMd5 = true;
+    private Boolean encrypt = true;
 
     @Column(length = 64)
     private String salt;
