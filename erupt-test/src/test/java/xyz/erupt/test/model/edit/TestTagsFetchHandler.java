@@ -6,10 +6,10 @@ import xyz.erupt.annotation.fun.TagsFetchHandler;
 import java.util.List;
 
 @Component
-public class TestTagsFetchHandler implements TagsFetchHandler {
+public class TestTagsFetchHandler implements TagsFetchHandler<TagsModel> {
 
     @Override
-    public List<String> fetchTags(String[] params) {
+    public List<String> fetchTags(TagsModel tagsModel, String[] params) {
         return List.of("Spring", "Erupt", "JPA", "Redis", "Kafka", "Docker");
     }
 }
