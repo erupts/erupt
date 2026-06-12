@@ -33,6 +33,11 @@ public class DesignerClassFactory {
 
     private static final String PKG = "xyz.erupt.designer.runtime.";
 
+    // 设计器伪装类位于独立运行时包，以此区分真实 @Erupt 类
+    public static boolean designerClass(Class<?> clazz) {
+        return clazz.getName().startsWith(PKG);
+    }
+
     public static Class<?> build(DesignerForm form) {
         DynamicType.Builder<?> builder = new ByteBuddy()
                 .subclass(BaseModel.class)

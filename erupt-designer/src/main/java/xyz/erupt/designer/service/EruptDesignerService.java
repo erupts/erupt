@@ -91,6 +91,7 @@ public class EruptDesignerService {
         if (null == form.getErupt() || !form.getErupt().has("name")) {
             throw new EruptWebApiRuntimeException("请填写功能名称");
         }
+        this.checkNotRealErupt(entity.getClassName());
         EruptModel model = this.toEruptModel(form);
         entity.setConfig(GsonFactory.getGson().toJson(form));
         entity.setName(form.getErupt().get("name").getAsString());
@@ -112,11 +113,20 @@ public class EruptDesignerService {
         for (DesignerEntity entity : eruptDao.lambdaQuery(DesignerEntity.class).list()) {
             if (null == entity.getConfig() || entity.getConfig().isEmpty()) continue;
             try {
+                this.checkNotRealErupt(entity.getClassName());
                 EruptCoreService.registerErupt(this.toEruptModel(
                         GsonFactory.getGson().fromJson(entity.getConfig(), DesignerForm.class)));
             } catch (Exception e) {
                 log.warn("Designer model register failed: {} → {}", entity.getClassName(), e.getMessage());
             }
+        }
+    }
+
+    // 设计模型只允许注册到空位或覆盖自身，绝不允许顶掉真实 @Erupt 类
+    private void checkNotRealErupt(String className) {
+        EruptModel existing = EruptCoreService.getErupt(className);
+        if (null != existing && !DesignerClassFactory.designerClass(existing.getClazz())) {
+            throw new EruptWebApiRuntimeException("已存在同名的真实 Erupt 类，禁止覆盖：" + className);
         }
     }
 

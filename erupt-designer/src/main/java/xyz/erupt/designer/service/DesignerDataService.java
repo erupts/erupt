@@ -6,6 +6,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.query.Condition;
+import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
@@ -52,7 +53,7 @@ public class DesignerDataService implements IEruptDataService {
                 .filter(it -> this.match(it, eruptQuery.getConditions())).collect(Collectors.toList());
         if (null != page.getSort() && !page.getSort().isEmpty()) {
             Comparator<Map<String, Object>> comparator = null;
-            for (xyz.erupt.annotation.query.Sort sort : page.getSort()) {
+            for (Sort sort : page.getSort()) {
                 Comparator<Map<String, Object>> c = Comparator.comparing(it ->
                         (Comparable) it.get(sort.getField()), Comparator.nullsFirst(Comparator.naturalOrder()));
                 if (sort.getDirection() == xyz.erupt.annotation.query.Direction.DESC) c = c.reversed();

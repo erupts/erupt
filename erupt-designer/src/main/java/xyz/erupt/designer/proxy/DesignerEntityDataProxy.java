@@ -32,13 +32,13 @@ public class DesignerEntityDataProxy implements DataProxy<DesignerEntity> {
         if (null != EruptCoreService.getErupt(entity.getClassName())) {
             throw new EruptWebApiRuntimeException("模型名已存在：" + entity.getClassName());
         }
+        if (eruptDao.lambdaQuery(DesignerEntity.class)
+                .eq(DesignerEntity::getClassName, entity.getClassName()).count() > 0) {
+            throw new EruptWebApiRuntimeException("类名已被其他设计占用：" + entity.getClassName());
+        }
         entity.setUpdateTime(new Date());
     }
 
-    @Override
-    public void beforeUpdate(DesignerEntity entity) {
-        entity.setUpdateTime(new Date());
-    }
 
     @Override
     public void afterDelete(DesignerEntity entity) {
