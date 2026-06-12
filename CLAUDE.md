@@ -47,10 +47,10 @@ The project is a multi-module Maven project (~25 modules):
 |-------|---------|
 | Core | `erupt-annotation` (annotation declarations), `erupt-core` (runtime engine), `erupt-toolkit` |
 | Data | `erupt-data/erupt-jpa` (default), `erupt-data/erupt-mongodb` |
-| Features | `erupt-upms` (user/permissions), `erupt-security`, `erupt-excel`, `erupt-web` (frontend assets), `erupt-websocket`, `erupt-notice`, `erupt-print`, `erupt-terminal` |
+| Features | `erupt-upms` (user/permissions), `erupt-security`, `erupt-excel`, `erupt-web` (frontend assets) |
 | Templates | `erupt-tpl/{ant-design,element-ui,element-plus,amis}` |
 | AI | `erupt-ai` (LLM + MCP integration via langchain4j), `erupt-ai-claw` (turn-key admin agent) |
-| Extra | `erupt-extra/{erupt-job,erupt-generator,erupt-monitor,erupt-magic-api}` |
+| Extra | `erupt-extra/{erupt-job,erupt-generator,erupt-designer,erupt-monitor,erupt-magic-api,erupt-websocket,erupt-notice,erupt-print,erupt-terminal}` |
 | Cloud | `erupt-cloud/{erupt-cloud-server,erupt-cloud-node,erupt-cloud-node-jpa}` |
 | Dev | `erupt-test` (JUnit 5 + H2), `erupt-sample` (runnable demo) |
 

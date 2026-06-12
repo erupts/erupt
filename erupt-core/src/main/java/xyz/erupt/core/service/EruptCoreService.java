@@ -42,6 +42,9 @@ public class EruptCoreService implements ApplicationRunner {
 
     private static final List<EruptModel> ERUPT_LIST = new ArrayList<>();
 
+    // Erupts registered at runtime by model instance (e.g. erupt-designer), not rebuildable from class
+    private static final Set<String> RUNTIME_ERUPTS = new HashSet<>();
+
     private static final List<String> MODULES = new ArrayList<>();
 
     public static List<String> getModules() {
@@ -54,7 +57,7 @@ public class EruptCoreService implements ApplicationRunner {
 
     public static EruptModel getErupt(String eruptName) {
         if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
-            if (null == ERUPTS.get(eruptName)) {
+            if (null == ERUPTS.get(eruptName) || RUNTIME_ERUPTS.contains(eruptName.toLowerCase())) {
                 return ERUPTS.get(eruptName);
             } else {
                 return EruptCoreService.initEruptModel(ERUPTS.get(eruptName).getClazz(), false);
@@ -62,6 +65,21 @@ public class EruptCoreService implements ApplicationRunner {
         } else {
             return ERUPTS.get(eruptName);
         }
+    }
+
+    // Dynamically register a prebuilt erupt model (replace if exists), effective without restart
+    public static void registerErupt(EruptModel eruptModel) {
+        unregisterErupt(eruptModel.getEruptName());
+        ERUPTS.put(eruptModel.getEruptName(), eruptModel);
+        ERUPT_LIST.add(eruptModel);
+        RUNTIME_ERUPTS.add(eruptModel.getEruptName().toLowerCase());
+    }
+
+    // Remove a runtime-registered erupt by name
+    public static void unregisterErupt(String eruptName) {
+        ERUPTS.remove(eruptName);
+        ERUPT_LIST.removeIf(model -> model.getEruptName().equalsIgnoreCase(eruptName));
+        RUNTIME_ERUPTS.remove(eruptName.toLowerCase());
     }
 
     // Dynamically register an erupt class

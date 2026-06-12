@@ -34,10 +34,6 @@
         <module>erupt-upms</module>
         <module>erupt-security</module>
         <module>erupt-admin</module>
-        <module>erupt-websocket</module>
-        <module>erupt-notice</module>
-        <module>erupt-print</module>
-        <module>erupt-terminal</module>
         <module>erupt-web</module>
 
         <!-- Template -->
@@ -54,8 +50,13 @@
         <!-- Extra -->
         <module>erupt-extra/erupt-job</module>
         <module>erupt-extra/erupt-generator</module>
+        <module>erupt-extra/erupt-designer</module>
         <module>erupt-extra/erupt-monitor</module>
         <module>erupt-extra/erupt-magic-api</module>
+        <module>erupt-extra/erupt-websocket</module>
+        <module>erupt-extra/erupt-notice</module>
+        <module>erupt-extra/erupt-print</module>
+        <module>erupt-extra/erupt-terminal</module>
 
         <!-- Cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>

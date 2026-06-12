@@ -1,0 +1,64 @@
+package xyz.erupt.designer.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.view.EruptBuildModel;
+import xyz.erupt.core.view.R;
+import xyz.erupt.designer.model.DesignerEntity;
+import xyz.erupt.designer.model.DesignerForm;
+import xyz.erupt.designer.service.EruptCodeService;
+import xyz.erupt.designer.service.EruptDesignerService;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author YuePeng
+ * date 2026-06-12
+ */
+@RestController
+@RequestMapping(EruptRestPath.ERUPT_API + "/designer")
+@RequiredArgsConstructor
+public class EruptDesignerController {
+
+    private final EruptDesignerService eruptDesignerService;
+
+    private final EruptCodeService eruptCodeService;
+
+    // design json → disguised annotation EruptModel, rendered by the standard erupt frontend pipeline
+    @PostMapping("/preview")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public EruptBuildModel preview(@RequestBody DesignerForm designerForm) {
+        return eruptDesignerService.preview(designerForm);
+    }
+
+    // load persisted design config of a model
+    @GetMapping("/config/{className}")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public R<Map<String, String>> config(@PathVariable("className") String className) {
+        DesignerEntity entity = eruptDesignerService.loadDesign(className);
+        Map<String, String> result = new HashMap<>();
+        result.put("className", entity.getClassName());
+        result.put("name", entity.getName());
+        result.put("config", entity.getConfig());
+        return R.ok(result);
+    }
+
+    // save design config and register the runtime erupt model, effective without restart
+    @PostMapping("/publish/{className}")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public R<Void> publish(@PathVariable("className") String className, @RequestBody DesignerForm designerForm) {
+        eruptDesignerService.publish(className, designerForm);
+        return R.ok();
+    }
+
+    // export annotation source code to graduate the design to hand-written development
+    @PostMapping("/java-code")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public R<String> javaCode(@RequestBody DesignerForm designerForm) {
+        return R.ok(eruptCodeService.generate(designerForm));
+    }
+
+}
