@@ -26,6 +26,9 @@
         <module>erupt-excel</module>
         <module>erupt-toolkit</module>
 
+        <!-- Designer -->
+        <module>erupt-designer</module>
+
         <!-- Data -->
         <module>erupt-data/erupt-jpa</module>
         <module>erupt-data/erupt-mongodb</module>
@@ -50,7 +53,6 @@
         <!-- Extra -->
         <module>erupt-extra/erupt-job</module>
         <module>erupt-extra/erupt-generator</module>
-        <module>erupt-extra/erupt-designer</module>
         <module>erupt-extra/erupt-monitor</module>
         <module>erupt-extra/erupt-magic-api</module>
         <module>erupt-extra/erupt-websocket</module>
