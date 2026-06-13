@@ -10,6 +10,7 @@ import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.designer.model.DesignerForm;
 import xyz.erupt.jpa.model.BaseModel;
 
+import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
@@ -33,6 +34,9 @@ public class DesignerClassFactory {
 
     private static final String PKG = "xyz.erupt.designer.runtime.";
 
+    // 引入 erupt-flow 模块时此注解可加载，设计器模型即自动具备审批流能力（注解直接烙进字节码，供 flow 反射识别）
+    private static final Class<? extends Annotation> ERUPT_FLOW = loadOptionalAnnotation("xyz.erupt.flow.annotation.EruptFlow");
+
     // 设计器伪装类位于独立运行时包，以此区分真实 @Erupt 类
     public static boolean designerClass(Class<?> clazz) {
         return clazz.getName().startsWith(PKG);
@@ -44,11 +48,24 @@ public class DesignerClassFactory {
                 .name(PKG + form.getClassName())
                 .annotateType(AnnotationDescription.Builder.ofType(EruptDataProcessor.class)
                         .define("value", DATA_PROCESSOR).build());
+        // 未引入 erupt-flow 时 ERUPT_FLOW 为 null，跳过即可，不产生硬依赖
+        if (null != ERUPT_FLOW) {
+            builder = builder.annotateType(AnnotationDescription.Builder.ofType(ERUPT_FLOW).build());
+        }
         for (DesignerForm.DesignerField field : form.getFields()) {
             builder = builder.defineField(field.getFieldName(), javaType(field), Visibility.PRIVATE);
         }
         return builder.make().load(DesignerClassFactory.class.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER)
                 .getLoaded();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Class<? extends Annotation> loadOptionalAnnotation(String className) {
+        try {
+            return (Class<? extends Annotation>) Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
     }
 
     private static Class<?> javaType(DesignerForm.DesignerField field) {
