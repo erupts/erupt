@@ -7,7 +7,7 @@ import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.annotation.EruptDataProcessor;
-import xyz.erupt.designer.model.DesignerForm;
+import xyz.erupt.designer.pojo.DesignerForm;
 import xyz.erupt.jpa.model.BaseModel;
 
 import java.lang.annotation.Annotation;
@@ -76,18 +76,13 @@ public class DesignerClassFactory {
             case NUMBER:
             case SLIDER:
             case RATE:
-                switch (Optional.ofNullable(field.getFieldType()).orElse("Integer")) {
-                    case "Long":
-                        return Long.class;
-                    case "Double":
-                        return Double.class;
-                    case "Float":
-                        return Float.class;
-                    case "BigDecimal":
-                        return BigDecimal.class;
-                    default:
-                        return Integer.class;
-                }
+                return switch (Optional.ofNullable(field.getFieldType()).orElse("Integer")) {
+                    case "Long" -> Long.class;
+                    case "Double" -> Double.class;
+                    case "Float" -> Float.class;
+                    case "BigDecimal" -> BigDecimal.class;
+                    default -> Integer.class;
+                };
             case BOOLEAN:
                 return Boolean.class;
             case DATE:

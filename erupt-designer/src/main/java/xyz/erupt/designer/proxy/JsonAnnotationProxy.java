@@ -31,7 +31,6 @@ public class JsonAnnotationProxy {
         });
     }
 
-    @SuppressWarnings("unchecked")
     private static Object toValue(Class<?> rt, JsonElement je, MethodInvocation invocation) throws Throwable {
         if (Class.class.isAssignableFrom(rt)) return invocation.proceed();
         if (rt.isAnnotation()) {
@@ -44,7 +43,7 @@ public class JsonAnnotationProxy {
             Annotation prototype = null;
             if (ct.isAnnotation() && !arr.isEmpty()) {
                 Object[] template = (Object[]) invocation.proceed();
-                if (template.length == 0) {
+                if (template != null && template.length == 0) {
                     throw new EruptWebApiRuntimeException("No annotation prototype in template: "
                             + invocation.getMethod().getName());
                 }

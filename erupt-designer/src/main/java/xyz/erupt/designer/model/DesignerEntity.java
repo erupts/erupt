@@ -32,11 +32,11 @@ import java.util.Date;
 @Entity
 @Table(name = "e_designer")
 @Erupt(
-        name = "表单设计",
+        name = "Form Designer",
         orderBy = "updateTime desc",
         dataProxy = DesignerEntityDataProxy.class,
         rowOperation = @RowOperation(
-                title = "设计",
+                title = "Design",
                 icon = "fa fa-paint-brush",
                 mode = RowOperation.Mode.SINGLE,
                 type = RowOperation.Type.TPL,
@@ -49,8 +49,8 @@ public class DesignerEntity extends HyperModelUpdateVo {
 
     @Column(name = "class_name", length = 64, unique = true, nullable = false)
     @EruptField(
-            views = @View(title = "类名"),
-            edit = @Edit(title = "类名", notNull = true, search = @Search,
+            views = @View(title = "Class Name"),
+            edit = @Edit(title = "Class Name", notNull = true, search = @Search,
                     inputType = @InputType(length = 64),
                     readonly = @Readonly(add = false)
             )
@@ -58,23 +58,23 @@ public class DesignerEntity extends HyperModelUpdateVo {
     private String className;
 
     @EruptField(
-            views = @View(title = "功能名称"),
-            edit = @Edit(title = "功能名称", notNull = true, search = @Search)
+            views = @View(title = "Name"),
+            edit = @Edit(title = "Name", notNull = true, search = @Search)
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "备注"),
-            edit = @Edit(title = "备注", type = EditType.TEXTAREA)
+            views = @View(title = "Remark"),
+            edit = @Edit(title = "Remark", type = EditType.TEXTAREA)
     )
     private String remark;
 
     @EruptField(
-            views = @View(title = "发布时间", type = xyz.erupt.annotation.sub_field.ViewType.DATE_TIME)
+            views = @View(title = "Publish Time", type = xyz.erupt.annotation.sub_field.ViewType.DATE_TIME)
     )
     private Date publishTime;
 
-    // 设计器 JSON 配置，由设计器页面维护
+    // designer JSON config, maintained by the designer page
     @Column(length = AnnotationConst.REMARK_LENGTH)
     private String config;
 

@@ -1,4 +1,4 @@
-package xyz.erupt.designer.model;
+package xyz.erupt.designer.pojo;
 
 import com.google.gson.JsonObject;
 import lombok.Getter;

@@ -132,45 +132,24 @@ public class DesignerDataService implements IEruptDataService {
         for (Condition condition : conditions) {
             Object value = row.get(condition.getKey());
             Object target = condition.getValue();
-            boolean pass;
-            switch (condition.getExpression()) {
-                case LIKE:
-                    pass = null != value && value.toString().contains(target.toString());
-                    break;
-                case EQ:
-                    pass = this.eq(value, target);
-                    break;
-                case NEQ:
-                    pass = !this.eq(value, target);
-                    break;
-                case IN:
-                    pass = target instanceof Collection && ((Collection<?>) target).stream().anyMatch(it -> this.eq(value, it));
-                    break;
-                case RANGE:
+            boolean pass = switch (condition.getExpression()) {
+                case LIKE -> null != value && value.toString().contains(target.toString());
+                case EQ -> this.eq(value, target);
+                case NEQ -> !this.eq(value, target);
+                case IN ->
+                        target instanceof Collection && ((Collection<?>) target).stream().anyMatch(it -> this.eq(value, it));
+                case RANGE -> {
                     List<?> range = (List<?>) target;
-                    pass = this.compare(value, range.get(0)) >= 0 && this.compare(value, range.get(1)) <= 0;
-                    break;
-                case GT:
-                    pass = this.compare(value, target) > 0;
-                    break;
-                case GTE:
-                    pass = this.compare(value, target) >= 0;
-                    break;
-                case LT:
-                    pass = this.compare(value, target) < 0;
-                    break;
-                case LTE:
-                    pass = this.compare(value, target) <= 0;
-                    break;
-                case NULL:
-                    pass = null == value;
-                    break;
-                case NOT_NULL:
-                    pass = null != value;
-                    break;
-                default:
-                    pass = true;
-            }
+                    yield this.compare(value, range.get(0)) >= 0 && this.compare(value, range.get(1)) <= 0;
+                }
+                case GT -> this.compare(value, target) > 0;
+                case GTE -> this.compare(value, target) >= 0;
+                case LT -> this.compare(value, target) < 0;
+                case LTE -> this.compare(value, target) <= 0;
+                case NULL -> null == value;
+                case NOT_NULL -> null != value;
+                default -> true;
+            };
             if (!pass) return false;
         }
         return true;

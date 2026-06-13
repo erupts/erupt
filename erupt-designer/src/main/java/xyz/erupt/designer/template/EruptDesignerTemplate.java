@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.Vis;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
@@ -25,7 +26,9 @@ import java.util.Set;
  */
 @Getter
 @Setter
-@Erupt(name = "EruptDesignerTemplate")
+// vis prototype: JsonAnnotationProxy expands the designer's vis[] array from this single template
+// element (same mechanism as views / vl). Without it, a non-empty vis throws "No annotation prototype".
+@Erupt(name = "EruptDesignerTemplate", vis = @Vis(title = ""))
 public class EruptDesignerTemplate {
 
     @EruptField(

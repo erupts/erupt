@@ -8,7 +8,7 @@ import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 import xyz.erupt.designer.model.DesignerEntity;
-import xyz.erupt.designer.model.DesignerForm;
+import xyz.erupt.designer.pojo.DesignerForm;
 import xyz.erupt.designer.service.EruptCodeService;
 import xyz.erupt.designer.service.EruptDesignerService;
 import xyz.erupt.upms.annotation.EruptMenuAuth;
@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EruptDesignerController {
 
-    // 设计器全部接口统一以 DesignerEntity 菜单作为权限标识
     public static final String MENU_AUTH = "DesignerEntity";
 
     private final EruptDesignerService eruptDesignerService;

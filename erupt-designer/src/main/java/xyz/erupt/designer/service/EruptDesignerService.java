@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedCaseInsensitiveMap;
+import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -19,10 +21,11 @@ import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.designer.model.DesignerEntity;
-import xyz.erupt.designer.model.DesignerForm;
+import xyz.erupt.designer.pojo.DesignerForm;
 import xyz.erupt.designer.proxy.JsonAnnotationProxy;
 import xyz.erupt.designer.template.EruptDesignerTemplate;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -52,18 +55,22 @@ public class EruptDesignerService {
         EruptModel model = new EruptModel(EruptDesignerTemplate.class);
         model.setClazz(dynamicClass);
         model.setEruptName(Optional.ofNullable(form.getClassName()).orElse(EruptDesignerTemplate.class.getSimpleName()));
-        Optional.ofNullable(form.getErupt()).ifPresent(it -> model.setErupt(JsonAnnotationProxy.proxy(model.getErupt(), it)));
+        Optional.ofNullable(form.getErupt()).ifPresent(it -> {
+            if (!it.has(LambdaSee.method(Erupt::vis))) it.add(LambdaSee.method(Erupt::vis), new JsonArray());
+            model.setErupt(JsonAnnotationProxy.proxy(model.getErupt(), it));
+        });
         model.setEruptFieldModels(new ArrayList<>());
         model.setEruptFieldMap(new LinkedCaseInsensitiveMap<>());
         // BaseModel.id 自带 @EruptField，保证主键参与序列化与表单回显
         EruptFieldModel idField = new EruptFieldModel(xyz.erupt.jpa.model.BaseModel.class.getDeclaredField("id"), false);
         model.getEruptFieldModels().add(idField);
         model.getEruptFieldMap().put(idField.getFieldName(), idField);
+        String editTypeMember = LambdaSee.method(Edit::type);
         int sort = 0;
         for (DesignerForm.DesignerField designerField : Optional.ofNullable(form.getFields()).orElse(new ArrayList<>())) {
             EditType editType = Optional.ofNullable(designerField.getEdit())
-                    .filter(it -> it.has("type"))
-                    .map(it -> EditType.valueOf(it.get("type").getAsString())).orElse(EditType.INPUT);
+                    .filter(it -> it.has(editTypeMember))
+                    .map(it -> EditType.valueOf(it.get(editTypeMember).getAsString())).orElse(EditType.INPUT);
             EruptFieldModel fieldModel = new EruptFieldModel(this.templateField(editType), false);
             fieldModel.setField(dynamicClass.getDeclaredField(designerField.getFieldName()));
             fieldModel.setFieldName(designerField.getFieldName());
@@ -71,9 +78,9 @@ public class EruptDesignerService {
             JsonObject fieldJson = new JsonObject();
             JsonArray views = new JsonArray();
             Optional.ofNullable(designerField.getView()).ifPresent(views::add);
-            fieldJson.add("views", views);
-            Optional.ofNullable(designerField.getEdit()).ifPresent(it -> fieldJson.add("edit", it));
-            fieldJson.addProperty("sort", sort += 10);
+            fieldJson.add(LambdaSee.method(EruptField::views), views);
+            Optional.ofNullable(designerField.getEdit()).ifPresent(it -> fieldJson.add(LambdaSee.method(EruptField::edit), it));
+            fieldJson.addProperty(LambdaSee.method(EruptField::sort), sort += 10);
             fieldModel.setEruptField(JsonAnnotationProxy.proxy(fieldModel.getEruptField(), fieldJson));
             model.getEruptFieldModels().add(fieldModel);
             model.getEruptFieldMap().put(fieldModel.getFieldName(), fieldModel);
@@ -86,15 +93,16 @@ public class EruptDesignerService {
     public void publish(String className, DesignerForm form) {
         DesignerEntity entity = eruptDao.lambdaQuery(DesignerEntity.class)
                 .eq(DesignerEntity::getClassName, className).one();
-        if (null == entity) throw new EruptWebApiRuntimeException("模型不存在：" + className);
+        if (null == entity) throw new EruptWebApiRuntimeException("Model does not exist: " + className);
         form.setClassName(entity.getClassName());
-        if (null == form.getErupt() || !form.getErupt().has("name")) {
-            throw new EruptWebApiRuntimeException("请填写功能名称");
+        String eruptNameMember = LambdaSee.method(Erupt::name);
+        if (null == form.getErupt() || !form.getErupt().has(eruptNameMember)) {
+            throw new EruptWebApiRuntimeException("Please enter the function name");
         }
         this.checkNotRealErupt(entity.getClassName());
         EruptModel model = this.toEruptModel(form);
         entity.setConfig(GsonFactory.getGson().toJson(form));
-        entity.setName(form.getErupt().get("name").getAsString());
+        entity.setName(form.getErupt().get(eruptNameMember).getAsString());
         entity.setPublishTime(new Date());
         entity.setUpdateTime(new Date());
         eruptDao.merge(entity);
@@ -104,7 +112,7 @@ public class EruptDesignerService {
     public DesignerEntity loadDesign(String className) {
         DesignerEntity entity = eruptDao.lambdaQuery(DesignerEntity.class)
                 .eq(DesignerEntity::getClassName, className).one();
-        if (null == entity) throw new EruptWebApiRuntimeException("模型不存在：" + className);
+        if (null == entity) throw new EruptWebApiRuntimeException("Model does not exist: " + className);
         return entity;
     }
 
@@ -126,7 +134,7 @@ public class EruptDesignerService {
     private void checkNotRealErupt(String className) {
         EruptModel existing = EruptCoreService.getErupt(className);
         if (null != existing && !DesignerClassFactory.designerClass(existing.getClazz())) {
-            throw new EruptWebApiRuntimeException("已存在同名的真实 Erupt 类，禁止覆盖：" + className);
+            throw new EruptWebApiRuntimeException("A real Erupt class with the same name already exists: " + className);
         }
     }
 
@@ -147,27 +155,15 @@ public class EruptDesignerService {
 
     @SneakyThrows
     private Field templateField(EditType editType) {
-        switch (editType) {
-            case NUMBER:
-            case SLIDER:
-            case RATE:
-                return EruptDesignerTemplate.class.getDeclaredField("numberValue");
-            case BOOLEAN:
-                return EruptDesignerTemplate.class.getDeclaredField("boolValue");
-            case DATE:
-                return EruptDesignerTemplate.class.getDeclaredField("dateValue");
-            case REFERENCE_TREE:
-            case REFERENCE_TABLE:
-            case COMBINE:
-                return EruptDesignerTemplate.class.getDeclaredField("refValue");
-            case CHECKBOX:
-            case TAB_TREE:
-            case TAB_TABLE_ADD:
-            case TAB_TABLE_REFER:
-                return EruptDesignerTemplate.class.getDeclaredField("setValue");
-            default:
-                return EruptDesignerTemplate.class.getDeclaredField("stringValue");
-        }
+        String fieldName = switch (editType) {
+            case NUMBER, SLIDER, RATE -> LambdaSee.field(EruptDesignerTemplate::getNumberValue);
+            case BOOLEAN -> LambdaSee.field(EruptDesignerTemplate::getBoolValue);
+            case DATE -> LambdaSee.field(EruptDesignerTemplate::getDateValue);
+            case REFERENCE_TREE, REFERENCE_TABLE, COMBINE -> LambdaSee.field(EruptDesignerTemplate::getRefValue);
+            case CHECKBOX, TAB_TREE, TAB_TABLE_ADD, TAB_TABLE_REFER -> LambdaSee.field(EruptDesignerTemplate::getSetValue);
+            default -> LambdaSee.field(EruptDesignerTemplate::getStringValue);
+        };
+        return EruptDesignerTemplate.class.getDeclaredField(fieldName);
     }
 
     private String fieldReturnName(DesignerForm.DesignerField field, EditType editType) {
@@ -177,9 +173,9 @@ public class EruptDesignerService {
             case RATE:
                 return EruptFieldModel.NUMBER;
             case BOOLEAN:
-                return "Boolean";
+                return Boolean.class.getSimpleName();
             case DATE:
-                return "Date";
+                return Date.class.getSimpleName();
             case REFERENCE_TREE:
             case REFERENCE_TABLE:
             case COMBINE:
@@ -192,7 +188,7 @@ public class EruptDesignerService {
                         .orElseThrow(() -> new EruptWebApiRuntimeException(
                                 "Field '" + field.getFieldName() + "' requires a registered erupt class to link"));
             default:
-                return "String";
+                return String.class.getSimpleName();
         }
     }
 

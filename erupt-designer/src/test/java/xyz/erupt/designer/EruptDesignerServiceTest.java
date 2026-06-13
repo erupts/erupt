@@ -8,7 +8,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
-import xyz.erupt.designer.model.DesignerForm;
+import xyz.erupt.designer.pojo.DesignerForm;
 import xyz.erupt.designer.service.EruptDesignerService;
 
 import java.util.Arrays;
