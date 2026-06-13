@@ -60,8 +60,8 @@ public class EruptCodeService {
                 .addAnnotation(Entity.class)
                 .addAnnotation(Getter.class)
                 .addAnnotation(Setter.class);
-        String extendsModel = Optional.ofNullable(form.getExtendsModel()).orElse("");
-        if (!extendsModel.isEmpty()) type.superclass(ClassName.get("xyz.erupt.jpa.model", extendsModel));
+        String extendsModel = Optional.ofNullable(form.getExtendsModel()).filter(it -> !it.isEmpty()).orElse("BaseModel");
+        type.superclass(ClassName.get("xyz.erupt.jpa.model", extendsModel));
         for (DesignerForm.DesignerField field : Optional.ofNullable(form.getFields()).orElse(new ArrayList<>())) {
             type.addField(fieldSpec(form, field));
         }

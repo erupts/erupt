@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptBuildModel;
-import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.KV;
 import xyz.erupt.core.view.R;
 import xyz.erupt.designer.model.DesignerEntity;
 import xyz.erupt.designer.pojo.DesignerForm;
@@ -63,9 +63,10 @@ public class EruptDesignerController {
     // registered erupt model names, as options for reference field linking
     @GetMapping("/erupts")
     @EruptMenuAuth(MENU_AUTH)
-    public R<List<String>> erupts() {
+    public R<List<KV<String, String>>> erupts() {
         return R.ok(EruptCoreService.getErupts().stream()
-                .map(EruptModel::getEruptName).sorted().collect(Collectors.toList()));
+                .map(it -> new KV<>(it.getEruptName(), it.getErupt().name()))
+                .collect(Collectors.toList()));
     }
 
     // export annotation source code to graduate the design to hand-written development
