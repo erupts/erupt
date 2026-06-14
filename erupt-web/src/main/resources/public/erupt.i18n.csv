@@ -470,3 +470,134 @@ tree.delete_has_children,存在子节点不允许直接删除,存在子節點不
 global.select_all,全选,全選,Select All,Tout sélectionner,すべて選択,전체 선택,Выбрать все,Seleccionar todo,Alle auswählen,Selecionar tudo,Pilih semua,تحديد الكل
 login.remember_account,记住账号,記住帳號,Remember account,Se souvenir du compte,アカウントを記憶,계정 기억,Запомнить аккаунт,Recordar cuenta,Konto merken,Lembrar conta,Ingat akun,تذكر الحساب
 login.caps_lock,大写锁定已开启,大寫鎖定已開啟,Caps Lock is on,Verrouillage majuscule activé,Caps Lockがオンです,Caps Lock 켜짐,Caps Lock включён,Bloqueo de mayúsculas activado,Feststelltaste ist aktiv,Caps Lock ativado,Caps Lock aktif,مفتاح الأحرف الكبيرة مفعّل
+designer.title,表单设计器,表單設計器,Form Designer,Form Designer,フォームデザイナー,Form Designer,Form Designer,Form Designer,Form Designer,Form Designer,Form Designer,Form Designer
+designer.erupt_name,功能名称,功能名稱,Form Name,Form Name,機能名,Form Name,Form Name,Form Name,Form Name,Form Name,Form Name,Form Name
+designer.clear,清空,清空,Clear,Clear,クリア,Clear,Clear,Clear,Clear,Clear,Clear,Clear
+designer.preview,实时预览,即時預覽,Live Preview,Live Preview,プレビュー,Live Preview,Live Preview,Live Preview,Live Preview,Live Preview,Live Preview,Live Preview
+designer.generate_code,生成代码,生成代碼,Generate Code,Generate Code,コード生成,Generate Code,Generate Code,Generate Code,Generate Code,Generate Code,Generate Code,Generate Code
+designer.clear_confirm,确定要清空当前设计吗？,確定要清空當前設計嗎？,Clear current design?,Clear current design?,現在のデザインをクリアしますか？,Clear current design?,Clear current design?,Clear current design?,Clear current design?,Clear current design?,Clear current design?,Clear current design?
+designer.copy_success,已复制到剪贴板,已複製到剪貼板,Copied to clipboard,Copied to clipboard,クリップボードにコピーしました,Copied to clipboard,Copied to clipboard,Copied to clipboard,Copied to clipboard,Copied to clipboard,Copied to clipboard,Copied to clipboard
+designer.empty_canvas,从左侧拖入或点击组件开始设计,從左側拖入或點擊組件開始設計,Drag or click components on the left to start,Drag or click components on the left to start,左側からドラッグまたはクリックして開始,Drag or click components on the left to start,Drag or click components on the left to start,Drag or click components on the left to start,Drag or click components on the left to start,Drag or click components on the left to start,Drag or click components on the left to start,Drag or click components on the left to start
+designer.field_name_invalid,字段名不合法,字段名不合法,Invalid field name,Invalid field name,フィールド名が不正です,Invalid field name,Invalid field name,Invalid field name,Invalid field name,Invalid field name,Invalid field name,Invalid field name
+designer.field_name_duplicate,字段名重复,字段名重複,Duplicate field name,Nom de champ en double,フィールド名が重複,필드명 중복,Дублирующееся имя поля,Nombre de campo duplicado,Doppelter Feldname,Nome de campo duplicado,Nama bidang duplikat,اسم الحقل مكرر
+designer.link_erupt_required,请选择关联模型,請選擇關聯模型,Select a linked model,Sélectionnez un modèle lié,関連モデルを選択してください,연결 모델을 선택하세요,Выберите связанную модель,Seleccione un modelo vinculado,Verknüpftes Modell wählen,Selecione um modelo vinculado,Pilih model tertaut,اختر النموذج المرتبط
+designer.vis.title_required,视图名称不能为空,視圖名稱不能為空,View name is required,Le nom de la vue est requis,ビュー名は必須です,뷰 이름은 필수입니다,Название представления обязательно,El nombre de la vista es obligatorio,Ansichtsname erforderlich,Nome da visualização obrigatório,Nama tampilan wajib diisi,اسم العرض مطلوب
+designer.vis.gantt_date_required,甘特视图需配置开始和结束日期字段,甘特視圖需配置開始和結束日期字段,Gantt view needs start and end date fields,La vue gantt nécessite des champs de date de début et de fin,ガントビューには開始日と終了日のフィールドが必要です,간트 뷰에는 시작일과 종료일 필드가 필요합니다,Для гантта нужны поля даты начала и окончания,La vista gantt requiere campos de fecha de inicio y fin,Gantt-Ansicht braucht Start- und Enddatumsfelder,A visualização gantt precisa de campos de data inicial e final,Tampilan gantt perlu bidang tanggal mulai dan selesai,يحتاج عرض جانت إلى حقلي تاريخ البدء والانتهاء
+designer.vis.board_group_required,看板视图需配置分组字段,看板視圖需配置分組字段,Board view needs a group field,La vue tableau nécessite un champ de groupe,ボードビューにはグループフィールドが必要です,보드 뷰에는 그룹 필드가 필요합니다,Для доски нужно поле группировки,La vista de tablero requiere un campo de grupo,Board-Ansicht braucht ein Gruppierungsfeld,A visualização de quadro precisa de um campo de grupo,Tampilan papan perlu bidang grup,يحتاج عرض اللوحة إلى حقل تجميع
+designer.vis.calendar_date_required,日历视图需配置日期字段,日曆視圖需配置日期字段,Calendar view needs a date field,La vue calendrier nécessite un champ de date,カレンダービューには日付フィールドが必要です,캘린더 뷰에는 날짜 필드가 필요합니다,Для календаря нужно поле даты,La vista de calendario requiere un campo de fecha,Kalenderansicht braucht ein Datumsfeld,A visualização de calendário precisa de um campo de data,Tampilan kalender perlu bidang tanggal,يحتاج عرض التقويم إلى حقل تاريخ
+designer.tab.field,字段属性,字段屬性,Field,Field,フィールド,Field,Field,Field,Field,Field,Field,Field
+designer.tab.form,表单配置,表單配置,Form,Form,フォーム,Form,Form,Form,Form,Form,Form,Form
+designer.unselected,请先在画布中选择字段,請先在畫布中選擇字段,Select a field in the canvas,Select a field in the canvas,キャンバスでフィールドを選択してください,Select a field in the canvas,Select a field in the canvas,Select a field in the canvas,Select a field in the canvas,Select a field in the canvas,Select a field in the canvas,Select a field in the canvas
+designer.field_name,字段名,字段名,Field Name,Field Name,フィールド名,Field Name,Field Name,Field Name,Field Name,Field Name,Field Name,Field Name
+designer.field_title,标题,標題,Title,Title,タイトル,Title,Title,Title,Title,Title,Title,Title
+designer.placeholder,占位提示,占位提示,Placeholder,Placeholder,プレースホルダー,Placeholder,Placeholder,Placeholder,Placeholder,Placeholder,Placeholder,Placeholder
+designer.field_desc,描述,描述,Description,Description,説明,Description,Description,Description,Description,Description,Description,Description
+designer.link_erupt,关联模型,關聯模型,Linked Erupt,Linked Erupt,関連モデル,Linked Erupt,Linked Erupt,Linked Erupt,Linked Erupt,Linked Erupt,Linked Erupt,Linked Erupt
+designer.link_erupt_hint,已注册的 @Erupt 类名,已註冊的 @Erupt 類名,Registered @Erupt class name,Registered @Erupt class name,登録済みの @Erupt クラス名,Registered @Erupt class name,Registered @Erupt class name,Registered @Erupt class name,Registered @Erupt class name,Registered @Erupt class name,Registered @Erupt class name,Registered @Erupt class name
+designer.not_null,必填,必填,Required,Required,必須,Required,Required,Required,Required,Required,Required,Required
+designer.searchable,支持搜索,支持搜索,Searchable,Searchable,検索可能,Searchable,Searchable,Searchable,Searchable,Searchable,Searchable,Searchable
+designer.sortable,列表可排序,列表可排序,Sortable,Sortable,ソート可能,Sortable,Sortable,Sortable,Sortable,Sortable,Sortable,Sortable
+designer.type_config,类型配置,類型配置,Type Config,Type Config,タイプ設定,Type Config,Type Config,Type Config,Type Config,Type Config,Type Config,Type Config
+designer.full_span,整行显示,整行顯示,Full Span,Full Span,全行表示,Full Span,Full Span,Full Span,Full Span,Full Span,Full Span,Full Span
+designer.min,最小值,最小值,Min,Min,最小値,Min,Min,Min,Min,Min,Min,Min
+designer.max,最大值,最大值,Max,Max,最大値,Max,Max,Max,Max,Max,Max,Max
+designer.step,步长,步長,Step,Step,ステップ,Step,Step,Step,Step,Step,Step,Step
+designer.rate_count,评分总数,評分總數,Star Count,Star Count,星の数,Star Count,Star Count,Star Count,Star Count,Star Count,Star Count,Star Count
+designer.allow_half,允许半星,允許半星,Allow Half,Allow Half,半星を許可,Allow Half,Allow Half,Allow Half,Allow Half,Allow Half,Allow Half,Allow Half
+designer.date_type,日期类型,日期類型,Date Type,Date Type,日付タイプ,Date Type,Date Type,Date Type,Date Type,Date Type,Date Type,Date Type
+designer.true_text,开启文案,開啟文案,True Text,True Text,ON テキスト,True Text,True Text,True Text,True Text,True Text,True Text,True Text
+designer.false_text,关闭文案,關閉文案,False Text,False Text,OFF テキスト,False Text,False Text,False Text,False Text,False Text,False Text,False Text
+designer.options,选项,選項,Options,Options,選択肢,Options,Options,Options,Options,Options,Options,Options
+designer.choice_style,展示形式,展示形式,Style,Style,表示形式,Style,Style,Style,Style,Style,Style,Style
+designer.add_option,添加选项,添加選項,Add Option,Add Option,選択肢を追加,Add Option,Add Option,Add Option,Add Option,Add Option,Add Option,Add Option
+designer.option_value,值,值,Value,Value,値,Value,Value,Value,Value,Value,Value,Value
+designer.option_label,名称,名稱,Label,Label,ラベル,Label,Label,Label,Label,Label,Label,Label
+designer.tags_list,可选标签,可選標籤,Tags,Tags,タグ,Tags,Tags,Tags,Tags,Tags,Tags,Tags
+designer.attachment_type,附件类型,附件類型,Attachment Type,Attachment Type,添付タイプ,Attachment Type,Attachment Type,Attachment Type,Attachment Type,Attachment Type,Attachment Type,Attachment Type
+designer.max_limit,数量上限,數量上限,Max Count,Max Count,最大数,Max Count,Max Count,Max Count,Max Count,Max Count,Max Count,Max Count
+designer.size_limit,大小限制(KB),大小限制(KB),Size Limit(KB),Size Limit(KB),サイズ上限(KB),Size Limit(KB),Size Limit(KB),Size Limit(KB),Size Limit(KB),Size Limit(KB),Size Limit(KB),Size Limit(KB)
+designer.file_types,文件类型,文件類型,File Types,File Types,ファイルタイプ,File Types,File Types,File Types,File Types,File Types,File Types,File Types
+designer.language,语言,語言,Language,Language,言語,Language,Language,Language,Language,Language,Language,Language
+designer.height,高度,高度,Height,Height,高さ,Height,Height,Height,Height,Height,Height,Height
+designer.class_name,类名,類名,Class Name,Class Name,クラス名,Class Name,Class Name,Class Name,Class Name,Class Name,Class Name,Class Name
+designer.order_by,默认排序,預設排序,Default Sort,Tri par défaut,既定ソート,기본 정렬,Сортировка по умолчанию,Orden predeterminado,Standardsortierung,Ordenação padrão,Urutan default,الترتيب الافتراضي
+designer.order_by_placeholder,选择排序字段,選擇排序字段,Select sort field,Champ de tri,ソートフィールド,정렬 필드 선택,Поле сортировки,Campo de orden,Sortierfeld,Campo de ordenação,Pilih bidang urutan,اختر حقل الترتيب
+designer.order_asc,升序,升序,Ascending,Croissant,昇順,오름차순,По возрастанию,Ascendente,Aufsteigend,Ascendente,Naik,تصاعدي
+designer.order_desc,降序,降序,Descending,Décroissant,降順,내림차순,По убыванию,Descendente,Absteigend,Descendente,Turun,تنازلي
+designer.power,操作权限,操作權限,Permissions,Permissions,操作権限,Permissions,Permissions,Permissions,Permissions,Permissions,Permissions,Permissions
+designer.power_add,新增,新增,Add,Add,追加,Add,Add,Add,Add,Add,Add,Add
+designer.power_edit,编辑,編輯,Edit,Edit,編集,Edit,Edit,Edit,Edit,Edit,Edit,Edit
+designer.power_delete,删除,刪除,Delete,Delete,削除,Delete,Delete,Delete,Delete,Delete,Delete,Delete
+designer.power_query,查询,查詢,Query,Query,検索,Query,Query,Query,Query,Query,Query,Query
+designer.power_view,详情,詳情,Details,Details,詳細,Details,Details,Details,Details,Details,Details,Details
+designer.power_export,导出,導出,Export,Export,エクスポート,Export,Export,Export,Export,Export,Export,Export
+designer.power_import,导入,導入,Import,Import,インポート,Import,Import,Import,Import,Import,Import,Import
+designer.group.basic,基础,基礎,Basic,Basic,基本,Basic,Basic,Basic,Basic,Basic,Basic,Basic
+designer.group.choice,选择,選擇,Choice,Choice,選択,Choice,Choice,Choice,Choice,Choice,Choice,Choice
+designer.group.reference,引用,引用,Reference,Reference,参照,Reference,Reference,Reference,Reference,Reference,Reference,Reference
+designer.group.advanced,高级,高級,Advanced,Advanced,高度,Advanced,Advanced,Advanced,Advanced,Advanced,Advanced,Advanced
+designer.group.layout,布局,佈局,Layout,Layout,レイアウト,Layout,Layout,Layout,Layout,Layout,Layout,Layout
+designer.type.input,单行文本,單行文本,Input,Input,テキスト,Input,Input,Input,Input,Input,Input,Input
+designer.type.textarea,多行文本,多行文本,Textarea,Textarea,テキストエリア,Textarea,Textarea,Textarea,Textarea,Textarea,Textarea,Textarea
+designer.type.number,数字,數字,Number,Number,数値,Number,Number,Number,Number,Number,Number,Number
+designer.type.password,密码,密碼,Password,Password,パスワード,Password,Password,Password,Password,Password,Password,Password
+designer.type.boolean,开关,開關,Switch,Switch,スイッチ,Switch,Switch,Switch,Switch,Switch,Switch,Switch
+designer.type.date,日期,日期,Date,Date,日付,Date,Date,Date,Date,Date,Date,Date
+designer.type.slider,滑块,滑塊,Slider,Slider,スライダー,Slider,Slider,Slider,Slider,Slider,Slider,Slider
+designer.type.rate,评分,評分,Rate,Rate,評価,Rate,Rate,Rate,Rate,Rate,Rate,Rate
+designer.type.color,颜色,顏色,Color,Color,色,Color,Color,Color,Color,Color,Color,Color
+designer.type.choice,单选,單選,Choice,Choice,単一選択,Choice,Choice,Choice,Choice,Choice,Choice,Choice
+designer.type.multi_choice,多选,多選,Multi Choice,Multi Choice,複数選択,Multi Choice,Multi Choice,Multi Choice,Multi Choice,Multi Choice,Multi Choice,Multi Choice
+designer.type.tags,标签,標籤,Tags,Tags,タグ,Tags,Tags,Tags,Tags,Tags,Tags,Tags
+designer.type.auto_complete,自动完成,自動完成,Auto Complete,Auto Complete,オートコンプリート,Auto Complete,Auto Complete,Auto Complete,Auto Complete,Auto Complete,Auto Complete,Auto Complete
+designer.type.reference_table,表格引用,表格引用,Ref Table,Ref Table,テーブル参照,Ref Table,Ref Table,Ref Table,Ref Table,Ref Table,Ref Table,Ref Table
+designer.type.reference_tree,树形引用,樹形引用,Ref Tree,Ref Tree,ツリー参照,Ref Tree,Ref Tree,Ref Tree,Ref Tree,Ref Tree,Ref Tree,Ref Tree
+designer.type.checkbox,复选框,複選框,Checkbox,Checkbox,チェックボックス,Checkbox,Checkbox,Checkbox,Checkbox,Checkbox,Checkbox,Checkbox
+designer.type.tab_table_add,子表,子表,Sub Table,Sub Table,サブテーブル,Sub Table,Sub Table,Sub Table,Sub Table,Sub Table,Sub Table,Sub Table
+designer.type.attachment,附件,附件,Attachment,Attachment,添付,Attachment,Attachment,Attachment,Attachment,Attachment,Attachment,Attachment
+designer.type.html_editor,富文本,富文本,Rich Text,Rich Text,リッチテキスト,Rich Text,Rich Text,Rich Text,Rich Text,Rich Text,Rich Text,Rich Text
+designer.type.markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown
+designer.type.code_editor,代码编辑,代碼編輯,Code Editor,Code Editor,コードエディタ,Code Editor,Code Editor,Code Editor,Code Editor,Code Editor,Code Editor,Code Editor
+designer.type.map,地图,地圖,Map,Map,地図,Map,Map,Map,Map,Map,Map,Map
+designer.type.signature,签名,簽名,Signature,Signature,署名,Signature,Signature,Signature,Signature,Signature,Signature,Signature
+designer.type.divide,分割线,分割線,Divider,Divider,区切り線,Divider,Divider,Divider,Divider,Divider,Divider,Divider
+designer.publish,发布,發佈,Publish,Publish,公開,Publish,Publish,Publish,Publish,Publish,Publish,Publish
+designer.publish_success,发布成功，菜单值即模型名，免重启生效,發佈成功，菜單值即模型名，免重啟生效,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed,公開しました。メニュー値はモデル名です（再起動不要）,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed
+designer.unsaved,有未发布的修改,有未發佈的修改,Unpublished changes,Unpublished changes,未公開の変更あり,Unpublished changes,Unpublished changes,Unpublished changes,Unpublished changes,Unpublished changes,Unpublished changes,Unpublished changes
+designer.fields,个字段,個字段,fields,fields,フィールド,fields,fields,fields,fields,fields,fields,fields
+designer.search_component,搜索组件,搜索組件,Search components,Search components,コンポーネント検索,Search components,Search components,Search components,Search components,Search components,Search components,Search components
+designer.type.image,图片,圖片,Image,Image,画像,Image,Image,Image,Image,Image,Image,Image
+designer.type.hidden,隐藏域,隱藏域,Hidden,Hidden,隠しフィールド,Hidden,Hidden,Hidden,Hidden,Hidden,Hidden,Hidden
+designer.type.group,分组,分組,Group,Group,グループ,Group,Group,Group,Group,Group,Group,Group
+designer.type.tab_tree,多选树,多選樹,Tab Tree,Tab Tree,複数選択ツリー,Tab Tree,Tab Tree,Tab Tree,Tab Tree,Tab Tree,Tab Tree,Tab Tree
+designer.type.tab_table_refer,一对多引用,一對多引用,Tab Table Refer,Tab Table Refer,1対多参照,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer
+designer.type.combine,一对一,一對一,Combine,Combine,1対1,Combine,Combine,Combine,Combine,Combine,Combine,Combine
+designer.group_fields,包含字段,包含字段,Fields in group,Fields in group,含まれるフィールド,Fields in group,Fields in group,Fields in group,Fields in group,Fields in group,Fields in group,Fields in group
+designer.collapsed,默认折叠,默認折疊,Collapsed,Collapsed,デフォルトで折りたたむ,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed
+designer.layout,页面布局,頁面佈局,Page Layout,Mise en page,ページレイアウト,페이지 레이아웃,Макет страницы,Diseño de página,Seitenlayout,Layout da página,Tata Letak Halaman,تخطيط الصفحة
+designer.form_size,表单尺寸,表單尺寸,Form Size,Taille du formulaire,フォームサイズ,폼 크기,Размер формы,Tamaño del formulario,Formulargröße,Tamanho do formulário,Ukuran Formulir,حجم النموذج
+designer.page_size,每页条数,每頁條數,Page Size,Taille de page,1ページの件数,페이지당 행 수,Размер страницы,Tamaño de página,Seitengröße,Tamanho da página,Jumlah per Halaman,عدد العناصر في الصفحة
+designer.power_print,打印,列印,Print,Imprimer,印刷,인쇄,Печать,Imprimir,Drucken,Imprimir,Cetak,طباعة
+designer.vis.title,多视图,多視圖,Views,Vues,複数ビュー,다중 뷰,Представления,Vistas,Ansichten,Visualizações,Tampilan,العروض
+designer.vis.hint,在默认表格外配置卡片/看板/甘特/日历等视图,在預設表格外配置卡片/看板/甘特/日曆等視圖,Add card / board / gantt / calendar views beyond the default table,Ajoutez des vues carte / tableau / gantt / calendrier en plus du tableau par défaut,デフォルトのテーブル以外にカード/ボード/ガント/カレンダービューを追加,기본 테이블 외에 카드/보드/간트/캘린더 뷰 추가,Добавьте представления карточек/доски/гантта/календаря помимо таблицы,Añade vistas de tarjeta / tablero / gantt / calendario además de la tabla,Karten-/Board-/Gantt-/Kalenderansichten zusätzlich zur Tabelle,Adicione visualizações de cartão / quadro / gantt / calendário além da tabela,Tambahkan tampilan kartu / papan / gantt / kalender selain tabel,أضف عروض البطاقة/اللوحة/جانت/التقويم إلى جانب الجدول
+designer.vis.add,添加视图,添加視圖,Add View,Ajouter une vue,ビューを追加,뷰 추가,Добавить представление,Añadir vista,Ansicht hinzufügen,Adicionar visualização,Tambah tampilan,إضافة عرض
+designer.vis.default_title,新视图,新視圖,New View,Nouvelle vue,新しいビュー,새 뷰,Новое представление,Nueva vista,Neue Ansicht,Nova visualização,Tampilan baru,عرض جديد
+designer.vis.title_placeholder,视图名称,視圖名稱,View name,Nom de la vue,ビュー名,뷰 이름,Название представления,Nombre de la vista,Ansichtsname,Nome da visualização,Nama tampilan,اسم العرض
+designer.vis.type,视图类型,視圖類型,View Type,Type de vue,ビュータイプ,뷰 유형,Тип представления,Tipo de vista,Ansichtstyp,Tipo de visualização,Jenis tampilan,نوع العرض
+designer.vis.field_visibility,字段范围,字段範圍,Field Scope,Portée des champs,フィールド範囲,필드 범위,Область полей,Ámbito de campos,Feldbereich,Escopo de campos,Cakupan bidang,نطاق الحقول
+designer.vis.include,包含,包含,Include,Inclure,含める,포함,Включить,Incluir,Einschließen,Incluir,Sertakan,تضمين
+designer.vis.exclude,排除,排除,Exclude,Exclure,除外,제외,Исключить,Excluir,Ausschließen,Excluir,Kecualikan,استبعاد
+designer.vis.fields,字段列表,字段列表,Fields,Champs,フィールド,필드,Поля,Campos,Felder,Campos,Bidang,الحقول
+designer.vis.fields_placeholder,选择字段,選擇字段,Select fields,Sélectionner des champs,フィールドを選択,필드 선택,Выберите поля,Seleccionar campos,Felder auswählen,Selecionar campos,Pilih bidang,اختر الحقول
+designer.vis.group_field,分组字段,分組字段,Group Field,Champ de groupe,グループフィールド,그룹 필드,Поле группировки,Campo de grupo,Gruppierungsfeld,Campo de agrupamento,Bidang grup,حقل التجميع
+designer.vis.cover_field,封面字段,封面字段,Cover Field,Champ de couverture,カバーフィールド,커버 필드,Поле обложки,Campo de portada,Coverfeld,Campo de capa,Bidang sampul,حقل الغلاف
+designer.vis.cover_effect,封面效果,封面效果,Cover Effect,Effet de couverture,カバー効果,커버 효과,Эффект обложки,Efecto de portada,Cover-Effekt,Efeito de capa,Efek sampul,تأثير الغلاف
+designer.vis.start_date_field,开始日期字段,開始日期字段,Start Date Field,Champ date de début,開始日フィールド,시작일 필드,Поле даты начала,Campo fecha de inicio,Startdatumsfeld,Campo data de início,Bidang tanggal mulai,حقل تاريخ البدء
+designer.vis.end_date_field,结束日期字段,結束日期字段,End Date Field,Champ date de fin,終了日フィールド,종료일 필드,Поле даты окончания,Campo fecha de fin,Enddatumsfeld,Campo data de término,Bidang tanggal selesai,حقل تاريخ الانتهاء
+designer.vis.progress_field,进度字段,進度字段,Progress Field,Champ de progression,進捗フィールド,진행률 필드,Поле прогресса,Campo de progreso,Fortschrittsfeld,Campo de progresso,Bidang progres,حقل التقدم
+designer.vis.date_field,日期字段,日期字段,Date Field,Champ de date,日付フィールド,날짜 필드,Поле даты,Campo de fecha,Datumsfeld,Campo de data,Bidang tanggal,حقل التاريخ
+designer.vis.color_field,颜色字段,顏色字段,Color Field,Champ de couleur,色フィールド,색상 필드,Поле цвета,Campo de color,Farbfeld,Campo de cor,Bidang warna,حقل اللون
+designer.ref_config,关联配置,關聯配置,Ref Config,Config de référence,関連設定,관련 설정,Настройка связи,Config de referencia,Verknüpfungseinstellungen,Config de referência,Konfigurasi referensi,إعداد الارتباط
+designer.ref_id,主键字段,主鍵字段,ID Field,Champ ID,主キーフィールド,기본키 필드,Поле первичного ключа,Campo ID,ID-Feld,Campo de chave,Field kunci utama,حقل المفتاح الأساسي
+designer.ref_label,显示字段,顯示字段,Label Field,Champ d'affichage,表示フィールド,표시 필드,Поле отображения,Campo de etiqueta,Anzeigefeld,Campo de exibição,Field label,حقل العرض
+designer.ref_pid,父节点字段,父節點字段,Parent ID Field,Champ ID parent,親ノードフィールド,부모 노드 필드,Поле родительского узла,Campo ID padre,Eltern-ID-Feld,Campo de nó pai,Field node induk,حقل العقدة الأب
