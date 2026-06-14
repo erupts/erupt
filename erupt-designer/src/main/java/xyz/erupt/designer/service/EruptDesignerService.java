@@ -10,11 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptTag;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptBuildModel;
@@ -27,6 +29,7 @@ import xyz.erupt.designer.template.EruptDesignerTemplate;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,6 +57,13 @@ public class EruptDesignerService {
         Class<?> dynamicClass = DesignerClassFactory.build(form);
         EruptModel model = new EruptModel(EruptDesignerTemplate.class);
         model.setClazz(dynamicClass);
+        // EruptModel 构造器用模板类扫描 tags，此处补扫动态类，确保 @EruptFlow 等 @EruptTag 注解被识别
+        for (Annotation annotation : dynamicClass.getDeclaredAnnotations()) {
+            if (annotation.annotationType().getAnnotation(EruptTag.class) != null) {
+                model.getTags().put(annotation.annotationType().getSimpleName(),
+                        AnnotationProcess.annotationToJsonByReflect(annotation));
+            }
+        }
         model.setEruptName(Optional.ofNullable(form.getClassName()).orElse(EruptDesignerTemplate.class.getSimpleName()));
         Optional.ofNullable(form.getErupt()).ifPresent(it -> {
             if (!it.has(LambdaSee.method(Erupt::vis))) it.add(LambdaSee.method(Erupt::vis), new JsonArray());

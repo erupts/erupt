@@ -2,6 +2,7 @@ package xyz.erupt.core.controller;
 
 import com.google.gson.JsonObject;
 import org.springframework.web.bind.annotation.*;
+import xyz.erupt.annotation.fun.CodeEditHintHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.sub_edit.AutoCompleteType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
@@ -116,8 +117,8 @@ public class EruptComponentController {
         EruptFieldModel fieldModel = EruptCoreService.getErupt(eruptName).getEruptFieldMap().get(field);
         CodeEditorType codeEditType = fieldModel.getEruptField().edit().codeEditType();
         List<String> hints = new java.util.ArrayList<>(Arrays.stream(codeEditType.hints()).toList());
-        if (!codeEditType.hintHandler().isInterface()) {
-            hints.addAll(EruptSpringUtil.getBean(codeEditType.hintHandler()).hint(codeEditType.hintParams()));
+        for (Class<? extends CodeEditHintHandler> handler : codeEditType.hintHandler()) {
+            hints.addAll(EruptSpringUtil.getBean(handler).hint(codeEditType.hintParams()));
         }
         return hints;
     }

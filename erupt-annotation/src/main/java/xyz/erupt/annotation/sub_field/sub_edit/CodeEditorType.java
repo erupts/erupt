@@ -25,6 +25,6 @@ public @interface CodeEditorType {
     String[] hintParams() default {};
 
     @Comment("Dynamic hint handler class")
-    Class<? extends CodeEditHintHandler> hintHandler() default CodeEditHintHandler.class;
+    Class<? extends CodeEditHintHandler>[] hintHandler() default {};
 
 }
