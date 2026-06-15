@@ -42,10 +42,9 @@ public class Server {
 
     private String runDay; // Running duration
 
-    public Server(Boolean waitCpu) {
+    public Server() {
         SystemInfo si = new SystemInfo();
         OperatingSystem os = si.getOperatingSystem();
-        this.setCpu(new Cpu(si, waitCpu));
         this.setMem(new Mem(si));
         this.setJvm(new Jvm());
         this.setSys(new Sys());

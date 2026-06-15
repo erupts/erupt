@@ -1,15 +1,20 @@
 package xyz.erupt.monitor;
 
+import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.erupt.core.annotation.EruptScan;
+import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.monitor.constant.MonitorConstant;
+import xyz.erupt.monitor.interceptor.HttpStatInterceptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +27,15 @@ import java.util.List;
 @ComponentScan
 @EntityScan
 @EruptScan
-public class EruptMonitorAutoConfiguration implements EruptModule {
+public class EruptMonitorAutoConfiguration implements EruptModule, WebMvcConfigurer {
+
+    @Resource
+    private HttpStatInterceptor httpStatInterceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(httpStatInterceptor).addPathPatterns(EruptRestPath.ERUPT_API + "/**");
+    }
 
     static {
         EruptModuleInvoke.addEruptModule(EruptMonitorAutoConfiguration.class);

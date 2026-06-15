@@ -10,6 +10,7 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.monitor.constant.MonitorConstant;
+import xyz.erupt.monitor.service.CpuSampleService;
 import xyz.erupt.monitor.service.IoSampleService;
 import xyz.erupt.monitor.vo.Platform;
 import xyz.erupt.monitor.vo.Server;
@@ -29,10 +30,14 @@ public class MonitorServerController {
     @Resource
     private IoSampleService ioSampleService;
 
+    @Resource
+    private CpuSampleService cpuSampleService;
+
     @GetMapping("/info")
     @EruptMenuAuth(MonitorConstant.MENU_SERVER)
-    public Server info(Boolean waitCpu) {
-        Server server = new Server(waitCpu);
+    public Server info() {
+        Server server = new Server();
+        server.setCpu(cpuSampleService.sample());
         server.setIo(ioSampleService.sample());
         return server;
     }

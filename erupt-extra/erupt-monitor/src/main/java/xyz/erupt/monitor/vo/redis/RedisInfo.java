@@ -1,6 +1,7 @@
 package xyz.erupt.monitor.vo.redis;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class RedisInfo {
 
     private String version;
