@@ -29,6 +29,11 @@ public class Server {
     private List<Gpu> gpus;
 
     /**
+     * Real-time network / disk IO rate
+     */
+    private Io io;
+
+    /**
      * Disk
      */
     private List<SysFile> sysFiles;

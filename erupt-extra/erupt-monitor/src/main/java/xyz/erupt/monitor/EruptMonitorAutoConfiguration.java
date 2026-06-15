@@ -4,11 +4,12 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.annotation.EruptScan;
+import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
-import xyz.erupt.tpl.service.EruptTplService;
+import xyz.erupt.monitor.constant.MonitorConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +36,12 @@ public class EruptMonitorAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> metaMenus = new ArrayList<>();
-        metaMenus.add(MetaMenu.createRootMenu("monitor", "System Monitoring", "fa fa-bullseye", 10));
-        metaMenus.add(MetaMenu.createSimpleMenu("server.html", "Service Monitoring", "server.html", metaMenus.get(0), 10, EruptTplService.TPL));
-        metaMenus.add(MetaMenu.createSimpleMenu("redis.html", "Cache Monitoring", "redis.html", metaMenus.get(0), 20, EruptTplService.TPL));
+        String router = MenuTypeEnum.ROUTER.getCode();
+        MetaMenu root = MetaMenu.createRootMenu("monitor", "System Monitoring", "fa fa-bullseye", 10);
+        metaMenus.add(root);
+        metaMenus.add(MetaMenu.createSimpleMenu(MonitorConstant.MENU_SERVER, "Service Monitoring", MonitorConstant.MENU_SERVER, root, 10, router));
+        metaMenus.add(MetaMenu.createSimpleMenu(MonitorConstant.MENU_REDIS, "Cache Monitoring", MonitorConstant.MENU_REDIS, root, 20, router));
+        metaMenus.add(MetaMenu.createSimpleMenu(MonitorConstant.MENU_DIAGNOSIS, "Diagnosis Monitoring", MonitorConstant.MENU_DIAGNOSIS, root, 30, router));
         return metaMenus;
     }
 }
