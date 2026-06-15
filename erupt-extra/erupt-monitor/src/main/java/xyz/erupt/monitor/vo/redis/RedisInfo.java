@@ -32,11 +32,23 @@ public class RedisInfo {
 
     private String usedMem;
 
+    private String usedMemPeak;
+
+    private String fragRatio;
+
     private Long keyNum;
+
+    private Long evictedKeys;
+
+    private String ops;
+
+    private String hitRate;
 
     private boolean isCluster;
 
     private boolean isAOF;
+
+    private String rdbStatus;
 
     private List<RedisCmdStat> redisCmdStat;
 
@@ -60,7 +72,20 @@ public class RedisInfo {
             this.setPort(properties.getProperty("tcp_port"));
             this.setDay(properties.getProperty("uptime_in_days"));
             this.setClientNum(properties.getProperty("connected_clients"));
-            this.setPort(properties.getProperty("tcp_port"));
+            this.setUsedMemPeak(properties.getProperty("used_memory_peak_human"));
+            this.setFragRatio(properties.getProperty("mem_fragmentation_ratio"));
+            this.setOps(properties.getProperty("instantaneous_ops_per_sec"));
+            String hits = properties.getProperty("keyspace_hits");
+            String misses = properties.getProperty("keyspace_misses");
+            if (hits != null && misses != null) {
+                long h = Long.parseLong(hits);
+                long m = Long.parseLong(misses);
+                long total = h + m;
+                this.setHitRate(total > 0 ? String.format("%.1f", (double) h / total * 100) : null);
+            }
+            String evicted = properties.getProperty("evicted_keys");
+            if (evicted != null) this.setEvictedKeys(Long.parseLong(evicted));
+            this.setRdbStatus(properties.getProperty("rdb_last_bgsave_status"));
             String clusterEnabled = properties.getProperty("cluster_enabled");
             if (null != clusterEnabled) {
                 this.setCluster(Integer.parseInt(clusterEnabled) > 0);
