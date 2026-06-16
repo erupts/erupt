@@ -38,7 +38,7 @@ public class BooleanModel extends BaseModel {
     @EruptField(
             views = @View(title = "Published"),
             edit = @Edit(title = "Published", type = EditType.BOOLEAN,
-                    boolType = @BoolType(trueText = "已发布", falseText = "未发布"))
+                    boolType = @BoolType(trueText = "Published", falseText = "Unpublished"))
     )
     private Boolean published;
 

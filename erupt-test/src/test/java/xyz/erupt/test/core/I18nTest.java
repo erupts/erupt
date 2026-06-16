@@ -86,10 +86,10 @@ public class I18nTest extends EruptApplicationTests {
     /** Keys from erupt-upms CSV are loaded alongside erupt-core keys (cross-module loading). */
     @Test
     void testCrossModuleKeysLoaded() {
-        String value = I18nRunner.getI18nValue("zh-CN", "upms.pwd_required");
+        String value = I18nRunner.getI18nValue("en-US", "upms.pwd_required");
         assertNotEquals("upms.pwd_required", value,
                 "upms.pwd_required must be translated, not returned as-is");
-        assertEquals("密码必填", value, "zh-CN upms.pwd_required must be '密码必填'");
+        assertEquals("Password required", value, "zh-CN upms.pwd_required must be 'Password required'");
     }
 
     /** Every real language (excluding the "key" pseudo-entry) must translate key "Y". */

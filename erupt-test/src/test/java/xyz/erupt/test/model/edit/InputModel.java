@@ -70,7 +70,7 @@ public class InputModel extends BaseModel {
             edit = @Edit(title = "Price", type = EditType.INPUT,
                     inputType = @InputType(
                             prefix = {@VL(value = "¥", label = "CNY")},
-                            suffix = {@VL(value = "元", label = "Yuan")}))
+                            suffix = {@VL(value = "Yuan", label = "Yuan")}))
     )
     private String price;
 
