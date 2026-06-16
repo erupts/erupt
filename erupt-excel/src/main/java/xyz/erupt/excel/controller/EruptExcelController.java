@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -77,16 +76,14 @@ public class EruptExcelController {
     @EruptRecordOperate(value = "Export Excel", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void exportData(@PathVariable("erupt") String eruptName,
-                           @RequestBody(required = false) List<Condition> conditions,
+                           @RequestBody TableQuery tableQuery,
                            @RequestParam(required = false) List<Object> ids,
                            HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isExport);
-        TableQuery tableQuery = new TableQuery();
         tableQuery.setPageIndex(1);
         tableQuery.setPageSize(Page.PAGE_MAX_DATA);
-        Optional.ofNullable(conditions).ifPresent(tableQuery::setCondition);
         Page page;
         if (ids != null && !ids.isEmpty()) {
             EruptFieldModel pkField = eruptModel.getEruptFieldMap().get(eruptModel.getErupt().primaryKeyCol());
@@ -98,7 +95,7 @@ public class EruptExcelController {
         }
         try (Workbook wb = dataFileService.exportExcel(eruptModel, page)) {
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
-            this.createConditionSheet(wb, eruptModel, conditions);
+            this.createConditionSheet(wb, eruptModel, tableQuery.getCondition());
             wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name()
                     + "_" + DateUtil.getFormatDate(new Date(), DateUtil.ISO_8601) + EruptExcelService.XLSX_FORMAT));
         }
