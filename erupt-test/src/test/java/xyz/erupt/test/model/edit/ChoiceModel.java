@@ -19,7 +19,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "ChoiceEdit")
 public class ChoiceModel extends BaseModel {
 
-    // 下拉选择（默认 SELECT）
+    // dropdown selection (default SELECT)
     @EruptField(
             views = @View(title = "Status"),
             edit = @Edit(title = "Status", type = EditType.CHOICE,
@@ -32,7 +32,7 @@ public class ChoiceModel extends BaseModel {
     )
     private String status;
 
-    // VL 带颜色标记
+    // VL with color indicators
     @EruptField(
             views = @View(title = "Priority"),
             edit = @Edit(title = "Priority", type = EditType.CHOICE,
@@ -44,7 +44,7 @@ public class ChoiceModel extends BaseModel {
     )
     private String priority;
 
-    // VL 带禁用项 + 描述
+    // VL with disabled item + description
     @EruptField(
             views = @View(title = "Level"),
             edit = @Edit(title = "Level", type = EditType.CHOICE,
@@ -56,7 +56,7 @@ public class ChoiceModel extends BaseModel {
     )
     private String level;
 
-    // 单选框（RADIO 布局）
+    // radio buttons (RADIO layout)
     @EruptField(
             views = @View(title = "Gender"),
             edit = @Edit(title = "Gender", type = EditType.CHOICE,
@@ -68,7 +68,7 @@ public class ChoiceModel extends BaseModel {
     )
     private String gender;
 
-    // 动态 handler 获取选项（编辑时重新拉取）
+    // dynamic handler for options (re-fetched on edit)
     @EruptField(
             views = @View(title = "Category"),
             edit = @Edit(title = "Category", type = EditType.CHOICE,

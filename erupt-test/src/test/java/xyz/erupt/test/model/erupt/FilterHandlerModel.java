@@ -11,7 +11,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 @Filter 动态过滤：通过 conditionHandler 实现动态条件（如当前登录用户数据隔离）
+ * Demonstrates @Filter dynamic filtering: uses conditionHandler for dynamic conditions
+ * such as per-user data isolation.
  */
 @Getter
 @Setter

@@ -118,3 +118,7 @@ Tests live in `erupt-test/`. Base class `EruptApplicationTests` provides a login
 
 - **`spring-boot-devtools` is incompatible** — the framework detects and warns at startup.
 - JSON serialization uses **GSON** (not Jackson) throughout the framework.
+
+## Code Style
+
+- **All code comments must be in English.** This includes inline comments, Javadoc, and section headers. Do not write Chinese comments even when the surrounding code or identifiers are Chinese.

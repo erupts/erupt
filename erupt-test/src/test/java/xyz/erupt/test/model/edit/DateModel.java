@@ -18,7 +18,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "DateEdit")
 public class DateModel extends BaseModel {
 
-    // 日期
+    // date
     @EruptField(
             views = @View(title = "Date"),
             edit = @Edit(title = "Date", type = EditType.DATE,
@@ -27,7 +27,7 @@ public class DateModel extends BaseModel {
     )
     private String date;
 
-    // 时间
+    // time
     @EruptField(
             views = @View(title = "Time"),
             edit = @Edit(title = "Time", type = EditType.DATE,
@@ -35,7 +35,7 @@ public class DateModel extends BaseModel {
     )
     private String time;
 
-    // 日期 + 时间
+    // date + time
     @EruptField(
             views = @View(title = "DateTime"),
             edit = @Edit(title = "DateTime", type = EditType.DATE,
@@ -43,7 +43,7 @@ public class DateModel extends BaseModel {
     )
     private String dateTime;
 
-    // 月份
+    // month
     @EruptField(
             views = @View(title = "Month"),
             edit = @Edit(title = "Month", type = EditType.DATE,
@@ -51,7 +51,7 @@ public class DateModel extends BaseModel {
     )
     private String month;
 
-    // 周
+    // week
     @EruptField(
             views = @View(title = "Week"),
             edit = @Edit(title = "Week", type = EditType.DATE,
@@ -59,7 +59,7 @@ public class DateModel extends BaseModel {
     )
     private String week;
 
-    // 年
+    // year
     @EruptField(
             views = @View(title = "Year"),
             edit = @Edit(title = "Year", type = EditType.DATE,
@@ -67,7 +67,7 @@ public class DateModel extends BaseModel {
     )
     private String year;
 
-    // 只允许选未来日期
+    // future dates only
     @EruptField(
             views = @View(title = "Expire Date"),
             edit = @Edit(title = "Expire Date", type = EditType.DATE,
@@ -75,7 +75,7 @@ public class DateModel extends BaseModel {
     )
     private String expireDate;
 
-    // 只允许选历史日期
+    // past dates only
     @EruptField(
             views = @View(title = "Birth Date"),
             edit = @Edit(title = "Birth Date", type = EditType.DATE,

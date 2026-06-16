@@ -11,9 +11,9 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 @Erupt param（KV 扩展参数）：
- * 自定义 key-value 参数可通过 DataProxyContext.get() 在 dataProxy 中获取，
- * 或用于前端模板（TPL）传参
+ * Demonstrates @Erupt param (KV extension params):
+ * custom key-value params are accessible via DataProxyContext.get() in a dataProxy,
+ * or used as variables in frontend templates (TPL).
  */
 @Getter
 @Setter

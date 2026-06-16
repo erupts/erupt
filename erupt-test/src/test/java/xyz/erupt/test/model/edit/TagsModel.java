@@ -20,7 +20,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "TagsEdit")
 public class TagsModel extends BaseModel {
 
-    // 静态候选标签 + 允许自定义
+    // static candidate tags + custom extensions allowed
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Skills"),
@@ -29,7 +29,7 @@ public class TagsModel extends BaseModel {
     )
     private String skills;
 
-    // 禁止自定义，只能选预设
+    // custom input disabled; preset-only selection
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Category"),
@@ -40,7 +40,7 @@ public class TagsModel extends BaseModel {
     )
     private String category;
 
-    // 最多选 3 个
+    // max 3 tags
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Highlights"),
@@ -52,7 +52,7 @@ public class TagsModel extends BaseModel {
     )
     private String highlights;
 
-    // 自定义分隔符（逗号）
+    // custom separator (comma)
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Keywords"),
@@ -62,7 +62,7 @@ public class TagsModel extends BaseModel {
     )
     private String keywords;
 
-    // 动态 handler 获取候选标签
+    // dynamic handler for candidate tags
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Labels"),

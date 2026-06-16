@@ -11,7 +11,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 @Tree：自引用树形结构，通过 pid 字段标识父节点，默认展开 2 级
+ * Demonstrates @Tree: self-referencing tree structure with pid for parent identification,
+ * expands 2 levels by default.
  */
 @Getter
 @Setter

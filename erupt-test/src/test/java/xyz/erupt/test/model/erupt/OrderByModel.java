@@ -10,7 +10,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 orderBy：列表默认按 sort 升序、name 降序排列
+ * Demonstrates orderBy: list defaults to sort ascending.
  */
 @Getter
 @Setter

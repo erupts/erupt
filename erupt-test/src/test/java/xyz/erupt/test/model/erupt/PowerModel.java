@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 @Power 权限配置：开启导出 + 导入，关闭打印
+ * Demonstrates @Power permission config: export + import enabled, print disabled.
  */
 @Getter
 @Setter

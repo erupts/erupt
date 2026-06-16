@@ -11,18 +11,18 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 @RowOperation 自定义操作按钮：
- * - BUTTON 模式：不依赖行数据，顶部独立按钮
- * - SINGLE 模式：选中单行后可用
- * - MULTI 模式：选中多行后可用（也支持单行）
- * - MULTI_ONLY 模式：仅多选时展示，隐藏单行操作按钮
+ * Demonstrates @RowOperation custom action buttons:
+ * - BUTTON: standalone top button, no row selection required
+ * - SINGLE: enabled when exactly one row is selected
+ * - MULTI: enabled when one or more rows are selected
+ * - MULTI_ONLY: shown only when multiple rows are selected
  */
 @Getter
 @Setter
 @Entity
 @Erupt(name = "RowOperation Demo",
         rowOperation = {
-                // 不依赖行选中，顶部独立按钮
+                // standalone top button, no row selection required
                 @RowOperation(
                         code = "import",
                         title = "Custom Import",
@@ -31,7 +31,7 @@ import xyz.erupt.jpa.model.BaseModel;
                         callHint = "",
                         operationHandler = TestOperationHandler.class
                 ),
-                // 选中单行才可点击
+                // requires single-row selection
                 @RowOperation(
                         code = "approve",
                         title = "Approve",
@@ -42,7 +42,7 @@ import xyz.erupt.jpa.model.BaseModel;
                         ifExprBehavior = RowOperation.IfExprBehavior.DISABLE,
                         operationHandler = TestOperationHandler.class
                 ),
-                // 选中多行可批量操作
+                // batch operation on multiple selected rows
                 @RowOperation(
                         code = "batchDelete",
                         title = "Batch Archive",
@@ -50,7 +50,7 @@ import xyz.erupt.jpa.model.BaseModel;
                         mode = RowOperation.Mode.MULTI,
                         operationHandler = TestOperationHandler.class
                 ),
-                // 仅多选时展示，单选时隐藏
+                // shown only when multiple rows are selected
                 @RowOperation(
                         code = "export",
                         title = "Export Selected",

@@ -18,7 +18,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "NumberEdit")
 public class NumberModel extends BaseModel {
 
-    // min + max 双限制
+    // min + max both constrained
     @EruptField(
             views = @View(title = "Age"),
             edit = @Edit(title = "Age", type = EditType.NUMBER,
@@ -26,7 +26,7 @@ public class NumberModel extends BaseModel {
     )
     private Integer age;
 
-    // 仅限非负数
+    // non-negative only
     @EruptField(
             views = @View(title = "Quantity"),
             edit = @Edit(title = "Quantity", notNull = true, type = EditType.NUMBER,
@@ -34,7 +34,7 @@ public class NumberModel extends BaseModel {
     )
     private Integer quantity;
 
-    // 允许负数
+    // negatives allowed
     @EruptField(
             views = @View(title = "Balance"),
             edit = @Edit(title = "Balance", type = EditType.NUMBER,
@@ -42,7 +42,7 @@ public class NumberModel extends BaseModel {
     )
     private Long balance;
 
-    // 百分比（0-100）+ 搜索
+    // percentage (0-100) + search
     @EruptField(
             views = @View(title = "Percent"),
             edit = @Edit(title = "Percent", desc = "0 ~ 100",

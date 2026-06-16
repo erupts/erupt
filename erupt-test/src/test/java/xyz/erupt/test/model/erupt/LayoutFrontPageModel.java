@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 @Layout：前端分页、表单全行显示、自动刷新（5秒）
+ * Demonstrates @Layout: frontend paging, full-line form, auto-refresh every 5 seconds.
  */
 @Getter
 @Setter

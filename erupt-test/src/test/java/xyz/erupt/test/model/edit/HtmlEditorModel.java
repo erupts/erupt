@@ -19,7 +19,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "HtmlEditorEdit")
 public class HtmlEditorModel extends BaseModel {
 
-    // UEditor 富文本编辑器
+    // UEditor rich text editor
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Content (UEditor)"),
@@ -28,7 +28,7 @@ public class HtmlEditorModel extends BaseModel {
     )
     private String ueditorContent;
 
-    // CKEditor 富文本编辑器
+    // CKEditor rich text editor
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Content (CKEditor)"),

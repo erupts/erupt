@@ -10,8 +10,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 authVerify = false：跳过权限校验，任何人均可访问
- * 适用于公开数据接口场景（如字典表、公告等）
+ * Demonstrates authVerify = false: skips permission check, accessible to everyone.
+ * Suitable for public data endpoints such as dictionaries or announcements.
  */
 @Getter
 @Setter

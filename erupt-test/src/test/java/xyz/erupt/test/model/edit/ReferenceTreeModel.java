@@ -19,7 +19,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "ReferenceTreeEdit")
 public class ReferenceTreeModel extends BaseModel {
 
-    // 基础树引用（展开全部层级）
+    // basic tree reference (expand all levels)
     @ManyToOne
     @EruptField(
             views = @View(title = "Category", column = "name"),
@@ -29,7 +29,7 @@ public class ReferenceTreeModel extends BaseModel {
     )
     private RefTargetModel category;
 
-    // 只展开第一级
+    // expand first level only
     @ManyToOne
     @EruptField(
             views = @View(title = "Department", column = "name"),
@@ -40,7 +40,7 @@ public class ReferenceTreeModel extends BaseModel {
     )
     private RefTargetModel department;
 
-    // 按 name 排序
+    // sorted by name
     @ManyToOne
     @EruptField(
             views = @View(title = "Region", column = "name"),

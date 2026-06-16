@@ -26,9 +26,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * 对 erupt-core 下所有 Controller 进行 HTTP 集成测试，
- * 使用包扫描的全量模型批量驱动 Build / Data / Component 端点，
- * 并针对典型模型验证完整的 HTTP CRUD 流程。
+ * HTTP integration tests for all Controllers under erupt-core.
+ * Batch-drives Build / Data / Component endpoints using all models found via package scan,
+ * and validates the full HTTP CRUD flow for representative models.
  */
 public class EruptControllerTest extends EruptApplicationTests {
 
@@ -60,7 +60,7 @@ public class EruptControllerTest extends EruptApplicationTests {
         authHeaders.setContentType(MediaType.APPLICATION_JSON);
     }
 
-    // ─── 工具方法 ─────────────────────────────────────────────────────────────
+    // ─── Helpers ──────────────────────────────────────────────────────────────
 
     private List<Class<?>> scanModelClasses() {
         List<Class<?>> list = new ArrayList<>();
@@ -100,8 +100,8 @@ public class EruptControllerTest extends EruptApplicationTests {
     // ─── EruptBuildController ─────────────────────────────────────────────────
 
     /**
-     * 对所有 @Erupt 模型批量调用 /erupt-api/build/{erupt}，
-     * 验证返回 200 且 eruptModel 字段非 null。
+     * Batch-calls /erupt-api/build/{erupt} for all @Erupt models
+     * and verifies 200 + non-null eruptModel.
      */
     @Test
     void testBuildAllModels() {
@@ -115,7 +115,7 @@ public class EruptControllerTest extends EruptApplicationTests {
     }
 
     /**
-     * 验证 /erupt-api/build/{erupt}/{field} 对含有 @ManyToOne 字段的模型正确返回子 build。
+     * Verifies /erupt-api/build/{erupt}/{field} returns the sub-build correctly for models with a @ManyToOne field.
      */
     @Test
     void testBuildByField() {
@@ -129,8 +129,8 @@ public class EruptControllerTest extends EruptApplicationTests {
     // ─── EruptDataController ─────────────────────────────────────────────────
 
     /**
-     * 对所有模型批量调用 POST /erupt-api/data/table/{erupt}，
-     * 验证返回 200 且 list 字段非 null（空表也可）。
+     * Batch-calls POST /erupt-api/data/table/{erupt} for all models
+     * and verifies 200 + non-null list (empty table is valid).
      */
     @Test
     void testTableQueryAllModels() {
@@ -149,8 +149,8 @@ public class EruptControllerTest extends EruptApplicationTests {
     }
 
     /**
-     * 对所有模型批量调用 GET /erupt-api/data/init-value/{erupt}，
-     * 验证返回 200 且响应为 Map 对象。
+     * Batch-calls GET /erupt-api/data/init-value/{erupt} for all models
+     * and verifies 200 + Map response.
      */
     @Test
     void testInitValueAllModels() {
@@ -162,13 +162,13 @@ public class EruptControllerTest extends EruptApplicationTests {
     }
 
     /**
-     * 验证 GET /erupt-api/data/{erupt}/{id} 对存在的记录返回 200 且字段非空。
-     * （框架对不存在的 id 当前返回 500；此处用已知存在的记录测试正向路径。）
+     * Verifies GET /erupt-api/data/{erupt}/{id} returns 200 + non-null fields for an existing record.
+     * (The framework currently returns 500 for a non-existent id; test the happy path here using a known record.)
      */
     @Test
     @SuppressWarnings("unchecked")
     void testGetByIdFound() {
-        // 先 Add 一条，再 GET
+        // Add a record first, then GET
         String erupt = AuthVerifyModel.class.getSimpleName();
         String key = "getbyid-" + System.nanoTime();
         post("/erupt-api/data/modify/" + erupt, "{\"key\":\"" + key + "\",\"value\":\"v\"}");
@@ -180,11 +180,11 @@ public class EruptControllerTest extends EruptApplicationTests {
         assertEquals(key, getBody(resp).get("key"));
     }
 
-    // ─── EruptModifyController — InputModel 完整 HTTP CRUD ───────────────────
+    // ─── EruptModifyController — Full HTTP CRUD ───────────────────────────────
 
     /**
-     * 通过 HTTP 对 AuthVerifyModel（authVerify=false，无权限拦截）完整走通
-     * Add → TableQuery(find id) → GET by id → Update → Delete → TableQuery(verify gone)。
+     * Full HTTP CRUD walkthrough for AuthVerifyModel (authVerify=false, no permission intercept):
+     * Add → TableQuery(find id) → GET by id → Update → Delete → TableQuery(verify gone).
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -233,7 +233,7 @@ public class EruptControllerTest extends EruptApplicationTests {
     }
 
     /**
-     * 通过 HTTP 对 RowOperationModel 测试 BUTTON 模式的 RowOperation 执行。
+     * Tests RowOperation execution in BUTTON mode for RowOperationModel via HTTP.
      */
     @Test
     void testRowOperationExec() {
@@ -250,8 +250,8 @@ public class EruptControllerTest extends EruptApplicationTests {
     // ─── EruptComponentController ─────────────────────────────────────────────
 
     /**
-     * 对 ChoiceModel 的所有静态 VL 字段调用 GET /erupt-api/comp/choice-item/{erupt}/{field}，
-     * 验证返回 200 且列表非空。
+     * Calls GET /erupt-api/comp/choice-item/{erupt}/{field} for all static VL fields in ChoiceModel
+     * and verifies 200 + non-empty list.
      */
     @Test
     void testChoiceItemAllFields() {
@@ -269,8 +269,8 @@ public class EruptControllerTest extends EruptApplicationTests {
     }
 
     /**
-     * 对 AutoCompleteModel 调用 POST /erupt-api/comp/auto-complete/{erupt}/{field}，
-     * 验证触发长度满足时返回 200 列表。
+     * Calls POST /erupt-api/comp/auto-complete/{erupt}/{field} for AutoCompleteModel
+     * and verifies a 200 list when trigger length is met.
      */
     @Test
     void testAutoComplete() {
@@ -288,7 +288,7 @@ public class EruptControllerTest extends EruptApplicationTests {
     // ─── EruptTabController ───────────────────────────────────────────────────
 
     /**
-     * 对 TabTableAddModel.children (TAB_TABLE_ADD) 测试 tab-add 端点。
+     * Tests the tab-add endpoint for TabTableAddModel.children (TAB_TABLE_ADD).
      */
     @Test
     void testTabAdd() {
@@ -306,8 +306,8 @@ public class EruptControllerTest extends EruptApplicationTests {
     // ─── EruptToolController ──────────────────────────────────────────────────
 
     /**
-     * 验证 GET /erupt-api/tool/log 返回 200。
-     * 日志端点权限类型为 MENU；验证 HTTP 层不返回 5xx。
+     * Verifies GET /erupt-api/tool/log returns 200.
+     * Log endpoint permission type is MENU; verifies the HTTP layer does not return 5xx.
      */
     @Test
     void testEruptLog() {
@@ -321,10 +321,10 @@ public class EruptControllerTest extends EruptApplicationTests {
         assertNotNull(resp.getBody());
     }
 
-    // ─── 工具方法 ─────────────────────────────────────────────────────────────
+    // ─── Helpers ──────────────────────────────────────────────────────────────
 
     /**
-     * 通过 table query 在响应 list 中查找指定字段值对应记录的 id。
+     * Finds the id of a record in the table query response list by matching the given field value.
      */
     @SuppressWarnings("unchecked")
     private Long findIdByName(String eruptName, String value, String fieldName) {

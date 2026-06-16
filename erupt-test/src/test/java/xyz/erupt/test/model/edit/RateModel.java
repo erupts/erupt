@@ -17,14 +17,14 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "RateEdit")
 public class RateModel extends BaseModel {
 
-    // 默认 5 星
+    // default 5 stars
     @EruptField(
             views = @View(title = "Rating"),
             edit = @Edit(title = "Rating", type = EditType.RATE)
     )
     private Integer rating;
 
-    // 自定义总数
+    // custom count
     @EruptField(
             views = @View(title = "Score"),
             edit = @Edit(title = "Score", desc = "Out of 10",
@@ -33,7 +33,7 @@ public class RateModel extends BaseModel {
     )
     private Integer score;
 
-    // 允许半星
+    // allow half-star
     @EruptField(
             views = @View(title = "Half Star"),
             edit = @Edit(title = "Half Star", type = EditType.RATE,
@@ -41,7 +41,7 @@ public class RateModel extends BaseModel {
     )
     private Integer halfStar;
 
-    // 自定义字符（爱心）
+    // custom character (heart)
     @EruptField(
             views = @View(title = "Favorite"),
             edit = @Edit(title = "Favorite", type = EditType.RATE,
@@ -49,7 +49,7 @@ public class RateModel extends BaseModel {
     )
     private Integer favorite;
 
-    // 自定义字符 + 允许半选
+    // custom character + allow half
     @EruptField(
             views = @View(title = "Thumb"),
             edit = @Edit(title = "Thumb", type = EditType.RATE,
