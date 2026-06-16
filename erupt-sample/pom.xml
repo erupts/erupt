@@ -73,7 +73,7 @@
         </dependency>
     </dependencies>
 
-<!-- 如需打成可运行jar解开如下注释代码即可 -->
+<!-- To convert it into a runnable jar, simply uncomment the following code. -->
 <!--    <build>-->
 <!--        <plugins>-->
 <!--            <plugin>-->
