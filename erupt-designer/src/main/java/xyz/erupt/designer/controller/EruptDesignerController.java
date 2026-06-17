@@ -69,6 +69,15 @@ public class EruptDesignerController {
                 .collect(Collectors.toList()));
     }
 
+    // field name + title of a registered erupt model, used as dropdown options for reference-type field config
+    @GetMapping("/erupt-fields/{eruptName}")
+    @EruptMenuAuth(MENU_AUTH)
+    public R<List<KV<String, String>>> eruptFields(@PathVariable("eruptName") String eruptName) {
+        return R.ok(EruptCoreService.getErupt(eruptName).getEruptFieldModels().stream()
+                .map(it -> new KV<>(it.getFieldName(), it.getEruptField().edit().title()))
+                .collect(Collectors.toList()));
+    }
+
     // export annotation source code to graduate the design to hand-written development
     @PostMapping("/java-code")
     @EruptMenuAuth(MENU_AUTH)
