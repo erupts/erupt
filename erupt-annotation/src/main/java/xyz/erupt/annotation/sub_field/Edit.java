@@ -23,6 +23,9 @@ public @interface Edit {
     @Comment("Description")
     String desc() default "";
 
+    @Comment("AI prompt")
+    String prompt() default "";
+
     @Comment("Whether the field is required")
     boolean notNull() default false;
 
