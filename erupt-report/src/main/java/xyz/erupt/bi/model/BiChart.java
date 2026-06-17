@@ -94,6 +94,7 @@ public class BiChart extends MetaModelUpdateVo {
             edit = @Edit(title = "图表类型", notNull = true,
                     desc = "图表参考：G2Plot",
                     type = EditType.CHOICE,
+                    search = @Search,
                     choiceType = @ChoiceType(
                             type = ChoiceType.Type.RADIO,
                             fetchHandler = ChartType.class
@@ -111,7 +112,7 @@ public class BiChart extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "图表SQL"),
-            edit = @Edit(title = "图表SQL",
+            edit = @Edit(title = "图表SQL",search = @Search,
                     type = EditType.CODE_EDITOR, notNull = true, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
