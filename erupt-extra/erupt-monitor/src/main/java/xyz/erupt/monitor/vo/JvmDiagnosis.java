@@ -31,11 +31,14 @@ public class JvmDiagnosis {
 
     private ThreadStat threads;
 
+    private Compilation compilation;
+
     public JvmDiagnosis() {
         this.gc = ManagementFactory.getGarbageCollectorMXBeans().stream().map(Gc::new).collect(Collectors.toList());
         this.memoryPools = ManagementFactory.getMemoryPoolMXBeans().stream().map(MemoryPool::new).collect(Collectors.toList());
         this.classLoading = new ClassLoad();
         this.threads = new ThreadStat();
+        this.compilation = new Compilation();
     }
 
     @Getter
@@ -124,6 +127,23 @@ public class JvmDiagnosis {
                 }
             }
             this.states = states;
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class Compilation {
+        private String name;
+        private long totalTimeMs;
+        private boolean supported;
+
+        Compilation() {
+            CompilationMXBean bean = ManagementFactory.getCompilationMXBean();
+            if (bean != null) {
+                this.name = bean.getName();
+                this.supported = bean.isCompilationTimeMonitoringSupported();
+                this.totalTimeMs = this.supported ? bean.getTotalCompilationTime() : 0;
+            }
         }
     }
 
