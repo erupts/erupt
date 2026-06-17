@@ -23,7 +23,7 @@ import java.util.List;
 @Configuration
 @ComponentScan
 @EntityScan
-// 仅扫描 model 包，模板类（EruptDesignerTemplate）只作为注解实例来源，不注册为业务模型
+// scan only the model package; EruptDesignerTemplate is an annotation-instance source only, not a business model
 @EruptScan("xyz.erupt.designer.model")
 @Component
 public class EruptDesignerAutoConfiguration implements EruptModule {
@@ -42,7 +42,7 @@ public class EruptDesignerAutoConfiguration implements EruptModule {
 
     @Override
     public void run() {
-        // 重注册已发布的设计模型（伪装注解，运行时生效）
+        // re-register all published design models (disguised annotations, effective at runtime)
         eruptDesignerService.registerAll();
     }
 

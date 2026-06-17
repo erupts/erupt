@@ -15,6 +15,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.designer.pojo.DesignerForm;
+import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.linq.lambda.LambdaSee;
 
 import javax.lang.model.element.Modifier;
@@ -44,6 +45,11 @@ public class EruptCodeService {
     // member rendering order: well-known members first, sub-annotation configs last
     private static final List<String> MEMBER_ORDER = Arrays.asList("title", "name", "value", "label", "desc", "notNull", "type");
 
+    // JavaPoet format codes
+    private static final String S = "$S";
+    private static final String L = "$L";
+    private static final String TL = "$T.$L";
+
     public String generate(DesignerForm form) {
         if (null == form.getClassName() || !IDENTIFIER.matcher(form.getClassName()).matches()) {
             throw new EruptWebApiRuntimeException("Invalid class name: " + form.getClassName());
@@ -56,12 +62,11 @@ public class EruptCodeService {
         TypeSpec.Builder type = TypeSpec.classBuilder(form.getClassName())
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(annotationSpec(Erupt.class, eruptJson))
-                .addAnnotation(AnnotationSpec.builder(Table.class).addMember(LambdaSee.method(Table::name), "$S", tableName).build())
+                .addAnnotation(AnnotationSpec.builder(Table.class).addMember(LambdaSee.method(Table::name), S, tableName).build())
                 .addAnnotation(Entity.class)
                 .addAnnotation(Getter.class)
                 .addAnnotation(Setter.class);
-        String extendsModel = Optional.ofNullable(form.getExtendsModel()).filter(it -> !it.isEmpty()).orElse("BaseModel");
-        type.superclass(ClassName.get("xyz.erupt.jpa.model", extendsModel));
+        type.superclass(ClassName.get(BaseModel.class));
         for (DesignerForm.DesignerField field : Optional.ofNullable(form.getFields()).orElse(new ArrayList<>())) {
             type.addField(fieldSpec(form, field));
         }
@@ -79,9 +84,9 @@ public class EruptCodeService {
                 .map(it -> EditType.valueOf(it.get(editTypeMember).getAsString())).orElse(EditType.INPUT);
         AnnotationSpec.Builder eruptField = AnnotationSpec.builder(EruptField.class);
         if (null != field.getView())
-            eruptField.addMember(LambdaSee.method(EruptField::views), "$L", annotationSpec(View.class, field.getView()));
+            eruptField.addMember(LambdaSee.method(EruptField::views), L, annotationSpec(View.class, field.getView()));
         if (null != field.getEdit())
-            eruptField.addMember(LambdaSee.method(EruptField::edit), "$L", annotationSpec(Edit.class, field.getEdit()));
+            eruptField.addMember(LambdaSee.method(EruptField::edit), L, annotationSpec(Edit.class, field.getEdit()));
         FieldSpec.Builder fieldSpec = FieldSpec.builder(fieldType(field, editType), field.getFieldName(), Modifier.PRIVATE)
                 .addAnnotation(eruptField.build());
         for (AnnotationSpec orm : ormAnnotations(form, field, editType)) {
@@ -111,12 +116,12 @@ public class EruptCodeService {
             case REFERENCE_TREE, REFERENCE_TABLE ->
                     Arrays.asList(annotation(ManyToOne.class), joinColumn(field.getFieldName()));
             case COMBINE -> Arrays.asList(AnnotationSpec.builder(OneToOne.class)
-                            .addMember(LambdaSee.method(OneToOne::cascade), "$T.$L", CascadeType.class, CascadeType.ALL.name()).build(),
+                            .addMember(LambdaSee.method(OneToOne::cascade), TL, CascadeType.class, CascadeType.ALL.name()).build(),
                     joinColumn(field.getFieldName()));
             case CHECKBOX, TAB_TREE, TAB_TABLE_REFER -> List.of(annotation(ManyToMany.class));
             case TAB_TABLE_ADD -> Arrays.asList(AnnotationSpec.builder(OneToMany.class)
-                            .addMember(LambdaSee.method(OneToMany::cascade), "$T.$L", CascadeType.class, CascadeType.ALL.name())
-                            .addMember(LambdaSee.method(OneToMany::orphanRemoval), "$L", true).build(),
+                            .addMember(LambdaSee.method(OneToMany::cascade), TL, CascadeType.class, CascadeType.ALL.name())
+                            .addMember(LambdaSee.method(OneToMany::orphanRemoval), L, true).build(),
                     joinColumn(form.getClassName()));
             case HTML_EDITOR, CODE_EDITOR, MARKDOWN -> List.of(annotation(Lob.class));
             case DIVIDE, EMPTY, GROUP -> List.of(annotation(Transient.class));
@@ -130,7 +135,7 @@ public class EruptCodeService {
 
     private static AnnotationSpec joinColumn(String name) {
         return AnnotationSpec.builder(JoinColumn.class)
-                .addMember(LambdaSee.method(JoinColumn::name), "$S", camelToUnderline(name) + "_id").build();
+                .addMember(LambdaSee.method(JoinColumn::name), S, camelToUnderline(name) + "_id").build();
     }
 
     private TypeName linkErupt(DesignerForm.DesignerField field) {
@@ -173,33 +178,33 @@ public class EruptCodeService {
             Class<? extends Annotation> at = (Class<? extends Annotation>) rt;
             if (def instanceof Annotation && this.sameAsDefault(at, je.getAsJsonObject(), (Annotation) def))
                 return null;
-            return CodeBlock.of("$L", this.annotationSpec(at, je.getAsJsonObject()));
+            return CodeBlock.of(L, this.annotationSpec(at, je.getAsJsonObject()));
         }
         if (rt.isEnum()) {
             String name = je.getAsString();
             if (def instanceof Enum && ((Enum<?>) def).name().equals(name)) return null;
-            return CodeBlock.of("$T.$L", rt, name);
+            return CodeBlock.of(TL, rt, name);
         }
         if (rt == String.class) {
             String value = je.getAsString();
             if (value.equals(def)) return null;
-            return CodeBlock.of("$S", value);
+            return CodeBlock.of(S, value);
         }
         if (rt == boolean.class) {
             boolean value = je.getAsBoolean();
             if (def instanceof Boolean && (Boolean) def == value) return null;
-            return CodeBlock.of("$L", value);
+            return CodeBlock.of(L, value);
         }
         if (rt == float.class || rt == double.class) {
             double value = je.getAsDouble();
             if (def instanceof Number && ((Number) def).doubleValue() == value) return null;
             String str = value == Math.floor(value) ? String.valueOf((long) value) : String.valueOf(value);
-            return CodeBlock.of("$L", rt == float.class ? str + "f" : str);
+            return CodeBlock.of(L, rt == float.class ? str + "f" : str);
         }
         // int / long
         long value = je.getAsLong();
         if (def instanceof Number && ((Number) def).longValue() == value) return null;
-        return CodeBlock.of("$L", (value > Integer.MAX_VALUE || value < Integer.MIN_VALUE) ? value + "L" : String.valueOf(value));
+        return CodeBlock.of(L, (value > Integer.MAX_VALUE || value < Integer.MIN_VALUE) ? value + "L" : String.valueOf(value));
     }
 
     // whether the json effective values equal the default annotation instance held by the parent member

@@ -37,20 +37,20 @@ public class EruptDesignerServiceTest {
     public void disguisedAnnotation() throws Exception {
         DesignerForm form = new DesignerForm();
         form.setClassName("Goods");
-        form.setErupt(gson.fromJson("{name:'商品管理', power:{export:true, delete:false}}", JsonObject.class));
+        form.setErupt(gson.fromJson("{name:'Product Management', power:{export:true, delete:false}}", JsonObject.class));
         form.setFields(Arrays.asList(
-                field("name", "{title:'商品名称', sortable:true}",
-                        "{title:'商品名称', notNull:true, type:'INPUT', inputType:{length:100}, search:{value:true, vague:true}}"),
-                field("price", "{title:'价格'}", "{title:'价格', type:'NUMBER', numberType:{min:0}}"),
-                field("type", "{title:'分类'}",
-                        "{title:'分类', type:'CHOICE', choiceType:{vl:[{value:'1',label:'家电'},{value:'2',label:'数码'}]}}")
+                field("name", "{title:'Product Name', sortable:true}",
+                        "{title:'Product Name', notNull:true, type:'INPUT', inputType:{length:100}, search:{value:true, vague:true}}"),
+                field("price", "{title:'Price'}", "{title:'Price', type:'NUMBER', numberType:{min:0}}"),
+                field("type", "{title:'Category'}",
+                        "{title:'Category', type:'CHOICE', choiceType:{vl:[{value:'1',label:'Electronics'},{value:'2',label:'Digital'}]}}")
         ));
 
         EruptModel model = service.toEruptModel(form);
 
         // class-level disguised @Erupt
         assertEquals("Goods", model.getEruptName());
-        assertEquals("商品管理", model.getErupt().name());
+        assertEquals("Product Management", model.getErupt().name());
         assertTrue(model.getErupt().power().export());
         assertFalse(model.getErupt().power().delete());
         assertTrue(model.getErupt().power().add()); // untouched member falls back to template default
@@ -58,13 +58,13 @@ public class EruptDesignerServiceTest {
         // field-level disguised @EruptField
         EruptFieldModel name = model.getEruptFieldMap().get("name");
         Edit edit = name.getEruptField().edit();
-        assertEquals("商品名称", edit.title());
+        assertEquals("Product Name", edit.title());
         assertTrue(edit.notNull());
         assertEquals(EditType.INPUT, edit.type());
         assertEquals(100, edit.inputType().length());
         assertTrue(edit.search().value());
         assertTrue(edit.search().vague());
-        assertEquals("商品名称", name.getEruptField().views()[0].title());
+        assertEquals("Product Name", name.getEruptField().views()[0].title());
         assertTrue(name.getEruptField().views()[0].sortable());
 
         assertEquals(EruptFieldModel.NUMBER, model.getEruptFieldMap().get("price").getFieldReturnName());
@@ -73,7 +73,7 @@ public class EruptDesignerServiceTest {
         // annotation array expanded from template prototype
         EruptFieldModel type = model.getEruptFieldMap().get("type");
         assertEquals(2, type.getEruptField().edit().choiceType().vl().length);
-        assertEquals("家电", type.getEruptField().edit().choiceType().vl()[0].label());
+        assertEquals("Electronics", type.getEruptField().edit().choiceType().vl()[0].label());
 
         // the disguised model serializes through the standard pipeline (what the frontend consumes)
         EruptBuildModel buildModel = service.preview(form);
@@ -84,7 +84,7 @@ public class EruptDesignerServiceTest {
         assertFalse(buildModel.getPower().isDelete());
         JsonObject nameJson = cloned.getEruptFieldModels().stream()
                 .filter(it -> "name".equals(it.getFieldName())).findFirst().orElseThrow().getEruptFieldJson();
-        assertEquals("商品名称", nameJson.getAsJsonObject("edit").get("title").getAsString());
+        assertEquals("Product Name", nameJson.getAsJsonObject("edit").get("title").getAsString());
         assertEquals(100, nameJson.getAsJsonObject("edit").getAsJsonObject("inputType").get("length").getAsInt());
         // CHOICE options resolved into componentValue for the standard frontend choice component
         EruptFieldModel typeField = cloned.getEruptFieldModels().stream()

@@ -75,7 +75,7 @@ public class DesignerEntity extends HyperModelUpdateVo {
     private Date publishTime;
 
     // designer JSON config, maintained by the designer page
-    @Column(length = AnnotationConst.REMARK_LENGTH)
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     private String config;
 
     private Date updateTime;

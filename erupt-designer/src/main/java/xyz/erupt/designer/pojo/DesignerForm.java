@@ -27,9 +27,6 @@ public class DesignerForm {
 
     private String tableName;
 
-    // BaseModel / MetaModel / empty
-    private String extendsModel;
-
     // @Erupt annotation structure
     private JsonObject erupt;
 

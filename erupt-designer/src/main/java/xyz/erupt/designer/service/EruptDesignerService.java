@@ -53,11 +53,11 @@ public class EruptDesignerService {
 
     @SneakyThrows
     public EruptModel toEruptModel(DesignerForm form) {
-        // 模板类提供注解实例来源；真实承载类由字节码动态生成（真实字段 → Gson/反射全链路可用）
+        // template class supplies annotation instances; the real carrier class is generated via bytecode (real fields → full Gson/reflection pipeline)
         Class<?> dynamicClass = DesignerClassFactory.build(form);
         EruptModel model = new EruptModel(EruptDesignerTemplate.class);
         model.setClazz(dynamicClass);
-        // EruptModel 构造器用模板类扫描 tags，此处补扫动态类，确保 @EruptFlow 等 @EruptTag 注解被识别
+        // EruptModel constructor scans tags from the template class; re-scan the dynamic class here so @EruptFlow and other @EruptTag annotations are recognized
         for (Annotation annotation : dynamicClass.getDeclaredAnnotations()) {
             if (annotation.annotationType().getAnnotation(EruptTag.class) != null) {
                 model.getTags().put(annotation.annotationType().getSimpleName(),
@@ -71,7 +71,7 @@ public class EruptDesignerService {
         });
         model.setEruptFieldModels(new ArrayList<>());
         model.setEruptFieldMap(new LinkedCaseInsensitiveMap<>());
-        // BaseModel.id 自带 @EruptField，保证主键参与序列化与表单回显
+        // BaseModel.id carries @EruptField by default, ensuring the primary key participates in serialization and form rendering
         EruptFieldModel idField = new EruptFieldModel(xyz.erupt.jpa.model.BaseModel.class.getDeclaredField("id"), false);
         model.getEruptFieldModels().add(idField);
         model.getEruptFieldMap().put(idField.getFieldName(), idField);
@@ -98,7 +98,7 @@ public class EruptDesignerService {
         return model;
     }
 
-    // 发布：保存设计配置 → 注册运行时模型，免重启生效
+    // publish: save design config → register runtime model, effective without restart
     @Transactional
     public void publish(String className, DesignerForm form) {
         DesignerEntity entity = eruptDao.lambdaQuery(DesignerEntity.class)
@@ -126,7 +126,7 @@ public class EruptDesignerService {
         return entity;
     }
 
-    // 启动时重注册全部已发布设计
+    // re-register all published designs on startup
     public void registerAll() {
         for (DesignerEntity entity : eruptDao.lambdaQuery(DesignerEntity.class).list()) {
             if (null == entity.getConfig() || entity.getConfig().isEmpty()) continue;
@@ -140,7 +140,7 @@ public class EruptDesignerService {
         }
     }
 
-    // 设计模型只允许注册到空位或覆盖自身，绝不允许顶掉真实 @Erupt 类
+    // designer models may only register into an empty slot or overwrite themselves; never displace a real @Erupt class
     private void checkNotRealErupt(String className) {
         EruptModel existing = EruptCoreService.getErupt(className);
         if (null != existing && !DesignerClassFactory.designerClass(existing.getClazz())) {

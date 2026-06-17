@@ -26,7 +26,7 @@ public class EruptCodeServiceTest {
 
     private final Gson gson = new Gson();
 
-    // 参照实体：类名 / 字段名一律由 .class 与 LambdaSee 推导，杜绝魔法字符串与两侧重复
+    // Reference entities: class name / field name always derived from .class and LambdaSee — no magic strings
     @Getter
     static class Brand extends BaseModel {
         private String name;
@@ -56,23 +56,23 @@ public class EruptCodeServiceTest {
         form.setPkg("com.example.model");
         form.setClassName(Goods.class.getSimpleName());
         form.setExtendsModel(BaseModel.class.getSimpleName());
-        form.setErupt(gson.fromJson("{name:'商品管理', power:{export:true}}", JsonObject.class));
+        form.setErupt(gson.fromJson("{name:'Product Management', power:{export:true}}", JsonObject.class));
 
         DesignerForm.DesignerField name = field(LambdaSee.field(Goods::getName),
-                "{title:'商品名称', sortable:true}",
-                "{title:'商品名称', notNull:true, search:{value:true, vague:true}, type:'INPUT', inputType:{length:100}}");
-        DesignerForm.DesignerField price = field(LambdaSee.field(Goods::getPrice), "{title:'价格'}",
-                "{title:'价格', type:'NUMBER', numberType:{min:0}}");
+                "{title:'Product Name', sortable:true}",
+                "{title:'Product Name', notNull:true, search:{value:true, vague:true}, type:'INPUT', inputType:{length:100}}");
+        DesignerForm.DesignerField price = field(LambdaSee.field(Goods::getPrice), "{title:'Price'}",
+                "{title:'Price', type:'NUMBER', numberType:{min:0}}");
         price.setFieldType(Double.class.getSimpleName());
-        DesignerForm.DesignerField status = field(LambdaSee.field(Goods::getStatus), "{title:'上架'}",
-                "{title:'上架', type:'BOOLEAN', boolType:{trueText:'上架', falseText:'下架'}}");
-        DesignerForm.DesignerField type = field(LambdaSee.field(Goods::getType), "{title:'分类'}",
-                "{title:'分类', type:'CHOICE', choiceType:{vl:[{value:'1',label:'家电'},{value:'2',label:'数码'}]}}");
-        DesignerForm.DesignerField brand = field(LambdaSee.field(Goods::getBrand), "{title:'品牌', column:'name'}",
-                "{title:'品牌', type:'REFERENCE_TABLE'}");
+        DesignerForm.DesignerField status = field(LambdaSee.field(Goods::getStatus), "{title:'Listed'}",
+                "{title:'Listed', type:'BOOLEAN', boolType:{trueText:'Listed', falseText:'Unlisted'}}");
+        DesignerForm.DesignerField type = field(LambdaSee.field(Goods::getType), "{title:'Category'}",
+                "{title:'Category', type:'CHOICE', choiceType:{vl:[{value:'1',label:'Electronics'},{value:'2',label:'Digital'}]}}");
+        DesignerForm.DesignerField brand = field(LambdaSee.field(Goods::getBrand), "{title:'Brand', column:'name'}",
+                "{title:'Brand', type:'REFERENCE_TABLE'}");
         brand.setLinkErupt(Brand.class.getSimpleName());
-        DesignerForm.DesignerField createTime = field(LambdaSee.field(Goods::getCreateTime), "{title:'创建时间'}",
-                "{title:'创建时间', type:'DATE', dateType:{type:'DATE_TIME'}}");
+        DesignerForm.DesignerField createTime = field(LambdaSee.field(Goods::getCreateTime), "{title:'Created Time'}",
+                "{title:'Created Time', type:'DATE', dateType:{type:'DATE_TIME'}}");
 
         form.setFields(Arrays.asList(name, price, status, type, brand, createTime));
         String code = service.generate(form);
@@ -81,13 +81,13 @@ public class EruptCodeServiceTest {
         // JavaPoet may break declaration annotations across lines; collapse whitespace so the
         // assertions below stay readable and check semantics, not the exact line layout.
         String flat = code.replaceAll("\\s+", " ").replace("( ", "(").replace(" )", ")");
-        assertTrue(flat.contains("@Erupt(name = \"商品管理\", power = @Power(export = true))"));
+        assertTrue(flat.contains("@Erupt(name = \"Product Management\", power = @Power(export = true))"));
         assertTrue(flat.contains("@Table(name = \"" + EruptCodeService.camelToUnderline(Goods.class.getSimpleName()) + "\")"));
         assertTrue(flat.contains("public class " + Goods.class.getSimpleName() + " extends " + BaseModel.class.getSimpleName() + " {"));
-        assertTrue(flat.contains("edit = @Edit(title = \"价格\", type = EditType.NUMBER, numberType = @NumberType(min = 0))"));
+        assertTrue(flat.contains("edit = @Edit(title = \"Price\", type = EditType.NUMBER, numberType = @NumberType(min = 0))"));
         assertTrue(flat.contains("private " + Double.class.getSimpleName() + " " + LambdaSee.field(Goods::getPrice) + ";"));
-        assertTrue(flat.contains("boolType = @BoolType(falseText = \"下架\", trueText = \"上架\")"));
-        assertTrue(flat.contains("@VL(value = \"1\", label = \"家电\")"));
+        assertTrue(flat.contains("boolType = @BoolType(falseText = \"Unlisted\", trueText = \"Listed\")"));
+        assertTrue(flat.contains("@VL(value = \"1\", label = \"Electronics\")"));
         assertTrue(flat.contains("@ManyToOne"));
         assertTrue(flat.contains("@JoinColumn(name = \"" + EruptCodeService.camelToUnderline(LambdaSee.field(Goods::getBrand)) + "_id\")"));
         assertTrue(flat.contains("private " + Brand.class.getSimpleName() + " " + LambdaSee.field(Goods::getBrand) + ";"));
@@ -107,7 +107,7 @@ public class EruptCodeServiceTest {
         // search = {value:true} differs from @Search(false) but every member equals Search's own
         // defaults, so it must collapse to `search = @Search`
         form.setFields(Collections.singletonList(
-                field(LambdaSee.field(Goods::getName), null, "{title:'名称', search:{value:true}, type:'INPUT'}")));
+                field(LambdaSee.field(Goods::getName), null, "{title:'Name', search:{value:true}, type:'INPUT'}")));
         String code = service.generate(form);
         System.out.println(code);
         assertTrue(code.contains("search = @Search"));

@@ -119,7 +119,7 @@ public class DesignerDataService implements IEruptDataService {
                     JsonObject json = gson.fromJson(it.getData(), JsonObject.class);
                     json.addProperty("id", it.getId());
                     Map<String, Object> map = gson.fromJson(json, LinkedHashMap.class);
-                    // 引用类字段 {id,label..} 拍平为 field_column，供表格列直接渲染
+                    // flatten reference fields {id,label..} into field_column entries for direct table column rendering
                     new ArrayList<>(map.entrySet()).stream().filter(e -> e.getValue() instanceof Map)
                             .forEach(e -> ((Map<?, ?>) e.getValue()).forEach((k, v) ->
                                     map.put(e.getKey() + "_" + k, v)));

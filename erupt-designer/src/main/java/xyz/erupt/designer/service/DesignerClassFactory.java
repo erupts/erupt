@@ -34,10 +34,10 @@ public class DesignerClassFactory {
 
     private static final String PKG = "xyz.erupt.designer.runtime.";
 
-    // 引入 erupt-flow 模块时此注解可加载，设计器模型即自动具备审批流能力（注解直接烙进字节码，供 flow 反射识别）
+    // when erupt-flow is on the classpath this annotation loads; designer models then gain approval-flow capability (annotation baked into bytecode so flow can detect it via reflection)
     private static final Class<? extends Annotation> ERUPT_FLOW = loadOptionalAnnotation("xyz.erupt.flow.annotation.EruptFlow");
 
-    // 设计器伪装类位于独立运行时包，以此区分真实 @Erupt 类
+    // designer disguise classes live in a dedicated runtime package to distinguish them from real @Erupt classes
     public static boolean designerClass(Class<?> clazz) {
         return clazz.getName().startsWith(PKG);
     }
@@ -48,7 +48,7 @@ public class DesignerClassFactory {
                 .name(PKG + form.getClassName())
                 .annotateType(AnnotationDescription.Builder.ofType(EruptDataProcessor.class)
                         .define("value", DATA_PROCESSOR).build());
-        // 未引入 erupt-flow 时 ERUPT_FLOW 为 null，跳过即可，不产生硬依赖
+        // ERUPT_FLOW is null when erupt-flow is absent; skip without creating a hard dependency
         if (null != ERUPT_FLOW) {
             builder = builder.annotateType(AnnotationDescription.Builder.ofType(ERUPT_FLOW).build());
         }
@@ -90,7 +90,7 @@ public class DesignerClassFactory {
             case REFERENCE_TREE:
             case REFERENCE_TABLE:
             case COMBINE:
-                // 引用数据以 {id, label...} 结构存储，无 ORM 实体
+                // reference data is stored as {id, label...}; no ORM entity involved
                 return Map.class;
             case CHECKBOX:
             case TAB_TREE:

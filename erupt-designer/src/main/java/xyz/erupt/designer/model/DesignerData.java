@@ -24,7 +24,7 @@ public class DesignerData extends BaseModel {
     @Column(length = 64, nullable = false)
     private String model;
 
-    @Column(length = AnnotationConst.REMARK_LENGTH)
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     private String data;
 
 }
