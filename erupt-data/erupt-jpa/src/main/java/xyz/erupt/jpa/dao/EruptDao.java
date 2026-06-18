@@ -36,12 +36,6 @@ public class EruptDao {
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Deprecated
-    public <T> T findById(Class<T> clazz, Object id) {
-        this.entityManager.clear();
-        return entityManager.find(clazz, id);
-    }
-
     public <T> T find(Class<T> clazz, Object id) {
         return entityManager.find(clazz, id);
     }

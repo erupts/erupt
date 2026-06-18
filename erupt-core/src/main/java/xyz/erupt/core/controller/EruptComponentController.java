@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.CodeEditHintHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.sub_edit.AutoCompleteType;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.GsonFactory;
@@ -20,9 +19,7 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author YuePeng
@@ -79,21 +76,6 @@ public class EruptComponentController {
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
         Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
         return EruptUtil.getChoiceListFilter(eruptModel, fieldModel.getEruptField().edit(), o);
-    }
-
-    @GetMapping("/choice-trigger/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    public Map<String, Object> choiceTrigger(@PathVariable("erupt") String eruptName,
-                                             @PathVariable("field") String field,
-                                             @RequestParam("val") Object val) {
-        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
-        ChoiceType choiceType = fieldModel.getEruptField().edit().choiceType();
-        if (choiceType.trigger().isInterface()) {
-            return Collections.emptyMap();
-        } else {
-            return EruptSpringUtil.getBean(choiceType.trigger()).trigger(val, choiceType.triggerParams());
-        }
     }
 
     //Gets the TAGS component data

@@ -2,9 +2,7 @@ package xyz.erupt.annotation.sub_field.sub_edit;
 
 import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
-import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
-import xyz.erupt.annotation.fun.ChoiceTrigger;
 
 import java.beans.Transient;
 
@@ -26,16 +24,6 @@ public @interface ChoiceType {
 
     @Comment("Dynamically fetched dropdown list")
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
-
-    @Deprecated
-    @Transient
-    @Comment("Accessible by the trigger interface")
-    String[] triggerParams() default {};
-
-    @Deprecated
-    @Comment("Action triggered when a selection is made")
-    @Match("#item.trigger().getSimpleName() != 'ChoiceTrigger'")
-    Class<? extends ChoiceTrigger> trigger() default ChoiceTrigger.class;
 
     //Linkage capability
     @Comment("Linkage capability; dependent field name")
