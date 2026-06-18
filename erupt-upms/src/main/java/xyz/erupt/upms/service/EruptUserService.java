@@ -15,7 +15,7 @@ import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.MD5Util;
-import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.constant.EncryptType;
@@ -154,9 +154,9 @@ public class EruptUserService {
     }
 
     @Transactional
-    public EruptApiModel changePwd(String account, String pwd, String newPwd, String newPwd2) {
+    public R<Void> changePwd(String account, String pwd, String newPwd, String newPwd2) {
         if (!newPwd.equals(newPwd2)) {
-            return EruptApiModel.errorMessageApi(I18nTranslate.$translate("upms.change_pwd_inconsistent"));
+            return R.error(I18nTranslate.$translate("upms.change_pwd_inconsistent"));
         }
         EruptUser eruptUser = findEruptUserByAccount(account);
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
@@ -169,7 +169,7 @@ public class EruptUserService {
 
         if (isValid) {
             if (checkPwd(eruptUser, newPwd)) {
-                return EruptApiModel.errorMessageApi(I18nTranslate.$translate("upms.change_pwd_same_as_old"));
+                return R.error(I18nTranslate.$translate("upms.change_pwd_same_as_old"));
             }
             if (eruptUser.getEncrypt()) {
                 String salt = MD5Util.generateSalt();
@@ -187,9 +187,9 @@ public class EruptUserService {
             if (null != loginProxy) {
                 loginProxy.afterChangePwd(eruptUser, pwd, newPwd);
             }
-            return EruptApiModel.successApi();
+            return R.ok();
         } else {
-            return EruptApiModel.errorMessageApi(I18nTranslate.$translate("upms.pwd_error"));
+            return R.error(I18nTranslate.$translate("upms.pwd_error"));
         }
     }
 

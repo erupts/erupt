@@ -18,24 +18,40 @@ public class R<T> implements Serializable {
 
     private boolean success;
 
-    private EruptApiModel.Status status;
+    private Status status;
 
-    // prompting mode
-    private EruptApiModel.PromptWay promptWay = EruptApiModel.PromptWay.MESSAGE;
+    private PromptWay promptWay = PromptWay.MESSAGE;
 
     public static <T> R<T> ok(T data) {
         R<T> r = new R<>();
         r.setSuccess(true);
         r.setData(data);
-        r.setPromptWay(EruptApiModel.PromptWay.NONE);
-        r.setStatus(EruptApiModel.Status.SUCCESS);
+        r.setPromptWay(PromptWay.NONE);
+        r.setStatus(Status.SUCCESS);
         return r;
     }
 
     public static <T> R<T> ok() {
         R<T> r = new R<>();
         r.setSuccess(true);
-        r.setStatus(EruptApiModel.Status.SUCCESS);
+        r.setStatus(Status.SUCCESS);
+        return r;
+    }
+
+    public static <T> R<T> success(T data) {
+        R<T> r = new R<>();
+        r.setSuccess(true);
+        r.setData(data);
+        r.setStatus(Status.SUCCESS);
+        return r;
+    }
+
+    public static <T> R<T> success(String message, T data) {
+        R<T> r = new R<>();
+        r.setSuccess(true);
+        r.setMessage(message);
+        r.setData(data);
+        r.setStatus(Status.SUCCESS);
         return r;
     }
 
@@ -43,16 +59,29 @@ public class R<T> implements Serializable {
         R<T> r = new R<>();
         r.setSuccess(false);
         r.setMessage(message);
-        r.setStatus(EruptApiModel.Status.ERROR);
+        r.setStatus(Status.ERROR);
         return r;
+    }
+
+    public static <T> R<T> errorDialog(String message) {
+        R<T> r = new R<>();
+        r.setSuccess(false);
+        r.setMessage(message);
+        r.setStatus(Status.ERROR);
+        r.setPromptWay(PromptWay.DIALOG);
+        return r;
+    }
+
+    public static <T> R<T> errorDialog(Exception e) {
+        return errorDialog(e.getMessage());
     }
 
     public static <T> R<T> errorNotIntercept(String message, T data) {
         R<T> r = new R<>();
         r.setSuccess(false);
         r.setMessage(message);
-        r.setPromptWay(EruptApiModel.PromptWay.NONE);
-        r.setStatus(EruptApiModel.Status.ERROR);
+        r.setPromptWay(PromptWay.NONE);
+        r.setStatus(Status.ERROR);
         r.setData(data);
         return r;
     }

@@ -21,12 +21,6 @@ public @interface Dynamic {
 
     Ctrl match() default Ctrl.SHOW;
 
-//    // change the static configuration of the current decorated object, e.g. the language of the code editor
-//    String changeScript() default "";
-
-//    @Comment("Compute component value when condition changes, Variable, class field name")
-//    String render() default "";
-
     enum Ctrl {
         SHOW,     //Show
         HIDE,     //Hide

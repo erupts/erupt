@@ -18,7 +18,6 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.ReflectUtil;
-import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 
@@ -89,16 +88,16 @@ public class EruptFormViewController {
     public R<Void> saveFormView(@PathVariable("erupt") String eruptName, @RequestBody JsonObject data) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, powerObject -> powerObject.isAdd() || powerObject.isEdit());
-        EruptApiModel validation = EruptUtil.validateEruptValue(eruptModel, data);
-        if (validation.getStatus() == EruptApiModel.Status.ERROR) {
-            throw new EruptApiErrorTip(validation.getMessage(), EruptApiModel.PromptWay.MESSAGE);
+        R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
+        if (!validation.isSuccess()) {
+            throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
         }
         Object model = GsonFactory.getGson().fromJson(data, eruptModel.getClazz());
         DataProxyInvoke.invoke(eruptModel, dataProxy -> {
             try {
                 dataProxy.formSave(model);
             } catch (EruptException e) {
-                throw new EruptApiErrorTip(e.getMessage(), EruptApiModel.PromptWay.MESSAGE);
+                throw new EruptApiErrorTip(e.getMessage(), R.PromptWay.MESSAGE);
             }
         });
         return R.ok();

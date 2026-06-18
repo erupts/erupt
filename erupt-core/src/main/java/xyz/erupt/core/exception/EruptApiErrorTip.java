@@ -1,6 +1,6 @@
 package xyz.erupt.core.exception;
 
-import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.view.R;
 
 /**
  * @author YuePeng
@@ -8,26 +8,36 @@ import xyz.erupt.core.view.EruptApiModel;
  */
 public class EruptApiErrorTip extends RuntimeException {
 
-    public EruptApiModel eruptApiModel;
+    public R<?> r;
 
     public EruptApiErrorTip(String message) {
         super(message);
-        eruptApiModel = EruptApiModel.errorApi(message);
+        r = R.errorDialog(message);
     }
 
-    public EruptApiErrorTip(String message, EruptApiModel.PromptWay promptWay) {
+    public EruptApiErrorTip(String message, R.PromptWay promptWay) {
         super(message);
-        this.eruptApiModel = new EruptApiModel(EruptApiModel.Status.ERROR, message, promptWay);
+        R<Void> rr = new R<>();
+        rr.setSuccess(false);
+        rr.setMessage(message);
+        rr.setStatus(R.Status.ERROR);
+        rr.setPromptWay(promptWay);
+        this.r = rr;
     }
 
-    public EruptApiErrorTip(EruptApiModel.Status status, String message, EruptApiModel.PromptWay promptWay) {
+    public EruptApiErrorTip(R.Status status, String message, R.PromptWay promptWay) {
         super(message);
-        this.eruptApiModel = new EruptApiModel(status, message, promptWay);
+        R<Void> rr = new R<>();
+        rr.setSuccess(status == R.Status.SUCCESS);
+        rr.setMessage(message);
+        rr.setStatus(status);
+        rr.setPromptWay(promptWay);
+        this.r = rr;
     }
 
-    public EruptApiErrorTip(EruptApiModel eruptApiModel) {
-        super(eruptApiModel.getMessage());
-        this.eruptApiModel = eruptApiModel;
+    public EruptApiErrorTip(R<?> r) {
+        super(r.getMessage());
+        this.r = r;
     }
 
 }

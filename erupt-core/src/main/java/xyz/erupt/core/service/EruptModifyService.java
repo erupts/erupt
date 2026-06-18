@@ -25,8 +25,8 @@ import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
-import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.R;
 
 import java.util.HashMap;
 import java.util.List;
@@ -99,9 +99,9 @@ public class EruptModifyService {
     @SneakyThrows
     @Transactional
     public Object insertEruptData(EruptModel eruptModel, JsonObject data) {
-        EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
-        if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
-            throw new EruptApiErrorTip(eruptApiModel.getMessage(), EruptApiModel.PromptWay.MESSAGE);
+        R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
+        if (!validation.isSuccess()) {
+            throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
         }
         Object obj = this.eruptInsertDataProcess(eruptModel, data);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeAdd(obj)));
@@ -116,9 +116,9 @@ public class EruptModifyService {
     @SneakyThrows
     @Transactional
     public void updateEruptData(EruptModel eruptModel, JsonObject data) {
-        EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
-        if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
-            throw new EruptApiErrorTip(eruptApiModel.getMessage(), EruptApiModel.PromptWay.MESSAGE);
+        R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
+        if (!validation.isSuccess()) {
+            throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
         }
         eruptService.verifyIdPermissions(eruptModel, data.get(eruptModel.getErupt().primaryKeyCol()).getAsString());
         Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());

@@ -360,24 +360,6 @@ public class EruptLambdaQuery<T> {
         return this.geneQuery().getResultList();
     }
 
-    @Deprecated
-    @SafeVarargs
-    public final List<Object[]> listSelects(SFunction<T, ?>... fields) {
-        for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
-        return this.geneQuery().getResultList();
-    }
-
-    @Deprecated
-    @SafeVarargs
-    public final Object[] oneSelects(SFunction<T, ?>... fields) {
-        for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
-        try {
-            return (Object[]) this.geneQuery().getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
-
     @SneakyThrows
     private <R> R objectToClazz(Class<R> clazz, Object[] objects, SFunction<?, ?>... fields) {
         R r = clazz.getDeclaredConstructor().newInstance();

@@ -32,9 +32,9 @@ import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
-import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.R;
 import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.lang.reflect.Field;
@@ -282,36 +282,36 @@ public class EruptUtil {
             if (edit.search().value() && edit.search().notNull()) {
                 Condition condition = conditionMap.get(fieldModel.getFieldName());
                 if (null == condition || null == condition.getValue()) {
-                    throw new EruptApiErrorTip(EruptApiModel.Status.INFO, edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), EruptApiModel.PromptWay.MESSAGE);
+                    throw new EruptApiErrorTip(R.Status.INFO, edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), R.PromptWay.MESSAGE);
                 }
                 if (condition.getValue() instanceof List) {
                     if (((List<?>) condition.getValue()).isEmpty()) {
-                        throw new EruptApiErrorTip(EruptApiModel.Status.INFO + edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), EruptApiModel.PromptWay.MESSAGE);
+                        throw new EruptApiErrorTip(R.Status.INFO + " " + edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), R.PromptWay.MESSAGE);
                     }
                 }
             }
         }
     }
 
-    public static EruptApiModel validateEruptValue(EruptModel eruptModel, JsonObject jsonObject) {
+    public static R<Void> validateEruptValue(EruptModel eruptModel, JsonObject jsonObject) {
         for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
             Edit edit = field.getEruptField().edit();
             JsonElement value = jsonObject.get(field.getFieldName());
             if (edit.notNull()) {
                 if (null == value || value.isJsonNull()) {
-                    return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                    return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
                 } else if (String.class.getSimpleName().equals(field.getFieldReturnName())) {
                     if (StringUtils.isBlank(value.getAsString())) {
-                        return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                        return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
                     }
                 }
             }
             if (edit.type() == EditType.COMBINE) {
                 JsonObject combine = jsonObject.getAsJsonObject(field.getFieldName());
                 if (null != combine) {
-                    EruptApiModel eam = validateEruptValue(EruptCoreService.getErupt(field.getFieldReturnName()), combine);
-                    if (eam.getStatus() == EruptApiModel.Status.ERROR) {
-                        return eam;
+                    R<Void> nested = validateEruptValue(EruptCoreService.getErupt(field.getFieldReturnName()), combine);
+                    if (!nested.isSuccess()) {
+                        return nested;
                     }
                 }
             }
@@ -323,7 +323,7 @@ public class EruptUtil {
                     boolean dynamic = ScriptUtil.eval("!!(" + edit.dynamic().condition() + ")", vars, boolean.class);
                     Dynamic.Ctrl strategy = dynamic ? edit.dynamic().match() : edit.dynamic().noMatch();
                     if (strategy == Dynamic.Ctrl.NOTNULL) {
-                        return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                        return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
                     }
                 }
             }
@@ -331,7 +331,7 @@ public class EruptUtil {
                 // XSS Injection Handling
                 if (edit.type() == EditType.TEXTAREA || edit.type() == EditType.INPUT) {
                     if (SecurityUtil.xssInspect(value.getAsString())) {
-                        return EruptApiModel.errorApi(edit.title() + " " + I18nTranslate.$translate("erupt.attack.xss"));
+                        return R.errorDialog(edit.title() + " " + I18nTranslate.$translate("erupt.attack.xss"));
                     }
                 }
                 // Data type validation
@@ -339,7 +339,7 @@ public class EruptUtil {
                     case NUMBER:
                     case SLIDER:
                         if (!NumberUtils.isNumber(value.getAsString())) {
-                            return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.must.number"));
+                            return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.must.number"));
                         }
                         break;
                     case INPUT:
@@ -347,7 +347,7 @@ public class EruptUtil {
                             String content = value.getAsString();
                             if (StringUtils.isNotBlank(content)) {
                                 if (!Pattern.matches(edit.inputType().regex(), content)) {
-                                    return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.incorrect_format"));
+                                    return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.incorrect_format"));
                                 }
                             }
                         }
@@ -358,9 +358,9 @@ public class EruptUtil {
         try {
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.validate(GsonFactory.getGson().fromJson(jsonObject.toString(), eruptModel.getClazz()))));
         } catch (EruptException e) {
-            return EruptApiModel.errorMessageApi(e.getMessage());
+            return R.error(e.getMessage());
         }
-        return EruptApiModel.successApi();
+        return R.ok();
     }
 
     /**

@@ -25,8 +25,8 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptFileService;
 import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.R;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -61,10 +61,10 @@ public class EruptFileController {
     @SneakyThrows
     @PostMapping("/upload/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    public EruptApiModel upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
+    public R<String> upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
         // Generating storage paths
         if (null == file.getOriginalFilename()) {
-            return EruptApiModel.errorApi(I18nTranslate.$translate("filename is empty"));
+            return R.errorDialog(I18nTranslate.$translate("filename is empty"));
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
@@ -77,7 +77,7 @@ public class EruptFileController {
                     String[] fileNameArr = file.getOriginalFilename().split("\\.");
                     String extensionName = fileNameArr[fileNameArr.length - 1];
                     if (Stream.of(attachmentType.fileTypes()).noneMatch(type -> extensionName.equalsIgnoreCase(type))) {
-                        return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.file_format") + ": " + extensionName);
+                        return R.errorDialog(I18nTranslate.$translate("erupt.upload_error.file_format") + ": " + extensionName);
                     }
                 }
                 if (!"".equals(attachmentType.path())) {
@@ -85,22 +85,22 @@ public class EruptFileController {
                 }
                 // Verify the file size
                 if (attachmentType.size() > 0 && file.getSize() / 1024 > attachmentType.size()) {
-                    return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.size") + ": " + attachmentType.size() + "KB");
+                    return R.errorDialog(I18nTranslate.$translate("erupt.upload_error.size") + ": " + attachmentType.size() + "KB");
                 }
                 switch (edit.attachmentType().type()) {
                     case IMAGE:
                         AttachmentType.ImageType imageType = edit.attachmentType().imageType();
                         BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
                         if (bufferedImage == null) {
-                            return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.not_image"));
+                            return R.errorDialog(I18nTranslate.$translate("erupt.upload_error.not_image"));
                         }
                         int width = bufferedImage.getWidth();
                         int height = bufferedImage.getHeight();
                         if (imageType.minWidth() > width || imageType.maxWidth() < width) {
-                            return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.image_width") + String.format("[%s,%s]", imageType.minWidth(), imageType.maxWidth()));
+                            return R.errorDialog(I18nTranslate.$translate("erupt.upload_error.image_width") + String.format("[%s,%s]", imageType.minWidth(), imageType.maxWidth()));
                         }
                         if (imageType.minHeight() > height || imageType.maxHeight() < height) {
-                            return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.image_height") + String.format("[%s,%s]", imageType.minWidth(), imageType.maxWidth()));
+                            return R.errorDialog(I18nTranslate.$translate("erupt.upload_error.image_height") + String.format("[%s,%s]", imageType.minWidth(), imageType.maxWidth()));
                         }
                         break;
                     case BASE:
@@ -114,20 +114,20 @@ public class EruptFileController {
                 }
                 break;
         }
-        return EruptApiModel.successApi(eruptFileService.upload(file, path));
+        return R.ok(eruptFileService.upload(file, path));
 
     }
 
 
     @PostMapping("/uploads/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    public EruptApiModel uploads(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile[] files) {
+    public R<List<String>> uploads(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile[] files) {
         List<String> paths = new ArrayList<>();
         for (MultipartFile file : files) {
-            EruptApiModel eruptApiModel = upload(eruptName, fieldName, file);
-            paths.add(eruptApiModel.getData().toString());
+            R<String> r = upload(eruptName, fieldName, file);
+            paths.add(r.getData());
         }
-        return EruptApiModel.successApi(paths);
+        return R.ok(paths);
     }
 
 
@@ -136,22 +136,22 @@ public class EruptFileController {
     public Map<String, Object> uploadHtmlEditorImage(@PathVariable("erupt") String eruptName,
                                                      @PathVariable("field") String fieldName,
                                                      @RequestParam("upload") MultipartFile file) throws ClassNotFoundException {
-        EruptApiModel eruptApiModel = upload(eruptName, fieldName, file);
+        R<String> r = upload(eruptName, fieldName, file);
         Map<String, Object> map = new HashMap<>(2);
-        if (eruptApiModel.getStatus() == EruptApiModel.Status.SUCCESS) {
+        if (r.isSuccess()) {
             //{"uploaded":"true", "url":"image-path..."}
             AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
             if (null != attachmentProxy) {
-                map.put("url", attachmentProxy.fileDomain() + eruptApiModel.getData());
+                map.put("url", attachmentProxy.fileDomain() + r.getData());
             } else {
-                map.put("url", EruptRestPath.ERUPT_ATTACHMENT + eruptApiModel.getData());
+                map.put("url", EruptRestPath.ERUPT_ATTACHMENT + r.getData());
             }
             map.put("uploaded", true);
             map.put("state", "SUCCESS");
         } else {
             map.put("uploaded", false);
             map.put("state", "ERROR");
-            throw new EruptWebApiRuntimeException(eruptApiModel.getMessage());
+            throw new EruptWebApiRuntimeException(r.getMessage());
         }
         return map;
     }

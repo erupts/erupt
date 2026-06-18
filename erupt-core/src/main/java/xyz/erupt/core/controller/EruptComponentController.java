@@ -15,9 +15,9 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.R;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,7 +56,7 @@ public class EruptComponentController {
         try {
             return EruptSpringUtil.getBean(autoCompleteType.handler()).completeHandler(o, val, autoCompleteType.param());
         } catch (Exception e) {
-            throw new EruptApiErrorTip(e.getMessage(), EruptApiModel.PromptWay.MESSAGE);
+            throw new EruptApiErrorTip(e.getMessage(), R.PromptWay.MESSAGE);
         }
     }
 

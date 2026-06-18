@@ -6,14 +6,14 @@ import com.wf.captcha.base.Captcha;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
-import org.springframework.web.bind.annotation.*;;
+import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecretUtil;
-import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.view.R;
 import xyz.erupt.upms.base.ChangePwdBody;
 import xyz.erupt.upms.base.LoginBody;
 import xyz.erupt.upms.base.LoginModel;
@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+;
 
 /**
  * @author YuePeng
@@ -114,7 +116,7 @@ public class EruptUserController {
 
     @PostMapping(value = "/change-pwd")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel changePwd(@RequestBody ChangePwdBody body) {
+    public R<Void> changePwd(@RequestBody ChangePwdBody body) {
         String pwd = SecretUtil.decodeSecret(body.getPwd(), 3);
         String newPwd = SecretUtil.decodeSecret(body.getNewPwd(), 3);
         String newPwd2 = SecretUtil.decodeSecret(body.getNewPwd2(), 3);
@@ -150,13 +152,13 @@ public class EruptUserController {
 
     @GetMapping(value = "/logout")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel logout() {
+    public R<Void> logout() {
         String token = eruptContextService.getCurrentToken();
         MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         Optional.ofNullable(loginProxy).ifPresent(it -> it.logout(token));
         eruptTokenService.logoutToken(metaUserinfo.getUsername(), token);
-        return EruptApiModel.successApi();
+        return R.ok();
     }
 
     /**

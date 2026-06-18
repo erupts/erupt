@@ -130,10 +130,10 @@ public class EruptExcelController {
     @EruptRecordOperate(value = "Import Excel", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional
-    public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
+    public R<Void> importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isImportable, "Not import permission");
-        if (file.isEmpty() || null == file.getOriginalFilename()) return EruptApiModel.errorApi("No file");
+        if (file.isEmpty() || null == file.getOriginalFilename()) return R.errorDialog("No file");
         List<JsonObject> list;
         int i = 1;
         try {
@@ -157,9 +157,9 @@ public class EruptExcelController {
             int j = 1;
             for (JsonObject data : list) {
                 j++;
-                EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
-                if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
-                    throw new EruptWebApiRuntimeException(String.format(I18nTranslate.$translate("excel.row_error"), j, eruptApiModel.getMessage()));
+                R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
+                if (!validation.isSuccess()) {
+                    throw new EruptWebApiRuntimeException(String.format(I18nTranslate.$translate("excel.row_error"), j, validation.getMessage()));
                 }
                 eruptDataList.add(eruptModifyService.eruptInsertDataProcess(eruptModel, data));
             }
@@ -169,7 +169,7 @@ public class EruptExcelController {
             log.error("import error {}", eruptModel.getEruptName(), e);
             throw new EruptWebApiRuntimeException(String.format(I18nTranslate.$translate("excel.import_error"), e.getMessage()));
         }
-        return EruptApiModel.successApi();
+        return R.ok();
     }
 
 
