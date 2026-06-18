@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.designer.model.DesignerData;
 import xyz.erupt.designer.model.DesignerEntity;
@@ -27,13 +28,13 @@ public class DesignerEntityDataProxy implements DataProxy<DesignerEntity> {
     @Override
     public void beforeAdd(DesignerEntity entity) {
         if (!IDENTIFIER.matcher(entity.getClassName()).matches()) {
-            throw new EruptWebApiRuntimeException("Invalid class name: " + entity.getClassName());
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("designer.invalid_class_name") + ": " + entity.getClassName());
         }
         // name taken either by a registered erupt or another design row → one check, one message
         if (null != EruptCoreService.getErupt(entity.getClassName())
                 || eruptDao.lambdaQuery(DesignerEntity.class)
                 .eq(DesignerEntity::getClassName, entity.getClassName()).count() > 0) {
-            throw new EruptWebApiRuntimeException("Class name already exists: " + entity.getClassName());
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("designer.class_name_exists") + ": " + entity.getClassName());
         }
         entity.setUpdateTime(new Date());
     }

@@ -1,3 +1,8 @@
 key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
 Print Manager,打印管理,列印管理,Print Manager,Gestionnaire d'impression,印刷管理,인쇄 관리,Менеджер печати,Administrador de impresión,Druckverwaltung,Gestão de impressão,Manajemen Cetak,إدارة الطباعة
 Print Template,打印模板,列印範本,Print Template,Modèle d'impression,印刷テンプレート,인쇄 템플릿,Шаблон печати,Plantilla de impresión,Druckvorlage,Modelo de impressão,Template Cetak,قالب الطباعة
+Print Config,打印配置,列印配置,Print Config,Config. d'impression,印刷設定,인쇄 설정,Настройка печати,Configuración de impresión,Druckkonfiguration,Configuração de impressão,Konfigurasi Cetak,إعداد الطباعة
+Name,名称,名稱,Name,Nom,名前,이름,Имя,Nombre,Name,Nome,Nama,الاسم
+Content,内容,內容,Content,Contenu,内容,내용,Содержание,Contenido,Inhalt,Conteúdo,Konten,المحتوى
+Title,标题,標題,Title,Titre,タイトル,제목,Заголовок,Título,Titel,Título,Judul,العنوان
+Erupt Model,Erupt 模型,Erupt 模型,Erupt Model,Modèle Erupt,Eruptモデル,Erupt 모델,Модель Erupt,Modelo Erupt,Erupt-Modell,Modelo Erupt,Model Erupt,نموذج Erupt

@@ -16,6 +16,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptUtil;
@@ -103,11 +104,11 @@ public class EruptDesignerService {
     public void publish(String className, DesignerForm form) {
         DesignerEntity entity = eruptDao.lambdaQuery(DesignerEntity.class)
                 .eq(DesignerEntity::getClassName, className).one();
-        if (null == entity) throw new EruptWebApiRuntimeException("Model does not exist: " + className);
+        if (null == entity) throw new EruptWebApiRuntimeException(I18nTranslate.$translate("designer.model_not_exist") + ": " + className);
         form.setClassName(entity.getClassName());
         String eruptNameMember = LambdaSee.method(Erupt::name);
         if (null == form.getErupt() || !form.getErupt().has(eruptNameMember)) {
-            throw new EruptWebApiRuntimeException("Please enter the function name");
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("designer.enter_function_name"));
         }
         this.checkNotRealErupt(entity.getClassName());
         EruptModel model = this.toEruptModel(form);
@@ -122,7 +123,7 @@ public class EruptDesignerService {
     public DesignerEntity loadDesign(String className) {
         DesignerEntity entity = eruptDao.lambdaQuery(DesignerEntity.class)
                 .eq(DesignerEntity::getClassName, className).one();
-        if (null == entity) throw new EruptWebApiRuntimeException("Model does not exist: " + className);
+        if (null == entity) throw new EruptWebApiRuntimeException(I18nTranslate.$translate("designer.model_not_exist") + ": " + className);
         return entity;
     }
 
@@ -144,7 +145,7 @@ public class EruptDesignerService {
     private void checkNotRealErupt(String className) {
         EruptModel existing = EruptCoreService.getErupt(className);
         if (null != existing && !DesignerClassFactory.designerClass(existing.getClazz())) {
-            throw new EruptWebApiRuntimeException("A real Erupt class with the same name already exists: " + className);
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("designer.real_erupt_exists") + ": " + className);
         }
     }
 
@@ -196,7 +197,7 @@ public class EruptDesignerService {
                 return Optional.ofNullable(field.getLinkErupt()).filter(it -> !it.isEmpty())
                         .filter(it -> null != EruptCoreService.getErupt(it))
                         .orElseThrow(() -> new EruptWebApiRuntimeException(
-                                "Field '" + field.getFieldName() + "' requires a registered erupt class to link"));
+                                I18nTranslate.$translate("designer.field_requires_link") + ": " + field.getFieldName()));
             default:
                 return String.class.getSimpleName();
         }

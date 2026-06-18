@@ -14,6 +14,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.designer.pojo.DesignerForm;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.linq.lambda.LambdaSee;
@@ -52,7 +53,7 @@ public class EruptCodeService {
 
     public String generate(DesignerForm form) {
         if (null == form.getClassName() || !IDENTIFIER.matcher(form.getClassName()).matches()) {
-            throw new EruptWebApiRuntimeException("Invalid class name: " + form.getClassName());
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("designer.invalid_class_name") + ": " + form.getClassName());
         }
         String eruptName = LambdaSee.method(Erupt::name);
         JsonObject eruptJson = Optional.ofNullable(form.getErupt()).orElse(new JsonObject());
@@ -76,7 +77,7 @@ public class EruptCodeService {
 
     private FieldSpec fieldSpec(DesignerForm form, DesignerForm.DesignerField field) {
         if (null == field.getFieldName() || !IDENTIFIER.matcher(field.getFieldName()).matches()) {
-            throw new EruptWebApiRuntimeException("Invalid field name: " + field.getFieldName());
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("designer.invalid_field_name") + ": " + field.getFieldName());
         }
         String editTypeMember = LambdaSee.method(Edit::type);
         EditType editType = Optional.ofNullable(field.getEdit())
@@ -140,7 +141,7 @@ public class EruptCodeService {
 
     private TypeName linkErupt(DesignerForm.DesignerField field) {
         if (null == field.getLinkErupt() || !IDENTIFIER.matcher(field.getLinkErupt()).matches()) {
-            throw new EruptWebApiRuntimeException("Field '" + field.getFieldName() + "' requires a linked erupt class");
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("designer.field_requires_link") + ": " + field.getFieldName());
         }
         return ClassName.get("", field.getLinkErupt());
     }
