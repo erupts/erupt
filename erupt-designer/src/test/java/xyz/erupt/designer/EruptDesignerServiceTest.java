@@ -40,7 +40,7 @@ public class EruptDesignerServiceTest {
         form.setErupt(gson.fromJson("{name:'Product Management', power:{export:true, delete:false}}", JsonObject.class));
         form.setFields(Arrays.asList(
                 field("name", "{title:'Product Name', sortable:true}",
-                        "{title:'Product Name', notNull:true, type:'INPUT', inputType:{length:100}, search:{value:true, vague:true}}"),
+                        "{title:'Product Name', notNull:true, type:'INPUT', inputType:{length:100}, search:{value:true}}"),
                 field("price", "{title:'Price'}", "{title:'Price', type:'NUMBER', numberType:{min:0}}"),
                 field("type", "{title:'Category'}",
                         "{title:'Category', type:'CHOICE', choiceType:{vl:[{value:'1',label:'Electronics'},{value:'2',label:'Digital'}]}}")
@@ -63,7 +63,6 @@ public class EruptDesignerServiceTest {
         assertEquals(EditType.INPUT, edit.type());
         assertEquals(100, edit.inputType().length());
         assertTrue(edit.search().value());
-        assertTrue(edit.search().vague());
         assertEquals("Product Name", name.getEruptField().views()[0].title());
         assertTrue(name.getEruptField().views()[0].sortable());
 

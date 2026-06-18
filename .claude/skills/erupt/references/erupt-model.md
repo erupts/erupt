@@ -364,7 +364,6 @@
 ```java
 @Search(
     value = true,      // 是否作为查询条件
-    vague = false,     // 是否启用高级查询（范围/模糊）
     notNull = false    // 查询条件是否必填
 )
 ```

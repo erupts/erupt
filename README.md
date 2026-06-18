@@ -137,7 +137,7 @@ public class Simple extends BaseModel {
 
     @EruptField(
         views = @View(title = "Date"),
-        edit  = @Edit(title = "Date", search = @Search(vague = true))
+        edit  = @Edit(title = "Date", search = @Search)
     )
     private Date date;
 

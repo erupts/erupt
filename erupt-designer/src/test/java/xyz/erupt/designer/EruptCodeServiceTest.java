@@ -55,12 +55,11 @@ public class EruptCodeServiceTest {
         DesignerForm form = new DesignerForm();
         form.setPkg("com.example.model");
         form.setClassName(Goods.class.getSimpleName());
-        form.setExtendsModel(BaseModel.class.getSimpleName());
         form.setErupt(gson.fromJson("{name:'Product Management', power:{export:true}}", JsonObject.class));
 
         DesignerForm.DesignerField name = field(LambdaSee.field(Goods::getName),
                 "{title:'Product Name', sortable:true}",
-                "{title:'Product Name', notNull:true, search:{value:true, vague:true}, type:'INPUT', inputType:{length:100}}");
+                "{title:'Product Name', notNull:true, search:{value:true}, type:'INPUT', inputType:{length:100}}");
         DesignerForm.DesignerField price = field(LambdaSee.field(Goods::getPrice), "{title:'Price'}",
                 "{title:'Price', type:'NUMBER', numberType:{min:0}}");
         price.setFieldType(Double.class.getSimpleName());
@@ -96,8 +95,8 @@ public class EruptCodeServiceTest {
         assertTrue(code.contains("import " + Date.class.getName() + ";"));
         // values equal to annotation defaults must not be emitted
         assertFalse(flat.contains("notNull = false"));
-        // value=true equals Search's own default → omitted; vague=true differs → emitted
-        assertTrue(flat.contains("search = @Search(vague = true)"));
+        // value=true equals Search's own default → omitted; differs → emitted
+        assertTrue(flat.contains("search = @Search"));
     }
 
     @Test

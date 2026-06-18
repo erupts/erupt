@@ -13,8 +13,4 @@ public @interface Search {
     @Comment("Whether the field is required")
     boolean notNull() default false;
 
-    @Deprecated
-    @Comment("Advanced search")
-    boolean vague() default false;
-
 }
