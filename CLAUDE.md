@@ -122,3 +122,12 @@ Tests live in `erupt-test/`. Base class `EruptApplicationTests` provides a login
 ## Code Style
 
 - **All code comments must be in English.** This includes inline comments, Javadoc, and section headers. Do not write Chinese comments even when the surrounding code or identifiers are Chinese.
+
+## Internationalization (i18n)
+
+- **Default language is English.** All user-visible strings — `@Erupt(name=...)`, `@EruptField` titles, menu names, error messages — must be written in English.
+- **Every module must ship a CSV.** Place translations at `src/main/resources/i18n/<module-name>.i18n.csv`. `I18nRunner` auto-discovers all `i18n/*.csv` files on the classpath; no registration needed.
+- **CSV key = English text.** The key doubles as the en-US fallback, so `I18nTranslate.$translate(key)` degrades gracefully when no translation is found.
+- **Key case is significant.** The inner lookup map is a plain `HashMap` — `"Name"` and `"name"` are different keys. Match the exact string used in the annotation or code.
+- **Wrap runtime error messages.** Any `EruptWebApiRuntimeException` (or similar) message shown to the frontend must go through `I18nTranslate.$translate("module.key")`. Static/internal developer errors do not need translation.
+- **No Chinese hard-coded anywhere.** Java source files must contain zero CJK characters — including test assertion literals. Use `assertNotEquals` / language-neutral checks instead of hard-coded translated values.
