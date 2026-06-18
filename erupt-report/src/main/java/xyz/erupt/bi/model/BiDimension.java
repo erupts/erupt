@@ -16,6 +16,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Dynamic;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
@@ -24,7 +25,7 @@ import xyz.erupt.jpa.model.BaseModel;
  */
 @Entity
 @Table(name = "e_bi_dimension", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "bi_id"}))
-@Erupt(name = "查询维度", dataProxy = BiDimension.class)
+@Erupt(name = "Query Dimension", dataProxy = BiDimension.class)
 @Getter
 @Setter
 @EruptI18n
@@ -32,75 +33,75 @@ public class BiDimension extends BaseModel implements DataProxy<BiDimension> {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
-            views = @View(title = "维度编码", sortable = true),
-            edit = @Edit(title = "维度编码", notNull = true)
+            views = @View(title = "Dimension Code", sortable = true),
+            edit = @Edit(title = "Dimension Code", notNull = true)
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true)
+            views = @View(title = "Name"),
+            edit = @Edit(title = "Name", notNull = true)
     )
     private String title;
 
     @EruptField(
-            views = @View(title = "显示顺序", sortable = true),
-            edit = @Edit(title = "显示顺序")
+            views = @View(title = "Sort", sortable = true),
+            edit = @Edit(title = "Sort")
     )
     private Integer sort;
 
     @EruptField(
-            views = @View(title = "是否必填"),
-            edit = @Edit(title = "是否必填", notNull = true)
+            views = @View(title = "Required"),
+            edit = @Edit(title = "Required", notNull = true)
     )
     private Boolean notNull = false;
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "参照维度", column = "name"),
-            edit = @Edit(title = "参照维度", type = EditType.REFERENCE_TABLE,
+            views = @View(title = "Reference Dimension", column = "name"),
+            edit = @Edit(title = "Reference Dimension", type = EditType.REFERENCE_TABLE,
                     dynamic = @Dynamic(dependField = "type",
                             condition = "value && value.indexOf('REFERENCE') != -1"))
     )
     private BiDimensionReference biDimensionReference;
 
     @EruptField(
-            views = @View(title = "维度类型"),
+            views = @View(title = "Dimension Type"),
             edit = @Edit(
-                    title = "维度类型",
+                    title = "Dimension Type",
                     notNull = true,
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
                             type = ChoiceType.Type.RADIO,
                             vl = {
-                                    @VL(value = "INPUT", label = "文本"),
-                                    @VL(value = "TAG", label = "标签"),
+                                    @VL(value = "INPUT", label = "Text"),
+                                    @VL(value = "TAG", label = "Tag"),
 
-                                    @VL(value = "NUMBER", label = "数值"),
-                                    @VL(value = "NUMBER_RANGE", label = "数值区间"),
+                                    @VL(value = "NUMBER", label = "Number"),
+                                    @VL(value = "NUMBER_RANGE", label = "Number Range"),
 
-                                    @VL(value = "DATE", label = "日期"),
-                                    @VL(value = "TIME", label = "时间"),
-                                    @VL(value = "DATETIME", label = "日期时间"),
+                                    @VL(value = "DATE", label = "Date"),
+                                    @VL(value = "TIME", label = "Time"),
+                                    @VL(value = "DATETIME", label = "DateTime"),
 
-                                    @VL(value = "WEEK", label = "周"),
-                                    @VL(value = "MONTH", label = "月"),
-                                    @VL(value = "YEAR", label = "年"),
+                                    @VL(value = "WEEK", label = "Week"),
+                                    @VL(value = "MONTH", label = "Month"),
+                                    @VL(value = "YEAR", label = "Year"),
 
-                                    @VL(value = "DATE_RANGE", label = "日期区间"),
-                                    @VL(value = "DATETIME_RANGE", label = "日期时间区间"),
+                                    @VL(value = "DATE_RANGE", label = "Date Range"),
+                                    @VL(value = "DATETIME_RANGE", label = "DateTime Range"),
 
-                                    @VL(value = "REFERENCE", label = "单选参照", desc = "返回两列：id/label"),
-                                    @VL(value = "REFERENCE_MULTI", label = "多选参照", desc = "返回两列：id/label"),
-                                    @VL(value = "REFERENCE_RADIO", label = "Radio参照", desc = "返回两列：id/label"),
-                                    @VL(value = "REFERENCE_CHECKBOX", label = "Checkbox参照", desc = "返回两列：id/label"),
+                                    @VL(value = "REFERENCE", label = "Single Reference", desc = "Returns two columns: id/label"),
+                                    @VL(value = "REFERENCE_MULTI", label = "Multi Reference", desc = "Returns two columns: id/label"),
+                                    @VL(value = "REFERENCE_RADIO", label = "Radio Reference", desc = "Returns two columns: id/label"),
+                                    @VL(value = "REFERENCE_CHECKBOX", label = "Checkbox Reference", desc = "Returns two columns: id/label"),
 
-                                    @VL(value = "REFERENCE_TREE_RADIO", label = "单选树参照", desc = "返回三列：id/label/pid，pid为空代表树根节点"),
-                                    @VL(value = "REFERENCE_TREE_MULTI", label = "多选树参照", desc = "返回三列：id/label/pid，pid为空代表树根节点"),
-                                    @VL(value = "REFERENCE_CASCADE", label = "级联选择参照", desc = "返回三列：id/label/pid，pid为空代表树根节点"),
+                                    @VL(value = "REFERENCE_TREE_RADIO", label = "Single Tree Reference", desc = "Returns three columns: id/label/pid; empty pid = root"),
+                                    @VL(value = "REFERENCE_TREE_MULTI", label = "Multi Tree Reference", desc = "Returns three columns: id/label/pid; empty pid = root"),
+                                    @VL(value = "REFERENCE_CASCADE", label = "Cascade Reference", desc = "Returns three columns: id/label/pid; empty pid = root"),
 
-                                    @VL(value = "REFERENCE_TABLE_RADIO", label = "单选表格参照", desc = "返回2～N列，id/...，第一列是查询列不会显示在前端"),
-                                    @VL(value = "REFERENCE_TABLE_MULTI", label = "多选表格参照", desc = "返回2～N列，id/...，第一列是查询列不会显示在前端"),
+                                    @VL(value = "REFERENCE_TABLE_RADIO", label = "Single Table Reference", desc = "Returns 2-N columns; first column is query key, not shown in frontend"),
+                                    @VL(value = "REFERENCE_TABLE_MULTI", label = "Multi Table Reference", desc = "Returns 2-N columns; first column is query key, not shown in frontend"),
                             }
                     )
             )
@@ -109,8 +110,8 @@ public class BiDimension extends BaseModel implements DataProxy<BiDimension> {
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "默认值"),
-            edit = @Edit(title = "默认值", desc = "通过js脚本动态生成默认值，字符串请加引号"
+            views = @View(title = "Default Value"),
+            edit = @Edit(title = "Default Value", desc = "Generate default dynamically via JS; quote strings"
                     , type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "javascript", height = 80))
     )
     private String defaultValue;
@@ -118,7 +119,7 @@ public class BiDimension extends BaseModel implements DataProxy<BiDimension> {
     @Override
     public void beforeAdd(BiDimension biDimension) {
         if (biDimension.getType().startsWith("REFERENCE") && null == biDimension.getBiDimensionReference()) {
-            throw new EruptWebApiRuntimeException("参照维度必填");
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("bi.reference_required"));
         }
     }
 

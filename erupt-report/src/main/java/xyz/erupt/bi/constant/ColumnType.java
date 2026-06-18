@@ -17,14 +17,14 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public enum ColumnType {
 
-    STRING("string", "文本", null),
-    NUMBER("number", "数值", "数值靠右显示"),
-    DATE("date", "时间", "时间居中显示"),
-    LONG_TEXT("long_text", "长文本", "适用于长文本场景，会自动折叠"),
-    PERCENT("percent", "百分比", "进度条方式展示百分比"),
-    LINK("link", "链接", null),
-    LINK_DIALOG("link_dialog", "对话框方式打开链接", null),
-    DRILL("drill", "下钻", null),
+    STRING("string", "Text", null),
+    NUMBER("number", "Number", "right-aligned"),
+    DATE("date", "Time", "center-aligned"),
+    LONG_TEXT("long_text", "Long Text", "auto-collapsed for long text"),
+    PERCENT("percent", "Percent", "displayed as a progress bar"),
+    LINK("link", "Link", null),
+    LINK_DIALOG("link_dialog", "Link (Dialog)", null),
+    DRILL("drill", "Drill Down", null),
     ;
 
     private final String code;

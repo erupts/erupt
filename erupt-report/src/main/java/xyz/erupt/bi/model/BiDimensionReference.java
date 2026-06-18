@@ -23,36 +23,36 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  */
 @Entity
 @Table(name = "e_bi_dimension_reference")
-@Erupt(name = "参照维度")
+@Erupt(name = "Reference Dimension")
 @Getter
 @Setter
 @EruptI18n
 public class BiDimensionReference extends MetaModelUpdateVo {
 
     @EruptField(
-            views = @View(title = "名称", sortable = true),
-            edit = @Edit(title = "名称", notNull = true, search = @Search)
+            views = @View(title = "Name", sortable = true),
+            edit = @Edit(title = "Name", notNull = true, search = @Search)
     )
     private String name;
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "数据源", column = "name"),
-            edit = @Edit(title = "数据源", type = EditType.REFERENCE_TREE, search = @Search)
+            views = @View(title = "Data Source", column = "name"),
+            edit = @Edit(title = "Data Source", type = EditType.REFERENCE_TREE, search = @Search)
     )
     private BiDataSource dataSource;
 
     @ManyToOne
     @EruptField(
-            edit = @Edit(title = "处理类", type = EditType.REFERENCE_TABLE)
+            edit = @Edit(title = "Handler", type = EditType.REFERENCE_TABLE)
     )
     private BiClassHandler classHandler;
 
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "参照SQL"),
-            edit = @Edit(title = "参照SQL", type = EditType.CODE_EDITOR,
+            views = @View(title = "Reference SQL"),
+            edit = @Edit(title = "Reference SQL", type = EditType.CODE_EDITOR,
                     codeEditType = @CodeEditorType(language = "sql"), notNull = true)
     )
     private String refSql;

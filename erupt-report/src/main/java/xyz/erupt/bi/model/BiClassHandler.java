@@ -23,36 +23,36 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  */
 @Entity
 @Table(name = "e_bi_class_handler")
-@Erupt(name = "报表处理类")
+@Erupt(name = "Report Handler")
 @Getter
 @Service
 @EruptI18n
 public class BiClassHandler extends MetaModelUpdateVo {
 
     @EruptField(
-            views = @View(title = "名称", sortable = true),
-            edit = @Edit(title = "名称", notNull = true, search = @Search)
+            views = @View(title = "Name", sortable = true),
+            edit = @Edit(title = "Name", notNull = true, search = @Search)
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "处理类", sortable = true),
-            edit = @Edit(title = "处理类", notNull = true, type = EditType.CHOICE,
+            views = @View(title = "Handler Class", sortable = true),
+            edit = @Edit(title = "Handler Class", notNull = true, type = EditType.CHOICE,
                     choiceType = @ChoiceType(fetchHandler = BiHandlerChoice.class),
-                    desc = "实现xyz.erupt.bi.fun.EruptBiHandler接口")
+                    desc = "Implement xyz.erupt.bi.fun.EruptBiHandler interface")
     )
     private String handlerPath;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "处理类参数"),
-            edit = @Edit(title = "处理类参数", desc = "可在处理类exprHandler param参数中获取", type = EditType.CODE_EDITOR)
+            views = @View(title = "Handler Params"),
+            edit = @Edit(title = "Handler Params", desc = "Accessible via exprHandler param in the handler", type = EditType.CODE_EDITOR)
     )
     private String param;
 
     @EruptField(
-            views = @View(title = "备注"),
-            edit = @Edit(title = "备注", type = EditType.TEXTAREA)
+            views = @View(title = "Remark"),
+            edit = @Edit(title = "Remark", type = EditType.TEXTAREA)
     )
     private String remark;
 

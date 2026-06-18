@@ -18,21 +18,21 @@ import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
  * @author YuePeng
  * date 2021/7/17 23:04
  */
-@Erupt(name = "报表发布弹窗")
+@Erupt(name = "Publish Report")
 @Getter
 @Setter
 @EruptI18n
 public class BiReleaseModal extends BaseModel {
 
     @EruptField(
-            edit = @Edit(title = "菜单名称", notNull = true)
+            edit = @Edit(title = "Menu Name", notNull = true)
     )
     private String name;
 
     @EruptField(
             edit = @Edit(
                     search = @Search,
-                    title = "菜单位置", desc = "发布至根目录可跳过此选项", type = EditType.REFERENCE_TREE,
+                    title = "Menu Location", desc = "Skip if publishing to root directory", type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id"),
                     filter = @Filter(conditionHandler = EruptMenuViewFilter.class)
             )

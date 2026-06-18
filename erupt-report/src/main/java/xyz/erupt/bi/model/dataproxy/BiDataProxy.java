@@ -36,7 +36,7 @@ public class BiDataProxy implements DataProxy<Bi> {
     public void beforeUpdate(Bi bi) {
         eruptDao.detach(bi);
         Bi bbi = eruptDao.lambdaQuery(Bi.class).eq(Bi::getId, bi.getId()).one();
-        // 在一对多的映射情况下，多的一方如果存有一的一方对象，那么这个对象必须赋值否则会出现多的一方数据无法保存的问题
+        // in a one-to-many mapping, the many-side must have the one-side set, otherwise the many-side data cannot be saved
 //        if (null != bi.getBiDimension()) {
 //            for (BiDimension dimension : bi.getBiDimension()) {
 //                dimension.setBi(bi);

@@ -9,8 +9,8 @@ public enum DBTypeEnum {
     TiDB(DBTypeEnum.GENERAL_LIMIT),
     Oracle(DBTypeEnum.ORACLE_LIMIT),
     SQLServer2012(DBTypeEnum.SQL_SERVER_2012_LIMIT),
-    达梦(DBTypeEnum.ORACLE_LIMIT),
-    人大金仓(DBTypeEnum.GENERAL_LIMIT),
+    DaMeng(DBTypeEnum.ORACLE_LIMIT),
+    KingBase(DBTypeEnum.GENERAL_LIMIT),
     Clickhouse(DBTypeEnum.GENERAL_LIMIT),
     Impala(DBTypeEnum.GENERAL_LIMIT) {
         @Override

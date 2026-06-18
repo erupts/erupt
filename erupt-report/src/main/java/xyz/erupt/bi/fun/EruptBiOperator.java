@@ -11,17 +11,17 @@
 // */
 //public interface EruptBiOperator {
 //
-//    @Comment("绑定 BI 报表编码")
+//    @Comment("Bind BI report code")
 //    String bindBi();
 //
-//    @Comment("功能名称")
+//    @Comment("Feature name")
 //    String name();
 //
-//    @Comment("是否可用")
+//    @Comment("Whether enabled")
 //    boolean enable();
 //
-//    @Comment("定义数据处理过程")
-//    @Comment("返回值：自定义JS语句，支持null值")
+//    @Comment("Define data processing logic")
+//    @Comment("Returns: custom JS expression, nullable")
 //    String process(List<Map<String, Object>> data);
 //
 //

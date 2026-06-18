@@ -1,0 +1,128 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+Report Config,报表配置,報表配置,Report Config,Config Rapport,レポート設定,보고서 설정,Настройка отчёта,Configuración de Informe,Berichtskonfiguration,Configuração de Relatório,Konfigurasi Laporan,إعداد التقرير
+Publish,发布,發布,Publish,Publier,公開,게시,Опубликовать,Publicar,Veröffentlichen,Publicar,Terbitkan,نشر
+Chart Config,图表配置,圖表配置,Chart Config,Config Graphique,グラフ設定,차트 설정,Настройка графика,Configuración de Gráfico,Diagrammkonfiguration,Configuração de Gráfico,Konfigurasi Grafik,إعداد الرسم البياني
+Modification History,修改记录,修改記錄,Modification History,Historique des modifications,変更履歴,수정 기록,История изменений,Historial de Modificaciones,Änderungshistorie,Histórico de Modificações,Riwayat Modifikasi,سجل التعديلات
+Code,编码,編碼,Code,Code,コード,코드,Код,Código,Code,Código,Kode,رمز
+Name,名称,名稱,Name,Nom,名前,이름,Имя,Nombre,Name,Nome,Nama,اسم
+Group,组别,組別,Group,Groupe,グループ,그룹,Группа,Grupo,Gruppe,Grupo,Grup,مجموعة
+Data Source,数据源,數據源,Data Source,Source de données,データソース,데이터 소스,Источник данных,Fuente de datos,Datenquelle,Fonte de dados,Sumber data,مصدر البيانات
+Handler,处理类,處理類,Handler,Gestionnaire,ハンドラー,핸들러,Обработчик,Manejador,Handler,Manipulador,Penanganan,المعالج
+Pagination,分页方式,分頁方式,Pagination,Pagination,ページング,페이지네이션,Пагинация,Paginación,Paginierung,Paginação,Paginasi,ترقيم الصفحات
+Backend Pagination,后端分页,後端分頁,Backend Pagination,Pagination Backend,バックエンドページング,백엔드 페이지네이션,Серверная пагинация,Paginación Backend,Backend-Paginierung,Paginação Backend,Paginasi Backend,ترقيم صفحات الخادم
+Frontend Pagination,前端分页,前端分頁,Frontend Pagination,Pagination Frontend,フロントエンドページング,프론트엔드 페이지네이션,Клиентская пагинация,Paginación Frontend,Frontend-Paginierung,Paginação Frontend,Paginasi Frontend,ترقيم صفحات الواجهة
+No Pagination,不分页,不分頁,No Pagination,Sans pagination,ページングなし,페이지 없음,Без пагинации,Sin paginación,Keine Paginierung,Sem paginação,Tanpa paginasi,بدون ترقيم
+Cache Time,缓存时间,緩存時間,Cache Time,Temps de cache,キャッシュ時間,캐시 시간,Время кэша,Tiempo de caché,Cache-Zeit,Tempo de cache,Waktu cache,وقت التخزين المؤقت
+Cache Duration (s),缓存时间（秒）,緩存時間（秒）,Cache Duration (s),Durée du cache (s),キャッシュ期間（秒）,캐시 기간(초),Длительность кэша (с),Duración de caché (s),Cache-Dauer (s),Duração do cache (s),Durasi cache (d),مدة التخزين المؤقت (ث)
+Refresh Interval,自刷周期,自刷週期,Refresh Interval,Intervalle de rafraîchissement,更新間隔,새로 고침 간격,Интервал обновления,Intervalo de actualización,Aktualisierungsintervall,Intervalo de atualização,Interval refresh,فترة التحديث
+Auto Refresh (s),自动刷新周期（秒）,自動刷新週期（秒）,Auto Refresh (s),Rafraîchissement auto (s),自動更新（秒）,자동 새로 고침(초),Авто-обновление (с),Actualización automática (s),Automatische Aktualisierung (s),Atualização automática (s),Refresh otomatis (d),التحديث التلقائي (ث)
+Export,导出,導出,Export,Exporter,エクスポート,내보내기,Экспорт,Exportar,Exportieren,Exportar,Ekspor,تصدير
+On,开启,開啟,On,Activé,オン,켜기,Включить,Activado,Ein,Ligado,Aktif,تشغيل
+Off,关闭,關閉,Off,Désactivé,オフ,끄기,Выключить,Desactivado,Aus,Desligado,Nonaktif,إيقاف
+Query SQL,取值SQL,取值SQL,Query SQL,SQL de requête,クエリSQL,쿼리 SQL,SQL запроса,SQL de consulta,Abfrage-SQL,SQL de consulta,SQL kueri,SQL الاستعلام
+Count SQL,总条数SQL,總條數SQL,Count SQL,SQL de comptage,カウントSQL,카운트 SQL,SQL подсчёта,SQL de conteo,Anzahl-SQL,SQL de contagem,SQL jumlah,SQL العدد
+Description,描述,描述,Description,Description,説明,설명,Описание,Descripción,Beschreibung,Descrição,Deskripsi,وصف
+Preview,效果预览,效果預覽,Preview,Aperçu,プレビュー,미리 보기,Предпросмотр,Vista previa,Vorschau,Visualização,Pratinjau,معاينة
+Query Dimensions,查询维度,查詢維度,Query Dimensions,Dimensions de requête,クエリ次元,쿼리 차원,Измерения запроса,Dimensiones de consulta,Abfragedimensionen,Dimensões de consulta,Dimensi kueri,أبعاد الاستعلام
+Column Config,列配置,列配置,Column Config,Config Colonne,列設定,열 설정,Настройка столбца,Configuración de columna,Spaltenkonfiguration,Configuração de coluna,Konfigurasi kolom,إعداد العمود
+Data Source Manager,数据源管理,數據源管理,Data Source Manager,Gestionnaire de sources,データソース管理,데이터 소스 관리,Управление источниками,Gestión de fuentes,Datenquellenverwaltung,Gerenciamento de fontes,Manajemen sumber data,إدارة مصادر البيانات
+Driver,驱动,驅動,Driver,Pilote,ドライバー,드라이버,Драйвер,Controlador,Treiber,Driver,Driver,برنامج التشغيل
+DB Type,数据库类型,數據庫類型,DB Type,Type de BDD,DBタイプ,DB 유형,Тип БД,Tipo de BD,DB-Typ,Tipo de BD,Tipe DB,نوع قاعدة البيانات
+Connection String,连接字符串,連接字符串,Connection String,Chaîne de connexion,接続文字列,연결 문자열,Строка подключения,Cadena de conexión,Verbindungszeichenkette,String de conexão,String koneksi,سلسلة الاتصال
+Username,用户名,用戶名,Username,Nom d'utilisateur,ユーザー名,사용자 이름,Имя пользователя,Nombre de usuario,Benutzername,Nome de usuário,Nama pengguna,اسم المستخدم
+Password,密码,密碼,Password,Mot de passe,パスワード,비밀번호,Пароль,Contraseña,Passwort,Senha,Kata sandi,كلمة المرور
+Pagination SQL,分页语句,分頁語句,Pagination SQL,SQL de pagination,ページングSQL,페이지네이션 SQL,SQL пагинации,SQL de paginación,Paginierungs-SQL,SQL de paginação,SQL paginasi,SQL ترقيم الصفحات
+Connection Pool Config,连接池配置,連接池配置,Connection Pool Config,Config pool connexion,接続プール設定,연결 풀 설정,Настройка пула,Configuración de pool,Verbindungspool-Konfiguration,Configuração de pool,Konfigurasi pool,إعداد تجمع الاتصالات
+Remark,备注,備注,Remark,Remarque,備考,비고,Примечание,Observación,Bemerkung,Observação,Catatan,ملاحظة
+Query Dimension,查询维度,查詢維度,Query Dimension,Dimension de requête,クエリ次元,쿼리 차원,Измерение запроса,Dimensión de consulta,Abfragedimension,Dimensão de consulta,Dimensi kueri,بُعد الاستعلام
+Dimension Code,维度编码,維度編碼,Dimension Code,Code de dimension,次元コード,차원 코드,Код измерения,Código de dimensión,Dimensionscode,Código de dimensão,Kode dimensi,رمز البُعد
+Required,是否必填,是否必填,Required,Requis,必須,필수,Обязательно,Requerido,Erforderlich,Obrigatório,Wajib,مطلوب
+Reference Dimension,参照维度,參照維度,Reference Dimension,Dimension référence,参照次元,참조 차원,Ссылочное измерение,Dimensión de referencia,Referenzdimension,Dimensão de referência,Dimensi referensi,بُعد المرجع
+Dimension Type,维度类型,維度類型,Dimension Type,Type de dimension,次元タイプ,차원 유형,Тип измерения,Tipo de dimensión,Dimensionstyp,Tipo de dimensão,Tipe dimensi,نوع البُعد
+Text,文本,文本,Text,Texte,テキスト,텍스트,Текст,Texto,Text,Texto,Teks,نص
+Tag,标签,標籤,Tag,Étiquette,タグ,태그,Тег,Etiqueta,Tag,Tag,Tag,علامة
+Number,数值,數值,Number,Nombre,数値,숫자,Число,Número,Zahl,Número,Angka,رقم
+Number Range,数值区间,數值區間,Number Range,Plage numérique,数値範囲,숫자 범위,Числовой диапазон,Rango numérico,Zahlenbereich,Intervalo numérico,Rentang angka,نطاق رقمي
+Date,日期,日期,Date,Date,日付,날짜,Дата,Fecha,Datum,Data,Tanggal,تاريخ
+Time,时间,時間,Time,Heure,時間,시간,Время,Hora,Zeit,Hora,Waktu,وقت
+DateTime,日期时间,日期時間,DateTime,Date et heure,日時,날짜 시간,Дата и время,Fecha y hora,Datum und Uhrzeit,Data e hora,Tanggal waktu,التاريخ والوقت
+Week,周,周,Week,Semaine,週,주,Неделя,Semana,Woche,Semana,Minggu,أسبوع
+Month,月,月,Month,Mois,月,월,Месяц,Mes,Monat,Mês,Bulan,شهر
+Year,年,年,Year,Année,年,년,Год,Año,Jahr,Ano,Tahun,سنة
+Date Range,日期区间,日期區間,Date Range,Plage de dates,日付範囲,날짜 범위,Диапазон дат,Rango de fechas,Datumsbereich,Intervalo de datas,Rentang tanggal,نطاق التاريخ
+DateTime Range,日期时间区间,日期時間區間,DateTime Range,Plage date-heure,日時範囲,날짜 시간 범위,Диапазон дат и времён,Rango fecha-hora,Datum-Uhrzeit-Bereich,Intervalo data-hora,Rentang tanggal waktu,نطاق التاريخ والوقت
+Single Reference,单选参照,單選參照,Single Reference,Référence simple,単一参照,단일 참조,Одиночная ссылка,Referencia única,Einzelreferenz,Referência única,Referensi tunggal,مرجع واحد
+Multi Reference,多选参照,多選參照,Multi Reference,Référence multiple,複数参照,다중 참조,Множественная ссылка,Referencia múltiple,Mehrfachreferenz,Referência múltipla,Referensi multi,مراجع متعددة
+Radio Reference,Radio参照,Radio參照,Radio Reference,Référence radio,ラジオ参照,라디오 참조,Ссылка радио,Referencia radio,Radio-Referenz,Referência radio,Referensi radio,مرجع راديو
+Checkbox Reference,Checkbox参照,Checkbox參照,Checkbox Reference,Référence checkbox,チェックボックス参照,체크박스 참조,Ссылка чекбокс,Referencia checkbox,Checkbox-Referenz,Referência checkbox,Referensi checkbox,مرجع مربع الاختيار
+Single Tree Reference,单选树参照,單選樹參照,Single Tree Reference,Référence arbre simple,単一ツリー参照,단일 트리 참조,Одиночная древовидная ссылка,Referencia árbol único,Einzelbaum-Referenz,Referência de árvore única,Referensi pohon tunggal,مرجع شجرة واحدة
+Multi Tree Reference,多选树参照,多選樹參照,Multi Tree Reference,Référence arbre multiple,複数ツリー参照,다중 트리 참조,Множественная древовидная ссылка,Referencia árbol múltiple,Mehrfachbaum-Referenz,Referência de árvore múltipla,Referensi pohon multi,مراجع شجرة متعددة
+Cascade Reference,级联选择参照,級聯選擇參照,Cascade Reference,Référence cascade,カスケード参照,계단식 참조,Каскадная ссылка,Referencia en cascada,Kaskadenreferenz,Referência em cascata,Referensi bertingkat,مرجع متتالي
+Single Table Reference,单选表格参照,單選表格參照,Single Table Reference,Référence table simple,単一テーブル参照,단일 테이블 참조,Одиночная табличная ссылка,Referencia tabla única,Einzeltabellen-Referenz,Referência de tabela única,Referensi tabel tunggal,مرجع جدول واحد
+Multi Table Reference,多选表格参照,多選表格參照,Multi Table Reference,Référence table multiple,複数テーブル参照,다중 테이블 참조,Множественная табличная ссылка,Referencia tabla múltiple,Mehrfachtabellen-Referenz,Referência de tabela múltipla,Referensi tabel multi,مراجع جداول متعددة
+Default Value,默认值,默認值,Default Value,Valeur par défaut,デフォルト値,기본값,Значение по умолчанию,Valor predeterminado,Standardwert,Valor padrão,Nilai default,القيمة الافتراضية
+Column Name,列名,列名,Column Name,Nom de colonne,列名,열 이름,Имя столбца,Nombre de columna,Spaltenname,Nome da coluna,Nama kolom,اسم العمود
+Type,类型,類型,Type,Type,タイプ,유형,Тип,Tipo,Typ,Tipo,Tipe,النوع
+Width,宽度,寬度,Width,Largeur,幅,너비,Ширина,Ancho,Breite,Largura,Lebar,عرض
+Display,是否显示,是否顯示,Display,Affichage,表示,표시,Отображать,Mostrar,Anzeigen,Exibir,Tampilkan,عرض
+Sortable,是否排序,是否排序,Sortable,Triable,ソート可能,정렬 가능,Сортируемый,Ordenable,Sortierbar,Classificável,Dapat diurutkan,قابل للفرز
+Drill SQL,下钻SQL,下鑽SQL,Drill SQL,SQL de drill,ドリルSQL,드릴 SQL,SQL детализации,SQL de desglose,Drill-SQL,SQL de detalhamento,SQL drill,SQL التفصيل
+Publish Report,报表发布弹窗,報表發布彈窗,Publish Report,Publication de rapport,レポート公開,보고서 게시,Публикация отчёта,Publicación de informe,Bericht veröffentlichen,Publicar relatório,Terbitkan laporan,نشر التقرير
+Menu Name,菜单名称,菜單名稱,Menu Name,Nom du menu,メニュー名,메뉴 이름,Имя меню,Nombre del menú,Menüname,Nome do menu,Nama menu,اسم القائمة
+Menu Location,菜单位置,菜單位置,Menu Location,Emplacement du menu,メニュー位置,메뉴 위치,Расположение меню,Ubicación del menú,Menüposition,Localização do menu,Lokasi menu,موقع القائمة
+Component Template,组件模板,組件模板,Component Template,Modèle de composant,コンポーネントテンプレート,컴포넌트 템플릿,Шаблон компонента,Plantilla de componente,Komponentenvorlage,Modelo de componente,Template komponen,قالب المكون
+Resource Type,资源类型,資源類型,Resource Type,Type de ressource,リソースタイプ,리소스 유형,Тип ресурса,Tipo de recurso,Ressourcentyp,Tipo de recurso,Tipe sumber daya,نوع المورد
+File Path,文件路径,文件路徑,File Path,Chemin de fichier,ファイルパス,파일 경로,Путь к файлу,Ruta de archivo,Dateipfad,Caminho do arquivo,Jalur file,مسار الملف
+Online Config,在线配置,在線配置,Online Config,Config en ligne,オンライン設定,온라인 설정,Онлайн конфигурация,Configuración en línea,Online-Konfiguration,Configuração online,Konfigurasi online,إعداد عبر الإنترنت
+Path,路径,路徑,Path,Chemin,パス,경로,Путь,Ruta,Pfad,Caminho,Jalur,مسار
+Template,模板,模板,Template,Modèle,テンプレート,템플릿,Шаблон,Plantilla,Vorlage,Modelo,Template,قالب
+Report Handler,报表处理类,報表處理類,Report Handler,Gestionnaire de rapport,レポートハンドラー,보고서 핸들러,Обработчик отчёта,Manejador de informes,Berichts-Handler,Manipulador de relatório,Penanganan laporan,معالج التقرير
+Handler Class,处理类,處理類,Handler Class,Classe de gestionnaire,ハンドラークラス,핸들러 클래스,Класс обработчика,Clase de manejador,Handler-Klasse,Classe manipuladora,Kelas penanganan,فئة المعالج
+Handler Params,处理类参数,處理類參數,Handler Params,Paramètres du gestionnaire,ハンドラーパラメータ,핸들러 매개변수,Параметры обработчика,Parámetros del manejador,Handler-Parameter,Parâmetros do manipulador,Parameter penanganan,معاملات المعالج
+Group Manager,分组管理,分組管理,Group Manager,Gestionnaire de groupes,グループ管理,그룹 관리,Управление группами,Gestión de grupos,Gruppenverwaltung,Gerenciamento de grupos,Manajemen grup,إدارة المجموعات
+Group Name,组别名称,組別名稱,Group Name,Nom du groupe,グループ名,그룹 이름,Название группы,Nombre de grupo,Gruppenname,Nome do grupo,Nama grup,اسم المجموعة
+Parent Group,上级组别,上級組別,Parent Group,Groupe parent,親グループ,상위 그룹,Родительская группа,Grupo padre,Übergeordnete Gruppe,Grupo pai,Grup induk,المجموعة الأم
+Source,来源,來源,Source,Source,ソース,출처,Источник,Fuente,Quelle,Fonte,Sumber,المصدر
+Operator,操作人,操作人,Operator,Opérateur,操作者,운영자,Оператор,Operador,Operator,Operador,Operator,المشغل
+Operate Time,操作时间,操作時間,Operate Time,Heure d'opération,操作時間,작업 시간,Время операции,Hora de operación,Operationszeit,Hora de operação,Waktu operasi,وقت التشغيل
+Before,修改前,修改前,Before,Avant,変更前,변경 전,До изменения,Antes,Vorher,Antes,Sebelum,قبل
+After,修改后,修改後,After,Après,変更後,변경 후,После изменения,Después,Nachher,Depois,Setelah,بعد
+Function Manager,函数管理,函數管理,Function Manager,Gestionnaire de fonctions,関数管理,함수 관리,Управление функциями,Gestión de funciones,Funktionsverwaltung,Gerenciamento de funções,Manajemen fungsi,إدارة الوظائف
+Function Expression,函数表达式,函數表達式,Function Expression,Expression de fonction,関数式,함수 식,Выражение функции,Expresión de función,Funktionsausdruck,Expressão de função,Ekspresi fungsi,تعبير الدالة
+Reference Dimension,参照维度,參照維度,Reference Dimension,Dimension de référence,参照次元,참조 차원,Ссылочное измерение,Dimensión de referencia,Referenzdimension,Dimensão de referência,Dimensi referensi,بُعد المرجع
+Reference SQL,参照SQL,參照SQL,Reference SQL,SQL de référence,参照SQL,참조 SQL,SQL справки,SQL de referencia,Referenz-SQL,SQL de referência,SQL referensi,SQL المرجع
+Chart Type,图表类型,圖表類型,Chart Type,Type de graphique,グラフタイプ,차트 유형,Тип графика,Tipo de gráfico,Diagrammtyp,Tipo de gráfico,Tipe grafik,نوع الرسم البياني
+Chart SQL,图表SQL,圖表SQL,Chart SQL,SQL graphique,グラフSQL,차트 SQL,SQL графика,SQL del gráfico,Diagramm-SQL,SQL do gráfico,SQL grafik,SQL الرسم البياني
+Report Template,报表模板,報表模板,Report Template,Modèle de rapport,レポートテンプレート,보고서 템플릿,Шаблон отчёта,Plantilla de informe,Berichtsvorlage,Modelo de relatório,Template laporan,قالب التقرير
+Custom Chart Config,自定义图表配置,自定義圖表配置,Custom Chart Config,Config graphique personnalisée,カスタムグラフ設定,사용자 지정 차트 설정,Пользовательская конфигурация,Config gráfico personalizado,Benutzerdefinierte Diagrammkonfig.,Config personalizada de gráfico,Konfigurasi grafik kustom,إعداد مخصص للرسم البياني
+Height (px),高度(px),高度(px),Height (px),Hauteur (px),高さ(px),높이(px),Высота (px),Altura (px),Höhe (px),Altura (px),Tinggi (px),الارتفاع (px)
+Grid,栅格数,柵格數,Grid,Grille,グリッド,그리드,Сетка,Cuadrícula,Gitter,Grade,Grid,شبكة
+Sort,显示顺序,顯示順序,Sort,Ordre d'affichage,表示順序,표시 순서,Порядок сортировки,Orden de visualización,Anzeigereihenfolge,Ordem de exibição,Urutan tampilan,ترتيب العرض
+Statistic,数值统计,數值統計,Statistic,Statistique,統計,통계,Статистика,Estadística,Statistik,Estatística,Statistik,إحصاء
+Alert,文本提示,文本提示,Alert,Alerte,アラート,알림,Оповещение,Alerta,Benachrichtigung,Alerta,Peringatan,تنبيه
+Line,折线图,折線圖,Line,Graphique linéaire,折れ線グラフ,선 그래프,Линейный график,Gráfico lineal,Liniendiagramm,Gráfico de linhas,Grafik garis,رسم بياني خطي
+Step Line,阶梯折线图,階梯折線圖,Step Line,Graphique en escalier,ステップライングラフ,계단 선 그래프,Ступенчатый график,Gráfico escalonado,Stufenliniendiagramm,Gráfico em degraus,Grafik garis bertahap,رسم بياني خطوات
+Bar,柱状图,柱狀圖,Bar,Graphique à barres,棒グラフ,막대 그래프,Столбчатая диаграмма,Gráfico de barras,Balkendiagramm,Gráfico de barras,Grafik batang,رسم بياني شريطي
+Stacked Bar,堆叠柱状图,堆疊柱狀圖,Stacked Bar,Barres empilées,積み上げ棒グラフ,누적 막대 그래프,Составная диаграмма,Barras apiladas,Gestapeltes Balkendiagramm,Barras empilhadas,Grafik batang bertumpuk,أشرطة متكدسة
+Area,面积图,面積圖,Area,Graphique de surface,面積グラフ,영역 그래프,Диаграмма области,Gráfico de área,Flächendiagramm,Gráfico de área,Grafik area,رسم بياني المساحة
+Percentage Area,百分比面积图,百分比面積圖,Percentage Area,Aire en pourcentage,パーセント面積グラフ,백분율 영역 그래프,Процентная область,Área porcentual,Prozentuale Fläche,Área percentual,Area persentase,منطقة النسبة المئوية
+Horizontal Bar,条形图,條形圖,Horizontal Bar,Barres horizontales,横棒グラフ,수평 막대 그래프,Горизонтальные полосы,Barras horizontales,Horizontales Balkendiagramm,Barras horizontais,Batang horizontal,أشرطة أفقية
+Percentage Stacked Bar,百分比条形图,百分比條形圖,Percentage Stacked Bar,Barres empilées %,パーセント積み上げグラフ,백분율 누적 막대 그래프,Составные полосы в %,Barras apiladas %,Gestapelte Balken %,Barras empilhadas %,Batang bertumpuk %,أشرطة مكدسة بالنسبة المئوية
+Radar,雷达图,雷達圖,Radar,Graphique radar,レーダーグラフ,레이더 그래프,Радарная диаграмма,Gráfico radar,Netzdiagramm,Gráfico de radar,Grafik radar,رسم بياني راداري
+Scatter,散点图,散點圖,Scatter,Nuage de points,散布図,산점도,Точечная диаграмма,Diagrama de dispersión,Streudiagramm,Diagrama de dispersão,Grafik sebar,مخطط التشتت
+Bubble,气泡图,氣泡圖,Bubble,Graphique à bulles,バブルグラフ,버블 그래프,Пузырьковая диаграмма,Gráfico de burbujas,Blasendiagramm,Gráfico de bolhas,Grafik gelembung,رسم بياني فقاعي
+Pie,饼图,餅圖,Pie,Graphique circulaire,円グラフ,원형 그래프,Круговая диаграмма,Gráfico circular,Kreisdiagramm,Gráfico de pizza,Grafik lingkaran,مخطط دائري
+Ring,环形图,環形圖,Ring,Graphique annulaire,リンクグラフ,도넛 그래프,Кольцевая диаграмма,Gráfico de anillo,Ringdiagramm,Gráfico de rosca,Grafik cincin,مخطط حلقي
+Rose,玫瑰图,玫瑰圖,Rose,Graphique en rose,ローズグラフ,장미 그래프,Диаграмма роза,Gráfico de rosa,Rosendiagramm,Gráfico de rosa,Grafik mawar,مخطط الوردة
+Radial Bar,玉珏图,玉珏圖,Radial Bar,Barres radiales,放射状棒グラフ,방사형 막대 그래프,Радиальные полосы,Barras radiales,Radiales Balkendiagramm,Barras radiais,Batang radial,أشرطة شعاعية
+Funnel,漏斗图,漏斗圖,Funnel,Graphique en entonnoir,ファネルグラフ,깔때기 그래프,Воронкообразная диаграмма,Gráfico de embudo,Trichterdiagramm,Gráfico de funil,Grafik corong,مخطط قمعي
+Waterfall,瀑布图,瀑布圖,Waterfall,Graphique en cascade,ウォーターフォールグラフ,폭포 그래프,Каскадная диаграмма,Gráfico de cascada,Wasserfalldiagramm,Gráfico de cascata,Grafik air terjun,مخطط شلال
+Word Cloud,词云,詞雲,Word Cloud,Nuage de mots,ワードクラウド,단어 클라우드,Облако слов,Nube de palabras,Wortwolke,Nuvem de palavras,Awan kata,سحابة الكلمات
+Sankey,桑基图,桑基圖,Sankey,Diagramme de Sankey,サンキーダイアグラム,생키 다이어그램,Диаграмма Санкея,Diagrama de Sankey,Sankey-Diagramm,Diagrama de Sankey,Diagram Sankey,مخطط سانكي
+Chord,弦图,弦圖,Chord,Diagramme de cordes,コードダイアグラム,코드 다이어그램,Хордовая диаграмма,Diagrama de cuerdas,Sehnendiagramm,Diagrama de cordas,Diagram tali,مخطط الوتر
+Table,数据表,數據表,Table,Tableau de données,データテーブル,데이터 테이블,Таблица данных,Tabla de datos,Datentabelle,Tabela de dados,Tabel data,جدول البيانات
+bi.reference_required,参照维度必填,參照維度必填,Reference dimension is required,La dimension de référence est requise,参照次元は必須です,참조 차원은 필수입니다,Ссылочное измерение обязательно,La dimensión de referencia es requerida,Referenzdimension ist erforderlich,Dimensão de referência é obrigatória,Dimensi referensi wajib diisi,بُعد المرجع مطلوب
+bi.drill_sql_required,下钻SQL必填,下鑽SQL必填,Drill SQL is required,SQL de drill requis,ドリルSQLは必須です,드릴 SQL은 필수입니다,Drill SQL обязателен,SQL de desglose es requerido,Drill-SQL ist erforderlich,Drill SQL é obrigatório,Drill SQL wajib diisi,SQL التفصيل مطلوب
+bi.publish_super_admin_only,报表发布请联系"超级管理员"操作！,報表發布請聯繫"超級管理員"操作！,Report publishing requires Super Admin permission!,La publication nécessite les droits Super Admin !,レポートの公開にはスーパー管理者権限が必要です！,보고서 게시는 슈퍼 관리자 권한이 필요합니다！,Публикация отчётов требует прав суперадмина!,¡La publicación requiere permisos de Super Admin!,Bericht veröffentlichen erfordert Super-Admin-Rechte!,Publicação requer permissão de Super Admin!,Penerbitan laporan memerlukan izin Super Admin!,نشر التقارير يتطلب صلاحية المشرف الأعلى!
+bi.menu_already_exists,菜单已存在请勿重复发布,菜單已存在請勿重複發布,Menu already exists; please do not publish again,Le menu existe déjà ; ne publiez pas à nouveau,メニューはすでに存在します。再発行しないでください,메뉴가 이미 존재합니다. 다시 게시하지 마세요,Меню уже существует; не публикуйте повторно,El menú ya existe; no publique de nuevo,Menü existiert bereits; bitte nicht erneut veröffentlichen,O menu já existe; não publique novamente,Menu sudah ada; jangan terbitkan lagi,القائمة موجودة بالفعل؛ لا تنشر مرة أخرى
+bi.no_dimension_bound,未绑定查询维度,未綁定查詢維度,No query dimension bound,Aucune dimension de requête liée,クエリ次元が未設定です,쿼리 차원이 연결되지 않았습니다,Измерение запроса не привязано,No hay dimensión de consulta vinculada,Keine Abfragedimension gebunden,Nenhuma dimensão de consulta vinculada,Tidak ada dimensi kueri yang terikat,لم يتم ربط بُعد الاستعلام

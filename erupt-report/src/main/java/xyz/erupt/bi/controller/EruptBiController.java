@@ -19,6 +19,7 @@ import xyz.erupt.bi.view.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecurityUtil;
@@ -165,7 +166,7 @@ public class EruptBiController {
         throw new EruptWebApiRuntimeException(drillCode + " column not found");
     }
 
-    //参照列表接口
+    // reference list endpoint
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @PostMapping("/{code}/reference/{id}")
     public List<Reference> refQuery(@PathVariable("id") Long dimId, @PathVariable String code,
@@ -173,7 +174,7 @@ public class EruptBiController {
         BiDimension dimension = entityManager.find(BiDimension.class, dimId);
         BiDimensionReference reference = dimension.getBiDimensionReference();
         if (null == reference) {
-            throw new RuntimeException("未绑定查询维度");
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("bi.no_dimension_bound"));
         }
         List<Map<String, Object>> list = biService.startQuery(reference.getName(), reference.getRefSql(), null, reference.getClassHandler(), reference.getDataSource(), query);
         List<Reference> references = new ArrayList<>();
@@ -193,11 +194,11 @@ public class EruptBiController {
     }
 
     /**
-     * 参照表格接口
+     * Reference table endpoint
      *
-     * @param code 报表编码
-     * @param id   维度 ID
-     * @return 表格对象
+     * @param code report code
+     * @param id   dimension ID
+     * @return table data
      */
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @PostMapping("/{code}/reference-table/{id}")
@@ -221,9 +222,9 @@ public class EruptBiController {
     }
 
     /**
-     * @param chartId 图表ID
-     * @param code    报表编码
-     * @param query   查询条件
+     * @param chartId chart ID
+     * @param code    report code
+     * @param query   query params
      */
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @PostMapping("/{code}/chart/{id}")
@@ -253,7 +254,7 @@ public class EruptBiController {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         BiChart chart = entityManager.find(BiChart.class, chartId);
         Bi bi = chart.getBi();
-        Erupts.requireTrue(bi.getExport(), bi.getName() + "禁止导出！");
+        Erupts.requireTrue(bi.getExport(), bi.getName() + " export is disabled!");
         biService.verifyBiMenuPermissions(chart.getBi(), code);
         this.validateQuery(bi, query);
         List<Map<String, Object>> list = biService.startQuery(chart.getName(), chart.getSqlStatement(), chart.getCacheTime(), chart.getClassHandler(), chart.getDataSource(), query);
@@ -274,18 +275,18 @@ public class EruptBiController {
         Bi bi = biService.findBi(id);
         this.validateQuery(bi, query);
         biService.verifyBiMenuPermissions(bi, code);
-        Erupts.requireTrue(bi.getExport(), bi.getName() + "禁止导出！");
+        Erupts.requireTrue(bi.getExport(), bi.getName() + " export is disabled!");
         BiData biData = biService.queryBiData(bi, 1, Integer.MAX_VALUE, null, query, true);
         List<KV<String, String>> header = biData.getColumns().stream().filter(BiColumnVo::getDisplay).map(it -> new KV<>(it.getName(), it.getName())).collect(Collectors.toList());
         biService.exportExcel(bi.getName(), query, header, biData.getList(), bi.getClassHandler(), request, response);
     }
 
-    //校验查询参数
+    // validate query params
     private void validateQuery(Bi bi, Map<String, Object> query) {
         for (BiDimension dimension : bi.getBiDimension()) {
             if (dimension.getNotNull()) {
                 if (null == query || null == query.get(dimension.getCode())) {
-                    throw new EruptApiErrorTip(EruptApiModel.Status.WARNING, dimension.getTitle() + "必填！",
+                    throw new EruptApiErrorTip(EruptApiModel.Status.WARNING, dimension.getTitle() + " is required!",
                             EruptApiModel.PromptWay.MESSAGE);
                 }
             }

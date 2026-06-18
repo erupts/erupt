@@ -25,7 +25,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  */
 @Entity
 @Table(name = "e_bi_function", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@Erupt(name = "函数管理", dataProxy = BiFunctionDataProxy.class)
+@Erupt(name = "Function Manager", dataProxy = BiFunctionDataProxy.class)
 @Getter
 @Setter
 @Service
@@ -34,21 +34,21 @@ public class BiFunction extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
-            views = @View(title = "编码", sortable = true, width = "120px"),
-            edit = @Edit(title = "编码", search = @Search, show = false)
+            views = @View(title = "Code", sortable = true, width = "120px"),
+            edit = @Edit(title = "Code", search = @Search, show = false)
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称", sortable = true),
-            edit = @Edit(title = "名称", notNull = true, search = @Search)
+            views = @View(title = "Name", sortable = true),
+            edit = @Edit(title = "Name", notNull = true, search = @Search)
     )
     private String name;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "函数表达式"),
-            edit = @Edit(title = "函数表达式", desc = "参照JavaScript function写法",
+            views = @View(title = "Function Expression"),
+            edit = @Edit(title = "Function Expression", desc = "Follow JavaScript function syntax",
                     codeEditType = @CodeEditorType(language = "javascript"), notNull = true, type = EditType.CODE_EDITOR)
     )
     private String jsFunction;

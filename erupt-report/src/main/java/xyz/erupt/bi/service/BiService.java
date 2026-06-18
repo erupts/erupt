@@ -92,7 +92,7 @@ public class BiService {
         return entityManager.find(Bi.class, id);
     }
 
-    //校验请求id是否拥有菜单权限
+    // verify that the requested code has menu permission
     public void verifyBiMenuPermissions(Bi bi, String code) {
         String biCode = Optional.ofNullable(request.getHeader(EruptMutualConst.ERUPT))
                 .orElse(request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY));
@@ -145,13 +145,13 @@ public class BiService {
     }
 
     /**
-     * @param key          查询标识
-     * @param express      查询表达式
-     * @param cacheTime    缓存时间（秒）
-     * @param classHandler 处理类
-     * @param biDataSource 数据源
-     * @param query        查询参数对象
-     * @return 查询结果
+     * @param key          query key
+     * @param express      query expression (SQL)
+     * @param cacheTime    cache duration (seconds)
+     * @param classHandler handler class
+     * @param biDataSource data source
+     * @param query        query parameters
+     * @return query result
      */
     @SneakyThrows
     public List<Map<String, Object>> startQuery(String key, String express, Integer cacheTime, BiClassHandler classHandler,
@@ -163,7 +163,7 @@ public class BiService {
             biHandler = EruptSpringUtil.getBeanByPath(classHandler.getHandlerPath(), EruptBiHandler.class);
             express = biHandler.exprHandler(classHandler.getParam(), query, express);
         }
-        String finalExpress = String.format("/* erupt bi query → %s */ ", key) + express;
+        String finalExpress = String.format("/* erupt bi query :: %s */ ", key) + express;
         EruptBiHandler finalBiHandler = biHandler;
         if (eruptBiProp.getQueryLog()) {
             log.info(finalExpress);
@@ -245,7 +245,7 @@ public class BiService {
 
     public final Pattern EXPRESS_PATTERN = Pattern.compile("(?<=\\$\\{)(.+?)(?=\\})");
 
-    //插入通用上下文条件
+    // inject common context parameters
     private void putCommonContextParam(Map<String, Object> param) {
         param.put(ScriptPlaceholderConst.REQUEST_PLACEHOLDER, request);
         param.put(ScriptPlaceholderConst.RESPONSE_PLACEHOLDER, response);
@@ -277,7 +277,7 @@ public class BiService {
                             HttpServletResponse response
     ) {
         try (Workbook wb = new XSSFWorkbook()) {
-            //基本信息
+            // basic info
             Sheet sheet = wb.createSheet(name);
             sheet.createFreezePane(0, 1, 1, 1);
             Row headRow = sheet.createRow(0);

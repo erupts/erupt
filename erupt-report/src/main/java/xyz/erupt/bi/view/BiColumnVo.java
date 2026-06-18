@@ -25,7 +25,7 @@ public class BiColumnVo {
 
     private Boolean drill;
 
-    //表格列备注
+    // column remark
     private String remark;
 
     public BiColumnVo(String name, Integer width, Boolean sortable, Boolean display, String type, String remark) {

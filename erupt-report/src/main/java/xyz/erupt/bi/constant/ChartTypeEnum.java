@@ -13,57 +13,57 @@ import xyz.erupt.bi.annotation.ChartColumn;
 public enum ChartTypeEnum {
 
     @ChartColumn({A.X, A.Y})
-    Number("数值统计", "1 ~ 2 个数据列：值 / [名称]"),
+    Number("Statistic", "1-2 columns: value / [name]"),
 
     @ChartColumn({A.X})
-    Alert("文本提示", "1 个数据列（多行会自动拼接）, 展现需要关注的信息"),
+    Alert("Alert", "1 column (multi-row auto-concatenated), highlights key information"),
 
     @ChartColumn({A.X, A.Y, A.Z})
-    Line("折线图", "2 ~ 3 个数据列：名称 / 值 / [分类]"),
+    Line("Line", "2-3 columns: name / value / [category]"),
     @ChartColumn({A.X, A.Y, A.Z})
-    StepLine("阶梯折线图", Line.desc),
+    StepLine("Step Line", Line.desc),
     @ChartColumn({A.X, A.Y, A.Z})
-    Column("柱状图", Line.desc),
+    Column("Bar", Line.desc),
     @ChartColumn({A.X, A.Y, A.Z})
-    StackedColumn("堆叠柱状图", Line.desc),
+    StackedColumn("Stacked Bar", Line.desc),
     @ChartColumn({A.X, A.Y, A.Z})
-    Area("面积图", Line.desc),
+    Area("Area", Line.desc),
     @ChartColumn({A.X, A.Y, A.Z})
-    PercentageArea("百分比面积图", Line.desc),
+    PercentageArea("Percentage Area", Line.desc),
     @ChartColumn({A.X, A.Y, A.Z})
-    Bar("条形图", Line.desc),
+    Bar("Horizontal Bar", Line.desc),
     @ChartColumn({A.X, A.Y, A.Z})
-    PercentStackedBar("百分比条形图", Line.desc),
+    PercentStackedBar("Percentage Stacked Bar", Line.desc),
     @ChartColumn({A.X, A.Y, A.Z})
-    Radar("雷达图", Line.desc),
+    Radar("Radar", Line.desc),
     @ChartColumn({A.X, A.Y, A.Z})
-    Scatter("散点图", Line.desc),
+    Scatter("Scatter", Line.desc),
     @ChartColumn({A.X, A.Y, A.Z, "zx"})
-    Bubble("气泡图", "4个数据列：x / y / series / size"),
+    Bubble("Bubble", "4 columns: x / y / series / size"),
 
     @ChartColumn({A.X, A.Y})
-    Pie("饼图", "2 个数据列：名称 / 值"),
+    Pie("Pie", "2 columns: name / value"),
     @ChartColumn({A.X, A.Y})
-    Ring("环形图", Pie.desc),
+    Ring("Ring", Pie.desc),
     @ChartColumn({A.X, A.Y})
-    Rose("玫瑰图", Pie.desc),
+    Rose("Rose", Pie.desc),
     @ChartColumn({A.X, A.Y, A.Z})
-    RadialBar("玉珏图", Line.desc),
+    RadialBar("Radial Bar", Line.desc),
 
     @ChartColumn({A.X, A.Y})
-    Funnel("漏斗图", Pie.desc),
+    Funnel("Funnel", Pie.desc),
     @ChartColumn({A.X, A.Y})
-    Waterfall("瀑布图", "2 个数据列：名称 / 增加或减少的值"),
+    Waterfall("Waterfall", "2 columns: name / incremental value"),
     @ChartColumn({A.X, A.Y, A.Z})
-    WordCloud("词云", Line.desc),
+    WordCloud("Word Cloud", Line.desc),
     @ChartColumn({A.X, A.Y, A.Z})
-    Sankey("桑基图", "3 个数据列：名称 / 值 / 目标名"),
+    Sankey("Sankey", "3 columns: name / value / target name"),
     @ChartColumn({A.X, A.Y, A.Z})
-    Chord("弦图", Sankey.desc),
+    Chord("Chord", Sankey.desc),
 
-    table("数据表", "任意列数"),
+    table("Table", "Any number of columns"),
 
-    tpl("组件模板", null);
+    tpl("Component Template", null);
 
     private final String name;
 

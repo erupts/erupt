@@ -46,7 +46,7 @@ public class BiDataSourceService implements DataProxy<BiDataSource>, DisposableB
                         return jdbcTemplate;
                     }
                     HikariDataSource hikariDataSource = new HikariDataSource();
-                    hikariDataSource.setReadOnly(true); //报表数据源只读
+                    hikariDataSource.setReadOnly(true); // BI data sources are read-only
                     hikariDataSource.setDriverClassName(biDataSource.getDriver());
                     hikariDataSource.setJdbcUrl(biDataSource.getUrl());
                     hikariDataSource.setPassword(biDataSource.getPassword());

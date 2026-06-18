@@ -20,6 +20,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Dynamic;
 import xyz.erupt.bi.constant.ColumnType;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
@@ -28,7 +29,7 @@ import xyz.erupt.jpa.model.BaseModel;
  */
 @Entity
 @Table(name = "e_bi_column")
-@Erupt(name = "列配置", dataProxy = BiColumn.class)
+@Erupt(name = "Column Config", dataProxy = BiColumn.class)
 @Getter
 @Setter
 @Component
@@ -36,38 +37,38 @@ import xyz.erupt.jpa.model.BaseModel;
 public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
 
     @EruptField(
-            views = @View(title = "列名", sortable = true),
-            edit = @Edit(title = "列名", notNull = true)
+            views = @View(title = "Column Name", sortable = true),
+            edit = @Edit(title = "Column Name", notNull = true)
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "类型", sortable = true),
-            edit = @Edit(title = "类型", type = EditType.CHOICE, notNull = true, choiceType = @ChoiceType(fetchHandler = ColumnType.Fetch.class))
+            views = @View(title = "Type", sortable = true),
+            edit = @Edit(title = "Type", type = EditType.CHOICE, notNull = true, choiceType = @ChoiceType(fetchHandler = ColumnType.Fetch.class))
     )
     private String type = ColumnType.STRING.getCode();
 
     @EruptField(
-            views = @View(title = "宽度", sortable = true),
-            edit = @Edit(title = "宽度")
+            views = @View(title = "Width", sortable = true),
+            edit = @Edit(title = "Width")
     )
     private Integer width;
 
     @EruptField(
-            views = @View(title = "是否显示", sortable = true),
-            edit = @Edit(title = "是否显示", notNull = true)
+            views = @View(title = "Display", sortable = true),
+            edit = @Edit(title = "Display", notNull = true)
     )
     private Boolean display = true;
 
     @EruptField(
-            views = @View(title = "是否排序", sortable = true),
-            edit = @Edit(title = "是否排序", notNull = true)
+            views = @View(title = "Sortable", sortable = true),
+            edit = @Edit(title = "Sortable", notNull = true)
     )
     private Boolean sortable = true;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            edit = @Edit(title = "下钻SQL", type = EditType.CODE_EDITOR,
+            edit = @Edit(title = "Drill SQL", type = EditType.CODE_EDITOR,
                     dynamic = @Dynamic(dependField = "type", condition = "value == 'drill'", match = Dynamic.Ctrl.NOTNULL),
                     codeEditType = @CodeEditorType(language = "sql"))
     )
@@ -75,7 +76,7 @@ public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            edit = @Edit(title = "描述", type = EditType.TEXTAREA)
+            edit = @Edit(title = "Description", type = EditType.TEXTAREA)
     )
     private String remark;
 
@@ -83,7 +84,7 @@ public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
     public void beforeAdd(BiColumn biColumn) {
         if (ColumnType.DRILL.equals(biColumn.type)) {
             if (StringUtils.isBlank(biColumn.drillExpress)) {
-                throw new EruptWebApiRuntimeException("下钻SQL必填");
+                throw new EruptWebApiRuntimeException(I18nTranslate.$translate("bi.drill_sql_required"));
             }
         }
     }

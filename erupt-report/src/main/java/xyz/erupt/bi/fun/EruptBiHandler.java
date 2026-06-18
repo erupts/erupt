@@ -13,43 +13,43 @@ import java.util.Map;
 public interface EruptBiHandler {
 
     /**
-     * 表达式处理
+     * Dynamic query expression handler
      *
-     * @param param 参数
-     * @param expr  表达式
-     * @return 返回新的表达式
+     * @param param handler class parameter
+     * @param expr  query expression
+     * @return new expression string
      */
-    @Comment("查询表达式动态处理")
-    default String exprHandler(@Comment("处理类参数") String param,
-                               @Comment("查询条件") Map<String, Object> condition,
-                               @Comment("查询表达式") String expr) {
+    @Comment("Dynamic query expression handler")
+    default String exprHandler(@Comment("Handler class parameter") String param,
+                               @Comment("Query conditions") Map<String, Object> condition,
+                               @Comment("Query expression") String expr) {
 
         return expr;
     }
 
     /**
-     * 返回结果处理
+     * Result processor
      *
-     * @param param  参数
-     * @param result 结果
+     * @param param  handler class parameter
+     * @param result query result
      */
-    @Comment("返回结果处理")
-    default void resultHandler(@Comment("处理类参数") String param,
-                               @Comment("查询条件") Map<String, Object> condition,
-                               @Comment("查询结果") List<Map<String, Object>> result) {
+    @Comment("Result processor")
+    default void resultHandler(@Comment("Handler class parameter") String param,
+                               @Comment("Query conditions") Map<String, Object> condition,
+                               @Comment("Query result") List<Map<String, Object>> result) {
 
     }
 
     /**
-     * 导出excel处理
+     * Excel export handler
      *
-     * @param condition 查询条件
-     * @param workbook  poi对象
+     * @param condition query conditions
+     * @param workbook  initialized POI workbook
      */
-    @Comment("导出excel处理")
-    default void exportHandler(@Comment("处理类参数") String param,
-                               @Comment("查询条件") Map<String, Object> condition,
-                               @Comment("创建好的poi对象") Workbook workbook) {
+    @Comment("Excel export handler")
+    default void exportHandler(@Comment("Handler class parameter") String param,
+                               @Comment("Query conditions") Map<String, Object> condition,
+                               @Comment("Initialized POI workbook") Workbook workbook) {
 
     }
 }

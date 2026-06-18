@@ -25,7 +25,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  */
 @Entity
 @Table(name = "e_bi_group", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@Erupt(name = "分组管理", tree = @Tree(pid = "parent.id"), dataProxy = BiGroup.class)
+@Erupt(name = "Group Manager", tree = @Tree(pid = "parent.id"), dataProxy = BiGroup.class)
 @Getter
 @Setter
 @Component
@@ -34,29 +34,29 @@ public class BiGroup extends MetaModelUpdateVo implements DataProxy<BiGroup> {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
-            views = @View(title = "编码", sortable = true),
-            edit = @Edit(title = "编码", notNull = true, search = @Search, readonly = @Readonly(add = false))
+            views = @View(title = "Code", sortable = true),
+            edit = @Edit(title = "Code", notNull = true, search = @Search, readonly = @Readonly(add = false))
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "组别名称", sortable = true),
-            edit = @Edit(title = "组别名称", notNull = true, search = @Search)
+            views = @View(title = "Group Name", sortable = true),
+            edit = @Edit(title = "Group Name", notNull = true, search = @Search)
     )
     private String name;
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "上级组别", column = "name"),
-            edit = @Edit(title = "上级组别", type = EditType.REFERENCE_TREE,
+            views = @View(title = "Parent Group", column = "name"),
+            edit = @Edit(title = "Parent Group", type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(pid = "parent.id"))
     )
     private BiGroup parent;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "备注", sortable = true),
-            edit = @Edit(title = "备注", type = EditType.TEXTAREA)
+            views = @View(title = "Remark", sortable = true),
+            edit = @Edit(title = "Remark", type = EditType.TEXTAREA)
     )
     private String remark;
 

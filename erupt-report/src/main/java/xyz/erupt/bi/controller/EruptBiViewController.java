@@ -21,37 +21,37 @@
 //    @Resource
 //    private EruptDao eruptDao;
 //
-//    //列表
+//    // list
 //    @GetMapping("/list")
 //    public List<BiViewVo> list() {
 //        return eruptDao.queryEntityList(BiViewVo.class);
 //    }
 //
-//    //预览
+//    // preview
 //    @GetMapping("/preview/{id}")
 //    public void preview(@PathVariable Long id) {
 //
 //    }
 //
-//    //详情
+//    // detail
 //    @GetMapping("/detail/{id}")
 //    public BiViewVo detail(@PathVariable Long id) {
 //        return eruptDao.getEntityManager().find(BiViewVo.class, id);
 //    }
 //
-//    //创建
+//    // create
 //    @PostMapping("/create")
 //    public void create(String name) {
 //
 //    }
 //
-//    //更新
+//    // update
 //    @PostMapping("/update/{id}")
 //    public void update(@PathVariable Long id, String config) {
 //
 //    }
 //
-//    //重命名
+//    // rename
 //    @Transactional
 //    @GetMapping("rename/{id}")
 //    public void rename(@PathVariable Long id, String name) {
@@ -60,7 +60,7 @@
 //        eruptDao.mergeAndFlush(biView);
 //    }
 //
-//    //发布
+//    // publish
 //    @Transactional
 //    @GetMapping("/publish/{id}")
 //    public void publish(@PathVariable Long id) {
@@ -69,7 +69,7 @@
 //        eruptDao.mergeAndFlush(biView);
 //    }
 //
-//    //取消发布
+//    // cancel publish
 //    @Transactional
 //    @GetMapping("/cancel-publish/{id}")
 //    public void cancelPublish(@PathVariable Long id) {
@@ -78,13 +78,13 @@
 //        eruptDao.mergeAndFlush(biView);
 //    }
 //
-//    //克隆
+//    // clone
 //    @GetMapping("/clone/{id}")
 //    public void cloneView(@PathVariable Long id) {
 //
 //    }
 //
-//    //删除
+//    // delete
 //    @GetMapping("/delete/{id}")
 //    @Transactional
 //    public void delete(@PathVariable Long id) {

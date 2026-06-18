@@ -24,7 +24,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  */
 @Entity
 @Table(name = "e_bi_chart", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "bi_id"}))
-@Erupt(name = "图表配置", orderBy = "sort", dataProxy = BiChartDataProxy.class)
+@Erupt(name = "Chart Config", orderBy = "sort", dataProxy = BiChartDataProxy.class)
 @Getter
 @Setter
 @EruptI18n
@@ -33,66 +33,66 @@ public class BiChart extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
-            views = @View(title = "编码", sortable = true, width = "100px"),
-            edit = @Edit(title = "编码", readonly = @Readonly(add = false), notNull = true)
+            views = @View(title = "Code", sortable = true, width = "100px"),
+            edit = @Edit(title = "Code", readonly = @Readonly(add = false), notNull = true)
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称", sortable = true),
-            edit = @Edit(title = "名称", notNull = true, search = @Search)
+            views = @View(title = "Name", sortable = true),
+            edit = @Edit(title = "Name", notNull = true, search = @Search)
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "栅格数"),
-            edit = @Edit(title = "栅格数", search = @Search, type = EditType.SLIDER, desc = "图表占据的栅格数，24代表一行", notNull = true,
+            views = @View(title = "Grid"),
+            edit = @Edit(title = "Grid", search = @Search, type = EditType.SLIDER, desc = "Grid units the chart occupies; 24 = full row", notNull = true,
                     sliderType = @SliderType(max = 24, markPoints = {3, 4, 6, 8, 12, 16, 18, 20, 21, 24}, dots = true))
     )
     private Integer grid = 24;
 
     @EruptField(
-            views = @View(title = "高度(px)"),
-            edit = @Edit(title = "高度(px)", notNull = true)
+            views = @View(title = "Height (px)"),
+            edit = @Edit(title = "Height (px)", notNull = true)
     )
     private Integer height = 340;
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "数据源", column = "name"),
-            edit = @Edit(title = "数据源", type = EditType.REFERENCE_TREE, search = @Search)
+            views = @View(title = "Data Source", column = "name"),
+            edit = @Edit(title = "Data Source", type = EditType.REFERENCE_TREE, search = @Search)
     )
     private BiDataSource dataSource;
 
     @ManyToOne
     @EruptField(
-            edit = @Edit(title = "处理类", type = EditType.REFERENCE_TABLE)
+            edit = @Edit(title = "Handler", type = EditType.REFERENCE_TABLE)
     )
     private BiClassHandler classHandler;
 
     @EruptField(
-            views = @View(title = "显示顺序", sortable = true),
-            edit = @Edit(title = "显示顺序")
+            views = @View(title = "Sort", sortable = true),
+            edit = @Edit(title = "Sort")
     )
     private Integer sort;
 
     @EruptField(
-            views = @View(title = "缓存时间", sortable = true, template = "value&&value+'s'"),
-            edit = @Edit(title = "缓存时间（秒）")
+            views = @View(title = "Cache Time", sortable = true, template = "value&&value+'s'"),
+            edit = @Edit(title = "Cache Duration (s)")
     )
     private Integer cacheTime = 1;
 
     @EruptField(
-            views = @View(title = "描述"),
-            edit = @Edit(title = "描述", inputType = @InputType(fullSpan = true))
+            views = @View(title = "Description"),
+            edit = @Edit(title = "Description", inputType = @InputType(fullSpan = true))
     )
     private String remark;
 
     @Enumerated(EnumType.STRING)
     @EruptField(
-            views = @View(title = "图表类型"),
-            edit = @Edit(title = "图表类型", notNull = true,
-                    desc = "图表参考：G2Plot",
+            views = @View(title = "Chart Type"),
+            edit = @Edit(title = "Chart Type", notNull = true,
+                    desc = "Reference: G2Plot",
                     type = EditType.CHOICE,
                     search = @Search,
                     choiceType = @ChoiceType(
@@ -104,22 +104,22 @@ public class BiChart extends MetaModelUpdateVo {
 
     @ManyToOne
     @EruptField(
-            edit = @Edit(title = "报表模板", type = EditType.REFERENCE_TABLE,
+            edit = @Edit(title = "Report Template", type = EditType.REFERENCE_TABLE,
                     dynamic = @Dynamic(dependField = "type", condition = "value=='tpl'", match = Dynamic.Ctrl.NOTNULL))
     )
     private BiTpl biTpl;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "图表SQL"),
-            edit = @Edit(title = "图表SQL",search = @Search,
+            views = @View(title = "Chart SQL"),
+            edit = @Edit(title = "Chart SQL",search = @Search,
                     type = EditType.CODE_EDITOR, notNull = true, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照G2Plot",
+            edit = @Edit(title = "Custom Chart Config", desc = "JSON format, reference G2Plot",
                     type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
     )
     private String chartOption;

@@ -19,7 +19,7 @@ public class BiVo {
 
     private String pageType;
 
-    private String remark; //报表描述
+    private String remark; // report description
 
     private boolean export;
 

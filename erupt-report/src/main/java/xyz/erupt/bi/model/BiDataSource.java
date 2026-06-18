@@ -34,7 +34,7 @@ import java.util.stream.Stream;
  */
 @Entity
 @Table(name = "e_bi_datasource", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@Erupt(name = "数据源管理", dataProxy = BiDataSourceService.class)
+@Erupt(name = "Data Source Manager", dataProxy = BiDataSourceService.class)
 @Getter
 @Setter
 @EruptI18n
@@ -42,56 +42,56 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
-            views = @View(title = "编码", sortable = true, width = "100px")
+            views = @View(title = "Code", sortable = true, width = "100px")
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称", sortable = true),
-            edit = @Edit(title = "名称", notNull = true)
+            views = @View(title = "Name", sortable = true),
+            edit = @Edit(title = "Name", notNull = true)
     )
     private String name;
 
     @EruptField(
-            edit = @Edit(title = "驱动", notNull = true, type = EditType.CHOICE,
+            edit = @Edit(title = "Driver", notNull = true, type = EditType.CHOICE,
                     choiceType = @ChoiceType(fetchHandler = DriverChoice.class))
     )
     private String driver;
 
     @EruptField(
-            views = @View(title = "数据库类型", sortable = true),
-            edit = @Edit(title = "数据库类型", notNull = true, type = EditType.CHOICE,
+            views = @View(title = "DB Type", sortable = true),
+            edit = @Edit(title = "DB Type", notNull = true, type = EditType.CHOICE,
                     choiceType = @ChoiceType(fetchHandler = BiDataSource.class))
     )
     private String type;
 
     @EruptField(
-            views = @View(title = "连接字符串", type = ViewType.HTML),
-            edit = @Edit(title = "连接字符串", type = EditType.TEXTAREA, notNull = true)
+            views = @View(title = "Connection String", type = ViewType.HTML),
+            edit = @Edit(title = "Connection String", type = EditType.TEXTAREA, notNull = true)
     )
     private String url;
 
     @EruptField(
-            views = @View(title = "用户名", sortable = true),
-            edit = @Edit(title = "用户名")
+            views = @View(title = "Username", sortable = true),
+            edit = @Edit(title = "Username")
     )
     private String userName;
 
     @EruptField(
-            edit = @Edit(title = "密码", type = EditType.PASSWORD)
+            edit = @Edit(title = "Password", type = EditType.PASSWORD)
     )
     private String password;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            edit = @Edit(title = "分页语句", type = EditType.CODE_EDITOR,
+            edit = @Edit(title = "Pagination SQL", type = EditType.CODE_EDITOR,
                     codeEditType = @CodeEditorType(language = "sql"),
                     placeHolder = DBTypeEnum.GENERAL_LIMIT,
-                    desc = "分页变量：\n" +
-                            "@sql：sql语句\n" +
-                            "@size：展示条数\n" +
-                            "@skip：跳过行数\n" +
-                            "@sort：字段排序",
+                    desc = "Pagination variables:\n" +
+                            "@sql: SQL statement\n" +
+                            "@size: page size\n" +
+                            "@skip: rows to skip\n" +
+                            "@sort: field sorting",
                     dynamic = @Dynamic(dependField = "type", condition = "value === 'Other'")
             )
     )
@@ -100,15 +100,15 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            edit = @Edit(title = "连接池配置", desc = "参考hikari,格式：key=value", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "ini"))
+            edit = @Edit(title = "Connection Pool Config", desc = "Reference hikari, format: key=value", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "ini"))
     )
     private String poolConfig;
 
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "备注", type = ViewType.HTML),
-            edit = @Edit(title = "备注", type = EditType.TEXTAREA)
+            views = @View(title = "Remark", type = ViewType.HTML),
+            edit = @Edit(title = "Remark", type = EditType.TEXTAREA)
     )
     private String remark;
 

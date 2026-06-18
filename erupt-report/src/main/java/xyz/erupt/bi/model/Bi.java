@@ -27,10 +27,10 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "e_bi", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@Erupt(name = "报表配置",
+@Erupt(name = "Report Config",
         rowOperation = {
                 @RowOperation(
-                        title = "发布", mode = RowOperation.Mode.SINGLE, icon = "fa fa-send",
+                        title = "Publish", mode = RowOperation.Mode.SINGLE, icon = "fa fa-send",
                         eruptClass = BiReleaseModal.class, operationHandler = BiPublishMenu.class
                 )
         },
@@ -38,9 +38,9 @@ import java.util.Set;
         linkTree = @LinkTree(field = "biGroup"),
         dataProxy = BiDataProxy.class,
         drills = {
-                @Drill(title = "图表配置", icon = "fa fa-pie-chart"
+                @Drill(title = "Chart Config", icon = "fa fa-pie-chart"
                         , link = @Link(linkErupt = BiChart.class, joinColumn = "bi.id")),
-                @Drill(title = "修改记录", icon = "fa fa-history text-green"
+                @Drill(title = "Modification History", icon = "fa fa-history text-green"
                         , link = @Link(linkErupt = BiHistory.class, joinColumn = "biId"))
         })
 @Getter
@@ -51,22 +51,22 @@ public class Bi extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
-            views = @View(title = "编码", width = "100px"),
-            edit = @Edit(title = "编码", readonly = @Readonly(add = false), search = @Search, notNull = true)
+            views = @View(title = "Code", width = "100px"),
+            edit = @Edit(title = "Code", readonly = @Readonly(add = false), search = @Search, notNull = true)
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称", sortable = true),
-            edit = @Edit(title = "名称", notNull = true, search = @Search)
+            views = @View(title = "Name", sortable = true),
+            edit = @Edit(title = "Name", notNull = true, search = @Search)
     )
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "bi_group_id")
     @EruptField(
-            views = @View(title = "组别", column = "name", sortable = true),
-            edit = @Edit(title = "组别", notNull = true, type = EditType.REFERENCE_TREE,
+            views = @View(title = "Group", column = "name", sortable = true),
+            edit = @Edit(title = "Group", notNull = true, type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(pid = "parent.id"), search = @Search)
     )
     private BiGroup biGroup;
@@ -74,55 +74,55 @@ public class Bi extends MetaModelUpdateVo {
     @ManyToOne
     @JoinColumn(name = "datasource_id")
     @EruptField(
-            views = @View(title = "数据源", column = "name"),
-            edit = @Edit(title = "数据源", type = EditType.REFERENCE_TREE, search = @Search)
+            views = @View(title = "Data Source", column = "name"),
+            edit = @Edit(title = "Data Source", type = EditType.REFERENCE_TREE, search = @Search)
     )
     private BiDataSource dataSource;
 
     @ManyToOne
     @EruptField(
-            edit = @Edit(title = "处理类", type = EditType.REFERENCE_TABLE)
+            edit = @Edit(title = "Handler", type = EditType.REFERENCE_TABLE)
     )
     private BiClassHandler classHandler;
 
     @EruptField(
-            views = @View(title = "分页方式", sortable = true),
-            edit = @Edit(title = "分页方式", notNull = true, type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
-                    @VL(value = BiConst.PAGE_END, label = "后端分页"),
-                    @VL(value = BiConst.PAGE_FRONT, label = "前端分页"),
-                    @VL(value = BiConst.PAGE_NONE, label = "不分页"),
+            views = @View(title = "Pagination", sortable = true),
+            edit = @Edit(title = "Pagination", notNull = true, type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
+                    @VL(value = BiConst.PAGE_END, label = "Backend Pagination"),
+                    @VL(value = BiConst.PAGE_FRONT, label = "Frontend Pagination"),
+                    @VL(value = BiConst.PAGE_NONE, label = "No Pagination"),
             }))
     )
     private String pageType = BiConst.PAGE_END;
 
     @EruptField(
-            views = @View(title = "缓存时间", width = "100px", sortable = true, template = "value&&value+'s'"),
-            edit = @Edit(title = "缓存时间（秒）")
+            views = @View(title = "Cache Time", width = "100px", sortable = true, template = "value&&value+'s'"),
+            edit = @Edit(title = "Cache Duration (s)")
     )
     private Integer cacheTime = 1;
 
     @EruptField(
-            views = @View(title = "自刷周期", width = "100px", sortable = true, template = "value&&value+'s'"),
-            edit = @Edit(title = "自动刷新周期（秒）",desc = "数据自动更新时间")
+            views = @View(title = "Refresh Interval", width = "100px", sortable = true, template = "value&&value+'s'"),
+            edit = @Edit(title = "Auto Refresh (s)",desc = "Data auto-update interval")
     )
     private Integer refreshTime;
 
     @EruptField(
-            views = @View(title = "导出", sortable = true),
-            edit = @Edit(title = "导出", notNull = true, boolType = @BoolType(trueText = "开启", falseText = "关闭"))
+            views = @View(title = "Export", sortable = true),
+            edit = @Edit(title = "Export", notNull = true, boolType = @BoolType(trueText = "On", falseText = "Off"))
     )
     private Boolean export = true;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "取值SQL"),
-            edit = @Edit(title = "取值SQL", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
+            views = @View(title = "Query SQL"),
+            edit = @Edit(title = "Query SQL", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            edit = @Edit(title = "总条数SQL", desc = "计算数据总量，在取值SQL嵌套子查询count性能较低时使用",
+            edit = @Edit(title = "Count SQL", desc = "Compute total rows; use when nested count subquery is slow",
                     dynamic = @Dynamic(dependField = "pageType", condition = "value == '" + BiConst.PAGE_END + "'"),
                     type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql", height = 100))
     )
@@ -130,14 +130,14 @@ public class Bi extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "报表描述", type = ViewType.HTML),
-            edit = @Edit(title = "报表描述", type = EditType.TEXTAREA)
+            views = @View(title = "Description", type = ViewType.HTML),
+            edit = @Edit(title = "Description", type = EditType.TEXTAREA)
     )
     private String remark;
 
     @Transient
     @EruptField(
-            views = @View(title = "效果预览", type = ViewType.LINK_DIALOG, desc = "需提前配置菜单权限")
+            views = @View(title = "Preview", type = ViewType.LINK_DIALOG, desc = "Requires menu permission configured in advance")
     )
     private String view;
 
@@ -145,14 +145,14 @@ public class Bi extends MetaModelUpdateVo {
     @JoinColumn(name = "bi_id")
     @OrderBy("sort")
     @EruptField(
-            edit = @Edit(title = "查询维度", type = EditType.TAB_TABLE_ADD)
+            edit = @Edit(title = "Query Dimensions", type = EditType.TAB_TABLE_ADD)
     )
     private Set<BiDimension> biDimension;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "bi_id")
     @EruptField(
-            edit = @Edit(title = "表格列配置", desc = "列会根据表达式动态渲染，不做列相关配置请忽略此项", type = EditType.TAB_TABLE_ADD)
+            edit = @Edit(title = "Column Config", desc = "Columns render dynamically via expressions; skip if no config needed", type = EditType.TAB_TABLE_ADD)
     )
     private Set<BiColumn> biColumns;
 

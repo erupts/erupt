@@ -15,22 +15,22 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "erupt.bi")
 public class EruptBiProp {
 
-    // 打印查询日志
+    // enable query logging
     private Boolean queryLog = true;
 
-    // 开启缓存功能
+    // enable cache
     private Boolean enableCache = true;
 
-    // 超管用户才有报表发布权限
+    // only super-admin users can publish reports
     private Boolean superAdminPublish = false;
 
-    //指定每页可以显示多少条
+    // available page size options
     private Integer[] pageSizeOptions = {10, 30, 50, 100};
 
-    //每页条数
+    // default page size
     private Integer pageSize = 10;
 
-    //后端分页场景下单次查询最大结果集
+    // max result set per query for backend pagination
     private Integer singleMaxResultNum = 500;
 
 }

@@ -28,7 +28,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  */
 @Entity
 @Table(name = "e_bi_tpl", uniqueConstraints = @UniqueConstraint(columnNames = {"code"}))
-@Erupt(name = "组件模板", orderBy = "createTime desc", dataProxy = BiTpl.class)
+@Erupt(name = "Component Template", orderBy = "createTime desc", dataProxy = BiTpl.class)
 @Getter
 @Setter
 @EruptI18n
@@ -41,39 +41,39 @@ public class BiTpl extends MetaModelUpdateVo implements DataProxy<BiTpl> {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
-            views = @View(title = "编码", width = "100px")
+            views = @View(title = "Code", width = "100px")
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true)
+            views = @View(title = "Name"),
+            edit = @Edit(title = "Name", notNull = true)
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "资源类型"),
-            edit = @Edit(title = "资源类型", notNull = true, type = EditType.CHOICE,
+            views = @View(title = "Resource Type"),
+            edit = @Edit(title = "Resource Type", notNull = true, type = EditType.CHOICE,
                     choiceType = @ChoiceType(
                             vl = {
-                                    @VL(label = "文件路径", value = TYPE_PATH),
-                                    @VL(label = "在线配置", value = TYPE_ONLINE)
+                                    @VL(label = "File Path", value = TYPE_PATH),
+                                    @VL(label = "Online Config", value = TYPE_ONLINE)
                             }
                     ))
     )
     private String type = BiTpl.TYPE_ONLINE;
 
     @EruptField(
-            views = @View(title = "路径"),
-            edit = @Edit(title = "路径",
+            views = @View(title = "Path"),
+            edit = @Edit(title = "Path",
                     dynamic = @Dynamic(dependField = "type", condition = "value == '" + BiTpl.TYPE_PATH + "'", match = Dynamic.Ctrl.NOTNULL),
-                    desc = "resources路径下模板文件")
+                    desc = "Template file under resources path")
     )
     private String path;
 
     @EruptField(
-            views = @View(title = "模板"),
-            edit = @Edit(title = "模板", desc = "语法Freemarker",
+            views = @View(title = "Template"),
+            edit = @Edit(title = "Template", desc = "Freemarker syntax",
                     dynamic = @Dynamic(dependField = "type", condition = "value == '" + BiTpl.TYPE_ONLINE + "'", match = Dynamic.Ctrl.NOTNULL),
                     type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "html"))
     )
