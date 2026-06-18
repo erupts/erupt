@@ -23,7 +23,7 @@ import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecurityUtil;
-import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.script.ScriptException;
@@ -286,8 +286,8 @@ public class EruptBiController {
         for (BiDimension dimension : bi.getBiDimension()) {
             if (dimension.getNotNull()) {
                 if (null == query || null == query.get(dimension.getCode())) {
-                    throw new EruptApiErrorTip(EruptApiModel.Status.WARNING, dimension.getTitle() + " is required!",
-                            EruptApiModel.PromptWay.MESSAGE);
+                    throw new EruptApiErrorTip(R.Status.WARNING, dimension.getTitle() + " is required!",
+                            R.PromptWay.MESSAGE);
                 }
             }
         }
