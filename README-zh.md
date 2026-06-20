@@ -227,7 +227,7 @@ List<EruptUser> list = eruptDao.lambdaQuery(EruptUser.class)
 
 ### 支持 50+ 大模型提供商
 
-OpenAI · Claude · Gemini · DeepSeek · 通义千问 · 智谱 GLM · 豆包 · Moonshot · MiniMax · Mistral · Grok · Fireworks · Together · OpenRouter · Ollama（本地）—— **管理界面里随时热切换，共 50+ 个。**
+OpenAI · Claude · Gemini · DeepSeek · 通义千问 · 智谱 GLM · 豆包 · Moonshot · MiniMax · Mistral · Grok · Fireworks · Together · OpenRouter · Requesty · Ollama（本地）—— **管理界面里随时热切换，共 50+ 个。**
 
 ### 核心能力
 
