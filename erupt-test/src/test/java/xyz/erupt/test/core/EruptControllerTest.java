@@ -10,13 +10,14 @@ import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.http.*;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.core.util.EruptSpringUtil;
-import xyz.erupt.core.util.MD5Util;
+import xyz.erupt.core.util.SecretUtil;
 import xyz.erupt.test.EruptApplicationTests;
 import xyz.erupt.test.model.edit.AutoCompleteModel;
 import xyz.erupt.test.model.edit.ChoiceModel;
 import xyz.erupt.test.model.edit.TabTableAddModel;
 import xyz.erupt.test.model.erupt.AuthVerifyModel;
 import xyz.erupt.test.model.erupt.RowOperationModel;
+import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ public class EruptControllerTest extends EruptApplicationTests {
     @Resource
     private EruptUpmsProp eruptUpmsProp;
 
+    @Resource
+    private EruptAppProp eruptAppProp;
+
     private static final String MODEL_PACKAGE = "xyz.erupt.test.model";
     private HttpHeaders authHeaders;
 
@@ -45,7 +49,10 @@ public class EruptControllerTest extends EruptApplicationTests {
     @SuppressWarnings("unchecked")
     void setUp() {
         String account = eruptUpmsProp.getDefaultAccount();
-        String pwd = MD5Util.digest(MD5Util.digest(eruptUpmsProp.getDefaultPassword()) + account);
+        String pwd = eruptUpmsProp.getDefaultPassword();
+        if (eruptAppProp.getPwdTransferEncrypt()) {
+            pwd = SecretUtil.encodeSecret(pwd, 3);
+        }
         Map<String, String> loginBody = Map.of("account", account, "pwd", pwd);
         ResponseEntity<Map> resp = rest.postForEntity("/erupt-api/login", loginBody, Map.class);
         assertEquals(HttpStatus.OK, resp.getStatusCode(), "login must succeed");
