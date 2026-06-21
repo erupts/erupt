@@ -9,10 +9,179 @@
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <meta name="renderer" content="webkit">
-    <link href="pre.css" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black">
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#E7E9E8">
+    <style>
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 9999;
+            transition: opacity .5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .preloader::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.12) 0%, transparent 60%),
+                        linear-gradient(160deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0.18) 100%);
+            pointer-events: none;
+        }
+
+        .pl-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.07);
+            animation: plOrbFloat ease-in-out infinite;
+            will-change: transform;
+        }
+        .pl-orb-1 { width: 360px; height: 360px; top: -100px; right: -80px; animation-duration: 22s; }
+        .pl-orb-2 { width: 220px; height: 220px; bottom: -60px; left: -50px; animation-duration: 28s; animation-delay: -6s; }
+        .pl-orb-3 { width: 120px; height: 120px; top: 25%; left: 12%; animation-duration: 18s; animation-delay: -10s; opacity: 0.5; }
+        .pl-orb-4 { width: 80px; height: 80px; bottom: 20%; right: 15%; animation-duration: 14s; animation-delay: -4s; opacity: 0.4; }
+
+        @keyframes plOrbFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            33%       { transform: translateY(-18px) scale(1.03); }
+            66%       { transform: translateY(10px) scale(0.97); }
+        }
+
+        .pl-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .pl-spinner {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .pl-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            will-change: transform;
+        }
+
+        .pl-ring-1 {
+            inset: 0;
+            border-top-color: rgba(255, 255, 255, 0.95);
+            border-right-color: rgba(255, 255, 255, 0.2);
+            animation: plSpin 1.1s linear infinite;
+        }
+
+        .pl-ring-2 {
+            inset: 10px;
+            border-top-color: rgba(255, 255, 255, 0.6);
+            border-left-color: rgba(255, 255, 255, 0.15);
+            animation: plSpin 1.7s linear infinite reverse;
+        }
+
+        .pl-ring-3 {
+            inset: 20px;
+            border-top-color: rgba(255, 255, 255, 0.8);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+            animation: plSpin 2.5s linear infinite;
+        }
+
+        .pl-dot {
+            position: absolute;
+            inset: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+            animation: plDotPulse 2s ease-in-out infinite;
+            will-change: transform, opacity;
+        }
+
+        @keyframes plSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes plDotPulse {
+            0%, 100% { opacity: 0.9; transform: scale(1); }
+            50%       { opacity: 0.4; transform: scale(0.55); }
+        }
+
+        .pl-brand {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            animation: plFadeUp .7s ease-out .2s both;
+        }
+
+        .pl-dots {
+            display: flex;
+            gap: 7px;
+            animation: plFadeUp .7s ease-out .4s both;
+        }
+
+        .pl-dots span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.65);
+            animation: plBounce 1.3s ease-in-out infinite;
+            will-change: transform, opacity;
+        }
+
+        .pl-dots span:nth-child(2) { animation-delay: .15s; }
+        .pl-dots span:nth-child(3) { animation-delay: .30s; }
+
+        @keyframes plBounce {
+            0%, 80%, 100% { transform: scale(0.55); opacity: 0.35; }
+            40%            { transform: scale(1);    opacity: 1; }
+        }
+
+        @keyframes plFadeUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .preloader-hidden-add         { opacity: 1; display: flex; }
+        .preloader-hidden-add-active  { opacity: 0; }
+        .preloader-hidden             { display: none; }
+
+        @keyframes tipFadeIn {
+            0%, 88% { opacity: 0; }
+            100%    { opacity: 1; }
+        }
+
+        #preloader-tip {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 12px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 24px;
+            animation: tipFadeIn 6s;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            letter-spacing: 0.02em;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .pl-orb, .pl-ring, .pl-dot, .pl-dots span { animation: none; }
+            .pl-brand, .pl-dots { animation: none; opacity: 1; transform: none; }
+        }
+    </style>
 <style>@-webkit-keyframes fa-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0)}to{-webkit-transform:rotate(359deg);transform:rotate(359deg)}}html{--ant-primary-color:#1890ff;--ant-primary-color-hover:#40a9ff;--ant-primary-color-active:#096dd9;--ant-primary-color-outline:rgba(24, 144, 255, .2);--ant-primary-1:#e6f7ff;--ant-primary-2:#bae7ff;--ant-primary-3:#91d5ff;--ant-primary-4:#69c0ff;--ant-primary-5:#40a9ff;--ant-primary-6:#1890ff;--ant-primary-7:#096dd9;--ant-primary-color-deprecated-pure: ;--ant-primary-color-deprecated-l-35:#cbe6ff;--ant-primary-color-deprecated-l-20:#7ec1ff;--ant-primary-color-deprecated-t-20:#46a6ff;--ant-primary-color-deprecated-t-50:#8cc8ff;--ant-primary-color-deprecated-f-12:rgba(24, 144, 255, .12);--ant-primary-color-active-deprecated-f-30:rgba(230, 247, 255, .3);--ant-primary-color-active-deprecated-d-02:#dcf4ff;--ant-success-color:#52c41a;--ant-success-color-hover:#73d13d;--ant-success-color-active:#389e0d;--ant-success-color-outline:rgba(82, 196, 26, .2);--ant-success-color-deprecated-bg:#f6ffed;--ant-success-color-deprecated-border:#b7eb8f;--ant-error-color:#ff4d4f;--ant-error-color-hover:#ff7875;--ant-error-color-active:#d9363e;--ant-error-color-outline:rgba(255, 77, 79, .2);--ant-error-color-deprecated-bg:#fff2f0;--ant-error-color-deprecated-border:#ffccc7;--ant-warning-color:#faad14;--ant-warning-color-hover:#ffc53d;--ant-warning-color-active:#d48806;--ant-warning-color-outline:rgba(250, 173, 20, .2);--ant-warning-color-deprecated-bg:#fffbe6;--ant-warning-color-deprecated-border:#ffe58f;--ant-info-color:#1890ff;--ant-info-color-deprecated-bg:#e6f7ff;--ant-info-color-deprecated-border:#91d5ff}body,html{width:100%;height:100%}*,:after,:before{box-sizing:border-box}html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-ms-overflow-style:scrollbar;-webkit-tap-highlight-color:transparent}html{--antd-wave-shadow-color:var(--ant-primary-color);--scroll-bar:0}body{counter-reset:katexEqnNo mmlEqnNo}html,body{width:100%;height:100%}*,*:before,*:after{box-sizing:border-box}html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-ms-overflow-style:scrollbar;-webkit-tap-highlight-color:rgba(0,0,0,0)}body{margin:0;color:#000000d9;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";font-variant:tabular-nums;line-height:1.5715;background-color:#fff;font-feature-settings:"tnum"}html{--antd-wave-shadow-color:var(--ant-primary-color);--scroll-bar:0}body{scrollbar-color:rgba(0,0,0,.3) transparent;scrollbar-width:thin}body::-webkit-scrollbar{width:6px;height:6px}body::-webkit-scrollbar-track{box-shadow:inset 0 0 6px #0000004d}body::-webkit-scrollbar-thumb{background-color:transparent;outline:1px solid #333}html{touch-action:manipulation;direction:ltr;height:100%}html,body,app-root{height:100%}body{color:#000000d9;background-color:var(--alain-default-content-bg, #f5f7fa)}html{--ant-primary-color:#1890ff;--ant-primary-color-hover:#40a9ff;--ant-primary-color-active:#096dd9;--ant-primary-color-outline:rgba(24, 144, 255, .2);--ant-primary-1:#e6f7ff;--ant-primary-2:#bae7ff;--ant-primary-3:#91d5ff;--ant-primary-4:#69c0ff;--ant-primary-5:#40a9ff;--ant-primary-6:#1890ff;--ant-primary-7:#096dd9;--ant-primary-color-deprecated-pure: ;--ant-primary-color-deprecated-l-35:#cbe6ff;--ant-primary-color-deprecated-l-20:#7ec1ff;--ant-primary-color-deprecated-t-20:#46a6ff;--ant-primary-color-deprecated-t-50:#8cc8ff;--ant-primary-color-deprecated-f-12:rgba(24, 144, 255, .12);--ant-primary-color-active-deprecated-f-30:rgba(230, 247, 255, .3);--ant-primary-color-active-deprecated-d-02:#dcf4ff;--ant-success-color:#52c41a;--ant-success-color-hover:#73d13d;--ant-success-color-active:#389e0d;--ant-success-color-outline:rgba(82, 196, 26, .2);--ant-success-color-deprecated-bg:#f6ffed;--ant-success-color-deprecated-border:#b7eb8f;--ant-error-color:#ff4d4f;--ant-error-color-hover:#ff7875;--ant-error-color-active:#d9363e;--ant-error-color-outline:rgba(255, 77, 79, .2);--ant-error-color-deprecated-bg:#fff2f0;--ant-error-color-deprecated-border:#ffccc7;--ant-warning-color:#faad14;--ant-warning-color-hover:#ffc53d;--ant-warning-color-active:#d48806;--ant-warning-color-outline:rgba(250, 173, 20, .2);--ant-warning-color-deprecated-bg:#fffbe6;--ant-warning-color-deprecated-border:#ffe58f;--ant-info-color:#1890ff;--ant-info-color-deprecated-bg:#e6f7ff;--ant-info-color-deprecated-border:#91d5ff}html{--grey-1:#fff;--grey-2:#fafafa;--grey-3:#f5f5f5;--grey-4:#f0f0f0;--grey-5:#d9d9d9;--grey-6:#bfbfbf;--grey-7:#8c8c8c;--grey-8:#595959;--grey-9:#434343;--grey-10:#262626;--grey-11:#1f1f1f;--grey-12:#141414;--grey-13:#000}*{scrollbar-width:thin;scrollbar-color:#888888 #f1f1f1}html{--ant-border-color-split:#e5e5e5}@media print{*{font-family:Heiti SC,-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\5fae\8f6f\96c5\9ed1,Helvetica Neue,Helvetica,Arial,sans-serif!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}@page{size:A4 landscape;margin:10mm}}</style><link rel="stylesheet" href="styles-FVG6PLIY.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles-FVG6PLIY.css"></noscript></head>
 <body>
 <div class="preloader">
@@ -32,7 +201,35 @@
     </div>
     <div id="preloader-tip">Stuck? Press Ctrl + Shift + R to reload.</div>
 </div>
-<script type="text/javascript" src="pre.js"></script>
+<script>
+    window.setTimeout(function () {
+        if (!window.eruptWebSuccess) {
+            location.reload(true)
+        }
+    }, 1000 * 12);
+    (function (date) {
+        var __t__ = '' + date.getFullYear() + date.getMonth() + date.getDate() + date.getHours() + date.getMinutes();
+        document.write(
+            "<link rel=\"stylesheet\" href=\"app.css?_=" + __t__ + "\" type=\"text/css\"/>" +
+            "<script type=\"text/javascript\" src=\"app.js?_=" + __t__ + "\"><\/script>" +
+            "<script type=\"module\" src=\"app.module.js?_=" + __t__ + "\" ><\/script>"
+        );
+        var _preloaderEl = document.querySelector(".preloader");
+        _preloaderEl.style.background = "#1890ff";
+        var _brandEl = document.getElementById("preload-brand");
+        var _colorCheckTimer = setInterval(function () {
+            if (window.eruptSiteConfig !== undefined) {
+                clearInterval(_colorCheckTimer);
+                if (window.eruptSiteConfig.theme && window.eruptSiteConfig.theme.primaryColor) {
+                    _preloaderEl.style.background = window.eruptSiteConfig.theme.primaryColor;
+                }
+                if (_brandEl) {
+                    _brandEl.textContent = window.eruptSiteConfig.logoText || window.eruptSiteConfig.title || "Loading";
+                }
+            }
+        }, 10);
+    })(new Date())
+</script>
 <!--[if lte IE 11]>
 <style>
     .preloader {
@@ -47,5 +244,5 @@
 </div>
 <![endif]-->
 <app-root></app-root>
-<link rel="modulepreload" href="chunk-CDKJWRVZ.js"><link rel="modulepreload" href="chunk-ZE2HTNV5.js"><link rel="modulepreload" href="chunk-WQPRXSRI.js"><link rel="modulepreload" href="chunk-4FRFCK5O.js"><link rel="modulepreload" href="chunk-MNKFFE23.js"><link rel="modulepreload" href="chunk-SDBWQRLN.js"><link rel="modulepreload" href="chunk-O44YI6V6.js"><script src="polyfills-B7LGQ2G6.js" type="module"></script><script src="main-QVKO3OWT.js" type="module"></script></body>
+<link rel="modulepreload" href="chunk-DX6363MX.js"><link rel="modulepreload" href="chunk-I5PC7VHF.js"><link rel="modulepreload" href="chunk-IRRUARHK.js"><link rel="modulepreload" href="chunk-V5F6ZIPY.js"><link rel="modulepreload" href="chunk-VYBBKOHA.js"><link rel="modulepreload" href="chunk-TJVOJ34K.js"><link rel="modulepreload" href="chunk-O44YI6V6.js"><script src="polyfills-B7LGQ2G6.js" type="module"></script><script src="main-U4XSBRDS.js" type="module"></script></body>
 </html>

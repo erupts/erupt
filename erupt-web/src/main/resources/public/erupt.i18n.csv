@@ -103,6 +103,7 @@ change-pwd.validate.text,请至少输入6个字符。请不要使用容易被猜
 change-pwd.validate.confirm_password,请确认密码！,請確認密碼！,Please confirm password!,Veuillez confirmer le mot de passe!,パスワードを確認してください,비밀번호를확인하세요!,"Пожалуйста, подтвердите код!",Por favor confirme la contraseña!,Bitte ihr passwort bestätigen!,"Por favor, confirme a senha!",Tolong konfirmasi passwordnya!,يرجى تأكيد كلمة المرور!
 change-pwd.validate.password_not_match,两次输入的密码不匹配！,兩次輸入的密碼不匹配！,The two passwords entered do not match!,Les mots de passe entrés deux fois ne correspondent pas!,二回入力したパスワードが一致しません。,두번입력한비밀번호가일치하지않습니다!,Два входных пароля не совпадают!,¡Las contraseñas introducidas dos veces no coinciden!,Der code stimmt nicht überein.,As senhas digitadas duas vezes não correspondem!,Dua kali masukkan password yang tidak cocok!,كلمة المرور التي دخلت مرتين لا تتطابق!
 login.account_pwd_login,账户密码登录,賬戶密碼登錄,Account Password Login,Connexion par mot de passe,アカウントパスワードログイン,계정비밀번호로그인,Вход по паролю аккаунта.,Inicio de sesión por contraseña de cuenta,Login mit passwort,Login com senha da conta,Masuk dengan kata sandi akun,تسجيل الدخول بكلمة مرور الحساب
+login.subtitle,欢迎回来，请登录账户,歡迎回來，請登錄賬戶,Welcome back — sign in to your account,Bienvenue — connectez-vous,ようこそ — ログインしてください,환영합니다 — 로그인하세요,Добро пожаловать — войдите,Bienvenido — inicia sesión,Willkommen — bitte anmelden,Bem-vindo — faça login,Selamat datang — silakan masuk,مرحباً — سجّل الدخول
 login.account,用户名,用戶名,Username,Nom de l’utilisateur,ユーザ名,사용자이름,Имя пользователя.,Nombre de usuario,benutzername,Nome de usuário,Nama pengguna,اسم المستخدم
 login.validate.account,请输入账户名！,請輸入賬戶名！,Please enter your username!,Veuillez entrer le nom du compte!,アカウント名を入力してください。,계정이름을입력하세요!,"Введите имя счета, пожалуйста!",Por favor ingrese el nombre de la cuenta!,Bitte geben sie einen kontonamen ein!,Digite o nome da conta!,Silahkan masukkan nama akun!,يرجى إدخال اسم الحساب!
 login.pwd,密码,密碼,Password,Les mots de passe,パスワード,비밀번호,код,La contraseña,kennwort,senha,kode,كلمة المرور
@@ -1146,3 +1147,4 @@ designer.bool.true,是,是,Yes,Oui,はい,예,Да,Sí,Ja,Sim,Ya,نعم
 designer.bool.false,否,否,No,Non,いいえ,아니오,Нет,No,Nein,Não,Tidak,لا
 designer.option.one,选项一,選項一,Option 1,Option 1,選択肢 1,옵션 1,Вариант 1,Opción 1,Option 1,Opção 1,Pilihan 1,الخيار 1
 designer.option.two,选项二,選項二,Option 2,Option 2,選択肢 2,옵션 2,Вариант 2,Opción 2,Option 2,Opção 2,Pilihan 2,الخيار 2
+setting.split-menu,分类导航,分類導航,Category Nav,Navigation par catégorie,カテゴリナビ,카테고리 탐색,Навигация по разделам,Navegación por categorías,Kategorienavigation,Navegação por categorias,Navigasi Kategori,التنقل بالفئات
