@@ -14,6 +14,7 @@ import xyz.erupt.notice.model.NoticeAnnouncement;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.service.EruptUserService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +43,9 @@ public class EruptAnnouncementController {
     @GetMapping("/popups")
     public R<List<NoticeAnnouncement>> popups() {
         EruptUserAnnouncement eruptUserAnn = eruptDao.find(EruptUserAnnouncement.class, eruptUserService.getCurrentUid());
+        if (null == eruptUserAnn) {
+            return R.ok(new ArrayList<>());
+        }
         return R.ok(eruptDao.lambdaQuery(NoticeAnnouncement.class)
                 .eq(NoticeAnnouncement::getStatus, AnnouncementStatus.OPEN)
                 .gt(NoticeAnnouncement::getCreateTime, DateUtils.addDays(new Date(), -7))

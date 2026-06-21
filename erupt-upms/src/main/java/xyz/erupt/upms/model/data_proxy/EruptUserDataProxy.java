@@ -8,7 +8,7 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
-import xyz.erupt.core.util.MD5Util;
+import xyz.erupt.core.util.EncryptUtil;
 import xyz.erupt.core.view.R;
 import xyz.erupt.upms.constant.EncryptType;
 import xyz.erupt.upms.model.EruptUser;
@@ -43,10 +43,10 @@ public class EruptUserDataProxy implements DataProxy<EruptUser> {
         }
         if (eruptUser.getPasswordA().equals(eruptUser.getPasswordB())) {
             if (eruptUser.getEncrypt()) {
-                String salt = MD5Util.generateSalt();
+                String salt = EncryptUtil.generateSalt();
                 eruptUser.setSalt(salt);
                 eruptUser.setEncryptType(EncryptType.SHA512);
-                eruptUser.setPassword(MD5Util.digestSHA512Salt(eruptUser.getPasswordA(), salt));
+                eruptUser.setPassword(EncryptUtil.digestSHA512Salt(eruptUser.getPasswordA(), salt));
             } else {
                 eruptUser.setPassword(eruptUser.getPasswordA());
             }

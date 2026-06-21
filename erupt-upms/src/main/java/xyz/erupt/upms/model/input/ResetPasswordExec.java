@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
-import xyz.erupt.core.util.MD5Util;
+import xyz.erupt.core.util.EncryptUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.EncryptType;
 import xyz.erupt.upms.model.EruptUser;
@@ -31,10 +31,10 @@ public class ResetPasswordExec implements OperationHandler<EruptUser, ResetPassw
             eruptUser.setResetPwdTime(null);
             eruptUser.setEncrypt(resetPassword.getEncrypt());
             if (resetPassword.getEncrypt()) {
-                String salt = MD5Util.generateSalt();
+                String salt = EncryptUtil.generateSalt();
                 eruptUser.setSalt(salt);
                 eruptUser.setEncryptType(EncryptType.SHA512);
-                eruptUser.setPassword(MD5Util.digestSHA512Salt(resetPassword.getPassword(), salt));
+                eruptUser.setPassword(EncryptUtil.digestSHA512Salt(resetPassword.getPassword(), salt));
             } else {
                 eruptUser.setSalt(null);
                 eruptUser.setEncryptType(null);

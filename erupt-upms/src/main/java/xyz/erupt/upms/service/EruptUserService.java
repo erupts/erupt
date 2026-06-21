@@ -13,8 +13,8 @@ import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.DateUtil;
+import xyz.erupt.core.util.EncryptUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
-import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
@@ -116,9 +116,9 @@ public class EruptUserService {
     public boolean checkPwd(String storedPassword, Boolean encrypt, String salt, String encryptType, String inputPwd) {
         String checkPwd;
         if (EncryptType.SHA512.equalsIgnoreCase(encryptType)) {
-            checkPwd = MD5Util.digestSHA512Salt(inputPwd, salt);
+            checkPwd = EncryptUtil.digestSHA512Salt(inputPwd, salt);
         } else {
-            checkPwd = encrypt ? MD5Util.digest(inputPwd) : inputPwd;
+            checkPwd = encrypt ? EncryptUtil.digest(inputPwd) : inputPwd;
         }
         return checkPwd.equals(storedPassword);
     }
@@ -172,10 +172,10 @@ public class EruptUserService {
                 return R.error(I18nTranslate.$translate("upms.change_pwd_same_as_old"));
             }
             if (eruptUser.getEncrypt()) {
-                String salt = MD5Util.generateSalt();
+                String salt = EncryptUtil.generateSalt();
                 eruptUser.setSalt(salt);
                 eruptUser.setEncryptType(EncryptType.SHA512);
-                eruptUser.setPassword(MD5Util.digestSHA512Salt(newPwd, salt));
+                eruptUser.setPassword(EncryptUtil.digestSHA512Salt(newPwd, salt));
             } else {
                 eruptUser.setSalt(null);
                 eruptUser.setEncryptType(null);

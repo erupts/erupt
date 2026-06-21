@@ -10,7 +10,7 @@ import java.security.SecureRandom;
  * @author YuePeng
  * date 2018-10-10.
  */
-public class MD5Util {
+public class EncryptUtil {
 
     private final static String[] STR_DIGITS = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
 
