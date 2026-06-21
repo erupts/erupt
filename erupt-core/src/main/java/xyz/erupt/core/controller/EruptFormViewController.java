@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.exception.EruptException;
 import xyz.erupt.core.annotation.EruptRecordOperate;
@@ -17,11 +16,9 @@ import xyz.erupt.core.naming.EruptRecordNaming;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.Erupts;
-import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
@@ -58,15 +55,10 @@ public class EruptFormViewController {
     @GetMapping("/{erupt}")
     @SneakyThrows
     @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
-    public Map<String, Object> openFormView(@PathVariable("erupt") String eruptName,
-                                            @RequestParam(value = "id", required = false) String id) {
+    public Map<String, Object> openFormView(@PathVariable("erupt") String eruptName) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, powerObject -> powerObject.isAdd() || powerObject.isEdit());
         Object model = eruptModel.getClazz().getDeclaredConstructor().newInstance();
-        if (StringUtils.isNotBlank(id)) {
-            Field pkField = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol());
-            pkField.set(model, EruptUtil.toEruptId(eruptModel, id));
-        }
         DataProxyInvoke.invoke(eruptModel, dataProxy -> dataProxy.formViewBehavior(model));
         return EruptUtil.generateEruptDataMap(eruptModel, model, false);
     }
