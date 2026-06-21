@@ -27,6 +27,9 @@ public @interface Layout {
 
     String tableOperatorWidth() default "";
 
+    //Collapse delete/edit/view buttons into a dropdown menu in the toolbar
+    boolean collapseActionButton() default false;
+
     enum FormSize {
         //Default
         DEFAULT,
