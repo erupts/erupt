@@ -17,6 +17,7 @@ import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.designer.handler.DesignerPublishMenu;
 import xyz.erupt.designer.proxy.DesignerEntityDataProxy;
 import xyz.erupt.upms.helper.HyperModelUpdateVo;
 
@@ -35,13 +36,22 @@ import java.util.Date;
         name = "Form Designer",
         orderBy = "updateTime desc",
         dataProxy = DesignerEntityDataProxy.class,
-        rowOperation = @RowOperation(
-                title = "Design",
-                icon = "fa fa-paint-brush",
-                mode = RowOperation.Mode.SINGLE,
-                type = RowOperation.Type.TPL,
-                tpl = @Tpl(path = "/designer/{className}", openWay = OpenWay.ROUTER)
-        )
+        rowOperation = {
+                @RowOperation(
+                        title = "Design",
+                        icon = "fa fa-paint-brush",
+                        mode = RowOperation.Mode.SINGLE,
+                        type = RowOperation.Type.TPL,
+                        tpl = @Tpl(path = "/designer/{className}", openWay = OpenWay.ROUTER)
+                ),
+                @RowOperation(
+                        title = "Publish",
+                        icon = "fa fa-send",
+                        mode = RowOperation.Mode.SINGLE,
+                        eruptClass = DesignerReleaseModal.class,
+                        operationHandler = DesignerPublishMenu.class
+                )
+        }
 )
 @Getter
 @Setter
