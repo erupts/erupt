@@ -58,7 +58,7 @@ public class A2AAgentService implements DataProxy<A2AAgent> {
 
     @Scheduled(fixedDelay = 60 * 1000)
     public void check() {
-        for (Long id : AGENT_CARDS.keySet()) {
+        for (Long id : AGENT_ERRORS.keySet()) {
             A2AAgent agent = eruptDao.lambdaQuery(A2AAgent.class).eq(A2AAgent::getId, id).one();
             if (agent != null) {
                 refresh(agent);
@@ -66,7 +66,7 @@ public class A2AAgentService implements DataProxy<A2AAgent> {
         }
     }
 
-    private void refresh(A2AAgent agent) {
+    public void refresh(A2AAgent agent) {
         try {
             AgentCard card = A2A.getAgentCard(agent.getAgentUrl(),
                     "/.well-known/agent.json",
