@@ -14,6 +14,7 @@ import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptOpenApi;
 import xyz.erupt.upms.service.EruptTokenService;
+import xyz.erupt.upms.vo.OpenApiInfoVo;
 import xyz.erupt.upms.vo.OpenApiTokenVo;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,20 @@ public class EruptOpenApiController {
     private final EruptDao eruptDao;
 
     private final EruptTokenService eruptTokenService;
+
+    /**
+     * Query appid info by token
+     *
+     * @param token token
+     * @return appid info
+     */
+    @GetMapping("/get-appid")
+    public R<OpenApiInfoVo> getAppid(@RequestParam("token") String token) {
+        if (!eruptTokenService.tokenExist(token)) throw new EruptWebApiRuntimeException("token expired or not found");
+        EruptOpenApi eruptOpenApi = eruptDao.lambdaQuery(EruptOpenApi.class).eq(EruptOpenApi::getCurrentToken, token).one();
+        if (eruptOpenApi == null) throw new EruptWebApiRuntimeException("token not found");
+        return R.ok(new OpenApiInfoVo(eruptOpenApi.getAppid(), eruptOpenApi.getName()));
+    }
 
     /**
      * Create token
