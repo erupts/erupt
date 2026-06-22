@@ -8,7 +8,7 @@ import java.beans.Transient;
 public @interface TagsType {
 
     @Comment("Separator character when storing multiple tags")
-    String joinSeparator() default "|";
+    String joinSeparator() default "[]";
 
     @Comment("Whether custom tags are allowed")
     boolean allowExtension() default true;

@@ -1,5 +1,7 @@
 package xyz.erupt.ai.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +39,12 @@ public class AgentController {
             agentVo.setName(it.getName());
             agentVo.setDesc(it.getRemark());
             if (StringUtils.isNotBlank(it.getHint())) {
-                agentVo.setHints(Arrays.stream(it.getHint().split("\\|")).toList());
+                String hint = it.getHint().trim();
+                if (hint.startsWith("[")) {
+                    agentVo.setHints(new Gson().fromJson(hint, new TypeToken<List<String>>() {}.getType()));
+                } else {
+                    agentVo.setHints(Arrays.stream(hint.split("\\|")).toList());
+                }
             }
             return agentVo;
         }).collect(Collectors.toList()));
