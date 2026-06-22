@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.context.OldEntityTL;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.security.config.EruptSecurityProp;
 import xyz.erupt.security.tl.RequestBodyTL;
@@ -73,7 +74,9 @@ public class OperationService {
                         operate.setStatus(false);
                     });
                     Object param = RequestBodyTL.get().getBody();
+                    operate.setBeforeData(OldEntityTL.get());
                     operate.setReqParam(null == param ? findRequestParamVal(request) : param.toString());
+                    OldEntityTL.remove();
                     RequestBodyTL.remove();
                     entityManager.persist(operate);
                 });

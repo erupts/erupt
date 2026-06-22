@@ -86,6 +86,13 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
+            views = @View(title = "Before Data", type = ViewType.CODE),
+            edit = @Edit(title = "Before Data", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
+    )
+    private String beforeData;
+
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
+    @EruptField(
             views = @View(title = "Req Param", type = ViewType.CODE),
             edit = @Edit(title = "Req Param", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
     )
@@ -147,12 +154,17 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
         builder.setPrettyPrinting();
         Gson gson = builder.create();
         for (Map<String, Object> map : list) {
-            Object reqParam = map.get(LambdaSee.field(EruptOperateLog::getReqParam));
-            if (null != reqParam) {
-                try {
-                    map.put(LambdaSee.field(EruptOperateLog::getReqParam), gson.toJson(gson.fromJson(reqParam.toString(), Object.class)));
-                } catch (Exception ignore) {
-                }
+            prettyPrintField(gson, map, LambdaSee.field(EruptOperateLog::getBeforeData));
+            prettyPrintField(gson, map, LambdaSee.field(EruptOperateLog::getReqParam));
+        }
+    }
+
+    private void prettyPrintField(Gson gson, Map<String, Object> map, String field) {
+        Object val = map.get(field);
+        if (null != val) {
+            try {
+                map.put(field, gson.toJson(gson.fromJson(val.toString(), Object.class)));
+            } catch (Exception ignore) {
             }
         }
     }
