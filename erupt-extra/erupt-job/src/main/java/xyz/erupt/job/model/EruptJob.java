@@ -99,7 +99,7 @@ public class EruptJob extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "Failure Notify Email", ifRender = @ExprBool(exprHandler = NotifyEmailRender.class)),
-            edit = @Edit(title = "Failure Notify Email", ifRender = @ExprBool(exprHandler = NotifyEmailRender.class), type = EditType.TAGS, tagsType = @TagsType)
+            edit = @Edit(title = "Failure Notify Email", ifRender = @ExprBool(exprHandler = NotifyEmailRender.class), type = EditType.TAGS, tagsType = @TagsType(joinSeparator = "|"))
     )
     private String notifyEmails;
 
