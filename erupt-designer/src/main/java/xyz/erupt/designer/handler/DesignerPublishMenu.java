@@ -12,10 +12,12 @@ import xyz.erupt.core.util.Erupts;
 import xyz.erupt.designer.model.DesignerEntity;
 import xyz.erupt.designer.model.DesignerReleaseModal;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.upms.service.EruptUserService;
+import xyz.erupt.upms.util.UPMSUtil;
 
 import java.util.List;
 
@@ -58,6 +60,13 @@ public class DesignerPublishMenu implements OperationHandler<DesignerEntity, Des
                 null, modal.getEruptMenu()
         );
         eruptDao.persist(menu);
+        int i = 0;
+        for (EruptFunPermissions perm : EruptFunPermissions.values()) {
+            eruptDao.persist(new EruptMenu(
+                    Erupts.generateCode(), perm.getName(), MenuTypeEnum.BUTTON.getCode(),
+                    UPMSUtil.getEruptFunPermissionsCode(entity.getClassName(), perm), menu, i += 10
+            ));
+        }
         eruptTokenService.loginToken(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
         return null;
     }
