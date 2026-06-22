@@ -8,11 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 import xyz.erupt.core.annotation.EruptScan;
+import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
-import xyz.erupt.tpl.service.EruptTplService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
 @EnableWebSocket
 public class EruptTerminalAutoConfiguration implements EruptModule {
 
-    public static final String TERMINAL_KEY = "erupt-terminal.html";
+    public static final String TERMINAL_KEY = "/terminal";
 
     static {
         EruptModuleInvoke.addEruptModule(EruptTerminalAutoConfiguration.class);
@@ -48,7 +48,7 @@ public class EruptTerminalAutoConfiguration implements EruptModule {
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
         MetaMenu metaMenu = MetaMenu.createSimpleMenu("terminal", "Terminal",
-                TERMINAL_KEY, null, 120, EruptTplService.TPL);
+                TERMINAL_KEY, null, 120, MenuTypeEnum.ROUTER.name());
         metaMenu.setIcon("fa fa-terminal");
         menus.add(metaMenu);
         return menus;

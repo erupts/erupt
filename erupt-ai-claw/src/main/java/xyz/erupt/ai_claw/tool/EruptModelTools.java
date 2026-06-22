@@ -85,7 +85,7 @@ public class EruptModelTools {
     public String findEruptDataByPk(
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
             @P("Primary key value of the record to retrieve") String id) {
-        return GsonFactory.getGson().toJson(eruptDataController.getEruptDataById(eruptName, id));
+        return GsonFactory.getGson().toJson(eruptDataController.getEruptDataById(eruptName, id, true));
     }
 
 
