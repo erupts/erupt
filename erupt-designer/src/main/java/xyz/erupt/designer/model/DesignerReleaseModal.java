@@ -16,7 +16,7 @@ import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
 /**
  * @author YuePeng
  */
-@Erupt(name = "Publish to Menu")
+@Erupt(name = "Add to Menu")
 @Getter
 @Setter
 public class DesignerReleaseModal extends BaseModel {

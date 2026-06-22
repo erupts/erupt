@@ -45,7 +45,7 @@ import java.util.Date;
                         tpl = @Tpl(path = "/designer/{className}", openWay = OpenWay.ROUTER)
                 ),
                 @RowOperation(
-                        title = "Publish",
+                        title = "Add to Menu",
                         icon = "fa fa-send",
                         mode = RowOperation.Mode.SINGLE,
                         eruptClass = DesignerReleaseModal.class,

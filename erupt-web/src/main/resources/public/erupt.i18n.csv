@@ -32,6 +32,9 @@ global.delete.hint.check,请选中要删除的数据,請選中要刪除的數據
 global.reset_pwd,修改密码,修改密碼,Change pwd,Chg pwd,パス変更,비밀번호수정,Измени код.,Camb pwd,Codes ändern.,Alterar sua senha,Ubah sandi,تعديل كلمة المرور
 global.logout,退出登录,退出登錄,Log out,Déconnexion du login,ログアウト,로그인종료,Выход из системы.,Salir del login,Und loggen sie sich nicht ein.,Sair do login,Log masuk keluar,خروج تسجيل الدخول
 global.search.hint,搜索菜单,搜索菜單,Search menu,Rechercher le menu,検索メニュー,검색메뉴,Меню поиска.,Buscar el menú,Suche nach dem menü.,Procurar no menu,Menu pencarian,قائمة البحث
+global.refresh,刷新,刷新,Refresh,Actualiser,リフレッシュ,새로고침,Обновить,Actualizar,Aktualisieren,Atualizar,Segarkan,تحديث
+global.save_only,保存,保存,Save,Sauvegarder,保存,저장,Сохранить,Guardar,Speichern,Salvar,Simpan,حفظ
+global.save_close,保存并关闭,保存並關閉,Save & Close,Sauvegarder et fermer,保存して閉じる,저장 후 닫기,Сохранить и закрыть,Guardar y cerrar,Speichern und schließen,Salvar e fechar,Simpan dan tutup,حفظ وإغلاق
 global.confirm_logout,退出登录，是否继续?,退出系統，是否繼續?,Are you sure to log out and exit the system?,Sûr de se déconnecter et quitter le système?,ログアウトしてシステムを終了しますか？,로그아웃하고시스템을종료하시겠습니까?,"Вы уверены, что система списана и выведена из строя?",¿Seguro de salir y salir del sistema?,Und steigen sie aus Oder nicht?,Sair do login. Deseja continuar?,"Log keluar, apakah akan terus?",خروج تسجيل الدخول، هل تستمر؟
 global.confirm_delete,确认删除吗？,確認刪除嗎？,Are you sure to delete?,Confirmer la suppression?,削除を確認しますか？,삭제확인하시겠습니까?,Подтвердите удаление?,¿Confirmar la eliminación?,Ortung bestätigt?,Confirmar a exclusão?,Konfirmasi dihapus?,تأكيد حذف؟
 global.update.loading.hint,数据加载中无法保存!,數據加載中無法保存!,Data cannot be saved while loading!,Les données ne peuvent pas être sauvegardées lors du chargement!,データ読み込み中に保存できません。,데이터불러오는중저장할수없습니다!,Данные не сохраняются в загрузке!,¡Los datos no se pueden guardar en la carga!,Es kann nicht geladen werden.,Os dados não podem ser salvos no carregamento!,Tak dapat disimpan dalam pemuatan data!,لا يمكن حفظ البيانات في تحميل البيانات!
