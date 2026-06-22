@@ -50,6 +50,7 @@ public class ResetPasswordExec implements OperationHandler<EruptUser, ResetPassw
     @Override
     public ResetPassword eruptFormValue(List<EruptUser> data, ResetPassword resetPassword, String[] param) {
         resetPassword.setEncrypt(data.get(0).getEncrypt());
+        resetPassword.setName(data.get(0).getName());
         return OperationHandler.super.eruptFormValue(data, resetPassword, param);
     }
 }

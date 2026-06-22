@@ -7,7 +7,9 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
@@ -19,6 +21,11 @@ import xyz.erupt.jpa.model.BaseModel;
 @Getter
 @Setter
 public class ResetPassword extends BaseModel {
+
+    @EruptField(
+            edit = @Edit(title = "Full Name", notNull = true, inputType = @InputType(fullSpan = true), readonly = @Readonly)
+    )
+    private String name;
 
     @EruptField(
             edit = @Edit(title = "Password", notNull = true, type = EditType.PASSWORD)
