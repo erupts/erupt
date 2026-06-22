@@ -23,17 +23,9 @@ public class PreEruptDataService {
 
     // get by pk
     public Map<String, Object> getEruptData(EruptModel eruptModel, String id, boolean valueMapping) {
-        return getEruptData(eruptModel, id, valueMapping, true);
-    }
-
-    public Map<String, Object> getEruptData(EruptModel eruptModel, String id, boolean valueMapping, boolean edit) {
         Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
-        if (edit) {
-            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.editBehavior(data)));
-        } else {
-            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.viewBehavior(data)));
-        }
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.editBehavior(data)));
         return EruptUtil.generateEruptDataMap(eruptModel, data, valueMapping);
     }
 

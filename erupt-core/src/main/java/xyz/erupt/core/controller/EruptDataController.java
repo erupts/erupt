@@ -97,12 +97,11 @@ public class EruptDataController {
 
     @GetMapping("/{erupt}/{id}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
-    public Map<String, Object> getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id,
-                                                @RequestParam(defaultValue = "true") boolean edit) {
+    public Map<String, Object> getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, powerObject -> powerObject.isEdit() || powerObject.isViewDetails() || powerObject.isPrint());
         eruptService.verifyIdPermissions(eruptModel, id);
-        return preEruptDataService.getEruptData(eruptModel, id, false, edit);
+        return preEruptDataService.getEruptData(eruptModel, id, false);
     }
 
     public static final String OPERATOR_PATH_STR = "/operator";

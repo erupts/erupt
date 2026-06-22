@@ -62,11 +62,6 @@ public interface DataProxy<@Comment("Erupt object") MODEL> extends MetaProxy<MOD
     default void addBehavior(MODEL model) {
     }
 
-    @Comment("View data behavior; pre-processes the data to be viewed (read-only)")
-    default void viewBehavior(MODEL model) {
-        this.editBehavior(model);
-    }
-
     @Comment("Edit data behavior; pre-processes the data to be edited")
     default void editBehavior(MODEL model) {
     }
