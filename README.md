@@ -228,7 +228,7 @@ Full module catalog: **[erupt.xyz/#!/module](https://www.erupt.xyz/#!/module)** 
 
 ### Supported LLM providers
 
-OpenAI · Claude · Gemini · DeepSeek · Qwen · GLM · Doubao · Moonshot · MiniMax · Mistral · Grok · Fireworks · Together · OpenRouter · Ollama (self-hosted) — **hot-swappable from the admin UI, 50+ in total.**
+OpenAI · Claude · Gemini · DeepSeek · Qwen · GLM · Doubao · Moonshot · MiniMax · Mistral · Grok · Fireworks · Together · OpenRouter · Requesty · Ollama (self-hosted) — **hot-swappable from the admin UI, 50+ in total.**
 
 ### Key capabilities
 
