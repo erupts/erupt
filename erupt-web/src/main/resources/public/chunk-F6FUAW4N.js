@@ -1,6 +1,4 @@
-import {b as e} from "./chunk-WU44OQKR.js";
-
-var l=e(()=>`
+import{b as e}from"./chunk-WU44OQKR.js";var l=e(()=>`
   /* Font Awesome icon styling - consolidated */
   .label-icon {
     display: inline-block;
