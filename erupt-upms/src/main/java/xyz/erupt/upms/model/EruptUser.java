@@ -85,7 +85,7 @@ public class EruptUser extends LookerSelf {
     private Boolean status = true;
 
     @EruptField(
-            edit = @Edit(title = "Phone", search = @Search, inputType = @InputType(regex = RegexConst.PHONE_REGEX))
+            edit = @Edit(title = "Phone", search = @Search, inputType = @InputType)
     )
     private String phone;
 
