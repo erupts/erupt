@@ -30,7 +30,7 @@ import java.util.Set;
 @Erupt(name = "Report Config",
         rowOperation = {
                 @RowOperation(
-                        title = "Publish", mode = RowOperation.Mode.SINGLE, icon = "fa fa-send",
+                        title = "Add to Menu", mode = RowOperation.Mode.SINGLE, icon = "fa fa-send",
                         eruptClass = BiReleaseModal.class, operationHandler = BiPublishMenu.class
                 )
         },
