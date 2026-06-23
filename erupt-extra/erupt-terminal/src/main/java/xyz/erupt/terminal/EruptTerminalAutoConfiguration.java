@@ -48,7 +48,7 @@ public class EruptTerminalAutoConfiguration implements EruptModule {
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
         MetaMenu metaMenu = MetaMenu.createSimpleMenu("terminal", "Terminal",
-                TERMINAL_KEY, null, 120, MenuTypeEnum.ROUTER.name());
+                TERMINAL_KEY, null, 120, MenuTypeEnum.ROUTER.getCode());
         metaMenu.setIcon("fa fa-terminal");
         menus.add(metaMenu);
         return menus;
