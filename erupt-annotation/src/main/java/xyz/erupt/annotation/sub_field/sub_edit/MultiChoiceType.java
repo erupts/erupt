@@ -27,7 +27,7 @@ public @interface MultiChoiceType {
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
 
     @Comment("Dependent field name for linkage")
-    @Language(value = "java", prefix = "private String ", suffix = ";")
+    @Language(value = "java", prefix = "Object get() { ", suffix = ";}")
     String dependField() default "";
 
     enum Type {

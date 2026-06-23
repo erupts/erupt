@@ -27,7 +27,7 @@ public @interface ChoiceType {
 
     //Linkage capability
     @Comment("Linkage capability; dependent field name")
-    @Language(value = "java", prefix = "private String ", suffix = ";")
+    @Language(value = "java", prefix = "Object get() { ", suffix = ";}")
     String dependField() default "";
 
     enum Type {

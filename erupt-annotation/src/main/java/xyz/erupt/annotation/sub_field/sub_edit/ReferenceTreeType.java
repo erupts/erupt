@@ -27,7 +27,7 @@ public @interface ReferenceTreeType {
     Expr rootPid() default @Expr;
 
     @Comment("Dependent field")
-    @Language(value = "java", prefix = "private String ", suffix = ";")
+    @Language(value = "java", prefix = "Object get() { ", suffix = ";}")
     String dependField() default "";
 
     @Transient
