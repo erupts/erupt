@@ -14,6 +14,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.proxy.AnnotationProcess;
@@ -111,13 +112,22 @@ public class EruptExcelService {
                                     cell.setCellValue(edit.boolType().falseText());
                                 }
                             } else if (edit.type() == EditType.DATE) {
-                                cell.getCellStyle().setDataFormat((short) 22);
+                                boolean dateOnly = edit.dateType().type() == DateType.Type.DATE;
+                                cell.getCellStyle().setDataFormat(dateOnly ? (short) 14 : (short) 22);
                                 if (it instanceof Date date) {
-                                    cell.setCellValue(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+                                    if (dateOnly) {
+                                        cell.setCellValue(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                                    } else {
+                                        cell.setCellValue(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+                                    }
                                 } else if (it instanceof LocalDate date) {
                                     cell.setCellValue(date);
                                 } else if (it instanceof LocalDateTime date) {
-                                    cell.setCellValue(date);
+                                    if (dateOnly) {
+                                        cell.setCellValue(date.toLocalDate());
+                                    } else {
+                                        cell.setCellValue(date);
+                                    }
                                 } else {
                                     cell.setCellValue(str);
                                 }
