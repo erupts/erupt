@@ -1,26 +1,49 @@
 <html>
 <head>
     <style>
-        .box {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            transition: all 1s;
-            cursor: pointer;
-            width: 80px;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f7fb;
         }
 
-        .box:hover {
-            width: 110px;
+        .icon {
+            animation: float 4s ease-in-out infinite;
+        }
+        .rays {
+            animation: spin 22s linear infinite;
+            transform-origin: 44px 44px;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-9px); }
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-<div>
-    <div class="box">
-        <img src="assets/give.gif" draggable="false" width="100%" alt="">
-    </div>
-</div>
+    <svg class="icon" width="96" height="96" viewBox="0 0 88 88"
+         fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g class="rays" stroke="#1677ff" stroke-linecap="round">
+            <line x1="44" y1="7"  x2="44" y2="17" stroke-width="3"   transform="rotate(0,44,44)"/>
+            <line x1="44" y1="7"  x2="44" y2="15" stroke-width="2"   transform="rotate(45,44,44)" opacity=".55"/>
+            <line x1="44" y1="7"  x2="44" y2="17" stroke-width="3"   transform="rotate(90,44,44)"/>
+            <line x1="44" y1="7"  x2="44" y2="15" stroke-width="2"   transform="rotate(135,44,44)" opacity=".55"/>
+            <line x1="44" y1="7"  x2="44" y2="17" stroke-width="3"   transform="rotate(180,44,44)"/>
+            <line x1="44" y1="7"  x2="44" y2="15" stroke-width="2"   transform="rotate(225,44,44)" opacity=".55"/>
+            <line x1="44" y1="7"  x2="44" y2="17" stroke-width="3"   transform="rotate(270,44,44)"/>
+            <line x1="44" y1="7"  x2="44" y2="15" stroke-width="2"   transform="rotate(315,44,44)" opacity=".55"/>
+        </g>
+        <circle cx="44" cy="44" r="17" fill="#1677ff"/>
+        <circle cx="44" cy="44" r="10" fill="white" opacity=".18"/>
+        <circle cx="39" cy="39" r="4"  fill="white" opacity=".22"/>
+    </svg>
 </body>
 </html>

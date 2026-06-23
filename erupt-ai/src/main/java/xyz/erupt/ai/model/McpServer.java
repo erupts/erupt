@@ -29,7 +29,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
         rowOperation = @RowOperation(
                 title = "Refresh",
                 icon = "fa fa-refresh",
-                mode = RowOperation.Mode.MULTI,
+                mode = RowOperation.Mode.SINGLE,
                 operationHandler = RefreshMcpServerHandler.class
         )
 )
