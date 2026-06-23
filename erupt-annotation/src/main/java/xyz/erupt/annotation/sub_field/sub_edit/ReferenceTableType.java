@@ -13,9 +13,11 @@ import java.beans.Transient;
 public @interface ReferenceTableType {
 
     @Comment("Storage column")
+    @Language(value = "java", prefix = "private String ", suffix = ";")
     String id() default AnnotationConst.ID;
 
     @Comment("Display column")
+    @Language(value = "java", prefix = "private String ", suffix = ";")
     String label() default AnnotationConst.LABEL;
 
     @Comment("Dependent field")
@@ -24,5 +26,6 @@ public @interface ReferenceTableType {
 
     @Transient
     @Comment("The column name associated with the dependent field value; dependField.value = this.dependColumn")
+    @Language(value = "java", prefix = "private String ", suffix = ";")
     String dependColumn() default AnnotationConst.ID;
 }

@@ -11,6 +11,7 @@ import xyz.erupt.annotation.config.Comment;
 public @interface Dynamic {
 
     @Comment("Dependent field name")
+    @Language(value = "java", prefix = "Object get() { ", suffix = ";}")
     String dependField();
 
     @Comment("JS expression，Variable: class field name")

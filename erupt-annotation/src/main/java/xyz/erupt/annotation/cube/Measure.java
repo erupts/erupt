@@ -28,7 +28,6 @@ public @interface Measure {
     @Language(value = "sql", prefix = "select * from x where ")
     String drillFilter() default "";
 
-
     boolean hidden() default false;
 
     String[] tags() default {};

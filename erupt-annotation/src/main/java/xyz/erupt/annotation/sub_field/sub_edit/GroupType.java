@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
+import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 
 /**
@@ -9,6 +10,7 @@ import xyz.erupt.annotation.config.Comment;
 public @interface GroupType {
 
     @Comment("Field names to be grouped")
+    @Language(value = "java", prefix = "Object get() { ", suffix = ";}")
     String[] fields();
 
     @Comment("Whether the group is initially collapsed")
