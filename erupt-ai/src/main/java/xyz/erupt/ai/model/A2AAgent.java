@@ -28,7 +28,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * date 2026/5/15
  */
 @Erupt(
-        name = "A2A Agent",
+        name = "A2A",
         dataProxy = A2AAgentService.class,
         rowOperation = @RowOperation(
                 title = "Refresh",
