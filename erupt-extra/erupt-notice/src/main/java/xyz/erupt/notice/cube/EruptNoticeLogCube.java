@@ -48,7 +48,7 @@ public class EruptNoticeLogCube {
     @Dimension(title = "Create Time", sql = "create_time")
     private Date createTime;
 
-    @Measure(title = "Count", sql = "count(*)", drillFields = {"createTime", "receiveUserId"})
+    @Measure(title = "Count", sql = "count(*)")
     private Long count;
 
     @Measure(title = "Success Count", sql = "sum(case when success then 1 else 0 end)")
