@@ -43,7 +43,7 @@ import java.util.Map;
         name = "Operation Log",
         desc = "Records all user operations in the platform",
         power = @Power(add = false, edit = false, viewDetails = false,
-                delete = false, powerHandler = SuperAdminPower.class),
+                delete = false, powerHandler = SuperAdminPower.class, export = true),
         orderBy = "createTime desc",
         dataProxy = EruptOperateLog.class
 )
