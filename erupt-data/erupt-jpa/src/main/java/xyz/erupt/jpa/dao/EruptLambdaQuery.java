@@ -17,6 +17,7 @@ import xyz.erupt.linq.lambda.SFunction;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -241,6 +242,16 @@ public class EruptLambdaQuery<T> {
 
     public <E, R> EruptLambdaQuery<T> likeValue(boolean condition, SFunction<E, R> field, Object val) {
         if (condition) return this.likeValue(field, val);
+        return this;
+    }
+
+    public EruptLambdaQuery<T> or(Consumer<EruptLambdaQuery<T>> consumer) {
+        EruptLambdaQuery<T> sub = new EruptLambdaQuery<>(entityManager, eruptClass);
+        consumer.accept(sub);
+        if (!sub.querySchema.getWheres().isEmpty()) {
+            querySchema.getWheres().add("(" + String.join(SqlLang.OR, sub.querySchema.getWheres()) + ")");
+            querySchema.getParams().putAll(sub.querySchema.getParams());
+        }
         return this;
     }
 

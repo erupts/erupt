@@ -1,16 +1,62 @@
 package xyz.erupt.test.core;
 
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.Rollback;
 import xyz.erupt.test.EruptApplicationTests;
 import xyz.erupt.test.model.query.Grade;
 import xyz.erupt.test.model.query.Student;
 
+import java.util.List;
+
 @Rollback
 @Transactional
 public class LambdaQueryTest extends EruptApplicationTests {
 
+    private Student newStudent(String name, int age) {
+        Student s = new Student();
+        s.setName(name);
+        s.setAge(age);
+        eruptDao.persist(s);
+        return s;
+    }
+
+    @Test
+    void orQueryTest() {
+        newStudent("Alice", 18);
+        newStudent("Bob", 20);
+        newStudent("Carol", 22);
+        eruptDao.getEntityManager().flush();
+
+        // OR matches two of the three students
+        List<Student> result = eruptDao.lambdaQuery(Student.class)
+                .or(q -> q.eq(Student::getName, "Alice").eq(Student::getName, "Bob"))
+                .orderBy(Student::getName)
+                .list();
+        Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals("Alice", result.get(0).getName());
+        Assertions.assertEquals("Bob", result.get(1).getName());
+
+        // AND narrows the OR result
+        List<Student> narrowed = eruptDao.lambdaQuery(Student.class)
+                .ge(Student::getAge, 20)
+                .or(q -> q.eq(Student::getName, "Bob").eq(Student::getName, "Carol"))
+                .list();
+        Assertions.assertEquals(2, narrowed.size());
+
+        // OR with no match returns empty
+        List<Student> empty = eruptDao.lambdaQuery(Student.class)
+                .or(q -> q.eq(Student::getName, "Nobody").eq(Student::getName, "Ghost"))
+                .list();
+        Assertions.assertTrue(empty.isEmpty());
+
+        // Empty consumer is a no-op (no extra AND clause added)
+        List<Student> all = eruptDao.lambdaQuery(Student.class)
+                .or(q -> {})
+                .list();
+        Assertions.assertEquals(3, all.size());
+    }
 
     @Test
     void lambdaQueryTest() {
