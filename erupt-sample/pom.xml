@@ -29,6 +29,8 @@
             <artifactId>erupt-web</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
+        <!-- optional -->
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-notice</artifactId>
@@ -49,8 +51,11 @@
             <artifactId>erupt-ai-claw</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-
-        <!-- optional -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-monitor</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-cloud-server</artifactId>
