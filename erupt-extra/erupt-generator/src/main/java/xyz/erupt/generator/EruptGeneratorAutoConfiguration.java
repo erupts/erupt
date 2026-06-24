@@ -37,8 +37,9 @@ public class EruptGeneratorAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$generator", "Generate Code", "fa fa-code", 40));
-        menus.add(MetaMenu.createEruptClassMenu(GeneratorClass.class, menus.get(0), 0));
+        MetaMenu menu = MetaMenu.createEruptClassMenu(GeneratorClass.class, null, 40);
+        menu.setIcon("fa fa-code");
+        menus.add(menu);
         return menus;
     }
 }

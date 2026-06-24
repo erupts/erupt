@@ -49,8 +49,9 @@ public class EruptDesignerAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$designer", "Form Designer", "fa fa-object-group", 45));
-        menus.add(MetaMenu.createEruptClassMenu(DesignerEntity.class, menus.get(0), 0));
+        MetaMenu menu = MetaMenu.createEruptClassMenu(DesignerEntity.class, null, 45);
+        menu.setIcon("fa fa-object-group");
+        menus.add(menu);
         return menus;
     }
 

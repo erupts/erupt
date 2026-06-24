@@ -13,11 +13,11 @@ import java.beans.Transient;
 public @interface ReferenceTableType {
 
     @Comment("Storage column")
-    @Language(value = "java", prefix = "private String ", suffix = ";")
+    @Language(value = "hql", prefix = "select ", suffix = " from")
     String id() default AnnotationConst.ID;
 
     @Comment("Display column")
-    @Language(value = "java", prefix = "private String ", suffix = ";")
+    @Language(value = "hql", prefix = "select ", suffix = " from")
     String label() default AnnotationConst.LABEL;
 
     @Comment("Dependent field")

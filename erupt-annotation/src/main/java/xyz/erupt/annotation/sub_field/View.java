@@ -24,7 +24,7 @@ public @interface View {
     String width() default "";
 
     @Comment("Column name must be specified when the field type is an entity class object")
-    @Language(value = "java", prefix = "private String ", suffix = ";")
+    @Language(value = "hql", prefix = "select ", suffix = " from")
     String column() default "";
 
     ViewType type() default ViewType.AUTO;
