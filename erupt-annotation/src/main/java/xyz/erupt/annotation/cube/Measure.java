@@ -20,6 +20,7 @@ public @interface Measure {
 
     FieldType type() default FieldType.AUTO;
 
+    @Comment("Aggregate SQL expression, e.g. sum(amount)")
     @Language(value = "sql", prefix = "select ")
     String sql();
 
@@ -27,9 +28,11 @@ public @interface Measure {
     @Language("markdown")
     String prompt() default "";
 
+    @Comment("Dimension fields exposed when drilling down")
     @Language(value = "java", prefix = "Object get() { ", suffix = ";}")
     String[] drillFields() default {};
 
+    @Comment("Extra filter applied when drilling down")
     @Language(value = "sql", prefix = "select * from x where ")
     String drillFilter() default "";
 

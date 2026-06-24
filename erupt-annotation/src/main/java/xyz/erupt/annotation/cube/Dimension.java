@@ -20,6 +20,7 @@ public @interface Dimension {
 
     FieldType type() default FieldType.AUTO;
 
+    @Comment("Group-by column expression, defaults to the field name")
     @Language("VTL")
     String sql() default "";
 
