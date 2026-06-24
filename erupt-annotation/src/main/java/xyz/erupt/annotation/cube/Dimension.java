@@ -22,6 +22,9 @@ public @interface Dimension {
     @Language("VTL")
     String sql() default "";
 
+    @Language("md")
+    String prompt() default "";
+
     boolean hidden() default false;
 
     String[] tags() default {};

@@ -22,6 +22,9 @@ public @interface Measure {
     @Language(value = "sql", prefix = "select ")
     String sql();
 
+    @Language("markdown")
+    String prompt() default "";
+
     @Language(value = "java", prefix = "Object get() { ", suffix = ";}")
     String[] drillFields() default {};
 

@@ -34,6 +34,9 @@ public @interface EruptCube {
             )
     };
 
+    @Language("md")
+    String prompt() default "";
+
     String[] tags() default {};
 
     Class<? extends CubeProxy>[] dataProxy() default {};
