@@ -19,7 +19,8 @@ public @interface Parameter {
 
     String description() default "";
 
-    @Language("md")
+    @Comment("AI prompt")
+    @Language("markdown")
     String prompt() default "";
 
     FieldType type() default FieldType.STRING;

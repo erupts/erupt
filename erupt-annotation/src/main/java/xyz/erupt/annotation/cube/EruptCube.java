@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.cube;
 
 import org.intellij.lang.annotations.Language;
+import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.fun.CubeProxy;
 
 import java.lang.annotation.*;
@@ -34,7 +35,8 @@ public @interface EruptCube {
             )
     };
 
-    @Language("md")
+    @Comment("AI prompt")
+    @Language("markdown")
     String prompt() default "";
 
     String[] tags() default {};

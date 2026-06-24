@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.cube;
 
 import org.intellij.lang.annotations.Language;
+import xyz.erupt.annotation.config.Comment;
 
 import java.lang.annotation.*;
 
@@ -22,6 +23,7 @@ public @interface Measure {
     @Language(value = "sql", prefix = "select ")
     String sql();
 
+    @Comment("AI prompt")
     @Language("markdown")
     String prompt() default "";
 

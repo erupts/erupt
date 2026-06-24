@@ -31,6 +31,8 @@ public @interface Erupt {
     String desc() default "";
 
     @Comment("AI prompt")
+    @Transient
+    @Language("markdown")
     String prompt() default "";
 
     @Transient

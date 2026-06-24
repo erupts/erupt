@@ -24,6 +24,8 @@ public @interface Edit {
     String desc() default "";
 
     @Comment("AI prompt")
+    @Transient
+    @Language("markdown")
     String prompt() default "";
 
     @Comment("Whether the field is required")

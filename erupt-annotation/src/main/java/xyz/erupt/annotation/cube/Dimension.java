@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.cube;
 
 import org.intellij.lang.annotations.Language;
+import xyz.erupt.annotation.config.Comment;
 
 import java.lang.annotation.*;
 
@@ -22,7 +23,8 @@ public @interface Dimension {
     @Language("VTL")
     String sql() default "";
 
-    @Language("md")
+    @Comment("AI prompt")
+    @Language("markdown")
     String prompt() default "";
 
     boolean hidden() default false;
