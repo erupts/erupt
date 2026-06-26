@@ -5,7 +5,7 @@ FROM eclipse-temurin:17-jre
 WORKDIR /app
 
 # 将本地的 jar 文件拷贝到容器中
-COPY target/erupt-cloud-server-docker-*.jar /app/EruptCloudServerApplication.jar
+COPY target/erupt-docker-*.jar /app/Erupt.jar
 
 # 暴露应用运行的端口
 EXPOSE 8080
@@ -15,4 +15,4 @@ ENV JAVA_OPTS="-Xms256m -Xmx512m -Xss256k"
 
 # 定义容器启动时执行的命令
 ENTRYPOINT ["sh", "-c"]
-CMD ["java -jar /app/EruptCloudServerApplication.jar ${JAVA_OPTS}"]
+CMD ["java -jar /app/Erupt.jar ${JAVA_OPTS}"]

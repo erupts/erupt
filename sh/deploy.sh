@@ -3,7 +3,7 @@
 #cd ../erupt/erupt-web
 #git add src/main/resources/public
 #
-#cd ../deploy/erupt-cloud-server-docker
+#cd ../deploy/erupt-docker
 #source deploy.sh
 
 mvn clean deploy -P release

@@ -6,7 +6,7 @@ set -e
 # 获取 Maven 项目的版本号
 DOCKER_TAG=$(sed -n 's|.*<version>\([^<]*\)</version>.*|\1|p' pom.xml | head -n 1)
 
-IMG_NAME="erupts/erupt-cloud-server"
+IMG_NAME="erupts/erupt"
 
 # 打印版本号
 echo "Using Docker tag: $DOCKER_TAG"

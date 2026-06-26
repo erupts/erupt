@@ -15,8 +15,8 @@
         <central.publishing.skip>true</central.publishing.skip>
     </properties>
 
-    <artifactId>erupt-cloud-server-docker</artifactId>
-    <name>erupt-cloud-server-docker</name>
+    <artifactId>erupt-docker</artifactId>
+    <name>erupt-docker</name>
 
     <dependencies>
         <dependency>
@@ -102,7 +102,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
                 <configuration>
-                    <mainClass>xyz.erupt.cloud_server.docker.Application</mainClass>
+                    <mainClass>xyz.erupt.docker.Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>
