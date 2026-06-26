@@ -10,9 +10,6 @@ public @interface Search {
 
     boolean value() default true;
 
-    @Comment("Advanced search")
-    boolean vague() default false;
-
     @Comment("Whether the field is required")
     boolean notNull() default false;
 

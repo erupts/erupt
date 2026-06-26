@@ -118,20 +118,23 @@ condition: [{ "key": "dept.id", "value": "2", "conditionType": "EQ" }]
 
 ### `R<T>` — 通用响应
 ```
-success: boolean
-status: SUCCESS | ERROR
-data:    T
-message: string（可选）
+success:   boolean
+status:    SUCCESS | ERROR | INFO | WARNING
+data:      T
+message:   string（可选）
 promptWay: MESSAGE | DIALOG | NOTIFY | NONE
 ```
 
-### `EruptApiModel` — 操作结果
-```
-status:    SUCCESS | ERROR | INFO | WARNING
-message:   string
-data:      Object
-promptWay: MESSAGE | DIALOG | NOTIFY | NONE
-```
+工厂方法速查：
+
+| 方法 | status | promptWay | 用途 |
+|------|--------|-----------|------|
+| `R.ok()` | SUCCESS | MESSAGE | 操作成功，无数据 |
+| `R.ok(data)` | SUCCESS | NONE | 成功，返回数据（静默） |
+| `R.success(data)` | SUCCESS | MESSAGE | 成功，返回数据（弹提示） |
+| `R.success(msg, data)` | SUCCESS | MESSAGE | 成功，带消息和数据 |
+| `R.error(msg)` | ERROR | MESSAGE | 错误，消息条提示 |
+| `R.errorDialog(msg)` | ERROR | DIALOG | 错误，弹窗提示 |
 
 ### `Page` — 分页响应
 ```
@@ -227,7 +230,7 @@ power:           PowerObject         // 当前用户权限
   "ids":  ["id1", "id2"]
 }
 ```
-**Response:** `EruptApiModel`
+**Response:** `R<String>`（message = 操作反馈文字，由 `OperationHandler.exec()` 返回）
 
 ---
 
@@ -339,7 +342,7 @@ power:           PowerObject         // 当前用户权限
 
 **Body:** `JsonObject`
 
-**Response:** `EruptApiModel`（data 为更新后的对象）
+**Response:** `R<Object>`（data 为更新后的对象）
 
 ---
 
@@ -348,7 +351,7 @@ power:           PowerObject         // 当前用户权限
 
 **Body:** `JsonObject`（含子记录主键）
 
-**Response:** `EruptApiModel`
+**Response:** `R<Object>`
 
 ---
 
@@ -357,7 +360,7 @@ power:           PowerObject         // 当前用户权限
 
 **Body:** `JsonObject`（含子记录主键）
 
-**Response:** `EruptApiModel`
+**Response:** `R<Void>`
 
 ---
 
@@ -438,7 +441,7 @@ power:           PowerObject         // 当前用户权限
 
 **Form:** `file` (MultipartFile)
 
-**Response:** `EruptApiModel`（data = 文件路径）
+**Response:** `R<String>`（data = 文件路径）
 
 ---
 
@@ -447,7 +450,7 @@ power:           PowerObject         // 当前用户权限
 
 **Form:** `file[]` (MultipartFile[])
 
-**Response:** `EruptApiModel`（data = 多个路径，分隔符 `|`）
+**Response:** `R<List<String>>`（data = 多个路径列表）
 
 ---
 

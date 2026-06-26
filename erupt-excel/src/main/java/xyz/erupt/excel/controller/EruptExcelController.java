@@ -29,14 +29,8 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptModifyService;
 import xyz.erupt.core.service.EruptService;
-import xyz.erupt.core.util.DateUtil;
-import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.core.util.Erupts;
-import xyz.erupt.core.util.SecurityUtil;
-import xyz.erupt.core.view.EruptApiModel;
-import xyz.erupt.core.view.EruptModel;
-import xyz.erupt.core.view.Page;
-import xyz.erupt.core.view.TableQuery;
+import xyz.erupt.core.util.*;
+import xyz.erupt.core.view.*;
 import xyz.erupt.excel.service.EruptExcelService;
 import xyz.erupt.excel.util.ExcelUtil;
 
@@ -44,7 +38,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -75,7 +68,7 @@ public class EruptExcelController {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isImportable);
         try (Workbook wb = dataFileService.createExcelTemplate(eruptModel)) {
-            wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name() + "_template" + EruptExcelService.XLS_FORMAT));
+            wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name() + "_template" + EruptExcelService.XLSX_FORMAT));
         }
     }
 
@@ -83,19 +76,26 @@ public class EruptExcelController {
     @EruptRecordOperate(value = "Export Excel", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void exportData(@PathVariable("erupt") String eruptName,
-                           @RequestBody(required = false) List<Condition> conditions,
+                           @RequestBody TableQuery tableQuery,
+                           @RequestParam(required = false) List<Object> ids,
                            HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isExport);
-        TableQuery tableQuery = new TableQuery();
         tableQuery.setPageIndex(1);
         tableQuery.setPageSize(Page.PAGE_MAX_DATA);
-        Optional.ofNullable(conditions).ifPresent(tableQuery::setCondition);
-        Page page = eruptService.getEruptData(eruptModel, tableQuery, null);
+        Page page;
+        if (ids != null && !ids.isEmpty()) {
+            EruptFieldModel pkField = eruptModel.getEruptFieldMap().get(eruptModel.getErupt().primaryKeyCol());
+            String idsCondition = eruptModel.getErupt().primaryKeyCol() + " in (" +
+                    TypeUtil.arrayToConditonString(new ArrayList<>(ids), pkField.getField().getType()) + ")";
+            page = eruptService.getEruptData(eruptModel, tableQuery, null, idsCondition);
+        } else {
+            page = eruptService.getEruptData(eruptModel, tableQuery, null);
+        }
         try (Workbook wb = dataFileService.exportExcel(eruptModel, page)) {
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
-            this.createConditionSheet(wb, eruptModel, conditions);
+            this.createConditionSheet(wb, eruptModel, tableQuery.getCondition());
             wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name()
                     + "_" + DateUtil.getFormatDate(new Date(), DateUtil.ISO_8601) + EruptExcelService.XLSX_FORMAT));
         }
@@ -130,10 +130,10 @@ public class EruptExcelController {
     @EruptRecordOperate(value = "Import Excel", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional
-    public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
+    public R<Void> importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isImportable, "Not import permission");
-        if (file.isEmpty() || null == file.getOriginalFilename()) return EruptApiModel.errorApi("No file");
+        if (file.isEmpty() || null == file.getOriginalFilename()) return R.errorDialog("No file");
         List<JsonObject> list;
         int i = 1;
         try {
@@ -157,9 +157,9 @@ public class EruptExcelController {
             int j = 1;
             for (JsonObject data : list) {
                 j++;
-                EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
-                if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
-                    throw new EruptWebApiRuntimeException(String.format(I18nTranslate.$translate("excel.row_error"), j, eruptApiModel.getMessage()));
+                R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
+                if (!validation.isSuccess()) {
+                    throw new EruptWebApiRuntimeException(String.format(I18nTranslate.$translate("excel.row_error"), j, validation.getMessage()));
                 }
                 eruptDataList.add(eruptModifyService.eruptInsertDataProcess(eruptModel, data));
             }
@@ -169,7 +169,7 @@ public class EruptExcelController {
             log.error("import error {}", eruptModel.getEruptName(), e);
             throw new EruptWebApiRuntimeException(String.format(I18nTranslate.$translate("excel.import_error"), e.getMessage()));
         }
-        return EruptApiModel.successApi();
+        return R.ok();
     }
 
 

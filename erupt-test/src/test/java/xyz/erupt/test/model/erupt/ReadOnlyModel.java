@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 @Power 权限配置：纯只读，仅允许查询
+ * Demonstrates @Power permission config: read-only, query allowed only.
  */
 @Getter
 @Setter

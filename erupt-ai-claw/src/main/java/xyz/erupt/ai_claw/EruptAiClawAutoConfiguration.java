@@ -30,7 +30,7 @@ public class EruptAiClawAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-ai-claw").description("Super AI powerful").build();
+        return ModuleInfo.builder().name("erupt-ai-claw").description("Drop-in admin agent built on erupt-ai — natural language to Erupt admin operations").build();
     }
 
     @Override

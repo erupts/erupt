@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
-import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptMenu;
@@ -23,12 +22,6 @@ public class EruptContextService {
 
     @Resource
     private EruptSessionService sessionService;
-
-    //Get the erupt context object
-    @Deprecated
-    public Class<?> getContextEruptClass() {
-        return EruptCoreService.getErupt(MetaContext.getErupt().getName()).getClazz();
-    }
 
     //Get the current request token
     public String getCurrentToken() {

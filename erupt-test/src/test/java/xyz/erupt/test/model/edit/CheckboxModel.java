@@ -20,7 +20,7 @@ import java.util.List;
 @Erupt(name = "CheckboxEdit")
 public class CheckboxModel extends BaseModel {
 
-    // 基础：id + label
+    // basic: id + label
     @ManyToMany
     @EruptField(
             views = @View(title = "Tags"),
@@ -29,7 +29,7 @@ public class CheckboxModel extends BaseModel {
     )
     private List<RefTargetModel> tags;
 
-    // 带 remark（描述列）
+    // with remark (description column)
     @ManyToMany
     @EruptField(
             views = @View(title = "Roles"),

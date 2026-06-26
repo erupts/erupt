@@ -2,7 +2,6 @@ package xyz.erupt.annotation.sub_field;
 
 import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
-import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 
@@ -25,9 +24,9 @@ public @interface View {
     String width() default "";
 
     @Comment("Column name must be specified when the field type is an entity class object")
+    @Language(value = "hql", prefix = "select ", suffix = " from")
     String column() default "";
 
-    @EruptProperty(alias = "viewType")
     ViewType type() default ViewType.AUTO;
 
     @Transient

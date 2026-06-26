@@ -19,7 +19,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "AttachmentEdit")
 public class AttachmentModel extends BaseModel {
 
-    // 单文件上传（默认）
+    // single-file upload (default)
     @EruptField(
             views = @View(title = "Resume"),
             edit = @Edit(title = "Resume", type = EditType.ATTACHMENT,
@@ -29,7 +29,7 @@ public class AttachmentModel extends BaseModel {
     )
     private String resume;
 
-    // 多文件上传
+    // multi-file upload
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Attachments"),
@@ -40,7 +40,7 @@ public class AttachmentModel extends BaseModel {
     )
     private String attachments;
 
-    // 图片上传（IMAGE 类型）
+    // image upload (IMAGE type)
     @EruptField(
             views = @View(title = "Avatar"),
             edit = @Edit(title = "Avatar", type = EditType.ATTACHMENT,
@@ -51,7 +51,7 @@ public class AttachmentModel extends BaseModel {
     )
     private String avatar;
 
-    // 图片尺寸约束
+    // image dimension constraints
     @EruptField(
             views = @View(title = "Banner"),
             edit = @Edit(title = "Banner", desc = "1920×400 recommended",
@@ -64,7 +64,7 @@ public class AttachmentModel extends BaseModel {
     )
     private String banner;
 
-    // 多图上传
+    // multi-image upload
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Gallery"),

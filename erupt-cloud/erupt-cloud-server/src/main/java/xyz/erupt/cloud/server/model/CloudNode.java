@@ -35,11 +35,12 @@ import xyz.erupt.upms.handler.ViaMenuValueCtrl;
 @Table(name = "e_cloud_node")
 @Erupt(
         name = "Node Config", dataProxy = CloudNodeProcess.class,
+        linkTree = @LinkTree(field = "cloudNodeGroup"),
         rowOperation = {
                 @RowOperation(
                         title = "View Token", icon = "fa fa-shield", mode = RowOperation.Mode.SINGLE,
                         show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION),
-                        type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/node-info.ftl",embedType = PageEmbedType.MICRO_FRONTEND)
+                        type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/node-info.ftl", embedType = PageEmbedType.MICRO_FRONTEND)
                 ),
                 @RowOperation(
                         title = "Node Log", mode = RowOperation.Mode.SINGLE,
@@ -56,13 +57,13 @@ public class CloudNode extends MetaModelUpdateVo {
     @Column(unique = true)
     @EruptField(
             views = @View(title = "Node Name", sortable = true),
-            edit = @Edit(title = "Node Name", desc = "NodeName", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Node Name", desc = "NodeName", notNull = true, search = @Search)
     )
     private String nodeName;
 
     @EruptField(
             views = @View(title = "Friendly Name", sortable = true),
-            edit = @Edit(title = "Friendly Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Friendly Name", notNull = true, search = @Search)
     )
     private String name;
 
@@ -110,7 +111,7 @@ public class CloudNode extends MetaModelUpdateVo {
     @EruptField(
             views = @View(title = "Duty", sortable = true),
             edit = @Edit(title = "Duty", type = EditType.TAGS,
-                    tagsType = @TagsType(fetchHandler = CloudNodeProcess.class), notNull = true)
+                    tagsType = @TagsType(fetchHandler = CloudNodeProcess.class))
     )
     private String duty;
 

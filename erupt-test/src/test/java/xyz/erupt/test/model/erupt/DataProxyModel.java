@@ -10,7 +10,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 dataProxy：绑定 TestDataProxy，在新增/修改/删除各阶段执行业务逻辑
+ * Demonstrates dataProxy: binds TestDataProxy to execute business logic on add / update / delete.
  */
 @Getter
 @Setter

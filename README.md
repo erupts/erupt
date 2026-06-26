@@ -68,7 +68,37 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 
 https://github.com/user-attachments/assets/aa348010-a894-4b3e-9217-a30fd3acadfa
 
-### 1. Add two dependencies
+Choose the option that fits your situation:
+
+---
+
+### Option A · Source Code (explore or contribute)
+
+Clone this repo and run the bundled sample — H2 in-memory database, no extra config required.
+
+```bash
+git clone https://github.com/erupts/erupt.git
+cd erupt
+mvn spring-boot:run -pl erupt-sample -am
+# → http://localhost:8080   login: erupt / erupt
+```
+
+---
+
+### Option B · Docker (zero-install trial)
+
+Pull the image from Docker Hub — [hub.docker.com/r/erupts/erupt](https://hub.docker.com/r/erupts/erupt)
+
+```bash
+docker run -p 8080:8080 erupts/erupt
+# → http://localhost:8080   login: erupt / erupt
+```
+
+---
+
+### Option C · Maven Dependency (integrate into your project)
+
+#### 1. Add two dependencies
 
 ```xml
 <dependency>
@@ -83,7 +113,7 @@ https://github.com/user-attachments/assets/aa348010-a894-4b3e-9217-a30fd3acadfa
 </dependency>
 ```
 
-### 2. Annotate a JPA entity — this **is** the UI
+#### 2. Annotate a JPA entity — this **is** the UI
 
 ```java
 @Erupt(name = "User")
@@ -98,7 +128,7 @@ public class User extends BaseModel {
 }
 ```
 
-### 3. Run and login
+#### 3. Run and login
 
 ```bash
 mvn spring-boot:run
@@ -107,9 +137,8 @@ mvn spring-boot:run
 
 You now have a paged, searchable, exportable admin page with role-based permissions — backed by the table behind `User`. Add a field, refresh, it shows up.
 
-> Don't want to clone? Try **[demo.erupt.xyz](https://demo.erupt.xyz)** (`guest / guest`).
+> Don't want to install anything? Try **[demo.erupt.xyz](https://demo.erupt.xyz)** (`guest / guest`).
 > Want a starter project? **[start.erupt.xyz](https://start.erupt.xyz)** generates one in your browser.
-> Prefer to run from source? Clone this repo and run `EruptSampleApplication` in the `erupt-sample` module — bundled H2 database, no extra config required.
 > Need the full walkthrough? **[Detailed setup guide →](https://docs.erupt.xyz/guide/quick-start)**
 
 <details>
@@ -137,7 +166,7 @@ public class Simple extends BaseModel {
 
     @EruptField(
         views = @View(title = "Date"),
-        edit  = @Edit(title = "Date", search = @Search(vague = true))
+        edit  = @Edit(title = "Date", search = @Search)
     )
     private Date date;
 
@@ -207,6 +236,8 @@ Built-in via `erupt-excel`. Override `excelImport` / `excelExport` on `DataProxy
 **🦞 AI Claw (`erupt-ai-claw`)**
 Drive Erupt entities, the shell, files, and a browser through natural language. [→ details below](#-erupt-ai-claw)
 
+> **Which one do I add?** Pick **`erupt-ai`** if you want raw LLM / MCP access to build your own agent; pick **`erupt-ai-claw`** if you want a turn-key admin agent out of the box (it depends on `erupt-ai`, so you only need this one).
+
 **☁️ Cluster & multi-tenant**
 `erupt-cloud` for distributed config; commercial `erupt-tenant` for full SaaS.
 
@@ -226,7 +257,7 @@ Full module catalog: **[erupt.xyz/#!/module](https://www.erupt.xyz/#!/module)** 
 
 ### Supported LLM providers
 
-OpenAI · Claude · Gemini · DeepSeek · Qwen · GLM · Doubao · Moonshot · MiniMax · Mistral · Grok · Fireworks · Together · OpenRouter · Ollama (self-hosted) — **hot-swappable from the admin UI, 50+ in total.**
+OpenAI · Claude · Gemini · DeepSeek · Qwen · GLM · Doubao · Moonshot · MiniMax · Mistral · Grok · Fireworks · Together · OpenRouter · Requesty · Ollama (self-hosted) — **hot-swappable from the admin UI, 50+ in total.**
 
 ### Key capabilities
 
@@ -298,7 +329,7 @@ Claw shares the same Role-based Tool security as AI Harness — only whitelisted
 
 ---
 
-> 📌 **Core modules are permanently free and open source** — `erupt-core` / `erupt-annotation` / `erupt-web` / `erupt-jpa` / `erupt-upms` / `erupt-ai` and other core modules are licensed under Apache 2.0 forever — **no License restrictions · no project-count limits · no commercial restrictions** (see the [governance commitment →](./GOVERNANCE.md)). The commercial modules below are optional enterprise extensions that evolve independently from the open-source core.
+> 📌 **Core modules are permanently free and open source** — `erupt-core` / `erupt-annotation` / `erupt-web` / `erupt-jpa` / `erupt-upms` / `erupt-ai` and other core modules are licensed under Apache 2.0 forever — **no License restrictions · no project-count limits · no commercial restrictions** (see the [governance commitment →](./.github/GOVERNANCE.md)). The commercial modules below are optional enterprise extensions that evolve independently from the open-source core.
 
 ## 🔌 Commercial extension modules
 
@@ -321,7 +352,7 @@ Beyond the open-source core, 4 enterprise-grade modules are available — source
 
 Erupt is a free and open-source project. We welcome anyone to contribute — submitting code, reporting bugs, sharing ideas, or sharing your use cases. Blog posts and social-media coverage are equally welcome.
 
-To contribute code, please read our [contribution guidelines](./CONTRIBUTING.md) first, then open an [Issue](https://github.com/erupts/erupt/issues) or [Pull Request](https://github.com/erupts/erupt/pulls) on GitHub.
+To contribute code, please read our [contribution guidelines](./.github/CONTRIBUTING.md) first, then open an [Issue](https://github.com/erupts/erupt/issues) or [Pull Request](https://github.com/erupts/erupt/pulls) on GitHub.
 
 **Thanks to the following contributors:**
 

@@ -15,6 +15,7 @@ import org.ssssssss.magicapi.core.servlet.MagicHttpServletRequest;
 import org.ssssssss.magicapi.datasource.model.DataSourceInfo;
 import org.ssssssss.magicapi.function.model.FunctionInfo;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.magicapi.EruptMagicApiAutoConfiguration;
 import xyz.erupt.upms.service.EruptUserService;
@@ -30,9 +31,9 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
 
     private final EruptUserService eruptUserService;
 
-    private static final String NO_PERMISSION = "权限不足！";
+    private static final String NO_PERMISSION = "No permission!";
 
-    private static final String LOGIN_EXPIRE = "登录凭证失效！";
+    private static final String LOGIN_EXPIRE = "Login credentials expired!";
 
     /**
      * Configure interface permissions
@@ -44,20 +45,20 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
         String role = Objects.toString(info.getOptionValue(Options.ROLE), "");
         String login = Objects.toString(info.getOptionValue(Options.REQUIRE_LOGIN), "");
         boolean isLogin = eruptUserService.getCurrentUid() != null;
-        if (StringUtils.isNotBlank(login) && !isLogin) return new JsonBean<>(401, LOGIN_EXPIRE);
+        if (StringUtils.isNotBlank(login) && !isLogin) return new JsonBean<>(401, I18nTranslate.$translate(LOGIN_EXPIRE));
         if (StringUtils.isNotBlank(role) || StringUtils.isNotBlank(permission)) {
             if (!isLogin) {
-                return new JsonBean<Void>(401, LOGIN_EXPIRE);
+                return new JsonBean<Void>(401, I18nTranslate.$translate(LOGIN_EXPIRE));
             } else {
                 MetaUserinfo metaUserInfo = eruptUserService.getSimpleUserInfo();
                 if (!metaUserInfo.isSuperAdmin()) {
                     // Menu judgment
                     if (StringUtils.isNotBlank(permission) && eruptUserService.getEruptMenuByValue(permission) == null) {
-                        return new JsonBean<Void>(403, NO_PERMISSION);
+                        return new JsonBean<Void>(403, I18nTranslate.$translate(NO_PERMISSION));
                     }
                     // Role judgment
                     if (StringUtils.isNotBlank(role) && metaUserInfo.getRoles().stream().noneMatch(role::equals)) {
-                        return new JsonBean<Void>(403, NO_PERMISSION);
+                        return new JsonBean<Void>(403, I18nTranslate.$translate(NO_PERMISSION));
                     }
                 }
             }
@@ -77,7 +78,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     @SneakyThrows
     public MagicUser getUserByToken(String token) {
         MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfoByToken(token);
-        if (null == metaUserinfo) throw new MagicLoginException(LOGIN_EXPIRE);
+        if (null == metaUserinfo) throw new MagicLoginException(I18nTranslate.$translate(LOGIN_EXPIRE));
         return new MagicUser(metaUserinfo.getAccount(), metaUserinfo.getUsername(), token);
     }
 
@@ -87,16 +88,16 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     @Override
     public boolean allowVisit(MagicUser magicUser, MagicHttpServletRequest request, Authorization authorization) {
         if (eruptUserService.getCurrentUid() == null) {
-            throw new EruptWebApiRuntimeException(LOGIN_EXPIRE);
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate(LOGIN_EXPIRE));
         } else if (null == eruptUserService.getEruptMenuByValue(EruptMagicApiAutoConfiguration.MAGIC_API_MENU_PREFIX + authorization.name())) {
-            throw new EruptWebApiRuntimeException(NO_PERMISSION);
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate(NO_PERMISSION));
         }
         return true;
     }
 
     @Override
     public boolean allowVisit(MagicUser magicUser, MagicHttpServletRequest request, Authorization authorization, Group group) {
-        if (null == eruptUserService.getCurrentUid()) throw new EruptWebApiRuntimeException(LOGIN_EXPIRE);
+        if (null == eruptUserService.getCurrentUid()) throw new EruptWebApiRuntimeException(I18nTranslate.$translate(LOGIN_EXPIRE));
         MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
         if (!metaUserinfo.isSuperAdmin()) {
             if (!group.getOptions().isEmpty()) {

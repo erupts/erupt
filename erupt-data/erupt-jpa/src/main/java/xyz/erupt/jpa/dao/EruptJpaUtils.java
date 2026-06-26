@@ -125,29 +125,59 @@ public class EruptJpaUtils {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(condition.getKey());
                 if (null != eruptFieldModel) {
                     Edit edit = eruptFieldModel.getEruptField().edit();
+                    String _key;
+                    boolean isReference = false;
                     if (edit.type() == EditType.REFERENCE_TREE) {
-                        hql.append(EruptJpaUtils.AND).append(condition.getKey()).append(EruptConst.DOT).append(edit.referenceTreeType().id()).append("=:").append(condition.getKey());
-                        continue;
+                        _key = condition.getKey() + EruptConst.DOT + edit.referenceTreeType().id();
+                        isReference = true;
                     } else if (edit.type() == EditType.REFERENCE_TABLE) {
-                        hql.append(EruptJpaUtils.AND).append(condition.getKey()).append(EruptConst.DOT).append(edit.referenceTableType().id()).append("=:").append(condition.getKey());
-                        continue;
+                        _key = condition.getKey() + EruptConst.DOT + edit.referenceTableType().id();
+                        isReference = true;
+                    } else {
+                        _key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), condition.getKey());
                     }
-                    String _key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), condition.getKey());
 
                     switch (condition.getExpression()) {
                         case EQ:
                             hql.append(EruptJpaUtils.AND).append(_key).append("=:").append(condition.getKey());
                             break;
+                        case NEQ:
+                            hql.append(EruptJpaUtils.AND).append(_key).append("!=:").append(condition.getKey());
+                            break;
+                        case NULL:
+                            hql.append(EruptJpaUtils.AND).append(isReference ? condition.getKey() : _key).append(" is null");
+                            break;
+                        case NOT_NULL:
+                            hql.append(EruptJpaUtils.AND).append(isReference ? condition.getKey() : _key).append(" is not null");
+                            break;
+                        case GT:
+                            if (!isReference) hql.append(EruptJpaUtils.AND).append(_key).append(">:").append(condition.getKey());
+                            break;
+                        case GTE:
+                            if (!isReference) hql.append(EruptJpaUtils.AND).append(_key).append(">=:").append(condition.getKey());
+                            break;
+                        case LT:
+                            if (!isReference) hql.append(EruptJpaUtils.AND).append(_key).append("<:").append(condition.getKey());
+                            break;
+                        case LTE:
+                            if (!isReference) hql.append(EruptJpaUtils.AND).append(_key).append("<=:").append(condition.getKey());
+                            break;
                         case LIKE:
-                            hql.append(EruptJpaUtils.AND).append(_key).append(" like :").append(condition.getKey());
+                            if (!isReference) hql.append(EruptJpaUtils.AND).append(_key).append(" like :").append(condition.getKey());
+                            break;
+                        case NOT_LIKE:
+                            if (!isReference) hql.append(EruptJpaUtils.AND).append(_key).append(" not like :").append(condition.getKey());
                             break;
                         case RANGE:
-                            hql.append(EruptJpaUtils.AND).append(_key).append(" between :")
+                            if (!isReference) hql.append(EruptJpaUtils.AND).append(_key).append(" between :")
                                     .append(L_VAL_KEY).append(condition.getKey()).append(" and :")
                                     .append(R_VAL_KEY).append(condition.getKey());
                             break;
                         case IN:
-                            hql.append(EruptJpaUtils.AND).append(_key).append(" in (:").append(condition.getKey()).append(")");
+                            if (!isReference) hql.append(EruptJpaUtils.AND).append(_key).append(" in (:").append(condition.getKey()).append(")");
+                            break;
+                        case NOT_IN:
+                            if (!isReference) hql.append(EruptJpaUtils.AND).append(_key).append(" not in (:").append(condition.getKey()).append(")");
                             break;
                     }
                 } else {

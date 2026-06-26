@@ -6,7 +6,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.14.3</version>
+        <version>2.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -29,6 +29,8 @@
             <artifactId>erupt-web</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
+        <!-- optional -->
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-notice</artifactId>
@@ -49,8 +51,11 @@
             <artifactId>erupt-ai-claw</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-
-        <!-- optional -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-monitor</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-cloud-server</artifactId>
@@ -61,6 +66,16 @@
             <artifactId>erupt-job</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-print</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-designer</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
@@ -68,7 +83,7 @@
         </dependency>
     </dependencies>
 
-<!-- 如需打成可运行jar解开如下注释代码即可 -->
+<!-- To convert it into a runnable jar, simply uncomment the following code. -->
 <!--    <build>-->
 <!--        <plugins>-->
 <!--            <plugin>-->

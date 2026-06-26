@@ -32,9 +32,9 @@ import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
-import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.R;
 import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.lang.reflect.Field;
@@ -164,11 +164,6 @@ public class EruptUtil {
         return map;
     }
 
-    @SneakyThrows
-    public static Map<String, Object> generateEruptDataViewMap(EruptModel eruptModel, Object obj) {
-        return null;
-    }
-
     public static Map<String, String> getChoiceMap(EruptModel eruptModel, Edit edit) {
         Map<String, String> choiceMap = new LinkedHashMap<>();
         getChoiceList(eruptModel, edit).forEach(vl -> choiceMap.put(vl.getValue(), vl.getLabel()));
@@ -192,16 +187,16 @@ public class EruptUtil {
         return vls;
     }
 
-    public static List<VLModel> getChoiceListFilter(EruptModel eruptModel, Edit edit, Map<String, Object> formData) {
+    public static List<VLModel> getChoiceListFilter(EruptModel eruptModel, Edit edit, Object data) {
         List<VLModel> vls = new ArrayList<>();
         if (edit.type() == EditType.CHOICE) {
             vls.addAll(Stream.of(edit.choiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.color(), vl.disable())).toList());
             Stream.of(edit.choiceType().fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
-                    Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetchFilter(formData, edit.choiceType().fetchHandlerParams())).ifPresent(vls::addAll));
+                    Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetchFilter(data, edit.choiceType().fetchHandlerParams())).ifPresent(vls::addAll));
         } else if (edit.type() == EditType.MULTI_CHOICE) {
             vls.addAll(Stream.of(edit.multiChoiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.color(), vl.disable())).toList());
             Stream.of(edit.multiChoiceType().fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
-                    Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetchFilter(formData, edit.multiChoiceType().fetchHandlerParams())).ifPresent(vls::addAll));
+                    Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetchFilter(data, edit.multiChoiceType().fetchHandlerParams())).ifPresent(vls::addAll));
         }
         if (eruptModel.isI18n()) {
             vls.forEach(vl -> vl.setLabel(I18nTranslate.$translate(vl.getLabel())));
@@ -209,10 +204,10 @@ public class EruptUtil {
         return vls;
     }
 
-    public static List<String> getTagList(TagsType tagsType) {
+    public static List<String> getTagList(TagsType tagsType, Object data) {
         List<String> tags = new ArrayList<>(Arrays.asList(tagsType.tags()));
         Stream.of(tagsType.fetchHandler()).filter(clazz -> !clazz.isInterface())
-                .forEach(clazz -> tags.addAll(EruptSpringUtil.getBean(clazz).fetchTags(tagsType.fetchHandlerParams())));
+                .forEach(clazz -> tags.addAll(EruptSpringUtil.getBean(clazz).fetchTags(data, tagsType.fetchHandlerParams())));
         return tags;
     }
 
@@ -260,21 +255,16 @@ public class EruptUtil {
                 if (null != eruptFieldModel) {
                     Edit edit = eruptFieldModel.getEruptField().edit();
                     EditTypeSearch editTypeSearch = AnnotationProcess.getEditTypeSearch(edit.type());
-                    if (null != editTypeSearch && editTypeSearch.value()) {
-                        if (edit.search().value() && null != condition.getValue()) {
-                            if (condition.getValue() instanceof Collection) {
-                                Collection<?> collection = (Collection<?>) condition.getValue();
-                                if (collection.isEmpty()) {
-                                    continue;
-                                }
+                    if (null != editTypeSearch && editTypeSearch.value() && edit.search().value()) {
+                        if (condition.getValue() instanceof Collection<?> collection) {
+                            if (collection.isEmpty()) {
+                                continue;
                             }
-                            if (edit.search().vague()) {
-                                condition.setExpression(editTypeSearch.vagueMethod());
-                            } else {
-                                condition.setExpression(QueryExpression.EQ);
-                            }
-                            legalConditions.add(condition);
                         }
+                        if (null == condition.getExpression()) {
+                            condition.setExpression(QueryExpression.EQ);
+                        }
+                        legalConditions.add(condition);
                     }
                 }
             }
@@ -292,36 +282,36 @@ public class EruptUtil {
             if (edit.search().value() && edit.search().notNull()) {
                 Condition condition = conditionMap.get(fieldModel.getFieldName());
                 if (null == condition || null == condition.getValue()) {
-                    throw new EruptApiErrorTip(EruptApiModel.Status.INFO, edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), EruptApiModel.PromptWay.MESSAGE);
+                    throw new EruptApiErrorTip(R.Status.INFO, edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), R.PromptWay.MESSAGE);
                 }
                 if (condition.getValue() instanceof List) {
                     if (((List<?>) condition.getValue()).isEmpty()) {
-                        throw new EruptApiErrorTip(EruptApiModel.Status.INFO + edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), EruptApiModel.PromptWay.MESSAGE);
+                        throw new EruptApiErrorTip(R.Status.INFO + " " + edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), R.PromptWay.MESSAGE);
                     }
                 }
             }
         }
     }
 
-    public static EruptApiModel validateEruptValue(EruptModel eruptModel, JsonObject jsonObject) {
+    public static R<Void> validateEruptValue(EruptModel eruptModel, JsonObject jsonObject) {
         for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
             Edit edit = field.getEruptField().edit();
             JsonElement value = jsonObject.get(field.getFieldName());
             if (edit.notNull()) {
                 if (null == value || value.isJsonNull()) {
-                    return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                    return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
                 } else if (String.class.getSimpleName().equals(field.getFieldReturnName())) {
                     if (StringUtils.isBlank(value.getAsString())) {
-                        return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                        return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
                     }
                 }
             }
             if (edit.type() == EditType.COMBINE) {
                 JsonObject combine = jsonObject.getAsJsonObject(field.getFieldName());
                 if (null != combine) {
-                    EruptApiModel eam = validateEruptValue(EruptCoreService.getErupt(field.getFieldReturnName()), combine);
-                    if (eam.getStatus() == EruptApiModel.Status.ERROR) {
-                        return eam;
+                    R<Void> nested = validateEruptValue(EruptCoreService.getErupt(field.getFieldReturnName()), combine);
+                    if (!nested.isSuccess()) {
+                        return nested;
                     }
                 }
             }
@@ -333,7 +323,7 @@ public class EruptUtil {
                     boolean dynamic = ScriptUtil.eval("!!(" + edit.dynamic().condition() + ")", vars, boolean.class);
                     Dynamic.Ctrl strategy = dynamic ? edit.dynamic().match() : edit.dynamic().noMatch();
                     if (strategy == Dynamic.Ctrl.NOTNULL) {
-                        return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                        return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
                     }
                 }
             }
@@ -341,7 +331,7 @@ public class EruptUtil {
                 // XSS Injection Handling
                 if (edit.type() == EditType.TEXTAREA || edit.type() == EditType.INPUT) {
                     if (SecurityUtil.xssInspect(value.getAsString())) {
-                        return EruptApiModel.errorApi(edit.title() + " " + I18nTranslate.$translate("erupt.attack.xss"));
+                        return R.errorDialog(edit.title() + " " + I18nTranslate.$translate("erupt.attack.xss"));
                     }
                 }
                 // Data type validation
@@ -349,7 +339,7 @@ public class EruptUtil {
                     case NUMBER:
                     case SLIDER:
                         if (!NumberUtils.isNumber(value.getAsString())) {
-                            return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.must.number"));
+                            return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.must.number"));
                         }
                         break;
                     case INPUT:
@@ -357,7 +347,7 @@ public class EruptUtil {
                             String content = value.getAsString();
                             if (StringUtils.isNotBlank(content)) {
                                 if (!Pattern.matches(edit.inputType().regex(), content)) {
-                                    return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.incorrect_format"));
+                                    return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.incorrect_format"));
                                 }
                             }
                         }
@@ -368,9 +358,9 @@ public class EruptUtil {
         try {
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.validate(GsonFactory.getGson().fromJson(jsonObject.toString(), eruptModel.getClazz()))));
         } catch (EruptException e) {
-            return EruptApiModel.errorMessageApi(e.getMessage());
+            return R.error(e.getMessage());
         }
-        return EruptApiModel.successApi();
+        return R.ok();
     }
 
     /**

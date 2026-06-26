@@ -23,6 +23,11 @@ public @interface Edit {
     @Comment("Description")
     String desc() default "";
 
+    @Comment("AI prompt")
+    @Transient
+    @Language("markdown")
+    String prompt() default "";
+
     @Comment("Whether the field is required")
     boolean notNull() default false;
 
@@ -109,6 +114,9 @@ public @interface Edit {
 
     @Transient
     CheckboxType checkboxType() default @CheckboxType;
+
+    @Match("#item.type().toString()=='GROUP'")
+    GroupType groupType() default @GroupType(fields = {});
 
     @Match("#item.type().toString()=='CODE_EDITOR'")
     CodeEditorType codeEditType() default @CodeEditorType(language = "text");

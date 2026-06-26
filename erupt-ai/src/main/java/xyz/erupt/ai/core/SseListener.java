@@ -19,7 +19,7 @@ public class SseListener {
     // Stream output, the content of the current message
     private String currMessage;
 
-    private String think;
+    private String call;
 
     private boolean isFinish;
 

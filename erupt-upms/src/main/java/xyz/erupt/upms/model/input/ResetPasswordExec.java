@@ -6,8 +6,9 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
-import xyz.erupt.core.util.MD5Util;
+import xyz.erupt.core.util.EncryptUtil;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.constant.EncryptType;
 import xyz.erupt.upms.model.EruptUser;
 
 import java.util.List;
@@ -28,10 +29,15 @@ public class ResetPasswordExec implements OperationHandler<EruptUser, ResetPassw
         EruptUser eruptUser = data.get(0);
         if (resetPassword.getPassword().equals(resetPassword.getPassword2())) {
             eruptUser.setResetPwdTime(null);
-            eruptUser.setIsMd5(resetPassword.getIsMd5());
-            if (resetPassword.getIsMd5()) {
-                eruptUser.setPassword(MD5Util.digest(resetPassword.getPassword()));
+            eruptUser.setEncrypt(resetPassword.getEncrypt());
+            if (resetPassword.getEncrypt()) {
+                String salt = EncryptUtil.generateSalt();
+                eruptUser.setSalt(salt);
+                eruptUser.setEncryptType(EncryptType.SHA512);
+                eruptUser.setPassword(EncryptUtil.digestSHA512Salt(resetPassword.getPassword(), salt));
             } else {
+                eruptUser.setSalt(null);
+                eruptUser.setEncryptType(null);
                 eruptUser.setPassword(resetPassword.getPassword());
             }
             eruptDao.merge(eruptUser);
@@ -43,7 +49,8 @@ public class ResetPasswordExec implements OperationHandler<EruptUser, ResetPassw
 
     @Override
     public ResetPassword eruptFormValue(List<EruptUser> data, ResetPassword resetPassword, String[] param) {
-        resetPassword.setIsMd5(data.get(0).getIsMd5());
+        resetPassword.setEncrypt(data.get(0).getEncrypt());
+        resetPassword.setName(data.get(0).getName());
         return OperationHandler.super.eruptFormValue(data, resetPassword, param);
     }
 }

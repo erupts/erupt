@@ -43,7 +43,7 @@ import java.util.Map;
         name = "Operation Log",
         desc = "Records all user operations in the platform",
         power = @Power(add = false, edit = false, viewDetails = false,
-                delete = false, powerHandler = SuperAdminPower.class),
+                delete = false, powerHandler = SuperAdminPower.class, export = true),
         orderBy = "createTime desc",
         dataProxy = EruptOperateLog.class
 )
@@ -59,7 +59,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     @Dimension(title = "Operate User", sql = "operate_user")
     @EruptField(
             views = @View(title = "Operator"),
-            edit = @Edit(title = "Operator", search = @Search(vague = true))
+            edit = @Edit(title = "Operator", search = @Search)
     )
     private String operateUser;
 
@@ -73,16 +73,23 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     @Dimension(title = "IP Region")
     @EruptField(
             views = @View(title = "IP Source", desc = "Country | Region | Province | City | ISP", template = "value&&value.replace(/\\|/g,' | ')"),
-            edit = @Edit(title = "IP Source", search = @Search(vague = true))
+            edit = @Edit(title = "IP Source", search = @Search)
     )
     private String region;
 
     @Dimension(title = "API Name", sql = "api_name")
     @EruptField(
             views = @View(title = "Function Name"),
-            edit = @Edit(title = "Function Name", search = @Search(vague = true))
+            edit = @Edit(title = "Function Name", search = @Search)
     )
     private String apiName;
+
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
+    @EruptField(
+            views = @View(title = "Before Data", type = ViewType.CODE),
+            edit = @Edit(title = "Before Data", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
+    )
+    private String beforeData;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
@@ -107,14 +114,14 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     @Dimension(title = "Total Time", sql = "total_time")
     @EruptField(
             views = @View(title = "Req Time", template = "value && value+'ms'", sortable = true),
-            edit = @Edit(title = "Req Time", search = @Search(vague = true))
+            edit = @Edit(title = "Req Time", search = @Search)
     )
     private Long totalTime;
 
     @Dimension(title = "Create Time", sql = "create_time")
     @EruptField(
             views = @View(title = "Record Time", sortable = true),
-            edit = @Edit(title = "Record Time", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "Record Time", search = @Search, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date createTime;
 
@@ -147,12 +154,17 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
         builder.setPrettyPrinting();
         Gson gson = builder.create();
         for (Map<String, Object> map : list) {
-            Object reqParam = map.get(LambdaSee.field(EruptOperateLog::getReqParam));
-            if (null != reqParam) {
-                try {
-                    map.put(LambdaSee.field(EruptOperateLog::getReqParam), gson.toJson(gson.fromJson(reqParam.toString(), Object.class)));
-                } catch (Exception ignore) {
-                }
+            prettyPrintField(gson, map, LambdaSee.field(EruptOperateLog::getBeforeData));
+            prettyPrintField(gson, map, LambdaSee.field(EruptOperateLog::getReqParam));
+        }
+    }
+
+    private void prettyPrintField(Gson gson, Map<String, Object> map, String field) {
+        Object val = map.get(field);
+        if (null != val) {
+            try {
+                map.put(field, gson.toJson(gson.fromJson(val.toString(), Object.class)));
+            } catch (Exception ignore) {
             }
         }
     }

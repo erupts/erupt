@@ -44,7 +44,7 @@ public class EruptMail extends BaseModel {
 
     @EruptField(
             views = @View(title = "Recipient"),
-            edit = @Edit(title = "Recipient", notNull = true, search = @Search(vague = true),
+            edit = @Edit(title = "Recipient", notNull = true, search = @Search,
                     inputType = @InputType(fullSpan = true, regex = RegexConst.EMAIL_REGEX))
     )
     private String recipient;
@@ -57,7 +57,7 @@ public class EruptMail extends BaseModel {
 
     @EruptField(
             views = @View(title = "Subject"),
-            edit = @Edit(title = "Subject", notNull = true, search = @Search(vague = true), inputType = @InputType(fullSpan = true))
+            edit = @Edit(title = "Subject", notNull = true, search = @Search, inputType = @InputType(fullSpan = true))
     )
     private String subject;
 

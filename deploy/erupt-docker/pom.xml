@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>xyz.erupt</groupId>
+        <artifactId>erupt</artifactId>
+        <version>2.0.0</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <central.publishing.skip>true</central.publishing.skip>
+    </properties>
+
+    <artifactId>erupt-docker</artifactId>
+    <name>erupt-docker</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-web</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-admin</artifactId>
+            <scope>provided</scope>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- optional -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-monitor</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-print</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-designer</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-cloud-server</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-notice</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-ai</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-ai-claw</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <!-- 如需打成可运行jar解开如下注释代码即可 -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.8.0</version>
+                <executions>
+                    <execution>
+                        <id>injected-central-publishing</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skipPublishing>true</skipPublishing>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <configuration>
+                    <mainClass>xyz.erupt.docker.Application</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

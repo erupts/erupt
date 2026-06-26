@@ -11,9 +11,9 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示左树右表之——右侧表格（商品列表）
- * linkTree.field 指向本模型中关联树节点 ID 的字段
- * dependNode=true 表示必须选中树节点才展示数据
+ * Demonstrates left-tree-right-table: the right-side table (product list).
+ * linkTree.field points to the field in this model that holds the tree node ID.
+ * dependNode=true means data is shown only when a tree node is selected.
  */
 @Getter
 @Setter

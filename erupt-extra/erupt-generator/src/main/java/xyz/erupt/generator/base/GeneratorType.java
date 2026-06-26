@@ -11,10 +11,11 @@ import java.util.Set;
 @Getter
 public enum GeneratorType {
     INPUT(EditType.INPUT, "Text Input", String.class.getSimpleName(), "inputType = @InputType"),
-    PASSWORD(EditType.INPUT, "Password Input", String.class.getSimpleName(), "inputType = @InputType(type = \"password\")"),
+    PASSWORD(EditType.PASSWORD, "Password Input", String.class.getSimpleName(), null),
     TEXTAREA(EditType.TEXTAREA, "Textarea", String.class.getSimpleName(), null),
     HTML_EDITOR(EditType.HTML_EDITOR, "Rich Text Editor", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), "htmlEditorType = @HtmlEditorType(HtmlEditorType.Type.UEDITOR)"),
     CODE_EDITOR(EditType.CODE_EDITOR, "Code Editor", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), "codeEditType = @CodeEditorType(language = \"sql\")"),
+    MARKDOWN(EditType.MARKDOWN, "Markdown Editor", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), null),
     COLOR(EditType.COLOR, "Color Picker", String.class.getSimpleName(), null),
     NUMBER(EditType.NUMBER, "Number Input", Integer.class.getSimpleName(), "numberType = @NumberType"),
     SLIDER(EditType.SLIDER, "Slider", Integer.class.getSimpleName(), "sliderType = @SliderType(max = 999)"),
@@ -27,12 +28,20 @@ public enum GeneratorType {
     YEAR(EditType.DATE, "Year", String.class.getSimpleName(), "dateType = @DateType(type = DateType.Type.YEAR)"),
     BOOLEAN(EditType.BOOLEAN, "Switch", Boolean.class.getSimpleName(), "boolType = @BoolType"),
     CHOICE(EditType.CHOICE, "Dropdown", String.class.getSimpleName(), "choiceType = @ChoiceType(vl = {@VL(value = \"xxx\", label = \"xxx\"), @VL(value = \"yyy\", label = \"yyy\")})"),
+    MULTI_CHOICE(EditType.MULTI_CHOICE, "Multi Select", String.class.getSimpleName(), "multiChoiceType = @MultiChoiceType(vl = {@VL(value = \"xxx\", label = \"xxx\"), @VL(value = \"yyy\", label = \"yyy\")})"),
     TAGS(EditType.TAGS, "Tags Selector", String.class.getSimpleName(), "tagsType = @TagsType"),
     ATTACHMENT(EditType.ATTACHMENT, "Attachment", String.class.getSimpleName(), "attachmentType = @AttachmentType"),
     IMAGE(EditType.ATTACHMENT, "Image", String.class.getSimpleName(), "attachmentType = @AttachmentType(type = AttachmentType.Type.IMAGE)"),
     AUTO_COMPLETE(EditType.AUTO_COMPLETE, "Auto Complete", String.class.getSimpleName(), "autoCompleteType = @AutoCompleteType(handler = AutoCompleteHandler.class)"),
     MAP(EditType.MAP, "Map", String.class.getSimpleName(), null),
+    SIGNATURE(EditType.SIGNATURE, "Signature Pad", String.class.getSimpleName(), null),
     DIVIDE(EditType.DIVIDE, "Divider", String.class.getSimpleName(), null) {
+        @Override
+        public String annotation(String thisErupt, String linkErupt) {
+            return "@" + Transient.class.getSimpleName();
+        }
+    },
+    GROUP(EditType.GROUP, "Field Group", String.class.getSimpleName(), "groupType = @GroupType(fields = {\"field1\", \"field2\"})") {
         @Override
         public String annotation(String thisErupt, String linkErupt) {
             return "@" + Transient.class.getSimpleName();
@@ -144,7 +153,7 @@ public enum GeneratorType {
             return CHECKBOX.importPackages();
         }
     },
-//    TPL(EditType.TPL, "Custom Template", String.class.getSimpleName(), "tplType = @Tpl(path = \"/xxx.ftl\")") {
+    //    TPL(EditType.TPL, "Custom Template", String.class.getSimpleName(), "tplType = @Tpl(path = \"/xxx.ftl\")") {
 //        @Override
 //        public String annotation(String thisErupt, String linkErupt) {
 //            return "@" + Transient.class.getSimpleName();

@@ -17,18 +17,14 @@ public @interface CodeEditorType {
     @Comment("Editor height")
     int height() default 300;
 
-    @Deprecated
-    @Comment("Hint trigger characters")
-    String[] triggerCharacters() default "$";
+    @Comment("Static hint list")
+    String[] hints() default {};
 
-    @Deprecated
-    @Comment("Code hint handler parameters")
+    @Comment("Parameters passed to hintHandler")
     @Transient
     String[] hintParams() default {};
 
-    @Deprecated
-    @Comment("Code hint handler class")
-    @Transient
-    Class<CodeEditHintHandler> hint() default CodeEditHintHandler.class;
+    @Comment("Dynamic hint handler class")
+    Class<? extends CodeEditHintHandler>[] hintHandler() default {};
 
 }

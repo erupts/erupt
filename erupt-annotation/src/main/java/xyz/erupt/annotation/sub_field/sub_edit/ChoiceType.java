@@ -2,9 +2,7 @@ package xyz.erupt.annotation.sub_field.sub_edit;
 
 import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
-import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
-import xyz.erupt.annotation.fun.ChoiceTrigger;
 
 import java.beans.Transient;
 
@@ -24,26 +22,12 @@ public @interface ChoiceType {
     @Comment("Accessible by the fetchHandler interface")
     String[] fetchHandlerParams() default {};
 
-    @Transient
     @Comment("Dynamically fetched dropdown list")
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
 
-    @Deprecated
-    @Transient
-    @Comment("Accessible by the trigger interface")
-    String[] triggerParams() default {};
-
-    @Deprecated
-    @Comment("Action triggered when a selection is made")
-    @Match("#item.trigger().getSimpleName() != 'ChoiceTrigger'")
-    Class<? extends ChoiceTrigger> trigger() default ChoiceTrigger.class;
-
-    @Comment("When enabled, the dropdown list will be re-fetched during edit and similar operations")
-    boolean anewFetch() default false;
-
     //Linkage capability
     @Comment("Linkage capability; dependent field name")
-    @Language(value = "java", prefix = "private String ", suffix = ";")
+    @Language(value = "java", prefix = "Object get() { ", suffix = ";}")
     String dependField() default "";
 
     enum Type {

@@ -19,7 +19,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "ReferenceTableEdit")
 public class ReferenceTableModel extends BaseModel {
 
-    // 基础表格引用
+    // basic table reference
     @ManyToOne
     @EruptField(
             views = @View(title = "Category", column = "name"),
@@ -29,7 +29,7 @@ public class ReferenceTableModel extends BaseModel {
     )
     private RefTargetModel category;
 
-    // 按 name 排序展示
+    // sorted by name
     @ManyToOne
     @EruptField(
             views = @View(title = "Owner", column = "name"),

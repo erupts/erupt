@@ -32,4 +32,12 @@ public class SecretUtil {
         return URLDecoder.decode(str, StandardCharsets.UTF_8);
     }
 
+    @SneakyThrows
+    public static String encodeSecret(String str, int encodeNum) {
+        for (int i = 0; i < encodeNum; i++) {
+            str = new String(Base64.getEncoder().encode(str.getBytes()));
+        }
+        return str;
+    }
+
 }

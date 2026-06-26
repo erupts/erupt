@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 @Layout：后端分页（每页20条）、表单铺满整行、左右各固定1列
+ * Demonstrates @Layout: backend paging (20 rows per page), form full-line, 1 fixed column on each side.
  */
 @Getter
 @Setter

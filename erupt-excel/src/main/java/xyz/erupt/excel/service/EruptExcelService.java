@@ -3,9 +3,6 @@ package xyz.erupt.excel.service;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.DVConstraint;
-import org.apache.poi.hssf.usermodel.HSSFDataValidation;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
@@ -17,6 +14,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.proxy.AnnotationProcess;
@@ -114,13 +112,22 @@ public class EruptExcelService {
                                     cell.setCellValue(edit.boolType().falseText());
                                 }
                             } else if (edit.type() == EditType.DATE) {
-                                cell.getCellStyle().setDataFormat((short) 22);
+                                boolean dateOnly = edit.dateType().type() == DateType.Type.DATE;
+                                cell.getCellStyle().setDataFormat(dateOnly ? (short) 14 : (short) 22);
                                 if (it instanceof Date date) {
-                                    cell.setCellValue(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+                                    if (dateOnly) {
+                                        cell.setCellValue(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                                    } else {
+                                        cell.setCellValue(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+                                    }
                                 } else if (it instanceof LocalDate date) {
                                     cell.setCellValue(date);
                                 } else if (it instanceof LocalDateTime date) {
-                                    cell.setCellValue(date);
+                                    if (dateOnly) {
+                                        cell.setCellValue(date.toLocalDate());
+                                    } else {
+                                        cell.setCellValue(date);
+                                    }
                                 } else {
                                     cell.setCellValue(str);
                                 }
@@ -285,7 +292,7 @@ public class EruptExcelService {
 
     // The format of the template is the same as that of the "edit" input box.
     public Workbook createExcelTemplate(EruptModel eruptModel) {
-        Workbook wb = new HSSFWorkbook();
+        Workbook wb = new XSSFWorkbook();
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
         sheet.setZoom(160);
         // Freeze the first line
@@ -303,7 +310,7 @@ public class EruptExcelService {
                 DataValidationHelper dvHelper = sheet.getDataValidationHelper();
                 switch (edit.type()) {
                     case BOOLEAN:
-                        sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(new String[]{edit.boolType().trueText(),
+                        sheet.addValidationData(generateValidation(sheet, cellNum, SIMPLE_CELL_ERR, dvHelper.createExplicitListConstraint(new String[]{edit.boolType().trueText(),
                                 edit.boolType().falseText()})));
                         break;
                     case CHOICE:
@@ -314,7 +321,7 @@ public class EruptExcelService {
                         }
                         break;
                     case SLIDER:
-                        sheet.addValidationData(generateValidation(cellNum,
+                        sheet.addValidationData(generateValidation(sheet, cellNum,
                                 "Select or enter a valid option, range: " + edit.sliderType().min() + " - " + edit.sliderType().max(), dvHelper.createNumericConstraint(
                                         DataValidationConstraint.ValidationType.INTEGER, DataValidationConstraint.OperatorType.BETWEEN,
                                         Integer.toString(edit.sliderType().min()), Integer.toString(edit.sliderType().max()))));
@@ -323,8 +330,8 @@ public class EruptExcelService {
                         if (fieldModel.getFieldReturnName().equals(Date.class.getSimpleName())
                                 || fieldModel.getFieldReturnName().equals(LocalDate.class.getSimpleName())
                                 || fieldModel.getFieldReturnName().equals(LocalDateTime.class.getSimpleName())) {
-                            sheet.addValidationData(generateValidation(cellNum, "Please select or enter the valid time！"
-                                    , dvHelper.createDateConstraint(DVConstraint.OperatorType.BETWEEN
+                            sheet.addValidationData(generateValidation(sheet, cellNum, "Please select or enter the valid time！"
+                                    , dvHelper.createDateConstraint(DataValidationConstraint.OperatorType.BETWEEN
                                             , "1900-01-01", "2999-12-31", "yyyy-MM-dd")));
                         }
                         break;
@@ -353,11 +360,11 @@ public class EruptExcelService {
         return wb;
     }
 
-    private DataValidation generateValidation(int colIndex, String errHint, DataValidationConstraint constraint) {
+    private DataValidation generateValidation(Sheet sheet, int colIndex, String errHint, DataValidationConstraint constraint) {
         // Set where the data validation is loaded.
         // The four parameters are: starting row, ending row, starting column, ending column
         CellRangeAddressList regions = new CellRangeAddressList(1, 1000, colIndex, colIndex);
-        DataValidation dataValidationList = new HSSFDataValidation(regions, constraint);
+        DataValidation dataValidationList = sheet.getDataValidationHelper().createValidation(constraint, regions);
         dataValidationList.createErrorBox("error", errHint);
         return dataValidationList;
     }

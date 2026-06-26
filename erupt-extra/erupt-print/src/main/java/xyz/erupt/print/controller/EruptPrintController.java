@@ -1,0 +1,63 @@
+package xyz.erupt.print.controller;
+
+import jakarta.annotation.Resource;
+import org.springframework.web.bind.annotation.*;
+import xyz.erupt.annotation.fun.VLModel;
+import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.invoke.DataProcessorManager;
+import xyz.erupt.core.invoke.DataProxyInvoke;
+import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.R;
+import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.print.model.EruptPrintConfig;
+import xyz.erupt.print.model.EruptPrintTpl;
+import xyz.erupt.print.service.EruptPrintService;
+import xyz.erupt.print.var.PrintVar;
+import xyz.erupt.upms.annotation.EruptLoginAuth;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
+@RestController
+@RequestMapping(EruptRestPath.ERUPT_API + "/print")
+public class EruptPrintController {
+
+    @Resource
+    private EruptDao eruptDao;
+
+    @Resource
+    private EruptPrintService eruptPrintService;
+
+    @PostMapping("/{erupt}/{id}")
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    public R<String> print(@PathVariable String erupt, @PathVariable String id, @RequestBody(required = false) String content) {
+        if (content == null) content = "";
+        EruptModel eruptModel = EruptCoreService.getErupt(erupt);
+        Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
+        AtomicReference<String> contentReference = new AtomicReference<>(eruptPrintService.render(content, EruptUtil.generateEruptDataMap(eruptModel, data, true)));
+        DataProxyInvoke.invoke(eruptModel, dataProxy -> contentReference.set(dataProxy.print(data, contentReference.get())));
+        return R.ok(contentReference.get());
+    }
+
+    @EruptLoginAuth
+    @GetMapping("/vars")
+    public R<List<VLModel>> vars() {
+        return R.ok(PrintVar.PRINT_VAR_MAP.values().stream().map(it -> new VLModel(it.code(), it.name())).toList());
+    }
+
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @GetMapping("/{erupt}/prints")
+    public R<List<EruptPrintConfig>> prints(@PathVariable String erupt) {
+        return R.ok(eruptDao.lambdaQuery(EruptPrintConfig.class).eq(EruptPrintConfig::getErupt, erupt).list());
+    }
+
+    @EruptLoginAuth
+    @GetMapping("/templates")
+    public R<List<EruptPrintTpl>> templates() {
+        return R.ok(eruptDao.lambdaQuery(EruptPrintTpl.class).list());
+    }
+
+}

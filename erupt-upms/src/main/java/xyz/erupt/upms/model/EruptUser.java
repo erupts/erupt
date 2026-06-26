@@ -8,6 +8,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.sub_erupt.Layout;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
         dataProxy = EruptUserDataProxy.class,
         linkTree = @LinkTree(field = "eruptOrg"),
         orderBy = "EruptUser.id",
+        layout = @Layout(tableLeftFixed = 1),
         rowOperation = @RowOperation(title = "Reset Password",
                 icon = "fa fa-refresh",
                 mode = RowOperation.Mode.SINGLE,
@@ -57,13 +59,13 @@ public class EruptUser extends LookerSelf {
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "Account", sortable = true),
-            edit = @Edit(title = "Account", desc = "Login account", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Account", desc = "Login account", notNull = true, search = @Search)
     )
     private String account;
 
     @EruptField(
             views = @View(title = "Full Name", sortable = true),
-            edit = @Edit(title = "Full Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Full Name", notNull = true, search = @Search)
     )
     private String name;
 
@@ -83,19 +85,19 @@ public class EruptUser extends LookerSelf {
     private Boolean status = true;
 
     @EruptField(
-            edit = @Edit(title = "Phone", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.PHONE_REGEX))
+            edit = @Edit(title = "Phone", search = @Search, inputType = @InputType)
     )
     private String phone;
 
     @EruptField(
-            edit = @Edit(title = "Email", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.EMAIL_REGEX))
+            edit = @Edit(title = "Email", search = @Search, inputType = @InputType(regex = RegexConst.EMAIL_REGEX))
     )
     private String email;
 
     @EruptField(
             views = @View(title = "Admin User", sortable = true),
             edit = @Edit(
-                    title = "Admin User", notNull = true, search = @Search(vague = true)
+                    title = "Admin User", notNull = true, search = @Search
             )
     )
     private Boolean isAdmin = false;
@@ -111,6 +113,14 @@ public class EruptUser extends LookerSelf {
             )
     )
     private EruptMenu eruptMenu;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Organization", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"eruptOrg", "eruptPost", "headOrg", "divisionOrg"})
+            )
+    )
+    private String orgGroup;
 
     @ManyToOne
     @EruptField(
@@ -144,24 +154,25 @@ public class EruptUser extends LookerSelf {
     )
     private Set<Long> divisionOrg;
 
-
     @Transient
     @EruptField(
-            edit = @Edit(title = "Password", type = EditType.DIVIDE)
+            edit = @Edit(title = "Password", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"passwordA", "passwordB", "encrypt"})
+            )
     )
-    private String pwdDivide;
+    private String pwdGroup;
 
     private String password;
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "Password", readonly = @Readonly(add = false))
+            edit = @Edit(title = "Password", readonly = @Readonly(add = false), type = EditType.PASSWORD)
     )
     private String passwordA;
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "Confirm Password", readonly = @Readonly(add = false))
+            edit = @Edit(title = "Confirm Password", readonly = @Readonly(add = false), type = EditType.PASSWORD)
     )
     private String passwordB;
 
@@ -170,9 +181,10 @@ public class EruptUser extends LookerSelf {
     )
     private Date resetPwdTime;
 
+    @Column(name = "is_md5")
     @EruptField(
             edit = @Edit(
-                    title = "MD5 Encrypt", type = EditType.BOOLEAN, notNull = true,
+                    title = "Encrypt", type = EditType.BOOLEAN, notNull = true,
                     readonly = @Readonly(add = false),
                     boolType = @BoolType(
                             trueText = "Encrypt",
@@ -180,7 +192,21 @@ public class EruptUser extends LookerSelf {
                     )
             )
     )
-    private Boolean isMd5 = true;
+    private Boolean encrypt = true;
+
+    @Column(length = 64)
+    private String salt;
+
+    @Column(length = 20)
+    private String encryptType;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Security", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"expireDate", "whiteIp"}, collapsed = true)
+            )
+    )
+    private String securityGroup;
 
     @EruptField(
             views = @View(title = "Account Expiry", sortable = true),

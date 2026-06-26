@@ -36,8 +36,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * 通过包扫描自动发现 xyz.erupt.model 下所有 @Erupt @Entity 模型，
- * 统一验证注解序列化正确性 + CRUD 可用性，无需每加一个 Model 就手动添加测试。
+ * Auto-discovers all @Erupt @Entity models under xyz.erupt.model via package scan,
+ * validates annotation serialization and CRUD in a unified way without needing to
+ * manually add tests for each new model.
  */
 @Service
 @Rollback
@@ -49,7 +50,7 @@ public class EruptModelTest extends EruptApplicationTests {
 
     private static final String MODEL_PACKAGE = "xyz.erupt.test.model";
 
-    // ─── 扫描 ─────────────────────────────────────────────────────────────────
+    // ─── Scan ────────────────────────────────────────────────────────────────
 
     private List<Class<?>> scanModelClasses() {
         List<Class<?>> list = new ArrayList<>();
@@ -58,10 +59,10 @@ public class EruptModelTest extends EruptApplicationTests {
         return list;
     }
 
-    // ─── 注册 & 序列化校验 ────────────────────────────────────────────────────
+    // ─── Registration & Serialization Validation ─────────────────────────────
 
     /**
-     * 验证每个 @Erupt 模型均已注册到 EruptCoreService。
+     * Verifies that every @Erupt model is registered in EruptCoreService.
      */
     @Test
     void testAllModelsRegistered() {
@@ -75,8 +76,8 @@ public class EruptModelTest extends EruptApplicationTests {
     }
 
     /**
-     * 验证所有模型通过 getEruptView() 完整序列化（触发 clone + field serializable），
-     * 校验 eruptJson 和每个字段的 eruptFieldJson 均不为空。
+     * Verifies all models fully serialize through getEruptView() (triggers clone + field serializable),
+     * checks that eruptJson and each field's eruptFieldJson are non-null.
      */
     @Test
     void testEruptViewSerialization() throws Exception {
@@ -102,7 +103,7 @@ public class EruptModelTest extends EruptApplicationTests {
     }
 
     /**
-     * 每个 @Erupt 模型必须声明至少一个 @EruptField 字段。
+     * Every @Erupt model must declare at least one @EruptField.
      */
     @Test
     void testEruptFieldPresence() {
@@ -114,10 +115,10 @@ public class EruptModelTest extends EruptApplicationTests {
         }
     }
 
-    // ─── CRUD 统一校验 ────────────────────────────────────────────────────────
+    // ─── Unified CRUD Validation ──────────────────────────────────────────────
 
     /**
-     * 对所有扫描到的模型执行 persist → find 验证。
+     * Executes persist → find validation against all scanned models.
      */
     @Test
     void testAllEditTypesCrud() throws Exception {
@@ -135,8 +136,8 @@ public class EruptModelTest extends EruptApplicationTests {
     }
 
     /**
-     * 对所有模型验证 update：通过 JPA 脏检查更新第一个 String 字段，
-     * flush + clear 后重新 find，验证变更已持久化。
+     * Validates update for all models: updates the first String field via JPA dirty-checking,
+     * then flush + clear and re-find to confirm the change is persisted.
      */
     @Test
     void testAllEditTypesMerge() throws Exception {
@@ -161,7 +162,7 @@ public class EruptModelTest extends EruptApplicationTests {
     }
 
     /**
-     * 对所有模型验证显式 merge：persist → flush → detach → 修改字段 → eruptDao.merge() → clear → find。
+     * Validates explicit merge for all models: persist → flush → detach → modify field → eruptDao.merge() → clear → find.
      */
     @Test
     void testAllEditTypesExplicitMerge() throws Exception {
@@ -189,8 +190,8 @@ public class EruptModelTest extends EruptApplicationTests {
     }
 
     /**
-     * 对所有模型验证 delete：persist → flush → remove → flush → find 返回 null。
-     * @OneToMany / @ManyToMany 均通过 join table 管理，Hibernate 会自动清理关联行。
+     * Validates delete for all models: persist → flush → remove → flush → find returns null.
+     * @OneToMany / @ManyToMany are managed via join table; Hibernate automatically cleans up association rows.
      */
     @Test
     void testAllEditTypesDelete() throws Exception {
@@ -209,7 +210,8 @@ public class EruptModelTest extends EruptApplicationTests {
     }
 
     /**
-     * 对所有模型执行 lambdaQuery().list()：persist 后查询，验证结果非 null 且包含已持久化的实体。
+     * Executes lambdaQuery().list() on all models: queries after persist, verifies the result
+     * is non-null and contains the persisted entity.
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -227,10 +229,10 @@ public class EruptModelTest extends EruptApplicationTests {
         }
     }
 
-    // ─── DataProxy 生命周期校验 ───────────────────────────────────────────────
+    // ─── DataProxy Lifecycle Validation ──────────────────────────────────────
 
     /**
-     * beforeAdd 在新增前设置默认 status 和 creator。
+     * beforeAdd sets default status and creator before add.
      */
     @Test
     void testDataProxyBeforeAdd() {
@@ -242,7 +244,7 @@ public class EruptModelTest extends EruptApplicationTests {
     }
 
     /**
-     * validate 在 title 为空白时抛出 EruptException。
+     * validate throws EruptException when title is blank.
      */
     @Test
     void testDataProxyValidateThrowsOnBlankTitle() {
@@ -255,7 +257,7 @@ public class EruptModelTest extends EruptApplicationTests {
     }
 
     /**
-     * beforeDelete 拒绝删除已发布记录，允许删除草稿记录。
+     * beforeDelete rejects deletion of published records and allows deletion of draft records.
      */
     @Test
     void testDataProxyBeforeDelete() {
@@ -270,7 +272,7 @@ public class EruptModelTest extends EruptApplicationTests {
                 "beforeDelete must not throw for non-PUBLISHED records");
     }
 
-    // ─── 反射工具 ─────────────────────────────────────────────────────────────
+    // ─── Reflection Helpers ───────────────────────────────────────────────────
 
     private BaseModel buildEntity(Class<?> clazz) throws Exception {
         BaseModel entity = (BaseModel) clazz.getDeclaredConstructor().newInstance();

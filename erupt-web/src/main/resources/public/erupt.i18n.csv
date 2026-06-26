@@ -32,6 +32,9 @@ global.delete.hint.check,请选中要删除的数据,請選中要刪除的數據
 global.reset_pwd,修改密码,修改密碼,Change pwd,Chg pwd,パス変更,비밀번호수정,Измени код.,Camb pwd,Codes ändern.,Alterar sua senha,Ubah sandi,تعديل كلمة المرور
 global.logout,退出登录,退出登錄,Log out,Déconnexion du login,ログアウト,로그인종료,Выход из системы.,Salir del login,Und loggen sie sich nicht ein.,Sair do login,Log masuk keluar,خروج تسجيل الدخول
 global.search.hint,搜索菜单,搜索菜單,Search menu,Rechercher le menu,検索メニュー,검색메뉴,Меню поиска.,Buscar el menú,Suche nach dem menü.,Procurar no menu,Menu pencarian,قائمة البحث
+global.refresh,刷新,刷新,Refresh,Actualiser,リフレッシュ,새로고침,Обновить,Actualizar,Aktualisieren,Atualizar,Segarkan,تحديث
+global.save_only,保存,保存,Save,Sauvegarder,保存,저장,Сохранить,Guardar,Speichern,Salvar,Simpan,حفظ
+global.save_close,保存并关闭,保存並關閉,Save & Close,Sauvegarder et fermer,保存して閉じる,저장 후 닫기,Сохранить и закрыть,Guardar y cerrar,Speichern und schließen,Salvar e fechar,Simpan dan tutup,حفظ وإغلاق
 global.confirm_logout,退出登录，是否继续?,退出系統，是否繼續?,Are you sure to log out and exit the system?,Sûr de se déconnecter et quitter le système?,ログアウトしてシステムを終了しますか？,로그아웃하고시스템을종료하시겠습니까?,"Вы уверены, что система списана и выведена из строя?",¿Seguro de salir y salir del sistema?,Und steigen sie aus Oder nicht?,Sair do login. Deseja continuar?,"Log keluar, apakah akan terus?",خروج تسجيل الدخول، هل تستمر؟
 global.confirm_delete,确认删除吗？,確認刪除嗎？,Are you sure to delete?,Confirmer la suppression?,削除を確認しますか？,삭제확인하시겠습니까?,Подтвердите удаление?,¿Confirmar la eliminación?,Ortung bestätigt?,Confirmar a exclusão?,Konfirmasi dihapus?,تأكيد حذف؟
 global.update.loading.hint,数据加载中无法保存!,數據加載中無法保存!,Data cannot be saved while loading!,Les données ne peuvent pas être sauvegardées lors du chargement!,データ読み込み中に保存できません。,데이터불러오는중저장할수없습니다!,Данные не сохраняются в загрузке!,¡Los datos no se pueden guardar en la carga!,Es kann nicht geladen werden.,Os dados não podem ser salvos no carregamento!,Tak dapat disimpan dalam pemuatan data!,لا يمكن حفظ البيانات في تحميل البيانات!
@@ -48,6 +51,8 @@ global.drag,拖拽,拖拽,Drag,Glisser,ドラッグ,드래그,Перетащит
 global.copy,复制,複製,Copy,Copier,コピー,복사,Копировать,Copiar,Kopieren,Copiar,Salin,نسخ
 global.download,下载,下載,Download,Télécharger,ダウンロード,다운로드,Скачать,Descargar,Herunterladen,Baixar,Unduh,تحميل
 global.refresh,刷新,刷新,Refresh,Actualiser,更新,새로고침,Обновить,Actualizar,Aktualisieren,Atualizar,Segarkan,تحديث
+global.select_all,全选,全選,Select All,Tout sélectionner,すべて選択,전체 선택,Выбрать все,Seleccionar todo,Alle auswählen,Selecionar tudo,Pilih semua,تحديد الكل
+board.unset,未设置,未設置,Unset,Non défini,未設定,미설정,Не задано,Sin definir,Nicht gesetzt,Não definido,Belum diatur,غير محدد
 
 
 component.attachment.upload_hint,单击或拖动文件到此区域上传,單擊或拖動文件到此區域上傳,Click or drag the file to this area to upload,Cliquez ou faites glisser les fichiers dans cette zone pour les télécharger,ファイルをクリックまたはドラッグしてアップロードします,파일을이 영역으로 업로드하려면 누르거나 드래그하십시오,Нажмите или перетащите файл в эту область,Haga clic o arrastre los archivos a esta área para subir,Klicken Oder ziehen sie die datei in diese region zum aufladen,Clique ou arraste os arquivos para esta área para fazer upload,Klik atau tarik berkas untuk diunggah ke area ini,انقر أو اسحب الملف لتحميل في هذه المنطقة
@@ -75,11 +80,20 @@ table.sort.not_field,暂无排序字段,暫無排序欄位,No sort fields,Aucun 
 tree.base,基本信息,基本信息,Basic information,Les informations essentielles,基本情報,기본정보,Основная информация.,La información básica,Elementarste informationen.,A informação básica,Informasi dasar,المعلومات الأساسية
 tree.update,更新,更新,Update,Mise à jour,更新,업데이트,обновля,actualización,Aktualisiert.,actualização,update,تحديث
 tree.add_button,新增,新增,Add,nouveaux,追加,새로추가,нов,nuevos,hinzufügen,nova,baru,الإضافية
+tree.select_hint,从左侧选择一条数据,從左側選擇一條數據,Select an item from the left,Sélectionnez un élément à gauche,左側から項目を選択,왼쪽에서 항목 선택,Выберите элемент слева,Seleccione un elemento a la izquierda,Wählen Sie links ein Element aus,Selecione um item à esquerda,Pilih item dari kiri,حدد عنصراً من اليسار
+tree.expand_all,展开全部,展開全部,Expand all,Tout développer,すべて展開,모두 펼치기,Развернуть всё,Expandir todo,Alle aufklappen,Expandir tudo,Perluas semua,توسيع الكل
+tree.collapse_all,收起全部,收起全部,Collapse all,Tout réduire,すべて折りたたむ,모두 접기,Свернуть всё,Colapsar todo,Alle einklappen,Recolher tudo,Ciutkan semua,طي الكل
+tree.refresh,刷新,刷新,Refresh,Actualiser,更新,새로고침,Обновить,Actualizar,Aktualisieren,Atualizar,Segarkan,تحديث
 tree.add,保存,增加,Add,La conservation,増加,증가,сохран,guardar,Intakt?,conservação,simpan,حفظ
 tree.add_children,增加下级,增加下級,Add subordinate,Ajouter un sous-niveau,部下を増やす,하급자증가,Увеличить нижний уровень.,Añadir un subnivel,Junior high.,Adicionar um sub-nível,Meningkatkan junior,زيادة الرتب الدنيا
 tree.delete,删除,刪除,Delete,supprimé,削除,삭제,удал,borrar,Löschen.,apagar,hapus,حذف
+tree.search,搜索,搜尋,Search,Rechercher,検索,검색,Поиск,Buscar,Suchen,Pesquisar,Cari,بحث
 tree.validate.no_this_parent,不可以选择自己作为父级,不可以選擇自己作為父級,You cannot choose yourself as a parent,Vous ne pouvez pas vous sélectionner comme parent,自分を父親として選んではいけません。,부모로서자신을선택할수없습니다,Я не могу выбирать себя в качестве отца,No se puede seleccionar como padre,Du darfst dir das leben nicht zum vater aussuchen,Não é possível escolher-se como pai,Jangan memilih dirimu sebagai orang tua,لا يمكنك اختيار نفسك كأب
 tree.validate.no_this_children_parent,不可以选择自己的子级作为父级,不可以選擇自己的子級作為父級,You cannot select your own child as the parent,Vous ne pouvez pas choisir votre propre enfant comme parent,自分のサブを父親として選んではいけません。,자신의하위레벨을부모레벨로선택할수없습니다,Не может быть выбора собственного сына в качестве отца,No es posible seleccionar su propio hijo como padre,Man darf sich die eigene teilklasse als vater nicht aussuchen,Não é possível selecionar seu próprio filho como pai,Jangan memilih anakmu sendiri sebagai ayahmu,لا يمكنك اختيار مستوى الابن كأب
+tree.sort_asc,升序排列,升序排列,Sort ascending,Tri croissant,昇順で並べ替え,오름차순 정렬,Сортировать по возрастанию,Ordenar ascendente,Aufsteigend sortieren,Ordenar crescente,Urutkan naik,ترتيب تصاعدي
+tree.sort_desc,降序排列,降序排列,Sort descending,Tri décroissant,降順で並べ替え,내림차순 정렬,Сортировать по убыванию,Ordenar descendente,Absteigend sortieren,Ordenar decrescente,Urutkan turun,ترتيب تنازلي
+tree.sort_cancel,取消排序,取消排序,Cancel sort,Annuler le tri,並べ替えをキャンセル,정렬 취소,Отменить сортировку,Cancelar orden,Sortierung aufheben,Cancelar ordenação,Batalkan pengurutan,إلغاء الترتيب
+tree.locate,定位选中节点,定位選中節點,Locate selected node,Localiser le nœud sélectionné,選択ノードを定位,선택한 노드 위치 찾기,Найти выбранный узел,Localizar nodo seleccionado,Ausgewählten Knoten finden,Localizar nó selecionado,Temukan node yang dipilih,تحديد موقع العقدة المحددة
 change-pwd.original_password,原始密码,原始密碼,Original password,Le mot de passe original,元のパスワード,원본비밀번호,Оригинальный код.,La contraseña original,Der ursprüngliche code.,A senha original,Sandi asli,كلمة المرور الأصلية
 change-pwd.new_password,新密码,新密碼,New password,Nouveau mot de passe,新しいパスワードです,새 비밀번호,Новый пароль.,Una nueva contraseña,Neuer code.,Nova palavra-passe,Kata sandi baru,رمز جديد
 change-pwd.confirm_password,确认密码,確認密碼,Confirm password,Confirmer le mot de passe,パスワードを確認する,비밀번호확인,Подтвердите код.,Confirme su contraseña,Passwort bestätigt.,Confirme a senha,Konfirmasi sandi,تأكيد كلمة المرور
@@ -92,6 +106,7 @@ change-pwd.validate.text,请至少输入6个字符。请不要使用容易被猜
 change-pwd.validate.confirm_password,请确认密码！,請確認密碼！,Please confirm password!,Veuillez confirmer le mot de passe!,パスワードを確認してください,비밀번호를확인하세요!,"Пожалуйста, подтвердите код!",Por favor confirme la contraseña!,Bitte ihr passwort bestätigen!,"Por favor, confirme a senha!",Tolong konfirmasi passwordnya!,يرجى تأكيد كلمة المرور!
 change-pwd.validate.password_not_match,两次输入的密码不匹配！,兩次輸入的密碼不匹配！,The two passwords entered do not match!,Les mots de passe entrés deux fois ne correspondent pas!,二回入力したパスワードが一致しません。,두번입력한비밀번호가일치하지않습니다!,Два входных пароля не совпадают!,¡Las contraseñas introducidas dos veces no coinciden!,Der code stimmt nicht überein.,As senhas digitadas duas vezes não correspondem!,Dua kali masukkan password yang tidak cocok!,كلمة المرور التي دخلت مرتين لا تتطابق!
 login.account_pwd_login,账户密码登录,賬戶密碼登錄,Account Password Login,Connexion par mot de passe,アカウントパスワードログイン,계정비밀번호로그인,Вход по паролю аккаунта.,Inicio de sesión por contraseña de cuenta,Login mit passwort,Login com senha da conta,Masuk dengan kata sandi akun,تسجيل الدخول بكلمة مرور الحساب
+login.subtitle,欢迎回来，请登录账户,歡迎回來，請登錄賬戶,Welcome back — sign in to your account,Bienvenue — connectez-vous,ようこそ — ログインしてください,환영합니다 — 로그인하세요,Добро пожаловать — войдите,Bienvenido — inicia sesión,Willkommen — bitte anmelden,Bem-vindo — faça login,Selamat datang — silakan masuk,مرحباً — سجّل الدخول
 login.account,用户名,用戶名,Username,Nom de l’utilisateur,ユーザ名,사용자이름,Имя пользователя.,Nombre de usuario,benutzername,Nome de usuário,Nama pengguna,اسم المستخدم
 login.validate.account,请输入账户名！,請輸入賬戶名！,Please enter your username!,Veuillez entrer le nom du compte!,アカウント名を入力してください。,계정이름을입력하세요!,"Введите имя счета, пожалуйста!",Por favor ingrese el nombre de la cuenta!,Bitte geben sie einen kontonamen ein!,Digite o nome da conta!,Silahkan masukkan nama akun!,يرجى إدخال اسم الحساب!
 login.pwd,密码,密碼,Password,Les mots de passe,パスワード,비밀번호,код,La contraseña,kennwort,senha,kode,كلمة المرور
@@ -148,6 +163,10 @@ IN,包含于,包含於,Contains,Contient,含まれる,포함,Содержит,Co
 NOT_IN,不包含于,不包含於,Not contains,Ne contient pas,含まれない,포함하지 않음,Не содержит,No contiene,Enthält nicht,Não contém,Tidak mengandung,لا يحتوي على
 
 print.preview,打印预览,列印預覽,Print Preview,Aperçu avant impression,印刷プレビュー,인쇄 미리보기,Предпросмотр печати,Vista previa de impresión,Druckvorschau,Pré-visualizar impressão,Pratinjau Cetak,معاينة الطباعة
+print.layout,打印排版,列印排版,Print Layout,Mise en page,印刷レイアウト,인쇄 레이아웃,Макет печати,Diseño de impresión,Drucklayout,Layout de impressão,Tata Letak Cetak,تخطيط الطباعة
+print.select_layout,选择打印排版,選擇列印排版,Select Print Layout,Sélectionner la mise en page,印刷レイアウトを選択,인쇄 레이아웃 선택,Выберите макет печати,Seleccionar diseño,Drucklayout auswählen,Selecionar layout,Pilih Tata Letak,اختر تخطيط الطباعة
+print.input_title,请输入排版名称,請輸入排版名稱,Enter layout name,Nom de la mise en page,レイアウト名を入力,레이아웃 이름 입력,Введите название макета,Nombre del diseño,Layoutname eingeben,Nome do layout,Nama tata letak,أدخل اسم التخطيط
+print.default,默认排版,預設排版,Default Layout,Mise en page par défaut,デフォルトレイアウト,기본 레이아웃,Макет по умолчанию,Diseño predeterminado,Standardlayout,Layout padrão,Tata Letak Default,التخطيط الافتراضي
 
 [flow]
 VIEW_FLOW,查看流程,檢視流程,View Flow,Voir le flux,フローを見る,플로우 보기,Просмотр потока,Ver flujo,Fluss anzeigen,Ver fluxo,Lihat Aliran,عرض التدفق
@@ -417,3 +436,719 @@ cube.report.config.compare.filter_field,日期过滤字段,日期過濾字段,Da
 cube.report.config.compare.filter_placeholder,请选择 BETWEEN 类型的日期过滤器,請選擇 BETWEEN 類型的日期過濾器,Select a date filter (BETWEEN),Sélectionner un filtre de date,日付フィルターを選択,날짜 필터 선택,Выберите фильтр даты,Seleccionar filtro de fecha,Datumsfilter auswählen,Selecionar filtro de data,Pilih filter tanggal,اختر فلتر التاريخ
 cube.report.config.compare.current_label,当期标签,當期標籤,Current Period Label,Étiquette période actuelle,当期ラベル,현재 기간 레이블,Метка текущего периода,Etiqueta período actual,Aktuelle Periodenbezeichnung,Rótulo período atual,Label periode saat ini,تسمية الفترة الحالية
 cube.report.config.compare.compare_label,对比期标签,對比期標籤,Compare Period Label,Étiquette période comparée,比較期ラベル,비교 기간 레이블,Метка периода сравнения,Etiqueta período comparado,Vergleichsperiodenbezeichnung,Rótulo período comparado,Label periode pembanding,تسمية فترة المقارنة
+global.density,密度,密度,Density,Densité,密度,밀도,Плотность,Densidad,Dichte,Densidade,Kepadatan,الكثافة
+global.density.small,紧凑,緊湊,Compact,Compact,コンパクト,컴팩트,Компактный,Compacto,Kompakt,Compacto,Kompak,مضغوط
+global.density.middle,适中,適中,Medium,Moyen,中間,중간,Средний,Medio,Mittel,Médio,Sedang,متوسط
+global.density.large,宽松,寬鬆,Relaxed,Spacieux,ゆったり,넓게,Просторный,Espacioso,Geräumig,Espaçoso,Longgar,مريح
+setting.table-size,表格密度,表格密度,Table Density,Densité du tableau,テーブル密度,테이블 밀도,Плотность таблицы,Densidad de tabla,Tabellendichte,Densidade da tabela,Kepadatan tabel,كثافة الجدول
+table.column.ctrl,列显示,列顯示,Columns,Colonnes,列表示,열 표시,Столбцы,Columnas,Spalten,Colunas,Kolom,الأعمدة
+table.column.all,全选,全選,Select all,Tout sélectionner,全選択,전체 선택,Выбрать все,Seleccionar todo,Alle auswählen,Selecionar tudo,Pilih semua,تحديد الكل
+table.column.reset,重置列设置,重置列設置,Reset columns,Réinitialiser colonnes,列の設定をリセット,열 설정 초기화,Сбросить столбцы,Restablecer columnas,Spalten zurücksetzen,Redefinir colunas,Reset kolom,إعادة تعيين الأعمدة
+table.column.pin.left,固定到左侧,固定到左側,Pin left,Épingler à gauche,左に固定,왼쪽에 고정,Закрепить слева,Fijar a la izquierda,Links fixieren,Fixar à esquerda,Sematkan ke kiri,تثبيت على اليسار
+table.column.pin.right,固定到右侧,固定到右側,Pin right,Épingler à droite,右に固定,오른쪽에 고정,Закрепить справа,Fijar a la derecha,Rechts fixieren,Fixar à direita,Sematkan ke kanan,تثبيت على اليمين
+table.column.unpin,取消固定,取消固定,Unpin,Désépingler,固定解除,고정 해제,Открепить,Desfijar,Fixierung lösen,Soltar coluna,Lepas sematan,إلغاء التثبيت
+table.column.reset_width,重置列宽,重置列寬,Reset widths,Réinitialiser largeurs,列幅をリセット,열 너비 초기화,Сбросить ширину,Restablecer anchos,Breiten zurücksetzen,Redefinir larguras,Reset lebar kolom,إعادة ضبط العرض
+table.auto_refresh,自动刷新,自動刷新,Auto refresh,Actualisation auto,自動更新,자동 새로고침,Автообновление,Actualización auto,Auto-Aktualisierung,Atualização auto,Perbarui otomatis,التحديث التلقائي
+table.auto_refresh.off,关闭,關閉,Off,Désactivé,オフ,끄기,Выкл,Desactivado,Aus,Desativado,Nonaktif,إيقاف
+ai.chat.wide_mode,展开宽度,展開寬度,Expand Width,Élargir,幅を広げる,너비 확장,Расширить,Expandir ancho,Breite erweitern,Expandir largura,Perluas lebar,توسيع العرض
+ai.chat.narrow_mode,收窄宽度,收窄寬度,Narrow Width,Rétrécir,幅を狭める,너비 축소,Сузить,Reducir ancho,Breite verringern,Reduzir largura,Persempit lebar,تضييق العرض
+ai.chat.yesterday,昨天,昨天,Yesterday,Hier,昨日,어제,Вчера,Ayer,Gestern,Ontem,Kemarin,أمس
+ai.chat.just_now,刚刚,剛剛,Just now,À l'instant,たった今,방금,Только что,Ahora mismo,Gerade eben,Agora mesmo,Baru saja,الآن
+global.expand,展开,展開,Expand,Développer,展開,펼치기,Развернуть,Expandir,Erweitern,Expandir,Perluas,توسيع
+global.collapse,收起,收起,Collapse,Réduire,折りたたむ,접기,Свернуть,Contraer,Einklappen,Recolher,Ciutkan,طي
+setting.detail-drawer,抽屉查看详情,抽屜查看詳情,Drawer for Details,Tiroir pour détails,ドロワーで詳細表示,서랍으로 상세보기,Боковая панель,Cajón para detalles,Seitenleiste für Details,Gaveta para detalhes,Drawer untuk detail,درج للتفاصيل
+setting.search-collapsed,默认收起搜索,預設收起搜索,Collapse Search by Default,Recherche réduite par défaut,検索をデフォルトで折りたたむ,기본 검색 접기,Свернуть поиск по умолчанию,Contraer búsqueda por defecto,Suche standardmäßig einklappen,Recolher pesquisa por padrão,Ciutkan pencarian default,طي البحث افتراضيًا
+query.op.like,包含,包含,Contains,Contient,含む,포함,Содержит,Contiene,Enthält,Contém,Mengandung,يحتوي
+query.op.not_like,不包含,不包含,Not contains,Ne contient pas,含まない,미포함,Не содержит,No contiene,Enthält nicht,Não contém,Tidak mengandung,لا يحتوي
+query.op.eq,等于,等於,Equal,Égal,等しい,같음,Равно,Igual,Gleich,Igual,Sama dengan,يساوي
+query.op.neq,不等于,不等於,Not equal,Non égal,等しくない,다름,Не равно,No igual,Ungleich,Diferente,Tidak sama,لا يساوي
+query.op.gt,大于,大於,Greater than,Supérieur,より大きい,초과,Больше,Mayor que,Größer als,Maior que,Lebih besar,أكبر من
+query.op.gte,大于等于,大於等於,Greater or equal,Supérieur ou égal,以上,이상,Не менее,Mayor o igual,Größer gleich,Maior ou igual,Lebih besar atau sama,أكبر أو يساوي
+query.op.lt,小于,小於,Less than,Inférieur,より小さい,미만,Меньше,Menor que,Kleiner als,Menor que,Lebih kecil,أقل من
+query.op.lte,小于等于,小於等於,Less or equal,Inférieur ou égal,以下,이하,Не более,Menor o igual,Kleiner gleich,Menor ou igual,Lebih kecil atau sama,أقل أو يساوي
+query.op.range,范围,範圍,Range,Plage,範囲,범위,Диапазон,Rango,Bereich,Intervalo,Rentang,نطاق
+query.op.in,属于,屬於,In,Dans,含まれる,포함됨,Входит в,En,Enthalten,Pertence,Termasuk,ينتمي إلى
+query.op.null,为空,為空,Is null,Est vide,空である,비어있음,Пусто,Es nulo,Ist leer,É nulo,Kosong,فارغ
+query.op.not_null,非空,非空,Not null,Non vide,空でない,비어있지않음,Не пусто,No es nulo,Nicht leer,Não é nulo,Tidak kosong,غير فارغ
+query.op.not_in,不属于,不屬於,Not in,Non inclus,含まない,포함하지 않음,Не входит,No pertenece,Nicht enthalten,Não pertence,Tidak termasuk,لا ينتمي
+tree.delete_has_children,存在子节点不允许直接删除,存在子節點不允許直接刪除,Non-leaf nodes cannot be deleted directly,Les nœuds non-feuilles ne peuvent pas être supprimés directement,子ノードが存在する場合は直接削除できません,하위 노드가 있으면 직접 삭제할 수 없습니다,Нельзя удалить узел с дочерними элементами,No se pueden eliminar directamente los nodos con hijos,Knoten mit Unterknoten können nicht direkt gelöscht werden,Nós com filhos não podem ser excluídos diretamente,Node dengan anak tidak dapat dihapus langsung,لا يمكن حذف العقد التي تحتوي على عقد فرعية مباشرة
+login.remember_account,记住账号,記住帳號,Remember account,Se souvenir du compte,アカウントを記憶,계정 기억,Запомнить аккаунт,Recordar cuenta,Konto merken,Lembrar conta,Ingat akun,تذكر الحساب
+login.caps_lock,大写锁定已开启,大寫鎖定已開啟,Caps Lock is on,Verrouillage majuscule activé,Caps Lockがオンです,Caps Lock 켜짐,Caps Lock включён,Bloqueo de mayúsculas activado,Feststelltaste ist aktiv,Caps Lock ativado,Caps Lock aktif,مفتاح الأحرف الكبيرة مفعّل
+[designer]
+designer.title,表单设计器,表單設計器,Form Designer,Form Designer,フォームデザイナー,Form Designer,Form Designer,Form Designer,Form Designer,Form Designer,Form Designer,Form Designer
+designer.erupt_name,功能名称,功能名稱,Form Name,Form Name,機能名,Form Name,Form Name,Form Name,Form Name,Form Name,Form Name,Form Name
+designer.clear,清空,清空,Clear,Clear,クリア,Clear,Clear,Clear,Clear,Clear,Clear,Clear
+designer.preview,实时预览,即時預覽,Live Preview,Live Preview,プレビュー,Live Preview,Live Preview,Live Preview,Live Preview,Live Preview,Live Preview,Live Preview
+designer.generate_code,生成代码,生成代碼,Generate Code,Generate Code,コード生成,Generate Code,Generate Code,Generate Code,Generate Code,Generate Code,Generate Code,Generate Code
+designer.clear_confirm,确定要清空当前设计吗？,確定要清空當前設計嗎？,Clear current design?,Clear current design?,現在のデザインをクリアしますか？,Clear current design?,Clear current design?,Clear current design?,Clear current design?,Clear current design?,Clear current design?,Clear current design?
+designer.copy_success,已复制到剪贴板,已複製到剪貼板,Copied to clipboard,Copied to clipboard,クリップボードにコピーしました,Copied to clipboard,Copied to clipboard,Copied to clipboard,Copied to clipboard,Copied to clipboard,Copied to clipboard,Copied to clipboard
+designer.empty_canvas,从左侧拖入或点击组件开始设计,從左側拖入或點擊組件開始設計,Drag or click components on the left to start,Drag or click components on the left to start,左側からドラッグまたはクリックして開始,Drag or click components on the left to start,Drag or click components on the left to start,Drag or click components on the left to start,Drag or click components on the left to start,Drag or click components on the left to start,Drag or click components on the left to start,Drag or click components on the left to start
+designer.field_name_invalid,字段名不合法,字段名不合法,Invalid field name,Invalid field name,フィールド名が不正です,Invalid field name,Invalid field name,Invalid field name,Invalid field name,Invalid field name,Invalid field name,Invalid field name
+designer.field_name_duplicate,字段名重复,字段名重複,Duplicate field name,Nom de champ en double,フィールド名が重複,필드명 중복,Дублирующееся имя поля,Nombre de campo duplicado,Doppelter Feldname,Nome de campo duplicado,Nama bidang duplikat,اسم الحقل مكرر
+designer.link_erupt_required,请选择关联模型,請選擇關聯模型,Select a linked model,Sélectionnez un modèle lié,関連モデルを選択してください,연결 모델을 선택하세요,Выберите связанную модель,Seleccione un modelo vinculado,Verknüpftes Modell wählen,Selecione um modelo vinculado,Pilih model tertaut,اختر النموذج المرتبط
+designer.vis.title_required,视图名称不能为空,視圖名稱不能為空,View name is required,Le nom de la vue est requis,ビュー名は必須です,뷰 이름은 필수입니다,Название представления обязательно,El nombre de la vista es obligatorio,Ansichtsname erforderlich,Nome da visualização obrigatório,Nama tampilan wajib diisi,اسم العرض مطلوب
+designer.vis.gantt_date_required,甘特视图需配置开始和结束日期字段,甘特視圖需配置開始和結束日期字段,Gantt view needs start and end date fields,La vue gantt nécessite des champs de date de début et de fin,ガントビューには開始日と終了日のフィールドが必要です,간트 뷰에는 시작일과 종료일 필드가 필요합니다,Для гантта нужны поля даты начала и окончания,La vista gantt requiere campos de fecha de inicio y fin,Gantt-Ansicht braucht Start- und Enddatumsfelder,A visualização gantt precisa de campos de data inicial e final,Tampilan gantt perlu bidang tanggal mulai dan selesai,يحتاج عرض جانت إلى حقلي تاريخ البدء والانتهاء
+designer.vis.board_group_required,看板视图需配置分组字段,看板視圖需配置分組字段,Board view needs a group field,La vue tableau nécessite un champ de groupe,ボードビューにはグループフィールドが必要です,보드 뷰에는 그룹 필드가 필요합니다,Для доски нужно поле группировки,La vista de tablero requiere un campo de grupo,Board-Ansicht braucht ein Gruppierungsfeld,A visualização de quadro precisa de um campo de grupo,Tampilan papan perlu bidang grup,يحتاج عرض اللوحة إلى حقل تجميع
+designer.vis.calendar_date_required,日历视图需配置日期字段,日曆視圖需配置日期字段,Calendar view needs a date field,La vue calendrier nécessite un champ de date,カレンダービューには日付フィールドが必要です,캘린더 뷰에는 날짜 필드가 필요합니다,Для календаря нужно поле даты,La vista de calendario requiere un campo de fecha,Kalenderansicht braucht ein Datumsfeld,A visualização de calendário precisa de um campo de data,Tampilan kalender perlu bidang tanggal,يحتاج عرض التقويم إلى حقل تاريخ
+designer.tab.field,字段属性,字段屬性,Field,Field,フィールド,Field,Field,Field,Field,Field,Field,Field
+designer.tab.form,表单配置,表單配置,Form,Form,フォーム,Form,Form,Form,Form,Form,Form,Form
+designer.unselected,请先在画布中选择字段,請先在畫布中選擇字段,Select a field in the canvas,Select a field in the canvas,キャンバスでフィールドを選択してください,Select a field in the canvas,Select a field in the canvas,Select a field in the canvas,Select a field in the canvas,Select a field in the canvas,Select a field in the canvas,Select a field in the canvas
+designer.field_name,字段名,字段名,Field Name,Field Name,フィールド名,Field Name,Field Name,Field Name,Field Name,Field Name,Field Name,Field Name
+designer.field_title,标题,標題,Title,Title,タイトル,Title,Title,Title,Title,Title,Title,Title
+designer.placeholder,占位提示,占位提示,Placeholder,Placeholder,プレースホルダー,Placeholder,Placeholder,Placeholder,Placeholder,Placeholder,Placeholder,Placeholder
+designer.field_desc,描述,描述,Description,Description,説明,Description,Description,Description,Description,Description,Description,Description
+designer.link_erupt,关联模型,關聯模型,Linked Erupt,Linked Erupt,関連モデル,Linked Erupt,Linked Erupt,Linked Erupt,Linked Erupt,Linked Erupt,Linked Erupt,Linked Erupt
+designer.link_erupt_hint,已注册的 @Erupt 类名,已註冊的 @Erupt 類名,Registered @Erupt class name,Registered @Erupt class name,登録済みの @Erupt クラス名,Registered @Erupt class name,Registered @Erupt class name,Registered @Erupt class name,Registered @Erupt class name,Registered @Erupt class name,Registered @Erupt class name,Registered @Erupt class name
+designer.not_null,必填,必填,Required,Required,必須,Required,Required,Required,Required,Required,Required,Required
+designer.searchable,支持搜索,支持搜索,Searchable,Searchable,検索可能,Searchable,Searchable,Searchable,Searchable,Searchable,Searchable,Searchable
+designer.sortable,列表可排序,列表可排序,Sortable,Sortable,ソート可能,Sortable,Sortable,Sortable,Sortable,Sortable,Sortable,Sortable
+designer.type_config,类型配置,類型配置,Type Config,Type Config,タイプ設定,Type Config,Type Config,Type Config,Type Config,Type Config,Type Config,Type Config
+designer.full_span,整行显示,整行顯示,Full Span,Full Span,全行表示,Full Span,Full Span,Full Span,Full Span,Full Span,Full Span,Full Span
+designer.min,最小值,最小值,Min,Min,最小値,Min,Min,Min,Min,Min,Min,Min
+designer.max,最大值,最大值,Max,Max,最大値,Max,Max,Max,Max,Max,Max,Max
+designer.step,步长,步長,Step,Step,ステップ,Step,Step,Step,Step,Step,Step,Step
+designer.rate_count,评分总数,評分總數,Star Count,Star Count,星の数,Star Count,Star Count,Star Count,Star Count,Star Count,Star Count,Star Count
+designer.allow_half,允许半星,允許半星,Allow Half,Allow Half,半星を許可,Allow Half,Allow Half,Allow Half,Allow Half,Allow Half,Allow Half,Allow Half
+designer.date_type,日期类型,日期類型,Date Type,Date Type,日付タイプ,Date Type,Date Type,Date Type,Date Type,Date Type,Date Type,Date Type
+designer.true_text,开启文案,開啟文案,True Text,True Text,ON テキスト,True Text,True Text,True Text,True Text,True Text,True Text,True Text
+designer.false_text,关闭文案,關閉文案,False Text,False Text,OFF テキスト,False Text,False Text,False Text,False Text,False Text,False Text,False Text
+designer.options,选项,選項,Options,Options,選択肢,Options,Options,Options,Options,Options,Options,Options
+designer.choice_style,展示形式,展示形式,Style,Style,表示形式,Style,Style,Style,Style,Style,Style,Style
+designer.add_option,添加选项,添加選項,Add Option,Add Option,選択肢を追加,Add Option,Add Option,Add Option,Add Option,Add Option,Add Option,Add Option
+designer.option_value,值,值,Value,Value,値,Value,Value,Value,Value,Value,Value,Value
+designer.option_label,名称,名稱,Label,Label,ラベル,Label,Label,Label,Label,Label,Label,Label
+designer.tags_list,可选标签,可選標籤,Tags,Tags,タグ,Tags,Tags,Tags,Tags,Tags,Tags,Tags
+designer.attachment_type,附件类型,附件類型,Attachment Type,Attachment Type,添付タイプ,Attachment Type,Attachment Type,Attachment Type,Attachment Type,Attachment Type,Attachment Type,Attachment Type
+designer.max_limit,数量上限,數量上限,Max Count,Max Count,最大数,Max Count,Max Count,Max Count,Max Count,Max Count,Max Count,Max Count
+designer.size_limit,大小限制(KB),大小限制(KB),Size Limit(KB),Size Limit(KB),サイズ上限(KB),Size Limit(KB),Size Limit(KB),Size Limit(KB),Size Limit(KB),Size Limit(KB),Size Limit(KB),Size Limit(KB)
+designer.file_types,文件类型,文件類型,File Types,File Types,ファイルタイプ,File Types,File Types,File Types,File Types,File Types,File Types,File Types
+designer.language,语言,語言,Language,Language,言語,Language,Language,Language,Language,Language,Language,Language
+designer.height,高度,高度,Height,Height,高さ,Height,Height,Height,Height,Height,Height,Height
+designer.class_name,类名,類名,Class Name,Class Name,クラス名,Class Name,Class Name,Class Name,Class Name,Class Name,Class Name,Class Name
+designer.order_by,默认排序,預設排序,Default Sort,Tri par défaut,既定ソート,기본 정렬,Сортировка по умолчанию,Orden predeterminado,Standardsortierung,Ordenação padrão,Urutan default,الترتيب الافتراضي
+designer.order_by_placeholder,选择排序字段,選擇排序字段,Select sort field,Champ de tri,ソートフィールド,정렬 필드 선택,Поле сортировки,Campo de orden,Sortierfeld,Campo de ordenação,Pilih bidang urutan,اختر حقل الترتيب
+designer.order_asc,升序,升序,Ascending,Croissant,昇順,오름차순,По возрастанию,Ascendente,Aufsteigend,Ascendente,Naik,تصاعدي
+designer.order_desc,降序,降序,Descending,Décroissant,降順,내림차순,По убыванию,Descendente,Absteigend,Descendente,Turun,تنازلي
+designer.power,操作权限,操作權限,Permissions,Permissions,操作権限,Permissions,Permissions,Permissions,Permissions,Permissions,Permissions,Permissions
+designer.power_add,新增,新增,Add,Add,追加,Add,Add,Add,Add,Add,Add,Add
+designer.power_edit,编辑,編輯,Edit,Edit,編集,Edit,Edit,Edit,Edit,Edit,Edit,Edit
+designer.power_delete,删除,刪除,Delete,Delete,削除,Delete,Delete,Delete,Delete,Delete,Delete,Delete
+designer.power_query,查询,查詢,Query,Query,検索,Query,Query,Query,Query,Query,Query,Query
+designer.power_view,详情,詳情,Details,Details,詳細,Details,Details,Details,Details,Details,Details,Details
+designer.power_export,导出,導出,Export,Export,エクスポート,Export,Export,Export,Export,Export,Export,Export
+designer.power_import,导入,導入,Import,Import,インポート,Import,Import,Import,Import,Import,Import,Import
+designer.group.basic,基础,基礎,Basic,Basic,基本,Basic,Basic,Basic,Basic,Basic,Basic,Basic
+designer.group.choice,选择,選擇,Choice,Choice,選択,Choice,Choice,Choice,Choice,Choice,Choice,Choice
+designer.group.reference,引用,引用,Reference,Reference,参照,Reference,Reference,Reference,Reference,Reference,Reference,Reference
+designer.group.advanced,高级,高級,Advanced,Advanced,高度,Advanced,Advanced,Advanced,Advanced,Advanced,Advanced,Advanced
+designer.group.layout,布局,佈局,Layout,Layout,レイアウト,Layout,Layout,Layout,Layout,Layout,Layout,Layout
+designer.type.input,单行文本,單行文本,Input,Input,テキスト,Input,Input,Input,Input,Input,Input,Input
+designer.type.textarea,多行文本,多行文本,Textarea,Textarea,テキストエリア,Textarea,Textarea,Textarea,Textarea,Textarea,Textarea,Textarea
+designer.type.number,数字,數字,Number,Number,数値,Number,Number,Number,Number,Number,Number,Number
+designer.type.password,密码,密碼,Password,Password,パスワード,Password,Password,Password,Password,Password,Password,Password
+designer.type.boolean,开关,開關,Switch,Switch,スイッチ,Switch,Switch,Switch,Switch,Switch,Switch,Switch
+designer.type.date,日期,日期,Date,Date,日付,Date,Date,Date,Date,Date,Date,Date
+designer.type.slider,滑块,滑塊,Slider,Slider,スライダー,Slider,Slider,Slider,Slider,Slider,Slider,Slider
+designer.type.rate,评分,評分,Rate,Rate,評価,Rate,Rate,Rate,Rate,Rate,Rate,Rate
+designer.type.color,颜色,顏色,Color,Color,色,Color,Color,Color,Color,Color,Color,Color
+designer.type.choice,单选,單選,Choice,Choice,単一選択,Choice,Choice,Choice,Choice,Choice,Choice,Choice
+designer.type.multi_choice,多选,多選,Multi Choice,Multi Choice,複数選択,Multi Choice,Multi Choice,Multi Choice,Multi Choice,Multi Choice,Multi Choice,Multi Choice
+designer.type.tags,标签,標籤,Tags,Tags,タグ,Tags,Tags,Tags,Tags,Tags,Tags,Tags
+designer.type.auto_complete,自动完成,自動完成,Auto Complete,Auto Complete,オートコンプリート,Auto Complete,Auto Complete,Auto Complete,Auto Complete,Auto Complete,Auto Complete,Auto Complete
+designer.type.reference_table,表格引用,表格引用,Ref Table,Ref Table,テーブル参照,Ref Table,Ref Table,Ref Table,Ref Table,Ref Table,Ref Table,Ref Table
+designer.type.reference_tree,树形引用,樹形引用,Ref Tree,Ref Tree,ツリー参照,Ref Tree,Ref Tree,Ref Tree,Ref Tree,Ref Tree,Ref Tree,Ref Tree
+designer.type.checkbox,复选框,複選框,Checkbox,Checkbox,チェックボックス,Checkbox,Checkbox,Checkbox,Checkbox,Checkbox,Checkbox,Checkbox
+designer.type.tab_table_add,子表,子表,Sub Table,Sub Table,サブテーブル,Sub Table,Sub Table,Sub Table,Sub Table,Sub Table,Sub Table,Sub Table
+designer.type.attachment,附件,附件,Attachment,Attachment,添付,Attachment,Attachment,Attachment,Attachment,Attachment,Attachment,Attachment
+designer.type.html_editor,富文本,富文本,Rich Text,Rich Text,リッチテキスト,Rich Text,Rich Text,Rich Text,Rich Text,Rich Text,Rich Text,Rich Text
+designer.type.markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown,Markdown
+designer.type.code_editor,代码编辑,代碼編輯,Code Editor,Code Editor,コードエディタ,Code Editor,Code Editor,Code Editor,Code Editor,Code Editor,Code Editor,Code Editor
+designer.type.map,地图,地圖,Map,Map,地図,Map,Map,Map,Map,Map,Map,Map
+designer.type.signature,签名,簽名,Signature,Signature,署名,Signature,Signature,Signature,Signature,Signature,Signature,Signature
+designer.type.divide,分割线,分割線,Divider,Divider,区切り線,Divider,Divider,Divider,Divider,Divider,Divider,Divider
+designer.publish,发布,發佈,Publish,Publish,公開,Publish,Publish,Publish,Publish,Publish,Publish,Publish
+designer.publish_success,发布成功，菜单值即模型名，免重启生效,發佈成功，菜單值即模型名，免重啟生效,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed,公開しました。メニュー値はモデル名です（再起動不要）,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed,Published. Use the model name as menu value — no restart needed
+designer.unsaved,有未发布的修改,有未發佈的修改,Unpublished changes,Unpublished changes,未公開の変更あり,Unpublished changes,Unpublished changes,Unpublished changes,Unpublished changes,Unpublished changes,Unpublished changes,Unpublished changes
+designer.fields,个字段,個字段,fields,fields,フィールド,fields,fields,fields,fields,fields,fields,fields
+designer.search_component,搜索组件,搜索組件,Search components,Search components,コンポーネント検索,Search components,Search components,Search components,Search components,Search components,Search components,Search components
+designer.type.image,图片,圖片,Image,Image,画像,Image,Image,Image,Image,Image,Image,Image
+designer.type.hidden,隐藏域,隱藏域,Hidden,Hidden,隠しフィールド,Hidden,Hidden,Hidden,Hidden,Hidden,Hidden,Hidden
+designer.type.group,分组,分組,Group,Group,グループ,Group,Group,Group,Group,Group,Group,Group
+designer.type.tab_tree,多选树,多選樹,Tab Tree,Tab Tree,複数選択ツリー,Tab Tree,Tab Tree,Tab Tree,Tab Tree,Tab Tree,Tab Tree,Tab Tree
+designer.type.tab_table_refer,一对多引用,一對多引用,Tab Table Refer,Tab Table Refer,1対多参照,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer
+designer.type.combine,一对一,一對一,Combine,Combine,1対1,Combine,Combine,Combine,Combine,Combine,Combine,Combine
+designer.group_fields,包含字段,包含字段,Fields in group,Fields in group,含まれるフィールド,Fields in group,Fields in group,Fields in group,Fields in group,Fields in group,Fields in group,Fields in group
+designer.collapsed,默认折叠,默認折疊,Collapsed,Collapsed,デフォルトで折りたたむ,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed
+designer.layout,页面布局,頁面佈局,Page Layout,Mise en page,ページレイアウト,페이지 레이아웃,Макет страницы,Diseño de página,Seitenlayout,Layout da página,Tata Letak Halaman,تخطيط الصفحة
+designer.form_size,表单尺寸,表單尺寸,Form Size,Taille du formulaire,フォームサイズ,폼 크기,Размер формы,Tamaño del formulario,Formulargröße,Tamanho do formulário,Ukuran Formulir,حجم النموذج
+designer.page_size,每页条数,每頁條數,Page Size,Taille de page,1ページの件数,페이지당 행 수,Размер страницы,Tamaño de página,Seitengröße,Tamanho da página,Jumlah per Halaman,عدد العناصر في الصفحة
+designer.power_print,打印,列印,Print,Imprimer,印刷,인쇄,Печать,Imprimir,Drucken,Imprimir,Cetak,طباعة
+designer.vis.title,多视图,多視圖,Views,Vues,複数ビュー,다중 뷰,Представления,Vistas,Ansichten,Visualizações,Tampilan,العروض
+designer.vis.hint,在默认表格外配置卡片/看板/甘特/日历等视图,在預設表格外配置卡片/看板/甘特/日曆等視圖,Add card / board / gantt / calendar views beyond the default table,Ajoutez des vues carte / tableau / gantt / calendrier en plus du tableau par défaut,デフォルトのテーブル以外にカード/ボード/ガント/カレンダービューを追加,기본 테이블 외에 카드/보드/간트/캘린더 뷰 추가,Добавьте представления карточек/доски/гантта/календаря помимо таблицы,Añade vistas de tarjeta / tablero / gantt / calendario además de la tabla,Karten-/Board-/Gantt-/Kalenderansichten zusätzlich zur Tabelle,Adicione visualizações de cartão / quadro / gantt / calendário além da tabela,Tambahkan tampilan kartu / papan / gantt / kalender selain tabel,أضف عروض البطاقة/اللوحة/جانت/التقويم إلى جانب الجدول
+designer.vis.add,添加视图,添加視圖,Add View,Ajouter une vue,ビューを追加,뷰 추가,Добавить представление,Añadir vista,Ansicht hinzufügen,Adicionar visualização,Tambah tampilan,إضافة عرض
+designer.vis.default_title,新视图,新視圖,New View,Nouvelle vue,新しいビュー,새 뷰,Новое представление,Nueva vista,Neue Ansicht,Nova visualização,Tampilan baru,عرض جديد
+designer.vis.title_placeholder,视图名称,視圖名稱,View name,Nom de la vue,ビュー名,뷰 이름,Название представления,Nombre de la vista,Ansichtsname,Nome da visualização,Nama tampilan,اسم العرض
+designer.vis.type,视图类型,視圖類型,View Type,Type de vue,ビュータイプ,뷰 유형,Тип представления,Tipo de vista,Ansichtstyp,Tipo de visualização,Jenis tampilan,نوع العرض
+designer.vis.field_visibility,字段范围,字段範圍,Field Scope,Portée des champs,フィールド範囲,필드 범위,Область полей,Ámbito de campos,Feldbereich,Escopo de campos,Cakupan bidang,نطاق الحقول
+designer.vis.include,包含,包含,Include,Inclure,含める,포함,Включить,Incluir,Einschließen,Incluir,Sertakan,تضمين
+designer.vis.exclude,排除,排除,Exclude,Exclure,除外,제외,Исключить,Excluir,Ausschließen,Excluir,Kecualikan,استبعاد
+designer.vis.fields,字段列表,字段列表,Fields,Champs,フィールド,필드,Поля,Campos,Felder,Campos,Bidang,الحقول
+designer.vis.fields_placeholder,选择字段,選擇字段,Select fields,Sélectionner des champs,フィールドを選択,필드 선택,Выберите поля,Seleccionar campos,Felder auswählen,Selecionar campos,Pilih bidang,اختر الحقول
+designer.vis.group_field,分组字段,分組字段,Group Field,Champ de groupe,グループフィールド,그룹 필드,Поле группировки,Campo de grupo,Gruppierungsfeld,Campo de agrupamento,Bidang grup,حقل التجميع
+designer.vis.cover_field,封面字段,封面字段,Cover Field,Champ de couverture,カバーフィールド,커버 필드,Поле обложки,Campo de portada,Coverfeld,Campo de capa,Bidang sampul,حقل الغلاف
+designer.vis.cover_effect,封面效果,封面效果,Cover Effect,Effet de couverture,カバー効果,커버 효과,Эффект обложки,Efecto de portada,Cover-Effekt,Efeito de capa,Efek sampul,تأثير الغلاف
+designer.vis.start_date_field,开始日期字段,開始日期字段,Start Date Field,Champ date de début,開始日フィールド,시작일 필드,Поле даты начала,Campo fecha de inicio,Startdatumsfeld,Campo data de início,Bidang tanggal mulai,حقل تاريخ البدء
+designer.vis.end_date_field,结束日期字段,結束日期字段,End Date Field,Champ date de fin,終了日フィールド,종료일 필드,Поле даты окончания,Campo fecha de fin,Enddatumsfeld,Campo data de término,Bidang tanggal selesai,حقل تاريخ الانتهاء
+designer.vis.progress_field,进度字段,進度字段,Progress Field,Champ de progression,進捗フィールド,진행률 필드,Поле прогресса,Campo de progreso,Fortschrittsfeld,Campo de progresso,Bidang progres,حقل التقدم
+designer.vis.date_field,日期字段,日期字段,Date Field,Champ de date,日付フィールド,날짜 필드,Поле даты,Campo de fecha,Datumsfeld,Campo de data,Bidang tanggal,حقل التاريخ
+designer.vis.color_field,颜色字段,顏色字段,Color Field,Champ de couleur,色フィールド,색상 필드,Поле цвета,Campo de color,Farbfeld,Campo de cor,Bidang warna,حقل اللون
+designer.ref_config,关联配置,關聯配置,Ref Config,Config de référence,関連設定,관련 설정,Настройка связи,Config de referencia,Verknüpfungseinstellungen,Config de referência,Konfigurasi referensi,إعداد الارتباط
+designer.ref_id,主键字段,主鍵字段,ID Field,Champ ID,主キーフィールド,기본키 필드,Поле первичного ключа,Campo ID,ID-Feld,Campo de chave,Field kunci utama,حقل المفتاح الأساسي
+designer.ref_label,显示字段,顯示字段,Label Field,Champ d'affichage,表示フィールド,표시 필드,Поле отображения,Campo de etiqueta,Anzeigefeld,Campo de exibição,Field label,حقل العرض
+designer.ref_pid,父节点字段,父節點字段,Parent ID Field,Champ ID parent,親ノードフィールド,부모 노드 필드,Поле родительского узла,Campo ID padre,Eltern-ID-Feld,Campo de nó pai,Field node induk,حقل العقدة الأب
+[monitor]
+monitor.loading,加载中...,加載中...,Loading...,Chargement...,読み込み中...,로딩 중...,Загрузка...,Cargando...,Lädt...,Carregando...,Memuat...,جارٍ التحميل...
+monitor.tip,提示,提示,Tip,Astuce,ヒント,알림,Подсказка,Aviso,Hinweis,Aviso,Petunjuk,تنبيه
+monitor.server.cpu_info,CPU 信息,CPU 資訊,CPU Info,Infos CPU,CPU 情報,CPU 정보,Информация о ЦП,Información de CPU,CPU-Info,Informações da CPU,Info CPU,معلومات المعالج
+monitor.server.cpu_num,核心个数,核心個數,Cores,Cœurs,コア数,코어 수,Ядра,Núcleos,Kerne,Núcleos,Inti,عدد الأنوية
+monitor.server.cpu_freq,核心频率,核心頻率,Frequency,Fréquence,周波数,주파수,Частота,Frecuencia,Frequenz,Frequência,Frekuensi,التردد
+monitor.server.sys_user,系统 / 用户,系統 / 用戶,System / User,Système / Utilisateur,システム / ユーザー,시스템 / 사용자,Система / Пользователь,Sistema / Usuario,System / Benutzer,Sistema / Usuário,Sistem / Pengguna,النظام / المستخدم
+monitor.server.usage,使用率,使用率,Usage,Utilisation,使用率,사용률,Использование,Uso,Auslastung,Uso,Penggunaan,نسبة الاستخدام
+monitor.server.app_info,ERUPT 应用信息,ERUPT 應用資訊,ERUPT App Info,Infos application ERUPT,ERUPT アプリ情報,ERUPT 앱 정보,Информация о приложении ERUPT,Información de la app ERUPT,ERUPT App-Info,Informações do app ERUPT,Info Aplikasi ERUPT,معلومات تطبيق ERUPT
+monitor.server.erupt_count,erupt 类数量,erupt 類數量,Erupt Classes,Classes Erupt,erupt クラス数,erupt 클래스 수,Классы Erupt,Clases Erupt,Erupt-Klassen,Classes Erupt,Kelas Erupt,عدد فئات erupt
+monitor.server.erupt_modules,erupt 模块数,erupt 模塊數,Erupt Modules,Modules Erupt,erupt モジュール数,erupt 모듈 수,Модули Erupt,Módulos Erupt,Erupt-Module,Módulos Erupt,Modul Erupt,عدد وحدات erupt
+monitor.server.session_strategy,Session 策略,Session 策略,Session Strategy,Stratégie de session,セッション戦略,세션 전략,Стратегия сессии,Estrategia de sesión,Session-Strategie,Estratégia de sessão,Strategi Sesi,استراتيجية الجلسة
+monitor.server.upload_path,文件上传路径,檔案上傳路徑,Upload Path,Chemin de téléversement,アップロードパス,업로드 경로,Путь загрузки,Ruta de carga,Upload-Pfad,Caminho de upload,Jalur Unggah,مسار الرفع
+monitor.server.mem_info,内存信息,記憶體資訊,Memory Info,Infos mémoire,メモリ情報,메모리 정보,Информация о памяти,Información de memoria,Speicher-Info,Informações de memória,Info Memori,معلومات الذاكرة
+monitor.server.attr,属性,屬性,Attribute,Attribut,属性,속성,Атрибут,Atributo,Attribut,Atributo,Atribut,السمة
+monitor.server.memory,内存,記憶體,Memory,Mémoire,メモリ,메모리,Память,Memoria,Speicher,Memória,Memori,الذاكرة
+monitor.server.total_mem,总内存,總記憶體,Total,Total,合計,전체,Всего,Total,Gesamt,Total,Total,الإجمالي
+monitor.server.used_mem,已用内存,已用記憶體,Used,Utilisé,使用済み,사용됨,Использовано,Usado,Belegt,Usado,Terpakai,المستخدم
+monitor.server.free_mem,剩余内存,剩餘記憶體,Free,Libre,空き,남음,Свободно,Libre,Frei,Livre,Tersisa,المتاح
+monitor.server.server_info,服务器信息,伺服器資訊,Server Info,Infos serveur,サーバー情報,서버 정보,Информация о сервере,Información del servidor,Server-Info,Informações do servidor,Info Server,معلومات الخادم
+monitor.server.host_name,服务器名称,伺服器名稱,Hostname,Nom d'hôte,ホスト名,호스트명,Имя хоста,Nombre del host,Hostname,Nome do host,Nama Host,اسم المضيف
+monitor.server.os,操作系统,作業系統,OS,Système,OS,운영체제,ОС,SO,Betriebssystem,SO,Sistem Operasi,نظام التشغيل
+monitor.server.server_time,服务器时间,伺服器時間,Server Time,Heure serveur,サーバー時刻,서버 시간,Время сервера,Hora del servidor,Serverzeit,Hora do servidor,Waktu Server,وقت الخادم
+monitor.server.arch,系统架构,系統架構,Architecture,Architecture,アーキテクチャ,아키텍처,Архитектура,Arquitectura,Architektur,Arquitetura,Arsitektur,المعمارية
+monitor.server.jvm_info,JVM 虚拟机信息,JVM 虛擬機資訊,JVM Info,Infos JVM,JVM 情報,JVM 정보,Информация о JVM,Información de JVM,JVM-Info,Informações da JVM,Info JVM,معلومات JVM
+monitor.server.java_name,Java 名称,Java 名稱,Java Name,Nom Java,Java 名,Java 이름,Имя Java,Nombre Java,Java-Name,Nome Java,Nama Java,اسم Java
+monitor.server.java_version,Java 版本,Java 版本,Java Version,Version Java,Java バージョン,Java 버전,Версия Java,Versión de Java,Java-Version,Versão Java,Versi Java,إصدار Java
+monitor.server.startup_time,启动时间,啟動時間,Startup Time,Heure de démarrage,起動時刻,시작 시간,Время запуска,Hora de inicio,Startzeit,Hora de início,Waktu Mulai,وقت البدء
+monitor.server.run_time,运行时长,運行時長,Uptime,Durée d'activité,稼働時間,가동 시간,Время работы,Tiempo activo,Laufzeit,Tempo de atividade,Waktu Aktif,مدة التشغيل
+monitor.server.thread_count,实时线程,即時線程,Threads,Threads,スレッド数,스레드,Потоки,Hilos,Threads,Threads,Thread,المسارات
+monitor.server.install_path,安装路径,安裝路徑,Install Path,Chemin d'installation,インストールパス,설치 경로,Путь установки,Ruta de instalación,Installationspfad,Caminho de instalação,Jalur Instalasi,مسار التثبيت
+monitor.server.project_path,项目路径,專案路徑,Project Path,Chemin du projet,プロジェクトパス,프로젝트 경로,Путь проекта,Ruta del proyecto,Projektpfad,Caminho do projeto,Jalur Proyek,مسار المشروع
+monitor.server.input_args,运行参数,運行參數,Arguments,Arguments,起動引数,실행 인자,Аргументы,Argumentos,Argumente,Argumentos,Argumen,معاملات التشغيل
+monitor.server.gpu_info,GPU 信息,GPU 資訊,GPU Info,Infos GPU,GPU 情報,GPU 정보,Информация о GPU,Información de GPU,GPU-Info,Informações da GPU,Info GPU,معلومات GPU
+monitor.server.device_id,设备 ID,裝置 ID,Device ID,ID appareil,デバイス ID,장치 ID,ID устройства,ID de dispositivo,Geräte-ID,ID do dispositivo,ID Perangkat,معرّف الجهاز
+monitor.server.name,名称,名稱,Name,Nom,名前,이름,Имя,Nombre,Name,Nome,Nama,الاسم
+monitor.server.vendor,供应商,供應商,Vendor,Fournisseur,ベンダー,공급업체,Поставщик,Proveedor,Hersteller,Fornecedor,Vendor,المورّد
+monitor.server.memory_size,内存大小,記憶體大小,Memory Size,Taille mémoire,メモリ容量,메모리 크기,Размер памяти,Tamaño de memoria,Speichergröße,Tamanho da memória,Ukuran Memori,حجم الذاكرة
+monitor.server.version_info,版本信息,版本資訊,Version Info,Infos version,バージョン情報,버전 정보,Информация о версии,Información de versión,Versionsinfo,Informações da versão,Info Versi,معلومات الإصدار
+monitor.server.disk_info,磁盘信息,磁碟資訊,Disk Info,Infos disque,ディスク情報,디스크 정보,Информация о диске,Información del disco,Festplatten-Info,Informações do disco,Info Disk,معلومات القرص
+monitor.server.disk_path,盘符路径,磁碟路徑,Path,Chemin,パス,경로,Путь,Ruta,Pfad,Caminho,Jalur,المسار
+monitor.server.disk_type,盘符类型,磁碟類型,Disk Type,Type de disque,ディスク種別,디스크 유형,Тип диска,Tipo de disco,Festplattentyp,Tipo de disco,Tipe Disk,نوع القرص
+monitor.server.file_type,文件类型,檔案類型,File Type,Type de fichier,ファイル種別,파일 유형,Тип файла,Tipo de archivo,Dateityp,Tipo de arquivo,Tipe File,نوع الملف
+monitor.server.total_size,总大小,總大小,Total,Total,合計,전체,Всего,Total,Gesamt,Total,Total,الإجمالي
+monitor.server.free_size,剩余大小,剩餘大小,Free,Libre,空き,남음,Свободно,Libre,Frei,Livre,Tersisa,المتاح
+monitor.server.used_size,已使用量,已使用量,Used,Utilisé,使用済み,사용량,Использовано,Usado,Belegt,Usado,Terpakai,المستخدم
+monitor.redis.info,Redis 信息,Redis 資訊,Redis Info,Infos Redis,Redis 情報,Redis 정보,Информация о Redis,Información de Redis,Redis-Info,Informações do Redis,Info Redis,معلومات Redis
+monitor.redis.version,版本号,版本號,Version,Version,バージョン,버전,Версия,Versión,Version,Versão,Versi,الإصدار
+monitor.redis.port,端口号,連接埠,Port,Port,ポート,포트,Порт,Puerto,Port,Porta,Port,المنفذ
+monitor.redis.run_days,运行天数,運行天數,Uptime (days),Jours d'activité,稼働日数,가동 일수,Дней работы,Días activos,Laufzeit (Tage),Dias ativos,Hari Aktif,أيام التشغيل
+monitor.redis.days_unit,天,天,days,jours,日,일,дн.,días,Tage,dias,hari,يوم
+monitor.redis.is_cluster,是否集群,是否叢集,Cluster,Cluster,クラスタ,클러스터,Кластер,Clúster,Cluster,Cluster,Cluster,عنقود
+monitor.redis.persistence,持久化方式,持久化方式,Persistence,Persistance,永続化方式,영속화 방식,Персистентность,Persistencia,Persistenz,Persistência,Persistensi,آلية الحفظ
+monitor.redis.client_num,已连接客户端,已連接用戶端,Connected Clients,Clients connectés,接続クライアント数,연결된 클라이언트,Подключенные клиенты,Clientes conectados,Verbundene Clients,Clientes conectados,Klien Terhubung,العملاء المتصلون
+monitor.redis.command_stat,命令统计,命令統計,Command Stats,Statistiques des commandes,コマンド統計,명령 통계,Статистика команд,Estadísticas de comandos,Befehlsstatistik,Estatísticas de comandos,Statistik Perintah,إحصاءات الأوامر
+monitor.redis.key_count,Redis Key 数量,Redis Key 數量,Redis Key Count,Nombre de clés Redis,Redis キー数,Redis 키 수,Количество ключей Redis,Cantidad de claves Redis,Redis-Schlüsselanzahl,Quantidade de chaves Redis,Jumlah Key Redis,عدد مفاتيح Redis
+monitor.redis.key_count_series,key 数量,key 數量,Key Count,Nombre de clés,キー数,키 수,Кол-во ключей,Cantidad de claves,Schlüsselanzahl,Qtd. de chaves,Jumlah Key,عدد المفاتيح
+monitor.redis.connect_failed,Redis 连接失败,Redis 連接失敗,Redis connection failed,Échec de connexion Redis,Redis 接続失敗,Redis 연결 실패,Сбой подключения к Redis,Error de conexión a Redis,Redis-Verbindung fehlgeschlagen,Falha na conexão Redis,Koneksi Redis gagal,فشل الاتصال بـ Redis
+monitor.refresh,刷新,刷新,Refresh,Actualiser,更新,새로고침,Обновить,Actualizar,Aktualisieren,Atualizar,Segarkan,تحديث
+monitor.auto_refresh,自动刷新,自動刷新,Auto Refresh,Actualisation auto,自動更新,자동 새로고침,Автообновление,Auto actualizar,Auto-Aktualisierung,Atualização automática,Segarkan otomatis,تحديث تلقائي
+monitor.last_update,上次更新,上次更新,Last update,Dernière mise à jour,最終更新,마지막 업데이트,Последнее обновление,Última actualización,Letzte Aktualisierung,Última atualização,Pembaruan terakhir,آخر تحديث
+monitor.server.cpu_usage,CPU 使用率,CPU 使用率,CPU Usage,Utilisation CPU,CPU 使用率,CPU 사용률,Загрузка ЦП,Uso de CPU,CPU-Auslastung,Uso da CPU,Penggunaan CPU,استخدام المعالج
+monitor.server.mem_usage,内存使用率,記憶體使用率,Memory Usage,Utilisation mémoire,メモリ使用率,메모리 사용률,Использование памяти,Uso de memoria,Speicherauslastung,Uso de memória,Penggunaan Memori,استخدام الذاكرة
+monitor.server.jvm_usage,JVM 使用率,JVM 使用率,JVM Usage,Utilisation JVM,JVM 使用率,JVM 사용률,Использование JVM,Uso de JVM,JVM-Auslastung,Uso da JVM,Penggunaan JVM,استخدام JVM
+monitor.server.usage_trend,使用率趋势,使用率趨勢,Usage Trend,Tendance d'utilisation,使用率の推移,사용률 추이,Динамика использования,Tendencia de uso,Auslastungsverlauf,Tendência de uso,Tren Penggunaan,اتجاه الاستخدام
+monitor.redis.key_trend,Key 数量趋势,Key 數量趨勢,Key Count Trend,Tendance du nombre de clés,キー数の推移,키 수 추이,Динамика количества ключей,Tendencia de claves,Schlüsselanzahl-Verlauf,Tendência de chaves,Tren Jumlah Key,اتجاه عدد المفاتيح
+monitor.server.io_rate,IO 实时速率,IO 即時速率,IO Rate,Débit IO,IO レート,IO 속도,Скорость IO,Tasa de IO,IO-Rate,Taxa de IO,Laju IO,معدل الإدخال/الإخراج
+monitor.server.net_recv,网络下行,網路下行,Net In,Réseau ↓,ネット受信,네트워크 수신,Сеть ↓,Red ↓,Netz ↓,Rede ↓,Jaringan ↓,تنزيل الشبكة
+monitor.server.net_sent,网络上行,網路上行,Net Out,Réseau ↑,ネット送信,네트워크 송신,Сеть ↑,Red ↑,Netz ↑,Rede ↑,Jaringan ↑,رفع الشبكة
+monitor.server.disk_read,磁盘读,磁碟讀,Disk Read,Lecture disque,ディスク読込,디스크 읽기,Чтение диска,Lectura de disco,Disk lesen,Leitura de disco,Baca Disk,قراءة القرص
+monitor.server.disk_write,磁盘写,磁碟寫,Disk Write,Écriture disque,ディスク書込,디스크 쓰기,Запись диска,Escritura de disco,Disk schreiben,Escrita de disco,Tulis Disk,كتابة القرص
+monitor.diagnosis.title,应用诊断,應用診斷,Diagnosis,Diagnostic,アプリ診断,앱 진단,Диагностика,Diagnóstico,Diagnose,Diagnóstico,Diagnostik,التشخيص
+monitor.diagnosis.thread_dump,线程快照,線程快照,Thread Dump,Dump des threads,スレッドダンプ,스레드 덤프,Дамп потоков,Volcado de hilos,Thread-Dump,Dump de threads,Thread Dump,تفريغ المسارات
+monitor.diagnosis.deadlock,检测到死锁,偵測到死鎖,Deadlock Detected,Interblocage détecté,デッドロック検出,교착 상태 감지,Обнаружена взаимоблокировка,Interbloqueo detectado,Deadlock erkannt,Deadlock detectado,Deadlock terdeteksi,تم اكتشاف قفل ميت
+monitor.diagnosis.deadlock_desc,存在死锁线程，请立即排查,存在死鎖線程，請立即排查,Deadlocked threads detected, investigate immediately,Threads en interblocage détectés, à examiner immédiatement,デッドロックスレッドあり、直ちに調査してください,교착 스레드 발견, 즉시 점검하세요,Обнаружены заблокированные потоки, проверьте немедленно,Hilos en interbloqueo detectados, revise de inmediato,Blockierte Threads erkannt, sofort prüfen,Threads em deadlock detectados, investigue imediatamente,Thread deadlock terdeteksi, periksa segera,تم رصد مسارات في قفل ميت، تحقق فورًا
+monitor.diagnosis.threads,线程,線程,Threads,Threads,スレッド,스레드,Потоки,Hilos,Threads,Threads,Thread,المسارات
+monitor.diagnosis.thread_live,活动线程,活動線程,Live,Actifs,稼働中,활성,Активные,Activos,Aktiv,Ativos,Aktif,نشطة
+monitor.diagnosis.thread_daemon,守护线程,守護線程,Daemon,Daemon,デーモン,데몬,Демоны,Demonio,Daemon,Daemon,Daemon,خفية
+monitor.diagnosis.thread_peak,峰值,峰值,Peak,Pic,ピーク,최대,Пик,Pico,Spitze,Pico,Puncak,الذروة
+monitor.diagnosis.thread_started,累计启动,累計啟動,Total Started,Total démarrés,累計起動,누적 시작,Всего запущено,Total iniciados,Insgesamt gestartet,Total iniciados,Total Dimulai,إجمالي المُشغّلة
+monitor.diagnosis.class_loading,类加载,類加載,Class Loading,Chargement de classes,クラスロード,클래스 로딩,Загрузка классов,Carga de clases,Klassenladung,Carregamento de classes,Pemuatan Kelas,تحميل الفئات
+monitor.diagnosis.class_loaded,已加载,已加載,Loaded,Chargées,ロード済み,로드됨,Загружено,Cargadas,Geladen,Carregadas,Dimuat,محمّلة
+monitor.diagnosis.class_total,累计加载,累計加載,Total Loaded,Total chargées,累計ロード,누적 로드,Всего загружено,Total cargadas,Insgesamt geladen,Total carregadas,Total Dimuat,إجمالي المحمّلة
+monitor.diagnosis.class_unloaded,已卸载,已卸載,Unloaded,Déchargées,アンロード済み,언로드됨,Выгружено,Descargadas,Entladen,Descarregadas,Dibongkar,مُفرّغة
+monitor.diagnosis.gc_name,GC 名称,GC 名稱,GC,GC,GC 名,GC 이름,GC,GC,GC,GC,GC,GC
+monitor.diagnosis.gc_count,次数,次數,Count,Nombre,回数,횟수,Количество,Cantidad,Anzahl,Contagem,Jumlah,العدد
+monitor.diagnosis.gc_time,耗时,耗時,Time,Durée,時間,시간,Время,Tiempo,Zeit,Tempo,Waktu,الوقت
+monitor.diagnosis.memory_pools,内存池,記憶體池,Memory Pools,Pools mémoire,メモリプール,메모리 풀,Пулы памяти,Pools de memoria,Speicherpools,Pools de memória,Pool Memori,تجمعات الذاكرة
+monitor.diagnosis.pool_name,名称,名稱,Name,Nom,名前,이름,Имя,Nombre,Name,Nome,Nama,الاسم
+monitor.diagnosis.pool_type,类型,類型,Type,Type,種別,유형,Тип,Tipo,Typ,Tipo,Tipe,النوع
+monitor.diagnosis.used,已用,已用,Used,Utilisé,使用済み,사용됨,Использовано,Usado,Belegt,Usado,Terpakai,المستخدم
+monitor.diagnosis.committed,已提交,已提交,Committed,Engagé,確保済み,확보됨,Зарезервировано,Comprometido,Zugesichert,Comprometido,Dialokasikan,المُلتزم
+monitor.diagnosis.max,上限,上限,Max,Max,上限,최대,Макс,Máx,Max,Máx,Maks,الحد الأقصى
+monitor.diagnosis.datasource,数据库连接池,資料庫連線池,Connection Pool,Pool de connexions,コネクションプール,커넥션 풀,Пул соединений,Pool de conexiones,Verbindungspool,Pool de conexões,Pool Koneksi,تجمع الاتصالات
+monitor.diagnosis.ds_name,名称,名稱,Name,Nom,名前,이름,Имя,Nombre,Name,Nome,Nama,الاسم
+monitor.diagnosis.ds_active,活动连接,活動連線,Active,Actives,使用中,활성,Активные,Activas,Aktiv,Ativas,Aktif,نشطة
+monitor.diagnosis.ds_idle,空闲连接,空閒連線,Idle,Inactives,アイドル,유휴,Простаивающие,Inactivas,Inaktiv,Ociosas,Menganggur,خاملة
+monitor.diagnosis.ds_total,总连接,總連線,Total,Total,合計,전체,Всего,Total,Gesamt,Total,Total,الإجمالي
+monitor.diagnosis.ds_waiting,等待线程,等待線程,Waiting,En attente,待機中,대기,Ожидающие,En espera,Wartend,Aguardando,Menunggu,منتظرة
+monitor.diagnosis.ds_max,最大连接,最大連線,Max,Max,最大,최대,Макс,Máx,Max,Máx,Maks,الحد الأقصى
+monitor.diagnosis.ds_active_ratio,活动占比,活動佔比,Active Ratio,Taux d'activité,使用率,활성 비율,Доля активных,Ratio activo,Aktivanteil,Taxa ativa,Rasio Aktif,نسبة النشاط
+monitor.diagnosis.http_stats,HTTP 请求统计,HTTP 請求統計,HTTP Stats,Statistiques HTTP,HTTPリクエスト統計,HTTP 요청 통계,Статистика HTTP,Estadísticas HTTP,HTTP-Statistiken,Estatísticas HTTP,Statistik HTTP,إحصائيات HTTP
+monitor.diagnosis.http_uri,接口,接口,Endpoint,Point de terminaison,エンドポイント,엔드포인트,Эндпоинт,Endpoint,Endpunkt,Endpoint,Endpoint,النقطة
+monitor.diagnosis.http_count,请求数,請求數,Requests,Requêtes,リクエスト数,요청 수,Запросы,Solicitudes,Anfragen,Requisições,Permintaan,الطلبات
+monitor.diagnosis.http_avg,平均耗时,平均耗時,Avg (ms),Moy (ms),平均(ms),평균(ms),Среднее (мс),Prom (ms),Ø (ms),Méd (ms),Rata-rata (ms),متوسط (مللي ث)
+monitor.diagnosis.http_max,最慢,最慢,Max (ms),Max (ms),最大(ms),최대(ms),Макс (мс),Máx (ms),Max (ms),Máx (ms),Maks (ms),أقصى (مللي ث)
+monitor.diagnosis.http_error,错误数,錯誤數,Errors,Erreurs,エラー数,오류 수,Ошибки,Errores,Fehler,Erros,Error,الأخطاء
+monitor.diagnosis.http_reset,清零,清零,Reset,Réinitialiser,リセット,초기화,Сбросить,Reiniciar,Zurücksetzen,Redefinir,Reset,إعادة تعيين
+monitor.diagnosis.http_sort_avg,按耗时,按耗時,By Avg,Par moy,耗時順,평균순,По времени,Por prom,Nach Zeit,Por méd,Per waktu,حسب الوقت
+monitor.diagnosis.http_sort_count,按请求数,按請求數,By Count,Par req,リクエスト順,요청순,По запросам,Por sol,Nach Anfr,Por req,Per req,حسب الطلبات
+monitor.diagnosis.http_sort_error,按错误数,按錯誤數,By Errors,Par erreurs,エラー順,오류순,По ошибкам,Por err,Nach Fehl,Por err,Per err,حسب الأخطاء
+monitor.fullscreen,大屏模式,大屏模式,Big Screen,Grand écran,大画面モード,대형 화면,Полноэкранный режим,Pantalla grande,Großbildschirm,Ecrã grande,Mode layar besar,وضع الشاشة الكبيرة
+monitor.fullscreen_exit,退出大屏,退出大屏,Exit Big Screen,Quitter le grand écran,大画面を終了,대형 화면 종료,Выйти из полноэкранного режима,Salir de pantalla grande,Großbildschirm beenden,Sair do ecrã grande,Keluar layar besar,الخروج من الشاشة الكبيرة
+monitor.redis.cmd_detail,命令详情,命令詳情,Command Detail,Détail commande,コマンド詳細,명령 상세,Детали команды,Detalle de comando,Befehlsdetails,Detalhe do comando,Detail perintah,تفاصيل الأمر
+monitor.redis.cmd_name,命令,命令,Command,Commande,コマンド,명령,Команда,Comando,Befehl,Comando,Perintah,الأمر
+monitor.redis.cmd_calls,调用次数,調用次數,Calls,Appels,呼び出し回数,호출 횟수,Вызовов,Llamadas,Aufrufe,Chamadas,Panggilan,عدد الاستدعاءات
+monitor.redis.cmd_percent,占比,佔比,Percent,Pourcentage,割合,비율,Доля,Porcentaje,Anteil,Percentagem,Persentase,النسبة المئوية
+monitor.redis.ops,当前 QPS,當前 QPS,Current QPS,QPS actuel,現在の QPS,현재 QPS,Текущий QPS,QPS actual,Aktueller QPS,QPS atual,QPS Saat Ini,QPS الحالي
+monitor.redis.hit_rate,缓存命中率,快取命中率,Hit Rate,Taux de succès,キャッシュヒット率,캐시 적중률,Доля попаданий,Tasa de aciertos,Cache-Trefferquote,Taxa de acertos,Tingkat Hit Cache,معدل الإصابة
+monitor.redis.evicted_keys,驱逐 Key 数,驅逐 Key 數,Evicted Keys,Clés expulsées,追い出しキー数,제거된 키 수,Вытесненных ключей,Claves expulsadas,Verdrängte Keys,Chaves expulsas,Key Terbuang,المفاتيح المُزالة
+monitor.redis.used_mem_peak,内存峰值,記憶體峰值,Peak Memory,Mémoire de pointe,ピークメモリ,메모리 최대치,Пик памяти,Memoria pico,Speicher-Peak,Pico de memória,Memori Puncak,ذروة الذاكرة
+monitor.redis.frag_ratio,内存碎片率,記憶體碎片率,Frag. Ratio,Fragmentation mémoire,メモリ断片化率,메모리 단편화율,Фрагментация памяти,Fragmentación,Fragmentierungsrate,Fragmentação,Rasio Fragmentasi,نسبة التجزؤ
+monitor.redis.rdb_status,RDB 备份状态,RDB 備份狀態,RDB Status,Statut RDB,RDB バックアップ状態,RDB 백업 상태,Статус RDB,Estado RDB,RDB-Status,Estado RDB,Status RDB,حالة RDB
+monitor.diagnosis.ds_trend,活跃趋势,活躍趨勢,Active Trend,Tendance active,アクティブ推移,활성 추이,Динамика активных,Tendencia activa,Aktiv-Trend,Tendência ativa,Tren aktif,اتجاه النشاط
+monitor.diagnosis.jit_compiler,JIT 编译器,JIT 編譯器,JIT Compiler,Compilateur JIT,JITコンパイラ,JIT 컴파일러,JIT-компилятор,Compilador JIT,JIT-Compiler,Compilador JIT,Kompilator JIT,مترجم JIT
+monitor.diagnosis.jit_time,编译总耗时,編譯總耗時,Compile Time,Temps de compilation,コンパイル時間,컴파일 시간,Время компиляции,Tiempo de compilación,Kompilierungszeit,Tempo de compilação,Waktu Kompilasi,وقت التحويل
+designer.ref_field_required,请配置主键字段和显示字段,請配置主鍵字段和顯示字段,Please configure ID field and label field,Veuillez configurer le champ ID et le champ étiquette,主キーフィールドと表示フィールドを設定してください,기본키 필드와 표시 필드를 설정해 주세요,Укажите поле первичного ключа и поле отображения,Configure el campo ID y el campo etiqueta,Bitte ID-Feld und Anzeigefeld konfigurieren,Configure o campo de chave e o campo de exibição,Harap konfigurasikan field kunci dan field label,يرجى تكوين حقل المفتاح وحقل العرض
+designer.field_title_required,标题不能为空,標題不能為空,Title is required,Le titre est requis,タイトルは必須です,제목은 필수입니다,Заголовок обязателен,El título es obligatorio,Titel ist erforderlich,O título é obrigatório,Judul wajib diisi,العنوان مطلوب
+designer.reference.disabled_tip,关联类型请使用注解方式建模,關聯類型請使用注解方式建模,Use annotation-based modeling for reference types,Utilisez la modélisation par annotation pour les types référence,参照型はアノテーション方式でモデリングしてください,참조 유형은 어노테이션 방식으로 모델링하세요,Используйте аннотации для моделирования ссылочных типов,Use el modelado por anotación para tipos de referencia,Verwenden Sie annotationsbasierte Modellierung für Referenztypen,Use modelagem baseada em anotações para tipos de referência,Gunakan pemodelan berbasis anotasi untuk tipe referensi,استخدم نمذجة الشرح للأنواع المرجعية
+tenant.enterprise_id,企业ID,企業ID,Enterprise ID,"ID d'entreprise",企業ID,기업 ID,ID организации,ID de empresa,Unternehmens-ID,ID da empresa,ID Perusahaan,معرّف المؤسسة
+tenant.platform_login,平台登录,平台登入,Platform Login,Connexion plateforme,プラットフォームログイン,플랫폼 로그인,Вход в платформу,Inicio de sesión,Plattform-Anmeldung,Login da plataforma,Login Platform,تسجيل دخول المنصة
+global.clear_cache,清除本地缓存,清除本地快取,Clear Local Cache,Vider le cache local,ローカルキャッシュをクリア,로컬 캐시 지우기,Очистить локальный кэш,Limpiar caché local,Lokalen Cache leeren,Limpar cache local,Hapus Cache Lokal,مسح الذاكرة المحلية
+print.select_template,选择模板,選擇模板,Select Template,Sélectionner un modèle,テンプレートを選択,템플릿 선택,Выбрать шаблон,Seleccionar plantilla,Vorlage auswählen,Selecionar modelo,Pilih Template,اختيار قالب
+print.insert_global_var,插入全局变量,插入全域變數,Insert Global Variable,Insérer une variable globale,グローバル変数を挿入,전역 변수 삽입,Вставить глобальную переменную,Insertar variable global,Globale Variable einfügen,Inserir variável global,Sisipkan Variabel Global,إدراج متغير عام
+print.insert_var,插入变量,插入變數,Insert Variable,Insérer une variable,変数を挿入,변수 삽입,Вставить переменную,Insertar variable,Variable einfügen,Inserir variável,Sisipkan Variabel,إدراج متغير
+print.page_setup,页面设置,頁面設定,Page Setup,Mise en page,ページ設定,페이지 설정,Настройка страницы,Configuración de página,Seiteneinrichtung,Configuração de página,Pengaturan Halaman,إعداد الصفحة
+print.paper_size,纸张大小,紙張大小,Paper Size,Taille du papier,用紙サイズ,용지 크기,Размер бумаги,Tamaño de papel,Papiergröße,Tamanho do papel,Ukuran Kertas,حجم الورق
+print.paper_orientation,纸张方向,紙張方向,Paper Orientation,Orientation du papier,用紙の向き,용지 방향,Ориентация бумаги,Orientación del papel,Papierausrichtung,Orientação do papel,Orientasi Kertas,اتجاه الورق
+print.margin_top,上边距 (mm),上邊距 (mm),Top Margin (mm),Marge supérieure (mm),上余白 (mm),상단 여백 (mm),Верхнее поле (мм),Margen superior (mm),Oberer Rand (mm),Margem superior (mm),Margin Atas (mm),الهامش العلوي (مم)
+print.margin_right,右边距 (mm),右邊距 (mm),Right Margin (mm),Marge droite (mm),右余白 (mm),오른쪽 여백 (mm),Правое поле (мм),Margen derecho (mm),Rechter Rand (mm),Margem direita (mm),Margin Kanan (mm),الهامش الأيمن (مم)
+print.margin_bottom,下边距 (mm),下邊距 (mm),Bottom Margin (mm),Marge inférieure (mm),下余白 (mm),하단 여백 (mm),Нижнее поле (мм),Margen inferior (mm),Unterer Rand (mm),Margem inferior (mm),Margin Bawah (mm),الهامش السفلي (مم)
+print.margin_left,左边距 (mm),左邊距 (mm),Left Margin (mm),Marge gauche (mm),左余白 (mm),왼쪽 여백 (mm),Левое поле (мм),Margen izquierdo (mm),Linker Rand (mm),Margem esquerda (mm),Margin Kiri (mm),الهامش الأيسر (مم)
+print.portrait,纵向,縱向,Portrait,Portrait,縦向き,세로,Книжная,Vertical,Hochformat,Retrato,Potret,طولي
+print.landscape,横向,橫向,Landscape,Paysage,横向き,가로,Альбомная,Horizontal,Querformat,Paisagem,Lanskap,أفقي
+cube.filter.null_value,(空值),(空值),(Empty),(Vide),(空),(비어 있음),(Пусто),(Vacío),(Leer),(Vazio),(Kosong),(فارغ)
+cube.report.compare.mom_period,上月同期,上月同期,Same Period Last Month,Même période mois précédent,先月同期,전월 동기,Тот же период прошлого месяца,Mismo período mes anterior,Gleicher Zeitraum Vormonat,Mesmo período mês anterior,Periode Bulan Lalu,نفس الفترة الشهر الماضي
+cube.report.compare.yoy_period,去年同期,去年同期,Same Period Last Year,Même période année précédente,昨年同期,전년 동기,Тот же период прошлого года,Mismo período año anterior,Gleicher Zeitraum Vorjahr,Mesmo período ano anterior,Periode Tahun Lalu,نفس الفترة العام الماضي
+cube.report.compare.current_period,当期,當期,Current Period,Période actuelle,当期,당기,Текущий период,Período actual,Aktueller Zeitraum,Período atual,Periode Saat Ini,الفترة الحالية
+smart_search.title,当满足以下条件时进入当前分支,當滿足以下條件時進入當前分支,Enter branch when conditions are met,Entrer dans la branche si les conditions sont remplies,条件を満たすとき現在のブランチに進む,조건 충족 시 현재 분기로 이동,Перейти к ветке при выполнении условий,Ingresar a la rama cuando se cumplan las condiciones,Zweig betreten wenn Bedingungen erfüllt sind,Entrar no ramo quando as condições forem atendidas,Masuk cabang saat kondisi terpenuhi,الدخول إلى الفرع عند استيفاء الشروط
+smart_search.or,或,或,Or,Ou,または,또는,Или,O,Oder,Ou,Atau,أو
+smart_search.condition_group,条件组,條件組,Condition Group,Groupe de conditions,条件グループ,조건 그룹,Группа условий,Grupo de condiciones,Bedingungsgruppe,Grupo de condições,Grup Kondisi,مجموعة الشروط
+smart_search.and,且,且,And,Et,かつ,그리고,И,Y,Und,E,Dan,و
+smart_search.select_field,请选择字段,請選擇字段,Select Field,Sélectionner un champ,フィールドを選択,필드 선택,Выбрать поле,Seleccionar campo,Feld auswählen,Selecionar campo,Pilih Bidang,اختر حقلاً
+smart_search.submitter,提交人,提交人,Submitter,Soumissionnaire,提出者,제출자,Отправитель,Remitente,Einreicher,Enviado por,Pengirim,المُقدِّم
+smart_search.min_value,最小值,最小值,Min Value,Valeur min,最小値,최솟값,Мин. значение,Valor mínimo,Mindestwert,Valor mínimo,Nilai Minimum,أدنى قيمة
+smart_search.range_to,至,至,To,À,〜,~,до,A,Bis,A,Hingga,إلى
+smart_search.max_value,最大值,最大值,Max Value,Valeur max,最大値,최댓값,Макс. значение,Valor máximo,Maximalwert,Valor máximo,Nilai Maksimum,أقصى قيمة
+smart_search.input_value,请输入,請輸入,Enter value,Saisir une valeur,値を入力,값 입력,Введите значение,Ingrese un valor,Wert eingeben,Inserir valor,Masukkan Nilai,أدخل قيمة
+smart_search.select_value,请选择,請選擇,Please select,Veuillez sélectionner,選択してください,선택하세요,Выберите,Seleccione,Bitte auswählen,Por favor selecione,Silakan pilih,يرجى الاختيار
+smart_search.add_condition,添加条件,新增條件,Add Condition,Ajouter une condition,条件を追加,조건 추가,Добавить условие,Agregar condición,Bedingung hinzufügen,Adicionar condição,Tambah Kondisi,إضافة شرط
+smart_search.add_group,添加条件组,新增條件組,Add Condition Group,Ajouter un groupe de conditions,条件グループを追加,조건 그룹 추가,Добавить группу условий,Agregar grupo de condiciones,Bedingungsgruppe hinzufügen,Adicionar grupo de condições,Tambah Grup Kondisi,إضافة مجموعة شروط
+smart_search.select_operator,请选择运算符,請選擇運算符,Select Operator,Sélectionner un opérateur,演算子を選択,연산자 선택,Выбрать оператор,Seleccionar operador,Operator auswählen,Selecionar operador,Pilih Operator,اختر عامل
+smart_search.input_value_required,请输入值,請輸入值,Please enter a value,Veuillez saisir une valeur,値を入力してください,값을 입력하세요,Введите значение,Por favor ingrese un valor,Bitte einen Wert eingeben,Por favor insira um valor,Silakan masukkan nilai,يرجى إدخال قيمة
+edit_type.uploading,附件上传中请稍后,附件上傳中請稍後,Uploading attachment please wait,Téléchargement de la pièce jointe en cours,添付ファイルをアップロード中,첨부 파일 업로드 중,Загрузка вложения,Cargando archivo adjunto,Anhang wird hochgeladen,Enviando anexo,Mengunggah lampiran,جارٍ تحميل المرفق
+edit_type.upload_failed,上传失败,上傳失敗,Upload failed,Échec du téléchargement,アップロード失敗,업로드 실패,Ошибка загрузки,Error al subir,Upload fehlgeschlagen,Falha no envio,Gagal diunggah,فشل التحميل
+edit_type.signature,签名,簽名,Signature,Signature,署名,서명,Подпись,Firma,Unterschrift,Assinatura,Tanda Tangan,توقيع
+amap.close_point_select,关闭点选,關閉點選,Disable Point Select,Désactiver la sélection,点選を無効化,점 선택 비활성화,Отключить выбор точки,Desactivar selección,Punktauswahl deaktivieren,Desativar seleção,Nonaktifkan Pemilihan,تعطيل التحديد
+amap.point_select,点击地图选点,點擊地圖選點,Click Map to Select,Cliquer sur la carte,地図をクリックして選択,지도 클릭으로 선택,Клик на карте для выбора,Clic en mapa para seleccionar,Auf Karte klicken,Clique no mapa,Klik Peta untuk Memilih,انقر على الخريطة
+amap.select_valid_address,请选择有效的地址,請選擇有效的地址,Please select a valid address,Sélectionner une adresse valide,有効な住所を選択してください,유효한 주소를 선택하세요,Выберите действительный адрес,Seleccione una dirección válida,Bitte eine gültige Adresse wählen,Selecione um endereço válido,Pilih alamat yang valid,اختر عنوانًا صحيحًا
+amap.select_address_first,请先选择地址,請先選擇地址,Please select an address first,Veuillez sélectionner une adresse,先に住所を選択してください,먼저 주소를 선택하세요,Сначала выберите адрес,Primero seleccione una dirección,Bitte zuerst Adresse wählen,Por favor selecione um endereço,Pilih alamat terlebih dahulu,الرجاء اختيار عنوان أولاً
+amap.location_not_found,找不到该位置信息,找不到該位置資訊,Location not found,Lieu introuvable,位置が見つかりません,위치를 찾을 수 없습니다,Место не найдено,Ubicación no encontrada,Ort nicht gefunden,Localização não encontrada,Lokasi tidak ditemukan,تعذر العثور على الموقع
+amap.info.name,名称：,名稱：,Name:,Nom :,名前：,이름:,Название:,Nombre:,Name:,Nome:,Nama:,الاسم:
+amap.info.address,地址：,地址：,Address:,Adresse :,住所：,주소:,Адрес:,Dirección:,Adresse:,Endereço:,Alamat:,العنوان:
+amap.info.phone,电话：,電話：,Phone:,Téléphone :,電話：,전화:,Телефон:,Teléfono:,Telefon:,Telefone:,Telepon:,الهاتف:
+amap.info.type,类型：,類型：,Type:,Type :,種類：,유형:,Тип:,Tipo:,Typ:,Tipo:,Tipe:,النوع:
+amap.info.lng,经度：,經度：,Lng:,Long. :,経度：,경도:,Долгота:,Longitud:,Länge:,Longitude:,Bujur:,خط الطول:
+amap.info.lat,纬度：,緯度：,Lat:,Lat. :,緯度：,위도:,Широта:,Latitud:,Breite:,Latitude:,Lintang:,خط العرض:
+excel.import_success,导入成功,匯入成功,Import successful,Importation réussie,インポート成功,가져오기 성공,Импорт выполнен,Importación exitosa,Import erfolgreich,Importação bem-sucedida,Impor berhasil,تم الاستيراد بنجاح
+gantt.scroll_to_today,定位到今天,定位到今天,Scroll to Today,"Aller à aujourd'hui",今日に移動,오늘로 이동,Перейти к сегодняшнему дню,Ir a hoy,Zum heutigen Tag,Ir para hoje,Gulir ke Hari Ini,الانتقال إلى اليوم
+bi.auto_refresh_resume,恢复自动刷新,恢復自動刷新,Resume Auto Refresh,Reprendre le rafraîchissement,自動更新を再開,자동 새로고침 재개,Возобновить автообновление,Reanudar actualización,Auto-Aktualisierung fortsetzen,Retomar atualização,Lanjutkan Refresh Otomatis,استئناف التحديث التلقائي
+bi.auto_refresh_pause,暂停自动刷新,暫停自動刷新,Pause Auto Refresh,Mettre en pause le rafraîchissement,自動更新を一時停止,자동 새로고침 일시 정지,Приостановить автообновление,Pausar actualización,Auto-Aktualisierung pausieren,Pausar atualização,Jeda Refresh Otomatis,إيقاف التحديث التلقائي مؤقتًا
+bi.exit_fullscreen,退出全屏,退出全螢幕,Exit Fullscreen,Quitter le plein écran,全画面を終了,전체 화면 종료,Выйти из полноэкранного режима,Salir de pantalla completa,Vollbild beenden,Sair da tela cheia,Keluar Layar Penuh,الخروج من ملء الشاشة
+bi.query_hint,输入查询条件，开启查询操作,輸入查詢條件，開啟查詢操作,Enter conditions to start querying,Saisir des conditions pour interroger,クエリ条件を入力してクエリを開始,조회 조건을 입력하여 조회를 시작하세요,Введите условия для запроса,Ingrese condiciones para iniciar la consulta,Abfragebedingungen eingeben,Insira condições para iniciar a consulta,Masukkan kondisi untuk memulai kueri,أدخل الشروط لبدء الاستعلام
+bi.required,必填,必填,Required,Obligatoire,必須,필수,Обязательно,Obligatorio,Pflichtfeld,Obrigatório,Wajib diisi,مطلوب
+flow.action.submit,提交,提交,Submit,Soumettre,提出,제출,Отправить,Enviar,Einreichen,Enviar,Kirim,إرسال
+flow.action.handle,办理,辦理,Handle,Traiter,対応,처리,Обработать,Gestionar,Verarbeiten,Processar,Proses,معالجة
+flow.action.approve,同意,同意,Approve,Approuver,承認,승인,Одобрить,Aprobar,Genehmigen,Aprovar,Setujui,موافقة
+flow.action.reject,拒绝,拒絕,Reject,Refuser,却下,거절,Отклонить,Rechazar,Ablehnen,Rejeitar,Tolak,رفض
+flow.action.cc,抄送,抄送,CC,Copier,CC,참조,Копировать,Copia,CC,Cópia,CC,نسخ
+flow.action.transfer,转交,轉交,Transfer,Transférer,転送,이관,Передать,Transferir,Übergeben,Transferir,Transfer,نقل
+flow.action.add_sign,加签,加簽,Add Sign,Ajouter signature,署名追加,서명 추가,Добавить подпись,Añadir firma,Unterschrift hinzufügen,Adicionar assinatura,Tambah Tanda Tangan,إضافة توقيع
+flow.action.return,退回,退回,Return,Retourner,差し戻し,반려,Вернуть,Devolver,Zurückgeben,Devolver,Kembalikan,إرجاع
+flow.action.resubmit,重新提交,重新提交,Resubmit,Soumettre à nouveau,再提出,재제출,Повторно отправить,Reenviar,Erneut einreichen,Reenviar,Kirim Ulang,إعادة الإرسال
+flow.action.withdraw,撤回,撤回,Withdraw,Retirer,取り消し,철회,Отозвать,Retirar,Zurückziehen,Retirar,Tarik,سحب
+flow.action.urge,催办,催辦,Urge,Relancer,督促,독촉,Напомнить,Urgir,Erinnern,Lembrar,Ingatkan,استعجال
+flow.action.cancel,撤销,撤銷,Cancel,Annuler,キャンセル,취소,Отменить,Cancelar,Abbrechen,Cancelar,Batal,إلغاء
+flow.action.view_flow,查看流程,查看流程,View Process,Voir le processus,プロセスを見る,프로세스 보기,Просмотр процесса,Ver proceso,Prozess anzeigen,Ver processo,Lihat Proses,عرض العملية
+flow.action.change_detail,变更详情,變更詳情,Change Details,Détails de modification,変更詳細,변경 상세,Детали изменений,Detalles del cambio,Änderungsdetails,Detalhes da alteração,Detail Perubahan,تفاصيل التغيير
+flow.success.handle,办理成功,辦理成功,Handled successfully,Traité avec succès,対応完了,처리 성공,Обработано успешно,Gestionado con éxito,Erfolgreich verarbeitet,Processado com sucesso,Berhasil diproses,تمت المعالجة بنجاح
+flow.success.approve,审批成功,審批成功,Approved successfully,Approuvé avec succès,承認完了,승인 성공,Успешно одобрено,Aprobado con éxito,Erfolgreich genehmigt,Aprovado com sucesso,Berhasil disetujui,تمت الموافقة بنجاح
+flow.success.reject,拒绝成功,拒絕成功,Rejected successfully,Refusé avec succès,却下完了,거절 성공,Успешно отклонено,Rechazado con éxito,Erfolgreich abgelehnt,Rejeitado com sucesso,Berhasil ditolak,تم الرفض بنجاح
+flow.success.cc,抄送成功,抄送成功,CC sent successfully,Copié avec succès,CC送信完了,참조 성공,Скопировано успешно,Copia enviada con éxito,CC erfolgreich gesendet,Cópia enviada com sucesso,CC berhasil dikirim,تم الإرسال بنجاح
+flow.success.transfer,转交成功,轉交成功,Transferred successfully,Transféré avec succès,転送完了,이관 성공,Успешно передано,Transferido con éxito,Erfolgreich übergeben,Transferido com sucesso,Berhasil ditransfer,تم النقل بنجاح
+flow.success.add_sign,加签成功,加簽成功,Sign added successfully,Signature ajoutée avec succès,署名追加完了,서명 추가 성공,Подпись успешно добавлена,Firma añadida con éxito,Unterschrift erfolgreich hinzugefügt,Assinatura adicionada com sucesso,Tanda tangan berhasil ditambahkan,تمت إضافة التوقيع بنجاح
+flow.success.return,退回成功,退回成功,Returned successfully,Retourné avec succès,差し戻し完了,반려 성공,Успешно возвращено,Devuelto con éxito,Erfolgreich zurückgegeben,Devolvido com sucesso,Berhasil dikembalikan,تم الإرجاع بنجاح
+flow.success.resubmit,重新提交成功,重新提交成功,Resubmitted successfully,Soumis à nouveau avec succès,再提出完了,재제출 성공,Повторно отправлено успешно,Reenviado con éxito,Erneut erfolgreich eingereicht,Reenviado com sucesso,Berhasil dikirim ulang,تمت إعادة الإرسال بنجاح
+flow.success.withdraw,撤回成功,撤回成功,Withdrawn successfully,Retiré avec succès,取り消し完了,철회 성공,Успешно отозвано,Retirado con éxito,Erfolgreich zurückgezogen,Retirado com sucesso,Berhasil ditarik,تم السحب بنجاح
+flow.success.urge,催办成功,催辦成功,Urged successfully,Relancé avec succès,督促完了,독촉 성공,Напоминание отправлено,Urgido con éxito,Erfolgreich erinnert,Lembrado com sucesso,Berhasil diingatkan,تم الاستعجال بنجاح
+flow.success.cancel,撤销成功,撤銷成功,Cancelled successfully,Annulé avec succès,キャンセル完了,취소 성공,Успешно отменено,Cancelado con éxito,Erfolgreich abgebrochen,Cancelado com sucesso,Berhasil dibatalkan,تم الإلغاء بنجاح
+flow.success.start_approval,发起成功,發起成功,Started successfully,Lancé avec succès,発起完了,발기 성공,Успешно запущено,Iniciado con éxito,Erfolgreich gestartet,Iniciado com sucesso,Berhasil dimulai,تم البدء بنجاح
+flow.warning.flow_name_required,请输入流程名称,請輸入流程名稱,Please enter the process name,Veuillez saisir le nom du processus,フロー名を入力してください,플로우 이름을 입력하세요,Пожалуйста введите имя процесса,Por favor ingrese el nombre del proceso,Bitte Prozessname eingeben,Por favor insira o nome do processo,Harap masukkan nama proses,الرجاء إدخال اسم العملية
+flow.warning.select_approver_prefix,请选择节点【,請選擇節點【,Please select approver for node 【,Veuillez sélectionner l'approbateur pour le nœud 【,ノード【の承認者を選択してください,노드【의 승인자를 선택하세요,Пожалуйста выберите утверждающего для узла 【,Por favor seleccione el aprobador para el nodo 【,Bitte Genehmiger für Knoten 【 wählen,Por favor selecione o aprovador para o nó 【,Pilih persetuju untuk node 【,الرجاء اختيار المعتمد للعقدة 【
+flow.warning.select_approver_suffix,】的审批用户,】的審批用戶,】 approver,】 approbateur,】の承認ユーザー,】의 승인 사용자,】 утверждающего пользователя,】 usuario aprobador,】 Genehmiger,】 usuário aprovador,】 pengguna persetuju,】 مستخدم المعتمد
+flow.modal.signature,签名,簽名,Signature,Signature,署名,서명,Подпись,Firma,Unterschrift,Assinatura,Tanda Tangan,توقيع
+flow.modal.approve_title,同意审批,同意審批,Approve,Approuver,承認,승인,Одобрить,Aprobar,Genehmigen,Aprovar,Setujui,موافقة
+flow.modal.reject_title,拒绝审批,拒絕審批,Reject,Refuser,却下,거절,Отклонить,Rechazar,Ablehnen,Rejeitar,Tolak,رفض
+flow.modal.cc_title,抄送,抄送,CC,Copier,CC,참조,Копировать,Copia,CC,Cópia,CC,نسخ
+flow.modal.transfer_title,转交,轉交,Transfer,Transférer,転送,이관,Передать,Transferir,Übergeben,Transferir,Transfer,نقل
+flow.modal.add_sign_title,加签,加簽,Add Sign,Ajouter signature,署名追加,서명 추가,Добавить подпись,Añadir firma,Unterschrift hinzufügen,Adicionar assinatura,Tambah Tanda Tangan,إضافة توقيع
+flow.modal.return_title,退回,退回,Return,Retourner,差し戻し,반려,Вернуть,Devolver,Zurückgeben,Devolver,Kembalikan,إرجاع
+flow.modal.resubmit_title,重新提交,重新提交,Resubmit,Soumettre à nouveau,再提出,재제출,Повторно отправить,Reenviar,Erneut einreichen,Reenviar,Kirim Ulang,إعادة الإرسال
+flow.modal.handle_title,办理,辦理,Handle,Traiter,対応,처리,Обработать,Gestionar,Verarbeiten,Processar,Proses,معالجة
+flow.modal.confirm_delete,确认删除,確認刪除,Confirm Delete,Confirmer la suppression,削除確認,삭제 확인,Подтвердить удаление,Confirmar eliminación,Löschen bestätigen,Confirmar exclusão,Konfirmasi Hapus,تأكيد الحذف
+flow.modal.confirm_exit,是否放弃当前编辑？,是否放棄當前編輯？,Discard current edits?,Abandonner les modifications ?,変更を破棄しますか？,현재 편집을 포기하시겠습니까?,Отменить текущие правки?,¿Descartar cambios actuales?,Aktuelle Änderungen verwerfen?,Descartar edições atuais?,Buang perubahan saat ini?,هل تريد تجاهل التعديلات الحالية؟
+flow.modal.print_config_title,配置打印模板,配置打印模板,Configure Print Template,Configurer le modèle d'impression,印刷テンプレート設定,인쇄 템플릿 설정,Настройка шаблона печати,Configurar plantilla de impresión,Druckvorlage konfigurieren,Configurar modelo de impressão,Atur Template Cetak,تهيئة قالب الطباعة
+flow.modal.prompt_title,提示,提示,Notice,Avis,注意,알림,Уведомление,Aviso,Hinweis,Aviso,Pemberitahuan,إشعار
+flow.placeholder.approve_opinion,请填写审批意见,請填寫審批意見,Please fill in approval comments,Veuillez saisir les commentaires,審批意見を入力してください,승인 의견을 입력하세요,Пожалуйста введите комментарий,Por favor ingrese comentarios de aprobación,Bitte Genehmigungskommentar eingeben,Por favor insira comentários de aprovação,Harap isi komentar persetujuan,الرجاء ملء تعليقات الموافقة
+flow.placeholder.reject_reason,请填写拒绝原因,請填寫拒絕原因,Please fill in rejection reason,Veuillez saisir la raison du refus,拒否理由を入力してください,거절 사유를 입력하세요,Пожалуйста введите причину отказа,Por favor ingrese la razón del rechazo,Bitte Ablehnungsgrund eingeben,Por favor insira o motivo da rejeição,Harap isi alasan penolakan,الرجاء ملء سبب الرفض
+flow.placeholder.return_reason,请填写退回原因,請填寫退回原因,Please fill in return reason,Veuillez saisir la raison du retour,差し戻し理由を入力してください,반려 사유를 입력하세요,Пожалуйста введите причину возврата,Por favor ingrese la razón de devolución,Bitte Rückgabegrund eingeben,Por favor insira o motivo de devolução,Harap isi alasan pengembalian,الرجاء ملء سبب الإرجاع
+flow.placeholder.group_name,请输入分组名称,請輸入分組名稱,Please enter group name,Veuillez saisir le nom du groupe,グループ名を入力してください,그룹 이름을 입력하세요,Пожалуйста введите имя группы,Por favor ingrese el nombre del grupo,Bitte Gruppenname eingeben,Por favor insira o nome do grupo,Harap masukkan nama grup,الرجاء إدخال اسم المجموعة
+flow.placeholder.search_flow,搜索流程...,搜索流程...,Search process...,Rechercher un processus...,フローを検索...,프로세스 검색...,Поиск процесса...,Buscar proceso...,Prozess suchen...,Pesquisar processo...,Cari proses...,البحث عن عملية...
+flow.tab.approval_info,审批信息,審批資訊,Approval Info,Informations d'approbation,承認情報,승인 정보,Информация об одобрении,Información de aprobación,Genehmigungsinfo,Informações de aprovação,Info Persetujuan,معلومات الموافقة
+flow.tab.flow_diagram,流程图,流程圖,Flow Diagram,Diagramme de flux,フロー図,흐름도,Схема процесса,Diagrama de flujo,Flussdiagramm,Diagrama de fluxo,Diagram Alur,مخطط العملية
+flow.tab.change_log,变更日志,變更日誌,Change Log,Journal des modifications,変更ログ,변경 로그,Журнал изменений,Registro de cambios,Änderungsprotokoll,Registro de alterações,Log Perubahan,سجل التغييرات
+flow.tab.extra,附加信息,附加資訊,Extra Info,Informations supplémentaires,追加情報,추가 정보,Дополнительная информация,Información adicional,Zusatzinformationen,Informações adicionais,Info Tambahan,معلومات إضافية
+flow.table.node,流程节点,流程節點,Process Node,Nœud de processus,プロセスノード,프로세스 노드,Узел процесса,Nodo de proceso,Prozessknoten,Nó de processo,Node Proses,عقدة العملية
+flow.table.task,审批任务,審批任務,Approval Task,Tâche d'approbation,承認タスク,승인 작업,Задача одобрения,Tarea de aprobación,Genehmigungsaufgabe,Tarefa de aprovação,Tugas Persetujuan,مهمة الموافقة
+flow.table.approver,审批人,審批人,Approver,Approbateur,承認者,승인자,Утверждающий,Aprobador,Genehmiger,Aprovador,Persetuju,المعتمد
+flow.table.result,审批结果,審批結果,Result,Résultat,結果,결과,Результат,Resultado,Ergebnis,Resultado,Hasil,النتيجة
+flow.table.opinion,审批意见,審批意見,Comment,Commentaire,コメント,의견,Комментарий,Comentario,Kommentar,Comentário,Komentar,تعليق
+flow.table.time,审批时间,審批時間,Time,Temps,時間,시간,Время,Tiempo,Zeit,Tempo,Waktu,الوقت
+flow.table.task_status,任务状态,任務狀態,Task Status,Statut de la tâche,タスク状態,작업 상태,Статус задачи,Estado de tarea,Aufgabenstatus,Status da tarefa,Status Tugas,حالة المهمة
+flow.instance.applicant,申请人,申請人,Applicant,Demandeur,申請者,신청인,Заявитель,Solicitante,Antragsteller,Solicitante,Pemohon,مقدم الطلب
+flow.instance.apply_date,申请日期,申請日期,Apply Date,Date de demande,申請日,신청일,Дата подачи,Fecha de solicitud,Antragsdatum,Data de solicitação,Tanggal Pengajuan,تاريخ الطلب
+flow.instance.flow_no,流程编号,流程編號,Process No.,N° de processus,プロセス番号,프로세스 번호,Номер процесса,N° de proceso,Prozessnummer,N° de processo,No. Proses,رقم العملية
+flow.instance.status,审批状态,審批狀態,Approval Status,Statut d'approbation,承認状態,승인 상태,Статус одобрения,Estado de aprobación,Genehmigungsstatus,Status de aprovação,Status Persetujuan,حالة الموافقة
+flow.instance.records,审批记录,審批記錄,Approval Records,Enregistrements d'approbation,承認記録,승인 기록,Записи об одобрении,Registros de aprobación,Genehmigungseinträge,Registros de aprovação,Catatan Persetujuan,سجلات الموافقة
+flow.add_sign.before,前加签,前加簽,Pre-sign,Pré-signature,前署名,전 서명,До подписи,Pre-firma,Vor-Unterschrift,Pré-assinatura,Tanda Tangan Sebelum,التوقيع المسبق
+flow.add_sign.after,后加签,後加簽,Post-sign,Post-signature,後署名,후 서명,После подписи,Post-firma,Nach-Unterschrift,Pós-assinatura,Tanda Tangan Setelah,التوقيع اللاحق
+flow.add_sign.sequential,顺序,順序,Sequential,Séquentiel,順次,순차,Последовательно,Secuencial,Sequenziell,Sequencial,Berurutan,تسلسلي
+flow.empty.no_records,暂无审批记录,暫無審批記錄,No approval records,Aucun enregistrement,承認記録がありません,승인 기록 없음,Нет записей об одобрении,Sin registros de aprobación,Keine Genehmigungseinträge,Sem registros de aprovação,Tidak ada catatan persetujuan,لا توجد سجلات موافقة
+flow.print.by,打印人：,打印人：,Printed by:,Imprimé par :,印刷者：,인쇄자:,Распечатал:,Impreso por:,Gedruckt von:,Impresso por:,Dicetak oleh:,طبع بواسطة:
+flow.print.time,打印时间：,打印時間：,Print time:,Heure d'impression :,印刷時間：,인쇄 시간:,Время печати:,Hora de impresión:,Druckzeit:,Hora de impressão:,Waktu cetak:,وقت الطباعة:
+flow.management.category,流程分类,流程分類,Process Category,Catégorie de processus,プロセスカテゴリ,프로세스 분류,Категория процесса,Categoría de proceso,Prozesskategorie,Categoria de processo,Kategori Proses,فئة العملية
+flow.management.new_group,新建分组,新建分組,New Group,Nouveau groupe,新しいグループ,새 그룹,Новая группа,Nuevo grupo,Neue Gruppe,Novo grupo,Grup Baru,مجموعة جديدة
+flow.management.count,共,共,Total,Total,合計,총,Всего,Total,Gesamt,Total,Total,المجموع
+flow.management.count_unit,个,個,items,éléments,件,개,элементов,elementos,Elemente,itens,item,عناصر
+flow.management.enable,启用,啟用,Enable,Activer,有効,활성화,Включить,Activar,Aktivieren,Ativar,Aktifkan,تفعيل
+flow.management.disable,停用,停用,Disable,Désactiver,無効,비활성화,Отключить,Desactivar,Deaktivieren,Desativar,Nonaktifkan,تعطيل
+flow.management.create,创建流程,創建流程,Create Process,Créer un processus,プロセスを作成,프로세스 생성,Создать процесс,Crear proceso,Prozess erstellen,Criar processo,Buat Proses,إنشاء عملية
+flow.management.disabled,已停用,已停用,Disabled,Désactivé,無効,비활성화됨,Отключено,Desactivado,Deaktiviert,Desativado,Dinonaktifkan,معطل
+flow.dashboard.others,其他,其他,Others,Autres,その他,기타,Другие,Otros,Andere,Outros,Lainnya,أخرى
+flow.config.step.basic,基础信息,基礎資訊,Basic Info,Informations de base,基本情報,기본 정보,Основная информация,Información básica,Basisinformationen,Informações básicas,Info Dasar,المعلومات الأساسية
+flow.config.step.form_preview,表单预览,表單預覽,Form Preview,Aperçu du formulaire,フォームプレビュー,폼 미리보기,Предварительный просмотр формы,Vista previa del formulario,Formularvorschau,Pré-visualização de formulário,Pratinjau Formulir,معاينة النموذج
+flow.config.step.design,流程设计,流程設計,Process Design,Conception du processus,プロセスデザイン,프로세스 설계,Дизайн процесса,Diseño de proceso,Prozessdesign,Design de processo,Desain Proses,تصميم العملية
+flow.config.step.settings,更多设置,更多設置,More Settings,Paramètres supplémentaires,詳細設定,추가 설정,Дополнительные настройки,Más configuraciones,Weitere Einstellungen,Mais configurações,Pengaturan Lainnya,المزيد من الإعدادات
+flow.config.label.icon,图标,圖示,Icon,Icône,アイコン,아이콘,Иконка,Icono,Symbol,Ícone,Ikon,أيقونة
+flow.config.label.name,名称,名稱,Name,Nom,名前,이름,Название,Nombre,Name,Nome,Nama,الاسم
+flow.config.label.group,分组,分組,Group,Groupe,グループ,그룹,Группа,Grupo,Gruppe,Grupo,Grup,المجموعة
+flow.config.label.data_model,数据模型,數據模型,Data Model,Modèle de données,データモデル,데이터 모델,Модель данных,Modelo de datos,Datenmodell,Modelo de dados,Model Data,نموذج البيانات
+flow.config.label.notify_channel,通知渠道,通知渠道,Notify Channel,Canal de notification,通知チャンネル,알림 채널,Канал уведомлений,Canal de notificación,Benachrichtigungskanal,Canal de notificação,Saluran Notifikasi,قناة الإشعارات
+flow.config.label.description,说明,說明,Description,Description,説明,설명,Описание,Descripción,Beschreibung,Descrição,Deskripsi,الوصف
+flow.config.label.who_can_submit,谁可以提交该审批,誰可以提交該審批,Who can submit this approval,Qui peut soumettre cette approbation,誰がこの承認を提出できますか,이 승인을 제출할 수 있는 사람,Кто может подать эту заявку,Quién puede enviar esta aprobación,Wer kann diese Genehmigung einreichen,Quem pode enviar esta aprovação,Siapa yang bisa mengajukan persetujuan ini,من يمكنه تقديم هذه الموافقة
+flow.permission.everyone,全员,全員,Everyone,Tout le monde,全員,전체,Все,Todos,Alle,Todos,Semua,الجميع
+flow.permission.org_manager,组织负责人,組織負責人,Org Manager,Responsable de l'organisation,組織責任者,조직 책임자,Руководитель организации,Responsable de organización,Organisationsleiter,Responsável da organização,Pengelola Organisasi,مدير المنظمة
+flow.permission.specific_person,指定人员,指定人員,Specific Person,Personne spécifique,指定者,지정된 사람,Конкретный человек,Persona específica,Bestimmte Person,Pessoa específica,Orang Tertentu,شخص محدد
+flow.permission.no_one,均不可提交,均不可提交,No one can submit,Personne ne peut soumettre,誰も提出できません,아무도 제출할 수 없음,Никто не может отправить,Nadie puede enviar,Niemand kann einreichen,Ninguém pode enviar,Tidak ada yang bisa mengirim,لا أحد يمكنه التقديم
+flow.print_setting.disabled,关闭,關閉,Disabled,Désactivé,無効,비활성화,Отключено,Desactivado,Deaktiviert,Desativado,Dinonaktifkan,معطل
+flow.print_setting.default,系统默认模板,系統預設模板,System Default Template,Modèle par défaut,システムデフォルトテンプレート,시스템 기본 템플릿,Системный шаблон по умолчанию,Plantilla predeterminada del sistema,Systemstandardvorlage,Modelo padrão do sistema,Template Default Sistem,القالب الافتراضي للنظام
+flow.print_setting.custom,自定义配置,自訂配置,Custom Config,Configuration personnalisée,カスタム設定,사용자 정의 설정,Пользовательская конфигурация,Configuración personalizada,Benutzerdefinierte Konfiguration,Configuração personalizada,Konfigurasi Kustom,إعداد مخصص
+flow.approval.type.sequential,顺序审批,順序審批,Sequential Approval,Approbation séquentielle,順次承認,순차 승인,Последовательное одобрение,Aprobación secuencial,Sequenzielle Genehmigung,Aprovação sequencial,Persetujuan Berurutan,موافقة متسلسلة
+flow.approval.type.any,任意人审批,任意人審批,Any Approver,N'importe quel approbateur,誰でも承認,임의 승인자,Любой утверждающий,Cualquier aprobador,Beliebiger Genehmiger,Qualquer aprovador,Persetuju Mana Saja,أي معتمد
+flow.approval.type.percent,按比例审批,按比例審批,Percentage Approval,Approbation par pourcentage,割合で承認,비율 승인,Пропорциональное одобрение,Aprobación por porcentaje,Prozentuale Genehmigung,Aprovação por percentagem,Persetujuan Persentase,موافقة بالنسبة
+flow.approval.self,由提交人自己审批,由提交人自己審批,Approved by submitter,Approuvé par le demandeur,提出者自身が承認,제출자가 직접 승인,Одобрено самим заявителем,Aprobado por el solicitante,Durch Antragsteller genehmigt,Aprovado pelo próprio solicitante,Disetujui oleh pengaju sendiri,الموافقة من قبل مقدم الطلب
+flow.approval.skip,跳过,跳過,Skip,Ignorer,スキップ,건너뛰기,Пропустить,Omitir,Überspringen,Pular,Lewati,تخطي
+flow.approval.to_admin,转交给管理员,轉交給管理員,Transfer to Admin,Transférer à l'admin,管理者に転送,관리자에게 이관,Передать администратору,Transferir al administrador,An Admin übergeben,Transferir para admin,Transfer ke Admin,نقل إلى المشرف
+flow.approval.allow_transfer,允许转交,允許轉交,Allow Transfer,Autoriser le transfert,転送を許可,이관 허용,Разрешить передачу,Permitir transferencia,Übergabe erlauben,Permitir transferência,Izinkan Transfer,السماح بالنقل
+flow.approval.allow_add_sign,允许加签,允許加簽,Allow Add Sign,Autoriser l'ajout de signature,署名追加を許可,서명 추가 허용,Разрешить добавление подписи,Permitir añadir firma,Unterschrift hinzufügen erlauben,Permitir adicionar assinatura,Izinkan Tambah Tanda Tangan,السماح بإضافة توقيع
+flow.approval.allow_cc,允许抄送,允許抄送,Allow CC,Autoriser la copie,CCを許可,참조 허용,Разрешить копирование,Permitir copia,CC erlauben,Permitir cópia,Izinkan CC,السماح بالنسخ
+flow.approval.allow_return,允许退回,允許退回,Allow Return,Autoriser le retour,差し戻しを許可,반려 허용,Разрешить возврат,Permitir devolución,Rückgabe erlauben,Permitir devolução,Izinkan Pengembalian,السماح بالإرجاع
+flow.approval.need_signature,审批同意时需手写签名,審批同意時需手寫簽名,Require handwritten signature on approval,Signature manuscrite requise,承認時に手書き署名が必要,승인 시 수기 서명 필요,Требуется рукописная подпись при одобрении,Firma manuscrita requerida al aprobar,Handschriftliche Unterschrift bei Genehmigung,Assinatura manuscrita necessária na aprovação,Tanda tangan tulis tangan diperlukan saat persetujuan,مطلوب التوقيع اليدوي عند الموافقة
+flow.approval.need_opinion,提交审批需填写审批意见,提交審批需填寫審批意見,Comment required when submitting approval,Commentaire requis lors de la soumission,提出時にコメント必須,승인 제출 시 의견 필수,Комментарий обязателен при подаче,Comentario requerido al enviar,Kommentar bei Einreichung erforderlich,Comentário obrigatório ao enviar,Komentar wajib saat mengajukan,التعليق مطلوب عند تقديم الموافقة
+flow.upms.count_prefix,共,共,Total,Total,合計,총,Всего,Total,Gesamt,Total,Total,المجموع
+flow.upms.count_unit,个,個,items,éléments,件,개,элементов,elementos,Elemente,itens,item,عناصر
+flow.upms.no_match_prefix,未找到匹配的,未找到匹配的,No matching,Aucun correspondant,一致する,일치하는,Нет совпадений,Sin coincidencias,Keine übereinstimmenden,Sem correspondência,Tidak ada yang cocok,لا يوجد تطابق
+flow.upms.no_selected,暂无已选项目,暫無已選項目,No selected items,Aucun élément sélectionné,選択済みアイテムなし,선택된 항목 없음,Нет выбранных элементов,Sin elementos seleccionados,Keine ausgewählten Elemente,Sem itens selecionados,Tidak ada item yang dipilih,لا توجد عناصر محددة
+flow.upms.select_hint,请在左侧选择需要分配的项目,請在左側選擇需要分配的項目,Please select items to assign on the left,Veuillez sélectionner les éléments à gauche,左側から項目を選択してください,왼쪽에서 항목을 선택하세요,Пожалуйста выберите элементы слева,Por favor seleccione los elementos a la izquierda,Bitte links Elemente auswählen,Por favor selecione itens à esquerda,Pilih item yang akan ditetapkan di sebelah kiri,الرجاء تحديد العناصر على اليسار
+flow.upms.click_to_toggle,点击选择或取消选择,點擊選擇或取消選擇,Click to select or deselect,Cliquer pour sélectionner ou désélectionner,クリックして選択または解除,클릭하여 선택 또는 해제,Нажмите для выбора или отмены,Clic para seleccionar o deseleccionar,Klicken zum Auswählen oder Abwählen,Clique para selecionar ou desmarcar,Klik untuk memilih atau membatalkan pilihan,انقر للتحديد أو الإلغاء
+flow.upms.selected_count_prefix,已选,已選,Selected,Sélectionné,選択済み,선택됨,Выбрано,Seleccionado,Ausgewählt,Selecionado,Dipilih,المحدد
+flow.upms.selected_count_suffix,项,項,items,éléments,件,개,элементов,elementos,Elemente,itens,item,عناصر
+flow.upms.clear_all,清空全部,清空全部,Clear All,Tout effacer,すべてクリア,모두 지우기,Очистить всё,Borrar todo,Alle löschen,Limpar tudo,Hapus Semua,مسح الكل
+flow.upms.no_selected_prefix,暂无已选,暫無已選,No selected,Aucun sélectionné,選択なし,선택 없음,Нет выбранных,Sin selección,Keine Auswahl,Sem seleção,Tidak ada yang dipilih,لا يوجد محدد
+flow.upms.clear_prefix,清空,清空,Clear,Effacer,クリア,지우기,Очистить,Borrar,Löschen,Limpar,Hapus,مسح
+flow.upms.search_prefix,搜索,搜索,Search,Rechercher,検索,검색,Поиск,Buscar,Suchen,Pesquisar,Cari,بحث
+flow.upms.search_suffix,名称...,名稱...,name...,nom...,名前...,이름...,название...,nombre...,Name...,nome...,nama...,الاسم...
+flow.node.approver_label,审批人,審批人,Approver,Approbateur,承認者,승인자,Утверждающий,Aprobador,Genehmiger,Aprovador,Persetuju,المعتمد
+flow.node.assignee_label,办理人,辦理人,Assignee,Assigné,担当者,담당자,Исполнитель,Asignado,Beauftragter,Responsável,Penerima Tugas,المكلف
+flow.node.cc_label,抄送人,抄送人,CC Recipient,Destinataire CC,CC受信者,참조 수신자,Получатель копии,Destinatario CC,CC-Empfänger,Destinatário CC,Penerima CC,مستلم النسخة
+flow.node.start_label,发起人,發起人,Initiator,Initiateur,発起人,발기인,Инициатор,Iniciador,Initiator,Iniciador,Pemrakarsa,المبادر
+flow.node.sub_label,子流程,子流程,Sub Process,Sous-processus,サブプロセス,하위 프로세스,Подпроцесс,Subproceso,Teilprozess,Sub-processo,Sub Proses,العملية الفرعية
+flow.node.flex_label,自由节点,自由節點,Free Node,Nœud libre,自由ノード,자유 노드,Свободный узел,Nodo libre,Freier Knoten,Nó livre,Node Bebas,عقدة حرة
+flow.node.add_approver,添加审批人,添加審批人,Add Approver,Ajouter un approbateur,承認者を追加,승인자 추가,Добавить утверждающего,Añadir aprobador,Genehmiger hinzufügen,Adicionar aprovador,Tambah Persetuju,إضافة معتمد
+flow.node.delete_approver,删除审批人,刪除審批人,Delete Approver,Supprimer l'approbateur,承認者を削除,승인자 삭제,Удалить утверждающего,Eliminar aprobador,Genehmiger löschen,Excluir aprovador,Hapus Persetuju,حذف المعتمد
+flow.node.hours_then,小时后,小時後,hours later,heures plus tard,時間後,시간 후,через часов,horas después,Stunden später,horas depois,jam kemudian,ساعات لاحقاً
+flow.node.set_approver,设置审核人,設置審核人,Set Approver,Définir l'approbateur,承認者を設定,승인자 설정,Установить утверждающего,Establecer aprobador,Genehmiger festlegen,Definir aprovador,Tetapkan Persetuju,تعيين المعتمد
+flow.node.auto_approve,自动审核通过,自動審核通過,Auto Approve,Approbation automatique,自動承認,자동 승인,Автоматическое одобрение,Aprobación automática,Automatische Genehmigung,Aprovação automática,Persetujuan Otomatis,موافقة تلقائية
+flow.node.auto_reject,自动驳回,自動駁回,Auto Reject,Rejet automatique,自動却下,자동 거절,Автоматический отказ,Rechazo automático,Automatische Ablehnung,Rejeição automática,Penolakan Otomatis,رفض تلقائي
+flow.node.timeout_action,超时操作,超時操作,Timeout Action,Action de délai,タイムアウト操作,시간 초과 작업,Действие по таймауту,Acción de tiempo de espera,Timeout-Aktion,Ação de tempo limite,Tindakan Timeout,إجراء انتهاء المهلة
+flow.gateway.exclusive,互斥分支,互斥分支,Exclusive Branch,Branche exclusive,排他分岐,배타적 분기,Эксклюзивная ветвь,Rama exclusiva,Exklusive Verzweigung,Ramo exclusivo,Cabang Eksklusif,فرع حصري
+flow.gateway.parallel,并行分支,並行分支,Parallel Branch,Branche parallèle,並列分岐,병렬 분기,Параллельная ветвь,Rama paralela,Parallele Verzweigung,Ramo paralelo,Cabang Paralel,فرع موازي
+flow.gateway.inclusive,包容分支,包容分支,Inclusive Branch,Branche inclusive,包括分岐,포함적 분기,Инклюзивная ветвь,Rama inclusiva,Inklusive Verzweigung,Ramo inclusivo,Cabang Inklusif,فرع شامل
+flow.gateway.default_cond,默认条件,預設條件,Default Condition,Condition par défaut,デフォルト条件,기본 조건,Условие по умолчанию,Condición predeterminada,Standardbedingung,Condição padrão,Kondisi Default,الشرط الافتراضي
+flow.gateway.default_cond_inclusive,默认条件（包容）,預設條件（包容）,"Default Condition (Inclusive)","Condition par défaut (Inclusive)",デフォルト条件（包括）,기본 조건（포함）,Условие по умолчанию（Включающее）,Condición predeterminada (Inclusiva),Standardbedingung (Inklusive),Condição padrão (Inclusiva),Kondisi Default (Inklusif),الشرط الافتراضي (الشامل)
+flow.gateway.exclusive_cond_prefix,互斥条件,互斥條件,Exclusive Condition,Condition exclusive,排他条件,배타 조건,Эксклюзивное условие,Condición exclusiva,Exklusive Bedingung,Condição exclusiva,Kondisi Eksklusif,شرط حصري
+flow.gateway.parallel_path_prefix,并行路径,並行路徑,Parallel Path,Chemin parallèle,並列パス,병렬 경로,Параллельный путь,Ruta paralela,Paralleler Pfad,Caminho paralelo,Jalur Paralel,مسار موازي
+flow.gateway.inclusive_cond_prefix,包容条件,包容條件,Inclusive Condition,Condition inclusive,包括条件,포함 조건,Инклюзивное условие,Condición inclusiva,Inklusive Bedingung,Condição inclusiva,Kondisi Inklusif,شرط شامل
+flow.gateway.priority_prefix,优先级,優先級,Priority,Priorité,優先度,우선순위,Приоритет,Prioridad,Priorität,Prioridade,Prioritas,الأولوية
+flow.gateway.parallel_exec,并行执行,並行執行,Parallel Execution,Exécution parallèle,並列実行,병렬 실행,Параллельное выполнение,Ejecución paralela,Parallele Ausführung,Execução paralela,Eksekusi Paralel,تنفيذ متوازٍ
+flow.gateway.inclusive_exec,包容执行,包容執行,Inclusive Execution,Exécution inclusive,包括実行,포함 실행,Инклюзивное выполнение,Ejecución inclusiva,Inklusive Ausführung,Execução inclusiva,Eksekusi Inklusif,تنفيذ شامل
+flow.gateway.exclusive_branch,互斥流程分支,互斥流程分支,Exclusive Process Branch,Branche de processus exclusive,排他プロセス分岐,배타적 프로세스 분기,Эксклюзивная ветвь процесса,Rama de proceso exclusiva,Exklusive Prozessverzweigung,Ramo de processo exclusivo,Cabang Proses Eksklusif,فرع عملية حصري
+flow.gateway.parallel_branch,并行流程分支,並行流程分支,Parallel Process Branch,Branche de processus parallèle,並列プロセス分岐,병렬 프로세스 분기,Параллельная ветвь процесса,Rama de proceso paralela,Parallele Prozessverzweigung,Ramo de processo paralelo,Cabang Proses Paralel,فرع عملية موازٍ
+flow.gateway.inclusive_branch,包容流程分支,包容流程分支,Inclusive Process Branch,Branche de processus inclusive,包括プロセス分岐,포함 프로세스 분기,Инклюзивная ветвь процесса,Rama de proceso inclusiva,Inklusive Prozessverzweigung,Ramo de processo inclusivo,Cabang Proses Inklusif,فرع عملية شامل
+flow.icon.select_color,选择颜色,選擇顏色,Select Color,Choisir une couleur,色を選択,색상 선택,Выбор цвета,Seleccionar color,Farbe auswählen,Selecionar cor,Pilih Warna,اختيار اللون
+flow.icon.select_icon,选择图标,選擇圖示,Select Icon,Choisir une icône,アイコンを選択,아이콘 선택,Выбор иконки,Seleccionar icono,Symbol auswählen,Selecionar ícone,Pilih Ikon,اختيار الأيقونة
+flow.icon.confirm_select,确认选择,確認選擇,Confirm Selection,Confirmer la sélection,選択を確認,선택 확인,Подтвердить выбор,Confirmar selección,Auswahl bestätigen,Confirmar seleção,Konfirmasi Pilihan,تأكيد التحديد
+flow.form_access.field_col,表单字段,表單欄位,Form Field,Champ du formulaire,フォームフィールド,폼 필드,Поле формы,Campo del formulario,Formularfeld,Campo do formulário,Kolom Formulir,حقل النموذج
+flow.form_access.read_only,只读,唯讀,Read Only,Lecture seule,読み取り専用,읽기 전용,Только чтение,Solo lectura,Schreibgeschützt,Somente leitura,Hanya Baca,للقراءة فقط
+flow.form_access.editable,编辑,編輯,Editable,Modifiable,編集可能,편집 가능,Редактируемый,Editable,Bearbeitbar,Editável,Dapat Diedit,قابل للتحرير
+flow.form_access.required,必填,必填,Required,Obligatoire,必須,필수,Обязательно,Obligatorio,Pflichtfeld,Obrigatório,Wajib diisi,مطلوب
+flow.form_access.hidden,隐藏,隱藏,Hidden,Masqué,非表示,숨김,Скрытый,Oculto,Ausgeblendet,Oculto,Tersembunyi,مخفي
+flow.form_access.all_read_only,全部只读,全部唯讀,All Read Only,Tout en lecture seule,全て読み取り専用,모두 읽기 전용,Всё только для чтения,Todo solo lectura,Alle schreibgeschützt,Tudo somente leitura,Semua Hanya Baca,الكل للقراءة فقط
+flow.form_access.all_editable,全部编辑,全部編輯,All Editable,Tout modifiable,全て編集可能,모두 편집 가능,Всё редактируемое,Todo editable,Alle bearbeitbar,Tudo editável,Semua Dapat Diedit,الكل قابل للتحرير
+flow.form_access.all_required,全部必填,全部必填,All Required,Tout obligatoire,全て必須,모두 필수,Всё обязательно,Todo obligatorio,Alle Pflichtfelder,Tudo obrigatório,Semua Wajib,الكل مطلوب
+flow.form_access.all_hidden,全部隐藏,全部隱藏,All Hidden,Tout masqué,全て非表示,모두 숨김,Всё скрытое,Todo oculto,Alle ausgeblendet,Tudo oculto,Semua Tersembunyi,الكل مخفي
+flow.zoom.zoom_out,缩小 (Ctrl + -),縮小 (Ctrl + -),Zoom Out (Ctrl + -),Zoom arrière (Ctrl + -),縮小 (Ctrl + -),축소 (Ctrl + -),Уменьшить (Ctrl + -),Alejar (Ctrl + -),Verkleinern (Ctrl + -),Diminuir zoom (Ctrl + -),Perkecil (Ctrl + -),تصغير (Ctrl + -)
+flow.zoom.zoom_in,放大 (Ctrl + +),放大 (Ctrl + +),Zoom In (Ctrl + +),Zoom avant (Ctrl + +),拡大 (Ctrl + +),확대 (Ctrl + +),Увеличить (Ctrl + +),Acercar (Ctrl + +),Vergrößern (Ctrl + +),Aumentar zoom (Ctrl + +),Perbesar (Ctrl + +),تكبير (Ctrl + +)
+flow.zoom.fit,自适应视图 (Ctrl + 0),自適應視圖 (Ctrl + 0),Fit View (Ctrl + 0),Ajuster la vue (Ctrl + 0),ビューに合わせる (Ctrl + 0),뷰에 맞추기 (Ctrl + 0),Подогнать вид (Ctrl + 0),Ajustar vista (Ctrl + 0),Ansicht anpassen (Ctrl + 0),Ajustar vista (Ctrl + 0),Sesuaikan Tampilan (Ctrl + 0),ملاءمة العرض (Ctrl + 0)
+flow.zoom.reset,点击恢复 100% 缩放,點擊恢復 100% 縮放,Click to reset 100% zoom,Cliquer pour réinitialiser le zoom,クリックで100%ズームリセット,클릭하여 100% 확대/축소 재설정,Нажмите для сброса до 100%,Clic para restablecer zoom al 100%,Klicken zum Zurücksetzen auf 100%,Clique para redefinir zoom para 100%,Klik untuk atur ulang zoom 100%,انقر لإعادة تعيين التكبير إلى 100%
+flow.grid.show,显示网格,顯示網格,Show Grid,Afficher la grille,グリッドを表示,그리드 표시,Показать сетку,Mostrar cuadrícula,Raster anzeigen,Mostrar grade,Tampilkan Grid,إظهار الشبكة
+flow.grid.hide,隐藏网格,隱藏網格,Hide Grid,Masquer la grille,グリッドを非表示,그리드 숨기기,Скрыть сетку,Ocultar cuadrícula,Raster ausblenden,Ocultar grade,Sembunyikan Grid,إخفاء الشبكة
+flow.print_var.no,流程-流水号,流程-流水號,Process-Serial No,Processus-N° de série,プロセス-シリアル番号,프로세스-일련번호,Процесс-Серийный номер,Proceso-N° de serie,Prozess-Seriennummer,Processo-N° de série,Proses-No. Seri,العملية-الرقم التسلسلي
+flow.print_var.name,流程-名称,流程-名稱,Process-Name,Processus-Nom,プロセス-名前,프로세스-이름,Процесс-Название,Proceso-Nombre,Prozess-Name,Processo-Nome,Proses-Nama,العملية-الاسم
+flow.print_var.start_time,流程-发起时间,流程-發起時間,Process-Start Time,Processus-Heure de départ,プロセス-開始時間,프로세스-시작 시간,Процесс-Время начала,Proceso-Hora de inicio,Prozess-Startzeit,Processo-Hora de início,Proses-Waktu Mulai,العملية-وقت البدء
+flow.print_var.end_time,流程-结束时间,流程-結束時間,Process-End Time,Processus-Heure de fin,プロセス-終了時間,프로세스-종료 시간,Процесс-Время окончания,Proceso-Hora de fin,Prozess-Endzeit,Processo-Hora de fim,Proses-Waktu Selesai,العملية-وقت الانتهاء
+flow.print_var.applicant,流程-申请人,流程-申請人,Process-Applicant,Processus-Demandeur,プロセス-申請者,프로세스-신청인,Процесс-Заявитель,Proceso-Solicitante,Prozess-Antragsteller,Processo-Solicitante,Proses-Pemohon,العملية-مقدم الطلب
+flow.review_user.title,审核人,審核人,Reviewer,Réviseur,審査者,검토자,Рецензент,Revisor,Prüfer,Revisor,Pengulas,المراجع
+flow.warning.select_approver_suffix2,】的审批人,】的審批人,】approver,】approbateur,】の承認者,】의 승인자,】утверждающего,】aprobador,】Genehmiger,】aprovador,】persetuju,】المعتمد
+flow.warning.fill_approve_opinion,请填写同意原因,請填寫同意原因,Please fill in approval comment,Veuillez saisir le commentaire,同意理由を入力してください,동의 사유를 입력하세요,Пожалуйста введите причину одобрения,Por favor ingrese el comentario de aprobación,Bitte Genehmigungskommentar eingeben,Por favor insira o motivo da aprovação,Harap isi komentar persetujuan,الرجاء ملء تعليق الموافقة
+flow.warning.fill_reject_reason,请填写拒绝原因,請填寫拒絕原因,Please fill in rejection reason,Veuillez saisir la raison du refus,拒否理由を入力してください,거절 사유를 입력하세요,Пожалуйста введите причину отказа,Por favor ingrese el motivo del rechazo,Bitte Ablehnungsgrund eingeben,Por favor insira o motivo de rejeição,Harap isi alasan penolakan,الرجاء ملء سبب الرفض
+flow.warning.select_cc_user,请选择抄送人员,請選擇抄送人員,Please select CC recipients,Veuillez sélectionner les destinataires CC,CC受信者を選択してください,참조 수신자를 선택하세요,Пожалуйста выберите получателей копии,Por favor seleccione los destinatarios CC,Bitte CC-Empfänger auswählen,Por favor selecione os destinatários CC,Harap pilih penerima CC,الرجاء اختيار مستلمي النسخة
+flow.warning.fill_cc_reason,请填写抄送说明,請填寫抄送說明,Please fill in CC note,Veuillez saisir la note de copie,CC説明を入力してください,참조 설명을 입력하세요,Пожалуйста введите примечание к копии,Por favor ingrese la nota de copia,Bitte CC-Notiz eingeben,Por favor insira a nota de cópia,Harap isi catatan CC,الرجاء ملء ملاحظة النسخة
+flow.warning.select_transfer_user,请选择转交人员,請選擇轉交人員,Please select transfer recipient,Veuillez sélectionner le destinataire du transfert,転送先を選択してください,이관 수신자를 선택하세요,Пожалуйста выберите получателя передачи,Por favor seleccione el destinatario de la transferencia,Bitte Übergabeempfänger auswählen,Por favor selecione o destinatário da transferência,Harap pilih penerima transfer,الرجاء اختيار مستلم النقل
+flow.warning.fill_transfer_reason,请填写转交说明,請填寫轉交說明,Please fill in transfer note,Veuillez saisir la note de transfert,転送説明を入力してください,이관 설명을 입력하세요,Пожалуйста введите примечание к передаче,Por favor ingrese la nota de transferencia,Bitte Übergabenotiz eingeben,Por favor insira a nota de transferência,Harap isi catatan transfer,الرجاء ملء ملاحظة النقل
+flow.warning.select_add_sign_type,请选择加签类型,請選擇加簽類型,Please select sign type,Veuillez sélectionner le type de signature,署名タイプを選択してください,서명 유형을 선택하세요,Пожалуйста выберите тип подписи,Por favor seleccione el tipo de firma,Bitte Unterschriftstyp auswählen,Por favor selecione o tipo de assinatura,Harap pilih jenis tanda tangan,الرجاء اختيار نوع التوقيع
+flow.warning.select_add_sign_user,请选择加签人员,請選擇加簽人員,Please select countersigners,Veuillez sélectionner les signataires,署名者を選択してください,서명자를 선택하세요,Пожалуйста выберите подписантов,Por favor seleccione los firmantes,Bitte Unterzeichner auswählen,Por favor selecione os signatários,Harap pilih penanda tangan,الرجاء اختيار الموقعين
+flow.warning.fill_add_sign_reason,请填写加签说明,請填寫加簽說明,Please fill in countersign note,Veuillez saisir la note de signature,署名説明を入力してください,서명 설명을 입력하세요,Пожалуйста введите примечание к подписанту,Por favor ingrese la nota de firma,Bitte Unterzeichnungsnotiz eingeben,Por favor insira a nota de assinatura,Harap isi catatan tanda tangan,الرجاء ملء ملاحظة التوقيع
+flow.warning.select_return_node,请选择退回节点,請選擇退回節點,Please select return node,Veuillez sélectionner le nœud de retour,差し戻しノードを選択してください,반려 노드를 선택하세요,Пожалуйста выберите узел возврата,Por favor seleccione el nodo de retorno,Bitte Rückgabeknoten auswählen,Por favor selecione o nó de retorno,Harap pilih node pengembalian,الرجاء اختيار عقدة الإرجاع
+flow.warning.fill_return_reason,请填写退回说明,請填寫退回說明,Please fill in return note,Veuillez saisir la note de retour,差し戻し説明を入力してください,반려 설명을 입력하세요,Пожалуйста введите примечание к возврату,Por favor ingrese la nota de devolución,Bitte Rückgabenotiz eingeben,Por favor insira a nota de devolução,Harap isi catatan pengembalian,الرجاء ملء ملاحظة الإرجاع
+flow.warning.select_category_for_sort,请先选择分组后再进行排序,請先選擇分組後再進行排序,Please select a group before sorting,Veuillez d'abord sélectionner un groupe,グループを選択してからソートしてください,정렬 전 그룹을 먼저 선택하세요,Пожалуйста сначала выберите группу для сортировки,Por favor seleccione un grupo antes de ordenar,Bitte zuerst Gruppe auswählen,Por favor selecione um grupo antes de ordenar,Harap pilih grup sebelum mengurutkan,الرجاء تحديد مجموعة قبل الفرز
+flow.success.submit,提交成功,提交成功,Submitted successfully,Soumis avec succès,提出完了,제출 성공,Успешно отправлено,Enviado con éxito,Erfolgreich eingereicht,Enviado com sucesso,Berhasil dikirim,تم الإرسال بنجاح
+flow.success.no_copied,编号已复制到剪贴板,編號已複製到剪貼板,Number copied to clipboard,Numéro copié dans le presse-papiers,番号がクリップボードにコピーされました,번호가 클립보드에 복사되었습니다,Номер скопирован в буфер обмена,Número copiado al portapapeles,Nummer in Zwischenablage kopiert,Número copiado para a área de transferência,Nomor disalin ke clipboard,تم نسخ الرقم إلى الحافظة
+flow.success.link_copied,地址已复制到剪贴板,地址已複製到剪貼板,Link copied to clipboard,Lien copié dans le presse-papiers,リンクがクリップボードにコピーされました,링크가 클립보드에 복사되었습니다,Ссылка скопирована в буфер обмена,Enlace copiado al portapapeles,Link in Zwischenablage kopiert,Link copiado para a área de transferência,Tautan disalin ke clipboard,تم نسخ الرابط إلى الحافظة
+flow.success.comment,评论提交成功,評論提交成功,Comment submitted,Commentaire soumis,コメント送信完了,댓글 제출 성공,Комментарий успешно отправлен,Comentario enviado con éxito,Kommentar erfolgreich eingereicht,Comentário enviado com sucesso,Komentar berhasil dikirim,تم إرسال التعليق بنجاح
+flow.success.group_created,分组创建成功,分組創建成功,Group created,Groupe créé,グループ作成完了,그룹 생성 성공,Группа успешно создана,Grupo creado con éxito,Gruppe erfolgreich erstellt,Grupo criado com sucesso,Grup berhasil dibuat,تم إنشاء المجموعة بنجاح
+flow.success.group_edited,分组编辑成功,分組編輯成功,Group updated,Groupe mis à jour,グループ更新完了,그룹 수정 성공,Группа успешно обновлена,Grupo actualizado con éxito,Gruppe erfolgreich aktualisiert,Grupo atualizado com sucesso,Grup berhasil diperbarui,تم تحديث المجموعة بنجاح
+flow.success.group_deleted,分组删除成功,分組刪除成功,Group deleted,Groupe supprimé,グループ削除完了,그룹 삭제 성공,Группа успешно удалена,Grupo eliminado con éxito,Gruppe erfolgreich gelöscht,Grupo excluído com sucesso,Grup berhasil dihapus,تم حذف المجموعة بنجاح
+flow.success.config_copied,流程配置复制成功,流程配置複製成功,Process config copied,Configuration copiée,フロー設定コピー完了,프로세스 설정 복사 성공,Конфигурация процесса скопирована,Configuración de proceso copiada,Prozesskonfiguration kopiert,Configuração de processo copiada,Konfigurasi proses berhasil disalin,تم نسخ إعداد العملية بنجاح
+flow.success.config_deleted,流程配置删除成功,流程配置刪除成功,Process config deleted,Configuration supprimée,フロー設定削除完了,프로세스 설정 삭제 성공,Конфигурация процесса удалена,Configuración de proceso eliminada,Prozesskonfiguration gelöscht,Configuração de processo excluída,Konfigurasi proses berhasil dihapus,تم حذف إعداد العملية بنجاح
+flow.modal.confirm_copy,确认复制,確認複製,Confirm Copy,Confirmer la copie,コピー確認,복사 확인,Подтвердить копирование,Confirmar copia,Kopieren bestätigen,Confirmar cópia,Konfirmasi Salin,تأكيد النسخ
+flow.error.group_create_failed,创建分组失败,創建分組失敗,Failed to create group,Échec de la création du groupe,グループ作成失敗,그룹 생성 실패,Ошибка создания группы,Error al crear el grupo,Gruppe konnte nicht erstellt werden,Falha ao criar grupo,Gagal membuat grup,فشل في إنشاء المجموعة
+flow.error.group_edit_failed,编辑分组失败,編輯分組失敗,Failed to edit group,Échec de la modification du groupe,グループ編集失敗,그룹 수정 실패,Ошибка редактирования группы,Error al editar el grupo,Gruppe konnte nicht bearbeitet werden,Falha ao editar grupo,Gagal mengedit grup,فشل في تحرير المجموعة
+flow.error.group_sort_failed,分组排序失败,分組排序失敗,Group sort failed,Échec du tri du groupe,グループ並替え失敗,그룹 정렬 실패,Ошибка сортировки группы,Error al ordenar el grupo,Gruppen-Sortierung fehlgeschlagen,Falha ao ordenar grupo,Gagal mengurutkan grup,فشل في ترتيب المجموعة
+flow.success.config_enabled_suffix,启用成功,啟用成功,Enabled successfully,Activé avec succès,有効化完了,활성화 성공,Успешно включено,Activado con éxito,Erfolgreich aktiviert,Ativado com sucesso,Berhasil diaktifkan,تم التفعيل بنجاح
+flow.success.config_disabled_suffix,停用成功,停用成功,Disabled successfully,Désactivé avec succès,無効化完了,비활성화 성공,Успешно отключено,Desactivado con éxito,Erfolgreich deaktiviert,Desativado com sucesso,Berhasil dinonaktifkan,تم التعطيل بنجاح
+flow.error.config_copy_failed,复制流程配置失败,複製流程配置失敗,Failed to copy process config,Échec de la copie,フロー設定コピー失敗,프로세스 설정 복사 실패,Ошибка копирования конфигурации,Error al copiar configuración,Fehler beim Kopieren der Konfiguration,Falha ao copiar configuração,Gagal menyalin konfigurasi,فشل في نسخ إعداد العملية
+flow.error.config_toggle_failed,切换流程配置状态失败,切換流程配置狀態失敗,Failed to toggle process config,Échec du changement d'état,フロー設定切替失敗,프로세스 설정 전환 실패,Ошибка переключения конфигурации,Error al cambiar estado de configuración,Fehler beim Umschalten der Konfiguration,Falha ao alternar configuração,Gagal mengalihkan konfigurasi,فشل في تبديل إعداد العملية
+flow.error.config_delete_failed,删除流程配置失败,刪除流程配置失敗,Failed to delete process config,Échec de la suppression,フロー設定削除失敗,프로세스 설정 삭제 실패,Ошибка удаления конфигурации,Error al eliminar configuración,Fehler beim Löschen der Konfiguration,Falha ao excluir configuração,Gagal menghapus konfigurasi,فشل في حذف إعداد العملية
+flow.modal.select_visible_scope,请选择可见范围,請選擇可見範圍,Please select visible scope,Veuillez sélectionner la portée visible,表示範囲を選択してください,표시 범위를 선택하세요,Пожалуйста выберите область видимости,Por favor seleccione el alcance visible,Bitte sichtbaren Bereich wählen,Por favor selecione o escopo visível,Harap pilih ruang lingkup yang terlihat,الرجاء تحديد النطاق المرئي
+flow.warning.select_data_model,请选择关联表,請選擇關聯表,Please select a data model,Veuillez sélectionner un modèle de données,関連テーブルを選択してください,데이터 모델을 선택하세요,Пожалуйста выберите модель данных,Por favor seleccione un modelo de datos,Bitte Datenmodell auswählen,Por favor selecione um modelo de dados,Harap pilih model data,الرجاء اختيار نموذج البيانات
+flow.warning.select_group,请选择分组,請選擇分組,Please select a group,Veuillez sélectionner un groupe,グループを選択してください,그룹을 선택하세요,Пожалуйста выберите группу,Por favor seleccione un grupo,Bitte Gruppe auswählen,Por favor selecione um grupo,Harap pilih grup,الرجاء اختيار المجموعة
+flow.warning.select_submit_permission,请选择提交权限,請選擇提交權限,Please select submit permission,Veuillez sélectionner la permission de soumission,提出権限を選択してください,제출 권한을 선택하세요,Пожалуйста выберите права на отправку,Por favor seleccione el permiso de envío,Bitte Einreichberechtigung wählen,Por favor selecione a permissão de envio,Harap pilih izin pengiriman,الرجاء اختيار صلاحية التقديم
+flow.warning.select_notify_channel,请选择通知渠道,請選擇通知渠道,Please select notification channel,Veuillez sélectionner le canal de notification,通知チャンネルを選択してください,알림 채널을 선택하세요,Пожалуйста выберите канал уведомлений,Por favor seleccione el canal de notificación,Bitte Benachrichtigungskanal wählen,Por favor selecione o canal de notificação,Harap pilih saluran notifikasi,الرجاء اختيار قناة الإشعارات
+flow.success.publish,发布成功,發布成功,Published successfully,Publié avec succès,公開完了,게시 성공,Успешно опубликовано,Publicado con éxito,Erfolgreich veröffentlicht,Publicado com sucesso,Berhasil diterbitkan,تم النشر بنجاح
+flow.error.rule_validation_failed,规则校验失败请检查,規則校驗失敗請檢查,Rule validation failed,Validation des règles échouée,ルール検証失敗を確認してください,규칙 검증 실패를 확인하세요,Ошибка проверки правил,Error de validación de reglas,Regelvalidierung fehlgeschlagen,Falha na validação de regras,Validasi aturan gagal,فشل في التحقق من القواعد
+flow.success.copied,已复制到剪贴板,已複製到剪貼板,Copied to clipboard,Copié dans le presse-papiers,クリップボードにコピーされました,클립보드에 복사되었습니다,Скопировано в буфер обмена,Copiado al portapapeles,In Zwischenablage kopiert,Copiado para a área de transferência,Disalin ke clipboard,تم النسخ إلى الحافظة
+flow.print_var.status,流程-状态,流程-狀態,Process-Status,Processus-Statut,プロセス-状態,프로세스-상태,Процесс-Статус,Proceso-Estado,Prozess-Status,Processo-Status,Proses-Status,العملية-الحالة
+flow.print_var.flow_log,流程-流转记录,流程-流轉記錄,Process-Flow Log,Processus-Journal,プロセス-フローログ,프로세스-흐름 로그,Процесс-Журнал потока,Proceso-Registro de flujo,Prozess-Durchlaufprotokoll,Processo-Registro de fluxo,Proses-Log Alur,العملية-سجل التدفق
+flow.print_var.initiator,流程-发起人,流程-發起人,Process-Initiator,Processus-Initiateur,プロセス-発起人,프로세스-발기인,Процесс-Инициатор,Proceso-Iniciador,Prozess-Initiator,Processo-Iniciador,Proses-Pemrakarsa,العملية-المبادر
+flow.print_var.task_approver,审批人,審批人,Approver,Approbateur,承認者,승인자,Утверждающий,Aprobador,Genehmiger,Aprovador,Persetuju,المعتمد
+flow.print_var.task_status,任务状态,任務狀態,Task Status,Statut de la tâche,タスク状態,작업 상태,Статус задачи,Estado de tarea,Aufgabenstatus,Status da tarefa,Status Tugas,حالة المهمة
+flow.print_var.task_comment,审批意见,審批意見,Comment,Commentaire,コメント,의견,Комментарий,Comentario,Kommentar,Comentário,Komentar,تعليق
+flow.print_var.task_create_time,创建时间,創建時間,Create Time,Heure de création,作成時間,생성 시간,Время создания,Hora de creación,Erstellungszeit,Hora de criação,Waktu Buat,وقت الإنشاء
+flow.print_var.task_complete_time,审批时间,審批時間,Approval Time,Heure d'approbation,承認時間,승인 시간,Время одобрения,Hora de aprobación,Genehmigungszeit,Hora de aprovação,Waktu Persetujuan,وقت الموافقة
+flow.management.edit_group,编辑分组,編輯分組,Edit Group,Modifier le groupe,グループを編集,그룹 편집,Редактировать группу,Editar grupo,Gruppe bearbeiten,Editar grupo,Edit Grup,تعديل المجموعة
+flow.label.no,编号,編號,No.,N°,番号,번호,Номер,Número,Nr.,Número,No.,رقم
+flow.label.link,链接,連結,Link,Lien,リンク,링크,Ссылка,Enlace,Link,Link,Tautan,رابط
+flow.action.view_flow_diagram,查看流程图,查看流程圖,View Flow Diagram,Voir le diagramme,フロー図を見る,흐름도 보기,Просмотр схемы,Ver diagrama de flujo,Flussdiagramm anzeigen,Ver diagrama de fluxo,Lihat Diagram Alur,عرض مخطط العملية
+flow.label.submitted_at,提交于,提交於,Submitted at,Soumis le,提出日時,제출일,Отправлено,Enviado el,Eingereicht am,Enviado em,Dikirim pada,أرسل في
+flow.tab.approval_records,审批记录,審批記錄,Approval Records,Enregistrements,承認記録,승인 기록,Записи одобрений,Registros de aprobación,Genehmigungseinträge,Registros de aprovação,Catatan Persetujuan,سجلات الموافقة
+flow.table.task_type,任务类型,任務類型,Task Type,Type de tâche,タスク種別,작업 유형,Тип задачи,Tipo de tarea,Aufgabentyp,Tipo de tarefa,Jenis Tugas,نوع المهمة
+flow.table.create_time,创建时间,創建時間,Create Time,Heure de création,作成時間,생성 시간,Время создания,Hora de creación,Erstellungszeit,Hora de criação,Waktu Buat,وقت الإنشاء
+flow.label.select_node_approver_prefix,选择 [,選擇 [,Select [,Sélectionner [,選択 [,선택 [,Выбрать [,Seleccionar [,Auswählen [,Selecionar [,Pilih [,اختيار [
+flow.label.select_node_approver_suffix,] 审批人：,] 審批人：,] Approver:,] Approbateur :,] 承認者：,] 승인자:,] Утверждающий:,] Aprobador:,] Genehmiger:,] Aprovador:,] Persetuju:,] المعتمد:
+flow.label.agree_signature,同意签名：,同意簽名：,Approval Signature:,Signature d'approbation :,承認署名：,동의 서명:,Подпись одобрения:,Firma de aprobación:,Genehmigungsunterschrift:,Assinatura de aprovação:,Tanda Tangan Persetujuan:,توقيع الموافقة:
+flow.label.fill_agree_reason,请填写同意原因：,請填寫同意原因：,Please fill in approval comment:,Veuillez saisir le commentaire :,同意理由を入力してください：,동의 사유를 입력하세요:,Пожалуйста введите причину одобрения:,Por favor ingrese el comentario:,Bitte Kommentar eingeben:,Por favor insira o motivo:,Harap isi komentar:,الرجاء ملء التعليق:
+flow.label.fill_reject_reason,请填写拒绝原因：,請填寫拒絕原因：,Please fill in rejection reason:,Veuillez saisir la raison :,拒否理由を入力してください：,거절 사유를 입력하세요:,Пожалуйста введите причину отказа:,Por favor ingrese el motivo:,Bitte Grund eingeben:,Por favor insira o motivo:,Harap isi alasan:,الرجاء ملء السبب:
+flow.label.cc_user,抄送人员：,抄送人員：,CC Recipients:,Destinataires CC :,CC受信者：,참조 수신자:,Получатели копии:,Destinatarios CC:,CC-Empfänger:,Destinatários CC:,Penerima CC:,مستلمو النسخة:
+flow.label.cc_reason,抄送说明：,抄送說明：,CC Note:,Note de copie :,CC説明：,참조 설명:,Примечание к копии:,Nota de copia:,CC-Notiz:,Nota de cópia:,Catatan CC:,ملاحظة النسخة:
+flow.label.transfer_user,转交人员：,轉交人員：,Transfer To:,Transférer à :,転送先：,이관 대상:,Передать:,Transferir a:,Übergeben an:,Transferir para:,Transfer ke:,نقل إلى:
+flow.label.transfer_reason,转交说明：,轉交說明：,Transfer Note:,Note de transfert :,転送説明：,이관 설명:,Примечание к передаче:,Nota de transferencia:,Übergabenotiz:,Nota de transferência:,Catatan Transfer:,ملاحظة النقل:
+flow.label.add_sign_type,加签类型：,加簽類型：,Sign Type:,Type de signature :,署名タイプ：,서명 유형:,Тип подписи:,Tipo de firma:,Unterschriftstyp:,Tipo de assinatura:,Jenis Tanda Tangan:,نوع التوقيع:
+flow.label.add_sign_user,加签人员：,加簽人員：,Countersigners:,Signataires :,署名者：,서명자:,Подписанты:,Firmantes:,Unterzeichner:,Signatários:,Penanda Tangan:,الموقعون:
+flow.label.add_sign_reason,加签说明：,加簽說明：,Countersign Note:,Note de signature :,署名説明：,서명 설명:,Примечание к подписи:,Nota de firma:,Unterzeichnungsnotiz:,Nota de assinatura:,Catatan Tanda Tangan:,ملاحظة التوقيع:
+flow.label.return_node,退回节点：,退回節點：,Return to Node:,Nœud de retour :,差し戻しノード：,반려 노드:,Узел возврата:,Nodo de retorno:,Rückgabeknoten:,Nó de retorno:,Node Pengembalian:,عقدة الإرجاع:
+flow.label.return_reason,退回说明：,退回說明：,Return Note:,Note de retour :,差し戻し説明：,반려 설명:,Примечание к возврату:,Nota de devolución:,Rückgabenotiz:,Nota de devolução:,Catatan Pengembalian:,ملاحظة الإرجاع:
+flow.label.submit_reason,提交说明：,提交說明：,Submit Note:,Note de soumission :,提出説明：,제출 설명:,Примечание к отправке:,Nota de envío:,Einreichungsnotiz:,Nota de envio:,Catatan Pengiriman:,ملاحظة الإرسال:
+flow.label.handle_reason,办理说明：,辦理說明：,Handle Note:,Note de traitement :,対応説明：,처리 설명:,Примечание к обработке:,Nota de gestión:,Bearbeitungsnotiz:,Nota de processamento:,Catatan Proses:,ملاحظة المعالجة:
+flow.placeholder.agree_reason,请输入同意原因...,請輸入同意原因...,Please enter approval comment...,Veuillez saisir le commentaire...,同意理由を入力...,동의 사유 입력...,Введите причину одобрения...,Ingrese el comentario de aprobación...,Kommentar eingeben...,Insira o motivo de aprovação...,Masukkan komentar persetujuan...,أدخل تعليق الموافقة...
+flow.placeholder.reject_reason_input,请输入拒绝原因...,請輸入拒絕原因...,Please enter rejection reason...,Veuillez saisir la raison...,拒否理由を入力...,거절 사유 입력...,Введите причину отказа...,Ingrese el motivo del rechazo...,Ablehnungsgrund eingeben...,Insira o motivo de rejeição...,Masukkan alasan penolakan...,أدخل سبب الرفض...
+flow.placeholder.cc_reason,请输入抄送说明...,請輸入抄送說明...,Please enter CC note...,Veuillez saisir la note...,CC説明を入力...,참조 설명 입력...,Введите примечание CC...,Ingrese la nota CC...,CC-Notiz eingeben...,Insira a nota CC...,Masukkan catatan CC...,أدخل ملاحظة النسخة...
+flow.placeholder.transfer_reason,请输入转交说明...,請輸入轉交說明...,Please enter transfer note...,Veuillez saisir la note...,転送説明を入力...,이관 설명 입력...,Введите примечание к передаче...,Ingrese la nota de transferencia...,Übergabenotiz eingeben...,Insira a nota de transferência...,Masukkan catatan transfer...,أدخل ملاحظة النقل...
+flow.placeholder.add_sign_reason,请输入加签说明...,請輸入加簽說明...,Please enter countersign note...,Veuillez saisir la note...,署名説明を入力...,서명 설명 입력...,Введите примечание к подписи...,Ingrese la nota de firma...,Unterzeichnungsnotiz eingeben...,Insira a nota de assinatura...,Masukkan catatan tanda tangan...,أدخل ملاحظة التوقيع...
+flow.placeholder.return_reason_input,请输入退回说明...,請輸入退回說明...,Please enter return note...,Veuillez saisir la note...,差し戻し説明を入力...,반려 설명 입력...,Введите примечание к возврату...,Ingrese la nota de devolución...,Rückgabenotiz eingeben...,Insira a nota de devolução...,Masukkan catatan pengembalian...,أدخل ملاحظة الإرجاع...
+flow.placeholder.submit_reason,提交说明...,提交說明...,Submit note...,Note de soumission...,提出説明...,제출 설명...,Примечание к отправке...,Nota de envío...,Einreichungsnotiz...,Nota de envio...,Catatan pengiriman...,ملاحظة الإرسال...
+flow.placeholder.handle_reason,办理说明...,辦理說明...,Handle note...,Note de traitement...,対応説明...,처리 설명...,Примечание к обработке...,Nota de gestión...,Bearbeitungsnotiz...,Nota de processamento...,Catatan proses...,ملاحظة المعالجة...
+flow.placeholder.select_approver,请选择审批人,請選擇審批人,Select Approver,Sélectionner l'approbateur,承認者を選択,승인자 선택,Выбрать утверждающего,Seleccionar aprobador,Genehmiger auswählen,Selecionar aprovador,Pilih persetuju,اختيار المعتمد
+flow.placeholder.select_cc_user,请选择抄送人员,請選擇抄送人員,Select CC Recipients,Sélectionner les destinataires CC,CC受信者を選択,참조 수신자 선택,Выбрать получателей копии,Seleccionar destinatarios CC,CC-Empfänger auswählen,Selecionar destinatários CC,Pilih penerima CC,اختيار مستلمي النسخة
+flow.placeholder.select_transfer_user,请选择转交人员,請選擇轉交人員,Select Transfer Recipient,Sélectionner le destinataire du transfert,転送先を選択,이관 대상 선택,Выбрать получателя передачи,Seleccionar destinatario,Übergabeempfänger auswählen,Selecionar destinatário,Pilih penerima transfer,اختيار مستلم النقل
+flow.placeholder.select_add_sign_user,请选择加签人员,請選擇加簽人員,Select Countersigners,Sélectionner les signataires,署名者を選択,서명자 선택,Выбрать подписантов,Seleccionar firmantes,Unterzeichner auswählen,Selecionar signatários,Pilih penanda tangan,اختيار الموقعين
+flow.placeholder.select_return_node,请选择退回节点,請選擇退回節點,Select Return Node,Sélectionner le nœud de retour,差し戻しノードを選択,반려 노드 선택,Выбрать узел возврата,Seleccionar nodo de retorno,Rückgabeknoten auswählen,Selecionar nó de retorno,Pilih node pengembalian,اختيار عقدة الإرجاع
+flow.tab.comment_list,评论列表,評論列表,Comments,Commentaires,コメント,댓글,Комментарии,Comentarios,Kommentare,Comentários,Komentar,التعليقات
+flow.tab.data_change,数据变更记录,數據變更記錄,Data Change Log,Journal des modifications,データ変更ログ,데이터 변경 로그,Журнал изменений данных,Registro de cambios de datos,Datenänderungsprotokoll,Registro de alterações de dados,Log Perubahan Data,سجل تغييرات البيانات
+flow.table.operator,操作人,操作人,Operator,Opérateur,操作者,운영자,Оператор,Operador,Operator,Operador,Operator,المشغل
+flow.table.operate_time,操作时间,操作時間,Operation Time,Heure d'opération,操作時間,운영 시간,Время операции,Hora de operación,Betriebszeit,Hora de operação,Waktu Operasi,وقت العملية
+flow.table.change_content,变更内容,變更內容,Change Content,Contenu modifié,変更内容,변경 내용,Содержимое изменений,Contenido modificado,Änderungsinhalt,Conteúdo alterado,Konten Perubahan,محتوى التغيير
+flow.button.view_detail,查看详情,查看詳情,View Details,Voir les détails,詳細を見る,상세 보기,Просмотр деталей,Ver detalles,Details anzeigen,Ver detalhes,Lihat Detail,عرض التفاصيل
+flow.placeholder.comment,请输入评论内容...,請輸入評論內容...,Please enter a comment...,Veuillez saisir un commentaire...,コメントを入力...,댓글을 입력하세요...,Введите комментарий...,Por favor ingrese un comentario...,Bitte Kommentar eingeben...,Por favor insira um comentário...,Harap masukkan komentar...,الرجاء إدخال تعليق...
+flow.button.submitting,提交中...,提交中...,Submitting...,Soumission...,提出中...,제출 중...,Отправка...,Enviando...,Wird eingereicht...,Enviando...,Mengirim...,جارٍ الإرسال...
+flow.button.send,发送,發送,Send,Envoyer,送信,보내기,Отправить,Enviar,Senden,Enviar,Kirim,إرسال
+flow.modal.cc_approval_title,抄送审批,抄送審批,CC Approval,Copie d'approbation,承認抄送,승인 참조,Копия одобрения,Copia de aprobación,CC-Genehmigung,Cópia de aprovação,Persetujuan CC,نسخ الموافقة
+flow.modal.transfer_approval_title,转交审批,轉交審批,Transfer Approval,Transfert d'approbation,承認転送,승인 이관,Передача одобрения,Transferencia de aprobación,Übergabe-Genehmigung,Transferência de aprovação,Transfer Persetujuan,نقل الموافقة
+flow.modal.add_sign_approval_title,加签审批,加簽審批,Countersign Approval,Approbation de signature,承認加署,승인 서명 추가,Подписание одобрения,Aprobación de firma,Unterzeichnungs-Genehmigung,Aprovação de assinatura,Persetujuan Tanda Tangan,توقيع الموافقة
+flow.modal.return_approval_title,退回审批,退回審批,Return Approval,Retour d'approbation,承認差し戻し,승인 반려,Возврат одобрения,Devolución de aprobación,Rückgabe-Genehmigung,Devolução de aprovação,Pengembalian Persetujuan,إرجاع الموافقة
+flow.empty.no_comments,暂无评论内容,暫無評論內容,No comments,Aucun commentaire,コメントなし,댓글 없음,Нет комментариев,Sin comentarios,Keine Kommentare,Sem comentários,Tidak ada komentar,لا توجد تعليقات
+flow.action.modify,修改,修改,Modify,Modifier,修正,수정,Изменить,Modificar,Ändern,Modificar,Ubah,تعديل
+flow.action.add_branch,添加分支,添加分支,Add Branch,Ajouter une branche,分岐追加,분기 추가,Добавить ветку,Añadir rama,Zweig hinzufügen,Adicionar ramo,Tambah Cabang,إضافة فرع
+flow.dashboard.available_flows,可用流程,可用流程,Available Flows,Flux disponibles,利用可能なフロー,사용 가능한 흐름,Доступные потоки,Flujos disponibles,Verfügbare Flows,Fluxos disponíveis,Alur Tersedia,التدفقات المتاحة
+flow.dashboard.category_count,分类,分類,Categories,Catégories,カテゴリ,카테고리,Категории,Categorías,Kategorien,Categorias,Kategori,الفئات
+flow.placeholder.search_flow_name,搜索流程名称...,搜索流程名稱...,Search flow name...,Rechercher un flux...,フロー名を検索...,흐름 이름 검색...,Поиск потока...,Buscar flujo...,Flow suchen...,Pesquisar fluxo...,Cari nama alur...,البحث عن اسم التدفق...
+flow.dashboard.no_matching_flow,未找到匹配的流程,未找到匹配的流程,No matching flows found,Aucun flux correspondant,一致するフローが見つかりません,일치하는 흐름 없음,Совпадений не найдено,No se encontraron flujos,Kein passender Flow,Nenhum fluxo encontrado,Tidak ada alur yang cocok,لم يُعثر على تدفق مطابق
+flow.dashboard.no_flow_data,暂无流程数据,暫無流程數據,No flow data,Aucune donnée de flux,フローデータなし,흐름 데이터 없음,Нет данных потоков,Sin datos de flujo,Keine Flow-Daten,Sem dados de fluxo,Tidak ada data alur,لا توجد بيانات تدفق
+flow.placeholder.filter_flow,流程筛选,流程篩選,Filter Flows,Filtrer les flux,フローをフィルター,흐름 필터,Фильтр потоков,Filtrar flujos,Flow filtern,Filtrar fluxos,Filter alur,تصفية التدفقات
+flow.node.gateway_join_label,网关汇聚,網關匯聚,Gateway Join,Jonction passerelle,ゲートウェイ結合,게이트웨이 합류,Объединение шлюза,Unión de pasarela,Gateway-Zusammenführung,Junção de gateway,Gabungan Gateway,ضم البوابة
+flow.node.end_label,流程结束,流程結束,End,Fin,終了,종료,Завершение,Fin,Ende,Fim,Selesai,نهاية
+flow.node.start_intro,流程从本节点开始,流程從本節點開始,Flow starts from this node,Le flux commence ici,このノードから開始,이 노드에서 시작,Поток начинается с этого узла,El flujo comienza aquí,Flow beginnt hier,Fluxo começa aqui,Alur dimulai dari node ini,يبدأ التدفق من هذه العقدة
+flow.node.insert_btn_title,请选择流程节点,請選擇流程節點,Select Flow Node,Sélectionner un nœud,フローノードを選択,흐름 노드 선택,Выбрать узел потока,Seleccionar nodo,Flow-Knoten wählen,Selecionar nó do fluxo,Pilih node alur,اختيار عقدة التدفق
+flow.node.tab.set_approver,设置审核人,設置審核人,Set Approver,Définir l'approbateur,承認者を設定,승인자 설정,Установить утверждающего,Establecer aprobador,Genehmiger festlegen,Definir aprovador,Atur Persetuju,تعيين المعتمد
+flow.node.tab.form_access,表单权限,表單權限,Form Access,Accès au formulaire,フォームアクセス,양식 접근,Доступ к форме,Acceso al formulario,Formular-Zugriff,Acesso ao formulário,Akses Formulir,صلاحية النموذج
+flow.node.tab.operation,操作权限,操作權限,Operation,Opération,操作権限,작업 권한,Операционные права,Operación,Betriebsrechte,Operação,Hak Operasi,صلاحيات التشغيل
+flow.node.tab.set_assignee,设置办理人,設置辦理人,Set Assignee,Définir le responsable,担当者を設定,담당자 설정,Установить исполнителя,Establecer responsable,Beauftragten festlegen,Definir responsável,Atur Penanggung Jawab,تعيين المسؤول
+flow.node.tab.set_cc,设置抄送人,設置抄送人,Set CC Recipients,Définir les destinataires CC,CC受信者を設定,참조 수신자 설정,Установить получателей копии,Establecer destinatarios CC,CC-Empfänger festlegen,Definir destinatários CC,Atur Penerima CC,تعيين مستلمي النسخة
+flow.node.delete_approver,删除审批人,刪除審批人,Remove Approver,Supprimer l'approbateur,承認者を削除,승인자 삭제,Удалить утверждающего,Eliminar aprobador,Genehmiger löschen,Remover aprovador,Hapus Persetuju,إزالة المعتمد
+flow.node.add_approver,添加审批人,添加審批人,Add Approver,Ajouter un approbateur,承認者を追加,승인자 추가,Добавить утверждающего,Añadir aprobador,Genehmiger hinzufügen,Adicionar aprovador,Tambah Persetuju,إضافة معتمد
+flow.node.add_cc,添加抄送,添加抄送,Add CC,Ajouter copie,CC追加,참조 추가,Добавить копию,Añadir copia,CC hinzufügen,Adicionar cópia,Tambah CC,إضافة نسخة
+flow.node.add_assignee,添加办理人,添加辦理人,Add Assignee,Ajouter un responsable,担当者を追加,담당자 추가,Добавить исполнителя,Añadir responsable,Beauftragten hinzufügen,Adicionar responsável,Tambah Penanggung Jawab,إضافة مسؤول
+flow.approval.same_person_title,审批人与提交人为同一人时,審批人與提交人為同一人時,When approver equals submitter,Quand l'approbateur est le soumissionnaire,承認者と提出者が同一の場合,승인자와 제출자가 동일할 때,Когда утверждающий совпадает с отправителем,Cuando el aprobador es el emisor,Wenn Genehmiger gleich Absender,Quando aprovador é o remetente,Saat persetuju sama dengan pengirim,عندما يكون المعتمد هو المقدِّم
+flow.approval.self_approval,由提交人自己审批,由提交人自己審批,Self Approval,Auto-approbation,本人自身が承認,본인 승인,Самоутверждение,Auto-aprobación,Selbst-Genehmigung,Auto-aprovação,Persetujuan Mandiri,موافقة ذاتية
+flow.approval.skip,跳过,跳過,Skip,Ignorer,スキップ,건너뜀,Пропустить,Omitir,Überspringen,Pular,Lewati,تخطي
+flow.approval.nobody_title,审批人不存在时,審批人不存在時,When no approver exists,Quand aucun approbateur n'existe,承認者が存在しない場合,승인자가 없을 때,Когда утверждающий отсутствует,Cuando no hay aprobador,Wenn kein Genehmiger vorhanden,Quando não há aprovador,Saat tidak ada persetuju,عندما لا يوجد معتمد
+flow.approval.redirect_admin,转交给管理员,轉交給管理員,Redirect to Admin,Rediriger vers l'admin,管理者に転送,관리자에게 전달,Передать администратору,Redirigir al admin,An Admin weiterleiten,Redirecionar para admin,Alihkan ke Admin,إعادة توجيه للمشرف
+flow.approval.redirect_specified,转交到指定审批人,轉交到指定審批人,Redirect to Specified Approver,Rediriger vers approbateur spécifié,指定承認者に転送,지정 승인자에게 전달,Передать указанному утверждающему,Redirigir al aprobador especificado,An bestimmten Genehmiger weiterleiten,Redirecionar para aprovador específico,Alihkan ke Persetuju Tertentu,توجيه لمعتمد محدد
+flow.approval.multi_person_title,多人审批时使用的审批方式,多人審批時使用的審批方式,Approval mode for multiple approvers,Mode d'approbation multiple,複数承認者の審批方式,다수 승인자 승인 방식,Режим утверждения для нескольких,Modo de aprobación múltiple,Genehmigungsmodus für mehrere,Modo de aprovação múltipla,Mode Persetujuan Multi Orang,نمط الموافقة لمتعدد المعتمدين
+flow.approval.or_sign,或签（一名审批人同意即可）,或簽（一名審批人同意即可）,Any Approve (one approver required),N'importe lequel (un suffit),いずれか承認（一名でOK）,또는 서명 (한 명이면 충분),Любой (достаточно одного),Cualquiera (basta uno),Beliebig (einer reicht),Qualquer (basta um),Salah Satu (satu cukup),أي موافق (يكفي واحد)
+flow.approval.all_sign,会签（需所有审批人同意）,會簽（需所有審批人同意）,All Approve (all must agree),Tous (tous doivent approuver),全員承認（全員必要）,회서명 (모두 동의해야 함),Все (нужно согласие всех),Todos (todos deben aprobar),Alle (alle müssen zustimmen),Todos (todos devem aprovar),Semua (semua harus setuju),الجميع (يجب موافقة الجميع)
+flow.approval.timeout_title,审批超时设置,審批超時設置,Approval Timeout Settings,Paramètres de délai d'approbation,承認タイムアウト設定,승인 시간 초과 설정,Настройки таймаута утверждения,Configuración de tiempo límite,Genehmigungszeitlimit,Configurações de timeout,Pengaturan Batas Waktu,إعدادات مهلة الموافقة
+flow.approval.timeout_suffix,小时后 →,小時後 →,hours later →,heures après →,時間後 →,시간 후 →,часов спустя →,horas después →,Stunden später →,horas depois →,jam setelah →,ساعات لاحقاً →
+flow.approval.auto_approve,自动同意,自動同意,Auto Approve,Approbation auto,自動承認,자동 승인,Авто одобрение,Aprobación automática,Auto-Genehmigung,Auto Aprovação,Persetujuan Otomatis,موافقة تلقائية
+flow.approval.auto_reject,自动拒绝,自動拒絕,Auto Reject,Rejet auto,自動拒否,자동 거절,Авто отклонение,Rechazo automático,Auto-Ablehnung,Auto Rejeição,Penolakan Otomatis,رفض تلقائي
+flow.approval.allow_transfer,允许转交,允許轉交,Allow Transfer,Autoriser le transfert,転送を許可,이관 허용,Разрешить передачу,Permitir transferencia,Transfer erlauben,Permitir transferência,Izinkan Transfer,السماح بالنقل
+flow.approval.allow_add_sign,允许加签,允許加簽,Allow Countersign,Autoriser la signature,署名追加を許可,서명 추가 허용,Разрешить подписание,Permitir contrafirma,Unterzeichnung erlauben,Permitir contrassinatura,Izinkan Tanda Tangan Tambahan,السماح بإضافة التوقيع
+flow.approval.allow_cc,允许抄送,允許抄送,Allow CC,Autoriser la copie,CCを許可,참조 허용,Разрешить копию,Permitir copia,CC erlauben,Permitir cópia,Izinkan CC,السماح بالنسخ
+flow.approval.allow_return,允许退回,允許退回,Allow Return,Autoriser le retour,差し戻しを許可,반려 허용,Разрешить возврат,Permitir devolución,Rückgabe erlauben,Permitir devolução,Izinkan Pengembalian,السماح بالإرجاع
+flow.approval.require_signature,审批同意时需手写签名,審批同意時需手寫簽名,Require handwritten signature on approval,Signature manuscrite requise,承認時に手書き署名が必要,승인 시 서명 필요,Требуется подпись при утверждении,Firma manuscrita requerida al aprobar,Handunterschrift bei Genehmigung erforderlich,Assinatura manuscrita necessária,Tanda tangan tangan diperlukan saat menyetujui,مطلوب توقيع يدوي عند الموافقة
+flow.approval.require_note,提交审批需填写审批意见,提交審批需填寫審批意見,Comment required on approval,Commentaire requis,承認意見の入力が必要,승인 의견 필수,Требуется комментарий,Comentario requerido,Kommentar erforderlich,Comentário necessário,Komentar wajib diisi,التعليق مطلوب
+flow.sub.initiator_config,发起人配置,發起人配置,Initiator Config,Config initiateur,発起人設定,발기인 구성,Конфигурация инициатора,Configuración del iniciador,Initiator-Konfiguration,Configuração do iniciador,Konfigurasi Inisiator,تكوين المبادر
+flow.sub.turn_rule,流转规则,流轉規則,Flow Rule,Règle de flux,フロー規則,흐름 규칙,Правило потока,Regla de flujo,Flow-Regel,Regra de fluxo,Aturan Alur,قاعدة التدفق
+flow.sub.wait_complete,子流程结束后进去下一个节点,子流程結束後進去下一個節點,Proceed after sub-flow completes,Continuer après la sous-workflow,サブフロー完了後に次のノードへ,하위 흐름 완료 후 다음 노드로,После завершения,Continuar después de completar,Nach Abschluss des Unterprozesses,Prosseguir após conclusão,Lanjutkan setelah sub-alur selesai,المتابعة بعد اكتمال التدفق الفرعي
+flow.sub.fire_and_forget,子流程发起后进去下一个节点,子流程發起後進去下一個節點,Proceed after sub-flow starts,Continuer après démarrage,サブフロー開始後に次のノードへ,하위 흐름 시작 후 다음 노드로,После запуска подпроцесса,Continuar después de iniciar,Nach dem Start des Unterprozesses,Prosseguir após início,Lanjutkan setelah sub-alur dimulai,المتابعة بعد بدء التدفق الفرعي
+flow.sub.title,子流程,子流程,Sub Flow,Sous-flux,サブフロー,하위 흐름,Вложенный поток,Subflujo,Unterflow,Subfluxo,Sub Alur,التدفق الفرعي
+flow.sub.select_placeholder,选择子流程,選擇子流程,Select Sub Flow,Sélectionner le sous-flux,サブフローを選択,하위 흐름 선택,Выбрать вложенный поток,Seleccionar subflujo,Unterflow auswählen,Selecionar subfluxo,Pilih sub alur,اختيار التدفق الفرعي
+flow.sub.parent_to_sub,父流程 → 子流程,父流程 → 子流程,Parent → Sub,Parent → Sub,親 → 子,부모 → 자식,Родитель → Дочерний,Padre → Sub,Eltern → Unter,Pai → Sub,Induk → Sub,الأصل → الفرعي
+flow.sub.parent_field,主流程字段,主流程字段,Parent Field,Champ parent,親フィールド,부모 필드,Поле родителя,Campo padre,Elternfeld,Campo pai,Field Induk,حقل الأصل
+flow.sub.sub_field,子流程字段,子流程字段,Sub Field,Champ sous-flux,子フィールド,자식 필드,Дочернее поле,Campo sub,Unterfeld,Campo sub,Field Sub,حقل الفرعي
+flow.sub.add_mapping,添加映射,添加映射,Add Mapping,Ajouter une correspondance,マッピングを追加,매핑 추가,Добавить маппинг,Añadir mapeo,Mapping hinzufügen,Adicionar mapeamento,Tambah Pemetaan,إضافة ربط
+flow.sub.sub_to_parent,子流程 → 父流程,子流程 → 父流程,Sub → Parent,Sub → Parent,子 → 親,자식 → 부모,Дочерний → Родитель,Sub → Padre,Unter → Eltern,Sub → Pai,Sub → Induk,الفرعي → الأصل
+flow.review_user.org_head_label,直属组织负责人,直屬組織負責人,Direct Org Manager,Responsable org. direct,直属組織責任者,직속 조직 책임자,Прямой руководитель,Responsable directo,Direkter Organisationsleiter,Responsável direto,Manajer Organisasi Langsung,مدير المنظمة المباشر
+flow.review_user.division_leader_label,直属分管领导,直屬分管領導,Direct Division Leader,Responsable division direct,直属分管リーダー,직속 분할 리더,Прямой руководитель отдела,Líder de división directo,Direkter Abteilungsleiter,Líder de divisão direto,Pemimpin Divisi Langsung,قائد القسم المباشر
+flow.review_user.level_prefix,加 ,加 ,+ ,+ ,+ ,+ ,+ ,+ ,+ ,+ ,+ ,+
+flow.review_user.level_suffix, 级负责人, 級負責人, Level Manager, niveaux manager, レベルマネージャー, 레벨 관리자, уровня менеджер, nivel manager, Ebene Manager, nível gestor, level manajer, مستوى مدير
+flow.config.export_flow,导出流程图,導出流程圖,Export Flow,Exporter le flux,フローをエクスポート,흐름 내보내기,Экспорт потока,Exportar flujo,Flow exportieren,Exportar fluxo,Ekspor Alur,تصدير التدفق
+flow.config.copy_config,复制配置,複製配置,Copy Config,Copier la config,設定をコピー,설정 복사,Копировать конфигурацию,Copiar configuración,Konfiguration kopieren,Copiar configuração,Salin Konfigurasi,نسخ الإعداد
+flow.config.publish,发布,發佈,Publish,Publier,公開,게시,Опубликовать,Publicar,Veröffentlichen,Publicar,Terbitkan,نشر
+flow.config.placeholder.name,请输入名称,請輸入名稱,Please enter name,Veuillez saisir le nom,名前を入力してください,이름을 입력하세요,Пожалуйста введите имя,Por favor ingrese el nombre,Bitte Namen eingeben,Por favor insira o nome,Harap masukkan nama,الرجاء إدخال الاسم
+flow.config.placeholder.group,请选择分组,請選擇分組,Please select group,Veuillez sélectionner le groupe,グループを選択してください,그룹을 선택하세요,Пожалуйста выберите группу,Por favor seleccione el grupo,Bitte Gruppe wählen,Por favor selecione o grupo,Harap pilih grup,الرجاء اختيار المجموعة
+flow.config.error.group_required,分组为空,请选择,分組為空,請選擇,Group is required,Groupe requis,グループは必須です,그룹이 필요합니다,Группа обязательна,Grupo requerido,Gruppe erforderlich,Grupo necessário,Grup wajib diisi,المجموعة مطلوبة
+flow.config.placeholder.remark,说明,說明,Description,Description,説明,설명,Описание,Descripción,Beschreibung,Descrição,Keterangan,وصف
+flow.config.placeholder.permission,请选择提交权限,請選擇提交權限,Select submit permission,Sélectionner l'autorisation,提出権限を選択,제출 권한 선택,Выбрать права отправки,Seleccionar permiso,Berechtigung wählen,Selecionar permissão,Pilih izin pengiriman,اختيار صلاحية الإرسال
+flow.config.placeholder.data_model,请选择数据模型,請選擇數據模型,Please select data model,Sélectionner le modèle,データモデルを選択してください,데이터 모델을 선택하세요,Пожалуйста выберите модель,Por favor seleccione el modelo,Bitte Modell wählen,Por favor selecione o modelo,Harap pilih model data,الرجاء اختيار نموذج البيانات
+flow.config.label.subtitle_field,审批子标题字段设置,審批子標題字段設置,Subtitle Field Settings,Paramètres sous-titre,サブタイトルフィールド設定,부제목 필드 설정,Настройки поля подзаголовка,Configuración de campos de subtítulo,Untertitelfeld-Einstellungen,Configurações de campo de subtítulo,Pengaturan Field Sub-judul,إعدادات حقل العنوان الفرعي
+flow.config.placeholder.field,请选择字段,請選擇字段,Select Field,Sélectionner le champ,フィールドを選択,필드 선택,Выбрать поле,Seleccionar campo,Feld wählen,Selecionar campo,Pilih Field,اختيار الحقل
+flow.config.label.print_setting,打印设置,打印設置,Print Settings,Paramètres d'impression,印刷設定,인쇄 설정,Настройки печати,Configuración de impresión,Druckeinstellungen,Configurações de impressão,Pengaturan Cetak,إعدادات الطباعة
+flow.config.config_template,配置模板,配置模板,Configure Template,Configurer le modèle,テンプレートを設定,템플릿 구성,Настроить шаблон,Configurar plantilla,Vorlage konfigurieren,Configurar modelo,Konfigurasi Template,تكوين القالب
+flow.print.applicant,申请人,申請人,Applicant,Demandeur,申請者,신청자,Заявитель,Solicitante,Antragsteller,Requerente,Pemohon,مقدِّم الطلب
+flow.print.apply_date,申请日期,申請日期,Apply Date,Date de demande,申請日,신청일,Дата заявки,Fecha de solicitud,Antragsdatum,Data de solicitação,Tanggal Pengajuan,تاريخ الطلب
+flow.print.flow_no,流程编号,流程編號,Flow No.,N° de flux,フロー番号,흐름 번호,Номер потока,Número de flujo,Flow-Nummer,Número do fluxo,No. Alur,رقم التدفق
+flow.print.status,审批状态,審批狀態,Approval Status,Statut d'approbation,承認ステータス,승인 상태,Статус утверждения,Estado de aprobación,Genehmigungsstatus,Status de aprovação,Status Persetujuan,حالة الموافقة
+flow.instance.select_approver_tip,请在发起流程前选择对应节点的审批用户,請在發起流程前選擇對應節點的審批用戶,Please select approver for each node before starting,Sélectionner les approbateurs avant de démarrer,開始前に各ノードの承認者を選択してください,시작 전에 각 노드의 승인자를 선택하세요,Пожалуйста выберите утверждающих перед запуском,Por favor seleccione aprobadores antes de iniciar,Bitte Genehmiger vor dem Starten auswählen,Por favor selecione aprovadores antes de iniciar,Harap pilih persetuju sebelum memulai,الرجاء اختيار المعتمدين قبل البدء
+flow.instance.select_approver_prefix,请选择,請選擇,Select,Sélectionner,選択,선택,Выбрать,Seleccionar,Auswählen,Selecionar,Pilih,اختيار
+flow.instance.select_approver_suffix, 的审批用户, 的審批用戶, Approver, approbateur, の承認ユーザー, 의 승인자, утверждающего, aprobador, Genehmiger, aprovador, persetuju, المعتمد
+flow.action.launch,发起审批,發起審批,Submit,Soumettre,申請を発起,신청 제출,Отправить заявку,Enviar solicitud,Antrag einreichen,Enviar solicitação,Ajukan Persetujuan,تقديم الطلب
+flow.upms.org_label,组织架构,組織架構,Organization,Organisation,組織,조직,Организация,Organización,Organisation,Organização,Organisasi,المنظمة
+flow.upms.unknown,未知,未知,Unknown,Inconnu,不明,알 수 없음,Неизвестно,Desconocido,Unbekannt,Desconhecido,Tidak diketahui,غير معروف
+flow.node.placeholder_default,请设置,請設置,Please set,Veuillez définir,設定してください,설정해주세요,Пожалуйста установите,Por favor configure,Bitte einstellen,Por favor configure,Harap atur,الرجاء التعيين
+flow.management.confirm_delete_group_prefix,确定要删除分组",確定要刪除分組",Delete group ",Supprimer le groupe ",グループ「,그룹 ",Удалить группу ",Eliminar grupo ",Gruppe „,Excluir grupo ",Hapus grup ",حذف المجموعة "
+flow.management.confirm_delete_group_suffix,"吗？,"嗎？,"？,"?,」を削除しますか？,"을(를) 삭제하시겠습니까?,"?,"?,»?,"?,»?,«؟
+flow.config.confirm_copy_prefix,确定要复制流程配置",確定要複製流程配置",Copy flow config ",Copier la config ",フロー設定「,흐름 설정 ",Копировать конфиг ",Copiar config ",Config „,Copiar config ",Salin konfigurasi ",نسخ الإعداد "
+flow.config.confirm_copy_suffix,"吗？,"嗎？,"?,"?,」をコピーしますか？,"을(를) 복사하시겠습니까?,"?,"?,»?,"?,»?,«؟
+flow.config.confirm_delete_prefix,确定要删除流程配置",確定要刪除流程配置",Delete flow config ",Supprimer la config ",フロー設定「,흐름 설정 ",Удалить конфиг ",Eliminar config ",Config „,Excluir config ",Hapus konfigurasi ",حذف الإعداد "
+flow.config.confirm_delete_suffix,"吗？此操作不可恢复。,"嗎？此操作不可恢復。,"? This cannot be undone.,"? Cette action est irréversible.,"? この操作は元に戻せません。,"? 이 작업은 되돌릴 수 없습니다.,"? Это действие нельзя отменить.,"? Esta acción no se puede deshacer.,"? Dies kann nicht rückgängig gemacht werden.,"? Esta ação não pode ser desfeita.,"? Tindakan ini tidak dapat dibatalkan.,"؟ لا يمكن التراجع عن هذا.
+flow.error.config_id_not_found,配置ID不存在,配置ID不存在,Config ID not found,ID de config introuvable,設定IDが見つかりません,설정 ID가 없습니다,ID конфигурации не найден,ID de config no encontrado,Config-ID nicht gefunden,ID de config não encontrado,ID konfigurasi tidak ditemukan,معرف الإعداد غير موجود
+designer.bool.true,是,是,Yes,Oui,はい,예,Да,Sí,Ja,Sim,Ya,نعم
+designer.bool.false,否,否,No,Non,いいえ,아니오,Нет,No,Nein,Não,Tidak,لا
+designer.option.one,选项一,選項一,Option 1,Option 1,選択肢 1,옵션 1,Вариант 1,Opción 1,Option 1,Opção 1,Pilihan 1,الخيار 1
+designer.option.two,选项二,選項二,Option 2,Option 2,選択肢 2,옵션 2,Вариант 2,Opción 2,Option 2,Opção 2,Pilihan 2,الخيار 2
+setting.split-menu,分类导航,分類導航,Category Nav,Navigation par catégorie,カテゴリナビ,카테고리 탐색,Навигация по разделам,Navegación por categorías,Kategorienavigation,Navegação por categorias,Navigasi Kategori,التنقل بالفئات
+global.back,返回,返回,Back,Retour,戻る,뒤로,Назад,Volver,Zurück,Voltar,Kembali,رجوع

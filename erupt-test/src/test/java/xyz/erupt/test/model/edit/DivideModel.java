@@ -17,7 +17,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "DivideEdit")
 public class DivideModel extends BaseModel {
 
-    // 第一分区
+    // section 1
     @Transient
     @EruptField(
             edit = @Edit(title = "Basic Info", type = EditType.DIVIDE)
@@ -36,7 +36,7 @@ public class DivideModel extends BaseModel {
     )
     private String email;
 
-    // 第二分区
+    // section 2
     @Transient
     @EruptField(
             edit = @Edit(title = "Extra Info", type = EditType.DIVIDE)

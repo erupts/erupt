@@ -34,13 +34,13 @@ public class EruptRole extends HyperModelUpdateVo {
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "code"),
-            edit = @Edit(title = "code", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "code", notNull = true, search = @Search)
     )
     private String code;
 
     @EruptField(
             views = @View(title = "name"),
-            edit = @Edit(title = "name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "name", notNull = true, search = @Search)
     )
     private String name;
 
@@ -56,7 +56,7 @@ public class EruptRole extends HyperModelUpdateVo {
                     title = "status",
                     type = EditType.BOOLEAN,
                     notNull = true,
-                    search = @Search(vague = true),
+                    search = @Search,
                     boolType = @BoolType(trueText = "Enable", falseText = "Disable")
             )
     )

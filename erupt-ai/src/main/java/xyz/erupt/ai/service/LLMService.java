@@ -2,7 +2,6 @@ package xyz.erupt.ai.service;
 
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
-import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
@@ -15,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.constants.ChatSenderType;
+import xyz.erupt.ai.constants.SseEvent;
 import xyz.erupt.ai.core.LlmCore;
 import xyz.erupt.ai.core.LlmRequest;
 import xyz.erupt.ai.handler.EruptPromptHandler;
@@ -23,7 +23,6 @@ import xyz.erupt.ai.model.AiChatMessage;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.vo.SseBody;
-import xyz.erupt.ai.vo.SseEvent;
 import xyz.erupt.ai.vo.ToolCallRecord;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
@@ -89,15 +88,14 @@ public class LLMService {
                 }
             }
         }
-        if (null != llmAgent) {
-            // Agent
-            if (null == llmAgent.getPromptHandler()) {
-                messages.add(SystemMessage.from(llmAgent.getPrompt()));
-            } else {
-                messages.add(SystemMessage.from(EruptSpringUtil.getBeanByPath(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt())));
-            }
-        }
         return messages;
+    }
+
+    @SneakyThrows
+    public String resolveAgentPrompt(LLMAgent llmAgent) {
+        if (null == llmAgent) return null;
+        if (null == llmAgent.getPromptHandler()) return llmAgent.getPrompt();
+        return EruptSpringUtil.getBeanByPath(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt());
     }
 
     @Async
@@ -105,14 +103,16 @@ public class LLMService {
     @SneakyThrows
     public void sendSse(MetaContext metaContext, Boolean autoToolCall, LLMAgent llmAgent, SseEmitter emitter,
                         LlmCore llm, LLM llmModel, AiChatMessage chatMessage,
-                        String userMessage,List<ChatMessage> chatContext) {
+                        String userMessage, List<ChatMessage> chatContext, String contextPrompt) {
         try {
             MetaContext.set(metaContext);
             LlmRequest llmRequest = llmModel.toLlmRequest();
             if (null != llmAgent) {
                 llmAgent.mergeToLLmRequest(llmModel);
+                llmRequest.setAgentPrompt(resolveAgentPrompt(llmAgent));
             }
             llmRequest.setAutoCallTool(autoToolCall);
+            llmRequest.setContextPrompt(contextPrompt);
             List<ToolCallRecord> toolCallList = new ArrayList<>();
             llm.chatSse(llmRequest, userMessage, chatContext, it -> {
                 if (null != it.getToolResult()) {
@@ -135,8 +135,8 @@ public class LLMService {
                 } else if (null != it.getCurrMessage()) {
                     this.sendSseMessage(emitter, it.getCurrMessage());
                 }
-                if (null != it.getThink()) {
-                    this.sendSseThinkMessage(emitter, it.getThink());
+                if (null != it.getCall()) {
+                    this.sendSseCallMessage(emitter, it.getCall());
                 }
             });
         } catch (Exception e) {
@@ -152,13 +152,13 @@ public class LLMService {
     }
 
     @SneakyThrows
-    public void sendSseThinkClear(SseEmitter emitter) {
-        this.sendSseBody(emitter, new SseBody(SseEvent.THINK, null));
+    public void sendSseCallClear(SseEmitter emitter) {
+        this.sendSseBody(emitter, new SseBody(SseEvent.CALL, null));
     }
 
     @SneakyThrows
-    public void sendSseThinkMessage(SseEmitter emitter, String llmMessage) {
-        this.sendSseBody(emitter, new SseBody(SseEvent.THINK, llmMessage));
+    public void sendSseCallMessage(SseEmitter emitter, String llmMessage) {
+        this.sendSseBody(emitter, new SseBody(SseEvent.CALL, llmMessage));
     }
 
     @SneakyThrows
@@ -171,7 +171,7 @@ public class LLMService {
     @SneakyThrows
     public void sendSseMessage(SseEmitter emitter, String llmMessage) {
         if (StringUtils.isNotBlank(llmMessage) && llmMessage.length() > aiProp.getMessageChunkSize()) {
-            this.sendSseThinkClear(emitter);
+            this.sendSseCallClear(emitter);
             for (int i = 0; i < llmMessage.length(); i += aiProp.getMessageChunkSize()) {
                 int end = Math.min(i + aiProp.getMessageChunkSize(), llmMessage.length());
                 this.sendSseBody(emitter, new SseBody(SseEvent.TOKEN, llmMessage.substring(i, end)));
@@ -181,7 +181,7 @@ public class LLMService {
             }
         } else {
             this.sendSseBody(emitter, new SseBody(SseEvent.TOKEN, llmMessage));
-            this.sendSseThinkClear(emitter);
+            this.sendSseCallClear(emitter);
         }
     }
 

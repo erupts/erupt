@@ -39,13 +39,13 @@ public class EruptOnline extends BaseModel {
 
     @EruptField(
             views = @View(title = "Account"),
-            edit = @Edit(title = "Account", search = @Search(vague = true))
+            edit = @Edit(title = "Account", search = @Search)
     )
     private String userName;
 
     @EruptField(
             views = @View(title = "Login Time", sortable = true),
-            edit = @Edit(title = "Login Time", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "Login Time", search = @Search, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date loginTime;
 
@@ -57,7 +57,7 @@ public class EruptOnline extends BaseModel {
 
     @EruptField(
             views = @View(title = "IP Source", desc = "Country | Region | Province | City | ISP", template = "value&&value.replace(/\\|/g,' | ')"),
-            edit = @Edit(title = "IP Source", search = @Search(vague = true))
+            edit = @Edit(title = "IP Source", search = @Search)
     )
     private String region;
 

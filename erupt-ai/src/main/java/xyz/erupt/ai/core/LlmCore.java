@@ -87,6 +87,12 @@ public abstract class LlmCore {
             if (rolePrompt != null && !rolePrompt.isBlank()) {
                 systemPrompt.append("\n\n").append(rolePrompt);
             }
+            if (llmRequest.getAgentPrompt() != null && !llmRequest.getAgentPrompt().isBlank()) {
+                systemPrompt.append("\n\n").append(llmRequest.getAgentPrompt());
+            }
+            if (llmRequest.getContextPrompt() != null && !llmRequest.getContextPrompt().isBlank()) {
+                systemPrompt.append("\n\n").append(llmRequest.getContextPrompt());
+            }
             return systemPrompt.toString();
         });
         if (llmRequest.getAutoCallTool()) {
@@ -163,10 +169,10 @@ public abstract class LlmCore {
                 }).onPartialToolCall(toolCall -> {
                     toolCalling.set(true);
                     MetaContext.set(metaContext);
-                    log.info("Calling {} with arguments: {}", toolCall.name(), toolCall.partialArguments());
-                    listener.accept(SseListener.builder().think("Calling " + toolCall.name()).build());
+                    String callMsg = toolCall.name();
+                    listener.accept(SseListener.builder().call(callMsg).build());
                 }).onPartialThinking(thinking -> {
-                    listener.accept(SseListener.builder().think(thinking.text()).build());
+                    listener.accept(SseListener.builder().currMessage(thinking.text()).build());
                 }).start();
     }
     public ChatMemory creatMemory(List<ChatMessage> chatMessages) {

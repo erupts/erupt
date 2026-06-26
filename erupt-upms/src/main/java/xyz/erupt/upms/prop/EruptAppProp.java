@@ -41,10 +41,10 @@ public class EruptAppProp {
             "en-US",      // 🇬🇧 English
             "fr-FR",      // 🇫🇷 En français
             "de-DE",      // 🇩🇪 Deutsch
-            "zh-CN",      // 🇨🇳 简体中文
-            "zh-TW",      // 🇭🇰 繁体中文
-            "ja-JP",      // 🇯🇵 日本語
-            "ko-KR",      // 🇰🇷 한국어
+            "zh-CN",      // 🇨🇳 Simplified Chinese
+            "zh-TW",      // 🇭🇰 Traditional Chinese
+            "ja-JP",      // 🇯🇵 Japanese
+            "ko-KR",      // 🇰🇷 Korean
             "ru-RU",      // 🇷🇺 русск
             "es-ES",      // 🇪🇸 español
             "pt-PT",      // 🇵🇹 Português

@@ -3,6 +3,7 @@ package xyz.erupt.ai.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.ai.core.LlmConfig;
@@ -12,6 +13,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.Layout;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -37,7 +39,8 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
                 @RowOperation(title = "Default Chat Model", icon = "fa fa-magic",
                         ifExpr = "item.defaultLLM === '×'",
                         mode = RowOperation.Mode.SINGLE, operationHandler = LLMDataProxy.class)
-        }
+        },
+        layout = @Layout(tableLeftFixed = 1)
 )
 @Getter
 @Setter
@@ -47,8 +50,8 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 public class LLM extends MetaModelUpdateVo {
 
     @EruptField(
-            views = @View(title = "Model Name"),
-            edit = @Edit(title = "Model Name", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Model Name",width = "150px"),
+            edit = @Edit(title = "Model Name", notNull = true, search = @Search)
     )
     private String name;
 
@@ -67,7 +70,7 @@ public class LLM extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "Model Version"),
-            edit = @Edit(title = "Model Version", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Model Version", notNull = true, search = @Search)
     )
     private String model;
 
@@ -82,6 +85,14 @@ public class LLM extends MetaModelUpdateVo {
             edit = @Edit(title = "API Key")
     )
     private String apiKey;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Advanced", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"maxContext", "config", "remark"}, collapsed = true)
+            )
+    )
+    private String advancedGroup;
 
     @EruptField(
             views = @View(title = "Context Memory Rounds"),

@@ -21,7 +21,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "InputEdit")
 public class InputModel extends BaseModel {
 
-    // 必填 + 占位符
+    // required + placeholder
     @EruptField(
             views = @View(title = "Name"),
             edit = @Edit(title = "Name", notNull = true, placeHolder = "Enter name",
@@ -29,7 +29,7 @@ public class InputModel extends BaseModel {
     )
     private String name;
 
-    // 长度限制 + 铺满整行
+    // length limit + full span
     @Column(length = 500)
     @EruptField(
             views = @View(title = "Description"),
@@ -39,7 +39,7 @@ public class InputModel extends BaseModel {
     )
     private String description;
 
-    // 邮箱类型
+    // email type
     @EruptField(
             views = @View(title = "Email"),
             edit = @Edit(title = "Email", type = EditType.INPUT,
@@ -47,7 +47,7 @@ public class InputModel extends BaseModel {
     )
     private String email;
 
-    // 正则校验（手机号）
+    // regex validation (phone number)
     @EruptField(
             views = @View(title = "Phone"),
             edit = @Edit(title = "Phone", type = EditType.INPUT,
@@ -55,7 +55,7 @@ public class InputModel extends BaseModel {
     )
     private String phone;
 
-    // 关闭自动去空格
+    // disable auto-trim
     @EruptField(
             views = @View(title = "Code"),
             edit = @Edit(title = "Code", desc = "Whitespace is preserved",
@@ -64,25 +64,25 @@ public class InputModel extends BaseModel {
     )
     private String code;
 
-    // 前缀 + 后缀
+    // prefix + suffix
     @EruptField(
             views = @View(title = "Price"),
             edit = @Edit(title = "Price", type = EditType.INPUT,
                     inputType = @InputType(
                             prefix = {@VL(value = "¥", label = "CNY")},
-                            suffix = {@VL(value = "元", label = "Yuan")}))
+                            suffix = {@VL(value = "Yuan", label = "Yuan")}))
     )
     private String price;
 
-    // 启用模糊搜索
+    // enable fuzzy search
     @EruptField(
             views = @View(title = "Keyword"),
             edit = @Edit(title = "Keyword", type = EditType.INPUT,
-                    search = @Search(value = true, vague = true))
+                    search = @Search)
     )
     private String keyword;
 
-    // 编辑时只读
+    // read-only in edit mode
     @EruptField(
             views = @View(title = "Serial No"),
             edit = @Edit(title = "Serial No",
@@ -91,7 +91,7 @@ public class InputModel extends BaseModel {
     )
     private String serialNo;
 
-    // 不在表单中展示（仅列表可见）
+    // hidden in form (list view only)
     @EruptField(
             views = @View(title = "Internal Code"),
             edit = @Edit(title = "Internal Code", show = false, type = EditType.INPUT)

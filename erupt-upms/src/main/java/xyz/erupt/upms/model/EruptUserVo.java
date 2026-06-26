@@ -30,7 +30,7 @@ public class EruptUserVo extends BaseModel {
 
     @EruptField(
             views = @View(title = "Full Name", sortable = true),
-            edit = @Edit(title = "Full Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Full Name", notNull = true, search = @Search)
     )
     private String name;
 

@@ -19,7 +19,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "CodeEditorEdit")
 public class CodeEditorModel extends BaseModel {
 
-    // JSON（默认高度 300）
+    // JSON (default height 300)
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "JSON Config"),
@@ -28,7 +28,7 @@ public class CodeEditorModel extends BaseModel {
     )
     private String jsonConfig;
 
-    // SQL（高度 500）
+    // SQL (height 500)
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "SQL Script"),

@@ -13,9 +13,9 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.R;
 
 import java.util.function.Consumer;
 
@@ -34,53 +34,55 @@ public class EruptTabController {
     // TAB component add behavior
     @PostMapping({"/tab-add/{erupt}/{tabName}"})
     @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    public EruptApiModel addTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
+    public R<?> addTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
         EruptModel eruptModel = getTabErupt(erupt, tabName);
         Object obj = gson.fromJson(data.toString(), eruptModel.getClazz());
-        EruptApiModel eruptApiModel = this.tabValidate(eruptModel, data, dp -> {
+        R<Object> r = this.tabValidate(eruptModel, data, dp -> {
             dp.beforeAdd(obj);
             dp.afterAdd(obj);
         });
-        eruptApiModel.setData(obj);
-        return eruptApiModel;
+        r.setData(obj);
+        return r;
     }
 
     // TAB component update behavior
     @PostMapping({"/tab-update/{erupt}/{tabName}"})
     @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    public EruptApiModel updateTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
+    public R<?> updateTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
         EruptModel eruptModel = getTabErupt(erupt, tabName);
         Object obj = gson.fromJson(data.toString(), eruptModel.getClazz());
-        EruptApiModel eruptApiModel = this.tabValidate(eruptModel, data, dp -> {
+        R<Object> r = this.tabValidate(eruptModel, data, dp -> {
             dp.beforeUpdate(obj);
             dp.afterUpdate(obj);
         });
-        eruptApiModel.setData(obj);
-        return eruptApiModel;
+        r.setData(obj);
+        return r;
     }
 
     // TAB component delete behavior
     @PostMapping({"/tab-delete/{erupt}/{tabName}"})
     @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    public EruptApiModel deleteTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
-        EruptApiModel eruptApiModel = EruptApiModel.successApi();
+    public R<Void> deleteTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
         EruptModel eruptModel = getTabErupt(erupt, tabName);
         Object obj = gson.fromJson(data.toString(), eruptModel.getClazz());
         DataProxyInvoke.invoke(eruptModel, dp -> {
             dp.beforeDelete(obj);
             dp.afterDelete(obj);
         });
-        eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
-        return eruptApiModel;
+        return R.ok();
     }
 
-    private EruptApiModel tabValidate(EruptModel eruptModel, JsonObject data, Consumer<DataProxy<Object>> consumer) {
-        EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
-        if (eruptApiModel.getStatus() == EruptApiModel.Status.SUCCESS) {
+    private <T> R<T> tabValidate(EruptModel eruptModel, JsonObject data, Consumer<DataProxy<Object>> consumer) {
+        R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
+        if (validation.isSuccess()) {
             DataProxyInvoke.invoke(eruptModel, consumer);
         }
-        eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
-        return eruptApiModel;
+        R<T> r = new R<>();
+        r.setSuccess(validation.isSuccess());
+        r.setMessage(validation.getMessage());
+        r.setStatus(validation.getStatus());
+        r.setPromptWay(R.PromptWay.MESSAGE);
+        return r;
     }
 
     private EruptModel getTabErupt(String erupt, String tabName) {

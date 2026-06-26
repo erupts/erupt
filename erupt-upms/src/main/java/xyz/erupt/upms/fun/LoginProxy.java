@@ -13,8 +13,6 @@ import xyz.erupt.upms.service.EruptUserService;
 public interface LoginProxy {
 
     @Comment("Login validation — throw an exception to surface a validation message")
-    @Comment("For security, pwd is encrypted. Encryption logic: md5(md5(pwd) + Calendar.DAY_OF_MONTH + account)")
-    @Comment("Calendar.DAY_OF_MONTH → Calendar.getInstance().get(Calendar.DAY_OF_MONTH) // day of the current month")
     @Comment("To disable encryption, set erupt-app.pwdTransferEncrypt = false in the configuration file")
     default EruptUser login(String account, String pwd) {
         LoginModel loginModel = EruptSpringUtil.getBean(EruptUserService.class).login(account, pwd);

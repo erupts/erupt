@@ -84,7 +84,7 @@ public class McpServerService implements DataProxy<McpServer>, OnChange<McpServe
     }
 
     @SneakyThrows
-    private synchronized void register(McpServer mcpServer) {
+    public synchronized void register(McpServer mcpServer) {
         long start = System.currentTimeMillis();
         this.unregister(mcpServer);
         if (mcpServer.getEnable()) {

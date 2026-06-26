@@ -11,8 +11,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示左树右表之——树节点（分类树）
- * 与 LinkTreeDetailModel 配合使用
+ * Demonstrates left-tree-right-table: the tree node side (category tree).
+ * Used together with LinkTreeDetailModel.
  */
 @Getter
 @Setter

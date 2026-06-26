@@ -13,16 +13,19 @@ import java.beans.Transient;
 public @interface ReferenceTableType {
 
     @Comment("Storage column")
+    @Language(value = "hql", prefix = "select ", suffix = " from")
     String id() default AnnotationConst.ID;
 
     @Comment("Display column")
+    @Language(value = "hql", prefix = "select ", suffix = " from")
     String label() default AnnotationConst.LABEL;
 
     @Comment("Dependent field")
-    @Language(value = "java", prefix = "private String ", suffix = ";")
+    @Language(value = "java", prefix = "Object get() { ", suffix = ";}")
     String dependField() default "";
 
     @Transient
     @Comment("The column name associated with the dependent field value; dependField.value = this.dependColumn")
+    @Language(value = "java", prefix = "private String ", suffix = ";")
     String dependColumn() default AnnotationConst.ID;
 }

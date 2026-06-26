@@ -17,7 +17,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "SliderEdit")
 public class SliderModel extends BaseModel {
 
-    // 基础 min/max
+    // basic min/max
     @EruptField(
             views = @View(title = "Percentage"),
             edit = @Edit(title = "Percentage", type = EditType.SLIDER,
@@ -25,7 +25,7 @@ public class SliderModel extends BaseModel {
     )
     private Integer percentage;
 
-    // 指定步长
+    // custom step
     @EruptField(
             views = @View(title = "Step Size"),
             edit = @Edit(title = "Step Size", desc = "Step: 5",
@@ -34,7 +34,7 @@ public class SliderModel extends BaseModel {
     )
     private Integer stepValue;
 
-    // 刻度标记点
+    // mark points
     @EruptField(
             views = @View(title = "Mark Points"),
             edit = @Edit(title = "Mark Points", type = EditType.SLIDER,
@@ -43,7 +43,7 @@ public class SliderModel extends BaseModel {
     )
     private Integer markedValue;
 
-    // 只能落在刻度点上
+    // snaps to mark points only
     @EruptField(
             views = @View(title = "Dots Only"),
             edit = @Edit(title = "Dots Only", desc = "Slider snaps to mark points",
@@ -53,7 +53,7 @@ public class SliderModel extends BaseModel {
     )
     private Integer dotsValue;
 
-    // 负数范围
+    // negative range
     @EruptField(
             views = @View(title = "Temperature"),
             edit = @Edit(title = "Temperature", desc = "-50 ~ 50 °C",

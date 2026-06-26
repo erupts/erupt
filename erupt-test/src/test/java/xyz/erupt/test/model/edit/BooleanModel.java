@@ -18,7 +18,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "BooleanEdit")
 public class BooleanModel extends BaseModel {
 
-    // 默认 Y/N 文本
+    // default Y/N text
     @EruptField(
             views = @View(title = "Active"),
             edit = @Edit(title = "Active", type = EditType.BOOLEAN,
@@ -26,7 +26,7 @@ public class BooleanModel extends BaseModel {
     )
     private Boolean active;
 
-    // 自定义 trueText / falseText
+    // custom trueText / falseText
     @EruptField(
             views = @View(title = "Enabled"),
             edit = @Edit(title = "Enabled", type = EditType.BOOLEAN,
@@ -34,15 +34,15 @@ public class BooleanModel extends BaseModel {
     )
     private Boolean enabled;
 
-    // 中文文本
+    // Chinese display text
     @EruptField(
             views = @View(title = "Published"),
             edit = @Edit(title = "Published", type = EditType.BOOLEAN,
-                    boolType = @BoolType(trueText = "已发布", falseText = "未发布"))
+                    boolType = @BoolType(trueText = "Published", falseText = "Unpublished"))
     )
     private Boolean published;
 
-    // 必填
+    // required
     @EruptField(
             views = @View(title = "Agreed"),
             edit = @Edit(title = "Agreed", notNull = true, type = EditType.BOOLEAN,

@@ -8,7 +8,7 @@ import java.beans.Transient;
 public @interface TagsType {
 
     @Comment("Separator character when storing multiple tags")
-    String joinSeparator() default "|";
+    String joinSeparator() default "[]";
 
     @Comment("Whether custom tags are allowed")
     boolean allowExtension() default true;
@@ -24,7 +24,6 @@ public @interface TagsType {
     @Comment("This configuration is accessible from fetchHandler")
     String[] fetchHandlerParams() default {};
 
-    @Transient
     @Comment("Dynamically fetched list of selectable tags")
     Class<? extends TagsFetchHandler>[] fetchHandler() default {};
 }

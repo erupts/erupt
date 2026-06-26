@@ -37,7 +37,7 @@ public class AiChat extends BaseModel {
 
     @EruptField(
             views = @View(title = "Chat Title"),
-            edit = @Edit(title = "Chat Title", search = @Search(vague = true))
+            edit = @Edit(title = "Chat Title", search = @Search)
     )
     private String title;
 

@@ -26,7 +26,7 @@ import java.util.Set;
 @Erupt(name = "MultiChoiceEdit")
 public class MultiChoiceModel extends BaseModel {
 
-    // 多选框组（默认 CHECKBOX）
+    // checkbox group (default CHECKBOX)
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
@@ -41,7 +41,7 @@ public class MultiChoiceModel extends BaseModel {
     )
     private Set<String> roles;
 
-    // 下拉多选（SELECT 布局）
+    // multi-select dropdown (SELECT layout)
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
@@ -58,7 +58,7 @@ public class MultiChoiceModel extends BaseModel {
     )
     private List<String> tags;
 
-    // 动态 handler 获取选项
+    // dynamic handler for options
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(

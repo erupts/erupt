@@ -5,7 +5,6 @@ import jakarta.persistence.Table;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.Vis;
-import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -34,7 +33,7 @@ public class Gantt extends BaseModel {
 
     @EruptField(
             views = @View(title = "Text"),
-            edit = @Edit(title = "Text", search = @Search(vague = true))
+            edit = @Edit(title = "Text", search = @Search)
     )
     private String input;
 

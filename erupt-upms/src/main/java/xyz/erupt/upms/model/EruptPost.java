@@ -29,13 +29,13 @@ public class EruptPost extends BaseModel {
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "Post Code", sortable = true),
-            edit = @Edit(title = "Post Code", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Post Code", notNull = true, search = @Search)
     )
     private String code;
 
     @EruptField(
             views = @View(title = "Post Name", sortable = true),
-            edit = @Edit(title = "Post Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Post Name", notNull = true, search = @Search)
     )
     private String name;
 

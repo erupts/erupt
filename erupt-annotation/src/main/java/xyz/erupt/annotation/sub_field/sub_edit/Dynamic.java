@@ -11,6 +11,7 @@ import xyz.erupt.annotation.config.Comment;
 public @interface Dynamic {
 
     @Comment("Dependent field name")
+    @Language(value = "java", prefix = "Object get() { ", suffix = ";}")
     String dependField();
 
     @Comment("JS expression，Variable: class field name")
@@ -20,12 +21,6 @@ public @interface Dynamic {
     Ctrl noMatch() default Ctrl.HIDE;
 
     Ctrl match() default Ctrl.SHOW;
-
-//    // change the static configuration of the current decorated object, e.g. the language of the code editor
-//    String changeScript() default "";
-
-//    @Comment("Compute component value when condition changes, Variable, class field name")
-//    String render() default "";
 
     enum Ctrl {
         SHOW,     //Show

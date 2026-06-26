@@ -1,7 +1,5 @@
 package xyz.erupt.annotation.sub_field;
 
-import xyz.erupt.annotation.config.QueryExpression;
-
 import java.lang.annotation.*;
 
 /**
@@ -15,5 +13,4 @@ public @interface EditTypeSearch {
 
     boolean value() default true;
 
-    QueryExpression vagueMethod() default QueryExpression.EQ;
 }

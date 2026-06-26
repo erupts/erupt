@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.job.model.EruptMail;
@@ -44,7 +45,9 @@ public class EruptMailDataProxy implements DataProxy<EruptMail> {
         helper.setSubject(eruptMail.getSubject());
         helper.setTo(eruptMail.getRecipient());
         helper.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
-        if (StringUtils.isNotBlank(eruptMail.getCc())) helper.setCc(eruptMail.getCc().split("\\|"));
+        if (StringUtils.isNotBlank(eruptMail.getCc())) {
+            helper.setCc(GsonFactory.getGson().fromJson(eruptMail.getCc(), String[].class));
+        }
         helper.setText(eruptMail.getContent(), true);
         try {
             javaMailSender.send(mimeMessage);

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+    <rect width="120" height="120" rx="20" fill="#ffffff"/>
+    <polygon id="p1" points="90.4,61.3 74.3,110.0 110.0,110.0 110.0,75.3" fill="#24292F"/>
+    <polygon id="p2" points="96.4,10.1 67.7,31.0 110.0,60.7 110.0,10.0" fill="#24292F"/>
+    <polygon id="p3" points="62.6,109.8 68.3,92.4 10.0,92.3 10.0,110.0" fill="#24292F"/>
+    <polygon id="p4" points="31.5,43.6 77.4,10.0 20.1,10.0" fill="#24292F"/>
+    <path id="p5" d="M10,15.51 L32.33,81.13 L10,81.09 Z" fill="#24292F"/>
+    <polygon id="poly" points="44.7,79.3 70.2,79.3 78.1,55.0 57.4,39.9 36.7,55.0" fill="#ffffff"/>
+</svg>

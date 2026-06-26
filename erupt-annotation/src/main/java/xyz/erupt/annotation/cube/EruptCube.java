@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.cube;
 
 import org.intellij.lang.annotations.Language;
+import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.fun.CubeProxy;
 
 import java.lang.annotation.*;
@@ -14,6 +15,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface EruptCube {
 
+    @Comment("Datasource key, blank uses the primary datasource")
     @Language(value = "java", prefix = "private String ", suffix = ";")
     String datasource() default "";
 
@@ -21,9 +23,11 @@ public @interface EruptCube {
 
     String description() default "";
 
+    @Comment("Source SQL, interpreted as a sub-query or table name per sqlType")
     @Language("VTL")
     String sql();
 
+    @Comment("How sql is interpreted: sub-query or table name")
     SqlType sqlType() default SqlType.SUB_QUERY;
 
     // Define the rules for external exposure
@@ -33,6 +37,10 @@ public @interface EruptCube {
                     name = "Overview"
             )
     };
+
+    @Comment("AI prompt")
+    @Language("markdown")
+    String prompt() default "";
 
     String[] tags() default {};
 

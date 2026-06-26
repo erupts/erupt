@@ -40,19 +40,19 @@ public class GeneratorClass extends MetaModel implements Tpl.TplHandler {
 
     @EruptField(
             views = @View(title = "Name"),
-            edit = @Edit(title = "Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Name", notNull = true, search = @Search)
     )
     private String name;
 
     @EruptField(
             views = @View(title = "Entity Class"),
-            edit = @Edit(title = "Entity Class", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Entity Class", notNull = true, search = @Search)
     )
     private String className;
 
     @EruptField(
             views = @View(title = "Table Name"),
-            edit = @Edit(title = "Table Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Table Name", notNull = true, search = @Search)
     )
     private String tableName;
 

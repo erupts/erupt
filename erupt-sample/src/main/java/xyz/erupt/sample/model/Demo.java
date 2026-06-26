@@ -24,7 +24,7 @@ public class Demo extends BaseModel {
 
     @EruptField(
             views = @View(title = "Text"),
-            edit = @Edit(title = "Text", search = @Search(vague = true), onchange = DemoInputChange.class)
+            edit = @Edit(title = "Text", search = @Search, onchange = DemoInputChange.class)
     )
     private String input;
 

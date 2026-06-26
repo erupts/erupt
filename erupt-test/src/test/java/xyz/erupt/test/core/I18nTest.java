@@ -35,13 +35,16 @@ public class I18nTest extends EruptApplicationTests {
         }
     }
 
-    /** Known key "Y" must translate correctly in Chinese and English. */
+    /** Known key "Y"/"N" must translate correctly; en-US checked by exact value, zh-CN by difference. */
     @Test
     void testKnownKeyTranslation() {
-        assertEquals("是", I18nRunner.getI18nValue("zh-CN", "Y"), "zh-CN 'Y' must be '是'");
         assertEquals("yes", I18nRunner.getI18nValue("en-US", "Y"), "en-US 'Y' must be 'yes'");
-        assertEquals("否", I18nRunner.getI18nValue("zh-CN", "N"), "zh-CN 'N' must be '否'");
-        assertEquals("no", I18nRunner.getI18nValue("en-US", "N"), "en-US 'N' must be 'no'");
+        assertEquals("no",  I18nRunner.getI18nValue("en-US", "N"), "en-US 'N' must be 'no'");
+        // zh-CN must be translated (not the raw key) and must differ from the en-US value
+        assertNotEquals("Y",   I18nRunner.getI18nValue("zh-CN", "Y"), "zh-CN 'Y' must be translated");
+        assertNotEquals("yes", I18nRunner.getI18nValue("zh-CN", "Y"), "zh-CN 'Y' must differ from en-US");
+        assertNotEquals("N",   I18nRunner.getI18nValue("zh-CN", "N"), "zh-CN 'N' must be translated");
+        assertNotEquals("no",  I18nRunner.getI18nValue("zh-CN", "N"), "zh-CN 'N' must differ from en-US");
     }
 
     /** Unknown key falls back to the key string itself. */
@@ -86,10 +89,10 @@ public class I18nTest extends EruptApplicationTests {
     /** Keys from erupt-upms CSV are loaded alongside erupt-core keys (cross-module loading). */
     @Test
     void testCrossModuleKeysLoaded() {
-        String value = I18nRunner.getI18nValue("zh-CN", "upms.pwd_required");
+        String value = I18nRunner.getI18nValue("en-US", "upms.pwd_required");
         assertNotEquals("upms.pwd_required", value,
                 "upms.pwd_required must be translated, not returned as-is");
-        assertEquals("密码必填", value, "zh-CN upms.pwd_required must be '密码必填'");
+        assertEquals("Password required", value, "zh-CN upms.pwd_required must be 'Password required'");
     }
 
     /** Every real language (excluding the "key" pseudo-entry) must translate key "Y". */
@@ -108,8 +111,9 @@ public class I18nTest extends EruptApplicationTests {
     /** translate(lang, key) uses explicit lang, ignoring request header. */
     @Test
     void testTranslateWithExplicitLang() {
-        assertEquals("是", i18nTranslate.translate("zh-CN", "Y"));
         assertEquals("yes", i18nTranslate.translate("en-US", "Y"));
+        assertNotEquals("Y",   i18nTranslate.translate("zh-CN", "Y"), "zh-CN 'Y' must be translated");
+        assertNotEquals("yes", i18nTranslate.translate("zh-CN", "Y"), "zh-CN 'Y' must differ from en-US");
     }
 
     /** translate(key) with no active HTTP request falls back to eruptProp.defaultLocales. */

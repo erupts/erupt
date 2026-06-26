@@ -10,7 +10,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 @Drill 下钻目标表：与 DrillModel 通过 orderId 关联
+ * Demonstrates @Drill drill-down target table: linked to DrillModel via orderId.
  */
 @Getter
 @Setter

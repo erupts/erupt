@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.cube;
 
+import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 
@@ -17,6 +18,10 @@ public @interface Parameter {
     String title();
 
     String description() default "";
+
+    @Comment("AI prompt")
+    @Language("markdown")
+    String prompt() default "";
 
     FieldType type() default FieldType.STRING;
 

@@ -12,8 +12,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 @Drill 数据下钻：点击行下钻到 DrillDetailModel，
- * 通过 id → orderId 关联过滤明细数据
+ * Demonstrates @Drill data drill-down: clicking a row drills into DrillDetailModel,
+ * filtered by id → orderId.
  */
 @Getter
 @Setter

@@ -6,11 +6,13 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
+import xyz.erupt.ai.handler.RefreshA2AAgentHandler;
 import xyz.erupt.ai.service.A2AAgentService;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -25,7 +27,16 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * @author YuePeng
  * date 2026/5/15
  */
-@Erupt(name = "A2A Agent", dataProxy = A2AAgentService.class)
+@Erupt(
+        name = "A2A",
+        dataProxy = A2AAgentService.class,
+        rowOperation = @RowOperation(
+                title = "Refresh",
+                icon = "fa fa-refresh",
+                mode = RowOperation.Mode.SINGLE,
+                operationHandler = RefreshA2AAgentHandler.class
+        )
+)
 @Getter
 @Setter
 @Table(name = "e_ai_a2a_agent")
@@ -35,7 +46,7 @@ public class A2AAgent extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "Name"),
-            edit = @Edit(title = "Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Name", notNull = true, search = @Search)
     )
     private String name;
 

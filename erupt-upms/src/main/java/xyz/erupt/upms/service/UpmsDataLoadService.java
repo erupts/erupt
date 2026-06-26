@@ -15,10 +15,11 @@ import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.prop.InitMethodEnum;
 import xyz.erupt.core.service.EruptCoreService;
-import xyz.erupt.core.util.MD5Util;
+import xyz.erupt.core.util.EncryptUtil;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
+import xyz.erupt.upms.constant.EncryptType;
 import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
@@ -103,11 +104,14 @@ public class UpmsDataLoadService implements CommandLineRunner {
                 if (eruptDao.lambdaQuery(EruptUser.class).eq(EruptUser::getIsAdmin, true).list().isEmpty()) {
                     EruptUser eruptUser = new EruptUser();
                     eruptUser.setIsAdmin(true);
-                    eruptUser.setIsMd5(true);
+                    eruptUser.setEncrypt(true);
                     eruptUser.setStatus(true);
                     eruptUser.setCreateTime(new Date());
                     eruptUser.setAccount(eruptUpmsProp.getDefaultAccount());
-                    eruptUser.setPassword(MD5Util.digest(eruptUpmsProp.getDefaultPassword()));
+                    String salt = EncryptUtil.generateSalt();
+                    eruptUser.setSalt(salt);
+                    eruptUser.setEncryptType(EncryptType.SHA512);
+                    eruptUser.setPassword(EncryptUtil.digestSHA512Salt(eruptUpmsProp.getDefaultPassword(), salt));
                     eruptUser.setName(eruptUpmsProp.getDefaultAccount());
                     eruptDao.persistIfNotExist(EruptUser.class, eruptUser, LambdaSee.field(EruptUser::getAccount), eruptUser.getAccount());
                 }

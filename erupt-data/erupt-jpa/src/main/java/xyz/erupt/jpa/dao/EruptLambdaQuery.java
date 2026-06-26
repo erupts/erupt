@@ -17,6 +17,7 @@ import xyz.erupt.linq.lambda.SFunction;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -244,6 +245,16 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
+    public EruptLambdaQuery<T> or(Consumer<EruptLambdaQuery<T>> consumer) {
+        EruptLambdaQuery<T> sub = new EruptLambdaQuery<>(entityManager, eruptClass);
+        consumer.accept(sub);
+        if (!sub.querySchema.getWheres().isEmpty()) {
+            querySchema.getWheres().add("(" + String.join(SqlLang.OR, sub.querySchema.getWheres()) + ")");
+            querySchema.getParams().putAll(sub.querySchema.getParams());
+        }
+        return this;
+    }
+
     // Add custom conditions
     public EruptLambdaQuery<T> addCondition(String condition) {
         querySchema.getWheres().add(condition);
@@ -358,24 +369,6 @@ public class EruptLambdaQuery<T> {
     public final <R> List<R> selectByPath(Class<R> requiredType, String... fields) {
         this.querySchema.columns.addAll(Arrays.asList(fields));
         return this.geneQuery().getResultList();
-    }
-
-    @Deprecated
-    @SafeVarargs
-    public final List<Object[]> listSelects(SFunction<T, ?>... fields) {
-        for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
-        return this.geneQuery().getResultList();
-    }
-
-    @Deprecated
-    @SafeVarargs
-    public final Object[] oneSelects(SFunction<T, ?>... fields) {
-        for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
-        try {
-            return (Object[]) this.geneQuery().getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
     }
 
     @SneakyThrows

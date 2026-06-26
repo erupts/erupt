@@ -30,6 +30,11 @@ public @interface Erupt {
     @Comment("Feature description")
     String desc() default "";
 
+    @Comment("AI prompt")
+    @Transient
+    @Language("markdown")
+    String prompt() default "";
+
     @Transient
     @Comment("Whether to verify permissions when accessing this feature")
     boolean authVerify() default true;

@@ -18,16 +18,16 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "AutoCompleteEdit")
 public class AutoCompleteModel extends BaseModel {
 
-    // 默认触发长度（1 个字符即触发）
+    // default trigger length (1 character)
     @EruptField(
             views = @View(title = "City"),
             edit = @Edit(title = "City", type = EditType.AUTO_COMPLETE,
                     autoCompleteType = @AutoCompleteType(handler = TestAutoCompleteHandler.class),
-                    search = @Search(value = true, vague = true))
+                    search = @Search)
     )
     private String city;
 
-    // 至少输入 2 个字符才触发
+    // requires at least 2 characters to trigger
     @EruptField(
             views = @View(title = "Company"),
             edit = @Edit(title = "Company", type = EditType.AUTO_COMPLETE,
@@ -37,7 +37,7 @@ public class AutoCompleteModel extends BaseModel {
     )
     private String company;
 
-    // 携带额外参数给 handler
+    // passes extra params to the handler
     @EruptField(
             views = @View(title = "Product"),
             edit = @Edit(title = "Product", type = EditType.AUTO_COMPLETE,

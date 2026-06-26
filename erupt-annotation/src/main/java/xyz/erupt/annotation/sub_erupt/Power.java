@@ -19,13 +19,15 @@ public @interface Power {
 
     boolean query() default true;
 
-    boolean print() default true;
-
     boolean viewDetails() default true;
 
     boolean export() default false;
 
     boolean importable() default false;
+
+    boolean print() default true;
+
+    boolean copy() default true;
 
     @Transient
     @Comment("Dynamic handling of Power permissions")

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.exception.EruptApiErrorTip;
-import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptExceptionVo;
+import xyz.erupt.core.view.R;
 
 /**
  * @author YuePeng
@@ -29,9 +29,9 @@ public class EruptExceptionAdvice {
     @ExceptionHandler(EruptApiErrorTip.class)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public EruptApiModel eruptApiErrorTip(EruptApiErrorTip e) {
+    public R<?> eruptApiErrorTip(EruptApiErrorTip e) {
         log.error(ERE, e);
-        return e.eruptApiModel;
+        return e.r;
     }
 
     @ResponseBody

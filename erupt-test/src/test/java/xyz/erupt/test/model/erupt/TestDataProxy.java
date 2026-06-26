@@ -27,17 +27,17 @@ public class TestDataProxy implements DataProxy<DataProxyModel> {
 
     @Override
     public void afterAdd(DataProxyModel model) {
-        // 新增后触发通知等业务逻辑
+        // business logic triggered after add, e.g. notifications
     }
 
     @Override
     public void beforeUpdate(DataProxyModel model) {
-        // 修改前校验状态
+        // validate status before update
     }
 
     @Override
     public void afterUpdate(DataProxyModel model) {
-        // 修改后同步缓存等
+        // sync cache or other side-effects after update
     }
 
     @Override
@@ -49,12 +49,12 @@ public class TestDataProxy implements DataProxy<DataProxyModel> {
 
     @Override
     public String beforeFetch(List<Condition> conditions) {
-        // 附加额外查询条件
+        // append extra query conditions
         return null;
     }
 
     @Override
     public void afterFetch(Collection<Map<String, Object>> list) {
-        // 对查询结果做脱敏等后处理
+        // post-process results, e.g. mask sensitive fields
     }
 }
