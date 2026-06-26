@@ -1,8 +1,1 @@
-import {a} from "./chunk-3RNQZPAA.js";
-import "./chunk-IZG24SGU.js";
-import "./chunk-C26JPOMN.js";
-import "./chunk-BRM5FOWK.js";
-import "./chunk-OZTEH5Z3.js";
-import "./chunk-YWJAWARJ.js";
-
-export{a as AiChatComponent};
+import{a}from"./chunk-3RNQZPAA.js";import"./chunk-IZG24SGU.js";import"./chunk-C26JPOMN.js";import"./chunk-BRM5FOWK.js";import"./chunk-OZTEH5Z3.js";import"./chunk-YWJAWARJ.js";export{a as AiChatComponent};
