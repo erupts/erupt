@@ -70,7 +70,37 @@
 
 https://github.com/user-attachments/assets/aa348010-a894-4b3e-9217-a30fd3acadfa
 
-### 1. 加两个依赖
+根据你的场景选择最适合的方式：
+
+---
+
+### 方式一 · 源码启动（探索 / 参与贡献）
+
+克隆仓库并运行内置示例 —— 内嵌 H2 数据库，无需额外配置。
+
+```bash
+git clone https://github.com/erupts/erupt.git
+cd erupt
+mvn spring-boot:run -pl erupt-sample -am
+# → http://localhost:8080   登录：erupt / erupt
+```
+
+---
+
+### 方式二 · Docker（零安装体验）
+
+从 Docker Hub 拉取镜像 —— [hub.docker.com/r/erupts/erupt](https://hub.docker.com/r/erupts/erupt)
+
+```bash
+docker run -p 8080:8080 erupts/erupt
+# → http://localhost:8080   登录：erupt / erupt
+```
+
+---
+
+### 方式三 · Maven 依赖（集成到自有项目）
+
+#### 1. 加两个依赖
 
 ```xml
 <dependency>
@@ -85,7 +115,7 @@ https://github.com/user-attachments/assets/aa348010-a894-4b3e-9217-a30fd3acadfa
 </dependency>
 ```
 
-### 2. 在 JPA 实体上写一个注解 —— 这就是整个 UI
+#### 2. 在 JPA 实体上写一个注解 —— 这就是整个 UI
 
 ```java
 @Erupt(name = "用户")
@@ -100,7 +130,7 @@ public class User extends BaseModel {
 }
 ```
 
-### 3. 启动，登录
+#### 3. 启动，登录
 
 ```bash
 mvn spring-boot:run
@@ -109,7 +139,7 @@ mvn spring-boot:run
 
 你已经拿到一个**带分页、搜索、导出、行列权限**的后台页面，数据来自 `User` 表。加一个字段、刷新、立刻出现。
 
-> 不想克隆代码？直接试 **[demo.erupt.xyz](https://demo.erupt.xyz)**（`guest / guest`）。
+> 不想安装任何东西？直接试 **[demo.erupt.xyz](https://demo.erupt.xyz)**（`guest / guest`）。
 > 想生成一个起手项目？**[start.erupt.xyz](https://start.erupt.xyz)** 在浏览器里就能生成。
 > 需要完整说明？**[详细使用步骤 →](https://docs.erupt.xyz/guide/quick-start)**
 

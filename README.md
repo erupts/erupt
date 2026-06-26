@@ -68,7 +68,37 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 
 https://github.com/user-attachments/assets/aa348010-a894-4b3e-9217-a30fd3acadfa
 
-### 1. Add two dependencies
+Choose the option that fits your situation:
+
+---
+
+### Option A · Source Code (explore or contribute)
+
+Clone this repo and run the bundled sample — H2 in-memory database, no extra config required.
+
+```bash
+git clone https://github.com/erupts/erupt.git
+cd erupt
+mvn spring-boot:run -pl erupt-sample -am
+# → http://localhost:8080   login: erupt / erupt
+```
+
+---
+
+### Option B · Docker (zero-install trial)
+
+Pull the image from Docker Hub — [hub.docker.com/r/erupts/erupt](https://hub.docker.com/r/erupts/erupt)
+
+```bash
+docker run -p 8080:8080 erupts/erupt
+# → http://localhost:8080   login: erupt / erupt
+```
+
+---
+
+### Option C · Maven Dependency (integrate into your project)
+
+#### 1. Add two dependencies
 
 ```xml
 <dependency>
@@ -83,7 +113,7 @@ https://github.com/user-attachments/assets/aa348010-a894-4b3e-9217-a30fd3acadfa
 </dependency>
 ```
 
-### 2. Annotate a JPA entity — this **is** the UI
+#### 2. Annotate a JPA entity — this **is** the UI
 
 ```java
 @Erupt(name = "User")
@@ -98,7 +128,7 @@ public class User extends BaseModel {
 }
 ```
 
-### 3. Run and login
+#### 3. Run and login
 
 ```bash
 mvn spring-boot:run
@@ -107,9 +137,8 @@ mvn spring-boot:run
 
 You now have a paged, searchable, exportable admin page with role-based permissions — backed by the table behind `User`. Add a field, refresh, it shows up.
 
-> Don't want to clone? Try **[demo.erupt.xyz](https://demo.erupt.xyz)** (`guest / guest`).
+> Don't want to install anything? Try **[demo.erupt.xyz](https://demo.erupt.xyz)** (`guest / guest`).
 > Want a starter project? **[start.erupt.xyz](https://start.erupt.xyz)** generates one in your browser.
-> Prefer to run from source? Clone this repo and run `EruptSampleApplication` in the `erupt-sample` module — bundled H2 database, no extra config required.
 > Need the full walkthrough? **[Detailed setup guide →](https://docs.erupt.xyz/guide/quick-start)**
 
 <details>
