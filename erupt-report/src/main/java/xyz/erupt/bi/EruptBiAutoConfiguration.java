@@ -59,10 +59,6 @@ public class EruptBiAutoConfiguration implements EruptModule {
         eruptDao.persistIfNotExist(BiFunction.class, new BiFunction(code, code,
                 StreamUtils.copyToString(EruptBiAutoConfiguration.class.getResourceAsStream("/BiDefaultFunction.js")
                         , StandardCharsets.UTF_8)), "code", code);
-        BiGroup biGroup = new BiGroup();
-        biGroup.setCode("default");
-        biGroup.setName("Default Group");
-        eruptDao.persistIfNotExist(BiGroup.class, biGroup, "code", biGroup.getCode());
     }
 
     @Override
@@ -74,7 +70,7 @@ public class EruptBiAutoConfiguration implements EruptModule {
         menus.add(MetaMenu.createEruptClassMenu(BiTpl.class, menus.get(0), 30));
         menus.add(MetaMenu.createEruptClassMenu(BiDimensionReference.class, menus.get(0), 40));
         menus.add(MetaMenu.createEruptClassMenu(BiFunction.class, menus.get(0), 50));
-        menus.add(MetaMenu.createEruptClassMenu(BiGroup.class, menus.get(0), 60, MenuTypeEnum.TREE));
+        menus.add(MetaMenu.createEruptClassMenu(BiGroup.class, menus.get(0), 60, MenuTypeEnum.TREE, MenuStatus.HIDE));
         MetaMenu bi = MetaMenu.createEruptClassMenu(Bi.class, menus.get(0), 100);
         menus.add(bi);
         menus.add(MetaMenu.createEruptClassMenu(BiChart.class, bi, 0, MenuStatus.HIDE));

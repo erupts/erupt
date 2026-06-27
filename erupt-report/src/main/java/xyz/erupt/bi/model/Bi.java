@@ -66,7 +66,7 @@ public class Bi extends MetaModelUpdateVo {
     @JoinColumn(name = "bi_group_id")
     @EruptField(
             views = @View(title = "Group", column = "name", sortable = true),
-            edit = @Edit(title = "Group", notNull = true, type = EditType.REFERENCE_TREE,
+            edit = @Edit(title = "Group", type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(pid = "parent.id"), search = @Search)
     )
     private BiGroup biGroup;
@@ -103,7 +103,7 @@ public class Bi extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "Refresh Interval", width = "100px", sortable = true, template = "value&&value+'s'"),
-            edit = @Edit(title = "Auto Refresh (s)",desc = "Data auto-update interval")
+            edit = @Edit(title = "Auto Refresh (s)", desc = "Data auto-update interval")
     )
     private Integer refreshTime;
 
