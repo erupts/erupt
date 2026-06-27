@@ -8,6 +8,7 @@ import xyz.erupt.cloud.server.base.CloudServerConst;
 import xyz.erupt.cloud.server.model.CloudNode;
 import xyz.erupt.cloud.server.model.CloudNodeGroup;
 import xyz.erupt.core.annotation.EruptScan;
+import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
@@ -42,7 +43,8 @@ public class EruptCloudServerAutoConfiguration implements EruptModule {
         MetaMenu nodeManager = MetaMenu.createRootMenu("$NodeManager", "Micronode Management", "fa fa-cloud", 70);
         MetaMenu nodeMenu = MetaMenu.createEruptClassMenu(CloudNode.class, nodeManager, 20);
         return Arrays.asList(nodeManager,
-                MetaMenu.createEruptClassMenu(CloudNodeGroup.class, nodeManager, 10, MenuTypeEnum.TREE), nodeMenu,
+                MetaMenu.createEruptClassMenu(CloudNodeGroup.class, nodeManager, 10, MenuTypeEnum.TREE, MenuStatus.HIDE),
+                nodeMenu,
                 MetaMenu.createSimpleMenu(CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION, "View Token", CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION, nodeMenu, 110, MenuTypeEnum.BUTTON.getCode()),
                 MetaMenu.createSimpleMenu(CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, "Node Manager", CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, nodeMenu, 120, MenuTypeEnum.BUTTON.getCode()),
                 MetaMenu.createSimpleMenu(CloudServerConst.ERUPT_CLOUD_NODE_LOG, "Node Log", CloudServerConst.ERUPT_CLOUD_NODE_LOG, nodeMenu, 120, MenuTypeEnum.BUTTON.getCode())

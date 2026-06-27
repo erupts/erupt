@@ -66,8 +66,6 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 
 ## ⚡ 60-second quickstart
 
-https://github.com/user-attachments/assets/aa348010-a894-4b3e-9217-a30fd3acadfa
-
 Choose the option that fits your situation:
 
 ---
