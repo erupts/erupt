@@ -68,8 +68,6 @@
 
 ## ⚡ 60 秒上手
 
-https://github.com/user-attachments/assets/aa348010-a894-4b3e-9217-a30fd3acadfa
-
 根据你的场景选择最适合的方式：
 
 ---
