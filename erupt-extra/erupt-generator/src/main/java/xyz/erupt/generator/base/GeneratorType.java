@@ -13,7 +13,7 @@ public enum GeneratorType {
     INPUT(EditType.INPUT, "Text Input", String.class.getSimpleName(), "inputType = @InputType"),
     PASSWORD(EditType.PASSWORD, "Password Input", String.class.getSimpleName(), null),
     TEXTAREA(EditType.TEXTAREA, "Textarea", String.class.getSimpleName(), null),
-    HTML_EDITOR(EditType.HTML_EDITOR, "Rich Text Editor", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), "htmlEditorType = @HtmlEditorType(HtmlEditorType.Type.UEDITOR)"),
+    HTML_EDITOR(EditType.HTML_EDITOR, "Rich Text Editor", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), null),
     CODE_EDITOR(EditType.CODE_EDITOR, "Code Editor", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), "codeEditType = @CodeEditorType(language = \"sql\")"),
     MARKDOWN(EditType.MARKDOWN, "Markdown Editor", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), null),
     COLOR(EditType.COLOR, "Color Picker", String.class.getSimpleName(), null),

@@ -7,6 +7,8 @@ import com.palantir.javapoet.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -106,6 +108,7 @@ public class EruptCodeService {
             case BOOLEAN -> ClassName.get(Boolean.class);
             case DATE -> ClassName.get(Date.class);
             case REFERENCE_TREE, REFERENCE_TABLE, COMBINE -> linkErupt(field);
+            case MULTI_CHOICE -> ParameterizedTypeName.get(ClassName.get(Set.class), ClassName.get(String.class));
             case CHECKBOX, TAB_TREE, TAB_TABLE_REFER, TAB_TABLE_ADD ->
                     ParameterizedTypeName.get(ClassName.get(Set.class), linkErupt(field));
             default -> ClassName.get(String.class);
@@ -119,6 +122,11 @@ public class EruptCodeService {
             case COMBINE -> Arrays.asList(AnnotationSpec.builder(OneToOne.class)
                             .addMember(LambdaSee.method(OneToOne::cascade), TL, CascadeType.class, CascadeType.ALL.name()).build(),
                     joinColumn(field.getFieldName()));
+            case MULTI_CHOICE -> Arrays.asList(
+                    AnnotationSpec.builder(JdbcTypeCode.class)
+                            .addMember(LambdaSee.method(JdbcTypeCode::value), "$T.$L", SqlTypes.class, "JSON").build(),
+                    AnnotationSpec.builder(Column.class)
+                            .addMember(LambdaSee.method(Column::length), "$L", 2000).build());
             case CHECKBOX, TAB_TREE, TAB_TABLE_REFER -> List.of(annotation(ManyToMany.class));
             case TAB_TABLE_ADD -> Arrays.asList(AnnotationSpec.builder(OneToMany.class)
                             .addMember(LambdaSee.method(OneToMany::cascade), TL, CascadeType.class, CascadeType.ALL.name())

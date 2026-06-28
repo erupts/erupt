@@ -90,17 +90,21 @@ public class EruptFileController {
                 switch (edit.attachmentType().type()) {
                     case IMAGE:
                         AttachmentType.ImageType imageType = edit.attachmentType().imageType();
-                        BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
-                        if (bufferedImage == null) {
-                            return R.errorDialog(I18nTranslate.$translate("erupt.upload_error.not_image"));
-                        }
-                        int width = bufferedImage.getWidth();
-                        int height = bufferedImage.getHeight();
-                        if (imageType.minWidth() > width || imageType.maxWidth() < width) {
-                            return R.errorDialog(I18nTranslate.$translate("erupt.upload_error.image_width") + String.format("[%s,%s]", imageType.minWidth(), imageType.maxWidth()));
-                        }
-                        if (imageType.minHeight() > height || imageType.maxHeight() < height) {
-                            return R.errorDialog(I18nTranslate.$translate("erupt.upload_error.image_height") + String.format("[%s,%s]", imageType.minWidth(), imageType.maxWidth()));
+                        boolean hasDimensionConstraint = imageType.minWidth() > 0 || imageType.maxWidth() < Integer.MAX_VALUE
+                                || imageType.minHeight() > 0 || imageType.maxHeight() < Integer.MAX_VALUE;
+                        if (hasDimensionConstraint) {
+                            BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+                            if (bufferedImage == null) {
+                                return R.errorDialog(I18nTranslate.$translate("erupt.upload_error.not_image"));
+                            }
+                            int width = bufferedImage.getWidth();
+                            int height = bufferedImage.getHeight();
+                            if (imageType.minWidth() > width || imageType.maxWidth() < width) {
+                                return R.errorDialog(I18nTranslate.$translate("erupt.upload_error.image_width") + String.format("[%s,%s]", imageType.minWidth(), imageType.maxWidth()));
+                            }
+                            if (imageType.minHeight() > height || imageType.maxHeight() < height) {
+                                return R.errorDialog(I18nTranslate.$translate("erupt.upload_error.image_height") + String.format("[%s,%s]", imageType.minHeight(), imageType.maxHeight()));
+                            }
                         }
                         break;
                     case BASE:

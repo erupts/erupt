@@ -92,6 +92,8 @@ public class DesignerClassFactory {
             case COMBINE:
                 // reference data is stored as {id, label...}; no ORM entity involved
                 return Map.class;
+            case MULTI_CHOICE:
+                return java.util.Set.class;
             case CHECKBOX:
             case TAB_TREE:
             case TAB_TABLE_ADD:
