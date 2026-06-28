@@ -101,7 +101,7 @@ public @interface Edit {
     AttachmentType attachmentType() default @AttachmentType;
 
     @Match("#item.type().toString()=='HTML_EDITOR'")
-    HtmlEditorType htmlEditorType() default @HtmlEditorType(HtmlEditorType.Type.UEDITOR);
+    HtmlEditorType htmlEditorType() default @HtmlEditorType(HtmlEditorType.Type.CKEDITOR);
 
     @Match("#item.type().toString()=='AUTO_COMPLETE'")
     AutoCompleteType autoCompleteType() default @AutoCompleteType(handler = AutoCompleteHandler.class);
