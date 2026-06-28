@@ -1,1 +1,0 @@
-mvn clean deploy -P release -D skipTests
