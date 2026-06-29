@@ -18,7 +18,7 @@ public class CurrentUser extends PrintVar {
 
     @Override
     public Object value() {
-        return MetaContext.getUser().getUid();
+        return MetaContext.getUser().getName();
     }
 
 }
