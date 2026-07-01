@@ -16,7 +16,7 @@
     </properties>
 
     <artifactId>erupt-sample</artifactId>
-    <name>erupt-sample</name>
+    <name>Erupt : Sample</name>
 
     <dependencies>
         <dependency>

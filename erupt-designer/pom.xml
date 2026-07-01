@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>erupt-designer</artifactId>
-    <name>erupt-designer</name>
+    <name>Erupt : Designer</name>
     <description>visual erupt form designer, convert design json to @Erupt entity code</description>
 
     <dependencies>

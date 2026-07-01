@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>erupt-ai-claw</artifactId>
-    <name>erupt-ai-claw</name>
+    <name>Erupt : AI Claw</name>
     <description>Drop-in admin agent built on erupt-ai — turns natural language into Erupt admin operations. Ships a preconfigured agent with tools for model CRUD, runtime inspection, shell execution and skill invocation.</description>
 
     <dependencies>

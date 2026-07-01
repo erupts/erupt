@@ -7,9 +7,40 @@
     <version>2.0.2</version>
 
     <packaging>pom</packaging>
-    <name>erupt</name>
+    <name>Erupt : </name>
     <description>erupt common data framework pom parent</description>
     <url>https://www.erupt.xyz</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <tag>master</tag>
+        <url>https://github.com/erupts/erupt</url>
+        <connection>scm:git:git@github.com:erupts/erupt.git</connection>
+        <developerConnection>scm:git:git@github.com:erupts/erupt.git</developerConnection>
+    </scm>
+
+    <organization>
+        <name>Erupt</name>
+        <url>https://www.erupt.xyz</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>YuePeng</name>
+            <email>erupts@126.com</email>
+            <roles>
+                <role>owner</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -59,6 +90,7 @@
         <module>erupt-extra/erupt-notice</module>
         <module>erupt-extra/erupt-print</module>
         <module>erupt-extra/erupt-terminal</module>
+        <module>erupt-extra/erupt-project</module>
 
         <!-- Cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>
@@ -139,35 +171,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-    <scm>
-        <tag>master</tag>
-        <url>git@github.com:erupts/erupt.git</url>
-        <connection>scm:git:git@github.com:erupts/erupt.git</connection>
-        <developerConnection>scm:git:git@github.com:erupts/erupt.git</developerConnection>
-    </scm>
-
-    <organization>
-        <name>Erupt</name>
-        <url>https://erupt.xyz</url>
-    </organization>
-    <developers>
-        <developer>
-            <name>YuePeng</name>
-            <email>erupts@126.com</email>
-            <roles>
-                <role>owner</role>
-            </roles>
-            <timezone>+8</timezone>
-        </developer>
-    </developers>
 
     <profiles>
         <profile>

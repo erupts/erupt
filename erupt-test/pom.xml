@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-test</artifactId>
-    <name>erupt-test</name>
+    <name>Erupt : Test</name>
     <description>unittest</description>
 
     <properties>

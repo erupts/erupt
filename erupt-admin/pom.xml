@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-admin</artifactId>
-    <name>erupt-admin</name>
+    <name>Erupt : Admin</name>
 
     <parent>
         <groupId>xyz.erupt</groupId>

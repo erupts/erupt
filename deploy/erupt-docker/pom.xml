@@ -16,7 +16,7 @@
     </properties>
 
     <artifactId>erupt-docker</artifactId>
-    <name>erupt-docker</name>
+    <name>Erupt : Docker</name>
 
     <dependencies>
         <dependency>

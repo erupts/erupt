@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-notice</artifactId>
-    <name>erupt-notice</name>
+    <name>Erupt : Notice</name>
     <description>erupt notice</description>
 
     <parent>

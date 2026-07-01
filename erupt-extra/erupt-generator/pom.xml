@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>erupt-generator</artifactId>
-    <name>erupt-generator</name>
+    <name>Erupt : Generator</name>
     <description>generator erupt code</description>
 
     <dependencies>

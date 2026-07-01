@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-tpl</artifactId>
-    <name>erupt-tpl</name>
+    <name>Erupt : Tpl</name>
     <description>erupt template</description>
 
     <parent>

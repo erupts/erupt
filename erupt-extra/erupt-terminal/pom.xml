@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>erupt-terminal</artifactId>
-    <name>erupt-terminal</name>
+    <name>Erupt : Terminal</name>
     <description>erupt terminal → real-time server shell via WebSocket</description>
 
     <dependencies>

@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>erupt-jpa</artifactId>
-    <name>erupt-jpa</name>
+    <name>Erupt : JPA</name>
     <description>EruptProcess database impl</description>
 
     <dependencies>
