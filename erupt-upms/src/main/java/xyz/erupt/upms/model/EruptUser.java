@@ -218,7 +218,9 @@ public class EruptUser extends LookerSelf {
     @JoinTable(
             name = "e_upms_user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            foreignKey = @ForeignKey(name = "fk_user_role_user"),
+            inverseForeignKey = @ForeignKey(name = "fk_user_role_role")
     )
     @OrderBy
     @EruptField(

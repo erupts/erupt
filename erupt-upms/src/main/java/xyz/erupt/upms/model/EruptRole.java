@@ -66,7 +66,9 @@ public class EruptRole extends HyperModelUpdateVo {
     @JoinTable(
             name = "e_upms_role_menu",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"),
+            foreignKey = @ForeignKey(name = "fk_role_menu_role"),
+            inverseForeignKey = @ForeignKey(name = "fk_role_menu_menu"))
     @EruptField(
             views = @View(title = "Menu Permission"),
             edit = @Edit(
@@ -79,7 +81,9 @@ public class EruptRole extends HyperModelUpdateVo {
 
     @JoinTable(name = "e_upms_user_role",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            foreignKey = @ForeignKey(name = "fk_user_role_role"),
+            inverseForeignKey = @ForeignKey(name = "fk_user_role_user"))
     @ManyToMany(fetch = FetchType.EAGER)
     @EruptField(
             views = @View(title = "Contain User"),

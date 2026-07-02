@@ -19,7 +19,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * date 2018-12-07.
  */
 @Entity
-@Table(name = "e_dict_item", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "erupt_dict_id"}))
+@Table(name = "e_dict_item", uniqueConstraints = @UniqueConstraint(name = "uk_dict_item_code_dict", columnNames = {"code", "erupt_dict_id"}))
 @Erupt(
         name = "Dict Item",
         orderBy = "sort",
