@@ -26,7 +26,7 @@ import java.util.Set;
  * date 2019-08-26.
  */
 @Entity
-@Table(name = "e_bi", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_bi", uniqueConstraints = @UniqueConstraint(name = "uk_bi_code", columnNames = "code"))
 @Erupt(name = "Report Config",
         rowOperation = {
                 @RowOperation(

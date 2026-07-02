@@ -23,7 +23,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * date 2019-12-24.
  */
 @Entity
-@Table(name = "e_bi_chart", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "bi_id"}))
+@Table(name = "e_bi_chart", uniqueConstraints = @UniqueConstraint(name = "uk_bi_chart_code_bi", columnNames = {"code", "bi_id"}))
 @Erupt(name = "Chart Config", orderBy = "sort", dataProxy = BiChartDataProxy.class)
 @Getter
 @Setter

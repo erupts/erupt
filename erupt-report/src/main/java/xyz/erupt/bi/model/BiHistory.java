@@ -26,7 +26,7 @@ import java.util.Date;
  * date 2019-08-26.
  */
 @Entity
-@Table(name = "e_bi_history", indexes = @Index(columnList = "bi_id"))
+@Table(name = "e_bi_history", indexes = @Index(name = "idx_bi_history_bi", columnList = "bi_id"))
 @Erupt(
         name = "Modification History",
         orderBy = "BiHistory.operateTime desc",

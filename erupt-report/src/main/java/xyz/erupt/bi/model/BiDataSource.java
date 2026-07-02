@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  * date 2019-08-26.
  */
 @Entity
-@Table(name = "e_bi_datasource", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_bi_datasource", uniqueConstraints = @UniqueConstraint(name = "uk_bi_datasource_code", columnNames = "code"))
 @Erupt(name = "Data Source Manager", dataProxy = BiDataSourceService.class)
 @Getter
 @Setter

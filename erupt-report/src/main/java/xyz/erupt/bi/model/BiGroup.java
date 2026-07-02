@@ -24,7 +24,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * date 2019-08-26.
  */
 @Entity
-@Table(name = "e_bi_group", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_bi_group", uniqueConstraints = @UniqueConstraint(name = "uk_bi_group_code", columnNames = "code"))
 @Erupt(name = "Group Manager", tree = @Tree(pid = "parent.id"), dataProxy = BiGroup.class)
 @Getter
 @Setter

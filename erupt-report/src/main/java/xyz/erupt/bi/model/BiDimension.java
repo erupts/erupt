@@ -24,7 +24,7 @@ import xyz.erupt.jpa.model.BaseModel;
  * date 2019-08-26.
  */
 @Entity
-@Table(name = "e_bi_dimension", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "bi_id"}))
+@Table(name = "e_bi_dimension", uniqueConstraints = @UniqueConstraint(name = "uk_bi_dimension_code_bi", columnNames = {"code", "bi_id"}))
 @Erupt(name = "Query Dimension", dataProxy = BiDimension.class)
 @Getter
 @Setter

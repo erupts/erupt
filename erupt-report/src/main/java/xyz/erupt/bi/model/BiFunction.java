@@ -24,7 +24,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * date 2019-08-26.
  */
 @Entity
-@Table(name = "e_bi_function", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_bi_function", uniqueConstraints = @UniqueConstraint(name = "uk_bi_function_code", columnNames = "code"))
 @Erupt(name = "Function Manager", dataProxy = BiFunctionDataProxy.class)
 @Getter
 @Setter

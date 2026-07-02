@@ -27,7 +27,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * date 2021/12/30 20:26
  */
 @Entity
-@Table(name = "e_bi_tpl", uniqueConstraints = @UniqueConstraint(columnNames = {"code"}))
+@Table(name = "e_bi_tpl", uniqueConstraints = @UniqueConstraint(name = "uk_bi_tpl_code", columnNames = {"code"}))
 @Erupt(name = "Component Template", orderBy = "createTime desc", dataProxy = BiTpl.class)
 @Getter
 @Setter
