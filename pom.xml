@@ -92,7 +92,6 @@
         <module>erupt-extra/erupt-notice</module>
         <module>erupt-extra/erupt-print</module>
         <module>erupt-extra/erupt-terminal</module>
-        <module>erupt-extra/erupt-project</module>
 
         <!-- Cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>
