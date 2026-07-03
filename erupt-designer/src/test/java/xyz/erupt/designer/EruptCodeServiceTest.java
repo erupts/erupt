@@ -100,6 +100,21 @@ public class EruptCodeServiceTest {
     }
 
     @Test
+    public void calloutWithExplicitNullView() {
+        // The designer frontend serializes no-view fields (CALLOUT/DIVIDE/GROUP) as "view": null;
+        // gson maps that to JsonNull, which must not break deserialization or generation.
+        DesignerForm form = gson.fromJson("{className:'" + Goods.class.getSimpleName() + "', fields:[" +
+                "{fieldName:'guide', view:null, edit:{title:'Guide', type:'CALLOUT'," +
+                "calloutType:{value:'<b>tips</b>', style:'INFO'}}}]}", DesignerForm.class);
+        String code = service.generate(form);
+        System.out.println(code);
+        String flat = code.replaceAll("\\s+", " ").replace("( ", "(").replace(" )", ")");
+        assertTrue(flat.contains("@Transient"));
+        assertTrue(flat.contains("calloutType = @CalloutType(value = \"<b>tips</b>\", style = CalloutType.Style.INFO)"));
+        assertFalse(flat.contains("views ="));
+    }
+
+    @Test
     public void searchDefaultCollapsesToMarker() {
         DesignerForm form = new DesignerForm();
         form.setClassName(Goods.class.getSimpleName());

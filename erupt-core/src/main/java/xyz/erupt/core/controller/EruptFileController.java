@@ -135,6 +135,20 @@ public class EruptFileController {
     }
 
 
+    // Generic editor upload shared by all scenarios without an erupt field context
+    // (form designer callout, cube report, print template, etc.)
+    @PostMapping("/upload-editor")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    public Map<String, Object> uploadEditor(@RequestParam("upload") MultipartFile file) {
+        String path = eruptFileService.upload(file, eruptFileService.createPath(file));
+        Map<String, Object> map = new HashMap<>(4);
+        AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
+        map.put("url", null != attachmentProxy ? attachmentProxy.fileDomain() + path : EruptRestPath.ERUPT_ATTACHMENT + path);
+        map.put("uploaded", true);
+        map.put("state", "SUCCESS");
+        return map;
+    }
+
     @PostMapping("/upload-html-editor/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT)
     public Map<String, Object> uploadHtmlEditorImage(@PathVariable("erupt") String eruptName,
