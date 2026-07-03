@@ -9,6 +9,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.CalloutType;
 import xyz.erupt.jpa.model.BaseModel;
 
 @Getter
@@ -16,6 +17,14 @@ import xyz.erupt.jpa.model.BaseModel;
 @Entity
 @Erupt(name = "DivideEdit")
 public class DivideModel extends BaseModel {
+
+    // static callout: display-only content, never collected nor persisted
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Filling Guide", type = EditType.CALLOUT,
+                    calloutType = @CalloutType(value = "Fields marked with <b>*</b> are required.", style = CalloutType.Style.INFO))
+    )
+    private String callout;
 
     // section 1
     @Transient

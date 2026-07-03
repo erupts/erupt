@@ -133,7 +133,7 @@ public class EruptCodeService {
                             .addMember(LambdaSee.method(OneToMany::orphanRemoval), L, true).build(),
                     joinColumn(form.getClassName()));
             case HTML_EDITOR, CODE_EDITOR, MARKDOWN -> List.of(annotation(Lob.class));
-            case DIVIDE, EMPTY, GROUP -> List.of(annotation(Transient.class));
+            case DIVIDE, EMPTY, GROUP, CALLOUT -> List.of(annotation(Transient.class));
             default -> List.of();
         };
     }

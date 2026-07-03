@@ -40,12 +40,14 @@ public class SearchProxy extends AnnotationProxy<Search, Edit> {
     private boolean isDateEdit() {
         Field field = ProxyContext.get().getField();
         if (null == field) return false;
-        Edit edit = field.getAnnotation(EruptField.class).edit();
-        if (EditType.AUTO == edit.type()) {
+        // Disguised models (e.g. erupt-designer) may leave a context field without @EruptField.
+        EruptField eruptField = field.getAnnotation(EruptField.class);
+        if (null == eruptField) return false;
+        if (EditType.AUTO == eruptField.edit().type()) {
             // Mirror the EditProxy AUTO inference for the date case.
             return EruptUtil.isDateField(field.getType().getSimpleName());
         }
-        return EditType.DATE == edit.type();
+        return EditType.DATE == eruptField.edit().type();
     }
 
 }

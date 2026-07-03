@@ -574,11 +574,14 @@ designer.search_component,搜索组件,搜索組件,Search components,Search com
 designer.type.image,图片,圖片,Image,Image,画像,Image,Image,Image,Image,Image,Image,Image
 designer.type.hidden,隐藏域,隱藏域,Hidden,Hidden,隠しフィールド,Hidden,Hidden,Hidden,Hidden,Hidden,Hidden,Hidden
 designer.type.group,分组,分組,Group,Group,グループ,Group,Group,Group,Group,Group,Group,Group
+designer.type.callout,标注,標註,Callout,Callout,コールアウト,Callout,Callout,Callout,Callout,Callout,Callout,Callout
 designer.type.tab_tree,多选树,多選樹,Tab Tree,Tab Tree,複数選択ツリー,Tab Tree,Tab Tree,Tab Tree,Tab Tree,Tab Tree,Tab Tree,Tab Tree
 designer.type.tab_table_refer,一对多引用,一對多引用,Tab Table Refer,Tab Table Refer,1対多参照,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer
 designer.type.combine,一对一,一對一,Combine,Combine,1対1,Combine,Combine,Combine,Combine,Combine,Combine,Combine
 designer.group_fields,包含字段,包含字段,Fields in group,Fields in group,含まれるフィールド,Fields in group,Fields in group,Fields in group,Fields in group,Fields in group,Fields in group,Fields in group
 designer.collapsed,默认折叠,默認折疊,Collapsed,Collapsed,デフォルトで折りたたむ,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed
+designer.callout_content,标注内容,標註內容,Callout Content,Callout Content,コールアウト内容,Callout Content,Callout Content,Callout Content,Callout Content,Callout Content,Callout Content,Callout Content
+designer.callout_style,标注样式,標註樣式,Callout Style,Callout Style,コールアウトスタイル,Callout Style,Callout Style,Callout Style,Callout Style,Callout Style,Callout Style,Callout Style
 designer.layout,页面布局,頁面佈局,Page Layout,Mise en page,ページレイアウト,페이지 레이아웃,Макет страницы,Diseño de página,Seitenlayout,Layout da página,Tata Letak Halaman,تخطيط الصفحة
 designer.form_size,表单尺寸,表單尺寸,Form Size,Taille du formulaire,フォームサイズ,폼 크기,Размер формы,Tamaño del formulario,Formulargröße,Tamanho do formulário,Ukuran Formulir,حجم النموذج
 designer.page_size,每页条数,每頁條數,Page Size,Taille de page,1ページの件数,페이지당 행 수,Размер страницы,Tamaño de página,Seitengröße,Tamanho da página,Jumlah per Halaman,عدد العناصر في الصفحة
