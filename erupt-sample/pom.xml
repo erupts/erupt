@@ -19,61 +19,10 @@
     <name>Erupt : Sample</name>
 
     <dependencies>
+        <!-- All-in-one starter: core admin + web + every optional feature module -->
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-admin</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-web</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <!-- optional -->
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-notice</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-terminal</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-ai</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-ai-claw</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-monitor</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-cloud-server</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-job</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-print</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-designer</artifactId>
+            <artifactId>erupt-spring-boot-starter-all</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

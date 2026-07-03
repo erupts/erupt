@@ -69,6 +69,8 @@
         <module>erupt-security</module>
         <module>erupt-admin</module>
         <module>erupt-web</module>
+        <module>erupt-spring-boot-starter</module>
+        <module>erupt-spring-boot-starter-all</module>
 
         <!-- Template -->
         <module>erupt-tpl</module>

@@ -85,31 +85,30 @@ mvn spring-boot:run -pl erupt-sample -am
 
 ### Option B · Docker (zero-install trial)
 
-Pull the image from Docker Hub — [hub.docker.com/r/erupts/erupt](https://hub.docker.com/r/erupts/erupt)
+Pull the all-in-one image from Docker Hub — [hub.docker.com/r/erupts/erupt](https://hub.docker.com/r/erupts/erupt). Built on `erupt-spring-boot-starter-all`, it ships every feature module (designer, job, monitor, magic-api, notice, AI, cloud-server, …) with an embedded H2 database — zero configuration to start.
 
 ```bash
 docker run -p 8080:8080 erupts/erupt
 # → http://localhost:8080   login: erupt / erupt
 ```
 
+For production, switch to MySQL / Redis via `-e` environment variables — see the [image guide →](./deploy/erupt-docker/README.md)
+
 ---
 
 ### Option C · Maven Dependency (integrate into your project)
 
-#### 1. Add two dependencies
+#### 1. Add one dependency
 
 ```xml
 <dependency>
     <groupId>xyz.erupt</groupId>
-    <artifactId>erupt-admin</artifactId>
-    <version>${erupt.version}</version>
-</dependency>
-<dependency>
-    <groupId>xyz.erupt</groupId>
-    <artifactId>erupt-web</artifactId>
+    <artifactId>erupt-spring-boot-starter</artifactId>
     <version>${erupt.version}</version>
 </dependency>
 ```
+
+This single starter bundles everything a runnable admin needs (`erupt-admin` + `erupt-web`). Prefer the batteries-included variant? Use `erupt-spring-boot-starter-all`, which additionally bundles every optional feature module (designer, job, generator, monitor, magic-api, websocket, notice, print, terminal, AI, cloud-server).
 
 #### 2. Annotate a JPA entity — this **is** the UI
 

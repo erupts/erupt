@@ -87,31 +87,30 @@ mvn spring-boot:run -pl erupt-sample -am
 
 ### 方式二 · Docker（零安装体验）
 
-从 Docker Hub 拉取镜像 —— [hub.docker.com/r/erupts/erupt](https://hub.docker.com/r/erupts/erupt)
+从 Docker Hub 拉取全家桶镜像 —— [hub.docker.com/r/erupts/erupt](https://hub.docker.com/r/erupts/erupt)。镜像基于 `erupt-spring-boot-starter-all` 构建，内置全部特性模块（designer、job、monitor、magic-api、notice、AI、cloud-server 等），默认使用内嵌 H2 数据库，零配置即可启动。
 
 ```bash
 docker run -p 8080:8080 erupts/erupt
 # → http://localhost:8080   登录：erupt / erupt
 ```
 
+生产环境可通过 `-e` 环境变量切换 MySQL / Redis —— 详见 [镜像使用说明 →](./deploy/erupt-docker/README.md)
+
 ---
 
 ### 方式三 · Maven 依赖（集成到自有项目）
 
-#### 1. 加两个依赖
+#### 1. 加一个依赖
 
 ```xml
 <dependency>
     <groupId>xyz.erupt</groupId>
-    <artifactId>erupt-admin</artifactId>
-    <version>${erupt.version}</version>
-</dependency>
-<dependency>
-    <groupId>xyz.erupt</groupId>
-    <artifactId>erupt-web</artifactId>
+    <artifactId>erupt-spring-boot-starter</artifactId>
     <version>${erupt.version}</version>
 </dependency>
 ```
+
+这一个 starter 就已包含跑起来一个 admin 所需的全部依赖（`erupt-admin` + `erupt-web`）。想要开箱即全家桶？改用 `erupt-spring-boot-starter-all`，它额外打包了所有可选特性模块（designer、job、generator、monitor、magic-api、websocket、notice、print、terminal、AI、cloud-server）。
 
 #### 2. 在 JPA 实体上写一个注解 —— 这就是整个 UI
 
