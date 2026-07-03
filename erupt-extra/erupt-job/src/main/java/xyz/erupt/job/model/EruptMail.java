@@ -10,6 +10,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -44,7 +45,7 @@ public class EruptMail extends BaseModel {
 
     @EruptField(
             views = @View(title = "Recipient"),
-            edit = @Edit(title = "Recipient", notNull = true, search = @Search,
+            edit = @Edit(title = "Recipient", notNull = true, search = @Search(operator = QueryExpression.LIKE),
                     inputType = @InputType(fullSpan = true, regex = RegexConst.EMAIL_REGEX))
     )
     private String recipient;
@@ -57,7 +58,7 @@ public class EruptMail extends BaseModel {
 
     @EruptField(
             views = @View(title = "Subject"),
-            edit = @Edit(title = "Subject", notNull = true, search = @Search, inputType = @InputType(fullSpan = true))
+            edit = @Edit(title = "Subject", notNull = true, search = @Search(operator = QueryExpression.LIKE), inputType = @InputType(fullSpan = true))
     )
     private String subject;
 

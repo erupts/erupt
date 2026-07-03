@@ -7,6 +7,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
@@ -45,7 +46,7 @@ public class NoticeLog extends HyperModelCreatorOnlyVo {
 
     @EruptField(
             views = @View(title = "title"),
-            edit = @Edit(title = "title", notNull = true, search = @Search)
+            edit = @Edit(title = "title", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String title;
 
@@ -81,7 +82,7 @@ public class NoticeLog extends HyperModelCreatorOnlyVo {
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "content", type = ViewType.HTML),
-            edit = @Edit(title = "content", type = EditType.CODE_EDITOR, search = @Search,
+            edit = @Edit(title = "content", type = EditType.CODE_EDITOR, search = @Search(operator = QueryExpression.LIKE),
                     notNull = true, codeEditType = @CodeEditorType(language = "text"))
     )
     private String content;

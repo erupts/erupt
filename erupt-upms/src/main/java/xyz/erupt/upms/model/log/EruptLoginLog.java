@@ -9,6 +9,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.cube.Dimension;
 import xyz.erupt.annotation.cube.EruptCube;
 import xyz.erupt.annotation.cube.Measure;
@@ -47,7 +48,7 @@ public class EruptLoginLog extends BaseModel {
     @Dimension(title = "User Name", sql = "user_name")
     @EruptField(
             views = @View(title = "Account"),
-            edit = @Edit(title = "Account", search = @Search)
+            edit = @Edit(title = "Account", search = @Search(operator = QueryExpression.LIKE))
     )
     private String userName;
 

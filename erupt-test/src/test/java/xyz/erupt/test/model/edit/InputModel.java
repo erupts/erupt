@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
@@ -78,7 +79,7 @@ public class InputModel extends BaseModel {
     @EruptField(
             views = @View(title = "Keyword"),
             edit = @Edit(title = "Keyword", type = EditType.INPUT,
-                    search = @Search)
+                    search = @Search(operator = QueryExpression.LIKE))
     )
     private String keyword;
 

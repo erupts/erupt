@@ -6,6 +6,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -31,7 +32,7 @@ public class NoticeAnnouncement extends HyperModelCreatorOnlyVo {
 
     @EruptField(
             views = @View(title = "title"),
-            edit = @Edit(title = "title", notNull = true, search = @Search)
+            edit = @Edit(title = "title", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String title;
 

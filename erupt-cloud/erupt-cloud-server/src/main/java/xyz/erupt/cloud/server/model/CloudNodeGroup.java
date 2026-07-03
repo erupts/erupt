@@ -8,6 +8,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -32,13 +33,13 @@ public class CloudNodeGroup extends MetaModel {
     @Column(unique = true)
     @EruptField(
             views = @View(title = "Code", sortable = true),
-            edit = @Edit(title = "Code", notNull = true, search = @Search)
+            edit = @Edit(title = "Code", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String code;
 
     @EruptField(
             views = @View(title = "Name", sortable = true),
-            edit = @Edit(title = "Name", notNull = true, search = @Search)
+            edit = @Edit(title = "Name", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String name;
 

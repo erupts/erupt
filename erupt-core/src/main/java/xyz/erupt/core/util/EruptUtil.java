@@ -30,6 +30,7 @@ import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.proxy.AnnotationProcess;
+import xyz.erupt.core.proxy.ProxyContext;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -261,8 +262,11 @@ public class EruptUtil {
                                 continue;
                             }
                         }
-                        if (null == condition.getExpression()) {
-                            condition.setExpression(QueryExpression.EQ);
+                        if (null == condition.getExpression() || QueryExpression.AUTO == condition.getExpression()) {
+                            // SearchProxy resolves AUTO against ProxyContext, so point it at the owning field first.
+                            ProxyContext.set(eruptFieldModel.getField(), false);
+                            QueryExpression defaultOperator = edit.search().operator();
+                            condition.setExpression(QueryExpression.AUTO == defaultOperator ? QueryExpression.EQ : defaultOperator);
                         }
                         legalConditions.add(condition);
                     }

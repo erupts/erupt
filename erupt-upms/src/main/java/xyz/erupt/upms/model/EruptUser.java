@@ -6,6 +6,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Layout;
@@ -59,13 +60,13 @@ public class EruptUser extends LookerSelf {
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "Account", sortable = true),
-            edit = @Edit(title = "Account", desc = "Login account", notNull = true, search = @Search)
+            edit = @Edit(title = "Account", desc = "Login account", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String account;
 
     @EruptField(
             views = @View(title = "Full Name", sortable = true),
-            edit = @Edit(title = "Full Name", notNull = true, search = @Search)
+            edit = @Edit(title = "Full Name", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String name;
 
@@ -85,12 +86,12 @@ public class EruptUser extends LookerSelf {
     private Boolean status = true;
 
     @EruptField(
-            edit = @Edit(title = "Phone", search = @Search, inputType = @InputType)
+            edit = @Edit(title = "Phone", search = @Search(operator = QueryExpression.LIKE), inputType = @InputType)
     )
     private String phone;
 
     @EruptField(
-            edit = @Edit(title = "Email", search = @Search, inputType = @InputType(regex = RegexConst.EMAIL_REGEX))
+            edit = @Edit(title = "Email", search = @Search(operator = QueryExpression.LIKE), inputType = @InputType(regex = RegexConst.EMAIL_REGEX))
     )
     private String email;
 

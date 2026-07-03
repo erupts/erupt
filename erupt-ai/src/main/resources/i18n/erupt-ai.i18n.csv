@@ -7,8 +7,8 @@ AI Chat,AI 对话,AI 對話,AI Chat,Discussion IA,AIチャット,AI 채팅,AI-ч
 Model Test,模型测试,模型測試,Model Test,Test de modèle,モデルテスト,모델 테스트,Тест модели,Prueba del modelo,Modelltest,Teste de modelo,Uji Model,اختبار النموذج
 Default Chat Model,默认对话模型,預設對話模型,Default Chat Model,Modèle de chat par défaut,デフォルトチャットモデル,기본 채팅 모델,Модель чата по умолчанию,Modelo de chat predeterminado,Standard-Chat-Modell,Modelo de chat padrão,Model Chat Default,نموذج الدردشة الافتراضي
 Model Name,模型名称,模型名稱,Model Name,Nom du modèle,モデル名,모델 이름,Название модели,Nombre del modelo,Modellname,Nome do modelo,Nama Model,اسم النموذج
-Large Language Model,大语言模型,大語言模型,Large Language Model,Grand modèle de langage,大規模言語モデル,대형 언어 모델,Большая языковая модель,Gran modelo de lenguaje,Großes Sprachmodell,Grande modelo de linguagem,Model Bahasa Besar,نموذج اللغة الكبير
-Model Version,模型版本,模型版本,Model Version,Version du modèle,モデルバージョン,모델 버전,Версия модели,Versión del modelo,Modellversion,Versão do modelo,Versi Model,إصدار النموذج
+Model Provider,模型厂商,模型廠商,Model Provider,Fournisseur de modèle,モデルプロバイダー,모델 제공업체,Поставщик модели,Proveedor del modelo,Modellanbieter,Fornecedor do modelo,Penyedia Model,مزود النموذج
+Model,模型,模型,Model,Modèle,モデル,모델,Модель,Modelo,Modell,Modelo,Model,النموذج
 API Domain,API 域名,API 域名,API Domain,Domaine API,APIドメイン,API 도메인,Домен API,Dominio API,API-Domain,Domínio da API,Domain API,نطاق API
 Context Memory Rounds,上下文记忆轮次,上下文記憶輪次,Context Memory Rounds,Tours de mémoire contextuelle,コンテキストメモリラウンド,컨텍스트 메모리 라운드,Раунды контекстной памяти,Rondas de memoria contextual,Kontextspeicher-Runden,Rodadas de memória de contexto,Putaran Memori Konteks,جولات الذاكرة السياقية
 Status,状态,狀態,Status,Statut,ステータス,상태,Статус,Estado,Status,Estado,Status,الحالة

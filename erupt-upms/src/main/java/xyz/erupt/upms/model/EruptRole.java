@@ -6,6 +6,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -34,13 +35,13 @@ public class EruptRole extends HyperModelUpdateVo {
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "code"),
-            edit = @Edit(title = "code", notNull = true, search = @Search)
+            edit = @Edit(title = "code", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String code;
 
     @EruptField(
             views = @View(title = "name"),
-            edit = @Edit(title = "name", notNull = true, search = @Search)
+            edit = @Edit(title = "name", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String name;
 

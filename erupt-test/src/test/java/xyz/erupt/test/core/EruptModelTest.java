@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.annotation.Rollback;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.exception.EruptException;
+import xyz.erupt.core.proxy.ProxyContext;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -113,6 +115,31 @@ public class EruptModelTest extends EruptApplicationTests {
                     .count();
             assertTrue(count > 0, clazz.getSimpleName() + " must declare at least one @EruptField");
         }
+    }
+
+    /**
+     * @Search.operator AUTO must resolve per owning edit type (RANGE for DATE, EQ otherwise)
+     * and must not leak across value-equal @Search annotations from other fields
+     * (annotation equals() is value-based, so a shared proxy cache would mix operators up).
+     */
+    @Test
+    void testSearchOperatorResolution() {
+        // DATE field: AUTO resolves to RANGE (SearchProxy reads the owning field from ProxyContext)
+        EruptModel dateModel = EruptCoreService.getErupt("DateModel");
+        ProxyContext.set(dateModel.getEruptFieldMap().get("date").getField(), false);
+        assertEquals(QueryExpression.RANGE, dateModel.getEruptFieldMap().get("date").getEruptField().edit().search().operator());
+        // plain NUMBER field: AUTO resolves to EQ
+        EruptModel numberModel = EruptCoreService.getErupt("NumberModel");
+        ProxyContext.set(numberModel.getEruptFieldMap().get("percent").getField(), false);
+        assertEquals(QueryExpression.EQ, numberModel.getEruptFieldMap().get("percent").getEruptField().edit().search().operator());
+        // explicitly configured operator wins over AUTO resolution
+        EruptModel inputModel = EruptCoreService.getErupt("InputModel");
+        assertEquals(QueryExpression.LIKE, inputModel.getEruptFieldMap().get("keyword").getEruptField().edit().search().operator());
+        // the serialized JSON handed to the frontend carries the resolved operator
+        EruptFieldModel dateFieldView = EruptCoreService.getEruptView("DateModel").getEruptFieldModels().stream()
+                .filter(f -> "date".equals(f.getFieldName())).findFirst().orElseThrow();
+        assertEquals(QueryExpression.RANGE.name(), dateFieldView.getEruptFieldJson()
+                .getAsJsonObject("edit").getAsJsonObject("search").get("operator").getAsString());
     }
 
     // ─── Unified CRUD Validation ──────────────────────────────────────────────

@@ -11,6 +11,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.cube.Dimension;
 import xyz.erupt.annotation.cube.EruptCube;
@@ -59,7 +60,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     @Dimension(title = "Operate User", sql = "operate_user")
     @EruptField(
             views = @View(title = "Operator"),
-            edit = @Edit(title = "Operator", search = @Search)
+            edit = @Edit(title = "Operator", search = @Search(operator = QueryExpression.LIKE))
     )
     private String operateUser;
 
@@ -80,7 +81,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     @Dimension(title = "API Name", sql = "api_name")
     @EruptField(
             views = @View(title = "Function Name"),
-            edit = @Edit(title = "Function Name", search = @Search)
+            edit = @Edit(title = "Function Name", search = @Search(operator = QueryExpression.LIKE))
     )
     private String apiName;
 

@@ -50,6 +50,8 @@ public class EditProxy extends AnnotationProxy<Edit, EruptField> {
             return ProxyContext.translate(this.rawAnnotation.desc());
         } else if (super.matchMethod(invocation, Edit::boolType)) {
             return AnnotationProxyPool.getOrPut(this.rawAnnotation.boolType(), boolType -> new BoolTypeProxy().newProxy(boolType, this));
+        } else if (super.matchMethod(invocation, Edit::search)) {
+            return AnnotationProxyPool.getOrPut(this.rawAnnotation.search(), search -> new SearchProxy().newProxy(search, this));
         }
         return this.invoke(invocation);
     }

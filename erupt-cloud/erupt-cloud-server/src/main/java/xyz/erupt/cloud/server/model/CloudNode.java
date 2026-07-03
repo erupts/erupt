@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.PageEmbedType;
 import xyz.erupt.annotation.expr.ExprBool;
@@ -57,13 +58,13 @@ public class CloudNode extends MetaModelUpdateVo {
     @Column(unique = true)
     @EruptField(
             views = @View(title = "Node Name", sortable = true),
-            edit = @Edit(title = "Node Name", desc = "NodeName", notNull = true, search = @Search)
+            edit = @Edit(title = "Node Name", desc = "NodeName", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String nodeName;
 
     @EruptField(
             views = @View(title = "Friendly Name", sortable = true),
-            edit = @Edit(title = "Friendly Name", notNull = true, search = @Search)
+            edit = @Edit(title = "Friendly Name", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String name;
 
