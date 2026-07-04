@@ -2,8 +2,6 @@ package xyz.erupt.docker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import xyz.erupt.core.annotation.EruptScan;
 
 /**
  * @author Barcke
@@ -14,8 +12,6 @@ import xyz.erupt.core.annotation.EruptScan;
  * slogan: Derived from life, yet surpassing life
  **/
 @SpringBootApplication
-@EruptScan
-@EntityScan
 public class Application {
 
     public static void main(String[] args) {

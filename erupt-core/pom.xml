@@ -4,14 +4,14 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>erupt-core</artifactId>
-    <name>erupt-core</name>
+    <name>Erupt : Core</name>
 
     <description>core realize</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

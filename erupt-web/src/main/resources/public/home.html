@@ -1,49 +1,702 @@
+<!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html, body { height: 100%; }
+
         body {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f5f7fb;
+            background: #fff;
+            overflow: hidden;
         }
 
-        .icon {
-            animation: float 4s ease-in-out infinite;
+        /* faint blueprint dot grid, fading toward edges */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(rgba(15, 35, 95, .16) 1px, transparent 1px);
+            background-size: 26px 26px;
+            opacity: .35;
+            -webkit-mask-image: radial-gradient(ellipse 70% 62% at 50% 50%, #000 30%, transparent 78%);
+            mask-image: radial-gradient(ellipse 70% 62% at 50% 50%, #000 30%, transparent 78%);
         }
-        .rays {
-            animation: spin 22s linear infinite;
-            transform-origin: 44px 44px;
+
+        @keyframes fade-in { to { opacity: 1; } }
+        @keyframes rise { to { opacity: 1; transform: none; } }
+        .ent {
+            opacity: 0;
+            transform: translateY(8px);
+            animation: rise .9s cubic-bezier(.22, 1, .36, 1) forwards;
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50%       { transform: translateY(-9px); }
+        .fad {
+            opacity: 0;
+            animation: fade-in 1s ease forwards;
         }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to   { transform: rotate(360deg); }
+
+        /* ================= guides (dashed, full viewport) ================= */
+        .gd {
+            position: fixed;
+            opacity: 0;
+            animation: fade-in 1.2s ease .1s forwards;
         }
+        .gd.gh {
+            left: 0; right: 0; height: 1px;
+            background: repeating-linear-gradient(90deg,
+                rgba(0, 0, 0, .14) 0 5px, transparent 5px 11px);
+        }
+        .gd.gv {
+            top: 0; bottom: 0; width: 1px;
+            background: repeating-linear-gradient(180deg,
+                rgba(0, 0, 0, .14) 0 5px, transparent 5px 11px);
+        }
+        .g1 { top: 12%; }
+        .g2 { top: 88%; animation-delay: .25s; }
+        .g3 { left: 15%; animation-delay: .4s; }
+        .g4 { left: 85%; animation-delay: .55s; }
+
+        /* corner crosses */
+        .cross {
+            position: fixed;
+            width: 15px; height: 15px;
+            margin: -7px 0 0 -7px;
+            opacity: 0;
+            animation: fade-in .7s ease forwards;
+        }
+        .cross::before, .cross::after {
+            content: "";
+            position: absolute;
+            background: rgba(15, 35, 95, .22);
+        }
+        .cross::before { left: 0; top: 7px; width: 15px; height: 1px; }
+        .cross::after  { left: 7px; top: 0; width: 1px; height: 15px; }
+        .x1 { left: 15%; top: 12%; animation-delay: 1.2s; }
+        .x2 { left: 85%; top: 12%; animation-delay: 1.35s; }
+        .x3 { left: 15%; top: 88%; animation-delay: 1.5s; }
+        .x4 { left: 85%; top: 88%; animation-delay: 1.65s; }
+        .x2::before, .x2::after { background: rgba(22, 119, 255, .55); }
+
+        /* dimension marks (blueprint style) */
+        .dim {
+            position: fixed;
+            opacity: 0;
+            animation: fade-in 1s ease 2.2s forwards;
+        }
+        .dim-h {
+            top: calc(12% - 20px);
+            left: 15%; right: 15%;
+            height: 1px;
+            background: rgba(15, 35, 95, .14);
+        }
+        .dim-h::before, .dim-h::after {
+            content: "";
+            position: absolute;
+            top: -3.5px;
+            width: 1px; height: 8px;
+            background: rgba(15, 35, 95, .22);
+        }
+        .dim-h::before { left: 0; }
+        .dim-h::after { right: 0; }
+        .dim-v {
+            left: calc(15% - 20px);
+            top: 12%; bottom: 12%;
+            width: 1px;
+            background: rgba(15, 35, 95, .14);
+        }
+        .dim-v::before, .dim-v::after {
+            content: "";
+            position: absolute;
+            left: -3.5px;
+            width: 8px; height: 1px;
+            background: rgba(15, 35, 95, .22);
+        }
+        .dim-v::before { top: 0; }
+        .dim-v::after { bottom: 0; }
+
+        /* light glide along the top guide */
+        .glide {
+            position: fixed;
+            top: calc(12% - 1px);
+            left: 0;
+            width: 220px; height: 1px;
+            background: linear-gradient(90deg,
+                transparent, rgba(22, 119, 255, .55) 50%, transparent);
+            box-shadow: 0 0 8px rgba(22, 119, 255, .25);
+            opacity: 0;
+            animation: slide 16s linear 3s infinite;
+        }
+        @keyframes slide {
+            0%   { transform: translateX(-220px); opacity: 0; }
+            5%   { opacity: 1; }
+            45%  { opacity: 1; }
+            50%  { transform: translateX(100vw); opacity: 0; }
+            100% { transform: translateX(100vw); opacity: 0; }
+        }
+        .glide-v {
+            position: fixed;
+            left: calc(15% - 1px);
+            top: 0;
+            width: 1px; height: 160px;
+            background: linear-gradient(180deg,
+                transparent, rgba(22, 119, 255, .40) 50%, transparent);
+            box-shadow: 0 0 8px rgba(22, 119, 255, .2);
+            opacity: 0;
+            animation: slide-v 21s linear 11s infinite;
+        }
+        @keyframes slide-v {
+            0%   { transform: translateY(-160px); opacity: 0; }
+            5%   { opacity: 1; }
+            45%  { opacity: 1; }
+            50%  { transform: translateY(100vh); opacity: 0; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        /* ================= the artboard: a ghost erupt page ================= */
+        .board {
+            position: fixed;
+            left: 15%; right: 15%;
+            top: 12%; bottom: 12%;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, .1);
+            box-shadow: 0 24px 64px -40px rgba(15, 43, 92, .25);
+            animation-delay: .3s;
+        }
+
+        /* top bar */
+        .tbar {
+            position: absolute;
+            left: 0; right: 0; top: 0;
+            height: 44px;
+        }
+        .tbar::after {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 1px;
+            background: rgba(0, 0, 0, .08);
+            transform: scaleX(0);
+            transform-origin: left center;
+            animation: grow-x 1s cubic-bezier(.4, 0, .2, 1) .55s forwards;
+        }
+        @keyframes grow-x { to { transform: scaleX(1); } }
+        @keyframes grow-y { to { transform: scaleY(1); } }
+
+        /* breadcrumbs */
+        .crumbs {
+            position: absolute;
+            left: 20px; top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            animation-delay: .9s;
+        }
+        .crumbs b {
+            display: block;
+            height: 5px;
+            border-radius: 2.5px;
+            background: rgba(15, 35, 95, .10);
+        }
+        .crumbs b:nth-child(1) { width: 30px; }
+        .crumbs b:nth-child(3) { width: 44px; }
+        .crumbs b:nth-child(5) { width: 36px; background: rgba(15, 35, 95, .16); }
+        .crumbs i {
+            display: block;
+            width: 3px; height: 3px;
+            border-radius: 50%;
+            background: rgba(15, 35, 95, .18);
+        }
+
+        /* top-right: bell + avatar */
+        .tools {
+            position: absolute;
+            right: 18px; top: 13px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            animation-delay: 1s;
+        }
+        .tools .bell {
+            position: relative;
+            width: 12px; height: 12px;
+            border: 1.5px solid rgba(15, 35, 95, .22);
+            border-radius: 50% 50% 4px 4px;
+        }
+        .tools .bell::after {
+            content: "";
+            position: absolute;
+            right: -3px; top: -3px;
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: rgba(255, 77, 79, .55);
+            animation: dot-pulse 5s ease-out 4s infinite;
+        }
+        @keyframes dot-pulse {
+            0%   { box-shadow: 0 0 0 0 rgba(255, 77, 79, .25); }
+            18%  { box-shadow: 0 0 0 5px rgba(255, 77, 79, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 77, 79, 0); }
+        }
+        .tools .avatar {
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            border: 1px solid rgba(22, 119, 255, .4);
+            background: linear-gradient(135deg, rgba(22, 119, 255, .18), rgba(22, 119, 255, .06));
+        }
+
+        /* sidebar */
+        .side {
+            position: absolute;
+            left: 0; top: 44px; bottom: 0;
+            width: 152px;
+        }
+        .side::after {
+            content: "";
+            position: absolute;
+            right: 0; top: 0; bottom: 0;
+            width: 1px;
+            background: rgba(0, 0, 0, .08);
+            transform: scaleY(0);
+            transform-origin: center top;
+            animation: grow-y 1s cubic-bezier(.4, 0, .2, 1) .7s forwards;
+        }
+        .mi {
+            position: absolute;
+            left: 0; right: 1px;
+            height: 30px;
+        }
+        .mi s {
+            position: absolute;
+            left: 18px; top: 10px;
+            width: 10px; height: 10px;
+            border-radius: 3px;
+            background: rgba(15, 35, 95, .10);
+        }
+        .mi b {
+            position: absolute;
+            left: 38px; top: 13px;
+            height: 5px;
+            border-radius: 2.5px;
+            background: rgba(15, 35, 95, .09);
+        }
+        .m1 { top: 16px;  animation-delay: .95s; } .m1 b { width: 58px; }
+        .m2 { top: 50px;  animation-delay: 1.05s; } .m2 b { width: 72px; }
+        .m3 { top: 84px;  animation-delay: 1.15s; } .m3 b { width: 48px; }
+        .m4 { top: 118px; animation-delay: 1.25s; } .m4 b { width: 64px; }
+        .m5 { top: 152px; animation-delay: 1.35s; } .m5 b { width: 54px; }
+
+        /* active menu item */
+        .mi.on {
+            background: rgba(22, 119, 255, .06);
+        }
+        .mi.on::before {
+            content: "";
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 2px;
+            background: rgba(22, 119, 255, .65);
+        }
+        .mi.on s { background: rgba(22, 119, 255, .40); }
+        .mi.on b { background: rgba(22, 119, 255, .35); }
+
+        /* ================= main region ================= */
+        .main {
+            position: absolute;
+            left: 152px; right: 0; top: 44px; bottom: 0;
+        }
+
+        /* query bar */
+        .query {
+            position: absolute;
+            left: 22px; right: 22px; top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation-delay: 1.3s;
+        }
+        .query .qbox {
+            position: relative;
+            width: 158px; height: 30px;
+            border: 1px solid rgba(15, 35, 95, .14);
+            border-radius: 6px;
+            background: #fff;
+        }
+        .query .qbox.focus {
+            border-color: rgba(22, 119, 255, .55);
+            box-shadow: 0 0 0 3px rgba(22, 119, 255, .08);
+        }
+        .caret {
+            position: absolute;
+            left: 10px; top: 8px;
+            width: 1.5px; height: 14px;
+            background: rgba(22, 119, 255, .8);
+            animation: blink 1.1s step-end infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%      { opacity: 0; }
+        }
+        .query .qbox .ph {
+            position: absolute;
+            left: 10px; top: 13px;
+            width: 52%; height: 4px;
+            border-radius: 2px;
+            background: rgba(15, 35, 95, .06);
+        }
+        .query .qbox .chev {
+            position: absolute;
+            right: 11px; top: 10px;
+            width: 6px; height: 6px;
+            border-right: 1.5px solid rgba(15, 35, 95, .26);
+            border-bottom: 1.5px solid rgba(15, 35, 95, .26);
+            transform: rotate(45deg);
+        }
+        .query .spacer { flex: 1; }
+        .btn {
+            position: relative;
+            width: 60px; height: 30px;
+            border-radius: 6px;
+        }
+        .btn::before {
+            content: "";
+            position: absolute;
+            left: 50%; top: 13px;
+            width: 24px; height: 4px;
+            margin-left: -12px;
+            border-radius: 2px;
+        }
+        .btn.plain {
+            border: 1px solid rgba(15, 35, 95, .14);
+            background: #fff;
+        }
+        .btn.plain::before { background: rgba(15, 35, 95, .10); }
+        .btn.primary {
+            background: linear-gradient(180deg, rgba(22, 119, 255, .68), rgba(22, 119, 255, .52));
+            box-shadow: 0 4px 12px -4px rgba(22, 119, 255, .40);
+            animation: btn-breathe 6s ease-in-out 3.5s infinite;
+        }
+        .btn.primary::before { background: rgba(255, 255, 255, .85); }
+        @keyframes btn-breathe {
+            0%, 100% { box-shadow: 0 4px 12px -4px rgba(22, 119, 255, .40), 0 0 0 0 rgba(22, 119, 255, .18); }
+            50%      { box-shadow: 0 4px 12px -4px rgba(22, 119, 255, .40), 0 0 0 5px rgba(22, 119, 255, 0); }
+        }
+
+        /* ================= table card ================= */
+        .card {
+            position: absolute;
+            left: 22px; right: 22px; top: 68px;
+            border: 1px solid rgba(15, 35, 95, .10);
+            border-radius: 8px;
+            background: #fff;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(15, 43, 92, .04);
+            animation-delay: 1.5s;
+        }
+        .thead {
+            position: relative;
+            height: 30px;
+            background: rgba(15, 35, 95, .028);
+            border-bottom: 1px solid rgba(15, 35, 95, .08);
+        }
+        .thead .sort {
+            position: absolute;
+            left: calc(7% + 32px); top: 9px;
+            width: 0; height: 0;
+            border-left: 3.5px solid transparent;
+            border-right: 3.5px solid transparent;
+            border-bottom: 4.5px solid rgba(22, 119, 255, .55);
+        }
+        .thead .sort::after {
+            content: "";
+            position: absolute;
+            left: -3.5px; top: 7px;
+            width: 0; height: 0;
+            border-left: 3.5px solid transparent;
+            border-right: 3.5px solid transparent;
+            border-top: 4.5px solid rgba(15, 35, 95, .18);
+        }
+        .trow {
+            position: relative;
+            height: 30px;
+            border-bottom: 1px solid rgba(15, 35, 95, .05);
+            opacity: 0;
+            animation: fade-in .6s ease forwards;
+        }
+        .trow:last-of-type { border-bottom: none; }
+        .trow:nth-child(even) { background: rgba(15, 35, 95, .014); }
+        .trow:nth-child(2) { animation-delay: 1.7s; }
+        .trow:nth-child(3) { animation-delay: 1.82s; }
+        .trow:nth-child(4) { animation-delay: 1.94s; }
+        .trow:nth-child(5) { animation-delay: 2.06s; }
+        .trow:nth-child(6) { animation-delay: 2.18s; }
+        .trow:nth-child(7) { animation-delay: 2.3s; }
+
+        .cb {
+            position: absolute;
+            left: 12px; top: 10px;
+            width: 10px; height: 10px;
+            border: 1px solid rgba(15, 35, 95, .20);
+            border-radius: 3px;
+            background: #fff;
+        }
+        .cb.on {
+            background: rgba(22, 119, 255, .75);
+            border-color: rgba(22, 119, 255, .75);
+        }
+        .cb.on::before {
+            content: "";
+            position: absolute;
+            left: 2px; top: .5px;
+            width: 3px; height: 6px;
+            border: solid #fff;
+            border-width: 0 1.5px 1.5px 0;
+            transform: rotate(45deg);
+        }
+
+        .cell {
+            position: absolute;
+            top: 13px;
+            height: 5px;
+            border-radius: 2.5px;
+            background: rgba(15, 35, 95, .065);
+        }
+        .thead .cell { background: rgba(15, 35, 95, .11); top: 12px; }
+        .cc1 { left: 7%;  width: 24px; }
+        .cc2 { left: 20%; width: 14%; }
+        .trow .cc2 { left: calc(20% + 22px); }
+        .cc3 { left: 47%; width: 9%; }
+        .cc4 { left: 64%; width: 28px; }
+        .trow:nth-child(odd)  .cc2 { width: 10%; }
+        .trow:nth-child(even) .cc1 { width: 18px; }
+
+        .ava {
+            position: absolute;
+            left: 20%; top: 7px;
+            width: 15px; height: 15px;
+            border-radius: 50%;
+            border: 1px solid rgba(15, 35, 95, .13);
+            background: linear-gradient(135deg, rgba(15, 35, 95, .07), rgba(15, 35, 95, .03));
+        }
+        .trow:first-of-type .ava,
+        .trow:nth-child(5) .ava {
+            border-color: rgba(22, 119, 255, .4);
+            background: linear-gradient(135deg, rgba(22, 119, 255, .16), rgba(22, 119, 255, .06));
+        }
+
+        .pill {
+            position: absolute;
+            left: 47%; top: 8px;
+            width: 36px; height: 14px;
+            border-radius: 7px;
+            border: 1px solid rgba(22, 119, 255, .35);
+            background: rgba(22, 119, 255, .07);
+        }
+        .pill::before {
+            content: "";
+            position: absolute;
+            left: 6px; top: 4.5px;
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: rgba(22, 119, 255, .55);
+        }
+        .pill::after {
+            content: "";
+            position: absolute;
+            left: 14px; top: 5.5px;
+            width: 14px; height: 2.5px;
+            border-radius: 1.5px;
+            background: rgba(22, 119, 255, .30);
+        }
+        .pill.grey {
+            border-color: rgba(15, 35, 95, .13);
+            background: rgba(15, 35, 95, .025);
+        }
+        .pill.grey::before { background: rgba(15, 35, 95, .22); }
+        .pill.grey::after  { background: rgba(15, 35, 95, .12); }
+
+        .prog {
+            position: absolute;
+            left: 64%; top: 13px;
+            width: 14%; height: 5px;
+            border-radius: 2.5px;
+            background: rgba(15, 35, 95, .055);
+            overflow: hidden;
+        }
+        .prog::before {
+            content: "";
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: var(--p, 50%);
+            border-radius: 2.5px;
+            background: linear-gradient(90deg, rgba(22, 119, 255, .30), rgba(22, 119, 255, .50));
+            transform: scaleX(0);
+            transform-origin: left center;
+            animation: prog-in 1s cubic-bezier(.4, 0, .2, 1) 2.5s forwards;
+        }
+        @keyframes prog-in { to { transform: scaleX(1); } }
+
+        .act, .act2 {
+            position: absolute;
+            top: 13px;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(22, 119, 255, .45);
+        }
+        .act  { right: 40px; width: 16px; }
+        .act2 { right: 14px; width: 16px; background: rgba(255, 77, 79, .30); }
+
+        /* roving row highlight */
+        .rover {
+            position: absolute;
+            left: 0; right: 0;
+            height: 30px;
+            background: rgba(22, 119, 255, .045);
+            box-shadow: inset 2px 0 0 rgba(22, 119, 255, .35);
+            opacity: 0;
+            animation: rove 16s ease-in-out 3.2s infinite;
+            pointer-events: none;
+        }
+        @keyframes rove {
+            0%          { top: 31px;  opacity: 0; }
+            2%, 13%     { top: 31px;  opacity: 1; }
+            16%, 27%    { top: 61px;  opacity: 1; }
+            30%, 41%    { top: 91px;  opacity: 1; }
+            44%, 55%    { top: 121px; opacity: 1; }
+            58%, 69%    { top: 151px; opacity: 1; }
+            72%, 92%    { top: 181px; opacity: 1; }
+            96%, 100%   { top: 181px; opacity: 0; }
+        }
+
+        /* pagination */
+        .pager {
+            position: absolute;
+            right: 22px; top: 296px;
+            display: flex;
+            gap: 8px;
+            animation-delay: 2.5s;
+        }
+        .pager s {
+            display: block;
+            width: 20px; height: 20px;
+            border: 1px solid rgba(15, 35, 95, .13);
+            border-radius: 5px;
+            background: #fff;
+            position: relative;
+        }
+        .pager s::before {
+            content: "";
+            position: absolute;
+            left: 50%; top: 50%;
+            width: 7px; height: 4px;
+            margin: -2px 0 0 -3.5px;
+            border-radius: 2px;
+            background: rgba(15, 35, 95, .09);
+        }
+        .pager s.on {
+            border-color: rgba(22, 119, 255, .6);
+            background: rgba(22, 119, 255, .06);
+        }
+        .pager s.on::before { background: rgba(22, 119, 255, .45); }
     </style>
 </head>
 <body>
-    <svg class="icon" width="96" height="96" viewBox="0 0 88 88"
-         fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g class="rays" stroke="#1677ff" stroke-linecap="round">
-            <line x1="44" y1="7"  x2="44" y2="17" stroke-width="3"   transform="rotate(0,44,44)"/>
-            <line x1="44" y1="7"  x2="44" y2="15" stroke-width="2"   transform="rotate(45,44,44)" opacity=".55"/>
-            <line x1="44" y1="7"  x2="44" y2="17" stroke-width="3"   transform="rotate(90,44,44)"/>
-            <line x1="44" y1="7"  x2="44" y2="15" stroke-width="2"   transform="rotate(135,44,44)" opacity=".55"/>
-            <line x1="44" y1="7"  x2="44" y2="17" stroke-width="3"   transform="rotate(180,44,44)"/>
-            <line x1="44" y1="7"  x2="44" y2="15" stroke-width="2"   transform="rotate(225,44,44)" opacity=".55"/>
-            <line x1="44" y1="7"  x2="44" y2="17" stroke-width="3"   transform="rotate(270,44,44)"/>
-            <line x1="44" y1="7"  x2="44" y2="15" stroke-width="2"   transform="rotate(315,44,44)" opacity=".55"/>
-        </g>
-        <circle cx="44" cy="44" r="17" fill="#1677ff"/>
-        <circle cx="44" cy="44" r="10" fill="white" opacity=".18"/>
-        <circle cx="39" cy="39" r="4"  fill="white" opacity=".22"/>
-    </svg>
+    <!-- guides + marks -->
+    <div class="gd gh g1"></div>
+    <div class="gd gh g2"></div>
+    <div class="gd gv g3"></div>
+    <div class="gd gv g4"></div>
+    <span class="cross x1"></span>
+    <span class="cross x2"></span>
+    <span class="cross x3"></span>
+    <span class="cross x4"></span>
+    <div class="dim dim-h"></div>
+    <div class="dim dim-v"></div>
+    <div class="glide"></div>
+    <div class="glide-v"></div>
+
+    <!-- artboard: ghost erupt page -->
+    <div class="board ent">
+        <!-- top bar -->
+        <div class="tbar">
+            <div class="crumbs fad">
+                <b></b><i></i><b></b><i></i><b></b>
+            </div>
+            <div class="tools fad">
+                <span class="bell"></span>
+                <span class="avatar"></span>
+            </div>
+        </div>
+
+        <!-- sidebar -->
+        <div class="side">
+            <div class="mi m1 fad"><s></s><b></b></div>
+            <div class="mi m2 on fad"><s></s><b></b></div>
+            <div class="mi m3 fad"><s></s><b></b></div>
+            <div class="mi m4 fad"><s></s><b></b></div>
+            <div class="mi m5 fad"><s></s><b></b></div>
+        </div>
+
+        <!-- main -->
+        <div class="main">
+            <div class="query ent">
+                <div class="qbox focus"><span class="caret"></span></div>
+                <div class="qbox"><span class="ph"></span><span class="chev"></span></div>
+                <div class="spacer"></div>
+                <div class="btn plain"></div>
+                <div class="btn primary"></div>
+            </div>
+
+            <div class="card ent">
+                <div class="thead">
+                    <span class="cb"></span>
+                    <span class="cell cc1"></span><span class="sort"></span>
+                    <span class="cell cc2"></span>
+                    <span class="cell cc3"></span>
+                    <span class="cell cc4"></span>
+                </div>
+                <div class="trow">
+                    <span class="cb on"></span>
+                    <span class="cell cc1"></span><span class="ava"></span><span class="cell cc2"></span>
+                    <span class="pill"></span><span class="prog" style="--p:72%"></span>
+                    <span class="act"></span><span class="act2"></span>
+                </div>
+                <div class="trow">
+                    <span class="cb"></span>
+                    <span class="cell cc1"></span><span class="ava"></span><span class="cell cc2"></span>
+                    <span class="pill grey"></span><span class="prog" style="--p:38%"></span>
+                    <span class="act"></span><span class="act2"></span>
+                </div>
+                <div class="trow">
+                    <span class="cb"></span>
+                    <span class="cell cc1"></span><span class="ava"></span><span class="cell cc2"></span>
+                    <span class="pill"></span><span class="prog" style="--p:56%"></span>
+                    <span class="act"></span><span class="act2"></span>
+                </div>
+                <div class="trow">
+                    <span class="cb"></span>
+                    <span class="cell cc1"></span><span class="ava"></span><span class="cell cc2"></span>
+                    <span class="pill grey"></span><span class="prog" style="--p:84%"></span>
+                    <span class="act"></span><span class="act2"></span>
+                </div>
+                <div class="trow">
+                    <span class="cb"></span>
+                    <span class="cell cc1"></span><span class="ava"></span><span class="cell cc2"></span>
+                    <span class="pill"></span><span class="prog" style="--p:47%"></span>
+                    <span class="act"></span><span class="act2"></span>
+                </div>
+                <div class="trow">
+                    <span class="cb"></span>
+                    <span class="cell cc1"></span><span class="ava"></span><span class="cell cc2"></span>
+                    <span class="pill grey"></span><span class="prog" style="--p:63%"></span>
+                    <span class="act"></span><span class="act2"></span>
+                </div>
+                <div class="rover"></div>
+            </div>
+
+            <div class="pager ent">
+                <s></s><s class="on"></s><s></s><s></s>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

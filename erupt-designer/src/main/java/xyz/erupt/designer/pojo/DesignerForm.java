@@ -1,5 +1,6 @@
 package xyz.erupt.designer.pojo;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,11 +45,17 @@ public class DesignerForm {
         // linked @Erupt class name for reference / tab types
         private String linkErupt;
 
-        // @View annotation structure (nullable → no table column)
-        private JsonObject view;
+        // @View annotation structure (nullable → no table column).
+        // Declared as JsonElement: gson maps an explicit json null to JsonNull,
+        // which fails to deserialize into a JsonObject-typed field.
+        private JsonElement view;
 
         // @Edit annotation structure
         private JsonObject edit;
+
+        public JsonObject getView() {
+            return null == view || view.isJsonNull() ? null : view.getAsJsonObject();
+        }
     }
 
 }

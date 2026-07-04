@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
@@ -40,19 +41,19 @@ public class GeneratorClass extends MetaModel implements Tpl.TplHandler {
 
     @EruptField(
             views = @View(title = "Name"),
-            edit = @Edit(title = "Name", notNull = true, search = @Search)
+            edit = @Edit(title = "Name", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String name;
 
     @EruptField(
             views = @View(title = "Entity Class"),
-            edit = @Edit(title = "Entity Class", notNull = true, search = @Search)
+            edit = @Edit(title = "Entity Class", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String className;
 
     @EruptField(
             views = @View(title = "Table Name"),
-            edit = @Edit(title = "Table Name", notNull = true, search = @Search)
+            edit = @Edit(title = "Table Name", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String tableName;
 

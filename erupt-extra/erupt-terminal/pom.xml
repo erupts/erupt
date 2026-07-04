@@ -5,12 +5,12 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.3</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>erupt-terminal</artifactId>
-    <name>erupt-terminal</name>
+    <name>Erupt : Terminal</name>
     <description>erupt terminal → real-time server shell via WebSocket</description>
 
     <dependencies>

@@ -12,6 +12,7 @@ import xyz.erupt.ai.core.LlmRequest;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Layout;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
@@ -51,14 +52,14 @@ public class LLM extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "Model Name",width = "150px"),
-            edit = @Edit(title = "Model Name", notNull = true, search = @Search)
+            edit = @Edit(title = "Model Name", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "Large Language Model"),
+            views = @View(title = "Model Provider"),
             edit = @Edit(
-                    title = "Large Language Model",
+                    title = "Model Provider",
                     type = EditType.CHOICE,
                     notNull = true,
                     search = @Search,
@@ -69,8 +70,8 @@ public class LLM extends MetaModelUpdateVo {
     private String llm;
 
     @EruptField(
-            views = @View(title = "Model Version"),
-            edit = @Edit(title = "Model Version", notNull = true, search = @Search)
+            views = @View(title = "Model"),
+            edit = @Edit(title = "Model", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String model;
 

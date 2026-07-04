@@ -6,7 +6,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.3</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -16,55 +16,13 @@
     </properties>
 
     <artifactId>erupt-docker</artifactId>
-    <name>erupt-docker</name>
+    <name>Erupt : Docker</name>
 
     <dependencies>
+        <!-- All-in-one starter: core admin + web plus every optional feature module -->
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-web</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-admin</artifactId>
-            <scope>provided</scope>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <!-- optional -->
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-monitor</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-print</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-designer</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-cloud-server</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-notice</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-ai</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-ai-claw</artifactId>
+            <artifactId>erupt-spring-boot-starter-all</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

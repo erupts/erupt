@@ -16,7 +16,7 @@ import xyz.erupt.jpa.model.BaseModel;
  * date 2026-06-12
  */
 @Entity
-@Table(name = "e_designer_data", indexes = @Index(columnList = "model"))
+@Table(name = "e_designer_data", indexes = @Index(name = "idx_designer_data_model", columnList = "model"))
 @Getter
 @Setter
 public class DesignerData extends BaseModel {

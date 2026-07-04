@@ -11,6 +11,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.PreDataProxy;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.sub_erupt.Drill;
@@ -55,7 +56,7 @@ public class EruptJob extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "Code", width = "100px"),
-            edit = @Edit(title = "Code", notNull = true, search = @Search, readonly = @Readonly(add = false))
+            edit = @Edit(title = "Code", notNull = true, search = @Search(operator = QueryExpression.LIKE), readonly = @Readonly(add = false))
     )
     private String code;
 
@@ -70,7 +71,7 @@ public class EruptJob extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "Job Name"),
-            edit = @Edit(title = "Job Name", notNull = true, search = @Search)
+            edit = @Edit(title = "Job Name", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String name;
 

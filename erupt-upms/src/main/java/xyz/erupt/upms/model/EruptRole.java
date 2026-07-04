@@ -6,6 +6,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -34,13 +35,13 @@ public class EruptRole extends HyperModelUpdateVo {
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "code"),
-            edit = @Edit(title = "code", notNull = true, search = @Search)
+            edit = @Edit(title = "code", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String code;
 
     @EruptField(
             views = @View(title = "name"),
-            edit = @Edit(title = "name", notNull = true, search = @Search)
+            edit = @Edit(title = "name", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String name;
 
@@ -66,7 +67,9 @@ public class EruptRole extends HyperModelUpdateVo {
     @JoinTable(
             name = "e_upms_role_menu",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"),
+            foreignKey = @ForeignKey(name = "fk_role_menu_role"),
+            inverseForeignKey = @ForeignKey(name = "fk_role_menu_menu"))
     @EruptField(
             views = @View(title = "Menu Permission"),
             edit = @Edit(
@@ -79,7 +82,9 @@ public class EruptRole extends HyperModelUpdateVo {
 
     @JoinTable(name = "e_upms_user_role",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            foreignKey = @ForeignKey(name = "fk_user_role_role"),
+            inverseForeignKey = @ForeignKey(name = "fk_user_role_user"))
     @ManyToMany(fetch = FetchType.EAGER)
     @EruptField(
             views = @View(title = "Contain User"),

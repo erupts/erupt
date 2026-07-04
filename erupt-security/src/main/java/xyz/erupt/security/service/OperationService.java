@@ -12,6 +12,7 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.OldEntityTL;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.security.config.EruptSecurityProp;
+import xyz.erupt.security.model.ReqBody;
 import xyz.erupt.security.tl.RequestBodyTL;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.model.EruptMenu;
@@ -67,13 +68,14 @@ public class OperationService {
                     operate.setReqAddr(request.getRequestURL().toString());
                     operate.setOperateUser(MetaContext.getUser().getName());
                     operate.setCreateTime(new Date());
-                    operate.setTotalTime(operate.getCreateTime().getTime() - RequestBodyTL.get().getDate());
+                    ReqBody reqBody = RequestBodyTL.get();
+                    operate.setTotalTime(null == reqBody ? 0 : operate.getCreateTime().getTime() - reqBody.getDate());
                     Optional.ofNullable(ex).ifPresent(e -> {
                         String errorInfo = ExceptionUtils.getStackTrace(e);
                         operate.setErrorInfo(errorInfo.length() > 4000 ? errorInfo.substring(0, 4000) : errorInfo);
                         operate.setStatus(false);
                     });
-                    Object param = RequestBodyTL.get().getBody();
+                    Object param = null == reqBody ? null : reqBody.getBody();
                     operate.setBeforeData(OldEntityTL.get());
                     operate.setReqParam(null == param ? findRequestParamVal(request) : param.toString());
                     OldEntityTL.remove();

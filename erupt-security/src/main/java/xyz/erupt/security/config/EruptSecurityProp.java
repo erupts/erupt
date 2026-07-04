@@ -17,4 +17,7 @@ public class EruptSecurityProp {
 
     // Whether to record operation logs
     private boolean recordOperateLog = true;
+
+    // Max JSON request body size (bytes) buffered for operation logging; larger or chunked bodies are passed through without buffering
+    private long recordOperateLogMaxBodySize = 1024 * 1024;
 }

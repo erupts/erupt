@@ -118,6 +118,9 @@ public @interface Edit {
     @Match("#item.type().toString()=='GROUP'")
     GroupType groupType() default @GroupType(fields = {});
 
+    @Match("#item.type().toString()=='CALLOUT'")
+    CalloutType calloutType() default @CalloutType;
+
     @Match("#item.type().toString()=='CODE_EDITOR'")
     CodeEditorType codeEditType() default @CodeEditorType(language = "text");
 

@@ -5,12 +5,12 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.3</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>erupt-generator</artifactId>
-    <name>erupt-generator</name>
+    <name>Erupt : Generator</name>
     <description>generator erupt code</description>
 
     <dependencies>

@@ -66,6 +66,8 @@ public enum EditType {
     DIVIDE,
     @EditTypeMapping(mapping = GroupType.class, desc = "Field group", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     GROUP,
+    @EditTypeMapping(mapping = CalloutType.class, desc = "Static callout showing user-defined descriptive content (not persisted)", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
+    CALLOUT,
     @EditTypeMapping(desc = "Hidden", allowType = {JavaTypeEnum.any}, excelOperator = false)
     HIDDEN,
     @EditTypeMapping(desc = "Empty (still occupies component space)", allowType = {JavaTypeEnum.not_know}, excelOperator = false)

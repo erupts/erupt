@@ -8,6 +8,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -32,13 +33,13 @@ public class EruptUserByRoleView extends BaseModel {
 
     @EruptField(
             views = @View(title = "Account", sortable = true),
-            edit = @Edit(title = "Account", desc = "Login account", notNull = true, search = @Search)
+            edit = @Edit(title = "Account", desc = "Login account", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String account;
 
     @EruptField(
             views = @View(title = "Full Name", sortable = true),
-            edit = @Edit(title = "Full Name", notNull = true, search = @Search)
+            edit = @Edit(title = "Full Name", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String name;
 

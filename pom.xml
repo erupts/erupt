@@ -4,19 +4,50 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.3</version>
 
     <packaging>pom</packaging>
-    <name>erupt</name>
+    <name>Erupt : </name>
     <description>erupt common data framework pom parent</description>
     <url>https://www.erupt.xyz</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <tag>master</tag>
+        <url>https://github.com/erupts/erupt</url>
+        <connection>scm:git:git@github.com:erupts/erupt.git</connection>
+        <developerConnection>scm:git:git@github.com:erupts/erupt.git</developerConnection>
+    </scm>
+
+    <organization>
+        <name>Erupt</name>
+        <url>https://www.erupt.xyz</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>YuePeng</name>
+            <email>erupts@126.com</email>
+            <roles>
+                <role>owner</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>17</java.version>
         <langchain4j.version>1.14.1</langchain4j.version>
-        <spring.boot.version>3.5.15</spring.boot.version>
+        <spring.boot.version>3.5.16</spring.boot.version>
     </properties>
 
     <modules>
@@ -38,6 +69,8 @@
         <module>erupt-security</module>
         <module>erupt-admin</module>
         <module>erupt-web</module>
+        <module>erupt-spring-boot-starter</module>
+        <module>erupt-spring-boot-starter-all</module>
 
         <!-- Template -->
         <module>erupt-tpl</module>
@@ -139,35 +172,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-    <scm>
-        <tag>master</tag>
-        <url>git@github.com:erupts/erupt.git</url>
-        <connection>scm:git:git@github.com:erupts/erupt.git</connection>
-        <developerConnection>scm:git:git@github.com:erupts/erupt.git</developerConnection>
-    </scm>
-
-    <organization>
-        <name>Erupt</name>
-        <url>https://erupt.xyz</url>
-    </organization>
-    <developers>
-        <developer>
-            <name>YuePeng</name>
-            <email>erupts@126.com</email>
-            <roles>
-                <role>owner</role>
-            </roles>
-            <timezone>+8</timezone>
-        </developer>
-    </developers>
 
     <profiles>
         <profile>

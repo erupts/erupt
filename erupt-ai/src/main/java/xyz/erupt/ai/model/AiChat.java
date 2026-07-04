@@ -7,6 +7,7 @@ import org.hibernate.annotations.Where;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -37,7 +38,7 @@ public class AiChat extends BaseModel {
 
     @EruptField(
             views = @View(title = "Chat Title"),
-            edit = @Edit(title = "Chat Title", search = @Search)
+            edit = @Edit(title = "Chat Title", search = @Search(operator = QueryExpression.LIKE))
     )
     private String title;
 

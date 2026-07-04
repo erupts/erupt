@@ -11,6 +11,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.cube.Dimension;
 import xyz.erupt.annotation.cube.EruptCube;
@@ -25,6 +26,7 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.linq.lambda.LambdaSee;
 
@@ -59,7 +61,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     @Dimension(title = "Operate User", sql = "operate_user")
     @EruptField(
             views = @View(title = "Operator"),
-            edit = @Edit(title = "Operator", search = @Search)
+            edit = @Edit(title = "Operator", search = @Search(operator = QueryExpression.LIKE))
     )
     private String operateUser;
 
@@ -80,7 +82,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     @Dimension(title = "API Name", sql = "api_name")
     @EruptField(
             views = @View(title = "Function Name"),
-            edit = @Edit(title = "Function Name", search = @Search)
+            edit = @Edit(title = "Function Name", search = @Search(operator = QueryExpression.LIKE))
     )
     private String apiName;
 
@@ -150,7 +152,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
 
     @Override
     public void afterFetch(Collection<Map<String, Object>> list) {
-        GsonBuilder builder = new GsonBuilder();
+        GsonBuilder builder = GsonFactory.getGsonBuilder();
         builder.setPrettyPrinting();
         Gson gson = builder.create();
         for (Map<String, Object> map : list) {

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-test</artifactId>
-    <name>erupt-test</name>
+    <name>Erupt : Test</name>
     <description>unittest</description>
 
     <properties>
@@ -16,7 +16,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
