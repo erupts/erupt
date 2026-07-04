@@ -171,7 +171,7 @@ public class EruptUserController {
     public void createCode(HttpServletResponse response, @RequestParam long mark,
                            @RequestParam(required = false, defaultValue = "38") Integer height) throws Exception {
         // Clamp height to a sane captcha range to prevent resource abuse via oversized images
-        height = Math.max(10, Math.min(height, 200));
+        height = Math.max(10, Math.min(height, 100));
         response.setContentType("image/jpeg"); // Set the response type format to image format
         response.setDateHeader("Expires", 0);
         response.setHeader("Pragma", "no-cache"); // Prohibit image caching
