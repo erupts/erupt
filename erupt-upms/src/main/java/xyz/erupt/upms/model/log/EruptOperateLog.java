@@ -26,6 +26,7 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.linq.lambda.LambdaSee;
 
@@ -151,7 +152,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
 
     @Override
     public void afterFetch(Collection<Map<String, Object>> list) {
-        GsonBuilder builder = new GsonBuilder();
+        GsonBuilder builder = GsonFactory.getGsonBuilder();
         builder.setPrettyPrinting();
         Gson gson = builder.create();
         for (Map<String, Object> map : list) {
