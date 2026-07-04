@@ -5,10 +5,13 @@
 # Strategy:
 #   * Main repo (publishes erupt artifacts) -> `versions:set` updates its own
 #     project version and cascades into all submodules.
-#   * Satellite repos (consume erupt)       -> `versions:use-dep-version`
-#     updates every <dependency>/<parent> matching the erupt groupId, no
-#     matter whether the version is inline, a property reference, or in the
-#     parent declaration.
+#   * Satellite repos (consume erupt)       -> direct pom.xml text edits.
+#     Maven-based bumping (versions:use-dep-version) cannot work here: it
+#     needs to resolve the OLD erupt parent pom to read the project, which
+#     typically no longer exists locally after the main repo was bumped.
+#     We rewrite every <dependency>/<parent> matching the erupt groupId
+#     (literal or ${...} property ref), following version property
+#     indirections like <erupt.version>.
 #
 # Usage:
 #   ./bump-erupt.sh 1.14.4
@@ -89,13 +92,65 @@ current_erupt_versions() {
 import re, sys
 with open(sys.argv[1]) as f: text = f.read()
 grp = sys.argv[2]
+def is_erupt(gid):
+    return gid == grp or (gid.startswith("${") and "erupt" in gid.lower())
 for m in re.finditer(r"<(dependency|parent)\b[^>]*>(.*?)</\1>", text, re.DOTALL):
     block = m.group(2)
     g = re.search(r"<groupId>\s*([^<\s]+)\s*</groupId>", block)
     v = re.search(r"<version>\s*([^<\s]+)\s*</version>", block)
-    if g and v and g.group(1) == grp:
+    if g and v and is_erupt(g.group(1)):
         print(v.group(1))
 ' "$1" "$ERUPT_GROUP" 2>/dev/null | sort -u | tr '\n' ' '
+}
+
+# Rewrite erupt versions in all pom.xml files under a repo (pure text edit,
+# no Maven — works even when the old erupt parent is not resolvable).
+# Prints the number of modified files.
+bump_satellite_poms() {
+    python3 - "$1" "$NEW_VERSION" "$ERUPT_GROUP" <<'PYEOF'
+import re, sys, pathlib
+
+root, new, grp = pathlib.Path(sys.argv[1]), sys.argv[2], sys.argv[3]
+
+def is_erupt(gid):
+    return gid == grp or (gid.startswith("${") and "erupt" in gid.lower())
+
+changed = 0
+for pom in sorted(root.rglob("pom.xml")):
+    if "target" in pom.parts:
+        continue
+    text = pom.read_text(encoding="utf-8")
+    props_to_bump = set()
+
+    def bump_block(m):
+        block = m.group(0)
+        g = re.search(r"<groupId>\s*([^<\s]+)\s*</groupId>", block)
+        if not g or not is_erupt(g.group(1)):
+            return block
+
+        def bump_version(vm):
+            v = vm.group(1)
+            if v.startswith("${"):
+                prop = v[2:-1]
+                # project.parent.version / project.version resolve on their own
+                if not prop.startswith("project."):
+                    props_to_bump.add(prop)
+                return vm.group(0)
+            return "<version>%s</version>" % new
+
+        return re.sub(r"<version>\s*([^<\s]+)\s*</version>", bump_version, block)
+
+    out = re.sub(r"<(dependency|parent)\b[^>]*>.*?</\1>", bump_block, text, flags=re.DOTALL)
+    for prop in props_to_bump:
+        out = re.sub(
+            r"(<%s>)\s*[^<\s]+\s*(</%s>)" % (re.escape(prop), re.escape(prop)),
+            r"\g<1>%s\g<2>" % new, out)
+    if out != text:
+        pom.write_text(out, encoding="utf-8")
+        changed += 1
+
+print(changed)
+PYEOF
 }
 
 # ---------- run ----------
@@ -172,15 +227,11 @@ for repo in "${REPOS[@]}"; do
     fi
 
     echo "[BUMP-DEP] $repo  [$current] -> $NEW_VERSION"
-    if ( cd "$dir" && mvn -q "${VERSIONS_PLUGIN}:use-dep-version" \
-            -Dincludes="$ERUPT_GROUP:*" \
-            -DdepVersion="$NEW_VERSION" \
-            -DforceVersion=true \
-            -DprocessParent=true \
-            -DgenerateBackupPoms=false ); then
+    if n=$(bump_satellite_poms "$dir"); then
+        echo "           $n pom(s) updated"
         ok+=("$repo")
     else
-        echo "[FAIL] $repo  (mvn use-dep-version exited non-zero)" >&2
+        echo "[FAIL] $repo  (pom rewrite failed)" >&2
         failed+=("$repo")
     fi
 done
