@@ -33,39 +33,50 @@ public class HttpServletRequestFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        if (eruptSecurityProp.isRecordOperateLog()) {
+        if (!eruptSecurityProp.isRecordOperateLog()) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+        // finally guarantees ThreadLocal cleanup on every path (exceptions, non-recorded requests)
+        try {
             ReqBody reqBody = new ReqBody();
             RequestBodyTL.set(reqBody);
             reqBody.setDate(System.currentTimeMillis());
             if (servletRequest instanceof HttpServletRequest) {
                 HttpServletRequest request = (HttpServletRequest) servletRequest;
-                if (request.getServletPath().contains(EruptRestPath.ERUPT_API)) {
-                    if (null != request.getContentType() && CONTENT_TYPE_JSON.equals(request.getContentType())) {
-                        HttpServletRequestFilter.EruptRequestWrapper eruptRequestWrapper =
-                                new EruptRequestWrapper(request);
+                if (request.getServletPath().contains(EruptRestPath.ERUPT_API)
+                        && null != request.getContentType() && CONTENT_TYPE_JSON.equals(request.getContentType())) {
+                    // Only buffer bodies with a declared size within the limit;
+                    // chunked (-1) or oversized bodies pass through unbuffered to prevent pre-auth memory exhaustion
+                    long contentLength = request.getContentLengthLong();
+                    if (contentLength >= 0 && contentLength <= eruptSecurityProp.getRecordOperateLogMaxBodySize()) {
+                        EruptRequestWrapper eruptRequestWrapper = new EruptRequestWrapper(request);
                         reqBody.setBody(eruptRequestWrapper.getBody());
                         filterChain.doFilter(eruptRequestWrapper, servletResponse);
                         return;
                     }
                 }
             }
+            filterChain.doFilter(servletRequest, servletResponse);
+        } finally {
+            RequestBodyTL.remove();
         }
-        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     private static class EruptRequestWrapper extends HttpServletRequestWrapper {
 
-        private final String body;
+        // Kept as bytes so replaying the stream does not allocate another full copy
+        private final byte[] body;
 
         @SneakyThrows
         EruptRequestWrapper(HttpServletRequest request) {
             super(request);
-            body = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+            body = StreamUtils.copyToByteArray(request.getInputStream());
         }
 
         @Override
         public ServletInputStream getInputStream() {
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8));
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body);
             return new ServletInputStream() {
                 @Override
                 public boolean isFinished() {
@@ -95,7 +106,7 @@ public class HttpServletRequestFilter extends GenericFilterBean {
         }
 
         String getBody() {
-            return this.body;
+            return new String(this.body, StandardCharsets.UTF_8);
         }
 
     }
