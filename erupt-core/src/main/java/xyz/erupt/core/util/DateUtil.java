@@ -8,8 +8,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 /**
@@ -40,6 +42,29 @@ public class DateUtil {
      */
     public static Date parseDate(String dateStr) throws ParseException {
         return DateUtils.parseDateStrictly(dateStr, PATTERNS);
+    }
+
+    /**
+     * Lenient LocalDateTime parsing: accepts 'T' or space as the date-time separator,
+     * optional seconds and fraction, a bare date, and an ISO offset suffix (e.g. 'Z', '+08:00')
+     */
+    public static LocalDateTime parseLocalDateTime(String str) {
+        str = str.trim();
+        if (str.length() == 10) return parseLocalDate(str).atStartOfDay();
+        str = str.replace(' ', 'T');
+        try {
+            return LocalDateTime.parse(str, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        } catch (DateTimeParseException e) {
+            return OffsetDateTime.parse(str).toLocalDateTime();
+        }
+    }
+
+    /**
+     * Lenient LocalDate parsing: accepts a bare date or any string with a leading yyyy-MM-dd date part
+     */
+    public static LocalDate parseLocalDate(String str) {
+        str = str.trim();
+        return LocalDate.parse(str.length() > 10 ? str.substring(0, 10) : str, DateTimeFormatter.ofPattern(DATE));
     }
 
     public static String getSimpleFormatDate(Date date) {
@@ -73,9 +98,9 @@ public class DateUtil {
                 return new SimpleDateFormat(ISO_8601).parse(str);
             }
         } else if (targetDateType == LocalDate.class) {
-            return LocalDate.parse(str.substring(0, 10), DateTimeFormatter.ofPattern(DATE));
+            return parseLocalDate(str);
         } else if (targetDateType == LocalDateTime.class) {
-            return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(ISO_8601));
+            return parseLocalDateTime(str);
         } else {
             throw new EruptWebApiRuntimeException("Unsupported date type");
         }
