@@ -50,8 +50,7 @@ public class EruptBiTplController {
 
     private final Configuration freemarker = new FreemarkerEngine().init();
 
-    private static final String HTML = "" +
-            "<!DOCTYPE html>\n" +
+    private static final String HTML = "<!DOCTYPE html>\n" +
             "<html lang=\"en\">\n" +
             "<head>\n" +
             "    <meta charset=\"UTF-8\">\n" +

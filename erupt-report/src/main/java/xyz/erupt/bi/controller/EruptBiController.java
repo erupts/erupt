@@ -179,10 +179,10 @@ public class EruptBiController {
         List<Map<String, Object>> list = biService.startQuery(reference.getName(), reference.getRefSql(), null, reference.getClassHandler(), reference.getDataSource(), query);
         List<Reference> references = new ArrayList<>();
         for (Map<String, Object> map : list) {
-            if (map.keySet().size() == 1) {
+            if (map.size() == 1) {
                 Object obj = map.values().iterator().next();
                 references.add(new Reference(obj, obj));
-            } else if (map.keySet().size() >= 3) {
+            } else if (map.size() >= 3) {
                 Iterator<?> iterator = map.values().iterator();
                 references.add(new Reference(iterator.next(), iterator.next(), iterator.next()));
             } else {
