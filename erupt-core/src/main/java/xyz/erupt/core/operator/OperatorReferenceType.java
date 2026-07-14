@@ -41,6 +41,6 @@ public enum OperatorReferenceType implements OperatorExpr {
         public String expr(String field, Object value, Map<String, Object> parameter) {
             return OperatorStringType.NOT_NULL.expr(field, value, parameter);
         }
-    };
+    }
 
 }
