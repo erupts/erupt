@@ -33,7 +33,7 @@ public enum ColumnType {
 
     private final String desc;
 
-    public static class Fetch implements ChoiceFetchHandler {
+    public static class Fetch implements ChoiceFetchHandler<Void> {
 
         @Override
         public List<VLModel> fetch(String[] params) {

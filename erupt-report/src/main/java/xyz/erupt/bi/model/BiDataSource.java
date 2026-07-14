@@ -38,7 +38,7 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 @EruptI18n
-public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandler {
+public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandler<Void> {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(

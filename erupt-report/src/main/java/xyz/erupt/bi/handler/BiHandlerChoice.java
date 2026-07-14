@@ -16,7 +16,7 @@ import java.util.List;
  * @author YuePeng
  * date 2022/2/20 01:21
  */
-public class BiHandlerChoice implements ChoiceFetchHandler {
+public class BiHandlerChoice implements ChoiceFetchHandler<Void> {
 
     private static List<VLModel> biHandlerList;
 

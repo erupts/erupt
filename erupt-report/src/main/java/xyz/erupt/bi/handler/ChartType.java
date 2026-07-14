@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @author YuePeng
  * date 2021/12/30 00:48
  */
-public class ChartType implements ChoiceFetchHandler {
+public class ChartType implements ChoiceFetchHandler<Void> {
 
     @Override
     public List<VLModel> fetch(String[] params) {

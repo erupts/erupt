@@ -13,7 +13,7 @@ import java.util.List;
  * @author YuePeng
  * date 2021/12/28 21:33
  */
-public class DriverChoice implements ChoiceFetchHandler {
+public class DriverChoice implements ChoiceFetchHandler<Void> {
 
     @Override
     public List<VLModel> fetch(String[] params) {
