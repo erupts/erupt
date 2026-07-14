@@ -16,6 +16,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.model.A2AAgent;
@@ -95,8 +96,8 @@ public class A2AAgentService implements DataProxy<A2AAgent> {
                     agent.getHeaders(), new TypeToken<Map<String, String>>() {}.getType());
             transportBuilder.addInterceptor(new ClientCallInterceptor() {
                 @Override
-                public PayloadAndHeaders intercept(String method, Object payload, Map<String, String> headers,
-                                                   AgentCard agentCard, io.a2a.client.transport.spi.interceptors.ClientCallContext ctx) {
+                public @NonNull PayloadAndHeaders intercept(@NonNull String method, Object payload, @NonNull Map<String, String> headers,
+                                                            @NonNull AgentCard agentCard, io.a2a.client.transport.spi.interceptors.ClientCallContext ctx) {
                     headers.putAll(extraHeaders);
                     return new PayloadAndHeaders(payload, headers);
                 }

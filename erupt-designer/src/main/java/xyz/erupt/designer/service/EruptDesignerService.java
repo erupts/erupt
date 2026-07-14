@@ -178,29 +178,17 @@ public class EruptDesignerService {
     }
 
     private String fieldReturnName(DesignerForm.DesignerField field, EditType editType) {
-        switch (editType) {
-            case NUMBER:
-            case SLIDER:
-            case RATE:
-                return EruptFieldModel.NUMBER;
-            case BOOLEAN:
-                return Boolean.class.getSimpleName();
-            case DATE:
-                return Date.class.getSimpleName();
-            case REFERENCE_TREE:
-            case REFERENCE_TABLE:
-            case COMBINE:
-            case CHECKBOX:
-            case TAB_TREE:
-            case TAB_TABLE_ADD:
-            case TAB_TABLE_REFER:
-                return Optional.ofNullable(field.getLinkErupt()).filter(it -> !it.isEmpty())
-                        .filter(it -> null != EruptCoreService.getErupt(it))
-                        .orElseThrow(() -> new EruptWebApiRuntimeException(
-                                I18nTranslate.$translate("designer.field_requires_link") + ": " + field.getFieldName()));
-            default:
-                return String.class.getSimpleName();
-        }
+        return switch (editType) {
+            case NUMBER, SLIDER, RATE -> EruptFieldModel.NUMBER;
+            case BOOLEAN -> Boolean.class.getSimpleName();
+            case DATE -> Date.class.getSimpleName();
+            case REFERENCE_TREE, REFERENCE_TABLE, COMBINE, CHECKBOX, TAB_TREE, TAB_TABLE_ADD, TAB_TABLE_REFER ->
+                    Optional.ofNullable(field.getLinkErupt()).filter(it -> !it.isEmpty())
+                            .filter(it -> null != EruptCoreService.getErupt(it))
+                            .orElseThrow(() -> new EruptWebApiRuntimeException(
+                                    I18nTranslate.$translate("designer.field_requires_link") + ": " + field.getFieldName()));
+            default -> String.class.getSimpleName();
+        };
     }
 
 }

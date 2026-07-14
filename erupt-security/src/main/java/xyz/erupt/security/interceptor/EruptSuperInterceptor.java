@@ -1,5 +1,8 @@
 package xyz.erupt.security.interceptor;
 
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -15,9 +18,6 @@ import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -36,8 +36,7 @@ public class EruptSuperInterceptor implements AsyncHandlerInterceptor {
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,@NonNull Object handler) throws IOException {
-        if (handler instanceof HandlerMethod) {
-            HandlerMethod handlerMethod = (HandlerMethod) handler;
+        if (handler instanceof HandlerMethod handlerMethod) {
             EruptLoginAuth eruptAuth = handlerMethod.getMethodAnnotation(EruptLoginAuth.class);
             EruptMenuAuth eruptMenuAuth = handlerMethod.getMethodAnnotation(EruptMenuAuth.class);
             if (null != eruptAuth || null != eruptMenuAuth) {

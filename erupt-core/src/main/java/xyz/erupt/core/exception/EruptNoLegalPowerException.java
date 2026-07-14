@@ -2,6 +2,8 @@ package xyz.erupt.core.exception;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Objects;
+
 /**
  * @author YuePeng
  * date 2018-12-15
@@ -16,10 +18,6 @@ public class EruptNoLegalPowerException extends RuntimeException {
     }
 
     public EruptNoLegalPowerException(String message) {
-        if (null == message) {
-            throw new EruptWebApiRuntimeException(NO_LEGAL_POWER);
-        } else {
-            throw new EruptWebApiRuntimeException(message);
-        }
+        throw new EruptWebApiRuntimeException(Objects.requireNonNullElse(message, NO_LEGAL_POWER));
     }
 }

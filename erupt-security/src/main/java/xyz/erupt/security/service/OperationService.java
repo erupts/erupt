@@ -46,8 +46,7 @@ public class OperationService {
     @Transactional
     public void record(Object handler, Exception ex) {
         if (eruptSecurityProp.isRecordOperateLog()) {
-            if (handler instanceof HandlerMethod) {
-                HandlerMethod handlerMethod = (HandlerMethod) handler;
+            if (handler instanceof HandlerMethod handlerMethod) {
                 Optional.ofNullable(handlerMethod.getMethodAnnotation(EruptRecordOperate.class)).ifPresent(eruptRecordOperate -> {
                     EruptOperateLog operate = new EruptOperateLog();
                     if (eruptRecordOperate.dynamicConfig().isInterface()) {

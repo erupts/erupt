@@ -72,36 +72,23 @@ public class DesignerClassFactory {
         EditType editType = Optional.ofNullable(field.getEdit())
                 .filter(it -> it.has("type"))
                 .map(it -> EditType.valueOf(it.get("type").getAsString())).orElse(EditType.INPUT);
-        switch (editType) {
-            case NUMBER:
-            case SLIDER:
-            case RATE:
-                return switch (Optional.ofNullable(field.getFieldType()).orElse("Integer")) {
-                    case "Long" -> Long.class;
-                    case "Double" -> Double.class;
-                    case "Float" -> Float.class;
-                    case "BigDecimal" -> BigDecimal.class;
-                    default -> Integer.class;
-                };
-            case BOOLEAN:
-                return Boolean.class;
-            case DATE:
-                return Date.class;
-            case REFERENCE_TREE:
-            case REFERENCE_TABLE:
-            case COMBINE:
+        return switch (editType) {
+            case NUMBER, SLIDER, RATE -> switch (Optional.ofNullable(field.getFieldType()).orElse("Integer")) {
+                case "Long" -> Long.class;
+                case "Double" -> Double.class;
+                case "Float" -> Float.class;
+                case "BigDecimal" -> BigDecimal.class;
+                default -> Integer.class;
+            };
+            case BOOLEAN -> Boolean.class;
+            case DATE -> Date.class;
+            case REFERENCE_TREE, REFERENCE_TABLE, COMBINE ->
                 // reference data is stored as {id, label...}; no ORM entity involved
-                return Map.class;
-            case MULTI_CHOICE:
-                return java.util.Set.class;
-            case CHECKBOX:
-            case TAB_TREE:
-            case TAB_TABLE_ADD:
-            case TAB_TABLE_REFER:
-                return java.util.List.class;
-            default:
-                return String.class;
-        }
+                    Map.class;
+            case MULTI_CHOICE -> java.util.Set.class;
+            case CHECKBOX, TAB_TREE, TAB_TABLE_ADD, TAB_TABLE_REFER -> java.util.List.class;
+            default -> String.class;
+        };
     }
 
 }
