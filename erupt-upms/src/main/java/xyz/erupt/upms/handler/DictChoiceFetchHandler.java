@@ -33,7 +33,7 @@ public class DictChoiceFetchHandler implements ChoiceFetchHandler<Void> {
         return dictCache.getAndSet(DictChoiceFetchHandler.class.getName() + ":" + params[0],
                 params.length == 2 ? Long.parseLong(params[1]) : FetchConst.DEFAULT_CACHE_TIME, ()
                         -> eruptDao.lambdaQuery(EruptDictItem.class).addCondition("eruptDict.code = :code",
-                                new HashMap<String, Object>() {{
+                                new HashMap<>() {{
                                     this.put("code", params[0]);
                                 }}).orderBy(EruptDictItem::getSort).list()
                         .stream().map((item) -> new VLModel(item.getId(), item.getName())).collect(Collectors.toList()));

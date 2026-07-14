@@ -386,9 +386,8 @@ public class EruptUtil {
                             case TAB_TABLE_ADD:
                             case TAB_TABLE_REFER:
                                 value.getAsJsonArray().forEach(jsonElement ->
-                                        Optional.ofNullable(EruptCoreService.getErupt(field.getFieldReturnName())).ifPresent(it -> {
-                                            processEruptWebValue(it, jsonElement.getAsJsonObject());
-                                        })
+                                        Optional.ofNullable(EruptCoreService.getErupt(field.getFieldReturnName())).ifPresent(it
+                                                -> processEruptWebValue(it, jsonElement.getAsJsonObject()))
                                 );
                                 break;
                         }

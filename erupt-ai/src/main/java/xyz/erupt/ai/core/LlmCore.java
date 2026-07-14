@@ -171,9 +171,7 @@ public abstract class LlmCore {
                     MetaContext.set(metaContext);
                     String callMsg = toolCall.name();
                     listener.accept(SseListener.builder().call(callMsg).build());
-                }).onPartialThinking(thinking -> {
-                    listener.accept(SseListener.builder().currMessage(thinking.text()).build());
-                }).start();
+                }).onPartialThinking(thinking -> listener.accept(SseListener.builder().currMessage(thinking.text()).build())).start();
     }
     public ChatMemory creatMemory(List<ChatMessage> chatMessages) {
         return new ChatMemory() {

@@ -52,9 +52,7 @@ public class HyperModelCreatorOnlyVo extends BaseModel {
     protected void persist() {
         try {
             this.setCreateTime(new Date());
-            Optional.ofNullable(EruptSpringUtil.getBean(EruptUserService.class).getCurrentUid()).ifPresent(it -> {
-                this.setCreateUser(new EruptUserVo(it));
-            });
+            Optional.ofNullable(EruptSpringUtil.getBean(EruptUserService.class).getCurrentUid()).ifPresent(it -> this.setCreateUser(new EruptUserVo(it)));
         } catch (Exception ignored) {
         }
     }

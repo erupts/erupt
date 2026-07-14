@@ -56,7 +56,8 @@ public class EruptTplService {
     static {
         for (Class<?> tpl : engineTemplates) {
             try {
-                EngineTemplate<Object> engineTemplate = (EngineTemplate) tpl.getDeclaredConstructor().newInstance();
+                @SuppressWarnings("unchecked")
+                EngineTemplate<Object> engineTemplate = (EngineTemplate<Object>) tpl.getDeclaredConstructor().newInstance();
                 engineTemplate.setEngine(engineTemplate.init());
                 tplEngines.put(engineTemplate.engine(), engineTemplate);
             } catch (NoClassDefFoundError ignored) {

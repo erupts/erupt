@@ -72,9 +72,8 @@ public class CommentIntegrator implements Integrator {
             if (clazz.isAnnotationPresent(Erupt.class)) {
                 Erupt erupt = clazz.getAnnotation(Erupt.class);
                 persistentClass.getTable().setComment(i18nTranslate.translate(erupt.name()));
-                Optional.ofNullable(persistentClass.getIdentifierProperty()).ifPresent(it -> {
-                    this.fieldComment(persistentClass, it.getName());
-                });
+                Optional.ofNullable(persistentClass.getIdentifierProperty()).ifPresent(it ->
+                        this.fieldComment(persistentClass, it.getName()));
                 for (Property p : persistentClass.getProperties()) {
                     this.fieldComment(persistentClass, p.getName());
                 }

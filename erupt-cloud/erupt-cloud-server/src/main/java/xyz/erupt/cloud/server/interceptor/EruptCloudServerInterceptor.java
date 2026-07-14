@@ -206,13 +206,11 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         headers.put(EruptMutualConst.ERUPT, eruptName);
         headers.put(EruptMutualConst.USER, Base64Encoder.encode(GsonFactory.getGson().toJson(MetaContext.getUser())));
         if (headers.containsKey(EruptReqHeader.DRILL_SOURCE_ERUPT)) {
-            String dse = headers.get(EruptReqHeader.DRILL_SOURCE_ERUPT);
-            headers.put(EruptReqHeader.DRILL_SOURCE_ERUPT, dse.substring(dse.lastIndexOf(".") + 1));
+            headers.computeIfPresent(EruptReqHeader.DRILL_SOURCE_ERUPT, (k, dse) -> dse.substring(dse.lastIndexOf(".") + 1));
         }
         //Process drill header
         if (headers.containsKey(EruptReqHeader.DRILL_SOURCE_ERUPT)) {
-            String dse = headers.get(EruptReqHeader.DRILL_SOURCE_ERUPT);
-            headers.put(EruptReqHeader.DRILL_SOURCE_ERUPT, dse.substring(dse.lastIndexOf(".") + 1));
+            headers.computeIfPresent(EruptReqHeader.DRILL_SOURCE_ERUPT, (k, dse) -> dse.substring(dse.lastIndexOf(".") + 1));
         }
         HttpRequest httpRequest = HttpUtil.createRequest(Method.valueOf(request.getMethod()), location + path + (null == request.getQueryString() ? "" : "?" + request.getQueryString()));
         try {
