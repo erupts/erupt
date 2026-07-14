@@ -51,7 +51,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 public class LLM extends MetaModelUpdateVo {
 
     @EruptField(
-            views = @View(title = "Model Name",width = "150px"),
+            views = @View(title = "Model Name", width = "150px"),
             edit = @Edit(title = "Model Name", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String name;
@@ -83,7 +83,7 @@ public class LLM extends MetaModelUpdateVo {
     private String apiUrl;
 
     @EruptField(
-            edit = @Edit(title = "API Key")
+            edit = @Edit(title = "API Key", type = EditType.PASSWORD)
     )
     private String apiKey;
 
