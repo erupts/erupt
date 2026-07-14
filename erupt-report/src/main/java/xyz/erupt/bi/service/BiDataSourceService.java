@@ -76,8 +76,7 @@ public class BiDataSourceService implements DataProxy<BiDataSource>, DisposableB
     public void destroy() {
         for (NamedParameterJdbcTemplate jdbcTemplate : templateMap.values()) {
             DataSource dataSource = jdbcTemplate.getJdbcTemplate().getDataSource();
-            if (dataSource instanceof HikariDataSource) {
-                HikariDataSource hikariDataSource = (HikariDataSource) dataSource;
+            if (dataSource instanceof HikariDataSource hikariDataSource) {
                 hikariDataSource.close();
             }
         }

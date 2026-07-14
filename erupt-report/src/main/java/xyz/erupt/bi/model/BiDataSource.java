@@ -87,11 +87,12 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
             edit = @Edit(title = "Pagination SQL", type = EditType.CODE_EDITOR,
                     codeEditType = @CodeEditorType(language = "sql"),
                     placeHolder = DBTypeEnum.GENERAL_LIMIT,
-                    desc = "Pagination variables:\n" +
-                            "@sql: SQL statement\n" +
-                            "@size: page size\n" +
-                            "@skip: rows to skip\n" +
-                            "@sort: field sorting",
+                    desc = """
+                            Pagination variables:
+                            @sql: SQL statement
+                            @size: page size
+                            @skip: rows to skip
+                            @sort: field sorting""",
                     dynamic = @Dynamic(dependField = "type", condition = "value === 'Other'")
             )
     )
