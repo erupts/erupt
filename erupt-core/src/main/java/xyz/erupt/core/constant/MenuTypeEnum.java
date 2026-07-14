@@ -43,7 +43,7 @@ public enum MenuTypeEnum {
         menuTypes.add(menuType);
     }
 
-    public static class ChoiceFetch implements ChoiceFetchHandler {
+    public static class ChoiceFetch implements ChoiceFetchHandler<Void> {
 
         @Override
         public List<VLModel> fetch(String[] params) {

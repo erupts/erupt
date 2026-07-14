@@ -73,8 +73,9 @@ public class DataProxyInvoke {
                 });
     }
 
+    @SuppressWarnings("unchecked")
     private static DataProxy<Object> getInstanceBean(Class<? extends DataProxy<?>> dataProxy) {
-        return (DataProxy) EruptSpringUtil.getBean(dataProxy);
+        return (DataProxy<Object>) EruptSpringUtil.getBean(dataProxy);
     }
 
 }

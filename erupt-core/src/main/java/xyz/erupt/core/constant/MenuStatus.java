@@ -33,7 +33,7 @@ public enum MenuStatus {
         return null;
     }
 
-    public static class ChoiceFetch implements ChoiceFetchHandler {
+    public static class ChoiceFetch implements ChoiceFetchHandler<Void> {
 
         @Override
         public List<VLModel> fetch(String[] params) {

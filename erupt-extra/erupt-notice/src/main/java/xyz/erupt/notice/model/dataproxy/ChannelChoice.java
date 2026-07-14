@@ -8,7 +8,7 @@ import xyz.erupt.notice.channel.AbstractNoticeChannel;
 import java.util.List;
 
 @Component
-public class ChannelChoice implements ChoiceFetchHandler {
+public class ChannelChoice implements ChoiceFetchHandler<Void> {
 
     @Override
     public List<VLModel> fetch(String[] params) {

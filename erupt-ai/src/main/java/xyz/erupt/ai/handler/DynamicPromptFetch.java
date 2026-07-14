@@ -16,7 +16,7 @@ import java.util.List;
  * date 2025/3/1 19:16
  */
 @Component
-public class DynamicPromptFetch implements ChoiceFetchHandler {
+public class DynamicPromptFetch implements ChoiceFetchHandler<Void> {
 
     private static final List<VLModel> promptHandlers = new ArrayList<>();
 

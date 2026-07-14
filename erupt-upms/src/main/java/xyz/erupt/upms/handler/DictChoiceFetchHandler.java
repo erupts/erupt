@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * date 2020/12/16 18:00
  */
 @Component
-public class DictChoiceFetchHandler implements ChoiceFetchHandler {
+public class DictChoiceFetchHandler implements ChoiceFetchHandler<Void> {
 
     @Resource
     private EruptDao eruptDao;
