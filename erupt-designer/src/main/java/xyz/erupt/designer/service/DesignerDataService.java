@@ -54,8 +54,9 @@ public class DesignerDataService implements IEruptDataService {
         if (null != page.getSort() && !page.getSort().isEmpty()) {
             Comparator<Map<String, Object>> comparator = null;
             for (Sort sort : page.getSort()) {
+                @SuppressWarnings("unchecked")
                 Comparator<Map<String, Object>> c = Comparator.comparing(it ->
-                        (Comparable) it.get(sort.getField()), Comparator.nullsFirst(Comparator.naturalOrder()));
+                        (Comparable<Object>) it.get(sort.getField()), Comparator.nullsFirst(Comparator.naturalOrder()));
                 if (sort.getDirection() == xyz.erupt.annotation.query.Direction.DESC) c = c.reversed();
                 comparator = null == comparator ? c : comparator.thenComparing(c);
             }

@@ -415,12 +415,13 @@ public class EruptUtil {
                 try {
                     f.setAccessible(true);
                     if (eruptField.edit().type() == EditType.TAB_TABLE_ADD) {
-                        Collection<?> s = (Collection<?>) f.get(target);
+                        @SuppressWarnings("unchecked")
+                        Collection<Object> s = (Collection<Object>) f.get(target);
                         if (null == s) {
                             f.set(target, f.get(data));
                         } else {
                             s.clear();
-                            s.addAll((Collection) f.get(data));
+                            s.addAll((Collection<?>) f.get(data));
                             f.set(target, s);
                         }
                     } else {

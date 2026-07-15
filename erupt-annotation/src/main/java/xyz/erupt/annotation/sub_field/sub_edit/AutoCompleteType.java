@@ -9,7 +9,7 @@ public @interface AutoCompleteType {
 
     @Transient
     @Comment("Dynamically generates the autocomplete list")
-    Class<? extends AutoCompleteHandler<?>> handler();
+    Class<? extends AutoCompleteHandler> handler();
 
     @Transient
     @Comment("Accessible from the handler")

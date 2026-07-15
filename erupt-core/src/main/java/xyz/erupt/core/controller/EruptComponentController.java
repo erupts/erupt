@@ -32,11 +32,12 @@ public class EruptComponentController {
     /**
      * autoComplete component Interconnection Interface
      *
-     * @param field    Auto-fill component fields
-     * @param val      The value of the input box
-     * @param data     Erupt form object
+     * @param field Auto-fill component fields
+     * @param val   The value of the input box
+     * @param data  Erupt form object
      * @return Association results
      */
+    @SuppressWarnings("unchecked")
     @PostMapping("/auto-complete/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<Object> autoCompleteValue(@PathVariable("erupt") String eruptName,
