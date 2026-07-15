@@ -18,3 +18,10 @@ exclude:
       - erupt-ai/src/main/java/xyz/erupt/ai/controller/McpController.java
   - name: deprecation
   - name: UncheckedWarning
+  # SpEL in @Match/@ExprBool uses runtime-injected context variables (#item, #value) that static analysis cannot resolve
+  - name: SpringElInspection
+    paths:
+      - erupt-annotation
+  # Explicit @PathVariable/@RequestParam names are kept intentionally: implicit names require the -parameters
+  # compiler flag, and Spring 6.1+ fails at runtime (not compile time) when it is absent in downstream builds
+  - name: SpringMvcPathVariableDeclarationInspection

@@ -93,10 +93,4 @@ public class NoticeLog extends HyperModelCreatorOnlyVo {
     )
     private String params;
 
-//    @EruptField(
-//            views = @View(title = "Create Time", sortable = true),
-//            edit = @Edit(title = "Create Time",search = @Search, readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
-//    )
-//    private Date createTime;
-
 }

@@ -44,16 +44,6 @@ public class NoticeAnnouncement extends HyperModelCreatorOnlyVo {
     )
     private AnnouncementStatus status = AnnouncementStatus.OPEN;
 
-//    @ManyToOne
-//    @NotFound(action = NotFoundAction.IGNORE)
-//    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-//    private EruptPost eruptPost;
-//
-//    @ManyToOne
-//    @NotFound(action = NotFoundAction.IGNORE)
-//    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-//    private EruptOrg eruptOrg;
-
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "content", type = ViewType.HTML),
