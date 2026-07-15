@@ -82,7 +82,7 @@ public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
 
     @Override
     public void beforeAdd(BiColumn biColumn) {
-        if (ColumnType.DRILL.equals(biColumn.type)) {
+        if (ColumnType.DRILL == ColumnType.valueOf(biColumn.type)) {
             if (StringUtils.isBlank(biColumn.drillExpress)) {
                 throw new EruptWebApiRuntimeException(I18nTranslate.$translate("bi.drill_sql_required"));
             }
