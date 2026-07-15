@@ -42,9 +42,7 @@ public class EruptSearchModel {
                 if (search == null || search.getField() == null) {
                     continue;
                 }
-                Class<? extends Enum> operatorClass = search.getOperatorType().operatorClass;
-                @SuppressWarnings("unchecked")
-                OperatorExpr operatorExpr = (OperatorExpr) Enum.valueOf(operatorClass, search.getOperator());
+                OperatorExpr operatorExpr = enumValueOf(search.getOperatorType().operatorClass, search.getOperator());
                 String condition = operatorExpr.expr(search.getField(), search.getValue(), sqlParams.getParams());
                 andConditions.add(condition);
             }
@@ -57,6 +55,11 @@ public class EruptSearchModel {
         }
         sqlParams.setSql(sb.toString());
         return sqlParams;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <E extends Enum<E>> E enumValueOf(Class<? extends Enum<?>> enumClass, String name) {
+        return Enum.valueOf((Class<E>) enumClass, name);
     }
 
 }
