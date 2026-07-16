@@ -3,6 +3,8 @@ package xyz.erupt.core.util;
 import org.springframework.util.CollectionUtils;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -57,6 +59,15 @@ public class DataHandlerUtil {
                     continue;
                 }
                 Edit edit = fieldModel.getEruptField().edit();
+                // PASSWORD columns never reach the client in clear text, regardless of view configuration.
+                // Covers both the table view and the excel export, which share this pipeline.
+                for (View view : fieldModel.getEruptField().views()) {
+                    if (ViewType.PASSWORD == view.type()) {
+                        if (null != entry.getValue()) {
+                            map.put(entry.getKey(), EruptConst.PASSWORD_PLACEHOLDER);
+                        }
+                    }
+                }
                 switch (edit.type()) {
                     case REFERENCE_TREE:
                     case REFERENCE_TABLE:
