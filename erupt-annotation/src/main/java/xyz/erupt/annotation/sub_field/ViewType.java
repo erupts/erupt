@@ -53,4 +53,6 @@ public enum ViewType {
     TAB_VIEW,
     @Comment("Markdown editor")
     MARKDOWN,
+    @Comment("Password mask, the stored value is replaced with a placeholder and never sent to the client")
+    PASSWORD,
 }

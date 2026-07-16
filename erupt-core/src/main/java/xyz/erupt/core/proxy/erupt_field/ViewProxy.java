@@ -58,6 +58,8 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
                             return ViewType.TAB_VIEW;
                         case MARKDOWN:
                             return ViewType.MARKDOWN;
+                        case PASSWORD:
+                            return ViewType.PASSWORD;
                     }
                 }
                 String returnType = ProxyContext.get().getField().getType().getSimpleName();
