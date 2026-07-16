@@ -394,12 +394,18 @@ public class EruptUtil {
     }
 
     /**
-     * Serialize an erupt entity to JSON with PASSWORD field values masked.
+     * Serialize an erupt entity (or a collection of entities) to JSON with PASSWORD field values masked.
      */
     public static String toMaskedJson(EruptModel eruptModel, Object obj) {
         JsonElement jsonElement = GsonFactory.getGson().toJsonTree(obj);
         if (jsonElement.isJsonObject()) {
             maskPasswordFields(eruptModel, jsonElement.getAsJsonObject());
+        } else if (jsonElement.isJsonArray()) {
+            jsonElement.getAsJsonArray().forEach(element -> {
+                if (element.isJsonObject()) {
+                    maskPasswordFields(eruptModel, element.getAsJsonObject());
+                }
+            });
         }
         return jsonElement.toString();
     }

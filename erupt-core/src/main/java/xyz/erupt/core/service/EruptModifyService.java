@@ -128,14 +128,15 @@ public class EruptModifyService {
         Object old = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol()).get(o));
         Object realOld = eruptModel.getClazz().getDeclaredConstructor().newInstance();
         BeanUtils.copyProperties(old, realOld);
-        OldEntityTL.set(GsonFactory.getGson().toJson(realOld));
+        String maskedOld = EruptUtil.toMaskedJson(eruptModel, realOld);
+        OldEntityTL.set(maskedOld);
         Object obj = EruptUtil.dataTarget(eruptModel, o, old, SceneEnum.EDIT);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
         DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).editData(eruptModel, obj);
         // Mask PASSWORD fields on both sides so plaintext credentials never reach the log
         JsonObject maskedData = data.deepCopy();
         EruptUtil.maskPasswordFields(eruptModel, maskedData);
-        this.modifyLog(eruptModel, "UPDATE", EruptUtil.toMaskedJson(eruptModel, realOld) + " -> " + maskedData);
+        this.modifyLog(eruptModel, "UPDATE", maskedOld + " -> " + maskedData);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterUpdate(obj)));
         applicationEventPublisher.publishEvent(new EruptEditEvent<>(eruptModel.getClazz(), obj, realOld));
     }
@@ -158,9 +159,7 @@ public class EruptModifyService {
             applicationEventPublisher.publishEvent(new EruptDeleteEvent<>(eruptModel.getClazz(), obj));
             deletedObjs.add(obj);
         }
-        OldEntityTL.set(deletedObjs.size() == 1
-                ? GsonFactory.getGson().toJson(deletedObjs.get(0))
-                : GsonFactory.getGson().toJson(deletedObjs));
+        OldEntityTL.set(EruptUtil.toMaskedJson(eruptModel, deletedObjs.size() == 1 ? deletedObjs.get(0) : deletedObjs));
     }
 
 }
