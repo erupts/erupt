@@ -373,36 +373,6 @@ public class EruptUtil {
     }
 
     /**
-     * Front-end data processing logic
-     */
-    public static void processEruptWebValue(EruptModel eruptModel, JsonObject jsonObject) {
-        for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
-            JsonElement value = jsonObject.get(field.getFieldName());
-            Edit edit = field.getEruptField().edit();
-            if (null != value && !value.isJsonNull()) {
-                // Decrypt the encrypted transmission for the code editor type
-                if (edit.type() == EditType.CODE_EDITOR) {
-                    jsonObject.addProperty(field.getFieldName(), SecretUtil.decodeSecret(value.getAsString()));
-                } else {
-                    if (value.isJsonObject() && edit.type() == EditType.COMBINE) {
-                        processEruptWebValue(EruptCoreService.getErupt(field.getFieldReturnName()), value.getAsJsonObject());
-                    } else if (value.isJsonArray()) {
-                        switch (edit.type()) {
-                            case TAB_TABLE_ADD:
-                            case TAB_TABLE_REFER:
-                                value.getAsJsonArray().forEach(jsonElement ->
-                                        Optional.ofNullable(EruptCoreService.getErupt(field.getFieldReturnName())).ifPresent(it
-                                                -> processEruptWebValue(it, jsonElement.getAsJsonObject()))
-                                );
-                                break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Replace PASSWORD field values with the mask placeholder in the given JSON object,
      * recursing into COMBINE sub-objects. Used before writing entity data to logs.
      */

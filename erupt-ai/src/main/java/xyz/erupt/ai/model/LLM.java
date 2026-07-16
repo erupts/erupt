@@ -83,6 +83,7 @@ public class LLM extends MetaModelUpdateVo {
     private String apiUrl;
 
     @EruptField(
+            views = @View(title = "API Key"),
             edit = @Edit(title = "API Key", type = EditType.PASSWORD)
     )
     private String apiKey;

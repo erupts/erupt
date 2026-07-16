@@ -111,7 +111,7 @@ public class EruptModifyService {
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterAdd(obj)));
         applicationEventPublisher.publishEvent(new EruptAddEvent<>(eruptModel.getClazz(), obj));
         Object pk = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol()).get(obj);
-        this.modifyLog(eruptModel, "ADD", GsonFactory.getGson().toJson(obj));
+        this.modifyLog(eruptModel, "ADD", EruptUtil.toMaskedJson(eruptModel, obj));
         return pk;
     }
 
@@ -132,7 +132,10 @@ public class EruptModifyService {
         Object obj = EruptUtil.dataTarget(eruptModel, o, old, SceneEnum.EDIT);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
         DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).editData(eruptModel, obj);
-        this.modifyLog(eruptModel, "UPDATE", GsonFactory.getGson().toJson(realOld) + " -> " + data);
+        // Mask PASSWORD fields on both sides so plaintext credentials never reach the log
+        JsonObject maskedData = data.deepCopy();
+        EruptUtil.maskPasswordFields(eruptModel, maskedData);
+        this.modifyLog(eruptModel, "UPDATE", EruptUtil.toMaskedJson(eruptModel, realOld) + " -> " + maskedData);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterUpdate(obj)));
         applicationEventPublisher.publishEvent(new EruptEditEvent<>(eruptModel.getClazz(), obj, realOld));
     }
@@ -150,7 +153,7 @@ public class EruptModifyService {
             Object obj = dataService.findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id.toString()));
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeDelete(obj)));
             dataService.deleteData(eruptModel, obj);
-            this.modifyLog(eruptModel, "DELETE", GsonFactory.getGson().toJson(obj));
+            this.modifyLog(eruptModel, "DELETE", EruptUtil.toMaskedJson(eruptModel, obj));
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterDelete(obj)));
             applicationEventPublisher.publishEvent(new EruptDeleteEvent<>(eruptModel.getClazz(), obj));
             deletedObjs.add(obj);
