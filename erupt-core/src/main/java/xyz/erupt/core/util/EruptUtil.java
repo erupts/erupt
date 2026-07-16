@@ -138,6 +138,11 @@ public class EruptUtil {
                         }
                         map.put(field.getName(), list);
                         break;
+                    case PASSWORD:
+                        // Never send stored password values to the client; dataTarget restores
+                        // the stored value when the placeholder is submitted back unchanged
+                        map.put(field.getName(), EruptConst.PASSWORD_PLACEHOLDER);
+                        break;
                     case CHOICE:
                         if (valueMapping) {
                             Map<String, String> kv = EruptUtil.getChoiceMap(eruptModel, eruptField.edit());
@@ -397,6 +402,38 @@ public class EruptUtil {
         }
     }
 
+    /**
+     * Replace PASSWORD field values with the mask placeholder in the given JSON object,
+     * recursing into COMBINE sub-objects. Used before writing entity data to logs.
+     */
+    public static void maskPasswordFields(EruptModel eruptModel, JsonObject jsonObject) {
+        for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+            String fieldName = fieldModel.getFieldName();
+            JsonElement value = jsonObject.get(fieldName);
+            if (null == value || value.isJsonNull()) {
+                continue;
+            }
+            EditType editType = fieldModel.getEruptField().edit().type();
+            if (editType == EditType.PASSWORD) {
+                jsonObject.addProperty(fieldName, EruptConst.PASSWORD_PLACEHOLDER);
+            } else if (editType == EditType.COMBINE && value.isJsonObject()) {
+                Optional.ofNullable(EruptCoreService.getErupt(fieldModel.getFieldReturnName()))
+                        .ifPresent(sub -> maskPasswordFields(sub, value.getAsJsonObject()));
+            }
+        }
+    }
+
+    /**
+     * Serialize an erupt entity to JSON with PASSWORD field values masked.
+     */
+    public static String toMaskedJson(EruptModel eruptModel, Object obj) {
+        JsonElement jsonElement = GsonFactory.getGson().toJsonTree(obj);
+        if (jsonElement.isJsonObject()) {
+            maskPasswordFields(eruptModel, jsonElement.getAsJsonObject());
+        }
+        return jsonElement.toString();
+    }
+
     public static Object toEruptId(EruptModel eruptModel, String id) {
         Field primaryField = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol());
         return TypeUtil.typeStrConvertObject(id, primaryField.getType());
@@ -414,7 +451,11 @@ public class EruptUtil {
                 Field f = fieldModel.getField();
                 try {
                     f.setAccessible(true);
-                    if (eruptField.edit().type() == EditType.TAB_TABLE_ADD) {
+                    if (eruptField.edit().type() == EditType.PASSWORD && sceneEnum == SceneEnum.EDIT
+                            && EruptConst.PASSWORD_PLACEHOLDER.equals(f.get(data))) {
+                        // The client echoed the mask placeholder back unchanged -> keep the stored value.
+                        // An explicitly cleared or newly typed value still overwrites below.
+                    } else if (eruptField.edit().type() == EditType.TAB_TABLE_ADD) {
                         @SuppressWarnings("unchecked")
                         Collection<Object> s = (Collection<Object>) f.get(target);
                         if (null == s) {
