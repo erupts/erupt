@@ -24,6 +24,6 @@ public class EruptConst {
      * Sentinel value returned to the client instead of stored PASSWORD field values.
      * When an edit form is submitted with this exact value, the stored value is preserved.
      */
-    public static final String PASSWORD_PLACEHOLDER = "******";
+    public static final String PASSWORD_PLACEHOLDER = "••••••";
 
 }
