@@ -92,6 +92,11 @@ public class EruptService {
                 }
             }
         }
+        DragSort dragSort = eruptModel.getErupt().dragSort();
+        if (StringUtils.isNotBlank(dragSort.field()) && (null == tableQuery.getSort() || tableQuery.getSort().isEmpty())) {
+            tableQuery.setSort(new ArrayList<>());
+            tableQuery.getSort().add(new xyz.erupt.annotation.query.Sort(dragSort.field(), xyz.erupt.annotation.query.Direction.ASC));
+        }
         Optional.ofNullable(serverCondition).ifPresent(legalConditions::addAll);
         Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .queryList(eruptModel, tableQuery, EruptQuery.builder().sort(tableQuery.getSort())

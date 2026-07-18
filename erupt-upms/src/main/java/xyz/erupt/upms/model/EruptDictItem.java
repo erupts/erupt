@@ -8,12 +8,14 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.DragSort;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
+import xyz.erupt.upms.model.data_proxy.EruptDictItemDataProxy;
 
 /**
  * @author YuePeng
@@ -24,6 +26,8 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 @Erupt(
         name = "Dict Item",
         orderBy = "sort",
+        dragSort = @DragSort(field = "sort"),
+        dataProxy = EruptDictItemDataProxy.class,
         power = @Power(export = true, importable = true)
 )
 @Getter
@@ -50,10 +54,7 @@ public class EruptDictItem extends MetaModelUpdateVo {
     )
     private String val;
 
-    @EruptField(
-            views = @View(title = "Display Order", sortable = true),
-            edit = @Edit(title = "Display Order")
-    )
+    @EruptField
     private Integer sort;
 
     @EruptField(

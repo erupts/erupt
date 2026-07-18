@@ -72,6 +72,10 @@ public @interface Erupt {
     @Comment("Left-tree right-table configuration")
     LinkTree linkTree() default @LinkTree(field = "");
 
+    @Match("#value.field() != ''")
+    @Comment("Row drag sort configuration")
+    DragSort dragSort() default @DragSort(field = "");
+
     Layout layout() default @Layout;
 
     boolean visRawTable() default true;

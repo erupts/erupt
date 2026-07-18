@@ -34,6 +34,10 @@ public class LLMDataProxy implements DataProxy<LLM>, Tpl.TplHandler, OnChange<LL
     @Override
     public void beforeAdd(LLM llm) {
         llm.setDefaultLLM(eruptDao.lambdaQuery(LLM.class).count() == 0);
+        if (null == llm.getSort()) {
+            Integer max = (Integer) eruptDao.lambdaQuery(LLM.class).max(LLM::getSort);
+            llm.setSort(null == max ? 10 : max + 10);
+        }
     }
 
     @Override

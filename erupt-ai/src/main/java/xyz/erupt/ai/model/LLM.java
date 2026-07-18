@@ -14,6 +14,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.DragSort;
 import xyz.erupt.annotation.sub_erupt.Layout;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
@@ -33,6 +34,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 @Erupt(
         name = "LLM", dataProxy = LLMDataProxy.class,
         orderBy = "sort",
+        dragSort = @DragSort(field = "sort"),
         rowOperation = {
                 @RowOperation(title = "Model Test", icon = "fa fa-comments",
                         tpl = @Tpl(path = "/tpl/ai-chat.ftl", height = "85vh"),
@@ -119,11 +121,8 @@ public class LLM extends MetaModelUpdateVo {
     )
     private Boolean defaultLLM = false;
 
-    @EruptField(
-            views = @View(title = "Usage Order", sortable = true),
-            edit = @Edit(title = "Usage Order", notNull = true)
-    )
-    private Integer sort = 0;
+    @EruptField
+    private Integer sort;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(

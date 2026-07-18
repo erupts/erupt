@@ -26,9 +26,11 @@ import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.util.TypeUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -139,6 +141,24 @@ public class EruptModifyService {
         this.modifyLog(eruptModel, "UPDATE", maskedOld + " -> " + maskedData);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterUpdate(obj)));
         applicationEventPublisher.publishEvent(new EruptEditEvent<>(eruptModel.getClazz(), obj, realOld));
+    }
+
+    @SneakyThrows
+    @Transactional
+    public void dragSortEruptData(EruptModel eruptModel, Map<String, Object> sortData) {
+        String sortField = eruptModel.getErupt().dragSort().field();
+        if (StringUtils.isBlank(sortField)) {
+            throw new EruptWebApiRuntimeException("dragSort is not enabled");
+        }
+        IEruptDataService dataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
+        Field field = ReflectUtil.findClassField(eruptModel.getClazz(), sortField);
+        for (Map.Entry<String, Object> entry : sortData.entrySet()) {
+            eruptService.verifyIdPermissions(eruptModel, entry.getKey());
+            Object obj = dataService.findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, entry.getKey()));
+            field.set(obj, TypeUtil.typeStrConvertObject(entry.getValue(), field.getType()));
+            dataService.editData(eruptModel, obj);
+        }
+        this.modifyLog(eruptModel, "SORT", sortData.toString());
     }
 
     @SneakyThrows

@@ -14,7 +14,6 @@ Context Memory Rounds,上下文记忆轮次,上下文記憶輪次,Context Memory
 Status,状态,狀態,Status,Statut,ステータス,상태,Статус,Estado,Status,Estado,Status,الحالة
 Active,激活,激活,Active,Actif,アクティブ,활성,Активный,Activo,Aktiv,Ativo,Aktif,نشط
 Locked,锁定,鎖定,Locked,Verrouillé,ロック中,잠금,Заблокирован,Bloqueado,Gesperrt,Bloqueado,Terkunci,مقفل
-Usage Order,使用顺序,使用順序,Usage Order,Ordre d'utilisation,使用順序,사용 순서,Порядок использования,Orden de uso,Verwendungsreihenfolge,Ordem de uso,Urutan Penggunaan,ترتيب الاستخدام
 Model Config,模型配置,模型配置,Model Config,Configuration du modèle,モデル設定,모델 구성,Конфигурация модели,Configuración del modelo,Modellkonfiguration,Configuração do modelo,Konfigurasi Model,إعداد النموذج
 Remark,备注,備註,Remark,Remarque,備考,비고,Примечание,Observación,Bemerkung,Observação,Keterangan,ملاحظة
 Name,名称,名稱,Name,Nom,名前,이름,Название,Nombre,Name,Nome,Nama,الاسم

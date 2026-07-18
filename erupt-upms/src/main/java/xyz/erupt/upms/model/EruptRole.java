@@ -8,6 +8,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.DragSort;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -26,7 +27,9 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "e_upms_role")
-@Erupt(name = "Role Management", dataProxy = EruptRoleDataProxy.class, orderBy = "EruptRole.sort asc")
+@Erupt(name = "Role Management", dataProxy = EruptRoleDataProxy.class,
+        dragSort = @DragSort(field = "sort"),
+        orderBy = "EruptRole.sort asc")
 @EruptI18n
 @Getter
 @Setter
@@ -45,10 +48,7 @@ public class EruptRole extends HyperModelUpdateVo {
     )
     private String name;
 
-    @EruptField(
-            views = @View(title = "Display Order", sortable = true),
-            edit = @Edit(title = "Display Order")
-    )
+    @EruptField
     private Integer sort;
 
     @EruptField(
