@@ -45,6 +45,8 @@ public enum ViewType {
     BOOLEAN,
     @Comment("Numeric value")
     NUMBER,
+    @Comment("Progress bar; when edit type is SLIDER the max value comes from SliderType.max, otherwise 100")
+    PROGRESS,
     @Comment("Map")
     MAP,
     @Comment("Code")
