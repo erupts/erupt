@@ -5,7 +5,7 @@
 
     <artifactId>erupt-bi</artifactId>
     <description>Chart Module</description>
-    <name>Erupt : BI</name>
+    <name>Erupt : Chart</name>
 
     <parent>
         <groupId>xyz.erupt</groupId>

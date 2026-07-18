@@ -8,6 +8,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.DragSort;
 import xyz.erupt.annotation.sub_field.*;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.bi.constant.ChartTypeEnum;
@@ -21,7 +22,9 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  */
 @Entity
 @Table(name = "e_bi_chart", uniqueConstraints = @UniqueConstraint(name = "uk_bi_chart_code_bi", columnNames = {"code", "bi_id"}))
-@Erupt(name = "Chart Config", orderBy = "sort", dataProxy = BiChartDataProxy.class)
+@Erupt(name = "Chart Config", orderBy = "sort",
+        dragSort = @DragSort(field = "sort"),
+        dataProxy = BiChartDataProxy.class)
 @Getter
 @Setter
 @EruptI18n
@@ -67,10 +70,7 @@ public class BiChart extends MetaModelUpdateVo {
     )
     private BiClassHandler classHandler;
 
-    @EruptField(
-            views = @View(title = "Sort", sortable = true),
-            edit = @Edit(title = "Sort")
-    )
+    @EruptField
     private Integer sort;
 
     @EruptField(
