@@ -78,6 +78,7 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
     private String userName;
 
     @EruptField(
+            views = @View(title = "Password"),
             edit = @Edit(title = "Password", type = EditType.PASSWORD)
     )
     private String password;

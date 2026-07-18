@@ -8,10 +8,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.sub_field.Edit;
-import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.annotation.sub_field.Readonly;
-import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.*;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.bi.constant.ChartTypeEnum;
 import xyz.erupt.bi.handler.ChartType;
@@ -45,7 +42,7 @@ public class BiChart extends MetaModelUpdateVo {
     private String name;
 
     @EruptField(
-            views = @View(title = "Grid"),
+            views = @View(title = "Grid", type = ViewType.PROGRESS),
             edit = @Edit(title = "Grid", search = @Search, type = EditType.SLIDER, desc = "Grid units the chart occupies; 24 = full row", notNull = true,
                     sliderType = @SliderType(max = 24, markPoints = {3, 4, 6, 8, 12, 16, 18, 20, 21, 24}, dots = true))
     )
@@ -112,7 +109,7 @@ public class BiChart extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Chart SQL"),
-            edit = @Edit(title = "Chart SQL",search = @Search,
+            edit = @Edit(title = "Chart SQL", search = @Search,
                     type = EditType.CODE_EDITOR, notNull = true, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
