@@ -51,6 +51,7 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
     @Resource
     private EruptTplService eruptTplService;
 
+    @SuppressWarnings("unchecked")
     @GetMapping(value = "/**", produces = HTML_MIME_TYPE)
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyHandler = EruptTplController.class,
             verifyMethod = EruptRouter.VerifyMethod.PARAM)
@@ -69,7 +70,7 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
         if (StringUtils.isNotBlank(tplAction.path())) {
             path = tplAction.path();
         }
-        eruptTplService.tplRender(eruptTpl.engine(), path, (Map) method.invoke(obj), response.getWriter());
+        eruptTplService.tplRender(eruptTpl.engine(), path, (Map<String, Object>) method.invoke(obj), response.getWriter());
     }
 
     @Override

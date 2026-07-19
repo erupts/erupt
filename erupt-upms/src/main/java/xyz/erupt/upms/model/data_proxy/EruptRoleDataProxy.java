@@ -1,5 +1,7 @@
 package xyz.erupt.upms.model.data_proxy;
 
+import jakarta.annotation.Resource;
+import jakarta.persistence.Transient;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.query.Condition;
@@ -7,8 +9,6 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.service.EruptUserService;
 
-import jakarta.annotation.Resource;
-import jakarta.persistence.Transient;
 import java.util.List;
 
 /**
@@ -33,13 +33,9 @@ public class EruptRoleDataProxy implements DataProxy<EruptRole> {
     }
 
     @Override
-    public void addBehavior(EruptRole eruptRole) {
+    public void beforeAdd(EruptRole eruptRole) {
         Integer max = (Integer) eruptDao.lambdaQuery(EruptRole.class).max(EruptRole::getSort);
-        if (null == max) {
-            eruptRole.setSort(10);
-        } else {
-            eruptRole.setSort(max + 10);
-        }
+        eruptRole.setSort(null == max ? 10 : max + 10);
     }
 
 }

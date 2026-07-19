@@ -24,7 +24,7 @@ import java.util.Map;
  * date 2021/2/27 22:46
  */
 @Component
-public class EruptJobFetch implements ChoiceFetchHandler, OnChange<EruptJob> {
+public class EruptJobFetch implements ChoiceFetchHandler<Void>, OnChange<EruptJob> {
 
     private List<VLModel> loadedJobHandler;
 

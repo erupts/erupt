@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @Setter
-public class GeneratorField extends BaseModel implements ChoiceFetchHandler {
+public class GeneratorField extends BaseModel implements ChoiceFetchHandler<Void> {
 
     @EruptField(
             views = @View(title = "Field Name"),

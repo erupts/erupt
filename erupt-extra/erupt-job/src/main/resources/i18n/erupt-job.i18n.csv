@@ -31,3 +31,6 @@ Content,内容,內容,Content,Contenu,内容,내용,Содержание,Conteni
 Sent Time,发送时间,發送時間,Sent Time,Heure d'envoi,送信時間,전송 시간,Время отправки,Hora de envío,Sendezeitpunkt,Hora de envio,Waktu Pengiriman,وقت الإرسال
 Sender,发件人,發件人,Sender,Expéditeur,送信者,발신자,Отправитель,Remitente,Absender,Remetente,Pengirim,المرسل
 Task Parameters,任务参数,任務參數,Task Parameters,Paramètres de la tâche,タスクパラメータ,작업 매개변수,Параметры задачи,Parámetros de la tarea,Aufgabenparameter,Parâmetros da tarefa,Parameter Tugas,معلمات المهمة
+Validate Cron,校验 Cron,校驗 Cron,Validate Cron,Valider le cron,Cron検証,크론 검증,Проверить cron,Validar cron,Cron validieren,Validar cron,Validasi Cron,التحقق من كرون
+Invalid cron expression: ,无效的 Cron 表达式：,無效的 Cron 表達式：,Invalid cron expression: ,Expression cron invalide : ,無効なCron式：,잘못된 크론 표현식: ,Недопустимое выражение cron: ,Expresión cron no válida: ,Ungültiger Cron-Ausdruck: ,Expressão cron inválida: ,Ekspresi cron tidak valid: ,تعبير كرون غير صالح: 
+Next execution times:,未来执行时间：,未來執行時間：,Next execution times:,Prochaines exécutions :,今後の実行時間：,다음 실행 시간:,Следующие времена выполнения:,Próximas ejecuciones:,Nächste Ausführungszeiten:,Próximas execuções:,Waktu eksekusi berikutnya:,أوقات التنفيذ القادمة:

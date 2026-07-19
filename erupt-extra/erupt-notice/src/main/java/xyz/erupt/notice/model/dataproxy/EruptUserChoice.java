@@ -10,7 +10,7 @@ import xyz.erupt.upms.model.EruptUserVo;
 import java.util.List;
 
 @Component
-public class EruptUserChoice implements ChoiceFetchHandler {
+public class EruptUserChoice implements ChoiceFetchHandler<Void> {
 
     @Resource
     private EruptDao eruptDao;

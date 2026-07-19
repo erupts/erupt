@@ -3,17 +3,22 @@ package xyz.erupt.core.controller;
 import com.google.gson.JsonObject;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.CodeEditHintHandler;
+import xyz.erupt.annotation.fun.EruptButtonHandler;
 import xyz.erupt.annotation.fun.VLModel;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.AutoCompleteType;
+import xyz.erupt.annotation.sub_field.sub_edit.ButtonType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.view.EruptButtonVo;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
@@ -32,11 +37,12 @@ public class EruptComponentController {
     /**
      * autoComplete component Interconnection Interface
      *
-     * @param field    Auto-fill component fields
-     * @param val      The value of the input box
-     * @param data     Erupt form object
+     * @param field Auto-fill component fields
+     * @param val   The value of the input box
+     * @param data  Erupt form object
      * @return Association results
      */
+    @SuppressWarnings("unchecked")
     @PostMapping("/auto-complete/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<Object> autoCompleteValue(@PathVariable("erupt") String eruptName,
@@ -89,6 +95,32 @@ public class EruptComponentController {
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
         Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
         return EruptUtil.getTagList(fieldModel.getEruptField().edit().tagsType(), o);
+    }
+
+    //BUTTON component click event, passes all current form values to the handler
+    @SuppressWarnings("unchecked")
+    @PostMapping("/button/{erupt}/{field}")
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    public R<EruptButtonVo> buttonClick(@PathVariable("erupt") String eruptName,
+                                        @PathVariable("field") String field,
+                                        @RequestBody JsonObject data) {
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
+        if (EditType.BUTTON != fieldModel.getEruptField().edit().type()) {
+            throw new EruptWebApiRuntimeException(field + " is not a BUTTON component");
+        }
+        ButtonType buttonType = fieldModel.getEruptField().edit().buttonType();
+        if (buttonType.handler().isInterface()) {
+            return R.errorDialog("Please implement the 'EruptButtonHandler' interface for " + fieldModel.getEruptField().edit().title());
+        }
+        Object form = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
+        EruptButtonHandler<Object> handler = EruptSpringUtil.getBean(buttonType.handler());
+        String[] handlerParams = buttonType.handlerParams();
+        EruptButtonVo buttonVo = new EruptButtonVo();
+        buttonVo.setEval(handler.click(form, handlerParams));
+        buttonVo.setFormData(handler.populateForm(form, handlerParams));
+        buttonVo.setEditExpr(handler.buildEditExpr(form, handlerParams));
+        return R.success(I18nTranslate.$translate("erupt.exec_success"), buttonVo);
     }
 
     //Gets the CodeEdit component hint data

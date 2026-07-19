@@ -9,6 +9,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.DragSort;
 import xyz.erupt.annotation.sub_erupt.OpenWay;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
@@ -37,6 +38,7 @@ import java.util.Date;
         name = "Form Designer",
         orderBy = "updateTime desc",
         dataProxy = DesignerEntityDataProxy.class,
+        dragSort = @DragSort(field = "sort"),
         rowOperation = {
                 @RowOperation(
                         title = "Design",
@@ -79,6 +81,8 @@ public class DesignerEntity extends HyperModelUpdateVo {
             edit = @Edit(title = "Remark", type = EditType.TEXTAREA)
     )
     private String remark;
+
+    private String sort;
 
     @EruptField(
             views = @View(title = "Publish Time", type = xyz.erupt.annotation.sub_field.ViewType.DATE_TIME)

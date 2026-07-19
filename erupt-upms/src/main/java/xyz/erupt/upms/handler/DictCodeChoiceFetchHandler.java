@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * date 2020/12/16 18:00
  */
 @Component
-public class DictCodeChoiceFetchHandler implements ChoiceFetchHandler {
+public class DictCodeChoiceFetchHandler implements ChoiceFetchHandler<Void> {
 
     @Resource
     private EruptDao eruptDao;
@@ -33,7 +33,7 @@ public class DictCodeChoiceFetchHandler implements ChoiceFetchHandler {
         return dictCache.getAndSet(DictCodeChoiceFetchHandler.class.getName() + ":" + params[0],
                 params.length == 2 ? Long.parseLong(params[1]) : FetchConst.DEFAULT_CACHE_TIME, () ->
                         eruptDao.lambdaQuery(EruptDictItem.class).addCondition("eruptDict.code = :code",
-                                        new HashMap<String, Object>() {{
+                                        new HashMap<>() {{
                                             this.put("code", params[0]);
                                         }}).orderBy(EruptDictItem::getSort).list()
                                 .stream().map((item) -> new VLModel(item.getCode(), item.getName())).collect(Collectors.toList()));

@@ -47,7 +47,9 @@ public class JsonAnnotationProxy {
                     throw new EruptWebApiRuntimeException("No annotation prototype in template: "
                             + invocation.getMethod().getName());
                 }
-                prototype = (Annotation) template[0];
+                if (template != null) {
+                    prototype = (Annotation) template[0];
+                }
             }
             for (int i = 0; i < arr.size(); i++) {
                 Array.set(result, i, ct.isAnnotation()

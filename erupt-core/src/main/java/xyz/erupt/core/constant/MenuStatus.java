@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  */
 @Getter
 public enum MenuStatus {
-    OPEN(1, "Enable"), HIDE(2, "Disable"), DISABLE(3, "Hidden");
+    OPEN(1, "Enable"), HIDE(2, "Hidden"), DISABLE(3, "Disable");
 
     private final int value;
     private final String label;
@@ -33,7 +33,7 @@ public enum MenuStatus {
         return null;
     }
 
-    public static class ChoiceFetch implements ChoiceFetchHandler {
+    public static class ChoiceFetch implements ChoiceFetchHandler<Void> {
 
         @Override
         public List<VLModel> fetch(String[] params) {

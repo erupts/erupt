@@ -32,7 +32,7 @@ public enum FieldType {
         }
     }
 
-    public static class H implements ChoiceFetchHandler {
+    public static class H implements ChoiceFetchHandler<Void> {
 
         @Override
         public List<VLModel> fetch(String[] params) {

@@ -14,7 +14,7 @@ import java.util.List;
  * date 2025/9/26 21:29
  */
 @Component
-public class EruptOrgFetchHandler implements ChoiceFetchHandler {
+public class EruptOrgFetchHandler implements ChoiceFetchHandler<Void> {
 
     @Resource
     private EruptDao eruptDao;

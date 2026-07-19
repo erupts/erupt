@@ -28,7 +28,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 @Order(100)
 @Service
 @Slf4j
-public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler {
+public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler<Void> {
 
     @Resource
     private ApplicationContext applicationContext;

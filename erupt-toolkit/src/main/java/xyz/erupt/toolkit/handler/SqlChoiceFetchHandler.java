@@ -16,7 +16,7 @@ import java.util.List;
  * date 2021/01/03 18:00
  */
 @Component
-public class SqlChoiceFetchHandler implements ChoiceFetchHandler {
+public class SqlChoiceFetchHandler implements ChoiceFetchHandler<Void> {
 
     @Resource
     private JdbcTemplate jdbcTemplate;

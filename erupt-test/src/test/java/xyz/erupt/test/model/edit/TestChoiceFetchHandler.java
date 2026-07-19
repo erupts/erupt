@@ -7,7 +7,7 @@ import xyz.erupt.annotation.fun.VLModel;
 import java.util.List;
 
 @Component
-public class TestChoiceFetchHandler implements ChoiceFetchHandler {
+public class TestChoiceFetchHandler implements ChoiceFetchHandler<Void> {
 
     @Override
     public List<VLModel> fetch(String[] params) {

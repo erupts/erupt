@@ -16,6 +16,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.model.A2AAgent;
@@ -66,13 +67,17 @@ public class A2AAgentService implements DataProxy<A2AAgent> {
         }
     }
 
+    public AgentCard fetchAgentCard(A2AAgent agent) throws Exception {
+        return A2A.getAgentCard(agent.getAgentUrl(),
+                "/.well-known/agent.json",
+                null == agent.getHeaders() ? null : GsonFactory.getGson().fromJson(agent.getHeaders(),
+                        new TypeToken<Map<String, Object>>() {
+                        }.getType()));
+    }
+
     public void refresh(A2AAgent agent) {
         try {
-            AgentCard card = A2A.getAgentCard(agent.getAgentUrl(),
-                    "/.well-known/agent.json",
-                    null == agent.getHeaders() ? null : GsonFactory.getGson().fromJson(agent.getHeaders(),
-                            new TypeToken<Map<String, Object>>() {
-                            }.getType()));
+            AgentCard card = this.fetchAgentCard(agent);
             Client client = buildClient(agent, card);
             AGENT_CARDS.put(agent.getId(), card);
             AGENT_CLIENTS.put(agent.getId(), client);
@@ -95,8 +100,8 @@ public class A2AAgentService implements DataProxy<A2AAgent> {
                     agent.getHeaders(), new TypeToken<Map<String, String>>() {}.getType());
             transportBuilder.addInterceptor(new ClientCallInterceptor() {
                 @Override
-                public PayloadAndHeaders intercept(String method, Object payload, Map<String, String> headers,
-                                                   AgentCard agentCard, io.a2a.client.transport.spi.interceptors.ClientCallContext ctx) {
+                public @NonNull PayloadAndHeaders intercept(@NonNull String method, Object payload, @NonNull Map<String, String> headers,
+                                                            @NonNull AgentCard agentCard, io.a2a.client.transport.spi.interceptors.ClientCallContext ctx) {
                     headers.putAll(extraHeaders);
                     return new PayloadAndHeaders(payload, headers);
                 }

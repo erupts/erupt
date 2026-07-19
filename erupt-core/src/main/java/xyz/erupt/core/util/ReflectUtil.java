@@ -97,8 +97,7 @@ public class ReflectUtil {
     @SneakyThrows
     public static Type[] getClassGeneric(Class<?> clazz) {
         Type superType = clazz.getGenericSuperclass(); // BaseDao<User>
-        if (superType instanceof ParameterizedType) {
-            ParameterizedType pt = (ParameterizedType) superType;
+        if (superType instanceof ParameterizedType pt) {
             return pt.getActualTypeArguments();
         }
         return new Type[0];

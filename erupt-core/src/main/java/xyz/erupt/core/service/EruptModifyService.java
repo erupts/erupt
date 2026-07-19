@@ -26,9 +26,11 @@ import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.util.TypeUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,7 +113,7 @@ public class EruptModifyService {
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterAdd(obj)));
         applicationEventPublisher.publishEvent(new EruptAddEvent<>(eruptModel.getClazz(), obj));
         Object pk = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol()).get(obj);
-        this.modifyLog(eruptModel, "ADD", GsonFactory.getGson().toJson(obj));
+        this.modifyLog(eruptModel, "ADD", EruptUtil.toMaskedJson(eruptModel, obj));
         return pk;
     }
 
@@ -128,13 +130,35 @@ public class EruptModifyService {
         Object old = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol()).get(o));
         Object realOld = eruptModel.getClazz().getDeclaredConstructor().newInstance();
         BeanUtils.copyProperties(old, realOld);
-        OldEntityTL.set(GsonFactory.getGson().toJson(realOld));
+        String maskedOld = EruptUtil.toMaskedJson(eruptModel, realOld);
+        OldEntityTL.set(maskedOld);
         Object obj = EruptUtil.dataTarget(eruptModel, o, old, SceneEnum.EDIT);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
         DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).editData(eruptModel, obj);
-        this.modifyLog(eruptModel, "UPDATE", GsonFactory.getGson().toJson(realOld) + " -> " + data);
+        // Mask PASSWORD fields on both sides so plaintext credentials never reach the log
+        JsonObject maskedData = data.deepCopy();
+        EruptUtil.maskPasswordFields(eruptModel, maskedData);
+        this.modifyLog(eruptModel, "UPDATE", maskedOld + " -> " + maskedData);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterUpdate(obj)));
         applicationEventPublisher.publishEvent(new EruptEditEvent<>(eruptModel.getClazz(), obj, realOld));
+    }
+
+    @SneakyThrows
+    @Transactional
+    public void dragSortEruptData(EruptModel eruptModel, Map<String, Object> sortData) {
+        String sortField = eruptModel.getErupt().dragSort().field();
+        if (StringUtils.isBlank(sortField)) {
+            throw new EruptWebApiRuntimeException("dragSort is not enabled");
+        }
+        IEruptDataService dataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
+        Field field = ReflectUtil.findClassField(eruptModel.getClazz(), sortField);
+        for (Map.Entry<String, Object> entry : sortData.entrySet()) {
+            eruptService.verifyIdPermissions(eruptModel, entry.getKey());
+            Object obj = dataService.findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, entry.getKey()));
+            field.set(obj, TypeUtil.typeStrConvertObject(entry.getValue(), field.getType()));
+            dataService.editData(eruptModel, obj);
+        }
+        this.modifyLog(eruptModel, "SORT", sortData.toString());
     }
 
     @SneakyThrows
@@ -150,14 +174,12 @@ public class EruptModifyService {
             Object obj = dataService.findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id.toString()));
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeDelete(obj)));
             dataService.deleteData(eruptModel, obj);
-            this.modifyLog(eruptModel, "DELETE", GsonFactory.getGson().toJson(obj));
+            this.modifyLog(eruptModel, "DELETE", EruptUtil.toMaskedJson(eruptModel, obj));
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterDelete(obj)));
             applicationEventPublisher.publishEvent(new EruptDeleteEvent<>(eruptModel.getClazz(), obj));
             deletedObjs.add(obj);
         }
-        OldEntityTL.set(deletedObjs.size() == 1
-                ? GsonFactory.getGson().toJson(deletedObjs.get(0))
-                : GsonFactory.getGson().toJson(deletedObjs));
+        OldEntityTL.set(EruptUtil.toMaskedJson(eruptModel, deletedObjs.size() == 1 ? deletedObjs.get(0) : deletedObjs));
     }
 
 }

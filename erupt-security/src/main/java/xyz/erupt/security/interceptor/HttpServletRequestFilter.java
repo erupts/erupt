@@ -42,8 +42,7 @@ public class HttpServletRequestFilter extends GenericFilterBean {
             ReqBody reqBody = new ReqBody();
             RequestBodyTL.set(reqBody);
             reqBody.setDate(System.currentTimeMillis());
-            if (servletRequest instanceof HttpServletRequest) {
-                HttpServletRequest request = (HttpServletRequest) servletRequest;
+            if (servletRequest instanceof HttpServletRequest request) {
                 if (request.getServletPath().contains(EruptRestPath.ERUPT_API)
                         && null != request.getContentType() && CONTENT_TYPE_JSON.equals(request.getContentType())) {
                     // Only buffer bodies with a declared size within the limit;
