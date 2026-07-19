@@ -1,9 +1,6 @@
 package xyz.erupt.bi.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -16,10 +13,12 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.sub_edit.ButtonType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Dynamic;
 import xyz.erupt.bi.constant.DBTypeEnum;
+import xyz.erupt.bi.handler.DataSourceTestButtonHandler;
 import xyz.erupt.bi.handler.DriverChoice;
 import xyz.erupt.bi.service.BiDataSourceService;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
@@ -83,6 +82,13 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
     )
     private String password;
 
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Test Connection", type = EditType.BUTTON,
+                    buttonType = @ButtonType(icon = "fa fa-plug", handler = DataSourceTestButtonHandler.class))
+    )
+    private String testConnection;
+
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             edit = @Edit(title = "Pagination SQL", type = EditType.CODE_EDITOR,
@@ -99,13 +105,11 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
     )
     private String limitSql;
 
-
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(title = "Connection Pool Config", desc = "Reference hikari, format: key=value", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "ini"))
     )
     private String poolConfig;
-
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
