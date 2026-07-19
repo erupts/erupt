@@ -15,7 +15,6 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
-import xyz.erupt.upms.model.data_proxy.EruptDictItemDataProxy;
 
 /**
  * @author YuePeng
@@ -27,7 +26,6 @@ import xyz.erupt.upms.model.data_proxy.EruptDictItemDataProxy;
         name = "Dict Item",
         orderBy = "sort",
         dragSort = @DragSort(field = "sort"),
-        dataProxy = EruptDictItemDataProxy.class,
         power = @Power(export = true, importable = true)
 )
 @Getter

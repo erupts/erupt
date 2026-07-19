@@ -68,6 +68,8 @@ public enum EditType {
     GROUP,
     @EditTypeMapping(mapping = CalloutType.class, desc = "Static callout showing user-defined descriptive content (not persisted)", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     CALLOUT,
+    @EditTypeMapping(mapping = ButtonType.class, desc = "Button that passes all current form values to the backend handler (not persisted)", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
+    BUTTON,
     @EditTypeMapping(desc = "Hidden", allowType = {JavaTypeEnum.any}, excelOperator = false)
     HIDDEN,
     @EditTypeMapping(desc = "Empty (still occupies component space)", allowType = {JavaTypeEnum.not_know}, excelOperator = false)

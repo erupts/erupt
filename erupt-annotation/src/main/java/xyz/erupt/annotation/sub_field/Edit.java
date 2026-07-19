@@ -121,6 +121,9 @@ public @interface Edit {
     @Match("#item.type().toString()=='CALLOUT'")
     CalloutType calloutType() default @CalloutType;
 
+    @Match("#item.type().toString()=='BUTTON'")
+    ButtonType buttonType() default @ButtonType;
+
     @Match("#item.type().toString()=='CODE_EDITOR'")
     CodeEditorType codeEditType() default @CodeEditorType(language = "text");
 
