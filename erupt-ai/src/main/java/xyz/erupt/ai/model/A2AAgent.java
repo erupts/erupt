@@ -6,6 +6,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
+import xyz.erupt.ai.handler.A2AAgentTestButtonHandler;
 import xyz.erupt.ai.handler.RefreshA2AAgentHandler;
 import xyz.erupt.ai.service.A2AAgentService;
 import xyz.erupt.annotation.Erupt;
@@ -18,6 +19,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.ButtonType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
@@ -78,6 +80,13 @@ public class A2AAgent extends MetaModelUpdateVo {
                     codeEditType = @CodeEditorType(language = "json"))
     )
     private String headers;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Verify Agent", type = EditType.BUTTON,
+                    buttonType = @ButtonType(icon = "fa fa-plug", handler = A2AAgentTestButtonHandler.class))
+    )
+    private String verifyAgent;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(

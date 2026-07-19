@@ -3,6 +3,7 @@ package xyz.erupt.job.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,10 +22,8 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.job.handler.CronPreviewButtonHandler;
 import xyz.erupt.job.model.data_proxy.EruptJobDataProcess;
 import xyz.erupt.job.model.data_proxy.EruptJobExecDialog;
 import xyz.erupt.job.model.data_proxy.NotifyEmailRender;
@@ -80,6 +79,13 @@ public class EruptJob extends MetaModelUpdateVo {
             edit = @Edit(title = "Cron Expression", notNull = true)
     )
     private String cron;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Validate Cron", type = EditType.BUTTON,
+                    buttonType = @ButtonType(icon = "fa fa-clock-o", handler = CronPreviewButtonHandler.class))
+    )
+    private String validateCron;
 
     @EruptField(
             views = @View(title = "Job Status"),

@@ -67,13 +67,17 @@ public class A2AAgentService implements DataProxy<A2AAgent> {
         }
     }
 
+    public AgentCard fetchAgentCard(A2AAgent agent) throws Exception {
+        return A2A.getAgentCard(agent.getAgentUrl(),
+                "/.well-known/agent.json",
+                null == agent.getHeaders() ? null : GsonFactory.getGson().fromJson(agent.getHeaders(),
+                        new TypeToken<Map<String, Object>>() {
+                        }.getType()));
+    }
+
     public void refresh(A2AAgent agent) {
         try {
-            AgentCard card = A2A.getAgentCard(agent.getAgentUrl(),
-                    "/.well-known/agent.json",
-                    null == agent.getHeaders() ? null : GsonFactory.getGson().fromJson(agent.getHeaders(),
-                            new TypeToken<Map<String, Object>>() {
-                            }.getType()));
+            AgentCard card = this.fetchAgentCard(agent);
             Client client = buildClient(agent, card);
             AGENT_CARDS.put(agent.getId(), card);
             AGENT_CLIENTS.put(agent.getId(), client);

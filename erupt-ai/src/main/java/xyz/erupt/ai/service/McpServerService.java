@@ -83,52 +83,50 @@ public class McpServerService implements DataProxy<McpServer>, OnChange<McpServe
         }
     }
 
+    public McpClient buildMcpClient(McpServer mcpServer) {
+        switch (mcpServer.getServerType()) {
+            case STDIO -> {
+                McpServerStdio stdio = GsonFactory.getGson().fromJson(mcpServer.getConfig(), McpServerStdio.class);
+                List<String> command = new ArrayList<>();
+                command.add(stdio.getCommand());
+                if (null != stdio.getArgs()) {
+                    command.addAll(stdio.getArgs());
+                }
+                StdioMcpTransport.Builder transportBuilder = new StdioMcpTransport.Builder()
+                        .command(command)
+                        .logEvents(true);
+                if (null != stdio.getEnv()) {
+                    transportBuilder.environment(stdio.getEnv());
+                }
+                return new DefaultMcpClient.Builder()
+                        .clientName(mcpServer.getName())
+                        .transport(transportBuilder.build())
+                        .build();
+            }
+            case SSE -> {
+                McpServerSse sse = GsonFactory.getGson().fromJson(mcpServer.getConfig(), McpServerSse.class);
+                return new DefaultMcpClient.Builder()
+                        .clientName(mcpServer.getName())
+                        .transport(new StreamableHttpMcpTransport.Builder().url(sse.getUrl())
+                                .customHeaders(sse.getHeaders()).build())
+                        .build();
+            }
+            default -> throw new IllegalStateException("Unsupported MCP server type: " + mcpServer.getServerType());
+        }
+    }
+
     @SneakyThrows
     public synchronized void register(McpServer mcpServer) {
         long start = System.currentTimeMillis();
         this.unregister(mcpServer);
         if (mcpServer.getEnable()) {
             McpClientInfo mcpClientInfo = new McpClientInfo();
-            switch (mcpServer.getServerType()) {
-                case STDIO -> {
-                    McpServerStdio stdio = GsonFactory.getGson().fromJson(mcpServer.getConfig(), McpServerStdio.class);
-                    List<String> command = new ArrayList<>();
-                    command.add(stdio.getCommand());
-                    if (null != stdio.getArgs()) {
-                        command.addAll(stdio.getArgs());
-                    }
-                    try {
-                        StdioMcpTransport.Builder transportBuilder = new StdioMcpTransport.Builder()
-                                .command(command)
-                                .logEvents(true);
-                        if (null != stdio.getEnv()) {
-                            transportBuilder.environment(stdio.getEnv());
-                        }
-                        McpClient mcpClient = new DefaultMcpClient.Builder()
-                                .clientName(mcpServer.getName())
-                                .transport(transportBuilder.build())
-                                .build();
-                        mcpClientInfo.setName(mcpServer.getName());
-                        mcpClientInfo.setMcpClient(mcpClient);
-                    } catch (Exception e) {
-                        mcpClientInfo.setError(e.getMessage());
-                        log.error("Failed to initialize MCP client (STDIO): {}", mcpServer.getName(), e);
-                    }
-                }
-                case SSE -> {
-                    McpServerSse sse = GsonFactory.getGson().fromJson(mcpServer.getConfig(), McpServerSse.class);
-                    try {
-                        McpClient mcpClient = new DefaultMcpClient.Builder()
-                                .clientName(mcpServer.getName())
-                                .transport(new StreamableHttpMcpTransport.Builder().url(sse.getUrl())
-                                        .customHeaders(sse.getHeaders()).build())
-                                .build();
-                        mcpClientInfo.setMcpClient(mcpClient);
-                    } catch (Exception e) {
-                        mcpClientInfo.setError(e.getMessage());
-                        log.error("Failed to initialize MCP client (SSE): {}", mcpServer.getName(), e);
-                    }
-                }
+            mcpClientInfo.setName(mcpServer.getName());
+            try {
+                mcpClientInfo.setMcpClient(this.buildMcpClient(mcpServer));
+            } catch (Exception e) {
+                mcpClientInfo.setError(e.getMessage());
+                log.error("Failed to initialize MCP client ({}): {}", mcpServer.getServerType(), mcpServer.getName(), e);
             }
             MCP_CLIENTS.put(mcpServer.getId(), mcpClientInfo);
             log.info("MCP server {} registered in {}ms", mcpServer.getName(), System.currentTimeMillis() - start);

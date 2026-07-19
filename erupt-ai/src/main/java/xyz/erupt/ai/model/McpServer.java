@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.ai.constants.McpServerType;
+import xyz.erupt.ai.handler.McpServerTestButtonHandler;
 import xyz.erupt.ai.handler.RefreshMcpServerHandler;
 import xyz.erupt.ai.service.McpServerService;
 import xyz.erupt.annotation.Erupt;
@@ -14,10 +15,7 @@ import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
-import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 /**
@@ -79,5 +77,12 @@ public class McpServer extends MetaModelUpdateVo {
             )
     )
     private String config;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Test Connection", type = EditType.BUTTON,
+                    buttonType = @ButtonType(icon = "fa fa-plug", handler = McpServerTestButtonHandler.class))
+    )
+    private String testConnection;
 
 }

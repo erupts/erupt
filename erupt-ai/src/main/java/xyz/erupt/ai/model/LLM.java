@@ -9,6 +9,7 @@ import lombok.Setter;
 import xyz.erupt.ai.core.LlmConfig;
 import xyz.erupt.ai.core.LlmCore;
 import xyz.erupt.ai.core.LlmRequest;
+import xyz.erupt.ai.handler.LlmTestButtonHandler;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -89,6 +90,13 @@ public class LLM extends MetaModelUpdateVo {
             edit = @Edit(title = "API Key", type = EditType.PASSWORD)
     )
     private String apiKey;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Test Model", type = EditType.BUTTON,
+                    buttonType = @ButtonType(icon = "fa fa-bolt", handler = LlmTestButtonHandler.class))
+    )
+    private String testModel;
 
     @Transient
     @EruptField(
