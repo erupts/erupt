@@ -29,8 +29,14 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptModifyService;
 import xyz.erupt.core.service.EruptService;
-import xyz.erupt.core.util.*;
-import xyz.erupt.core.view.*;
+import xyz.erupt.core.util.DateUtil;
+import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.Erupts;
+import xyz.erupt.core.util.SecurityUtil;
+import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.Page;
+import xyz.erupt.core.view.R;
+import xyz.erupt.core.view.TableQuery;
 import xyz.erupt.excel.service.EruptExcelService;
 import xyz.erupt.excel.util.ExcelUtil;
 
@@ -86,10 +92,8 @@ public class EruptExcelController {
         tableQuery.setPageSize(Page.PAGE_MAX_DATA);
         Page page;
         if (ids != null && !ids.isEmpty()) {
-            EruptFieldModel pkField = eruptModel.getEruptFieldMap().get(eruptModel.getErupt().primaryKeyCol());
-            String idsCondition = eruptModel.getErupt().primaryKeyCol() + " in (" +
-                    TypeUtil.arrayToConditonString(new ArrayList<>(ids), pkField.getField().getType()) + ")";
-            page = eruptService.getEruptData(eruptModel, tableQuery, null, idsCondition);
+            Condition pkCondition = new Condition(eruptModel.getErupt().primaryKeyCol(), ids, QueryExpression.IN);
+            page = eruptService.getEruptData(eruptModel, tableQuery, List.of(pkCondition));
         } else {
             page = eruptService.getEruptData(eruptModel, tableQuery, null);
         }
