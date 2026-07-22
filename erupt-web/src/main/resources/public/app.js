@@ -21,9 +21,9 @@ window.eruptSiteConfig = {
             return `
             <div style="display: flex; align-items: center; gap: 8px;">
             <a href="https://start.erupt.xyz" target="_blank" style="
-                display: inline-flex; align-items: center; gap: 5px;margin: 0;padding: 3px 10px;border-radius: 4px;border: 1px solid #3f51b5;
-                color: #3f51b5;font-size: 12px;font-weight: 500;">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                display: inline-flex; align-items: center; gap: 5px; margin: 0; padding: 3px 12px; border-radius: 0; border: 2px solid #14120B;
+                background: #4FC8EC; color: #14120B; font-size: 12px; font-weight: 800; text-decoration: none; box-shadow: 2px 2px 0 #14120B;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#14120B"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                     Start Erupt
                 </a>
                 <a class="align-self-center" href='https://gitee.com/erupt/erupt' target="_blank">

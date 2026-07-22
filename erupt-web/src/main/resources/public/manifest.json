@@ -1,26 +1,32 @@
 {
-    "name": "erupt",
-    "short_name": "erupt",
-    "description": "Erupt Engine",
+    "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+    "id": "/",
+    "name": "Erupt",
+    "short_name": "Erupt",
+    "description": "Erupt Engine - a low-code framework that auto-generates admin UI from annotations.",
     "author": "YuePeng",
-    "mode": "fullscreen",
+    "lang": "en",
+    "dir": "ltr",
+    "categories": ["business", "productivity", "developer"],
     "theme_color": "#05192c",
     "background_color": "#fafafa",
     "display": "standalone",
+    "display_override": ["standalone", "minimal-ui", "browser"],
+    "orientation": "any",
     "scope": "./",
     "start_url": "./",
     "icons": [
         {
-            "src": "assets/logo-1x.png",
-            "sizes": "144*144",
-            "type": "image/png",
+            "src": "assets/icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
             "purpose": "any"
         },
         {
-            "src": "assets/logo-1x.png",
-            "sizes": "300x300",
-            "type": "image/png",
-            "purpose": "any"
+            "src": "assets/icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "maskable"
         }
     ]
 }
