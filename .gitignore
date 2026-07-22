@@ -16,7 +16,7 @@ HELP.md
 
 ### IntelliJ IDEA ###
 .idea/*
-!.idea/icon.png
+!.idea/icon.svg
 !.idea/runConfigurations/**
 !.idea/fileTemplates/**
 *.iws
