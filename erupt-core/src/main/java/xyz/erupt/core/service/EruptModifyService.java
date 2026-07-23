@@ -130,15 +130,20 @@ public class EruptModifyService {
         Object old = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol()).get(o));
         Object realOld = eruptModel.getClazz().getDeclaredConstructor().newInstance();
         BeanUtils.copyProperties(old, realOld);
-        String maskedOld = EruptUtil.toMaskedJson(eruptModel, realOld);
-        OldEntityTL.set(maskedOld);
+        String oldData;
+        try {
+            oldData = EruptUtil.toMaskedJson(eruptModel, realOld);
+        } catch (Exception e) {
+            oldData = GsonFactory.getGson().toJson(realOld);
+        }
+        OldEntityTL.set(oldData);
         Object obj = EruptUtil.dataTarget(eruptModel, o, old, SceneEnum.EDIT);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
         DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).editData(eruptModel, obj);
         // Mask PASSWORD fields on both sides so plaintext credentials never reach the log
         JsonObject maskedData = data.deepCopy();
         EruptUtil.maskPasswordFields(eruptModel, maskedData);
-        this.modifyLog(eruptModel, "UPDATE", maskedOld + " -> " + maskedData);
+        this.modifyLog(eruptModel, "UPDATE", oldData + " -> " + maskedData);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterUpdate(obj)));
         applicationEventPublisher.publishEvent(new EruptEditEvent<>(eruptModel.getClazz(), obj, realOld));
     }
