@@ -324,6 +324,8 @@ Read the [contribution guidelines](./.github/CONTRIBUTING.md), then open an [iss
 
 ## 08 · LICENSE
 
+![license.svg](readme/license.svg)
+
 [Apache 2.0](./LICENSE) — free · open source · commercial use permitted · fork-friendly.
 
 <p align="right"><code>AUTHOR — <a href="https://github.com/erupts">YuePeng</a> · <a href="mailto:erupts@126.com">erupts@126.com</a></code></p>
