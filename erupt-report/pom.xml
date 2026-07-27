@@ -3,9 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>erupt-bi</artifactId>
-    <description>Chart Module</description>
-    <name>Erupt : Chart</name>
+    <artifactId>erupt-report</artifactId>
+    <description>Report Module</description>
+    <name>Erupt : Report</name>
 
     <parent>
         <groupId>xyz.erupt</groupId>

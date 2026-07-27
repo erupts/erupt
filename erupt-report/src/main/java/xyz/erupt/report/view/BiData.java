@@ -1,0 +1,23 @@
+package xyz.erupt.report.view;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author YuePeng
+ * date 2020-02-13
+ */
+@Getter
+@Setter
+public class BiData {
+
+    private List<BiColumnVo> columns;
+
+    private List<Map<String, Object>> list;
+
+    private Long total;
+
+}
