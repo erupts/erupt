@@ -44,12 +44,12 @@ public class EruptReportAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-bi").build();
+        return ModuleInfo.builder().name("erupt-report").build();
     }
 
     @Override
     public void run() {
-        MenuTypeEnum.addMenuType(new VLModel("bi", "BI Report"));
+        MenuTypeEnum.addMenuType(new VLModel("report", "Analytic Report"));
     }
 
     @Override

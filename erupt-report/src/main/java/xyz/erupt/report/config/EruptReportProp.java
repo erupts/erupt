@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 @ConfigurationProperties(prefix = "erupt.bi")
-public class EruptBiProp {
+public class EruptReportProp {
 
     // enable query logging
     private Boolean queryLog = true;

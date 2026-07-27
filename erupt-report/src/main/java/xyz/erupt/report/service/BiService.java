@@ -26,7 +26,7 @@ import xyz.erupt.core.util.Erupts;
 import xyz.erupt.excel.service.EruptExcelService;
 import xyz.erupt.excel.util.ExcelUtil;
 import xyz.erupt.report.annotation.ChartColumn;
-import xyz.erupt.report.config.EruptBiProp;
+import xyz.erupt.report.config.EruptReportProp;
 import xyz.erupt.report.constant.*;
 import xyz.erupt.report.fun.EruptBiHandler;
 import xyz.erupt.report.handler.NamedRowMapper;
@@ -69,7 +69,7 @@ public class BiService {
     private BiDataSourceService dataSourceService;
 
     @Resource
-    private EruptBiProp eruptBiProp;
+    private EruptReportProp eruptBiProp;
 
     @Resource
     private ScriptService scriptService;

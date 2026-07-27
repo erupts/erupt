@@ -18,7 +18,7 @@ import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.report.config.EruptBiProp;
+import xyz.erupt.report.config.EruptReportProp;
 import xyz.erupt.report.constant.BiConst;
 import xyz.erupt.report.constant.ColumnType;
 import xyz.erupt.report.model.*;
@@ -53,7 +53,7 @@ public class EruptBiController {
     private EntityManager entityManager;
 
     @Resource
-    private EruptBiProp eruptBiProp;
+    private EruptReportProp eruptBiProp;
 
     @Resource
     private ScriptService scriptService;

@@ -9,7 +9,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.report.config.EruptBiProp;
+import xyz.erupt.report.config.EruptReportProp;
 import xyz.erupt.report.constant.BiConst;
 import xyz.erupt.report.model.Bi;
 import xyz.erupt.report.model.BiReleaseModal;
@@ -36,7 +36,7 @@ public class BiPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
     private EruptDao eruptDao;
 
     @Resource
-    private EruptBiProp eruptBiProp;
+    private EruptReportProp eruptBiProp;
 
     @Resource
     private EruptUserService eruptUserService;
