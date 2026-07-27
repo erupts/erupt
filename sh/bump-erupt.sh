@@ -35,7 +35,6 @@ VERSIONS_PLUGIN="${VERSIONS_PLUGIN:-org.codehaus.mojo:versions-maven-plugin:2.16
 # Repos to bump (relative to CODE_DIR). Main repo first by convention.
 REPOS=(
     erupt
-    erupt-bi
     erupt-cube
     erupt-flow
     erupt-tenant

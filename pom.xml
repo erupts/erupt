@@ -60,6 +60,9 @@
         <!-- Designer -->
         <module>erupt-designer</module>
 
+        <!-- Analytic -->
+        <module>erupt-report</module>
+
         <!-- Data -->
         <module>erupt-data/erupt-jpa</module>
         <module>erupt-data/erupt-mongodb</module>
