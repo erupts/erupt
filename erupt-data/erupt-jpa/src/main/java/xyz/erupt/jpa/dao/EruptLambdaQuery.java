@@ -256,20 +256,30 @@ public class EruptLambdaQuery<T> {
     }
 
     // Add custom conditions
-    public EruptLambdaQuery<T> addCondition(String condition) {
-        querySchema.getWheres().add(condition);
+    public EruptLambdaQuery<T> addCondition(String expr) {
+        querySchema.getWheres().add(expr);
+        return this;
+    }
+
+    public EruptLambdaQuery<T> addCondition(boolean condition, String expr) {
+        if (condition) return this.addCondition(expr);
         return this;
     }
 
     /**
      * Add custom conditions
      *
-     * @param condition The placeholder of xxx can be replaced by the params parameter at runtime to prevent SQL injection.
-     * @param params    Placeholder parameter
+     * @param expr   The placeholder of xxx can be replaced by the params parameter at runtime to prevent SQL injection.
+     * @param params Placeholder parameter
      */
-    public EruptLambdaQuery<T> addCondition(String condition, Map<String, Object> params) {
-        querySchema.getWheres().add(condition);
+    public EruptLambdaQuery<T> addCondition(String expr, Map<String, Object> params) {
+        querySchema.getWheres().add(expr);
         Optional.ofNullable(params).ifPresent(it -> querySchema.getParams().putAll(params));
+        return this;
+    }
+
+    public EruptLambdaQuery<T> addCondition(boolean condition, String expr, Map<String, Object> params) {
+        if (condition) return this.addCondition(expr, params);
         return this;
     }
 
