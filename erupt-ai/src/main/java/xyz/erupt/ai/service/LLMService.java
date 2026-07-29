@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.config.AiProp;
+import xyz.erupt.ai.constants.AiConst;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.ai.constants.SseEvent;
 import xyz.erupt.ai.core.LlmCore;
@@ -106,6 +107,9 @@ public class LLMService {
                         String userMessage, List<ChatMessage> chatContext, String contextPrompt) {
         try {
             MetaContext.set(metaContext);
+            // Expose the current chat session ID to AI tools; vars travel with MetaContext
+            // when it is restored on langchain4j tool-execution threads
+            MetaContext.registerVar(AiConst.VAR_CHAT_ID, chatMessage.getChatId());
             LlmRequest llmRequest = llmModel.toLlmRequest();
             if (null != llmAgent) {
                 llmAgent.mergeToLLmRequest(llmModel);

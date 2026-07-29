@@ -8,4 +8,7 @@ public class AiConst {
 
     public static final String AI_CHAT = "/ai/chat";
 
+    // MetaContext var key holding the chat session ID of the ongoing conversation
+    public static final String VAR_CHAT_ID = "ai_chat_id";
+
 }
