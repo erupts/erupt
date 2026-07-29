@@ -17,6 +17,6 @@ public class EruptAiClawProp {
 
     private boolean enabled = true;
 
-    private boolean enableExecShell = true;
+    private boolean enableExecShell = false;
 
 }
