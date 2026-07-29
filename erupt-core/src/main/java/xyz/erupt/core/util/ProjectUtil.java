@@ -24,8 +24,7 @@ public class ProjectUtil {
      */
     @SneakyThrows
     public void projectStartLoaded(String projectName, Consumer<Boolean> first) {
-        String userDir = System.getProperty("user.dir");
-        File dirFile = new File(userDir, EruptConst.ERUPT_DIR);
+        File dirFile = new File(EruptConst.ERUPT_DIR_PATH);
         String warnTxt = " The erupt initialization ID file could not be created";
         if (!dirFile.exists() && !dirFile.mkdirs()) {
             log.warn("{} {}", dirFile, warnTxt);
