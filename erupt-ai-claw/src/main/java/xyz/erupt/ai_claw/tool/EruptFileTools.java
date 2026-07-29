@@ -18,8 +18,9 @@ import java.util.StringJoiner;
 import java.util.stream.Stream;
 
 /**
- * File operations confined to a per-user sandbox directory: .erupt/{account}
- * (the framework's existing .erupt directory under the working directory).
+ * File operations confined to a per-user sandbox directory: ~/.erupt/{account}
+ * (under the user's home directory, so it survives working-directory changes
+ * and the framework's .erupt reset on data reload).
  * Every path argument is resolved against the sandbox root; escapes via ".." or
  * symlinks are rejected, so the model can never touch files outside the sandbox.
  *
@@ -133,7 +134,7 @@ public class EruptFileTools {
     // Sandbox root of the current user, created on first access
     private Path sandboxRoot() {
         try {
-            Path root = Paths.get(EruptConst.ERUPT_DIR_PATH, MetaContext.getUser().getAccount())
+            Path root = Paths.get(System.getProperty("user.home"), EruptConst.ERUPT_DIR, MetaContext.getUser().getAccount())
                     .toAbsolutePath().normalize();
             Files.createDirectories(root);
             return root;
