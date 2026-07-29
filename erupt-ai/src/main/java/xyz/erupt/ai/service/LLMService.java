@@ -30,11 +30,15 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.service.EruptSessionService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author YuePeng
@@ -44,11 +48,17 @@ import java.util.List;
 @Slf4j
 public class LLMService {
 
+    // Min interval between stop-signal lookups, so redis is not hit on every token
+    private static final long STOP_CHECK_INTERVAL_MS = 500;
+
     @Resource
     private AiProp aiProp;
 
     @Resource
     private EruptDao eruptDao;
+
+    @Resource
+    private EruptSessionService eruptSessionService;
 
     public String send(String prompt) {
         return this.send(List.of(UserMessage.from(prompt)));
@@ -118,28 +128,63 @@ public class LLMService {
             llmRequest.setAutoCallTool(autoToolCall);
             llmRequest.setContextPrompt(contextPrompt);
             List<ToolCallRecord> toolCallList = new ArrayList<>();
+            // Clear a stale stop signal left over from a previous round
+            eruptSessionService.remove(AiConst.CHAT_STOP_KEY + chatMessage.getChatId());
+            StringBuilder partialText = new StringBuilder();
+            StringBuilder partialThinking = new StringBuilder();
+            AtomicBoolean stopped = new AtomicBoolean(false);
+            AtomicLong lastStopCheck = new AtomicLong(System.currentTimeMillis());
+            // Flipped by the container when the emitter is closed (client disconnect, timeout,
+            // or completion), so the still-running upstream stream stops sending into it
+            AtomicBoolean emitterClosed = new AtomicBoolean(false);
+            emitter.onCompletion(() -> emitterClosed.set(true));
+            emitter.onTimeout(() -> emitterClosed.set(true));
+            emitter.onError(t -> emitterClosed.set(true));
             llm.chatSse(llmRequest, userMessage, chatContext, it -> {
+                // Stopped by user: the upstream stream may keep emitting, discard everything
+                if (stopped.get()) return;
                 if (null != it.getToolResult()) {
                     toolCallList.add(new ToolCallRecord(it.getToolName(), it.getToolArgs(), it.getToolResult(), LocalDateTime.now()));
                 } else if (null != it.getThrowable()) {
                     String message = it.getThrowable().getMessage();
-                    this.sendSseMessage(emitter, message);
+                    if (!emitterClosed.get()) this.sendSseMessage(emitter, message);
                     eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModel.getLlm(), llmModel.getModel(), ChatSenderType.MODEL, message, 0));
                     this.completeSse(emitter);
                 } else if (it.isFinish()) {
                     String message = it.getAiMessage() != null && it.getAiMessage().text() != null ? it.getAiMessage().text() : "";
                     String thinking = it.getAiMessage() != null ? it.getAiMessage().thinking() : null;
                     String toolCalls = toolCallList.isEmpty() ? null : GsonFactory.getGson().toJson(toolCallList);
-                    this.sendSseDone(emitter);
+                    if (!emitterClosed.get()) this.sendSseDone(emitter);
                     chatMessage.setTokens(it.getUsage().inputTokenCount());
                     eruptDao.mergeAndFlush(chatMessage);
                     eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModel.getLlm(),
                             llmModel.getModel(), ChatSenderType.MODEL, message, thinking, toolCalls, it.getUsage().outputTokenCount()));
                     this.completeSse(emitter);
                 } else if (null != it.getCurrMessage()) {
+                    (it.isThinking() ? partialThinking : partialText).append(it.getCurrMessage());
+                    boolean clientGone = emitterClosed.get();
+                    if (clientGone || this.stopRequested(chatMessage.getChatId(), lastStopCheck)) {
+                        stopped.set(true);
+                        // Keep the signal alive (TTL-bounded, cleared on the next round) so the tool
+                        // guard in LlmCore keeps blocking tool executions for the remainder of the
+                        // still-running ReAct loop — also on client disconnect without an explicit stop
+                        this.stopChat(chatMessage.getChatId());
+                        // Keep what was generated so far in the chat history
+                        if (!partialText.isEmpty() || !partialThinking.isEmpty()) {
+                            String toolCalls = toolCallList.isEmpty() ? null : GsonFactory.getGson().toJson(toolCallList);
+                            eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModel.getLlm(), llmModel.getModel(),
+                                    ChatSenderType.MODEL, partialText.toString(),
+                                    partialThinking.isEmpty() ? null : partialThinking.toString(), toolCalls, 0));
+                        }
+                        if (!clientGone) {
+                            this.sendSseDone(emitter);
+                            this.completeSse(emitter);
+                        }
+                        return;
+                    }
                     this.sendSseMessage(emitter, it.getCurrMessage());
                 }
-                if (null != it.getCall()) {
+                if (null != it.getCall() && !emitterClosed.get()) {
                     this.sendSseCallMessage(emitter, it.getCall());
                 }
             });
@@ -149,6 +194,25 @@ public class LLMService {
         }
     }
 
+
+    // Raise the stop signal for a chat; lives as long as a generation round possibly can
+    // (sseTimeout), cleared eagerly when the next round starts
+    public void stopChat(Long chatId) {
+        eruptSessionService.put(AiConst.CHAT_STOP_KEY + chatId, "1", aiProp.getSseTimeout(), TimeUnit.MILLISECONDS);
+    }
+
+    // Whether a stop signal exists for the chat; works for both redis and local session modes
+    public boolean isChatStopped(Long chatId) {
+        return eruptSessionService.exist(AiConst.CHAT_STOP_KEY + chatId);
+    }
+
+    // Throttled variant used on the token stream, so redis is not hit on every token
+    private boolean stopRequested(Long chatId, AtomicLong lastCheck) {
+        long now = System.currentTimeMillis();
+        if (now - lastCheck.get() < STOP_CHECK_INTERVAL_MS) return false;
+        lastCheck.set(now);
+        return this.isChatStopped(chatId);
+    }
 
     @SneakyThrows
     public void sendSseDone(SseEmitter emitter) {

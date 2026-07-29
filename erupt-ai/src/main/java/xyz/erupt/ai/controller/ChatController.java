@@ -113,6 +113,19 @@ public class ChatController {
     }
 
     @EruptMenuAuth(AiConst.AI_CHAT)
+    @GetMapping("/stop")
+    public R<Void> stop(@RequestParam Long chatId) {
+        AiChat chat = eruptDao.lambdaQuery(AiChat.class)
+                .eq(AiChat::getId, chatId)
+                .with(AiChat::getEruptUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
+                .one();
+        if (null == chat) return R.error("Chat not found");
+        // Signal is polled by the generating instance; works across nodes when redisSession is on
+        llmService.stopChat(chatId);
+        return R.ok();
+    }
+
+    @EruptMenuAuth(AiConst.AI_CHAT)
     @GetMapping("/delete-chat")
     @Transactional
     public R<Void> deleteChat(@RequestParam Long chatId) {

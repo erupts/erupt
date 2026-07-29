@@ -19,6 +19,9 @@ public class SseListener {
     // Stream output, the content of the current message
     private String currMessage;
 
+    // True when currMessage is a thinking (reasoning) token rather than answer text
+    private boolean thinking;
+
     private String call;
 
     private boolean isFinish;

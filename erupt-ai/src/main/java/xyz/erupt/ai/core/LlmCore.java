@@ -12,8 +12,10 @@ import dev.langchain4j.service.tool.ToolProviderResult;
 import lombok.extern.slf4j.Slf4j;
 import xyz.erupt.ai.ask.EruptAiChat;
 import xyz.erupt.ai.config.AiProp;
+import xyz.erupt.ai.constants.AiConst;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.service.LLMRoleService;
+import xyz.erupt.ai.service.LLMService;
 import xyz.erupt.ai.service.McpServerService;
 import xyz.erupt.ai.vo.mcp.McpClientInfo;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
@@ -97,12 +99,25 @@ public abstract class LlmCore {
         });
         if (llmRequest.getAutoCallTool()) {
             eruptAiServices.toolProvider(buildTools(listener));
+            eruptAiServices.maxSequentialToolsInvocations(EruptSpringUtil.getBean(AiProp.class).getMaxSequentialToolsInvocations());
         }
         eruptAiServices.toolExecutionErrorHandler((throwable, e) -> {
             log.error("Tool execution error [{}] e: {}", throwable.getMessage(), e);
             return new ToolErrorHandlerResult("Tool error: " + e.toString());
         });
         return eruptAiServices.build();
+    }
+
+    // Tool result returned instead of executing when the user has stopped the generation.
+    // The ReAct loop still makes one wrap-up request, but no further tools run.
+    private static final String CHAT_STOPPED_RESULT =
+            "The user has stopped this generation. Do not call any more tools, stop responding immediately.";
+
+    // True when a stop signal exists for the chat carried in MetaContext (set by ChatController#stop)
+    private static boolean chatStopRequested() {
+        Object chatId = MetaContext.getVars().get(AiConst.VAR_CHAT_ID);
+        if (null == chatId) return false;
+        return EruptSpringUtil.getBean(LLMService.class).isChatStopped(((Number) chatId).longValue());
     }
 
     private ToolProvider buildTools(Consumer<SseListener> listener) {
@@ -115,6 +130,7 @@ public abstract class LlmCore {
                     ToolSpecifications.toolSpecificationsFrom(obj).forEach(spec -> {
                         if (allowedTools.contains(spec.name())) {
                             builder.add(spec, (executionRequest, memoryId) -> {
+                                if (chatStopRequested()) return CHAT_STOPPED_RESULT;
                                 Object result = AiToolboxManager.invoke(executionRequest);
                                 String resultStr = null == result ? "" : result.toString();
                                 if (listener != null) {
@@ -131,6 +147,7 @@ public abstract class LlmCore {
                 if (null != value.getMcpClient()) {
                     value.getMcpClient().listTools().forEach(spec ->
                             builder.add(spec, (executionRequest, memoryId) -> {
+                                if (chatStopRequested()) return CHAT_STOPPED_RESULT;
                                 String result = value.getMcpClient().executeTool(executionRequest).toString();
                                 if (listener != null) {
                                     listener.accept(SseListener.builder()
@@ -171,7 +188,7 @@ public abstract class LlmCore {
                     MetaContext.set(metaContext);
                     String callMsg = toolCall.name();
                     listener.accept(SseListener.builder().call(callMsg).build());
-                }).onPartialThinking(thinking -> listener.accept(SseListener.builder().currMessage(thinking.text()).build())).start();
+                }).onPartialThinking(thinking -> listener.accept(SseListener.builder().thinking(true).currMessage(thinking.text()).build())).start();
     }
     public ChatMemory creatMemory(List<ChatMessage> chatMessages) {
         return new ChatMemory() {
