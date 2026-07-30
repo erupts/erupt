@@ -169,13 +169,16 @@ public class LLMService {
                         // guard in LlmCore keeps blocking tool executions for the remainder of the
                         // still-running ReAct loop — also on client disconnect without an explicit stop
                         this.stopChat(chatMessage.getChatId());
-                        // Keep what was generated so far in the chat history
-                        if (!partialText.isEmpty() || !partialThinking.isEmpty()) {
-                            String toolCalls = toolCallList.isEmpty() ? null : GsonFactory.getGson().toJson(toolCallList);
-                            eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModel.getLlm(), llmModel.getModel(),
-                                    ChatSenderType.MODEL, partialText.toString(),
-                                    partialThinking.isEmpty() ? null : partialThinking.toString(), toolCalls, 0));
-                        }
+                        // Keep what was generated so far in the chat history, flagged as interrupted
+                        // (persisted even when empty so the stop marker always shows in the chat)
+                        String toolCalls = toolCallList.isEmpty() ? null : GsonFactory.getGson().toJson(toolCallList);
+                        // Null content keeps an empty interrupted message out of the next-round
+                        // context (geneCompletionPrompt filters on content is-not-null)
+                        AiChatMessage stoppedMessage = AiChatMessage.create(chatMessage.getChatId(), llmModel.getLlm(), llmModel.getModel(),
+                                ChatSenderType.MODEL, partialText.isEmpty() ? null : partialText.toString(),
+                                partialThinking.isEmpty() ? null : partialThinking.toString(), toolCalls, 0);
+                        stoppedMessage.setInterrupted(true);
+                        eruptDao.persistAndFlush(stoppedMessage);
                         if (!clientGone) {
                             this.sendSseDone(emitter);
                             this.completeSse(emitter);

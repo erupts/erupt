@@ -55,6 +55,9 @@ public class AiChatMessage extends BaseModel implements DataProxy<AiChatMessage>
 
     private Integer tokens;
 
+    // True when the user stopped the generation before it finished
+    private Boolean interrupted;
+
     public static AiChatMessage create(Long chatId, String llm, String model, ChatSenderType senderType, String content, Integer tokens) {
         return create(chatId, llm, model, senderType, content, null, null, tokens);
     }
