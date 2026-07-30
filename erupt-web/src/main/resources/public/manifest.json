@@ -17,13 +17,13 @@
     "start_url": "./",
     "icons": [
         {
-            "src": "assets/icon.svg",
+            "src": "assets/pwa-icon.svg",
             "sizes": "any",
             "type": "image/svg+xml",
             "purpose": "any"
         },
         {
-            "src": "assets/icon.svg",
+            "src": "assets/pwa-icon.svg",
             "sizes": "any",
             "type": "image/svg+xml",
             "purpose": "maskable"
