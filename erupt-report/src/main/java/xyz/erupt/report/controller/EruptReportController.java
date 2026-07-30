@@ -19,10 +19,10 @@ import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.report.config.EruptReportProp;
-import xyz.erupt.report.constant.BiConst;
 import xyz.erupt.report.constant.ColumnType;
+import xyz.erupt.report.constant.ReportConst;
 import xyz.erupt.report.model.*;
-import xyz.erupt.report.service.BiService;
+import xyz.erupt.report.service.ReportService;
 import xyz.erupt.report.service.ScriptService;
 import xyz.erupt.report.view.*;
 
@@ -37,14 +37,14 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping(BiConst.BATH_PATH)
-public class EruptBiController {
+@RequestMapping(ReportConst.BATH_PATH)
+public class EruptReportController {
 
     @Resource
     private EruptDao eruptDao;
 
     @Resource
-    private BiService biService;
+    private ReportService biService;
 
     @Resource
     private EruptProp eruptProp;
@@ -67,7 +67,7 @@ public class EruptBiController {
             return null;
         }
         BiVo biVo = new BiVo();
-        biVo.setPageType(Optional.ofNullable(bi.getPageType()).orElse(BiConst.PAGE_END));
+        biVo.setPageType(Optional.ofNullable(bi.getPageType()).orElse(ReportConst.PAGE_END));
         biVo.setExport(bi.getExport());
         biVo.setTable(StringUtils.isNotBlank(bi.getSqlStatement()));
         int maxSort = 9999;

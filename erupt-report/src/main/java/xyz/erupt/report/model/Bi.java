@@ -15,8 +15,8 @@ import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.*;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
-import xyz.erupt.report.constant.BiConst;
-import xyz.erupt.report.handler.BiPublishMenu;
+import xyz.erupt.report.constant.ReportConst;
+import xyz.erupt.report.handler.ReportPublishMenu;
 import xyz.erupt.report.model.dataproxy.BiDataProxy;
 
 import java.util.Set;
@@ -31,7 +31,7 @@ import java.util.Set;
         rowOperation = {
                 @RowOperation(
                         title = "Add to Menu", mode = RowOperation.Mode.SINGLE, icon = "fa fa-send",
-                        eruptClass = BiReleaseModal.class, operationHandler = BiPublishMenu.class
+                        eruptClass = BiReleaseModal.class, operationHandler = ReportPublishMenu.class
                 )
         },
         orderBy = "createTime desc",
@@ -88,12 +88,12 @@ public class Bi extends MetaModelUpdateVo {
     @EruptField(
             views = @View(title = "Pagination", sortable = true),
             edit = @Edit(title = "Pagination", notNull = true, type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
-                    @VL(value = BiConst.PAGE_END, label = "Backend Pagination"),
-                    @VL(value = BiConst.PAGE_FRONT, label = "Frontend Pagination"),
-                    @VL(value = BiConst.PAGE_NONE, label = "No Pagination"),
+                    @VL(value = ReportConst.PAGE_END, label = "Backend Pagination"),
+                    @VL(value = ReportConst.PAGE_FRONT, label = "Frontend Pagination"),
+                    @VL(value = ReportConst.PAGE_NONE, label = "No Pagination"),
             }))
     )
-    private String pageType = BiConst.PAGE_END;
+    private String pageType = ReportConst.PAGE_END;
 
     @EruptField(
             views = @View(title = "Cache Time", width = "100px", sortable = true, template = "value&&value+'s'"),
@@ -123,7 +123,7 @@ public class Bi extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             edit = @Edit(title = "Count SQL", desc = "Compute total rows; use when nested count subquery is slow",
-                    dynamic = @Dynamic(dependField = "pageType", condition = "value == '" + BiConst.PAGE_END + "'"),
+                    dynamic = @Dynamic(dependField = "pageType", condition = "value == '" + ReportConst.PAGE_END + "'"),
                     type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql", height = 100))
     )
     private String countStatement;

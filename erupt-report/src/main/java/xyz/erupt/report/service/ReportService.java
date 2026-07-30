@@ -28,7 +28,7 @@ import xyz.erupt.excel.util.ExcelUtil;
 import xyz.erupt.report.annotation.ChartColumn;
 import xyz.erupt.report.config.EruptReportProp;
 import xyz.erupt.report.constant.*;
-import xyz.erupt.report.fun.EruptBiHandler;
+import xyz.erupt.report.fun.EruptReportHandler;
 import xyz.erupt.report.handler.NamedRowMapper;
 import xyz.erupt.report.model.*;
 import xyz.erupt.report.view.BiColumnVo;
@@ -51,7 +51,7 @@ import java.util.stream.Stream;
  */
 @Service
 @Slf4j
-public class BiService {
+public class ReportService {
 
     @Resource
     private EruptUserService eruptUserService;
@@ -66,7 +66,7 @@ public class BiService {
     private HttpServletResponse response;
 
     @Resource
-    private BiDataSourceService dataSourceService;
+    private ReportDataSourceService dataSourceService;
 
     @Resource
     private EruptReportProp eruptBiProp;
@@ -111,7 +111,7 @@ public class BiService {
         query.put(ScriptPlaceholderConst.PAGE_INDEX_PLACEHOLDER, pageIndex);
         this.putCommonContextParam(query);
         BiData biData = new BiData();
-        if (BiConst.PAGE_NONE.equals(bi.getPageType()) || BiConst.PAGE_FRONT.equals(bi.getPageType()) || export) {
+        if (ReportConst.PAGE_NONE.equals(bi.getPageType()) || ReportConst.PAGE_FRONT.equals(bi.getPageType()) || export) {
             String sql = StringUtils.isBlank(sort) ? bi.getSqlStatement() : String.format("select * from (%s) _t order by %s", bi.getSqlStatement(), sort);
             biData.setList(this.startQuery(bi.getName(), sql, bi.getCacheTime(), bi.getClassHandler(), bi.getDataSource(), query));
             biData.setTotal((long) biData.getList().size());
@@ -156,15 +156,15 @@ public class BiService {
     @SneakyThrows
     public List<Map<String, Object>> startQuery(String key, String express, Integer cacheTime, BiClassHandler classHandler,
                                                 BiDataSource biDataSource, Map<String, Object> query, RowMapper<Map<String, Object>> rowMapper) {
-        EruptBiHandler biHandler = null;
+        EruptReportHandler biHandler = null;
         this.putCommonContextParam(query);
         express = processPlaceHolder(express, query);
         if (null != classHandler) {
-            biHandler = EruptSpringUtil.getBeanByPath(classHandler.getHandlerPath(), EruptBiHandler.class);
+            biHandler = EruptSpringUtil.getBeanByPath(classHandler.getHandlerPath(), EruptReportHandler.class);
             express = biHandler.exprHandler(classHandler.getParam(), query, express);
         }
         String finalExpress = String.format("/* erupt bi query :: %s */ ", key) + express;
-        EruptBiHandler finalBiHandler = biHandler;
+        EruptReportHandler finalBiHandler = biHandler;
         if (eruptBiProp.getQueryLog()) {
             log.info(finalExpress);
         }
@@ -224,7 +224,7 @@ public class BiService {
         }
         BiClassHandler biClassHandler = bi.getClassHandler();
         if (null != biClassHandler) {
-            express = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class)
+            express = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptReportHandler.class)
                     .exprHandler(biClassHandler.getParam(), query, express);
         }
         if (StringUtils.isNotBlank(bi.getCountStatement())) {
@@ -311,7 +311,7 @@ public class BiService {
                 }
             }
             if (null != biClassHandler) {
-                EruptBiHandler biHandler = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class);
+                EruptReportHandler biHandler = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptReportHandler.class);
                 biHandler.exportHandler(biClassHandler.getParam(), query, wb);
             }
             wb.write(ExcelUtil.downLoadFile(request, response, name + "_" + DateUtil.getFormatDate(new Date(), "yyyy-MM-dd_HH-mm-ss") + EruptExcelService.XLSX_FORMAT));

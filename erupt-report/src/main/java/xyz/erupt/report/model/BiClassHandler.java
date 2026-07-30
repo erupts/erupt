@@ -15,7 +15,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
-import xyz.erupt.report.handler.BiHandlerChoice;
+import xyz.erupt.report.handler.ReportHandlerChoice;
 
 /**
  * @author YuePeng
@@ -38,8 +38,8 @@ public class BiClassHandler extends MetaModelUpdateVo {
     @EruptField(
             views = @View(title = "Handler Class", sortable = true),
             edit = @Edit(title = "Handler Class", notNull = true, type = EditType.CHOICE,
-                    choiceType = @ChoiceType(fetchHandler = BiHandlerChoice.class),
-                    desc = "Implement xyz.erupt.bi.fun.EruptBiHandler interface")
+                    choiceType = @ChoiceType(fetchHandler = ReportHandlerChoice.class),
+                    desc = "Implement xyz.erupt.bi.fun.EruptReportHandler interface")
     )
     private String handlerPath;
 

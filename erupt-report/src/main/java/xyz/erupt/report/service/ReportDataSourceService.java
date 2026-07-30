@@ -26,7 +26,7 @@ import java.util.Properties;
  * date 2020-02-28
  */
 @Service
-public class BiDataSourceService implements DataProxy<BiDataSource>, DisposableBean {
+public class ReportDataSourceService implements DataProxy<BiDataSource>, DisposableBean {
 
     private final Map<String, NamedParameterJdbcTemplate> templateMap = new HashMap<>();
 

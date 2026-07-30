@@ -10,7 +10,7 @@ import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.report.config.EruptReportProp;
-import xyz.erupt.report.constant.BiConst;
+import xyz.erupt.report.constant.ReportConst;
 import xyz.erupt.report.model.Bi;
 import xyz.erupt.report.model.BiReleaseModal;
 import xyz.erupt.upms.model.EruptMenu;
@@ -30,7 +30,7 @@ import java.util.List;
  * date 2023/6/4 17:51
  */
 @Component
-public class BiPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
+public class ReportPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
 
     @Resource
     private EruptDao eruptDao;
@@ -56,7 +56,7 @@ public class BiPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
         Bi bi = data.get(0);
         Erupts.requireNull(eruptDao.lambdaQuery(EruptMenu.class).eq(EruptMenu::getCode, bi.getCode()).one(), I18nTranslate.$translate("bi.menu_already_exists"));
         Integer max = (Integer) eruptDao.lambdaQuery(EruptMenu.class).max(EruptMenu::getSort);
-        EruptMenu eruptMenu = new EruptMenu(bi.getCode(), biReleaseModal.getName(), BiConst.MENU_TYPE,
+        EruptMenu eruptMenu = new EruptMenu(bi.getCode(), biReleaseModal.getName(), ReportConst.MENU_TYPE,
                 bi.getCode(), MenuStatus.OPEN.getValue(), max + 10, null, biReleaseModal.getEruptMenu());
         eruptDao.persist(eruptMenu);
         // save to the designated role as well

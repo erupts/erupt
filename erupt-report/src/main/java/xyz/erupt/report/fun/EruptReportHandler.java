@@ -10,7 +10,7 @@ import java.util.Map;
  * @author YuePeng
  * date 2019-08-26.
  */
-public interface EruptBiHandler {
+public interface EruptReportHandler {
 
     /**
      * Dynamic query expression handler

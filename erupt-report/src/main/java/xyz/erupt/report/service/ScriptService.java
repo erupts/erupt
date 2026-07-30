@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.core.cache.EruptCache;
 import xyz.erupt.core.cache.EruptCacheLRU;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.report.constant.BiConst;
+import xyz.erupt.report.constant.ReportConst;
 import xyz.erupt.report.model.BiFunction;
 
 import javax.script.Bindings;
@@ -25,7 +25,7 @@ public class ScriptService {
 
     private final EruptCache<String> functionCache = new EruptCacheLRU<>(1);
 
-    private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
+    private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(ReportConst.SCRIPT_ENGINE);
 
     @Resource
     private EruptDao eruptDao;

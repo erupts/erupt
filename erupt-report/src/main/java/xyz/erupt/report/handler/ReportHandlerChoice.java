@@ -7,7 +7,7 @@ import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.annotation.EruptHandlerNaming;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
-import xyz.erupt.report.fun.EruptBiHandler;
+import xyz.erupt.report.fun.EruptReportHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
  * @author YuePeng
  * date 2022/2/20 01:21
  */
-public class BiHandlerChoice implements ChoiceFetchHandler<Void> {
+public class ReportHandlerChoice implements ChoiceFetchHandler<Void> {
 
     private static List<VLModel> biHandlerList;
 
@@ -24,7 +24,7 @@ public class BiHandlerChoice implements ChoiceFetchHandler<Void> {
     public synchronized List<VLModel> fetch(String[] params) {
         if (null == biHandlerList) {
             biHandlerList = new ArrayList<>();
-            EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AssignableTypeFilter(EruptBiHandler.class)}, clazz -> {
+            EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AssignableTypeFilter(EruptReportHandler.class)}, clazz -> {
                 EruptHandlerNaming eruptHandlerNaming = clazz.getAnnotation(EruptHandlerNaming.class);
                 biHandlerList.add(new VLModel(clazz.getName(), (null == eruptHandlerNaming) ? clazz.getSimpleName() : eruptHandlerNaming.value()));
             });

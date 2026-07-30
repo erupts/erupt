@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.util.Erupts;
-import xyz.erupt.report.constant.BiConst;
+import xyz.erupt.report.constant.ReportConst;
 import xyz.erupt.report.model.BiFunction;
 import xyz.erupt.report.service.ScriptService;
 
@@ -20,7 +20,7 @@ import javax.script.ScriptException;
 @Component
 public class BiFunctionDataProxy implements DataProxy<BiFunction> {
 
-    private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
+    private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(ReportConst.SCRIPT_ENGINE);
     @Resource
     private ScriptService scriptService;
 

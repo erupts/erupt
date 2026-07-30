@@ -16,10 +16,10 @@ import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
-import xyz.erupt.report.constant.BiConst;
+import xyz.erupt.report.constant.ReportConst;
 import xyz.erupt.report.model.BiChart;
 import xyz.erupt.report.model.BiTpl;
-import xyz.erupt.report.service.BiService;
+import xyz.erupt.report.service.ReportService;
 import xyz.erupt.tpl.engine.FreemarkerEngine;
 import xyz.erupt.tpl.service.EruptTplService;
 
@@ -34,11 +34,11 @@ import java.util.Map;
  * date 2022/1/1 23:46
  */
 @RestController
-@RequestMapping(BiConst.BATH_PATH)
-public class EruptBiTplController {
+@RequestMapping(ReportConst.BATH_PATH)
+public class EruptReportTplController {
 
     @Resource
-    private BiService biService;
+    private ReportService biService;
 
     @Resource
     private EruptTplService eruptTplService;
@@ -57,7 +57,7 @@ public class EruptBiTplController {
             "    <title></title>\n" +
             "</head>\n" +
             "<body>\n" +
-            BiConst.SIMPLE_PLACEHOLDER +
+            ReportConst.SIMPLE_PLACEHOLDER +
             "</body>\n" +
             "</html>";
 
@@ -87,7 +87,7 @@ public class EruptBiTplController {
         if (BiTpl.TYPE_ONLINE.equals(biChart.getBiTpl().getType())) {
             map.put("request", request);
             StringTemplateLoader stringTemplateLoader = (StringTemplateLoader) freemarker.getTemplateLoader();
-            stringTemplateLoader.putTemplate(biChart.getCode(), HTML.replace(BiConst.SIMPLE_PLACEHOLDER, biChart.getBiTpl().getTpl()));
+            stringTemplateLoader.putTemplate(biChart.getCode(), HTML.replace(ReportConst.SIMPLE_PLACEHOLDER, biChart.getBiTpl().getTpl()));
             freemarker.getTemplate(biChart.getCode(), "utf-8").process(map, response.getWriter());
         } else if (BiTpl.TYPE_PATH.equals(biChart.getBiTpl().getType())) {
             eruptTplService.tplRender(Tpl.Engine.FreeMarker, biChart.getBiTpl().getPath(), map, response.getWriter());

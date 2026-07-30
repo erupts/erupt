@@ -6,7 +6,7 @@ import xyz.erupt.core.constant.EruptRestPath;
  * @author YuePeng
  * date 2021/7/17 23:10
  */
-public class BiConst {
+public class ReportConst {
 
     public static final String MENU_TYPE = "bi";
 

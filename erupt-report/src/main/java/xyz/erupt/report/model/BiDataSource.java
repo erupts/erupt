@@ -21,7 +21,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.report.constant.DBTypeEnum;
 import xyz.erupt.report.handler.DataSourceTestButtonHandler;
 import xyz.erupt.report.handler.DriverChoice;
-import xyz.erupt.report.service.BiDataSourceService;
+import xyz.erupt.report.service.ReportDataSourceService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  */
 @Entity
 @Table(name = "e_bi_datasource", uniqueConstraints = @UniqueConstraint(name = "uk_bi_datasource_code", columnNames = "code"))
-@Erupt(name = "Data Source Manager", dataProxy = BiDataSourceService.class)
+@Erupt(name = "Data Source Manager", dataProxy = ReportDataSourceService.class)
 @Getter
 @Setter
 @EruptI18n
