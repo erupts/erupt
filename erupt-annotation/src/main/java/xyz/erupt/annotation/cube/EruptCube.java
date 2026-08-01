@@ -30,10 +30,13 @@ public @interface EruptCube {
     @Comment("How sql is interpreted: sub-query or table name")
     SqlType sqlType() default SqlType.SUB_QUERY;
 
+    @Comment("Whether the cube is exposed externally")
+    boolean expose() default true;
+
     // Define the rules for external exposure
     Explore[] explores() default {
             @Explore(
-                    code = "overview",
+                    code = Explore.OVERVIEW,
                     name = "Overview"
             )
     };
