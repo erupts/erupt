@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.constants.SseEvent;
 import xyz.erupt.ai.core.LlmCore;
 import xyz.erupt.ai.core.LlmRequest;
@@ -26,10 +27,12 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.service.EruptSessionService;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -63,6 +66,12 @@ public class AiCanvasService {
     @Resource
     private EruptDao eruptDao;
 
+    @Resource
+    private EruptSessionService eruptSessionService;
+
+    @Resource
+    private AiProp aiProp;
+
     private final Map<String, CanvasModelProvider> providers;
 
     public AiCanvasService(List<CanvasModelProvider> canvasModelProviders) {
@@ -91,15 +100,21 @@ public class AiCanvasService {
         return this.saveVersion(view, message, this.extractHtml(response));
     }
 
+    // Session key prefix of the explicit stop signal for a running generation
+    private static final String STOP_KEY = "erupt-ai-canvas:generate-stop:";
+
     /**
      * Streaming variant: forwards tokens to the emitter as they arrive, then
      * files the version and answers DONE with either the version or an error.
-     * When the client disconnects mid-stream, nothing is saved.
+     * Only an explicit stop discards the round — a mere disconnect (page
+     * refresh, network hiccup) still persists the version, it shows on reload.
      */
     @Async
     public void generateSse(MetaContext metaContext, AiCanvas view, String message, SseEmitter emitter) {
         try {
             MetaContext.set(metaContext);
+            // Clear a stale stop signal left over from a previous round
+            eruptSessionService.remove(STOP_KEY + view.getId());
             LLM llm = null != view.getLlm() ? view.getLlm() : eruptDao.lambdaQuery(LLM.class)
                     .eq(LLM::getDefaultLLM, true).eq(LLM::getEnable, true).limit(1).one();
             if (null == llm) throw new EruptWebApiRuntimeException("Not found LLM config");
@@ -113,16 +128,17 @@ public class AiCanvasService {
             StringBuilder response = new StringBuilder();
             LlmCore.getLLM(llm).chatSse(llmRequest, this.userMessage(view, message), context, it -> {
                 if (null != it.getThrowable()) {
-                    this.doneSse(emitter, null, it.getThrowable().getMessage());
+                    if (!clientGone.get()) this.doneSse(emitter, null, it.getThrowable().getMessage());
                 } else if (it.isFinish()) {
-                    // Canceled by the client: discard the round, no version is filed
-                    if (clientGone.get()) return;
+                    // Stopped by the user: discard the round, no version is filed
+                    if (this.stopRequested(view.getId())) return;
                     try {
                         String text = null != it.getAiMessage() && null != it.getAiMessage().text()
                                 ? it.getAiMessage().text() : response.toString();
-                        this.doneSse(emitter, this.saveVersion(view, message, this.extractHtml(text)), null);
+                        AiCanvasVersion version = this.saveVersion(view, message, this.extractHtml(text));
+                        if (!clientGone.get()) this.doneSse(emitter, version, null);
                     } catch (Exception e) {
-                        this.doneSse(emitter, null, e.getMessage());
+                        if (!clientGone.get()) this.doneSse(emitter, null, e.getMessage());
                     }
                 } else if (null != it.getCurrMessage() && !it.isThinking()) {
                     response.append(it.getCurrMessage());
@@ -134,6 +150,15 @@ public class AiCanvasService {
         } catch (Exception e) {
             this.doneSse(emitter, null, e.getMessage());
         }
+    }
+
+    // Raise the stop signal; TTL-bounded to the longest a generation round can run
+    public void stopGenerate(Long canvasId) {
+        eruptSessionService.put(STOP_KEY + canvasId, "1", aiProp.getSseTimeout(), TimeUnit.MILLISECONDS);
+    }
+
+    private boolean stopRequested(Long canvasId) {
+        return eruptSessionService.exist(STOP_KEY + canvasId);
     }
 
     // Single completion protocol: DONE carries either {version: {...}} or {error: "..."}

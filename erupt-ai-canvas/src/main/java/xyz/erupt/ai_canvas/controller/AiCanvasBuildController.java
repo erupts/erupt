@@ -115,6 +115,15 @@ public class AiCanvasBuildController {
         return emitter;
     }
 
+    // Explicit stop: the running round is discarded; without this signal a mere
+    // disconnect (page refresh) still persists the generated version
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    @PostMapping("/stop/{canvasId}")
+    public R<Void> stop(@PathVariable("canvasId") Long canvasId) {
+        aiViewService.stopGenerate(canvasId);
+        return R.ok();
+    }
+
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @PostMapping("/active/{canvasId}/{versionId}")
     public R<Void> active(@PathVariable("canvasId") Long canvasId, @PathVariable("versionId") Long versionId) {
