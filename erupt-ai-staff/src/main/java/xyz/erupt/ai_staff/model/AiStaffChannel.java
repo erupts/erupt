@@ -29,7 +29,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * date 2026/8/3
  */
 @Erupt(
-        name = "Staff Channel",
+        name = "Channel Integration",
         dataProxy = AiStaffChannelProxy.class,
         rowOperation = @RowOperation(code = "testPush", icon = "fa fa-paper-plane", title = "Test Push",
                 mode = RowOperation.Mode.SINGLE, operationHandler = AiStaffChannelProxy.class)

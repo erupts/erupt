@@ -86,7 +86,7 @@
         <module>erupt-ai</module>
         <module>erupt-ai-claw</module>
         <module>erupt-ai-staff</module>
-        <module>erupt-ai-view</module>
+        <module>erupt-ai-canvas</module>
 
         <!-- Extra -->
         <module>erupt-extra/erupt-job</module>
