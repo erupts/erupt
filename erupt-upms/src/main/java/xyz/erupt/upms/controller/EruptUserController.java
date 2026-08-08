@@ -66,8 +66,6 @@ public class EruptUserController {
     /**
      * Login
      *
-     * @param verifyCode     Verification code
-     * @param verifyCodeMark Verification code identifier
      */
     @SneakyThrows
     @PostMapping(value = "/login")
@@ -116,9 +114,9 @@ public class EruptUserController {
     @PostMapping(value = "/change-pwd")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public R<Void> changePwd(@RequestBody ChangePwdBody body) {
-        String pwd = SecretUtil.decodeSecret(body.getPwd(), 3);
-        String newPwd = SecretUtil.decodeSecret(body.getNewPwd(), 3);
-        String newPwd2 = SecretUtil.decodeSecret(body.getNewPwd2(), 3);
+        String pwd = eruptAppProp.getPwdTransferEncrypt() ? SecretUtil.decodeSecret(body.getPwd(), 3) : body.getPwd();
+        String newPwd = eruptAppProp.getPwdTransferEncrypt() ? SecretUtil.decodeSecret(body.getNewPwd(), 3) : body.getNewPwd();
+        String newPwd2 = eruptAppProp.getPwdTransferEncrypt() ? SecretUtil.decodeSecret(body.getNewPwd2(), 3) : body.getNewPwd2();
         return eruptUserService.changePwd(eruptUserService.getCurrentAccount(), pwd, newPwd, newPwd2);
     }
 
