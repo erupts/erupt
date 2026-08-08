@@ -389,7 +389,8 @@ public class EruptExcelService {
                 targetRegion.getFirstRow(), targetRegion.getLastRow(),
                 targetRegion.getFirstColumn(), targetRegion.getLastColumn()));
         validation.setShowErrorBox(true);
-        validation.setSuppressDropDownArrow(false);
+        // XSSF semantics are inverted from HSSF: true shows the dropdown arrow
+        validation.setSuppressDropDownArrow(true);
         targetSheet.addValidationData(validation);
     }
 
