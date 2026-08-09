@@ -17,9 +17,6 @@ ai-canvas.empty_response,AI 返回了空响应,AI 返回了空響應,AI returned
 ai-canvas.bad_response,AI 响应中未找到 HTML 文档,AI 響應中未找到 HTML 文檔,No HTML document found in the AI response,Aucun document HTML trouvé dans la réponse de l'IA,AIの応答にHTMLドキュメントが見つかりません,AI 응답에서 HTML 문서를 찾을 수 없습니다,HTML-документ не найден в ответе ИИ,No se encontró un documento HTML en la respuesta de la IA,Kein HTML-Dokument in der KI-Antwort gefunden,Nenhum documento HTML encontrado na resposta da IA,Dokumen HTML tidak ditemukan dalam respons AI,لم يتم العثور على مستند HTML في استجابة الذكاء الاصطناعي
 ai-canvas.not_generated,页面尚未生成,頁面尚未生成,The page has not been generated yet,La page n'a pas encore été générée,ページはまだ生成されていません,페이지가 아직 생성되지 않았습니다,Страница ещё не сгенерирована,La página aún no se ha generado,Die Seite wurde noch nicht generiert,A página ainda não foi gerada,Halaman belum dibuat,لم يتم توليد الصفحة بعد
 ai-canvas.disabled,该视图已被禁用,該視圖已被禁用,This view is disabled,Cette vue est désactivée,このビューは無効になっています,이 뷰는 비활성화되었습니다,Это представление отключено,Esta vista está deshabilitada,Diese Ansicht ist deaktiviert,Esta vista está desativada,Tampilan ini dinonaktifkan,هذا العرض معطل
-Canvas Version,画布版本,畫布版本,Canvas Version,Version du canevas,キャンバスバージョン,캔버스 버전,Версия холста,Versión del lienzo,Canvas-Version,Versão da tela,Versi kanvas,إصدار اللوحة
-Canvas,画布,畫布,Canvas,Canevas,キャンバス,캔버스,Холст,Lienzo,Canvas,Tela,Kanvas,اللوحة
-Version,版本,版本,Version,Version,バージョン,버전,Версия,Versión,Version,Versão,Versi,الإصدار
 Designer,设计器,設計器,Designer,Concepteur,デザイナー,디자이너,Дизайнер,Diseñador,Designer,Designer,Desainer,المصمم
 Data Type,数据类型,數據類型,Data Type,Type de données,データタイプ,데이터 유형,Тип данных,Tipo de datos,Datentyp,Tipo de dados,Jenis data,نوع البيانات
 Data Model,数据模型,數據模型,Data Model,Modèle de données,データモデル,데이터 모델,Модель данных,Modelo de datos,Datenmodell,Modelo de dados,Model data,نموذج البيانات
