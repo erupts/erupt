@@ -100,6 +100,9 @@ public abstract class LlmCore {
         if (llmRequest.getAutoCallTool()) {
             eruptAiServices.toolProvider(buildTools(listener));
             eruptAiServices.maxSequentialToolsInvocations(EruptSpringUtil.getBean(AiProp.class).getMaxSequentialToolsInvocations());
+        } else if (null != llmRequest.getTools() && !llmRequest.getTools().isEmpty()) {
+            eruptAiServices.tools(llmRequest.getTools());
+            eruptAiServices.maxSequentialToolsInvocations(EruptSpringUtil.getBean(AiProp.class).getMaxSequentialToolsInvocations());
         }
         eruptAiServices.toolExecutionErrorHandler((throwable, e) -> {
             log.error("Tool execution error [{}] e: {}", throwable.getMessage(), e);

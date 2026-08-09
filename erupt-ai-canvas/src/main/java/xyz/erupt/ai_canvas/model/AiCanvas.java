@@ -16,8 +16,8 @@ import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
@@ -76,12 +76,19 @@ public class AiCanvas extends MetaModelUpdateVo {
     private LLM llm;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
-    @EruptField(
-            edit = @Edit(title = "HTML", type = EditType.CODE_EDITOR,
-                    codeEditType = @CodeEditorType(language = "html"),
-                    desc = "Active version's page source; manual tweaks are kept until the next generation")
-    )
+//    @EruptField(
+//            edit = @Edit(title = "HTML", type = EditType.CODE_EDITOR,
+//                    codeEditType = @CodeEditorType(language = "html"),
+//                    desc = "Active version's page source; manual tweaks are kept until the next generation")
+//    )
     private String html;
+
+    @Column(length = AnnotationConst.REMARK_LENGTH)
+    @EruptField(
+            views = @View(title = "Description", type = ViewType.HTML),
+            edit = @Edit(title = "Description", type = EditType.TEXTAREA)
+    )
+    private String remark;
 
     // Currently active version row id
     private Long activeVersion;

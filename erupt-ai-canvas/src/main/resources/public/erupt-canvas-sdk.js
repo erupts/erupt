@@ -91,6 +91,14 @@
         remove: function (model, ids) {
             return unwrap(call('POST', '/data/modify/' + model + '/delete', model,
                 Array.isArray(ids) ? ids : [ids]));
+        },
+        // Aggregation query against the erupt-cube semantic layer (requires the
+        // erupt-cube module). query: {cube, explore, dimensions, measures,
+        // filters, sorts, parameter, limit, offset}. Resolves to an array of
+        // flat rows keyed by the exact dimension/measure codes passed in.
+        cube: function (query) {
+            return unwrap(call('POST', '/cube/semantic/query', '', query))
+                .then(function (r) { return r.data; });
         }
     };
 })();

@@ -96,8 +96,26 @@ public class AiCanvasService {
         List<ChatMessage> messages = new ArrayList<>();
         messages.add(SystemMessage.from(this.buildSystem(view)));
         messages.add(UserMessage.from(this.userMessage(view, message)));
-        String response = null == view.getLlm() ? llmService.send(messages) : llmService.send(view.getLlm(), messages);
+        LLM llm = this.resolveLlm(view);
+        String response = LlmCore.getLLM(llm).chat(this.llmRequest(view, llm), messages);
         return this.saveVersion(view, message, this.extractHtml(response));
+    }
+
+    private LLM resolveLlm(AiCanvas view) {
+        LLM llm = null != view.getLlm() ? view.getLlm() : eruptDao.lambdaQuery(LLM.class)
+                .eq(LLM::getDefaultLLM, true).eq(LLM::getEnable, true).limit(1).one();
+        if (null == llm) throw new EruptWebApiRuntimeException("Not found LLM config");
+        return llm;
+    }
+
+    // ReAct: the provider's verification tool is the ONLY tool of the round —
+    // the global toolbox/MCP surface (autoCallTool) stays off during generation
+    private LlmRequest llmRequest(AiCanvas view, LLM llm) {
+        LlmRequest llmRequest = llm.toLlmRequest();
+        llmRequest.setAutoCallTool(false);
+        Object verifyTool = this.provider(view.getDataType()).verifyTool();
+        if (null != verifyTool) llmRequest.setTools(List.of(verifyTool));
+        return llmRequest;
     }
 
     // Session key prefix of the explicit stop signal for a running generation
@@ -115,10 +133,8 @@ public class AiCanvasService {
             MetaContext.set(metaContext);
             // Clear a stale stop signal left over from a previous round
             eruptSessionService.remove(STOP_KEY + view.getId());
-            LLM llm = null != view.getLlm() ? view.getLlm() : eruptDao.lambdaQuery(LLM.class)
-                    .eq(LLM::getDefaultLLM, true).eq(LLM::getEnable, true).limit(1).one();
-            if (null == llm) throw new EruptWebApiRuntimeException("Not found LLM config");
-            LlmRequest llmRequest = llm.toLlmRequest();
+            LLM llm = this.resolveLlm(view);
+            LlmRequest llmRequest = this.llmRequest(view, llm);
             List<ChatMessage> context = new ArrayList<>();
             context.add(SystemMessage.from(this.buildSystem(view)));
             AtomicBoolean clientGone = new AtomicBoolean(false);
@@ -139,6 +155,11 @@ public class AiCanvasService {
                         if (!clientGone.get()) this.doneSse(emitter, version, null);
                     } catch (Exception e) {
                         if (!clientGone.get()) this.doneSse(emitter, null, e.getMessage());
+                    }
+                } else if (null != it.getCall()) {
+                    // ReAct verification round: surface the tool name so the designer can show progress
+                    if (!clientGone.get()) {
+                        llmService.sendSseBody(emitter, new SseBody(SseEvent.CALL, it.getCall()));
                     }
                 } else if (null != it.getCurrMessage() && !it.isThinking()) {
                     response.append(it.getCurrMessage());
@@ -202,9 +223,23 @@ public class AiCanvasService {
         StringBuilder system = new StringBuilder(this.skill());
         this.styleOf(view.getStyle()).ifPresent(style -> system.append("\n\n").append(this.stylePrompt(style)));
         system.append("\n\n").append(provider.queryGuide());
+        if (null != provider.verifyTool()) system.append("\n\n").append(VERIFY_PROMPT);
         system.append("\n\n# Data Model\n").append(provider.describe(view.getTargetModel()));
         return system.toString();
     }
+
+    // ReAct contract shown to the LLM whenever the provider ships a verification tool
+    private static final String VERIFY_PROMPT = """
+            # Query Verification (ReAct)
+
+            Tools are available in this conversation: metadata inspection tools plus a query verification tool. Every data query the page will run MUST be proven to work before it appears in the final document:
+
+            1. Plan the data queries the page needs; use the inspection tools first whenever a structure, field code or option list you need is not already in the prompt — never guess it.
+            2. Call the verification tool once per planned query, passing EXACTLY the same JSON argument the page will pass to the SDK function.
+            3. If the call fails or the rows don't look as expected, fix the query (field codes, conditions, parameters) and verify again.
+            4. Only verified queries may be embedded, and the page may only read row keys actually observed in the verified results.
+
+            After all queries pass, output the complete HTML document as instructed. Never skip verification, and do not describe the tool calls in the final answer.""";
 
     // Switch the active version: its html becomes the served page
     @Transactional

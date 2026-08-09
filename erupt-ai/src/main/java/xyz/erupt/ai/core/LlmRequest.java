@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.ai.constants.ResponseFormat;
 
+import java.util.List;
+
 /**
  * @author YuePeng
  * date 2025/4/15 22:28
@@ -33,5 +35,10 @@ public class LlmRequest {
     private String agentPrompt;
 
     private String contextPrompt;
+
+    // Request-scoped tool objects (langchain4j @Tool methods) driving a ReAct
+    // loop for this call only; independent from autoCallTool, which exposes the
+    // global toolbox and MCP tools instead
+    private List<Object> tools;
 
 }

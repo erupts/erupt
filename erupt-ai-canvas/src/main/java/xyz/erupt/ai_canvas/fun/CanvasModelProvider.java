@@ -25,4 +25,10 @@ public interface CanvasModelProvider {
     // Teaches the LLM how pages query this source (SDK functions, shapes); Markdown
     String queryGuide();
 
+    // Object with langchain4j @Tool methods the LLM calls during generation to
+    // verify its planned queries actually work (ReAct); null disables verification
+    default Object verifyTool() {
+        return null;
+    }
+
 }
