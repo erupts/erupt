@@ -6,17 +6,17 @@ Describe a page in natural language, pick the Erupt models it reads from, and th
 
 ## How it works
 
-1. **AI View** menu → create a record: name, target models, requirement (natural language), optional dedicated LLM.
-2. Row operation **Generate** → the service builds a prompt from:
+1. **AI Canvas** menu → create a record: name, optional dedicated LLM.
+2. Row operation **Designer** opens the conversational designer: pick a data model and style, describe the page, iterate over versions. Each round builds a prompt from:
    - a built-in API skill (`prompts/ai-canvas-skill.md`) teaching the model the `data/table` list API, `TableQuery`/`Page` shapes, token handling and bundled frontend assets;
-   - the field structure (field name / title / edit type / java type) of every target model, resolved from `EruptCoreService` at runtime;
-   - the user requirement — plus the current HTML when regenerating, so edits become revisions.
-3. The returned ```html``` block is stored in the `html` column (editable as a code editor field for manual tweaks).
-4. Row operation **Preview** opens the page in a modal; the **Path** column shows the serving URL.
+   - the field structure (field name / title / edit type / java type) of the target model, resolved at runtime;
+   - the user message — plus the current HTML when regenerating, so edits become revisions.
+3. The returned ```html``` block is stored per version; the active version is what visitors see.
+4. The **Path** column shows the access route of each page.
 
 ## Serving & permissions
 
-Pages are served at `GET /erupt-api/ai-canvas/render/{id}` (login required, token via `_token` URL param). To expose a page to users, create a menu of type **Link** pointing at that path — the frontend appends `_token` automatically.
+Each view gets a short unique `code` on creation. Pages are accessed at the frontend route `#/ai/canvas/{code}`: the frontend fetches the page source from `GET /erupt-api/ai-canvas/html/{code}` (login required) and embeds it in an iframe. To expose a page to users, create a menu pointing at that route.
 
 The generated page calls the data APIs with the visitor's own token, so row-level data permissions always follow the logged-in user: non-admin users still need menu access to the target models.
 

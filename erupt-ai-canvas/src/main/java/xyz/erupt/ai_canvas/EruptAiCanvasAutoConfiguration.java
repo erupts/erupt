@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai_canvas.model.AiCanvas;
+import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
@@ -27,8 +28,12 @@ import java.util.List;
 @Component
 public class EruptAiCanvasAutoConfiguration implements EruptModule {
 
+    // Menu type whose value is an AI Canvas code, resolved by the frontend to the viewer route
+    public static final String MENU_TYPE = "aiCanvas";
+
     static {
         EruptModuleInvoke.addEruptModule(EruptAiCanvasAutoConfiguration.class);
+        MenuTypeEnum.addMenuType(new VLModel(MENU_TYPE, "AI Canvas", "AI Canvas Code"));
     }
 
     @Override

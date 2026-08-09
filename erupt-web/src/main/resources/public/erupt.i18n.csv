@@ -1177,3 +1177,4 @@ ai.canvas.view_source,查看源码,查看源碼,View source,Voir le code source,
 ai.canvas.copy_link,复制访问路径,複製訪問路徑,Copy link,Copier le lien,リンクをコピー,링크 복사,Копировать ссылку,Copiar enlace,Link kopieren,Copiar link,Salin tautan,نسخ الرابط
 ai.canvas.link_copied,已复制,已複製,Copied,Copié,コピーしました,복사되었습니다,Скопировано,Copiado,Kopiert,Copiado,Disalin,تم النسخ
 ai.canvas.source_title,页面源码,頁面源碼,Page source,Code source de la page,ページソース,페이지 소스,Исходный код страницы,Código fuente de la página,Seitenquelltext,Código-fonte da página,Sumber halaman,مصدر الصفحة
+ai.canvas.pick_element,选择元素,選擇元素,Pick element,Sélectionner un élément,要素を選択,요소 선택,Выбрать элемент,Seleccionar elemento,Element auswählen,Selecionar elemento,Pilih elemen,اختيار عنصر

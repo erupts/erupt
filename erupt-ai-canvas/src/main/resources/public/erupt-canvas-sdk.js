@@ -7,7 +7,16 @@
     // Script URL: {base}/erupt-canvas-sdk.js — strip the file name to get the base
     var src = document.currentScript.src;
     var base = src.substring(0, src.lastIndexOf('/erupt-canvas-sdk.js'));
-    var token = new URLSearchParams(location.search).get('_token') || '';
+    // Token resolution order: injected by the html endpoint (works everywhere,
+    // including srcdoc iframes) → URL param → admin frontend's localStorage
+    var token = window.eruptToken || new URLSearchParams(location.search).get('_token') || '';
+    if (!token) {
+        try {
+            var stored = localStorage.getItem('_token');
+            if (stored) token = JSON.parse(stored).token || '';
+        } catch (e) {
+        }
+    }
 
     function call(method, path, model, body) {
         return fetch(base + '/erupt-api' + path, {

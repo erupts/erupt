@@ -9,13 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.ai_canvas.model.AiCanvas;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.dao.EruptDao;
 
 /**
- * Serves AI generated pages stored in the database. The page itself calls the
- * Erupt data APIs with the visitor's own token, so data permissions still
- * follow the logged-in user.
+ * Returns AI generated page HTML stored in the database. The frontend route
+ * {@code #/ai/canvas/{code}} fetches it and embeds it in an iframe; the page
+ * itself calls the Erupt data APIs with the visitor's own token, so data
+ * permissions still follow the logged-in user.
  *
  * @author YuePeng
  * date 2026/8/3
@@ -23,7 +25,7 @@ import xyz.erupt.jpa.dao.EruptDao;
 @RestController
 public class AiCanvasController {
 
-    public static final String RENDER_PATH = EruptRestPath.ERUPT_API + "/ai-canvas/render";
+    public static final String HTML_PATH = EruptRestPath.ERUPT_API + "/ai-canvas/html";
 
     // Served from resources/public as a plain static asset
     public static final String SDK_PATH = "/erupt-canvas-sdk.js";
@@ -31,13 +33,17 @@ public class AiCanvasController {
     // Placeholder kept verbatim in stored HTML, swapped for the context path at render time
     private static final String BASE_PLACEHOLDER = "${base}";
 
+    // Static resources are served with a month-long cache; version the SDK URL per
+    // backend boot so browsers pick up SDK changes instead of a stale cached copy
+    private static final String SDK_VERSION_PARAM = "?v=" + System.currentTimeMillis();
+
     @Resource
     private EruptDao eruptDao;
 
-    @GetMapping(value = RENDER_PATH + "/{id}", produces = "text/html;charset=utf-8")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public String render(@PathVariable("id") Long id, HttpServletRequest request) {
-        AiCanvas view = eruptDao.find(AiCanvas.class, id);
+    @GetMapping(value = HTML_PATH + "/{code}", produces = "text/html;charset=utf-8")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public String html(@PathVariable("code") String code, HttpServletRequest request) {
+        AiCanvas view = eruptDao.lambdaQuery(AiCanvas.class).eq(AiCanvas::getCode, code).one();
         if (null == view || StringUtils.isBlank(view.getHtml())) {
             return this.tip(I18nTranslate.$translate("ai-canvas.not_generated"));
         }
@@ -45,20 +51,36 @@ public class AiCanvasController {
             return this.tip(I18nTranslate.$translate("ai-canvas.disabled"));
         }
         String html = view.getHtml().replace(BASE_PLACEHOLDER, request.getContextPath());
-        return this.ensureSdk(html, request.getContextPath());
+        html = this.ensureSdk(html, request.getContextPath());
+        html = html.replace(SDK_PATH, SDK_PATH + SDK_VERSION_PARAM);
+        // injectToken runs last so its tag lands before the SDK tag at the head start
+        return this.injectToken(html);
+    }
+
+    // The page is often embedded via iframe srcdoc, where URL params don't exist;
+    // this endpoint is already token-authenticated, so hand the caller's token
+    // to the SDK explicitly instead of letting it fish around for one
+    private String injectToken(String html) {
+        String token = MetaContext.getToken();
+        if (StringUtils.isBlank(token)) return html;
+        return this.insertAtHead(html,
+                "<script>window.eruptToken=\"" + token.replaceAll("[\"'<>\\\\]", "") + "\"</script>");
     }
 
     // The generated page should reference the SDK itself; inject it when missing
     // so a page that forgot the script tag still works
     private String ensureSdk(String html, String contextPath) {
         if (html.contains(SDK_PATH)) return html;
-        String sdkTag = "<script src=\"" + contextPath + SDK_PATH + "\"></script>";
+        return this.insertAtHead(html, "<script src=\"" + contextPath + SDK_PATH + "\"></script>");
+    }
+
+    private String insertAtHead(String html, String tag) {
         int head = html.indexOf("<head>");
         if (head >= 0) {
             int insertAt = head + "<head>".length();
-            return html.substring(0, insertAt) + sdkTag + html.substring(insertAt);
+            return html.substring(0, insertAt) + tag + html.substring(insertAt);
         }
-        return sdkTag + html;
+        return tag + html;
     }
 
     private String tip(String message) {

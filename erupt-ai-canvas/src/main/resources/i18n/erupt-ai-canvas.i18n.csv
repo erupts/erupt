@@ -4,6 +4,7 @@ Target Models,目标模型,目標模型,Target Models,Modèles cibles,対象モ�
 Requirement,页面需求,頁面需求,Requirement,Exigence,要件,요구 사항,Требование,Requisito,Anforderung,Requisito,Kebutuhan,المتطلبات
 Generate,生成,生成,Generate,Générer,生成,생성,Сгенерировать,Generar,Generieren,Gerar,Hasilkan,توليد
 Preview,预览,預覽,Preview,Aperçu,プレビュー,미리보기,Предпросмотр,Vista previa,Vorschau,Pré-visualizar,Pratinjau,معاينة
+Code,编码,編碼,Code,Code,コード,코드,Код,Código,Code,Código,Kode,الرمز
 Path,访问路径,訪問路徑,Path,Chemin,パス,경로,Путь,Ruta,Pfad,Caminho,Jalur,المسار
 Enable,启用,啟用,Enable,Activer,有効,활성화,Включить,Habilitar,Aktivieren,Ativar,Aktifkan,تفعيل
 Disable,禁用,禁用,Disable,Désactiver,無効,비활성화,Отключить,Deshabilitar,Deaktivieren,Desativar,Nonaktifkan,تعطيل
@@ -18,6 +19,12 @@ ai-canvas.bad_response,AI 响应中未找到 HTML 文档,AI 響應中未找到 H
 ai-canvas.not_generated,页面尚未生成,頁面尚未生成,The page has not been generated yet,La page n'a pas encore été générée,ページはまだ生成されていません,페이지가 아직 생성되지 않았습니다,Страница ещё не сгенерирована,La página aún no se ha generado,Die Seite wurde noch nicht generiert,A página ainda não foi gerada,Halaman belum dibuat,لم يتم توليد الصفحة بعد
 ai-canvas.disabled,该视图已被禁用,該視圖已被禁用,This view is disabled,Cette vue est désactivée,このビューは無効になっています,이 뷰는 비활성화되었습니다,Это представление отключено,Esta vista está deshabilitada,Diese Ansicht ist deaktiviert,Esta vista está desativada,Tampilan ini dinonaktifkan,هذا العرض معطل
 Designer,设计器,設計器,Designer,Concepteur,デザイナー,디자이너,Дизайнер,Diseñador,Designer,Designer,Desainer,المصمم
+AI Canvas Code,AI 画布编码,AI 畫布編碼,AI Canvas Code,Code du canevas IA,AIキャンバスコード,AI 캔버스 코드,Код ИИ-холста,Código del lienzo IA,KI-Canvas-Code,Código da tela IA,Kode kanvas AI,رمز لوحة الذكاء الاصطناعي
+Send to Menu,发送到菜单,發送到菜單,Send to Menu,Envoyer au menu,メニューへ送信,메뉴로 보내기,Отправить в меню,Enviar al menú,An Menü senden,Enviar para o menu,Kirim ke menu,إرسال إلى القائمة
+Menu Name,菜单名称,菜單名稱,Menu Name,Nom du menu,メニュー名,메뉴 이름,Название меню,Nombre del menú,Menüname,Nome do menu,Nama menu,اسم القائمة
+Menu Location,菜单位置,菜單位置,Menu Location,Emplacement du menu,メニューの場所,메뉴 위치,Расположение меню,Ubicación del menú,Menüposition,Localização do menu,Lokasi menu,موقع القائمة
+Skip if publishing to root directory,发布到根目录可不选,發布到根目錄可不選,Skip if publishing to root directory,Ignorer si publié à la racine,ルートに公開する場合は省略可,루트에 게시하면 생략 가능,Пропустите при публикации в корень,Omitir si se publica en la raíz,Überspringen bei Veröffentlichung im Stammverzeichnis,Ignorar se publicar na raiz,Lewati jika diterbitkan ke root,تخطَّ إذا كان النشر في الجذر
+ai-canvas.menu_exists,该页面已发布到菜单,該頁面已發布到菜單,This page has already been published to the menu,Cette page est déjà publiée dans le menu,このページはすでにメニューに公開されています,이 페이지는 이미 메뉴에 게시되었습니다,Эта страница уже опубликована в меню,Esta página ya se publicó en el menú,Diese Seite wurde bereits im Menü veröffentlicht,Esta página já foi publicada no menu,Halaman ini sudah diterbitkan ke menu,تم نشر هذه الصفحة بالفعل في القائمة
 Data Type,数据类型,數據類型,Data Type,Type de données,データタイプ,데이터 유형,Тип данных,Tipo de datos,Datentyp,Tipo de dados,Jenis data,نوع البيانات
 Data Model,数据模型,數據模型,Data Model,Modèle de données,データモデル,데이터 모델,Модель данных,Modelo de datos,Datenmodell,Modelo de dados,Model data,نموذج البيانات
 Style,页面风格,頁面風格,Style,Style,スタイル,스타일,Стиль,Estilo,Stil,Estilo,Gaya,النمط

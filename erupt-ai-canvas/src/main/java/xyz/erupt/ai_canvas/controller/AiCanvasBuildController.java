@@ -63,9 +63,9 @@ public class AiCanvasBuildController {
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    @GetMapping("/{canvasId}")
-    public R<DesignerVo> info(@PathVariable("canvasId") Long canvasId) {
-        AiCanvas view = this.view(canvasId);
+    @GetMapping("/{code}")
+    public R<DesignerVo> info(@PathVariable("code") String code) {
+        AiCanvas view = this.view(code);
         DesignerVo vo = new DesignerVo();
         vo.setName(view.getName());
         vo.setDataType(view.getDataType());
@@ -73,18 +73,18 @@ public class AiCanvasBuildController {
         vo.setStyle(view.getStyle());
         vo.setActiveVersion(view.getActiveVersion());
         vo.setVersions(eruptDao.lambdaQuery(AiCanvasVersion.class)
-                .eq(AiCanvasVersion::getCanvasId, canvasId)
+                .eq(AiCanvasVersion::getCanvasId, view.getId())
                 .orderByAsc(AiCanvasVersion::getVersion).list().stream().map(VersionVo::new).toList());
         return R.ok(vo);
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    @PostMapping("/generate/{canvasId}")
-    public R<VersionVo> generate(@PathVariable("canvasId") Long canvasId, @RequestBody GenerateBody body) {
+    @PostMapping("/generate/{code}")
+    public R<VersionVo> generate(@PathVariable("code") String code, @RequestBody GenerateBody body) {
         if (StringUtils.isBlank(body.getMessage())) {
             throw new EruptWebApiRuntimeException("Message must not be blank");
         }
-        AiCanvas view = this.view(canvasId);
+        AiCanvas view = this.view(code);
         view.setDataType(body.getDataType());
         view.setTargetModel(body.getTargetModel());
         view.setStyle(body.getStyle());
@@ -92,10 +92,10 @@ public class AiCanvasBuildController {
     }
 
     // Streaming variant of generate; EventSource is GET-only, so the token
-    // arrives as the _token URL parameter (PARAM verify, same as the render endpoint)
+    // arrives as the _token URL parameter (PARAM verify)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    @GetMapping(value = "/generate-sse/{canvasId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter generateSse(@PathVariable("canvasId") Long canvasId,
+    @GetMapping(value = "/generate-sse/{code}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter generateSse(@PathVariable("code") String code,
                                   @RequestParam("message") String message,
                                   @RequestParam("dataType") String dataType,
                                   @RequestParam("targetModel") String targetModel,
@@ -103,7 +103,7 @@ public class AiCanvasBuildController {
         if (StringUtils.isBlank(message)) {
             throw new EruptWebApiRuntimeException("Message must not be blank");
         }
-        AiCanvas view = this.view(canvasId);
+        AiCanvas view = this.view(code);
         view.setDataType(dataType);
         view.setTargetModel(targetModel);
         view.setStyle(style);
@@ -118,16 +118,16 @@ public class AiCanvasBuildController {
     // Explicit stop: the running round is discarded; without this signal a mere
     // disconnect (page refresh) still persists the generated version
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    @PostMapping("/stop/{canvasId}")
-    public R<Void> stop(@PathVariable("canvasId") Long canvasId) {
-        aiViewService.stopGenerate(canvasId);
+    @PostMapping("/stop/{code}")
+    public R<Void> stop(@PathVariable("code") String code) {
+        aiViewService.stopGenerate(this.view(code).getId());
         return R.ok();
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    @PostMapping("/active/{canvasId}/{versionId}")
-    public R<Void> active(@PathVariable("canvasId") Long canvasId, @PathVariable("versionId") Long versionId) {
-        AiCanvas view = this.view(canvasId);
+    @PostMapping("/active/{code}/{versionId}")
+    public R<Void> active(@PathVariable("code") String code, @PathVariable("versionId") Long versionId) {
+        AiCanvas view = this.view(code);
         AiCanvasVersion version = eruptDao.find(AiCanvasVersion.class, versionId);
         if (null == version || !view.getId().equals(version.getCanvasId())) {
             throw new EruptWebApiRuntimeException("Version not found: " + versionId);
@@ -136,9 +136,9 @@ public class AiCanvasBuildController {
         return R.ok();
     }
 
-    private AiCanvas view(Long canvasId) {
-        AiCanvas view = eruptDao.find(AiCanvas.class, canvasId);
-        if (null == view) throw new EruptWebApiRuntimeException("View not found: " + canvasId);
+    private AiCanvas view(String code) {
+        AiCanvas view = eruptDao.lambdaQuery(AiCanvas.class).eq(AiCanvas::getCode, code).one();
+        if (null == view) throw new EruptWebApiRuntimeException("View not found: " + code);
         return view;
     }
 
