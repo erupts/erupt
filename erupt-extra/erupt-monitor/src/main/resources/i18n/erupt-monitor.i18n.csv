@@ -3,3 +3,14 @@ System Monitoring,系统监控,系統監控,System Monitoring,Surveillance du sy
 Service Monitoring,服务监控,服務監控,Service Monitoring,Surveillance des services,サービス監視,서비스 모니터링,Мониторинг служб,Monitoreo de servicios,Dienstüberwachung,Monitorização de serviços,Pemantauan Layanan,مراقبة الخدمة
 Cache Monitoring,缓存监控,快取監控,Cache Monitoring,Surveillance du cache,キャッシュ監視,캐시 모니터링,Мониторинг кэша,Monitoreo de caché,Cache-Überwachung,Monitorização de cache,Pemantauan Cache,مراقبة ذاكرة التخزين المؤقت
 Diagnosis Monitoring,诊断监控,診斷監控,Diagnosis Monitoring,Surveillance de diagnostic,診断モニタリング,진단 모니터링,Мониторинг диагностики,Monitoreo de diagnóstico,Diagnoseüberwachung,Monitorização de diagnóstico,Pemantauan Diagnostik,مراقبة التشخيص
+Erupt Class Registry,Erupt 类注册表,Erupt 類註冊表,Erupt Class Registry,Registre des classes Erupt,Erupt クラスレジストリ,Erupt 클래스 레지스트리,Реестр классов Erupt,Registro de clases Erupt,Erupt-Klassenregister,Registo de classes Erupt,Registri Kelas Erupt,سجل فئات Erupt
+Class Name,类名,類名,Class Name,Nom de classe,クラス名,클래스명,Имя класса,Nombre de clase,Klassenname,Nome da classe,Nama Kelas,اسم الفئة
+Display Name,显示名称,顯示名稱,Display Name,Nom d'affichage,表示名,표시 이름,Отображаемое имя,Nombre para mostrar,Anzeigename,Nome de exibição,Nama Tampilan,اسم العرض
+Full Class Name,完整类名,完整類名,Full Class Name,Nom de classe complet,完全クラス名,전체 클래스명,Полное имя класса,Nombre de clase completo,Vollständiger Klassenname,Nome completo da classe,Nama Kelas Lengkap,اسم الفئة الكامل
+Source,来源,來源,Source,Source,ソース,소스,Источник,Origen,Quelle,Origem,Sumber,المصدر
+Multi-language,多语言,多語言,Multi-language,Multilingue,多言語,다국어,Многоязычность,Multilingüe,Mehrsprachig,Multilingue,Multibahasa,متعدد اللغات
+Field Count,字段数,欄位數,Field Count,Nombre de champs,フィールド数,필드 수,Количество полей,Número de campos,Feldanzahl,Número de campos,Jumlah Bidang,عدد الحقول
+Data Processor,数据处理器,資料處理器,Data Processor,Processeur de données,データプロセッサ,데이터 프로세서,Обработчик данных,Procesador de datos,Datenprozessor,Processador de dados,Pemroses Data,معالج البيانات
+Runtime Registered,运行时注册,執行時註冊,Runtime Registered,Enregistré à l'exécution,実行時登録,런타임 등록,Зарегистрировано во время выполнения,Registrado en tiempo de ejecución,Zur Laufzeit registriert,Registado em tempo de execução,Terdaftar Saat Runtime,مسجل وقت التشغيل
+Published,已发布,已發布,Published,Publié,公開済み,게시됨,Опубликовано,Publicado,Veröffentlicht,Publicado,Diterbitkan,منشور
+monitor.menu_already_exists,菜单已存在,菜單已存在,Menu already exists,Le menu existe déjà,メニューは既に存在します,메뉴가 이미 존재합니다,Меню уже существует,El menú ya existe,Menü existiert bereits,O menu já existe,Menu sudah ada,القائمة موجودة بالفعل
