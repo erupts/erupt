@@ -99,7 +99,7 @@ public class AiCanvasBuildController {
         view.setTargetModel(body.getTargetModel());
         view.setStyle(body.getStyle());
         view.setLlm(this.resolveLlm(body.getLlmId()));
-        return R.ok(new VersionVo(aiViewService.generate(view, body.getMessage().trim())));
+        return R.ok(new VersionVo(aiViewService.generate(view, body.getMessage().trim(), body.getElement())));
     }
 
     // Streaming variant of generate; EventSource is GET-only, so the token
@@ -111,7 +111,8 @@ public class AiCanvasBuildController {
                                   @RequestParam("dataType") String dataType,
                                   @RequestParam("targetModel") String targetModel,
                                   @RequestParam(value = "style", required = false) String style,
-                                  @RequestParam(value = "llmId", required = false) Long llmId) {
+                                  @RequestParam(value = "llmId", required = false) Long llmId,
+                                  @RequestParam(value = "element", required = false) String element) {
         if (StringUtils.isBlank(message)) {
             throw new EruptWebApiRuntimeException("Message must not be blank");
         }
@@ -124,7 +125,7 @@ public class AiCanvasBuildController {
         eruptDao.mergeAndFlush(view);
         eruptDao.detach(view);
         SseEmitter emitter = new SseEmitter(aiProp.getSseTimeout());
-        aiViewService.generateSse(MetaContext.get(), view, message.trim(), emitter);
+        aiViewService.generateSse(MetaContext.get(), view, message.trim(), element, emitter);
         return emitter;
     }
 
@@ -175,6 +176,8 @@ public class AiCanvasBuildController {
         private String targetModel;
         private String style;
         private Long llmId;
+        // CSS selector of the element the user picked on the preview
+        private String element;
     }
 
     @Getter

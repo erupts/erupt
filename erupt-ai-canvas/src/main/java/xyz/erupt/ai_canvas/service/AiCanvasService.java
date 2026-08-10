@@ -92,10 +92,10 @@ public class AiCanvasService {
     }
 
     @Transactional
-    public AiCanvasVersion generate(AiCanvas view, String message) {
+    public AiCanvasVersion generate(AiCanvas view, String message, String element) {
         List<ChatMessage> messages = new ArrayList<>();
         messages.add(SystemMessage.from(this.buildSystem(view)));
-        messages.add(UserMessage.from(this.userMessage(view, message)));
+        messages.add(UserMessage.from(this.userMessage(view, message, element)));
         LLM llm = this.resolveLlm(view);
         String response = LlmCore.getLLM(llm).chat(this.llmRequest(view, llm), messages);
         return this.saveVersion(view, message, this.extractHtml(response));
@@ -128,7 +128,7 @@ public class AiCanvasService {
      * refresh, network hiccup) still persists the version, it shows on reload.
      */
     @Async
-    public void generateSse(MetaContext metaContext, AiCanvas view, String message, SseEmitter emitter) {
+    public void generateSse(MetaContext metaContext, AiCanvas view, String message, String element, SseEmitter emitter) {
         try {
             MetaContext.set(metaContext);
             // Clear a stale stop signal left over from a previous round
@@ -142,7 +142,7 @@ public class AiCanvasService {
             emitter.onTimeout(() -> clientGone.set(true));
             emitter.onError(t -> clientGone.set(true));
             StringBuilder response = new StringBuilder();
-            LlmCore.getLLM(llm).chatSse(llmRequest, this.userMessage(view, message), context, it -> {
+            LlmCore.getLLM(llm).chatSse(llmRequest, this.userMessage(view, message, element), context, it -> {
                 if (null != it.getThrowable()) {
                     if (!clientGone.get()) this.doneSse(emitter, null, it.getThrowable().getMessage());
                 } else if (it.isFinish()) {
@@ -249,8 +249,16 @@ public class AiCanvasService {
         eruptDao.merge(view);
     }
 
-    private String userMessage(AiCanvas view, String message) {
+    private String userMessage(AiCanvas view, String message, String element) {
         StringBuilder user = new StringBuilder(message);
+        // The user picked a concrete element on the preview: scope the change to it.
+        // Framed as an explicit instruction so it is not drowned out by the
+        // "rewrite the whole page" directive that follows. Only the selector is sent —
+        // the element lives in the page source below, so its markup need not be shipped.
+        if (StringUtils.isNotBlank(element)) {
+            user.append("\n\n# Target Element\nThe requirement above refers to a specific element the user selected on the page, identified by the CSS selector `")
+                    .append(element).append("`. Locate this element in the current page source below and apply the change there; leave the rest of the page untouched unless the requirement clearly implies wider edits. The selector is derived from the rendered DOM, so match by structure if it does not resolve verbatim — e.g. browsers insert an implicit <tbody> that the source may omit.");
+        }
         if (StringUtils.isNotBlank(view.getHtml())) {
             user.append("\n\n# Current Page Source\nRevise the page below against the requirement above and output the full document again.\n")
                     .append(HTML_FENCE).append("\n").append(view.getHtml()).append("\n```");
