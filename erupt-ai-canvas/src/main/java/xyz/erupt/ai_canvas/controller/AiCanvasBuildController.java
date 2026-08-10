@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.config.AiProp;
+import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai_canvas.model.AiCanvas;
 import xyz.erupt.ai_canvas.model.AiCanvasVersion;
 import xyz.erupt.ai_canvas.service.AiCanvasService;
@@ -62,6 +63,14 @@ public class AiCanvasBuildController {
         return R.ok(aiViewService.getStyles().stream().map(StyleVo::new).toList());
     }
 
+    // Enabled chat models the designer can pick from; the default one leads
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    @GetMapping("/llms")
+    public R<List<LlmVo>> llms() {
+        return R.ok(eruptDao.lambdaQuery(LLM.class).eq(LLM::getEnable, true)
+                .orderByDesc(LLM::getDefaultLLM).list().stream().map(LlmVo::new).toList());
+    }
+
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping("/{code}")
     public R<DesignerVo> info(@PathVariable("code") String code) {
@@ -71,6 +80,7 @@ public class AiCanvasBuildController {
         vo.setDataType(view.getDataType());
         vo.setTargetModel(view.getTargetModel());
         vo.setStyle(view.getStyle());
+        vo.setLlmId(null != view.getLlm() ? view.getLlm().getId() : null);
         vo.setActiveVersion(view.getActiveVersion());
         vo.setVersions(eruptDao.lambdaQuery(AiCanvasVersion.class)
                 .eq(AiCanvasVersion::getCanvasId, view.getId())
@@ -88,6 +98,7 @@ public class AiCanvasBuildController {
         view.setDataType(body.getDataType());
         view.setTargetModel(body.getTargetModel());
         view.setStyle(body.getStyle());
+        view.setLlm(this.resolveLlm(body.getLlmId()));
         return R.ok(new VersionVo(aiViewService.generate(view, body.getMessage().trim())));
     }
 
@@ -99,7 +110,8 @@ public class AiCanvasBuildController {
                                   @RequestParam("message") String message,
                                   @RequestParam("dataType") String dataType,
                                   @RequestParam("targetModel") String targetModel,
-                                  @RequestParam(value = "style", required = false) String style) {
+                                  @RequestParam(value = "style", required = false) String style,
+                                  @RequestParam(value = "llmId", required = false) Long llmId) {
         if (StringUtils.isBlank(message)) {
             throw new EruptWebApiRuntimeException("Message must not be blank");
         }
@@ -107,6 +119,7 @@ public class AiCanvasBuildController {
         view.setDataType(dataType);
         view.setTargetModel(targetModel);
         view.setStyle(style);
+        view.setLlm(this.resolveLlm(llmId));
         // Persist the selection right away; html and version follow when the stream finishes
         eruptDao.mergeAndFlush(view);
         eruptDao.detach(view);
@@ -142,6 +155,11 @@ public class AiCanvasBuildController {
         return view;
     }
 
+    // null id means "use the default chat model", resolved at generation time
+    private LLM resolveLlm(Long llmId) {
+        return null == llmId ? null : eruptDao.find(LLM.class, llmId);
+    }
+
     @Getter
     @Setter
     public static class ModelGroup {
@@ -156,6 +174,21 @@ public class AiCanvasBuildController {
         private String dataType;
         private String targetModel;
         private String style;
+        private Long llmId;
+    }
+
+    @Getter
+    @Setter
+    public static class LlmVo {
+        private Long id;
+        private String name;
+        private Boolean defaultLLM;
+
+        public LlmVo(LLM llm) {
+            this.id = llm.getId();
+            this.name = llm.getName();
+            this.defaultLLM = llm.getDefaultLLM();
+        }
     }
 
     @Getter
@@ -165,6 +198,7 @@ public class AiCanvasBuildController {
         private String dataType;
         private String targetModel;
         private String style;
+        private Long llmId;
         private Long activeVersion;
         private List<VersionVo> versions;
     }

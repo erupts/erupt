@@ -19,6 +19,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
@@ -57,7 +58,9 @@ public class AiCanvas extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "Name"),
-            edit = @Edit(title = "Name", notNull = true, search = @Search(operator = QueryExpression.LIKE))
+            edit = @Edit(title = "Name", notNull = true,
+                    inputType = @InputType(fullSpan = true),
+                    search = @Search(operator = QueryExpression.LIKE))
     )
     private String name;
 
@@ -78,13 +81,10 @@ public class AiCanvas extends MetaModelUpdateVo {
     )
     private String style;
 
+    // Chat model used for the next generation, chosen in the designer conversation
+    // panel; null falls back to the default chat model
     @ManyToOne
     @JoinColumn(name = "llm_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
-    @EruptField(
-            views = @View(title = "Model", column = "name"),
-            edit = @Edit(title = "Model", type = EditType.REFERENCE_TABLE,
-                    desc = "Leave blank to use the default chat model")
-    )
     private LLM llm;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
