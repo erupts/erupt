@@ -10,12 +10,12 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.designer.model.DesignerEntity;
-import xyz.erupt.designer.model.DesignerReleaseModal;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.model.EruptMenu;
+import xyz.erupt.upms.model.input.MenuPublishModal;
 import xyz.erupt.upms.service.EruptContextService;
-import xyz.erupt.upms.service.EruptTokenService;
+import xyz.erupt.upms.service.EruptMenuService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.UPMSUtil;
 
@@ -27,7 +27,7 @@ import java.util.List;
  * @author YuePeng
  */
 @Component
-public class DesignerPublishMenu implements OperationHandler<DesignerEntity, DesignerReleaseModal> {
+public class DesignerPublishMenu implements OperationHandler<DesignerEntity, MenuPublishModal> {
 
     @Resource
     private EruptDao eruptDao;
@@ -39,11 +39,11 @@ public class DesignerPublishMenu implements OperationHandler<DesignerEntity, Des
     private EruptContextService eruptContextService;
 
     @Resource
-    private EruptTokenService eruptTokenService;
+    private EruptMenuService eruptMenuService;
 
     @Override
     @Transactional
-    public String exec(List<DesignerEntity> data, DesignerReleaseModal modal, String[] param) {
+    public String exec(List<DesignerEntity> data, MenuPublishModal modal, String[] param) {
         DesignerEntity entity = data.get(0);
         if (null == entity.getConfig() || entity.getConfig().isEmpty()) {
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("designer.publish_first"));
@@ -67,12 +67,12 @@ public class DesignerPublishMenu implements OperationHandler<DesignerEntity, Des
                     UPMSUtil.getEruptFunPermissionsCode(entity.getClassName(), perm), menu, i += 10
             ));
         }
-        eruptTokenService.loginToken(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
+        eruptMenuService.flushMenuCache();
         return null;
     }
 
     @Override
-    public DesignerReleaseModal eruptFormValue(List<DesignerEntity> data, DesignerReleaseModal modal, String[] param) {
+    public MenuPublishModal eruptFormValue(List<DesignerEntity> data, MenuPublishModal modal, String[] param) {
         modal.setName(data.get(0).getName());
         return OperationHandler.super.eruptFormValue(data, modal, param);
     }

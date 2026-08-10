@@ -22,6 +22,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
+import xyz.erupt.upms.model.input.MenuPublishModal;
 
 /**
  * An AI generated view, built conversationally in the designer: pick a data
@@ -40,7 +41,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
                         tpl = @Tpl(path = "/ai/canvas/design/{code}", openWay = OpenWay.ROUTER)),
                 @RowOperation(title = "Send to Menu", icon = "fa fa-send",
                         mode = RowOperation.Mode.SINGLE,
-                        eruptClass = AiCanvasMenuModal.class,
+                        eruptClass = MenuPublishModal.class,
                         operationHandler = AiCanvasMenuHandler.class)
         }
 )

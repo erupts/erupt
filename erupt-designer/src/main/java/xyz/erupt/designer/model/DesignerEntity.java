@@ -22,6 +22,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.designer.handler.DesignerPublishMenu;
 import xyz.erupt.designer.proxy.DesignerEntityDataProxy;
 import xyz.erupt.upms.helper.HyperModelUpdateVo;
+import xyz.erupt.upms.model.input.MenuPublishModal;
 
 import java.util.Date;
 
@@ -51,7 +52,7 @@ import java.util.Date;
                         title = "Add to Menu",
                         icon = "fa fa-send",
                         mode = RowOperation.Mode.SINGLE,
-                        eruptClass = DesignerReleaseModal.class,
+                        eruptClass = MenuPublishModal.class,
                         operationHandler = DesignerPublishMenu.class
                 )
         }
