@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.query.Direction;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
@@ -25,6 +26,7 @@ import xyz.erupt.core.view.Page;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 /**
  * @author YuePeng
@@ -57,11 +59,9 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
             query.skip((long) (page.getPageIndex() - 1) * page.getPageSize());
             if (null != page.getSort() && !page.getSort().isEmpty()) {
                 for (xyz.erupt.annotation.query.Sort sort : page.getSort()) {
-                    if (sort.getDirection() == Direction.ASC) {
-                        query.with(Sort.by(Sort.Direction.ASC, sort.getField()));
-                    } else {
-                        query.with(Sort.by(Sort.Direction.DESC, sort.getField()));
-                    }
+                    String mongoFieldName = this.populateMapping(eruptModel, sort.getField());
+                    query.with(Sort.by(sort.getDirection() == Direction.DESC
+                            ? Sort.Direction.DESC : Sort.Direction.ASC, mongoFieldName));
                 }
             } else if (!"".equals(eruptModel.getErupt().orderBy())) {
                 this.orderByTokenToQuery(eruptModel, query, eruptModel.getErupt().orderBy());
@@ -91,30 +91,44 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
     }
 
     public void addQueryCondition(EruptModel eruptModel, EruptQuery eruptQuery, Query query) {
-        for (Condition condition : eruptQuery.getConditions()) {
+        for (Condition condition : Optional.ofNullable(eruptQuery.getConditions()).orElse(Collections.emptyList())) {
             String conditionKey = condition.getKey();
             EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(conditionKey);
             String mongoFieldName = this.populateMapping(eruptModel, conditionKey);
+            // NULL / NOT_NULL carry no value, so they must be applied before value conversion;
+            // {field: null} also matches missing fields, mirroring "is null" in the other impls
+            if (QueryExpression.NULL == condition.getExpression()) {
+                query.addCriteria(Criteria.where(mongoFieldName).is(null));
+                continue;
+            }
+            if (QueryExpression.NOT_NULL == condition.getExpression()) {
+                query.addCriteria(Criteria.where(mongoFieldName).ne(null));
+                continue;
+            }
             Optional.ofNullable(this.convertConditionValue(condition, eruptFieldModel)).ifPresent(value -> {
                 switch (condition.getExpression()) {
-                    case EQ:
-                        query.addCriteria(Criteria.where(mongoFieldName).is(value));
-                        break;
-                    case LIKE:
-                        query.addCriteria(Criteria.where(mongoFieldName).regex("^.*" + value + ".*$"));
-                        break;
-                    case RANGE:
+                    case EQ -> query.addCriteria(Criteria.where(mongoFieldName).is(value));
+                    case NEQ -> query.addCriteria(Criteria.where(mongoFieldName).ne(value));
+                    case GT -> query.addCriteria(Criteria.where(mongoFieldName).gt(value));
+                    case GTE -> query.addCriteria(Criteria.where(mongoFieldName).gte(value));
+                    case LT -> query.addCriteria(Criteria.where(mongoFieldName).lt(value));
+                    case LTE -> query.addCriteria(Criteria.where(mongoFieldName).lte(value));
+                    case LIKE -> query.addCriteria(Criteria.where(mongoFieldName)
+                            .regex("^.*" + Pattern.quote(String.valueOf(value)) + ".*$"));
+                    case NOT_LIKE -> query.addCriteria(Criteria.where(mongoFieldName)
+                            .not().regex("^.*" + Pattern.quote(String.valueOf(value)) + ".*$"));
+                    case RANGE -> {
                         List<?> list = (List<?>) value;
                         query.addCriteria(Criteria.where(mongoFieldName).gte(list.get(0)).lte(list.get(1)));
-                        break;
-                    case IN:
-                        // Force type conversion.
-                        if (value instanceof Collection<?>) {
-                            query.addCriteria(Criteria.where(mongoFieldName).in((Collection<?>) value));
-                        } else {
-                            query.addCriteria(Criteria.where(mongoFieldName).in(value));
-                        }
-                        break;
+                    }
+                    case IN -> query.addCriteria(value instanceof Collection<?> collection
+                            ? Criteria.where(mongoFieldName).in(collection)
+                            : Criteria.where(mongoFieldName).in(value));
+                    case NOT_IN -> query.addCriteria(value instanceof Collection<?> collection
+                            ? Criteria.where(mongoFieldName).nin(collection)
+                            : Criteria.where(mongoFieldName).nin(value));
+                    default -> {
+                    }
                 }
             });
         }
@@ -162,6 +176,8 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
      */
     protected Object convertConditionValue(Condition condition, EruptFieldModel eruptFieldModel) {
         Object value = condition.getValue();
+        // keys outside the model (e.g. dotted association paths) have no field type to align with
+        if (null == eruptFieldModel || null == eruptFieldModel.getField() || null == value) return value;
         if (condition.getValue() instanceof Collection) {
             Collection<?> listValue = (Collection<?>) value;
             List<Object> objects = new ArrayList<>(listValue.size());
@@ -188,8 +204,9 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
         }
         Field eruptFieldModelField = eruptFieldModel.getField();
         org.springframework.data.mongodb.core.mapping.Field mongoFieldAnnotation = eruptFieldModelField.getAnnotation(org.springframework.data.mongodb.core.mapping.Field.class);
+        // no @Field mapping declared: the java field name is the mongo field name
         if (null == mongoFieldAnnotation) {
-            return mongoField;
+            return fieldName;
         }
         mongoField = Optional.of(mongoFieldAnnotation).map(obj -> StringUtils.defaultIfBlank(obj.value(), eruptFieldModelField.getName())).orElseThrow(() -> new EruptFieldAnnotationException("There is an error in the MongoDB field mapping configuration."));
         eruptFieldMongFieldMap.put(fieldName, mongoField);
@@ -201,10 +218,11 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
     @SneakyThrows
     private Map<String, Object> mongoObjectToMap(Object obj) {
         Map<String, Object> map = new HashMap<>();
-        Class<?> clazz = obj.getClass();
-        for (Field field : clazz.getDeclaredFields()) {
-            field.setAccessible(true);
-            map.put(field.getName(), field.get(obj));
+        for (Class<?> clazz = obj.getClass(); null != clazz && clazz != Object.class; clazz = clazz.getSuperclass()) {
+            for (Field field : clazz.getDeclaredFields()) {
+                field.setAccessible(true);
+                map.putIfAbsent(field.getName(), field.get(obj));
+            }
         }
         return map;
     }
@@ -231,7 +249,11 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
         columns.stream().map(column -> this.populateMapping(eruptModel, column.getName())).forEach(query.fields()::include);
         List<Map<String, Object>> list = new ArrayList<>();
         for (Object obj : mongoTemplate.find(query, eruptModel.getClazz())) {
-            list.add(mongoObjectToMap(obj));
+            Map<String, Object> row = this.mongoObjectToMap(obj);
+            // project by column alias, matching the jpa / memory implementations
+            Map<String, Object> map = new LinkedHashMap<>();
+            for (Column column : columns) map.put(column.getAlias(), row.get(column.getName()));
+            list.add(map);
         }
         return list;
     }
