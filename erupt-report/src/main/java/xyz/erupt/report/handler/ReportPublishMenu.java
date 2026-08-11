@@ -12,15 +12,11 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.report.config.EruptReportProp;
 import xyz.erupt.report.constant.ReportConst;
 import xyz.erupt.report.model.Bi;
-import xyz.erupt.report.model.BiReleaseModal;
 import xyz.erupt.upms.model.EruptMenu;
-import xyz.erupt.upms.model.EruptRole;
-import xyz.erupt.upms.service.EruptContextService;
-import xyz.erupt.upms.service.EruptTokenService;
+import xyz.erupt.upms.model.input.MenuPublishModal;
+import xyz.erupt.upms.service.EruptMenuService;
 import xyz.erupt.upms.service.EruptUserService;
 
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -30,7 +26,7 @@ import java.util.List;
  * date 2023/6/4 17:51
  */
 @Component
-public class ReportPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
+public class ReportPublishMenu implements OperationHandler<Bi, MenuPublishModal> {
 
     @Resource
     private EruptDao eruptDao;
@@ -42,14 +38,11 @@ public class ReportPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
     private EruptUserService eruptUserService;
 
     @Resource
-    private EruptContextService eruptContextService;
-
-    @Resource
-    private EruptTokenService eruptTokenService;
+    private EruptMenuService eruptMenuService;
 
     @Override
     @Transactional
-    public String exec(List<Bi> data, BiReleaseModal biReleaseModal, String[] param) {
+    public String exec(List<Bi> data, MenuPublishModal biReleaseModal, String[] param) {
         if (eruptBiProp.getSuperAdminPublish() && !eruptUserService.getSimpleUserInfo().isSuperAdmin()) {
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("bi.publish_super_admin_only"));
         }
@@ -59,31 +52,12 @@ public class ReportPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
         EruptMenu eruptMenu = new EruptMenu(bi.getCode(), biReleaseModal.getName(), ReportConst.MENU_TYPE,
                 bi.getCode(), MenuStatus.OPEN.getValue(), max + 10, null, biReleaseModal.getEruptMenu());
         eruptDao.persist(eruptMenu);
-        // save to the designated role as well
-        {
-            String biRoleName = "bi_view_role@auto";
-            EruptRole eruptRole = new EruptRole();
-            eruptRole.setCode(biRoleName);
-            eruptRole.setName("bi-view-role");
-            eruptRole.setStatus(true);
-            eruptRole.setSort(20);
-            eruptRole.setCreateTime(new Date());
-            eruptRole.setUpdateTime(new Date());
-            EruptRole biRole = eruptDao.persistIfNotExist(EruptRole.class, eruptRole, "code", biRoleName);
-            if (null == biRole.getMenus()) {
-                biRole.setMenus(new HashSet<>());
-            }
-            biRole.setUpdateTime(new Date());
-            biRole.getMenus().add(eruptMenu);
-            eruptDao.persist(biRole);
-        }
-        // refresh current user menu
-        eruptTokenService.loginToken(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
+        eruptMenuService.flushMenuCache();
         return null;
     }
 
     @Override
-    public BiReleaseModal eruptFormValue(List<Bi> data, BiReleaseModal biReleaseModal, String[] param) {
+    public MenuPublishModal eruptFormValue(List<Bi> data, MenuPublishModal biReleaseModal, String[] param) {
         biReleaseModal.setName(data.get(0).getName());
         return OperationHandler.super.eruptFormValue(data, biReleaseModal, param);
     }

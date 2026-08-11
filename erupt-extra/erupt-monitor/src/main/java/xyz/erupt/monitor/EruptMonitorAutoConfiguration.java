@@ -15,6 +15,7 @@ import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.monitor.constant.MonitorConstant;
 import xyz.erupt.monitor.interceptor.HttpStatInterceptor;
+import xyz.erupt.monitor.model.EruptClassInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,7 @@ public class EruptMonitorAutoConfiguration implements EruptModule, WebMvcConfigu
         metaMenus.add(MetaMenu.createSimpleMenu(MonitorConstant.MENU_SERVER, "Service Monitoring", MonitorConstant.MENU_SERVER, root, 10, router));
         metaMenus.add(MetaMenu.createSimpleMenu(MonitorConstant.MENU_REDIS, "Cache Monitoring", MonitorConstant.MENU_REDIS, root, 20, router));
         metaMenus.add(MetaMenu.createSimpleMenu(MonitorConstant.MENU_DIAGNOSIS, "Diagnosis Monitoring", MonitorConstant.MENU_DIAGNOSIS, root, 30, router));
+        metaMenus.add(MetaMenu.createEruptClassMenu(EruptClassInfo.class, root, 40));
         return metaMenus;
     }
 }

@@ -68,9 +68,6 @@ Width,宽度,寬度,Width,Largeur,幅,너비,Ширина,Ancho,Breite,Largura,L
 Display,是否显示,是否顯示,Display,Affichage,表示,표시,Отображать,Mostrar,Anzeigen,Exibir,Tampilkan,عرض
 Sortable,是否排序,是否排序,Sortable,Triable,ソート可能,정렬 가능,Сортируемый,Ordenable,Sortierbar,Classificável,Dapat diurutkan,قابل للفرز
 Drill SQL,下钻SQL,下鑽SQL,Drill SQL,SQL de drill,ドリルSQL,드릴 SQL,SQL детализации,SQL de desglose,Drill-SQL,SQL de detalhamento,SQL drill,SQL التفصيل
-Publish Report,报表发布弹窗,報表發布彈窗,Publish Report,Publication de rapport,レポート公開,보고서 게시,Публикация отчёта,Publicación de informe,Bericht veröffentlichen,Publicar relatório,Terbitkan laporan,نشر التقرير
-Menu Name,菜单名称,菜單名稱,Menu Name,Nom du menu,メニュー名,메뉴 이름,Имя меню,Nombre del menú,Menüname,Nome do menu,Nama menu,اسم القائمة
-Menu Location,菜单位置,菜單位置,Menu Location,Emplacement du menu,メニュー位置,메뉴 위치,Расположение меню,Ubicación del menú,Menüposition,Localização do menu,Lokasi menu,موقع القائمة
 Component Template,组件模板,組件模板,Component Template,Modèle de composant,コンポーネントテンプレート,컴포넌트 템플릿,Шаблон компонента,Plantilla de componente,Komponentenvorlage,Modelo de componente,Template komponen,قالب المكون
 Resource Type,资源类型,資源類型,Resource Type,Type de ressource,リソースタイプ,리소스 유형,Тип ресурса,Tipo de recurso,Ressourcentyp,Tipo de recurso,Tipe sumber daya,نوع المورد
 File Path,文件路径,文件路徑,File Path,Chemin de fichier,ファイルパス,파일 경로,Путь к файлу,Ruta de archivo,Dateipfad,Caminho do arquivo,Jalur file,مسار الملف

@@ -18,6 +18,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.report.constant.ReportConst;
 import xyz.erupt.report.handler.ReportPublishMenu;
 import xyz.erupt.report.model.dataproxy.BiDataProxy;
+import xyz.erupt.upms.model.input.MenuPublishModal;
 
 import java.util.Set;
 
@@ -31,7 +32,7 @@ import java.util.Set;
         rowOperation = {
                 @RowOperation(
                         title = "Add to Menu", mode = RowOperation.Mode.SINGLE, icon = "fa fa-send",
-                        eruptClass = BiReleaseModal.class, operationHandler = ReportPublishMenu.class
+                        eruptClass = MenuPublishModal.class, operationHandler = ReportPublishMenu.class
                 )
         },
         orderBy = "createTime desc",

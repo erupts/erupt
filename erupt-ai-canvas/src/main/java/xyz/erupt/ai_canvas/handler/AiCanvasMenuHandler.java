@@ -5,13 +5,13 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai_canvas.EruptAiCanvasAutoConfiguration;
 import xyz.erupt.ai_canvas.model.AiCanvas;
-import xyz.erupt.ai_canvas.model.AiCanvasMenuModal;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptMenu;
+import xyz.erupt.upms.model.input.MenuPublishModal;
 import xyz.erupt.upms.service.EruptMenuService;
 
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
  * date 2026/8/9
  */
 @Component
-public class AiCanvasMenuHandler implements OperationHandler<AiCanvas, AiCanvasMenuModal> {
+public class AiCanvasMenuHandler implements OperationHandler<AiCanvas, MenuPublishModal> {
 
     private static final String MENU_CODE_PREFIX = "ai-canvas-";
 
@@ -36,7 +36,7 @@ public class AiCanvasMenuHandler implements OperationHandler<AiCanvas, AiCanvasM
 
     @Override
     @Transactional
-    public String exec(List<AiCanvas> data, AiCanvasMenuModal modal, String[] param) {
+    public String exec(List<AiCanvas> data, MenuPublishModal modal, String[] param) {
         AiCanvas canvas = data.get(0);
         String menuCode = MENU_CODE_PREFIX + canvas.getCode();
         Erupts.requireNull(
@@ -55,7 +55,7 @@ public class AiCanvasMenuHandler implements OperationHandler<AiCanvas, AiCanvasM
     }
 
     @Override
-    public AiCanvasMenuModal eruptFormValue(List<AiCanvas> data, AiCanvasMenuModal modal, String[] param) {
+    public MenuPublishModal eruptFormValue(List<AiCanvas> data, MenuPublishModal modal, String[] param) {
         modal.setName(data.get(0).getName());
         return modal;
     }

@@ -1,4 +1,4 @@
-package xyz.erupt.report.model;
+package xyz.erupt.upms.model.input;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,14 +15,16 @@ import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
 
 /**
+ * Shared "publish to menu" row-operation form, reused by modules that
+ * expose a publish/send-to-menu action (report, designer, ai-canvas, cube...).
+ *
  * @author YuePeng
- * date 2021/7/17 23:04
  */
-@Erupt(name = "Publish Report")
+@Erupt(name = "Publish to Menu")
+@EruptI18n
 @Getter
 @Setter
-@EruptI18n
-public class BiReleaseModal extends BaseModel {
+public class MenuPublishModal extends BaseModel {
 
     @EruptField(
             edit = @Edit(title = "Menu Name", notNull = true)
@@ -31,13 +33,14 @@ public class BiReleaseModal extends BaseModel {
 
     @EruptField(
             edit = @Edit(
+                    title = "Menu Location",
+                    desc = "Skip if publishing to root directory",
                     search = @Search,
-                    title = "Menu Location", desc = "Skip if publishing to root directory", type = EditType.REFERENCE_TREE,
+                    type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id"),
                     filter = @Filter(conditionHandler = EruptMenuViewFilter.class)
             )
     )
     private EruptMenu eruptMenu;
-
 
 }

@@ -55,6 +55,10 @@ public class EruptCoreService implements ApplicationRunner {
         return ERUPT_LIST;
     }
 
+    public static boolean isRuntimeErupt(String eruptName) {
+        return RUNTIME_ERUPTS.contains(eruptName.toLowerCase());
+    }
+
     public static EruptModel getErupt(String eruptName) {
         if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
             if (null == ERUPTS.get(eruptName) || RUNTIME_ERUPTS.contains(eruptName.toLowerCase())) {
