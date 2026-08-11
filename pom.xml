@@ -68,6 +68,8 @@
         <module>erupt-data/erupt-mongodb</module>
         <module>erupt-data/erupt-memory</module>
         <module>erupt-data/erupt-http</module>
+        <module>erupt-data/erupt-jdbc</module>
+        <module>erupt-data/erupt-es</module>
 
         <!-- UPMS / Security / Web / Misc -->
         <module>erupt-upms</module>

@@ -196,7 +196,7 @@ public abstract class EruptMemoryDataService<T> implements IEruptDataService {
 
     // Frontend condition values arrive as strings; align them with the field type so
     // numeric / date comparisons behave like the persistent implementations
-    private Object convertTarget(EruptModel eruptModel, String key, Object value) {
+    protected Object convertTarget(EruptModel eruptModel, String key, Object value) {
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(key);
         if (null == fieldModel || null == fieldModel.getField() || null == value) return value;
         Class<?> type = fieldModel.getField().getType();
