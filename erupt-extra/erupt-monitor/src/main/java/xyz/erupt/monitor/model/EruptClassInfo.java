@@ -6,12 +6,16 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
+import xyz.erupt.annotation.sub_erupt.Drill;
+import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.monitor.handler.EruptClassPublishMenu;
@@ -28,11 +32,17 @@ import xyz.erupt.upms.model.input.MenuPublishModal;
         name = "Erupt Class Registry",
         primaryKeyCol = "name",
         power = @Power(add = false, edit = false, delete = false, export = true),
+        drills = @Drill(
+                title = "Fields",
+                link = @Link(column = "name", linkErupt = EruptFieldInfo.class, joinColumn = "eruptName")
+        ),
         rowOperation = @RowOperation(
                 title = "Publish to Menu",
                 icon = "fa fa-paper-plane",
                 mode = RowOperation.Mode.SINGLE,
-                ifExpr = "!item.published",
+                // table rows carry the boolType display text, not a boolean; the symbols below are
+                // locale-stable (absent from i18n CSVs) so this comparison works in every language
+                ifExpr = "item.published === '×'",
                 eruptClass = MenuPublishModal.class,
                 operationHandler = EruptClassPublishMenu.class
         )
@@ -74,7 +84,8 @@ public class EruptClassInfo {
     private Boolean i18n;
 
     @EruptField(
-            views = @View(title = "Field Count", sortable = true)
+            views = @View(title = "Field Count", sortable = true),
+            edit = @Edit(title = "Field Count", type = EditType.NUMBER)
     )
     private Integer fieldCount;
 
@@ -92,8 +103,16 @@ public class EruptClassInfo {
 
     @EruptField(
             views = @View(title = "Published", type = ViewType.BOOLEAN, sortable = true),
-            edit = @Edit(title = "Published", type = EditType.BOOLEAN, search = @Search)
+            edit = @Edit(title = "Published", type = EditType.BOOLEAN, search = @Search,
+                    boolType = @BoolType(trueText = "✓", falseText = "×"))
     )
     private Boolean published;
+
+    // Populated only by findDataById, so the class-level annotation JSON shows in the detail view without bloating list payloads
+    @EruptField(
+            edit = @Edit(title = "Model JSON", type = EditType.CODE_EDITOR,
+                    codeEditType = @CodeEditorType(language = "json", height = 500))
+    )
+    private String json;
 
 }

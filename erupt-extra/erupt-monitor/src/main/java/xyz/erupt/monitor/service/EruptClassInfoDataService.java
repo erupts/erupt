@@ -1,20 +1,18 @@
 package xyz.erupt.monitor.service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
-import xyz.erupt.annotation.query.Condition;
-import xyz.erupt.annotation.query.Direction;
-import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.invoke.DataProcessorManager;
-import xyz.erupt.core.query.Column;
+import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.EruptCoreService;
-import xyz.erupt.core.service.IEruptDataService;
 import xyz.erupt.core.view.EruptModel;
-import xyz.erupt.core.view.Page;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.monitor.model.EruptClassInfo;
 import xyz.erupt.upms.model.EruptMenu;
 
@@ -29,9 +27,11 @@ import java.util.stream.Collectors;
  * @author YuePeng
  */
 @Service
-public class EruptClassInfoDataService implements IEruptDataService {
+public class EruptClassInfoDataService extends MemoryDataService {
 
     public static final String DATA_PROCESSOR = "EruptClassInfo";
+
+    private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
 
     // Trailing build-output segments stripped when resolving a class source from a directory path
     private static final Set<String> BUILD_DIRS = new HashSet<>(Arrays.asList(
@@ -46,54 +46,18 @@ public class EruptClassInfoDataService implements IEruptDataService {
 
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
-        return this.load().stream().filter(it -> it.getName().equals(id.toString())).findFirst().orElse(null);
-    }
-
-    @Override
-    public Page queryList(EruptModel eruptModel, Page page, EruptQuery eruptQuery) {
-        List<Map<String, Object>> rows = this.load().stream().map(this::toMap)
-                .filter(it -> this.match(it, eruptQuery.getConditions())).collect(Collectors.toList());
-        if (null != page.getSort() && !page.getSort().isEmpty()) {
-            Comparator<Map<String, Object>> comparator = null;
-            for (Sort sort : page.getSort()) {
-                @SuppressWarnings("unchecked")
-                Comparator<Map<String, Object>> c = Comparator.comparing(it ->
-                        (Comparable<Object>) it.get(sort.getField()), Comparator.nullsFirst(Comparator.naturalOrder()));
-                if (sort.getDirection() == Direction.DESC) c = c.reversed();
-                comparator = null == comparator ? c : comparator.thenComparing(c);
-            }
-            rows.sort(comparator);
+        EruptClassInfo info = this.load().stream()
+                .filter(it -> it.getName().equals(id.toString())).findFirst().orElse(null);
+        if (null != info) {
+            Optional.ofNullable(EruptCoreService.getErupt(info.getName())).ifPresent(it ->
+                    info.setJson(PRETTY_GSON.toJson(AnnotationProcess.annotationToJsonByReflect(it.getErupt()))));
         }
-        page.setTotal((long) rows.size());
-        int from = Math.min((page.getPageIndex() - 1) * page.getPageSize(), rows.size());
-        page.setList(rows.subList(from, Math.min(from + page.getPageSize(), rows.size())));
-        return page;
+        return info;
     }
 
     @Override
-    public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery eruptQuery) {
-        return this.load().stream().map(this::toMap)
-                .filter(it -> this.match(it, eruptQuery.getConditions()))
-                .map(it -> {
-                    Map<String, Object> map = new LinkedHashMap<>();
-                    for (Column column : columns) map.put(column.getAlias(), it.get(column.getName()));
-                    return map;
-                }).collect(Collectors.toList());
-    }
-
-    @Override
-    public void addData(EruptModel eruptModel, Object object) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void editData(EruptModel eruptModel, Object object) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void deleteData(EruptModel eruptModel, Object object) {
-        throw new UnsupportedOperationException();
+    protected List<Map<String, Object>> rows(EruptQuery eruptQuery) {
+        return this.load().stream().map(this::toMap).collect(Collectors.toList());
     }
 
     private List<EruptClassInfo> load() {
@@ -139,45 +103,16 @@ public class EruptClassInfoDataService implements IEruptDataService {
 
     private Map<String, Object> toMap(EruptClassInfo info) {
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("name", info.getName());
-        map.put("displayName", info.getDisplayName());
-        map.put("source", info.getSource());
-        map.put("clazz", info.getClazz());
-        map.put("i18n", info.getI18n());
-        map.put("fieldCount", info.getFieldCount());
-        map.put("dataProcessor", info.getDataProcessor());
-        map.put("runtime", info.getRuntime());
-        map.put("published", info.getPublished());
+        map.put(LambdaSee.field(EruptClassInfo::getName), info.getName());
+        map.put(LambdaSee.field(EruptClassInfo::getDisplayName), info.getDisplayName());
+        map.put(LambdaSee.field(EruptClassInfo::getSource), info.getSource());
+        map.put(LambdaSee.field(EruptClassInfo::getClazz), info.getClazz());
+        map.put(LambdaSee.field(EruptClassInfo::getI18n), info.getI18n());
+        map.put(LambdaSee.field(EruptClassInfo::getFieldCount), info.getFieldCount());
+        map.put(LambdaSee.field(EruptClassInfo::getDataProcessor), info.getDataProcessor());
+        map.put(LambdaSee.field(EruptClassInfo::getRuntime), info.getRuntime());
+        map.put(LambdaSee.field(EruptClassInfo::getPublished), info.getPublished());
         return map;
-    }
-
-    private boolean match(Map<String, Object> row, List<Condition> conditions) {
-        if (null == conditions) return true;
-        for (Condition condition : conditions) {
-            Object value = row.get(condition.getKey());
-            Object target = condition.getValue();
-            boolean pass = switch (condition.getExpression()) {
-                case LIKE -> null != value && value.toString().toLowerCase().contains(target.toString().toLowerCase());
-                case EQ -> this.eq(value, target);
-                case NEQ -> !this.eq(value, target);
-                case IN -> target instanceof Collection
-                        && ((Collection<?>) target).stream().anyMatch(it -> this.eq(value, it));
-                case NULL -> null == value;
-                case NOT_NULL -> null != value;
-                default -> true;
-            };
-            if (!pass) return false;
-        }
-        return true;
-    }
-
-    private boolean eq(Object value, Object target) {
-        if (Objects.equals(value, target)) return true;
-        if (null == value || null == target) return false;
-        if (value instanceof Number && target instanceof Number) {
-            return ((Number) value).doubleValue() == ((Number) target).doubleValue();
-        }
-        return value.toString().equals(target.toString());
     }
 
 }

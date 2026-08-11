@@ -8,11 +8,10 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
-import xyz.erupt.annotation.sub_erupt.Drill;
-import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUserVo;
@@ -28,8 +27,7 @@ import java.time.LocalDateTime;
 @Table(name = "e_ai_chat")
 @Erupt(
         name = "Chat Management",
-        power = @Power(add = false, edit = false, viewDetails = false), orderBy = "createdTime desc",
-        drills = @Drill(title = "Chat Records", link = @Link(linkErupt = AiChatMessage.class, joinColumn = "chatId"))
+        power = @Power(add = false, edit = false, viewDetails = false), orderBy = "createdTime desc"
 )
 @Entity
 @EruptI18n
@@ -52,7 +50,7 @@ public class AiChat extends BaseModel {
     private Boolean deleted = false;
 
     @EruptField(
-            views = @View(title = "Created Time")
+            views = @View(title = "Created Time", type = ViewType.DATE_TIME)
     )
     private LocalDateTime createdTime;
 

@@ -15,7 +15,7 @@ public class EruptConst {
     // Absolute path of the .erupt directory under the process working directory
     public static final String ERUPT_DIR_PATH = System.getProperty("user.dir") + java.io.File.separator + ERUPT_DIR;
 
-    public static final String DEFAULT_DATA_PROCESSOR = "jpa";
+    public static final String DEFAULT_DATA_PROCESSOR = "JPA";
 
     public static final String DOT = ".";
 
