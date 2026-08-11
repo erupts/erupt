@@ -12,7 +12,7 @@ import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.linq.lambda.LambdaSee;
+import xyz.erupt.memory.service.EruptMemoryDataService;
 import xyz.erupt.monitor.model.EruptClassInfo;
 import xyz.erupt.upms.model.EruptMenu;
 
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * @author YuePeng
  */
 @Service
-public class EruptClassInfoDataService extends MemoryDataService {
+public class EruptClassInfoDataService extends EruptMemoryDataService<EruptClassInfo> {
 
     public static final String DATA_PROCESSOR = "EruptClassInfo";
 
@@ -46,8 +46,7 @@ public class EruptClassInfoDataService extends MemoryDataService {
 
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
-        EruptClassInfo info = this.load().stream()
-                .filter(it -> it.getName().equals(id.toString())).findFirst().orElse(null);
+        EruptClassInfo info = (EruptClassInfo) super.findDataById(eruptModel, id);
         if (null != info) {
             Optional.ofNullable(EruptCoreService.getErupt(info.getName())).ifPresent(it ->
                     info.setJson(PRETTY_GSON.toJson(AnnotationProcess.annotationToJsonByReflect(it.getErupt()))));
@@ -56,11 +55,7 @@ public class EruptClassInfoDataService extends MemoryDataService {
     }
 
     @Override
-    protected List<Map<String, Object>> rows(EruptQuery eruptQuery) {
-        return this.load().stream().map(this::toMap).collect(Collectors.toList());
-    }
-
-    private List<EruptClassInfo> load() {
+    protected List<EruptClassInfo> data(EruptModel eruptModel, EruptQuery eruptQuery) {
         Set<String> menuValues = eruptDao.lambdaQuery(EruptMenu.class).list().stream()
                 .map(EruptMenu::getValue).filter(Objects::nonNull).collect(Collectors.toSet());
         List<EruptClassInfo> list = new ArrayList<>();
@@ -99,20 +94,6 @@ public class EruptClassInfoDataService extends MemoryDataService {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    private Map<String, Object> toMap(EruptClassInfo info) {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put(LambdaSee.field(EruptClassInfo::getName), info.getName());
-        map.put(LambdaSee.field(EruptClassInfo::getDisplayName), info.getDisplayName());
-        map.put(LambdaSee.field(EruptClassInfo::getSource), info.getSource());
-        map.put(LambdaSee.field(EruptClassInfo::getClazz), info.getClazz());
-        map.put(LambdaSee.field(EruptClassInfo::getI18n), info.getI18n());
-        map.put(LambdaSee.field(EruptClassInfo::getFieldCount), info.getFieldCount());
-        map.put(LambdaSee.field(EruptClassInfo::getDataProcessor), info.getDataProcessor());
-        map.put(LambdaSee.field(EruptClassInfo::getRuntime), info.getRuntime());
-        map.put(LambdaSee.field(EruptClassInfo::getPublished), info.getPublished());
-        return map;
     }
 
 }
