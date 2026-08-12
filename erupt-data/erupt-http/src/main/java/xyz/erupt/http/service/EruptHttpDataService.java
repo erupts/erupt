@@ -39,7 +39,7 @@ import java.util.Optional;
 @Service
 public class EruptHttpDataService extends EruptMemoryDataService<Map<String, Object>> {
 
-    public static final String DATA_PROCESSOR = "http";
+    public static final String DATA_PROCESSOR = "HTTP";
 
     static {
         DataProcessorManager.register(DATA_PROCESSOR, EruptHttpDataService.class);

@@ -23,7 +23,7 @@ import java.util.Optional;
 @Service
 public class EruptFieldInfoDataService extends EruptMemoryDataService<EruptFieldInfo> {
 
-    public static final String DATA_PROCESSOR = "EruptFieldInfo";
+    public static final String DATA_PROCESSOR = "ERUPT_FIELD_INFO";
 
     static {
         DataProcessorManager.register(DATA_PROCESSOR, EruptFieldInfoDataService.class);

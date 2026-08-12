@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 public class EruptClassInfoDataService extends EruptMemoryDataService<EruptClassInfo> {
 
-    public static final String DATA_PROCESSOR = "EruptClassInfo";
+    public static final String DATA_PROCESSOR = "ERUPT_CLASS_INFO";
 
     private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
 

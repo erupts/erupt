@@ -30,7 +30,7 @@ import java.util.Optional;
  */
 public class DesignerClassFactory {
 
-    public static final String DATA_PROCESSOR = "erupt-designer-data";
+    public static final String DATA_PROCESSOR = "ERUPT_DESIGNER";
 
     private static final String PKG = "xyz.erupt.designer.runtime.";
 

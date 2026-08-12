@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @Service
 public class EruptEsDataService extends EruptMemoryDataService<Object> {
 
-    public static final String DATA_PROCESSOR = "elasticsearch";
+    public static final String DATA_PROCESSOR = "ELASTICSEARCH";
 
     static {
         DataProcessorManager.register(DATA_PROCESSOR, EruptEsDataService.class);

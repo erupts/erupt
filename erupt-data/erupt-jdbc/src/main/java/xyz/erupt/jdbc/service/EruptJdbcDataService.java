@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 @Service
 public class EruptJdbcDataService implements IEruptDataService {
 
-    public static final String DATA_PROCESSOR = "jdbc";
+    public static final String DATA_PROCESSOR = "JDBC";
 
     static {
         DataProcessorManager.register(DATA_PROCESSOR, EruptJdbcDataService.class);
