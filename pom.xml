@@ -70,6 +70,7 @@
         <module>erupt-data/erupt-data-http</module>
         <module>erupt-data/erupt-data-jdbc</module>
         <module>erupt-data/erupt-data-es</module>
+        <module>erupt-data/erupt-data-ldap</module>
         <module>erupt-data/erupt-data-redis</module>
         <module>erupt-data/erupt-data-file</module>
         <module>erupt-data/erupt-data-feishu</module>
