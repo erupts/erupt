@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.invoke.DataProcessorManager;
+import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.EruptBeanDataService;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.service.EruptRemoteRouter;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.monitor.model.EruptClassInfo;
@@ -48,8 +50,16 @@ public class EruptClassInfoDataService extends EruptBeanDataService<EruptClassIn
     public Object findDataById(EruptModel eruptModel, Object id) {
         EruptClassInfo info = (EruptClassInfo) super.findDataById(eruptModel, id);
         if (null != info) {
-            Optional.ofNullable(EruptCoreService.getErupt(info.getName())).ifPresent(it ->
-                    info.setJson(PRETTY_GSON.toJson(AnnotationProcess.annotationToJsonByReflect(it.getErupt()))));
+            if (EruptRemoteRouterManager.isRemote(info.getName())) {
+                // Remote: fetch the node-rendered schema JSON on demand
+                EruptModel view = EruptRemoteRouterManager.get().resolveEruptView(info.getName());
+                if (null != view && null != view.getEruptJson()) {
+                    info.setJson(PRETTY_GSON.toJson(view.getEruptJson()));
+                }
+            } else {
+                Optional.ofNullable(EruptCoreService.getErupt(info.getName())).ifPresent(it ->
+                        info.setJson(PRETTY_GSON.toJson(AnnotationProcess.annotationToJsonByReflect(it.getErupt()))));
+            }
         }
         return info;
     }
@@ -72,6 +82,21 @@ public class EruptClassInfoDataService extends EruptBeanDataService<EruptClassIn
             info.setRuntime(EruptCoreService.isRuntimeErupt(model.getEruptName()));
             info.setPublished(menuValues.contains(model.getEruptName()));
             list.add(info);
+        }
+        // erupt-cloud: append erupts served by remote nodes. Heartbeat only carries the dotted name,
+        // so most metadata columns stay null; the schema JSON is fetched lazily in findDataById.
+        EruptRemoteRouter router = EruptRemoteRouterManager.get();
+        if (null != router) {
+            for (String remoteName : router.remoteEruptNames()) {
+                EruptClassInfo info = new EruptClassInfo();
+                info.setName(remoteName);
+                int dot = remoteName.lastIndexOf(EruptConst.DOT);
+                info.setDisplayName(dot > 0 ? remoteName.substring(dot + 1) : remoteName);
+                info.setSource(dot > 0 ? remoteName.substring(0, dot) : null);
+                info.setRuntime(false);
+                info.setPublished(menuValues.contains(remoteName));
+                list.add(info);
+            }
         }
         return list;
     }

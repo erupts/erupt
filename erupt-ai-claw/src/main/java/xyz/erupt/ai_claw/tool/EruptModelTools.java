@@ -7,18 +7,28 @@ import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.ai.AiToolbox;
+import xyz.erupt.annotation.fun.PowerObject;
+import xyz.erupt.annotation.query.Condition;
+import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.controller.EruptDataController;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptModifyService;
+import xyz.erupt.core.service.EruptService;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptModel;
-import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.core.view.Page;
+import xyz.erupt.core.view.TableQuery;
+import xyz.erupt.upms.service.EruptUserService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author YuePeng
@@ -30,13 +40,20 @@ import java.util.Map;
 public class EruptModelTools {
 
     @Resource
-    private EruptDao eruptDao;
+    private EruptService eruptService;
 
     @Resource
     private EruptDataController eruptDataController;
 
     @Resource
     private EruptModifyService eruptModifyService;
+
+    @Resource
+    private EruptUserService eruptUserService;
+
+    private static final int DEFAULT_PAGE_SIZE = 20;
+
+    private static final int MAX_PAGE_SIZE = 200;
 
     public static final String ERUPT_NAME_PARAM_HINT = "Erupt model name (call eruptModelList first if unknown)";
 
@@ -53,14 +70,19 @@ public class EruptModelTools {
 
     @Tool("Erupt data model list")
     public String eruptModelList() {
+        boolean superAdmin = requireLogin().isSuperAdmin();
         StringBuilder sb = new StringBuilder();
         for (EruptModel erupt : EruptCoreService.getErupts()) {
-            sb.append(erupt.getEruptName()).append(": ").append(erupt.getErupt().name()).append("\n");
+            if (superAdmin || eruptUserService.getEruptMenuByValue(erupt.getEruptName()) != null) {
+                sb.append(erupt.getEruptName()).append(": ").append(erupt.getErupt().name()).append("\n");
+            }
         }
         // erupt-cloud: include erupts served by remote nodes (call eruptSchema to inspect their fields)
         if (null != EruptRemoteRouterManager.get()) {
             for (String name : EruptRemoteRouterManager.get().remoteEruptNames()) {
-                sb.append(name).append("\n");
+                if (superAdmin || eruptUserService.getEruptMenuByValue(name) != null) {
+                    sb.append(name).append("\n");
+                }
             }
         }
         return sb.toString();
@@ -68,15 +90,29 @@ public class EruptModelTools {
 
     @Tool("Erupt data model schema. If the erupt model name is not specified, call eruptModelList first to get available model names.")
     public String eruptSchema(@P(ERUPT_NAME_PARAM_HINT) String eruptName) {
+        checkErupt(eruptName, PowerObject::isQuery);
         EruptModel erupt = EruptCoreService.getEruptView(eruptName);
         return GsonFactory.getGson().toJson(erupt);
     }
 
-    @Tool("Query erupt model data. If the model structure is unknown, call eruptSchema first to get field definitions before writing HQL. Security restrictions: SELECT only (INSERT/UPDATE/DELETE/DROP/TRUNCATE are strictly forbidden).")
-    public String eruptDataQuery(@P("HQL (Hibernate Query Language), SELECT only. Ensure model schema is known via eruptSchema before querying.") String hql) {
-        List<?> result = eruptDao.getEntityManager().createQuery(hql)
-                .setMaxResults(200)
-                .getResultList();
+    @Tool("Query erupt model data with structured filter conditions, sort and pagination. " +
+            "Call eruptSchema first to discover field names. Returns a Page with pageIndex/pageSize/total/list.")
+    public String eruptDataQuery(
+            @P(ERUPT_NAME_PARAM_HINT) String eruptName,
+            @P("Filter conditions. Each Condition has: key (field name), expression (EQ/NEQ/GT/GTE/LT/LTE/LIKE/NOT_LIKE/IN/NOT_IN/RANGE/NULL/NOT_NULL), value (filter value; array for IN/NOT_IN/RANGE). Null or empty for no filter.")
+            List<Condition> conditions,
+            @P("Sort orders. Each Sort has: field (field name), direction (ASC/DESC). Null or empty for default order.")
+            List<Sort> sort,
+            @P("Page index, 1-based. Defaults to 1.") Integer pageIndex,
+            @P("Page size, defaults to 20, max 200.") Integer pageSize) {
+        checkErupt(eruptName, PowerObject::isQuery);
+        TableQuery tableQuery = new TableQuery();
+        tableQuery.setPageIndex(null == pageIndex || pageIndex < 1 ? 1 : pageIndex);
+        tableQuery.setPageSize(null == pageSize || pageSize < 1
+                ? DEFAULT_PAGE_SIZE : Math.min(pageSize, MAX_PAGE_SIZE));
+        tableQuery.setCondition(null == conditions ? new ArrayList<>() : conditions);
+        tableQuery.setSort(sort);
+        Page result = eruptService.getEruptData(EruptCoreService.getErupt(eruptName), tableQuery, null);
         return GsonFactory.getGson().toJson(result);
     }
 
@@ -84,6 +120,7 @@ public class EruptModelTools {
     public String insertEruptData(
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
             @P("JSON object representing the new record. Field names and types must match the model schema obtained from eruptSchema.") Map<String, Object> data) {
+        checkErupt(eruptName, PowerObject::isAdd);
         JsonObject jsonObject = GsonFactory.getGson().toJsonTree(data).getAsJsonObject();
         return "Insert success, Primary key:" + eruptModifyService.insertEruptData(EruptCoreService.getErupt(eruptName), jsonObject);
     }
@@ -92,6 +129,7 @@ public class EruptModelTools {
     public String findEruptDataByPk(
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
             @P("Primary key value of the record to retrieve") String id) {
+        checkErupt(eruptName, PowerObject::isQuery);
         return GsonFactory.getGson().toJson(eruptDataController.getEruptDataById(eruptName, id));
     }
 
@@ -100,6 +138,7 @@ public class EruptModelTools {
     public String updateEruptData(
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
             @P("JSON object representing the updated record. Must include the primary key field. Obtain the full record via findEruptDataByPk first to avoid overwriting fields with null or incorrect values.") Map<String, Object> data) {
+        checkErupt(eruptName, PowerObject::isEdit);
         JsonObject jsonObject = GsonFactory.getGson().toJsonTree(data).getAsJsonObject();
         eruptModifyService.updateEruptData(EruptCoreService.getErupt(eruptName), jsonObject);
         return "success";
@@ -109,6 +148,7 @@ public class EruptModelTools {
     public String deleteEruptData(
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
             @P("List of primary key values identifying the records to delete. Use findEruptDataByPk or eruptDataQuery to confirm IDs before deletion.") List<Object> ids) {
+        checkErupt(eruptName, PowerObject::isDelete);
         eruptModifyService.deleteEruptData(EruptCoreService.getErupt(eruptName), ids, false);
         return "success";
     }
@@ -118,6 +158,27 @@ public class EruptModelTools {
         try (var in = getClass().getClassLoader().getResourceAsStream("erupt-annotation.md")) {
             return new String(in.readAllBytes());
         }
+    }
+
+    // Enforce menu access + per-erupt power for the current user. Super admins bypass.
+    // Remote erupts skip the local power check — the owning node runs its own permission pipeline.
+    private void checkErupt(String eruptName, Function<PowerObject, Boolean> powerCheck) {
+        MetaUserinfo user = requireLogin();
+        if (user.isSuperAdmin()) return;
+        if (null == eruptUserService.getEruptMenuByValue(eruptName)) {
+            throw new EruptWebApiRuntimeException("Current user has no access to this Erupt model: " + eruptName);
+        }
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        if (null == eruptModel || eruptModel.isRemote()) return;
+        Erupts.powerLegal(eruptModel, powerCheck);
+    }
+
+    private MetaUserinfo requireLogin() {
+        MetaUserinfo user = eruptUserService.getSimpleUserInfo();
+        if (null == user) {
+            throw new EruptWebApiRuntimeException("Login required");
+        }
+        return user;
     }
 
 }
