@@ -17,6 +17,7 @@ import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
+import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.*;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -50,6 +51,10 @@ public class EruptService {
      * @param customCondition Condition string
      */
     public Page getEruptData(EruptModel eruptModel, TableQuery tableQuery, List<Condition> serverCondition, String... customCondition) {
+        // erupt-cloud: forward the list query to the owning node, which runs its own filters/permissions
+        if (eruptModel.isRemote()) {
+            return EruptRemoteRouterManager.get().tableQuery(eruptModel.getEruptName(), tableQuery);
+        }
         Erupts.powerLegal(eruptModel, PowerObject::isQuery);
         List<Condition> legalConditions = EruptUtil.geneEruptSearchCondition(eruptModel, tableQuery.getCondition());
         List<String> conditionStrings = new ArrayList<>();

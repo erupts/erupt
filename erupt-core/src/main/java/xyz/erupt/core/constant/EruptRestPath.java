@@ -17,6 +17,9 @@ public class EruptRestPath {
     // Data CRUD operations
     public static final String ERUPT_DATA_MODIFY = ERUPT_DATA + "/modify";
 
+    // Path segment substituted with the erupt name in remote proxy path templates
+    public static final String ERUPT_NAME_HOLDER = "/{erupt}";
+
     // Components
     public static final String ERUPT_COMP = ERUPT_API + "/comp";
 
