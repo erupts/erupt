@@ -6,19 +6,19 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
-import xyz.erupt.annotation.sub_erupt.Drill;
-import xyz.erupt.annotation.sub_erupt.Link;
-import xyz.erupt.annotation.sub_erupt.Power;
-import xyz.erupt.annotation.sub_erupt.RowOperation;
+import xyz.erupt.annotation.sub_erupt.*;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.annotation.EruptDataProcessor;
+import xyz.erupt.monitor.handler.EruptClassDataProcessorFetchHandler;
 import xyz.erupt.monitor.handler.EruptClassPublishMenu;
+import xyz.erupt.monitor.handler.EruptClassSourceFetchHandler;
 import xyz.erupt.monitor.service.EruptClassInfoDataService;
 import xyz.erupt.upms.model.input.MenuPublishModal;
 
@@ -32,6 +32,9 @@ import xyz.erupt.upms.model.input.MenuPublishModal;
         name = "Erupt Class Registry",
         primaryKeyCol = "name",
         power = @Power(add = false, edit = false, delete = false, export = false),
+        // Rows come from an in-memory scan of EruptCoreService (~dozens–hundreds); paginate client-side
+        // to avoid rebuilding the full list on every page/sort click
+        layout = @Layout(pagingType = Layout.PagingType.FRONT),
         drills = @Drill(
                 title = "Fields",
                 link = @Link(column = "name", linkErupt = EruptFieldInfo.class, joinColumn = "eruptName")
@@ -54,6 +57,13 @@ import xyz.erupt.upms.model.input.MenuPublishModal;
 public class EruptClassInfo {
 
     @EruptField(
+            views = @View(title = "Source", sortable = true),
+            edit = @Edit(title = "Source", type = EditType.CHOICE, search = @Search,
+                    choiceType = @ChoiceType(fetchHandler = EruptClassSourceFetchHandler.class))
+    )
+    private String source;
+
+    @EruptField(
             views = @View(title = "Class Name", sortable = true),
             edit = @Edit(title = "Class Name", search = @Search(operator = QueryExpression.LIKE))
     )
@@ -64,12 +74,6 @@ public class EruptClassInfo {
             edit = @Edit(title = "Display Name", search = @Search(operator = QueryExpression.LIKE))
     )
     private String displayName;
-
-    @EruptField(
-            views = @View(title = "Source", sortable = true),
-            edit = @Edit(title = "Source", search = @Search(operator = QueryExpression.LIKE))
-    )
-    private String source;
 
     @EruptField(
 //            views = @View(title = "Full Class Name"),
@@ -91,7 +95,8 @@ public class EruptClassInfo {
 
     @EruptField(
             views = @View(title = "Data Processor"),
-            edit = @Edit(title = "Data Processor", search = @Search(operator = QueryExpression.LIKE))
+            edit = @Edit(title = "Data Processor", type = EditType.CHOICE, search = @Search,
+                    choiceType = @ChoiceType(fetchHandler = EruptClassDataProcessorFetchHandler.class))
     )
     private String dataProcessor;
 

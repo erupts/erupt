@@ -74,11 +74,10 @@ public class EruptClassInfoDataService extends EruptBeanDataService<EruptClassIn
             info.setName(model.getEruptName());
             info.setDisplayName(model.getErupt().name());
             info.setClazz(model.getClazz().getName());
-            info.setSource(this.resolveSource(model.getClazz()));
+            info.setSource(resolveSource(model.getClazz()));
             info.setI18n(model.isI18n());
             info.setFieldCount(model.getEruptFieldModels().size());
-            EruptDataProcessor processor = model.getClazz().getAnnotation(EruptDataProcessor.class);
-            info.setDataProcessor(null == processor ? EruptConst.DEFAULT_DATA_PROCESSOR : processor.value());
+            info.setDataProcessor(resolveDataProcessor(model.getClazz()));
             info.setRuntime(EruptCoreService.isRuntimeErupt(model.getEruptName()));
             info.setPublished(menuValues.contains(model.getEruptName()));
             list.add(info);
@@ -101,7 +100,7 @@ public class EruptClassInfoDataService extends EruptBeanDataService<EruptClassIn
         return list;
     }
 
-    private String resolveSource(Class<?> clazz) {
+    public static String resolveSource(Class<?> clazz) {
         try {
             CodeSource codeSource = clazz.getProtectionDomain().getCodeSource();
             if (null == codeSource || null == codeSource.getLocation()) return null;
@@ -119,6 +118,11 @@ public class EruptClassInfoDataService extends EruptBeanDataService<EruptClassIn
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static String resolveDataProcessor(Class<?> clazz) {
+        EruptDataProcessor processor = clazz.getAnnotation(EruptDataProcessor.class);
+        return null == processor ? EruptConst.DEFAULT_DATA_PROCESSOR : processor.value();
     }
 
 }
