@@ -2,9 +2,9 @@ package xyz.erupt.es.service;
 
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,6 @@ import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
-import xyz.erupt.es.annotation.EruptEs;
 import xyz.erupt.memory.service.EruptMemoryDataService;
 
 import java.util.Collection;
@@ -25,14 +24,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Elasticsearch data source built on Spring Data Elasticsearch: the cluster is
- * configured with the standard {@code spring.elasticsearch.*} properties, and
- * conditions map to a {@link CriteriaQuery} so filtering, sorting and paging are
- * pushed down to {@code _search}. The in-memory base class contributes drill
- * condition-string parsing and bean → row conversion.
+ * Elasticsearch data source built on Spring Data Elasticsearch: the model binds
+ * to its index with the native {@code @Document(indexName = ...)} annotation,
+ * the cluster is configured with the standard {@code spring.elasticsearch.*}
+ * properties, and conditions map to a {@link CriteriaQuery} so filtering,
+ * sorting and paging are pushed down to {@code _search}. The in-memory base
+ * class contributes drill condition-string parsing and bean → row conversion.
  * <p>
  * The document {@code _id} maps to the model's id property (named {@code id} or
- * annotated with Spring Data's {@code @Id}).
+ * annotated with Spring Data's {@code @Id}). Equality filtering and sorting use
+ * exact (term) semantics — declare string fields with
+ * {@code @Field(type = FieldType.Keyword)} (or multi-fields) for them to behave
+ * as expected.
  *
  * @author YuePeng
  */
@@ -73,25 +76,27 @@ public class EruptEsDataService extends EruptMemoryDataService<Object> {
 
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
-        return elasticsearchOperations.get(String.valueOf(id), eruptModel.getClazz(), this.index(eruptModel));
+        return elasticsearchOperations.get(String.valueOf(id), this.document(eruptModel));
     }
 
     @Override
     public void addData(EruptModel eruptModel, Object object) {
-        elasticsearchOperations.save(object, this.index(eruptModel));
+        this.document(eruptModel);
+        elasticsearchOperations.save(object);
         this.refresh(eruptModel);
     }
 
     @Override
     public void editData(EruptModel eruptModel, Object object) {
+        this.document(eruptModel);
         this.requireId(eruptModel, object);
-        elasticsearchOperations.save(object, this.index(eruptModel));
+        elasticsearchOperations.save(object);
         this.refresh(eruptModel);
     }
 
     @Override
     public void deleteData(EruptModel eruptModel, Object object) {
-        elasticsearchOperations.delete(String.valueOf(this.requireId(eruptModel, object)), this.index(eruptModel));
+        elasticsearchOperations.delete(String.valueOf(this.requireId(eruptModel, object)), this.document(eruptModel));
         this.refresh(eruptModel);
     }
 
@@ -102,20 +107,20 @@ public class EruptEsDataService extends EruptMemoryDataService<Object> {
     }
 
     private SearchHits<?> search(EruptModel eruptModel, CriteriaQuery query) {
-        return elasticsearchOperations.search(query, eruptModel.getClazz(), this.index(eruptModel));
+        return elasticsearchOperations.search(query, this.document(eruptModel));
     }
 
     // The admin table re-queries immediately after a write; refresh makes it visible
     private void refresh(EruptModel eruptModel) {
-        elasticsearchOperations.indexOps(this.index(eruptModel)).refresh();
+        elasticsearchOperations.indexOps(this.document(eruptModel)).refresh();
     }
 
-    private IndexCoordinates index(EruptModel eruptModel) {
-        EruptEs eruptEs = eruptModel.getClazz().getAnnotation(EruptEs.class);
-        if (null == eruptEs) {
-            throw new EruptWebApiRuntimeException("@EruptEs annotation is missing on " + eruptModel.getEruptName());
+    private Class<?> document(EruptModel eruptModel) {
+        Class<?> clazz = eruptModel.getClazz();
+        if (!clazz.isAnnotationPresent(Document.class)) {
+            throw new EruptWebApiRuntimeException("@Document(indexName = ...) annotation is missing on " + eruptModel.getEruptName());
         }
-        return IndexCoordinates.of(eruptEs.value());
+        return clazz;
     }
 
     private Criteria buildCriteria(EruptModel eruptModel, EruptQuery eruptQuery) {
