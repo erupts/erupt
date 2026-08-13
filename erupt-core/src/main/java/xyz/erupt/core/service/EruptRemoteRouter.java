@@ -1,7 +1,10 @@
 package xyz.erupt.core.service;
 
 import com.google.gson.JsonObject;
+import org.springframework.http.HttpMethod;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.Page;
+import xyz.erupt.core.view.TableQuery;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,18 @@ public interface EruptRemoteRouter {
 
     // Fully-qualified names of every erupt exposed by currently live nodes
     List<String> remoteEruptNames();
+
+    /**
+     * Generic passthrough to the owning node's erupt-api — one method for the long tail
+     * (tree / reference / checkbox / choice / init-value ...). {@code pathTemplate} is the
+     * node-side path with {@code {erupt}} as a placeholder for the simple erupt name, e.g.
+     * {@code "/erupt-api/data/tree/{erupt}"} or {@code "/erupt-api/data/{erupt}/reference-table/dept"}
+     * (use {@link xyz.erupt.core.constant.EruptRestPath#ERUPT_NAME_HOLDER} for the placeholder).
+     * The node runs its own controllers; the raw response body is returned unparsed.
+     */
+    String proxy(String eruptName, HttpMethod httpMethod, String pathTemplate, Object body);
+
+    Page tableQuery(String eruptName, TableQuery tableQuery);
 
     Map<String, Object> findById(String eruptName, String id);
 
