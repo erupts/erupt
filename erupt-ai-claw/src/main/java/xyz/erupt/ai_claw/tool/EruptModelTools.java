@@ -73,16 +73,21 @@ public class EruptModelTools {
     public String eruptModelList() {
         String token = requireToken();
         boolean superAdmin = requireLogin(token).isSuperAdmin();
+        // One Redis round trip: read all allowed menu values up front, then match in-memory.
+        // Menu keys are stored lower-cased (see EruptTokenService#loginToken).
+        Map<String, Boolean> allowedMenus = superAdmin ? null : eruptUserService.getEruptMenuValuesMap(token);
         StringBuilder sb = new StringBuilder();
         for (EruptModel erupt : EruptCoreService.getErupts()) {
-            if (superAdmin || eruptUserService.getEruptMenuByValue(erupt.getEruptName(), token) != null) {
+            if (!erupt.getErupt().power().ai()) continue;
+            if (superAdmin || allowedMenus.containsKey(erupt.getEruptName().toLowerCase())) {
                 sb.append(erupt.getEruptName()).append(": ").append(erupt.getErupt().name()).append("\n");
             }
         }
-        // erupt-cloud: include erupts served by remote nodes (call eruptSchema to inspect their fields)
+        // erupt-cloud: include erupts served by remote nodes (call eruptSchema to inspect their fields).
+        // Remote erupts have no local annotation — access-control gating is deferred to the owning node.
         if (null != EruptRemoteRouterManager.get()) {
             for (String name : EruptRemoteRouterManager.get().remoteEruptNames()) {
-                if (superAdmin || eruptUserService.getEruptMenuByValue(name, token) != null) {
+                if (superAdmin || allowedMenus.containsKey(name.toLowerCase())) {
                     sb.append(name).append("\n");
                 }
             }
@@ -162,16 +167,20 @@ public class EruptModelTools {
         }
     }
 
-    // Enforce menu access + per-erupt power for the current user. Super admins bypass.
+    // Enforce menu access + per-erupt power for the current user. Super admins bypass user checks,
+    // but the model-level power.ai() opt-out still blocks AI usage regardless of role.
     // Remote erupts skip the local power check — the owning node runs its own permission pipeline.
     private void checkErupt(String eruptName, Function<PowerObject, Boolean> powerCheck) {
         String token = requireToken();
         MetaUserinfo user = requireLogin(token);
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        if (null != eruptModel && !eruptModel.isRemote() && !eruptModel.getErupt().power().ai()) {
+            throw new EruptWebApiRuntimeException("AI access is disabled for this Erupt model: " + eruptName);
+        }
         if (user.isSuperAdmin()) return;
         if (null == eruptUserService.getEruptMenuByValue(eruptName, token)) {
             throw new EruptWebApiRuntimeException("Current user has no access to this Erupt model: " + eruptName);
         }
-        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         if (null == eruptModel || eruptModel.isRemote()) return;
         Erupts.powerLegal(eruptModel, powerCheck);
     }

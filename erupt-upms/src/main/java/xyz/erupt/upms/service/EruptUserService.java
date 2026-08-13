@@ -213,11 +213,19 @@ public class EruptUserService {
     }
 
     public List<String> getEruptMenuValues() {
-        return sessionService.getMapKeys(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken());
+        return getEruptMenuValues(eruptContextService.getCurrentToken());
+    }
+
+    public List<String> getEruptMenuValues(String token) {
+        return sessionService.getMapKeys(SessionKey.MENU_VALUE_MAP + token);
     }
 
     public Map<String, Boolean> getEruptMenuValuesMap() {
-        return getEruptMenuValues().stream().collect(Collectors.toMap(it -> it, it -> true));
+        return getEruptMenuValuesMap(eruptContextService.getCurrentToken());
+    }
+
+    public Map<String, Boolean> getEruptMenuValuesMap(String token) {
+        return getEruptMenuValues(token).stream().collect(Collectors.toMap(it -> it, it -> true));
     }
 
     //Get the current user ID

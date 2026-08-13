@@ -30,6 +30,8 @@ public class PowerObject {
 
     private boolean copy = true;
 
+    private boolean ai = true;
+
     public PowerObject(Power power) {
         this.add = power.add();
         this.delete = power.delete();
@@ -40,6 +42,7 @@ public class PowerObject {
         this.importable = power.importable();
         this.print = power.print();
         this.copy = power.copy();
+        this.ai = power.ai();
     }
 
     public PowerObject() {
