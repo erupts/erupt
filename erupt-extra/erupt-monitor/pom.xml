@@ -22,7 +22,7 @@
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-memory</artifactId>
+            <artifactId>erupt-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

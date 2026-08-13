@@ -4,10 +4,10 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.EruptQuery;
+import xyz.erupt.core.service.EruptBeanDataService;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
-import xyz.erupt.memory.service.EruptMemoryDataService;
 import xyz.erupt.monitor.model.EruptFieldInfo;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.Optional;
  * @author YuePeng
  */
 @Service
-public class EruptFieldInfoDataService extends EruptMemoryDataService<EruptFieldInfo> {
+public class EruptFieldInfoDataService extends EruptBeanDataService<EruptFieldInfo> {
 
     public static final String DATA_PROCESSOR = "ERUPT_FIELD_INFO";
 

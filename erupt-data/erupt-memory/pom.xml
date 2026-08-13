@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-memory</artifactId>
-    <name>Erupt : Memory</name>
+    <name>Erupt : Data Memory</name>
     <description>EruptProcess in-memory impl</description>
 
     <parent>

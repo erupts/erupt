@@ -70,6 +70,8 @@
         <module>erupt-data/erupt-http</module>
         <module>erupt-data/erupt-jdbc</module>
         <module>erupt-data/erupt-es</module>
+        <module>erupt-data/erupt-redis</module>
+        <module>erupt-data/erupt-file</module>
 
         <!-- UPMS / Security / Web / Misc -->
         <module>erupt-upms</module>

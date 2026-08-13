@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-jdbc</artifactId>
-    <name>Erupt : Jdbc</name>
+    <name>Erupt : Data Jdbc</name>
     <description>EruptProcess plain jdbc impl</description>
 
     <parent>

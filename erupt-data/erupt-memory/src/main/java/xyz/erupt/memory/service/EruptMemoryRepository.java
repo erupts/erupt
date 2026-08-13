@@ -3,6 +3,7 @@ package xyz.erupt.memory.service;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.query.EruptQuery;
+import xyz.erupt.core.service.EruptBeanDataService;
 import xyz.erupt.core.view.EruptModel;
 
 import java.lang.reflect.Field;
@@ -23,7 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author YuePeng
  */
-public abstract class EruptMemoryRepository<T> extends EruptMemoryDataService<T> {
+public abstract class EruptMemoryRepository<T> extends EruptBeanDataService<T> {
 
     // Keys are normalized to strings so lookups stay insensitive to Long/String id types
     private final Map<String, T> store = new ConcurrentHashMap<>();

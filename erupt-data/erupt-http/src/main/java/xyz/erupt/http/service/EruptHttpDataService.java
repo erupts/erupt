@@ -11,10 +11,10 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.EruptQuery;
+import xyz.erupt.core.service.EruptBeanDataService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.http.annotation.EruptHttp;
-import xyz.erupt.memory.service.EruptMemoryDataService;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -31,13 +31,13 @@ import java.util.Optional;
 
 /**
  * REST-backed data source: models annotated with {@link EruptHttp} are read from and
- * written to a JSON endpoint. LOCAL query mode reuses the in-memory base class for
+ * written to a JSON endpoint. LOCAL query mode reuses the base class for
  * filtering / sorting / paging; REMOTE mode forwards paging to the endpoint.
  *
  * @author YuePeng
  */
 @Service
-public class EruptHttpDataService extends EruptMemoryDataService<Map<String, Object>> {
+public class EruptHttpDataService extends EruptBeanDataService<Map<String, Object>> {
 
     public static final String DATA_PROCESSOR = "HTTP";
 

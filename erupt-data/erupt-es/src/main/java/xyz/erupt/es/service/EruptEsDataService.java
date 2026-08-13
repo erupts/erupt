@@ -15,9 +15,9 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.EruptQuery;
+import xyz.erupt.core.service.EruptBeanDataService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
-import xyz.erupt.memory.service.EruptMemoryDataService;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
  * to its index with the native {@code @Document(indexName = ...)} annotation,
  * the cluster is configured with the standard {@code spring.elasticsearch.*}
  * properties, and conditions map to a {@link CriteriaQuery} so filtering,
- * sorting and paging are pushed down to {@code _search}. The in-memory base
- * class contributes drill condition-string parsing and bean → row conversion.
+ * sorting and paging are pushed down to {@code _search}. The base class
+ * contributes drill condition-string parsing and bean → row conversion.
  * <p>
  * The document {@code _id} maps to the model's id property (named {@code id} or
  * annotated with Spring Data's {@code @Id}). Equality filtering and sorting use
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * @author YuePeng
  */
 @Service
-public class EruptEsDataService extends EruptMemoryDataService<Object> {
+public class EruptEsDataService extends EruptBeanDataService<Object> {
 
     public static final String DATA_PROCESSOR = "ELASTICSEARCH";
 
@@ -61,6 +61,12 @@ public class EruptEsDataService extends EruptMemoryDataService<Object> {
         return this.search(eruptModel, query).getSearchHits().stream()
                 .map(org.springframework.data.elasticsearch.core.SearchHit::getContent)
                 .collect(Collectors.toList());
+    }
+
+    // data() already filters via _search; skip the base class re-evaluation
+    @Override
+    protected boolean conditionsPushedDown() {
+        return true;
     }
 
     @Override

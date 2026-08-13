@@ -9,10 +9,10 @@ import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.query.EruptQuery;
+import xyz.erupt.core.service.EruptBeanDataService;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.memory.service.EruptMemoryDataService;
 import xyz.erupt.monitor.model.EruptClassInfo;
 import xyz.erupt.upms.model.EruptMenu;
 
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * @author YuePeng
  */
 @Service
-public class EruptClassInfoDataService extends EruptMemoryDataService<EruptClassInfo> {
+public class EruptClassInfoDataService extends EruptBeanDataService<EruptClassInfo> {
 
     public static final String DATA_PROCESSOR = "ERUPT_CLASS_INFO";
 
