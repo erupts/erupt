@@ -44,9 +44,11 @@ public interface FileCodec {
     }
 
     /**
-     * Parse non-blank file content into one JSON object per record.
+     * Parse non-blank file content into one JSON object per record. The model's
+     * {@link EruptFile} is supplied because some formats (e.g. XML) need the
+     * {@link EruptFile#single()} flag to tell a one-record file from a one-row list.
      */
-    List<JsonObject> decode(String content);
+    List<JsonObject> decode(String content, EruptFile eruptFile);
 
     /**
      * Serialize records back to file text; the model supplies field order for

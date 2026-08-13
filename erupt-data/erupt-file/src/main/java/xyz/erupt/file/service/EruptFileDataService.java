@@ -67,6 +67,7 @@ public class EruptFileDataService extends EruptBeanDataService<Object> {
         }
         codecs.add(new PropertiesCodec());
         codecs.add(new MarkdownCodec());
+        codecs.add(new XmlCodec());
         codecs.add(new JsonCodec());
         return codecs;
     }
@@ -149,7 +150,7 @@ public class EruptFileDataService extends EruptBeanDataService<Object> {
         try {
             String content = Files.readString(path, StandardCharsets.UTF_8);
             if (content.trim().isEmpty()) return new ArrayList<>();
-            return this.codec(eruptFile).decode(content).stream()
+            return this.codec(eruptFile).decode(content, eruptFile).stream()
                     .map(json -> GsonFactory.getGson().fromJson(json, eruptModel.getClazz()))
                     .collect(Collectors.toList());
         } catch (IOException e) {

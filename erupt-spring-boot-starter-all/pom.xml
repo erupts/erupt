@@ -81,6 +81,16 @@
             <artifactId>erupt-ai-claw</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-ai-canvas</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-file</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <!-- Cloud (server side) -->
         <dependency>

@@ -23,6 +23,8 @@ public enum FileType {
 
     PROPERTIES,
 
-    MARKDOWN
+    MARKDOWN,
+
+    XML
 
 }

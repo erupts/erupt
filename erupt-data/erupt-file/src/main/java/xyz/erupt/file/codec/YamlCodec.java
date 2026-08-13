@@ -39,7 +39,7 @@ public class YamlCodec implements FileCodec {
     }
 
     @Override
-    public List<JsonObject> decode(String content) {
+    public List<JsonObject> decode(String content, EruptFile eruptFile) {
         List<JsonObject> list = new ArrayList<>();
         Object loaded = new Yaml().load(content);
         if (null == loaded) return list;

@@ -16,6 +16,8 @@ import java.lang.annotation.Target;
  *   <li>{@code .properties} — Java properties, always a single record</li>
  *   <li>{@code .md} / {@code .markdown} — Markdown with front-matter, always a single
  *       record; the body maps to the {@code content} field</li>
+ *   <li>{@code .xml} — XML; a root element wrapping {@code <item>} rows, or the root
+ *       itself as one record when {@code single = true}</li>
  *   <li>anything else (e.g. {@code .json}) — JSON, supporting nested fields</li>
  * </ul>
  * The file is re-read on every query and rewritten as a whole on every write —

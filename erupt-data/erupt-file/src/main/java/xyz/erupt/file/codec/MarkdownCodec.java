@@ -43,7 +43,7 @@ public class MarkdownCodec implements FileCodec {
     }
 
     @Override
-    public List<JsonObject> decode(String content) {
+    public List<JsonObject> decode(String content, EruptFile eruptFile) {
         JsonObject json = new JsonObject();
         String body = content;
         String[] lines = content.split("\n", -1);

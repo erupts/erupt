@@ -15,6 +15,12 @@ spring:
       hibernate:
         globally_quoted_identifiers: true
         type.enumeration.use_named: false # Make Hibernate 6 not use native enums and switch back to varchar.
+  # Used by the RedisConfig sample (erupt-redis data source). Start a Redis server first;
+  # the connection is lazy, so the app boots fine without one and only that menu errors.
+  data:
+    redis:
+      host: localhost
+      port: 6379
 erupt:
   ai:
     claw:

@@ -19,7 +19,8 @@ public class EruptFileAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-file").description("File data source implement (json / csv)").build();
+        return ModuleInfo.builder().name("erupt-file")
+                .description("File data source implement (csv / json / yaml / properties / markdown / xml)").build();
     }
 
 }

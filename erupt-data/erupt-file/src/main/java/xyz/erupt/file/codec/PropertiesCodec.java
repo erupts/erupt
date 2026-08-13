@@ -39,7 +39,7 @@ public class PropertiesCodec implements FileCodec {
     }
 
     @Override
-    public List<JsonObject> decode(String content) {
+    public List<JsonObject> decode(String content, EruptFile eruptFile) {
         Properties props = new Properties();
         try {
             props.load(new StringReader(content));

@@ -31,7 +31,7 @@ public class CsvCodec implements FileCodec {
     }
 
     @Override
-    public List<JsonObject> decode(String content) {
+    public List<JsonObject> decode(String content, EruptFile eruptFile) {
         List<List<String>> records = this.parse(content);
         List<JsonObject> list = new ArrayList<>();
         if (records.isEmpty()) return list;

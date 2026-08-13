@@ -39,7 +39,7 @@ public class JsonCodec implements FileCodec {
     }
 
     @Override
-    public List<JsonObject> decode(String content) {
+    public List<JsonObject> decode(String content, EruptFile eruptFile) {
         List<JsonObject> list = new ArrayList<>();
         JsonElement root = GsonFactory.getGson().fromJson(content, JsonElement.class);
         if (null == root || root.isJsonNull()) return list;
