@@ -23,6 +23,7 @@ import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
+import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
@@ -103,6 +104,10 @@ public class EruptModifyService {
     @SneakyThrows
     @Transactional
     public Object insertEruptData(EruptModel eruptModel, JsonObject data) {
+        // erupt-cloud: forward to the owning node, which runs its own validation/DataProxy pipeline
+        if (eruptModel.isRemote()) {
+            return EruptRemoteRouterManager.get().insert(eruptModel.getEruptName(), data);
+        }
         R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
         if (!validation.isSuccess()) {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
@@ -120,6 +125,10 @@ public class EruptModifyService {
     @SneakyThrows
     @Transactional
     public void updateEruptData(EruptModel eruptModel, JsonObject data) {
+        if (eruptModel.isRemote()) {
+            EruptRemoteRouterManager.get().update(eruptModel.getEruptName(), data);
+            return;
+        }
         R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
         if (!validation.isSuccess()) {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
@@ -169,6 +178,10 @@ public class EruptModifyService {
     @SneakyThrows
     @Transactional
     public void deleteEruptData(EruptModel eruptModel, List<Object> ids, boolean verifyIdPermissions) {
+        if (eruptModel.isRemote()) {
+            EruptRemoteRouterManager.get().delete(eruptModel.getEruptName(), ids);
+            return;
+        }
         List<Object> deletedObjs = new ArrayList<>();
         for (Object id : ids) {
             if (verifyIdPermissions) {

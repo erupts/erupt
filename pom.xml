@@ -72,6 +72,8 @@
         <module>erupt-data/erupt-data-es</module>
         <module>erupt-data/erupt-data-redis</module>
         <module>erupt-data/erupt-data-file</module>
+        <module>erupt-data/erupt-data-feishu</module>
+        <module>erupt-data/erupt-data-notion</module>
 
         <!-- UPMS / Security / Web / Misc -->
         <module>erupt-upms</module>

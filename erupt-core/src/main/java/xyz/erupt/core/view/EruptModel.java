@@ -42,6 +42,9 @@ public class EruptModel implements Cloneable {
 
     private String eruptName;
 
+    // erupt-cloud: the node this erupt physically lives on; null means local
+    private transient String remoteNode;
+
     private JsonObject eruptJson;
 
     private List<EruptFieldModel> eruptFieldModels;
@@ -71,6 +74,16 @@ public class EruptModel implements Cloneable {
             } catch (NoSuchMethodException ignored) {
             }
         });
+    }
+
+    // Lightweight placeholder for a remote (erupt-cloud node) erupt that has no local class
+    public EruptModel(String eruptName, String remoteNode) {
+        this.eruptName = eruptName;
+        this.remoteNode = remoteNode;
+    }
+
+    public boolean isRemote() {
+        return null != remoteNode;
     }
 
     public Erupt getErupt() {

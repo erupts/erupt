@@ -156,22 +156,25 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                     Optional.ofNullable(httpResponse.header(transferHeader)).ifPresent(it -> response.addHeader(transferHeader, it));
                 }
                 response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-                String body = httpResponse.body();
+                // Error: body is small, buffer it for logging and passthrough
                 if (httpResponse.getStatus() != HttpStatus.OK.value()) {
+                    String body = httpResponse.body();
                     log.error("{}: {} -> {}", metaNode.getNodeName(), path, body);
                     operationService.record(handler, new Exception(body));
                     response.setStatus(httpResponse.getStatus());
-                    response.getOutputStream().write(httpResponse.bodyBytes());
+                    response.getOutputStream().write(body.getBytes(StandardCharsets.UTF_8));
                     return false;
-                } else {
-                    operationService.record(handler, null);
                 }
+                operationService.record(handler, null);
                 if ((EruptRestPath.ERUPT_BUILD + "/" + erupt).equals(request.getServletPath())) {
-                    EruptBuildModel eruptBuildModel = GsonFactory.getGson().fromJson(body, EruptBuildModel.class);
+                    // Build: must buffer to rewrite node-name prefixes into the model
+                    EruptBuildModel eruptBuildModel = GsonFactory.getGson().fromJson(httpResponse.body(), EruptBuildModel.class);
                     this.eruptBuildProcess(eruptBuildModel, nodeName);
                     response.getOutputStream().write(GsonFactory.getGson().toJson(eruptBuildModel).getBytes(StandardCharsets.UTF_8));
                 } else {
-                    response.getOutputStream().write(httpResponse.bodyBytes());
+                    // Everything else (data / excel / file / large responses): stream through without full buffering
+                    StreamUtils.copy(httpResponse.bodyStream(), response.getOutputStream());
+                    response.flushBuffer();
                 }
                 NodeContext.remove();
                 return false;
@@ -222,7 +225,8 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 httpRequest.body(StreamUtils.copyToByteArray(request.getInputStream()));
             }
             httpRequest.timeout(eruptCloudServerProp.getNodeRequestTimeout());
-            return httpRequest.addHeaders(headers).execute();
+            // async execution keeps the body lazy so it can be streamed instead of fully buffered
+            return httpRequest.addHeaders(headers).executeAsync();
         } catch (Exception e) {
             throw new EruptWebApiRuntimeException(location + " -> " + e.getMessage());
         }

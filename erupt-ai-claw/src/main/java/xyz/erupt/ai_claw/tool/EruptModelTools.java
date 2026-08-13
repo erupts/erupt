@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.ai.AiToolbox;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.controller.EruptDataController;
+import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptModifyService;
@@ -55,6 +56,12 @@ public class EruptModelTools {
         StringBuilder sb = new StringBuilder();
         for (EruptModel erupt : EruptCoreService.getErupts()) {
             sb.append(erupt.getEruptName()).append(": ").append(erupt.getErupt().name()).append("\n");
+        }
+        // erupt-cloud: include erupts served by remote nodes (call eruptSchema to inspect their fields)
+        if (null != EruptRemoteRouterManager.get()) {
+            for (String name : EruptRemoteRouterManager.get().remoteEruptNames()) {
+                sb.append(name).append("\n");
+            }
         }
         return sb.toString();
     }
