@@ -88,7 +88,7 @@
         </dependency>
         <dependency>
             <groupId>${erupt.groupId}</groupId>
-            <artifactId>erupt-file</artifactId>
+            <artifactId>erupt-data-file</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

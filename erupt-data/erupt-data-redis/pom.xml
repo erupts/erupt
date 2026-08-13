@@ -3,9 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>erupt-cloud-node-jpa</artifactId>
-    <name>Erupt : Cloud Node JPA</name>
-    <packaging>jar</packaging>
+    <artifactId>erupt-data-redis</artifactId>
+    <name>Erupt : Data Redis</name>
+    <description>EruptProcess redis impl</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>
@@ -17,18 +17,13 @@
     <dependencies>
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-cloud-node</artifactId>
+            <artifactId>erupt-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-data-jpa</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-toolkit</artifactId>
-            <version>${project.parent.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
     </dependencies>
+
 </project>

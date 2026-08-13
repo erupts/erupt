@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-jpa</artifactId>
+            <artifactId>erupt-data-jpa</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
