@@ -23,7 +23,7 @@ import xyz.erupt.monitor.service.EruptFieldInfoDataService;
  */
 @Erupt(
         name = "Erupt Field Info",
-        power = @Power(add = false, edit = false, delete = false, export = true, viewDetails = false)
+        power = @Power(add = false, edit = false, delete = false, viewDetails = false)
 )
 @EruptDataProcessor(EruptFieldInfoDataService.DATA_PROCESSOR)
 @EruptI18n

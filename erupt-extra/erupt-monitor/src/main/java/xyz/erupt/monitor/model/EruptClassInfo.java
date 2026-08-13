@@ -31,7 +31,7 @@ import xyz.erupt.upms.model.input.MenuPublishModal;
 @Erupt(
         name = "Erupt Class Registry",
         primaryKeyCol = "name",
-        power = @Power(add = false, edit = false, delete = false, export = true),
+        power = @Power(add = false, edit = false, delete = false, export = false),
         drills = @Drill(
                 title = "Fields",
                 link = @Link(column = "name", linkErupt = EruptFieldInfo.class, joinColumn = "eruptName")
