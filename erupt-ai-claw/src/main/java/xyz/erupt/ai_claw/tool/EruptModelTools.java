@@ -11,6 +11,7 @@ import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.controller.EruptDataController;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.EruptRemoteRouterManager;
@@ -70,17 +71,18 @@ public class EruptModelTools {
 
     @Tool("Erupt data model list")
     public String eruptModelList() {
-        boolean superAdmin = requireLogin().isSuperAdmin();
+        String token = requireToken();
+        boolean superAdmin = requireLogin(token).isSuperAdmin();
         StringBuilder sb = new StringBuilder();
         for (EruptModel erupt : EruptCoreService.getErupts()) {
-            if (superAdmin || eruptUserService.getEruptMenuByValue(erupt.getEruptName()) != null) {
+            if (superAdmin || eruptUserService.getEruptMenuByValue(erupt.getEruptName(), token) != null) {
                 sb.append(erupt.getEruptName()).append(": ").append(erupt.getErupt().name()).append("\n");
             }
         }
         // erupt-cloud: include erupts served by remote nodes (call eruptSchema to inspect their fields)
         if (null != EruptRemoteRouterManager.get()) {
             for (String name : EruptRemoteRouterManager.get().remoteEruptNames()) {
-                if (superAdmin || eruptUserService.getEruptMenuByValue(name) != null) {
+                if (superAdmin || eruptUserService.getEruptMenuByValue(name, token) != null) {
                     sb.append(name).append("\n");
                 }
             }
@@ -163,9 +165,10 @@ public class EruptModelTools {
     // Enforce menu access + per-erupt power for the current user. Super admins bypass.
     // Remote erupts skip the local power check — the owning node runs its own permission pipeline.
     private void checkErupt(String eruptName, Function<PowerObject, Boolean> powerCheck) {
-        MetaUserinfo user = requireLogin();
+        String token = requireToken();
+        MetaUserinfo user = requireLogin(token);
         if (user.isSuperAdmin()) return;
-        if (null == eruptUserService.getEruptMenuByValue(eruptName)) {
+        if (null == eruptUserService.getEruptMenuByValue(eruptName, token)) {
             throw new EruptWebApiRuntimeException("Current user has no access to this Erupt model: " + eruptName);
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
@@ -173,11 +176,17 @@ public class EruptModelTools {
         Erupts.powerLegal(eruptModel, powerCheck);
     }
 
-    private MetaUserinfo requireLogin() {
-        MetaUserinfo user = eruptUserService.getSimpleUserInfo();
-        if (null == user) {
-            throw new EruptWebApiRuntimeException("Login required");
-        }
+    // Tools run on langchain4j's ForkJoinPool workers where no HttpServletRequest is bound;
+    // pull identity from MetaContext (propagated by LlmCore.streamingChat) instead of the request scope
+    private String requireToken() {
+        String token = MetaContext.getToken();
+        if (null == token || token.isBlank()) throw new EruptWebApiRuntimeException("Login required");
+        return token;
+    }
+
+    private MetaUserinfo requireLogin(String token) {
+        MetaUserinfo user = eruptUserService.getSimpleUserInfoByToken(token);
+        if (null == user) throw new EruptWebApiRuntimeException("Login required");
         return user;
     }
 
