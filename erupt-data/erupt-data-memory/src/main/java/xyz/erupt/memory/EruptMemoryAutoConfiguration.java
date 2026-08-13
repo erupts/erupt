@@ -19,7 +19,7 @@ public class EruptMemoryAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-memory").description("In-memory data source implement").build();
+        return ModuleInfo.builder().name("erupt-data-memory").description("In-memory data source implement").build();
     }
 
 }

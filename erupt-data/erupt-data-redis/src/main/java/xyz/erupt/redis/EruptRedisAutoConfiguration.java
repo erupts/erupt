@@ -19,7 +19,7 @@ public class EruptRedisAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-redis").description("Redis data source implement").build();
+        return ModuleInfo.builder().name("erupt-data-redis").description("Redis data source implement").build();
     }
 
 }

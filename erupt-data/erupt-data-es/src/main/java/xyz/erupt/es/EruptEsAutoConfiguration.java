@@ -19,7 +19,7 @@ public class EruptEsAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-es").description("Elasticsearch data source implement").build();
+        return ModuleInfo.builder().name("erupt-data-es").description("Elasticsearch data source implement").build();
     }
 
 }

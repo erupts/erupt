@@ -19,7 +19,7 @@ public class EruptJdbcAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-jdbc").description("Plain jdbc data source implement").build();
+        return ModuleInfo.builder().name("erupt-data-jdbc").description("Plain jdbc data source implement").build();
     }
 
 }

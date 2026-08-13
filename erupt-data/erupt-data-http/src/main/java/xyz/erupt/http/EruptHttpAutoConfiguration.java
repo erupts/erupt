@@ -19,7 +19,7 @@ public class EruptHttpAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-http").description("REST http data source implement").build();
+        return ModuleInfo.builder().name("erupt-data-http").description("REST http data source implement").build();
     }
 
 }
