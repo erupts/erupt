@@ -42,6 +42,12 @@ public class NotionPropertyMapTest {
         assertEquals("{\"title\":[{\"text\":{\"content\":\"Hi\"}}]}",
                 EruptNotionDataService.encodeProperty("title", json("\"Hi\"")).toString());
         assertEquals("{\"number\":7}", EruptNotionDataService.encodeProperty("number", json("7")).toString());
+        // form values arrive as strings; a number field must still emit a JSON number, not a string
+        assertEquals("{\"number\":150}", EruptNotionDataService.encodeProperty("number", json("\"150\"")).toString());
+        assertEquals("{\"number\":1.5}", EruptNotionDataService.encodeProperty("number", json("\"1.5\"")).toString());
+        // blank / non-numeric number input is skipped rather than sent as an invalid value
+        assertNull(EruptNotionDataService.encodeProperty("number", json("\"\"")));
+        assertNull(EruptNotionDataService.encodeProperty("number", json("\"abc\"")));
         assertEquals("{\"select\":{\"name\":\"Open\"}}", EruptNotionDataService.encodeProperty("select", json("\"Open\"")).toString());
         assertEquals("{\"multi_select\":[{\"name\":\"a\"},{\"name\":\"b\"}]}",
                 EruptNotionDataService.encodeProperty("multi_select", json("[\"a\",\"b\"]")).toString());

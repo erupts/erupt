@@ -234,9 +234,13 @@ public class EruptNotionDataService extends EruptBeanDataService<Map<String, Obj
                 property.add(type, array);
                 return property;
             }
-            case "number":
-                property.add("number", value);
+            case "number": {
+                // form values arrive as strings ("150"); Notion's number field rejects a JSON string, so coerce
+                JsonElement number = toNumber(value);
+                if (null == number) return null;
+                property.add("number", number);
                 return property;
+            }
             case "select":
             case "status": {
                 JsonObject name = new JsonObject();
@@ -284,6 +288,27 @@ public class EruptNotionDataService extends EruptBeanDataService<Map<String, Obj
             if (null != property) properties.add(entry.getKey(), property);
         }
         return properties;
+    }
+
+    /**
+     * Coerce a value into a numeric {@link JsonElement} for a Notion number property,
+     * parsing string inputs (form submissions arrive as strings). Returns {@code null}
+     * for blank or non-numeric values so the property is skipped rather than rejected.
+     */
+    static JsonElement toNumber(JsonElement value) {
+        if (!value.isJsonPrimitive()) return null;
+        JsonPrimitive primitive = value.getAsJsonPrimitive();
+        if (primitive.isNumber()) return value;
+        if (primitive.isString()) {
+            String text = primitive.getAsString().trim();
+            if (text.isEmpty()) return null;
+            try {
+                return new JsonPrimitive(new BigDecimal(text));
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     private static JsonObject namedOption(String name) {
