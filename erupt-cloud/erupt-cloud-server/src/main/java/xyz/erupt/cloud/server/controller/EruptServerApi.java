@@ -53,7 +53,6 @@ public class EruptServerApi {
         powerObject.setQuery(permissionMap.containsKey(name.toLowerCase()));
         powerObject.setAdd(powerOff(EruptFunPermissions.ADD, permissionMap, name));
         powerObject.setDelete(powerOff(EruptFunPermissions.DELETE, permissionMap, name));
-        powerObject.setAdd(powerOff(EruptFunPermissions.ADD, permissionMap, name));
         powerObject.setEdit(powerOff(EruptFunPermissions.EDIT, permissionMap, name));
         powerObject.setExport(powerOff(EruptFunPermissions.EXPORT, permissionMap, name));
         powerObject.setImportable(powerOff(EruptFunPermissions.IMPORTABLE, permissionMap, name));
