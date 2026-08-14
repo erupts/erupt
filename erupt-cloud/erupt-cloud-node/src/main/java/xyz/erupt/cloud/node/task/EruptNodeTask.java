@@ -16,6 +16,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
 import xyz.erupt.cloud.common.model.NodeInfo;
+import xyz.erupt.cloud.node.config.EruptNodeInterceptor;
 import xyz.erupt.cloud.node.config.EruptNodeProp;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.service.EruptCoreService;
@@ -51,6 +52,9 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
     private final String instanceId = RandomStringUtils.randomAlphabetic(6);
 
     private boolean errorConnect = false;
+
+    // This instance's registered addresses, captured so shutdown can deregister them precisely.
+    private volatile String[] nodeAddresses;
 
     @Override
     @SuppressWarnings("StringConcatenationArgumentToLogCall")
@@ -103,6 +107,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
                 nodeInfo.setNodeAddress(new String[]{eruptNodeProp.getSchema() + "://" + Inet4Address.getLocalHost().getHostAddress() + ":" + serverProperties.getPort() + contextPath});
             }
             nodeInfo.setErupts(EruptCoreService.getErupts().stream().map(EruptModel::getEruptName).collect(Collectors.toList()));
+            this.nodeAddresses = nodeInfo.getNodeAddress();
             try {
                 try (HttpResponse httpResponse = HttpUtil.createPost(address + CloudRestApiConst.REGISTER_NODE)
                         .body(gson.toJson(nodeInfo)).execute()) {
@@ -126,12 +131,35 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
     @Override
     public void destroy() {
         this.runner = false;
-        // cancel register
-        HttpResponse httpResponse = HttpUtil.createPost(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.REMOVE_INSTANCE_NODE
-        ).form(new HashMap<>() {{
-            this.put("nodeName", eruptNodeProp.getNodeName());
-            this.put("accessToken", eruptNodeProp.getAccessToken());
-        }}).execute();
-        httpResponse.close();
+        // 1. Deregister this instance's addresses so the server stops routing new requests to it
+        //    immediately, instead of waiting for the survival check to notice the node is gone.
+        try (HttpResponse httpResponse = HttpUtil.createPost(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.REMOVE_INSTANCE_NODE)
+                .form(new HashMap<String, Object>() {{
+                    put("nodeName", eruptNodeProp.getNodeName());
+                    put("accessToken", eruptNodeProp.getAccessToken());
+                    if (null != nodeAddresses && nodeAddresses.length > 0) {
+                        put("locations", String.join(",", nodeAddresses));
+                    }
+                }}).execute()) {
+            if (!httpResponse.isOk()) {
+                log.error("deregister failed: {}", httpResponse.body());
+            }
+        } catch (Exception e) {
+            log.error("deregister error: {}", e.getMessage());
+        }
+        // 2. Drain: wait for requests already accepted before this instance was deregistered to finish.
+        long deadline = System.currentTimeMillis() + eruptNodeProp.getDrainTimeout();
+        while (EruptNodeInterceptor.inFlight() > 0 && System.currentTimeMillis() < deadline) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        int remaining = EruptNodeInterceptor.inFlight();
+        if (remaining > 0) {
+            log.warn("shutdown drain timeout, {} request(s) still in flight", remaining);
+        }
     }
 }

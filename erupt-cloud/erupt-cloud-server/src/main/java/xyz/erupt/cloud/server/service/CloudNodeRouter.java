@@ -17,6 +17,7 @@ import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeManager;
+import xyz.erupt.cloud.server.util.CloudServerUtil;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptMutualConst;
@@ -33,7 +34,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Routes in-process erupt operations (AI/MCP tools, workflow, internal callers) against remote
@@ -55,8 +55,6 @@ public class CloudNodeRouter implements EruptRemoteRouter {
 
     @Resource
     private EruptCloudServerProp eruptCloudServerProp;
-
-    private final AtomicInteger counter = new AtomicInteger();
 
     private static final Type MAP_TYPE = new TypeToken<Map<String, Object>>() {
     }.getType();
@@ -152,30 +150,40 @@ public class CloudNodeRouter implements EruptRemoteRouter {
         if (null == metaNode) {
             throw new EruptWebApiRuntimeException("'" + nodeName + "' node not ready");
         }
-        HttpRequest httpRequest = HttpUtil.createRequest(method, pickLocation(metaNode) + path)
-                .header(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken())
-                .header(EruptMutualConst.TOKEN, MetaContext.getToken())
-                .header(EruptMutualConst.ERUPT, simpleName(eruptName))
-                .header(EruptMutualConst.USER, Base64Encoder.encode(GsonFactory.getGson().toJson(MetaContext.getUser())))
-                .timeout(eruptCloudServerProp.getNodeRequestTimeout());
-        if (null != body) {
-            httpRequest.body(GsonFactory.getGson().toJson(body));
-        }
-        try (HttpResponse httpResponse = httpRequest.execute()) {
-            String responseBody = httpResponse.body();
-            if (httpResponse.getStatus() != HttpStatus.OK.value()) {
-                throw new EruptWebApiRuntimeException(nodeName + " -> " + responseBody);
+        String payload = null == body ? null : GsonFactory.getGson().toJson(body);
+        List<String> locations = nodeManager.pickLocations(metaNode);
+        Exception lastError = null;
+        for (int i = 0; i < locations.size(); i++) {
+            String location = locations.get(i);
+            HttpRequest httpRequest = HttpUtil.createRequest(method, location + path)
+                    .header(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken())
+                    .header(EruptMutualConst.TOKEN, MetaContext.getToken())
+                    .header(EruptMutualConst.ERUPT, simpleName(eruptName))
+                    .header(EruptMutualConst.USER, Base64Encoder.encode(GsonFactory.getGson().toJson(MetaContext.getUser())))
+                    .timeout(eruptCloudServerProp.getNodeRequestTimeout());
+            if (null != payload) {
+                httpRequest.body(payload);
             }
-            return responseBody;
+            try (HttpResponse httpResponse = httpRequest.execute()) {
+                String responseBody = httpResponse.body();
+                if (httpResponse.getStatus() != HttpStatus.OK.value()) {
+                    throw new EruptWebApiRuntimeException(nodeName + " -> " + responseBody);
+                }
+                return responseBody;
+            } catch (EruptWebApiRuntimeException e) {
+                throw e; // application-level error from the node, never fail over
+            } catch (Exception e) {
+                lastError = e;
+                // Only fail over when the connection never reached the node.
+                if (i + 1 < locations.size() && CloudServerUtil.isConnectFailure(e)) {
+                    log.warn("node {} instance {} unreachable, failing over: {}", nodeName, location, e.getMessage());
+                    nodeManager.evictInstance(nodeName, location);
+                    continue;
+                }
+                throw new EruptWebApiRuntimeException(location + " -> " + e.getMessage());
+            }
         }
-    }
-
-    private String pickLocation(MetaNode metaNode) {
-        String[] locations = metaNode.getLocations().toArray(new String[0]);
-        if (locations.length == 0) {
-            throw new EruptWebApiRuntimeException(metaNode.getNodeName() + " has no available instance");
-        }
-        return locations[locations.length == 1 ? 0 : Math.abs(counter.getAndIncrement() % locations.length)];
+        throw new EruptWebApiRuntimeException(nodeName + " -> " + (null == lastError ? "no available instance" : lastError.getMessage()));
     }
 
 }

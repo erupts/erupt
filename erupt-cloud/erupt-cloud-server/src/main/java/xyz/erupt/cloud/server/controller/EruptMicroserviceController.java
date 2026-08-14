@@ -15,6 +15,8 @@ import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.service.EruptNodeMicroservice;
 import xyz.erupt.cloud.server.util.CloudServerUtil;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -46,11 +48,14 @@ public class EruptMicroserviceController {
         eruptNodeMicroservice.registerNode(cloudNode, metaNode);
     }
 
-    //Remove instance
+    //Remove instance. When the node reports its own locations (graceful shutdown) they are dropped
+    //precisely; otherwise fall back to a survival poll.
     @PostMapping(CloudRestApiConst.REMOVE_INSTANCE_NODE)
-    public void removeInstanceNode(@RequestParam String nodeName, @RequestParam String accessToken, HttpServletRequest request) {
+    public void removeInstanceNode(@RequestParam String nodeName, @RequestParam String accessToken,
+                                   @RequestParam(required = false) String locations, HttpServletRequest request) {
         Optional.ofNullable(CloudServerUtil.findEruptCloudServerAnnotation()).ifPresent(it -> it.removeNode(nodeName, request));
-        eruptNodeMicroservice.safeRemoveInstance(nodeName, accessToken);
+        List<String> locationList = (null == locations || locations.isBlank()) ? null : Arrays.asList(locations.split(","));
+        eruptNodeMicroservice.removeInstance(nodeName, accessToken, locationList);
     }
 
 }
