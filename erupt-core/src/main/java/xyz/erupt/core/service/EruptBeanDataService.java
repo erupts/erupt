@@ -55,9 +55,41 @@ public abstract class EruptBeanDataService<T> implements IEruptDataService {
     public Object findDataById(EruptModel eruptModel, Object id) {
         String primaryKey = eruptModel.getErupt().primaryKeyCol();
         for (T bean : this.data(eruptModel, EruptQuery.builder().build())) {
-            if (this.eq(this.readValue(eruptModel, bean, primaryKey), id)) return bean;
+            if (this.eq(this.readValue(eruptModel, bean, primaryKey), id)) {
+                return bean instanceof Map ? this.toModel(eruptModel, (Map<?, ?>) bean) : bean;
+            }
         }
         return null;
+    }
+
+    // Map-backed sources (Feishu Bitable, SaaS tables, ...) yield a row as a Map, but the
+    // detail / edit / update pipeline (generateEruptDataMap, dataTarget, BeanUtils.copyProperties,
+    // editData) reflects over model fields, so a matched row must be materialized into a model
+    // instance. Values are already decoded scalars / lists; each is coerced to its field type,
+    // turning Feishu epoch millis into Date where the field demands it.
+    @SneakyThrows
+    protected Object toModel(EruptModel eruptModel, Map<?, ?> row) {
+        Object model = eruptModel.getClazz().getDeclaredConstructor().newInstance();
+        for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+            Field field = fieldModel.getField();
+            if (null == field) continue;
+            Object value = row.get(fieldModel.getFieldName());
+            if (null == value) continue;
+            field.setAccessible(true);
+            field.set(model, this.coerce(value, field.getType()));
+        }
+        return model;
+    }
+
+    private Object coerce(Object value, Class<?> type) {
+        if (type.isInstance(value)) return value;
+        if (Date.class.isAssignableFrom(type) && value instanceof Number) {
+            return new Date(((Number) value).longValue());
+        }
+        if (Collection.class.isAssignableFrom(type)) {
+            return value instanceof Collection ? value : Collections.singletonList(value);
+        }
+        return TypeUtil.typeStrConvertObject(value, type);
     }
 
     @Override
