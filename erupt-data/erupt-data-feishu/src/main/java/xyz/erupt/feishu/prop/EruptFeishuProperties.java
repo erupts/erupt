@@ -3,17 +3,17 @@ package xyz.erupt.feishu.prop;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * Feishu open-platform credentials, bound from {@code erupt.feishu.*} in the
  * application configuration. Secrets stay out of source and annotations.
+ * Registered as a bean via {@code @EnableConfigurationProperties} in the
+ * auto-configuration, so no stereotype annotation here.
  *
  * @author YuePeng
  */
 @Getter
 @Setter
-@Component
 @ConfigurationProperties(prefix = "erupt.feishu")
 public class EruptFeishuProperties {
 

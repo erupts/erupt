@@ -3,7 +3,6 @@ package xyz.erupt.notion.prop;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * Notion integration credentials, bound from {@code erupt.notion.*} in the
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
  */
 @Getter
 @Setter
-@Component
 @ConfigurationProperties(prefix = "erupt.notion")
 public class EruptNotionProperties {
 

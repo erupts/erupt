@@ -74,9 +74,11 @@ public class EruptFeishuDataService extends EruptBeanDataService<Map<String, Obj
         List<Map<String, Object>> rows = new ArrayList<>();
         String pageToken = null;
         do {
-            String url = this.recordsUrl(feishu) + "?page_size=" + PAGE_SIZE
+            // Use the search endpoint; the legacy GET list-records API is deprecated
+            // and returns 400 on newer bases. Empty body = fetch all fields, no filter.
+            String url = this.recordsUrl(feishu) + "/search?page_size=" + PAGE_SIZE
                     + (null == pageToken ? "" : "&page_token=" + this.encode(pageToken));
-            JsonObject data = this.okData(this.request("GET", url, null));
+            JsonObject data = this.okData(this.request("POST", url, "{}"));
             JsonArray items = data.has("items") && data.get("items").isJsonArray()
                     ? data.getAsJsonArray("items") : new JsonArray();
             for (JsonElement element : items) {
@@ -248,8 +250,11 @@ public class EruptFeishuDataService extends EruptBeanDataService<Map<String, Obj
         try {
             HttpResponse<String> response = HTTP_CLIENT.send(builder.build(), HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
+                // Feishu returns a { code, msg } envelope even on 4xx; surface it so the
+                // real cause (invalid token / field / page_size) is visible, not just the status.
                 throw new EruptWebApiRuntimeException(I18nTranslate.$translate("feishu.request_failed")
-                        + " → " + response.statusCode() + " " + method + " " + url);
+                        + " → " + response.statusCode() + " " + method + " " + url
+                        + (this.isBlank(response.body()) ? "" : " " + response.body()));
             }
             return response.body();
         } catch (IOException e) {
