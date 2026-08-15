@@ -83,7 +83,7 @@ public class EruptExcelController {
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void exportData(@PathVariable("erupt") String eruptName,
                            @RequestBody TableQuery tableQuery,
-                           @RequestParam(required = false) List<Object> ids,
+                           @RequestParam(value = "ids", required = false) List<Object> ids,
                            HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);

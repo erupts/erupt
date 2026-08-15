@@ -22,8 +22,8 @@ public class EruptToolController {
 
     @GetMapping(EruptConst.ERUPT_LOG)
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
-    public List<LogMessage> eruptLog(@RequestParam(defaultValue = "1000") Long size,
-                                     @RequestParam(required = false) Long offset) {
+    public List<LogMessage> eruptLog(@RequestParam(value = "size", defaultValue = "1000") Long size,
+                                     @RequestParam(value = "offset", required = false) Long offset) {
         return EruptLogManager.getEventQueue(size, offset);
     }
 

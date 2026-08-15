@@ -34,8 +34,8 @@ public class MonitorDiagnosisController {
 
     @GetMapping("/http-stats")
     @EruptMenuAuth(MonitorConstant.MENU_DIAGNOSIS)
-    public List<HttpStat> httpStats(@RequestParam(defaultValue = "avg") String sortBy,
-                                    @RequestParam(defaultValue = "20") int limit) {
+    public List<HttpStat> httpStats(@RequestParam(value = "sortBy", defaultValue = "avg") String sortBy,
+                                    @RequestParam(value = "limit", defaultValue = "20") int limit) {
         return httpStatService.top(limit, sortBy);
     }
 

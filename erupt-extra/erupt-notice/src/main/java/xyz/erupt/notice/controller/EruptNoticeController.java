@@ -58,10 +58,10 @@ public class EruptNoticeController {
 
     @EruptLoginAuth
     @GetMapping("/messages")
-    public R<SimplePage<NoticeLogDetail>> messages(@RequestParam int page, @RequestParam int size,
-                                                   @RequestParam(required = false) NoticeStatus status,
-                                                   @RequestParam(required = false) String search,
-                                                   @RequestParam(required = false) Long scene) {
+    public R<SimplePage<NoticeLogDetail>> messages(@RequestParam("page") int page, @RequestParam("size") int size,
+                                                   @RequestParam(value = "status", required = false) NoticeStatus status,
+                                                   @RequestParam(value = "search", required = false) String search,
+                                                   @RequestParam(value = "scene", required = false) Long scene) {
         return R.ok(eruptDao.lambdaQuery(NoticeLogDetail.class)
                 .eq(NoticeLogDetail::getChannel, eruptInternalNotice.code())
                 .eq(NoticeLogDetail::getSuccess, true)
@@ -75,7 +75,7 @@ public class EruptNoticeController {
     @EruptLoginAuth
     @GetMapping("/message-detail")
     @Transactional
-    public R<NoticeLogDetail> message(@RequestParam Long id) {
+    public R<NoticeLogDetail> message(@RequestParam("id") Long id) {
         NoticeLogDetail noticeLogDetail = eruptDao.lambdaQuery(NoticeLogDetail.class).eq(NoticeLogDetail::getId, id)
                 .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with().one();
         if (noticeLogDetail.getStatus() == NoticeStatus.UNREAD) {

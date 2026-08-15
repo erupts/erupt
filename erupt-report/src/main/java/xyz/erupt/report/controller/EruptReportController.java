@@ -124,7 +124,7 @@ public class EruptReportController {
                             @RequestParam("size") int pageSize,
                             @RequestParam(value = "sort", required = false) String sortField,
                             @RequestParam(value = "direction", required = false) Boolean direction,
-                            @RequestBody Map<String, Object> query, @PathVariable String code) {
+                            @RequestBody Map<String, Object> query, @PathVariable("code") String code) {
         if (pageSize >= eruptBiProp.getSingleMaxResultNum()) {
             throw new EruptWebApiRuntimeException("exceed single maximum 'pageSize'");
         }
@@ -139,10 +139,10 @@ public class EruptReportController {
 
     @PostMapping("/drill/data/{code}/{drillCode}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 3)
-    public BiData drillData(@PathVariable String code,
-                            @PathVariable Integer drillCode,
-                            @RequestParam Integer pageIndex,
-                            @RequestParam Integer pageSize,
+    public BiData drillData(@PathVariable("code") String code,
+                            @PathVariable("drillCode") Integer drillCode,
+                            @RequestParam("pageIndex") Integer pageIndex,
+                            @RequestParam("pageSize") Integer pageSize,
                             @RequestBody Map<String, Object> query) {
         if (pageSize >= eruptBiProp.getSingleMaxResultNum())
             throw new EruptWebApiRuntimeException("exceed single maximum 'pageSize'");
@@ -169,7 +169,7 @@ public class EruptReportController {
     // reference list endpoint
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @PostMapping("/{code}/reference/{id}")
-    public List<Reference> refQuery(@PathVariable("id") Long dimId, @PathVariable String code,
+    public List<Reference> refQuery(@PathVariable("id") Long dimId, @PathVariable("code") String code,
                                     @RequestBody Map<String, Object> query) {
         BiDimension dimension = entityManager.find(BiDimension.class, dimId);
         BiDimensionReference reference = dimension.getBiDimensionReference();
@@ -202,8 +202,8 @@ public class EruptReportController {
      */
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @PostMapping("/{code}/reference-table/{id}")
-    public BiData refTableQuery(@PathVariable String code,
-                                @PathVariable Long id) {
+    public BiData refTableQuery(@PathVariable("code") String code,
+                                @PathVariable("id") Long id) {
         BiDimension dimension = entityManager.find(BiDimension.class, id);
         BiData biData = new BiData();
         BiDimensionReference reference = dimension.getBiDimensionReference();

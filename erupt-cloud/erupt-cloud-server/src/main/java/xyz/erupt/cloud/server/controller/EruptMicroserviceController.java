@@ -51,8 +51,8 @@ public class EruptMicroserviceController {
     //Remove instance. When the node reports its own locations (graceful shutdown) they are dropped
     //precisely; otherwise fall back to a survival poll.
     @PostMapping(CloudRestApiConst.REMOVE_INSTANCE_NODE)
-    public void removeInstanceNode(@RequestParam String nodeName, @RequestParam String accessToken,
-                                   @RequestParam(required = false) String locations, HttpServletRequest request) {
+    public void removeInstanceNode(@RequestParam("nodeName") String nodeName, @RequestParam("accessToken") String accessToken,
+                                   @RequestParam(value = "locations", required = false) String locations, HttpServletRequest request) {
         Optional.ofNullable(CloudServerUtil.findEruptCloudServerAnnotation()).ifPresent(it -> it.removeNode(nodeName, request));
         List<String> locationList = (null == locations || locations.isBlank()) ? null : Arrays.asList(locations.split(","));
         eruptNodeMicroservice.removeInstance(nodeName, accessToken, locationList);

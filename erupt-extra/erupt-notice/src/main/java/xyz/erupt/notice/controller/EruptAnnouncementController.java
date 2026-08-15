@@ -31,7 +31,7 @@ public class EruptAnnouncementController {
     @EruptLoginAuth
     @GetMapping("/list")
     @Transactional
-    public R<SimplePage<NoticeAnnouncement>> announcements(@RequestParam int page, @RequestParam int size, @RequestParam(required = false) String search) {
+    public R<SimplePage<NoticeAnnouncement>> announcements(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam(value = "search", required = false) String search) {
         return R.ok(eruptDao.lambdaQuery(NoticeAnnouncement.class)
                 .like(null != search, NoticeAnnouncement::getTitle, search)
                 .eq(NoticeAnnouncement::getStatus, AnnouncementStatus.OPEN)
@@ -57,7 +57,7 @@ public class EruptAnnouncementController {
     @Transactional
     @GetMapping("/mark-read/{annId}")
     @EruptLoginAuth
-    public R<Void> markRead(@PathVariable Long annId) {
+    public R<Void> markRead(@PathVariable("annId") Long annId) {
         EruptUserAnnouncement eruptUserAnn = eruptDao.find(EruptUserAnnouncement.class, eruptUserService.getCurrentUid());
         eruptUserAnn.setAnnReadId(annId);
         eruptDao.merge(eruptUserAnn);

@@ -22,7 +22,7 @@ public class EruptPrintConfigController {
 
     @GetMapping("/{erupt}/list")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    public R<List<EruptPrintConfig>> list(@PathVariable String erupt) {
+    public R<List<EruptPrintConfig>> list(@PathVariable("erupt") String erupt) {
         return R.ok(eruptDao.lambdaQuery(EruptPrintConfig.class)
                 .eq(EruptPrintConfig::getErupt, erupt).list());
     }
@@ -30,7 +30,7 @@ public class EruptPrintConfigController {
     @EruptMenuAuth(EruptPrintAutoConfiguration.PRINT_CONFIG)
     @PostMapping("/{erupt}/add")
     @Transactional
-    public R<Void> add(@PathVariable String erupt, @RequestBody EruptPrintConfig printConfig) {
+    public R<Void> add(@PathVariable("erupt") String erupt, @RequestBody EruptPrintConfig printConfig) {
         eruptDao.persist(printConfig);
         return R.ok();
     }
@@ -38,7 +38,7 @@ public class EruptPrintConfigController {
     @EruptMenuAuth(EruptPrintAutoConfiguration.PRINT_CONFIG)
     @PostMapping("/{erupt}/update")
     @Transactional
-    public R<Void> update(@PathVariable String erupt, @RequestBody EruptPrintConfig printConfig) {
+    public R<Void> update(@PathVariable("erupt") String erupt, @RequestBody EruptPrintConfig printConfig) {
         eruptDao.merge(printConfig);
         return R.ok();
     }
@@ -46,7 +46,7 @@ public class EruptPrintConfigController {
     @EruptMenuAuth(EruptPrintAutoConfiguration.PRINT_CONFIG)
     @PostMapping("/{erupt}/delete")
     @Transactional
-    public R<Void> delete(@PathVariable String erupt, @RequestParam Long id) {
+    public R<Void> delete(@PathVariable("erupt") String erupt, @RequestParam("id") Long id) {
         eruptDao.lambdaQuery(EruptPrintConfig.class)
                 .eq(EruptPrintConfig::getId, id)
                 .eq(EruptPrintConfig::getErupt, erupt).delete();

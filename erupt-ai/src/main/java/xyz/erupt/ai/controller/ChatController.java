@@ -53,12 +53,12 @@ public class ChatController {
     @GetMapping(value = "/send", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Transactional
     @SneakyThrows
-    public SseEmitter send(@RequestParam Long chatId,
-                           @RequestParam String message,
-                           @RequestParam(required = false, defaultValue = "true") Boolean autoToolCall,
-                           @RequestParam(required = false) Long llmId,
-                           @RequestParam(required = false) Long agentId,
-                           @RequestParam(required = false) String contextPrompt
+    public SseEmitter send(@RequestParam("chatId") Long chatId,
+                           @RequestParam("message") String message,
+                           @RequestParam(value = "autoToolCall", required = false, defaultValue = "true") Boolean autoToolCall,
+                           @RequestParam(value = "llmId", required = false) Long llmId,
+                           @RequestParam(value = "agentId", required = false) Long agentId,
+                           @RequestParam(value = "contextPrompt", required = false) String contextPrompt
     ) {
         LLM llmModel;
         if (llmId == null) {
@@ -102,7 +102,7 @@ public class ChatController {
     @EruptMenuAuth(AiConst.AI_CHAT)
     @PostMapping("/create-chat")
     @Transactional
-    public R<Long> createChat(@RequestParam String title) {
+    public R<Long> createChat(@RequestParam("title") String title) {
         AiChat chat = new AiChat();
         if (title.length() > 100) title = title.substring(0, 100);
         chat.setTitle(title);
@@ -114,7 +114,7 @@ public class ChatController {
 
     @EruptMenuAuth(AiConst.AI_CHAT)
     @GetMapping("/stop")
-    public R<Void> stop(@RequestParam Long chatId) {
+    public R<Void> stop(@RequestParam("chatId") Long chatId) {
         AiChat chat = eruptDao.lambdaQuery(AiChat.class)
                 .eq(AiChat::getId, chatId)
                 .with(AiChat::getEruptUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
@@ -128,7 +128,7 @@ public class ChatController {
     @EruptMenuAuth(AiConst.AI_CHAT)
     @GetMapping("/delete-chat")
     @Transactional
-    public R<Void> deleteChat(@RequestParam Long chatId) {
+    public R<Void> deleteChat(@RequestParam("chatId") Long chatId) {
         AiChat chat = eruptDao.find(AiChat.class, chatId);
         chat.setDeleted(true);
         return R.ok();
@@ -137,7 +137,7 @@ public class ChatController {
     @EruptMenuAuth(AiConst.AI_CHAT)
     @PostMapping("/rename-chat")
     @Transactional
-    public R<Void> renameChat(@RequestParam Long chatId, @RequestParam String title) {
+    public R<Void> renameChat(@RequestParam("chatId") Long chatId, @RequestParam("title") String title) {
         AiChat chat = eruptDao.find(AiChat.class, chatId);
         chat.setTitle(title);
         eruptDao.persist(chat);
@@ -147,8 +147,8 @@ public class ChatController {
 
     @EruptMenuAuth(AiConst.AI_CHAT)
     @GetMapping("/chats")
-    public R<SimplePage<AiChat>> chats(@RequestParam Integer size,
-                                       @RequestParam Integer index) {
+    public R<SimplePage<AiChat>> chats(@RequestParam("size") Integer size,
+                                       @RequestParam("index") Integer index) {
         return R.ok(eruptDao.lambdaQuery(AiChat.class)
                 .with(AiChat::getEruptUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
                 .orderByDesc(AiChat::getCreatedTime)
@@ -157,9 +157,9 @@ public class ChatController {
 
     @EruptMenuAuth(AiConst.AI_CHAT)
     @GetMapping("/messages")
-    public R<List<AiChatMessage>> messages(@RequestParam Long chatId,
-                                           @RequestParam Integer size,
-                                           @RequestParam Integer index) {
+    public R<List<AiChatMessage>> messages(@RequestParam("chatId") Long chatId,
+                                           @RequestParam("size") Integer size,
+                                           @RequestParam("index") Integer index) {
         return R.ok(eruptDao.lambdaQuery(AiChatMessage.class)
                 .eq(AiChatMessage::getChatId, chatId)
                 .orderByDesc(AiChatMessage::getCreatedAt)

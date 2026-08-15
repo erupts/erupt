@@ -39,14 +39,14 @@ public class EruptNodeController {
     //Remove instance
     @GetMapping("/remove-instance/{nodeName}")
     @EruptMenuAuth(CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION)
-    public void removeInstance(@PathVariable String nodeName, @RequestParam("instance") String instance) {
+    public void removeInstance(@PathVariable("nodeName") String nodeName, @RequestParam("instance") String instance) {
         nodeManager.removeNodeInstance(nodeName, instance);
     }
 
     //Node log
     @GetMapping("/erupt-cloud-node-log")
     @EruptMenuAuth(CloudServerConst.ERUPT_CLOUD_NODE_LOG)
-    public List<LogMessage> eruptNodeLog(@RequestParam String nodeName, @RequestParam Long size, @RequestParam(required = false) Long offset,
+    public List<LogMessage> eruptNodeLog(@RequestParam("nodeName") String nodeName, @RequestParam("size") Long size, @RequestParam(value = "offset", required = false) Long offset,
                                          HttpServletResponse httpServletResponse) {
         MetaNode metaNode = nodeManager.getNode(nodeName);
         if (null == metaNode || metaNode.getLocations().isEmpty())

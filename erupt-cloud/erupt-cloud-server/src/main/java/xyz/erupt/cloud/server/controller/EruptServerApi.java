@@ -45,7 +45,7 @@ public class EruptServerApi {
     private EruptNodeMicroservice eruptNodeMicroservice;
 
     @GetMapping(CloudRestApiConst.ERUPT_POWER)
-    public PowerObject eruptPower(@RequestParam String eruptName, @RequestParam String nodeName) {
+    public PowerObject eruptPower(@RequestParam("eruptName") String eruptName, @RequestParam("nodeName") String nodeName) {
         PowerObject powerObject = new PowerObject();
         List<String> values = eruptSessionService.getMapKeys(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken());
         Map<String, Boolean> permissionMap = values.stream().collect(Collectors.toMap(it -> it, it -> true));
@@ -61,13 +61,13 @@ public class EruptServerApi {
     }
 
     @GetMapping(CloudRestApiConst.NODE_CONFIG + "/{nodeName}")
-    public String getNodeConfig(@PathVariable String nodeName, @RequestHeader(CloudCommonConst.HEADER_ACCESS_TOKEN) String accessToken) {
+    public String getNodeConfig(@PathVariable("nodeName") String nodeName, @RequestHeader(CloudCommonConst.HEADER_ACCESS_TOKEN) String accessToken) {
         return eruptDao.lambdaQuery(CloudNode.class).eq(CloudNode::getNodeName, nodeName)
                 .eq(CloudNode::getAccessToken, accessToken).oneSelect(CloudNode::getConfig);
     }
 
     @GetMapping(CloudRestApiConst.NODE_GROUP_CONFIG + "/{nodeName}")
-    public String getNodeGroupConfig(@PathVariable String nodeName, @RequestHeader(CloudCommonConst.HEADER_ACCESS_TOKEN) String accessToken) {
+    public String getNodeGroupConfig(@PathVariable("nodeName") String nodeName, @RequestHeader(CloudCommonConst.HEADER_ACCESS_TOKEN) String accessToken) {
         CloudNode cloudNode = eruptDao.lambdaQuery(CloudNode.class)
                 .eq(CloudNode::getNodeName, nodeName)
                 .eq(CloudNode::getAccessToken, accessToken).one();
@@ -79,7 +79,7 @@ public class EruptServerApi {
     //User information
     @GetMapping(CloudRestApiConst.ERUPT_USER_INFO + "/{nodeName}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public MetaUserinfo userinfo(@PathVariable String nodeName, @RequestHeader(CloudCommonConst.HEADER_ACCESS_TOKEN) String accessToken) {
+    public MetaUserinfo userinfo(@PathVariable("nodeName") String nodeName, @RequestHeader(CloudCommonConst.HEADER_ACCESS_TOKEN) String accessToken) {
         eruptNodeMicroservice.findNodeByAppName(nodeName, accessToken);
         return eruptUserService.getSimpleUserInfo();
     }

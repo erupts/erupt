@@ -122,7 +122,7 @@ public class EruptDataController {
     @PostMapping("/{erupt}" + OPERATOR_PATH_STR + "/{code}/form-value")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @SneakyThrows
-    public Object eruptOperatorFormValue(@PathVariable("erupt") String eruptName, @PathVariable("code") String code, @RequestParam(required = false) List<Object> ids) {
+    public Object eruptOperatorFormValue(@PathVariable("erupt") String eruptName, @PathVariable("code") String code, @RequestParam(value = "ids", required = false) List<Object> ids) {
         if (null == ids) ids = new ArrayList<>();
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         RowOperation rowOperation = Arrays.stream(eruptModel.getErupt().rowOperation()).filter(it -> code.equals(it.code())).findFirst().orElseThrow(EruptNoLegalPowerException::new);

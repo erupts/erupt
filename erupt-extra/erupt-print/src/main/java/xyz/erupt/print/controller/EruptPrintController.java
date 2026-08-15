@@ -33,7 +33,7 @@ public class EruptPrintController {
 
     @PostMapping("/{erupt}/{id}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
-    public R<String> print(@PathVariable String erupt, @PathVariable String id, @RequestBody(required = false) String content) {
+    public R<String> print(@PathVariable("erupt") String erupt, @PathVariable("id") String id, @RequestBody(required = false) String content) {
         if (content == null) content = "";
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
@@ -50,7 +50,7 @@ public class EruptPrintController {
 
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @GetMapping("/{erupt}/prints")
-    public R<List<EruptPrintConfig>> prints(@PathVariable String erupt) {
+    public R<List<EruptPrintConfig>> prints(@PathVariable("erupt") String erupt) {
         return R.ok(eruptDao.lambdaQuery(EruptPrintConfig.class).eq(EruptPrintConfig::getErupt, erupt).list());
     }
 

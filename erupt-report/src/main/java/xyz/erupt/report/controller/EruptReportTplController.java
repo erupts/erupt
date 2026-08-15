@@ -68,7 +68,7 @@ public class EruptReportTplController {
 
     @GetMapping(value = "/{code}/custom-chart/{id}", produces = {"text/html;charset=UTF-8"})
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void customerChart(@PathVariable String code,
+    public void customerChart(@PathVariable("code") String code,
                               @PathVariable("id") Long chartId,
                               @RequestParam("condition") String conditionStr,
                               HttpServletRequest request,
