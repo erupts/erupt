@@ -53,6 +53,8 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
 
     private boolean errorConnect = false;
 
+    private int retryCount = 0;
+
     // This instance's registered addresses, captured so shutdown can deregister them precisely.
     private volatile String[] nodeAddresses;
 
@@ -117,11 +119,13 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
                 }
                 if (this.errorConnect) {
                     this.errorConnect = false;
+                    this.retryCount = 0;
                     log.info("{} -> {}", address, ansi().fgBright(Ansi.Color.GREEN).a("Connection success").reset());
                 }
                 TimeUnit.MILLISECONDS.sleep(eruptNodeProp.getHeartbeatTime());
             } catch (Exception e) {
-                log.error("{} -> Connection error: {}", address, e.getMessage());
+                this.retryCount++;
+                log.error("{} -> Connection error (retry {}): {}", address, this.retryCount, e.getMessage());
                 this.errorConnect = true;
                 TimeUnit.MILLISECONDS.sleep(eruptNodeProp.getHeartbeatTime() / 2);
             }
