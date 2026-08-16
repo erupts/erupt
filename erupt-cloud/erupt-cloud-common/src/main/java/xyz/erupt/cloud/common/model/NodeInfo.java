@@ -5,7 +5,9 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Node information
@@ -37,5 +39,8 @@ public class NodeInfo implements Serializable {
 
     //List of erupts managed by the service
     private List<String> erupts = new ArrayList<>();
+
+    //Named resource lists contributed by optional modules (e.g. cube models), rendered on the server node page
+    private Map<String, List<String>> resources = new LinkedHashMap<>();
 
 }

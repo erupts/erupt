@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.fusesource.jansi.Ansi;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -18,6 +19,7 @@ import xyz.erupt.cloud.common.consts.CloudRestApiConst;
 import xyz.erupt.cloud.common.model.NodeInfo;
 import xyz.erupt.cloud.node.config.EruptNodeInterceptor;
 import xyz.erupt.cloud.node.config.EruptNodeProp;
+import xyz.erupt.cloud.node.handler.NodeInfoHandler;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptInformation;
@@ -44,6 +46,9 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
 
     @Resource
     private ServerProperties serverProperties;
+
+    @Resource
+    private ObjectProvider<NodeInfoHandler> nodeInfoHandlers;
 
     private boolean runner = true;
 
@@ -109,6 +114,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
                 nodeInfo.setNodeAddress(new String[]{eruptNodeProp.getSchema() + "://" + Inet4Address.getLocalHost().getHostAddress() + ":" + serverProperties.getPort() + contextPath});
             }
             nodeInfo.setErupts(EruptCoreService.getErupts().stream().map(EruptModel::getEruptName).collect(Collectors.toList()));
+            nodeInfoHandlers.forEach(handler -> handler.handle(nodeInfo));
             this.nodeAddresses = nodeInfo.getNodeAddress();
             try {
                 try (HttpResponse httpResponse = HttpUtil.createPost(address + CloudRestApiConst.REGISTER_NODE)

@@ -1,6 +1,7 @@
 package xyz.erupt.cloud.server.node;
 
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -8,9 +9,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.model.CloudNode;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.jpa.dao.EruptDao;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
  * @author YuePeng
  * date 2022/1/29
  */
+@Slf4j
 @Component
 public class NodeManager {
 
@@ -33,11 +37,36 @@ public class NodeManager {
 
     private RedisTemplate<String, MetaNode> redisTemplate;
 
+    /**
+     * Dedicated template over the shared connection factory. Values are stored as JSON instead of
+     * JDK serialization, so adding fields to {@link xyz.erupt.cloud.common.model.NodeInfo} never
+     * invalidates cached entries again; a legacy (pre-JSON) binary entry fails to parse and is
+     * treated as absent — the next node heartbeat rewrites it.
+     */
     @Autowired
     public void setRedisTemplate(RedisTemplate<?, ?> redisTemplate) {
-        RedisSerializer<String> stringSerializer = new StringRedisSerializer();
-        redisTemplate.setKeySerializer(stringSerializer);
-        this.redisTemplate = (RedisTemplate<String, MetaNode>) redisTemplate;
+        RedisTemplate<String, MetaNode> template = new RedisTemplate<>();
+        template.setConnectionFactory(Objects.requireNonNull(redisTemplate.getConnectionFactory()));
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new RedisSerializer<MetaNode>() {
+            @Override
+            public byte[] serialize(MetaNode metaNode) {
+                return null == metaNode ? null : GsonFactory.getGson().toJson(metaNode).getBytes(StandardCharsets.UTF_8);
+            }
+
+            @Override
+            public MetaNode deserialize(byte[] bytes) {
+                if (null == bytes || bytes.length == 0) return null;
+                try {
+                    return GsonFactory.getGson().fromJson(new String(bytes, StandardCharsets.UTF_8), MetaNode.class);
+                } catch (Exception e) {
+                    log.warn("Dropped an incompatible node cache entry (pre-JSON format), it will be rebuilt on the next heartbeat");
+                    return null;
+                }
+            }
+        });
+        template.afterPropertiesSet();
+        this.redisTemplate = template;
     }
 
     @Resource
