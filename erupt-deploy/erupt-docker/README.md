@@ -54,6 +54,6 @@ docker run -d \
 ### Build & Publish
 
 ```shell
-cd deploy/erupt-docker
+cd erupt-deploy/erupt-docker
 ./deploy.sh   # mvn package → docker build → docker push erupts/erupt:<version>
 ```

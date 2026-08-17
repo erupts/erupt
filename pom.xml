@@ -118,7 +118,7 @@
         <!-- Test / Sample / Deploy -->
         <module>erupt-test</module>
         <module>erupt-sample</module>
-        <module>deploy/erupt-docker</module>
+        <module>erupt-deploy/erupt-docker</module>
     </modules>
 
     <dependencyManagement>
