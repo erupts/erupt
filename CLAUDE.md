@@ -45,13 +45,15 @@ The project is a multi-module Maven project (~25 modules):
 
 | Group | Modules |
 |-------|---------|
-| Core | `erupt-annotation` (annotation declarations), `erupt-core` (runtime engine), `erupt-toolkit` |
-| Data | `erupt-data/erupt-jpa` (default), `erupt-data/erupt-mongodb` |
-| Features | `erupt-upms` (user/permissions), `erupt-security`, `erupt-excel`, `erupt-web` (frontend assets) |
-| Templates | `erupt-tpl/{ant-design,element-ui,element-plus,amis}` |
-| AI | `erupt-ai` (LLM + MCP integration via langchain4j), `erupt-ai-claw` (turn-key admin agent) |
-| Extra | `erupt-extra/{erupt-job,erupt-generator,erupt-designer,erupt-monitor,erupt-magic-api,erupt-websocket,erupt-notice,erupt-print,erupt-terminal}` |
-| Cloud | `erupt-cloud/{erupt-cloud-server,erupt-cloud-node,erupt-cloud-node-jpa}` |
+| Core | `erupt-annotation` (annotation declarations), `erupt-core` (runtime engine) |
+| Data | `erupt-data/erupt-data-jpa` (default), `erupt-data/erupt-data-mongodb`, and 11 more connectors |
+| Platform | `erupt-upms` (user/permissions), `erupt-security`, `erupt-admin`, `erupt-web` (frontend assets) |
+| Starter | `erupt-starter/{erupt-spring-boot-starter,erupt-spring-boot-starter-all}` |
+| Templates | `erupt-tpl/erupt-tpl` (engine) + `erupt-tpl/{ant-design,element-ui,element-plus,amis}` (skins) |
+| AI | `erupt-ai/{erupt-ai,erupt-ai-canvas,erupt-ai-claw,erupt-ai-staff}` (LLM + MCP via langchain4j) |
+| Support | `erupt-support/{erupt-toolkit,erupt-excel,erupt-websocket}` (shared capabilities: cache/notify, import/export, realtime transport) |
+| Plugin | `erupt-plugin/{erupt-report,erupt-designer,erupt-job,erupt-generator,erupt-monitor,erupt-magic-api,erupt-notice,erupt-print,erupt-terminal}` |
+| Cloud | `erupt-cloud/{erupt-cloud-common,erupt-cloud-server,erupt-cloud-node,erupt-cloud-node-jpa}` |
 | Dev | `erupt-test` (JUnit 5 + H2), `erupt-sample` (runnable demo) |
 
 ### Core Patterns

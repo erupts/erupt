@@ -6,29 +6,22 @@
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
         <version>2.1.0</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>erupt-ai-canvas</artifactId>
-    <name>Erupt : AI Canvas</name>
-    <description>AI generated HTML view pages — describe a page in natural language, the LLM writes a self-contained HTML page that reads data through the Erupt REST API; pages are stored in the database and served as embeddable menus.</description>
+    <artifactId>erupt-ai-claw</artifactId>
+    <name>Erupt : AI Claw</name>
+    <description>Drop-in admin agent built on erupt-ai — turns natural language into Erupt admin operations. Ships a preconfigured agent with tools for model CRUD, runtime inspection, shell execution and skill invocation.</description>
 
     <dependencies>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-ai</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <!-- erupt-ai declares the data layer as provided; bring it in explicitly -->
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-upms</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <!-- Bundled Vue3 / Element Plus / axios assets referenced by generated pages -->
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-tpl-ui.element-plus</artifactId>
+            <artifactId>erupt-ai</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

@@ -54,14 +54,6 @@
         <!-- Core -->
         <module>erupt-annotation</module>
         <module>erupt-core</module>
-        <module>erupt-excel</module>
-        <module>erupt-toolkit</module>
-
-        <!-- Designer -->
-        <module>erupt-designer</module>
-
-        <!-- Analytic -->
-        <module>erupt-report</module>
 
         <!-- Data -->
         <module>erupt-data/erupt-data-jpa</module>
@@ -83,31 +75,39 @@
         <module>erupt-security</module>
         <module>erupt-admin</module>
         <module>erupt-web</module>
-        <module>erupt-spring-boot-starter</module>
-        <module>erupt-spring-boot-starter-all</module>
+
+        <!-- Starter -->
+        <module>erupt-starter/erupt-spring-boot-starter</module>
+        <module>erupt-starter/erupt-spring-boot-starter-all</module>
 
         <!-- Template -->
-        <module>erupt-tpl</module>
-        <module>erupt-tpl-ui/ant-design</module>
-        <module>erupt-tpl-ui/element-ui</module>
-        <module>erupt-tpl-ui/amis</module>
-        <module>erupt-tpl-ui/element-plus</module>
+        <module>erupt-tpl/erupt-tpl</module>
+        <module>erupt-tpl/ant-design</module>
+        <module>erupt-tpl/element-ui</module>
+        <module>erupt-tpl/amis</module>
+        <module>erupt-tpl/element-plus</module>
 
         <!-- AI -->
-        <module>erupt-ai</module>
-        <module>erupt-ai-claw</module>
-        <module>erupt-ai-staff</module>
-        <module>erupt-ai-canvas</module>
+        <module>erupt-ai/erupt-ai</module>
+        <module>erupt-ai/erupt-ai-claw</module>
+        <module>erupt-ai/erupt-ai-staff</module>
+        <module>erupt-ai/erupt-ai-canvas</module>
 
-        <!-- Extra -->
-        <module>erupt-extra/erupt-job</module>
-        <module>erupt-extra/erupt-generator</module>
-        <module>erupt-extra/erupt-monitor</module>
-        <module>erupt-extra/erupt-magic-api</module>
-        <module>erupt-extra/erupt-websocket</module>
-        <module>erupt-extra/erupt-notice</module>
-        <module>erupt-extra/erupt-print</module>
-        <module>erupt-extra/erupt-terminal</module>
+        <!-- Support (shared capabilities) -->
+        <module>erupt-support/erupt-toolkit</module>
+        <module>erupt-support/erupt-excel</module>
+        <module>erupt-support/erupt-websocket</module>
+
+        <!-- Plugin -->
+        <module>erupt-plugin/erupt-report</module>
+        <module>erupt-plugin/erupt-designer</module>
+        <module>erupt-plugin/erupt-job</module>
+        <module>erupt-plugin/erupt-generator</module>
+        <module>erupt-plugin/erupt-monitor</module>
+        <module>erupt-plugin/erupt-magic-api</module>
+        <module>erupt-plugin/erupt-notice</module>
+        <module>erupt-plugin/erupt-print</module>
+        <module>erupt-plugin/erupt-terminal</module>
 
         <!-- Cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>
