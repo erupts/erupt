@@ -39,9 +39,7 @@ public class KnowledgeChunk extends BaseModel {
     @ManyToOne
     @JoinColumn(name = "document_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @EruptField(
-            views = @View(title = "Document", column = "name"),
-            edit = @Edit(title = "Document", type = EditType.REFERENCE_TABLE, search = @Search,
-                    readonly = @Readonly)
+            views = @View(title = "Document", column = "name")
     )
     private KnowledgeDocument document;
 

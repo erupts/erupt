@@ -19,7 +19,8 @@ public class EmbeddingCoreTest {
     private static final List<EmbeddingCore> PROVIDERS = List.of(
             new OpenAICompatibleEmbedding(), new GeminiEmbedding(), new OllamaEmbedding(),
             new QwenEmbedding(), new GLMEmbedding(), new DoubaoEmbedding(), new SiliconFlowEmbedding(),
-            new JinaEmbedding(), new VoyageEmbedding(), new MistralEmbedding(), new CohereEmbedding()
+            new JinaEmbedding(), new VoyageEmbedding(), new MistralEmbedding(), new CohereEmbedding(),
+            new OpenRouterEmbedding()
     );
 
     @Test
