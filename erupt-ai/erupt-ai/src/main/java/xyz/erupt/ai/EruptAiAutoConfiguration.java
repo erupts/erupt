@@ -61,6 +61,7 @@ public class EruptAiAutoConfiguration implements EruptModule {
         List<MetaMenu> menus = new ArrayList<>();
         menus.add(MetaMenu.createRootMenu("$ai", "AI Manager", "fa fa-magic", 25));
         menus.add(MetaMenu.createEruptClassMenu(LLM.class, menus.get(0), 10));
+        menus.add(MetaMenu.createEruptClassMenu(EmbeddingLLM.class, menus.get(0), 15));
         menus.add(MetaMenu.createEruptClassMenu(McpServer.class, menus.get(0), 20));
         menus.add(MetaMenu.createEruptClassMenu(A2AAgent.class, menus.get(0), 30));
         menus.add(MetaMenu.createEruptClassMenu(LLMAgent.class, menus.get(0), 40));

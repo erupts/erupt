@@ -40,3 +40,9 @@ Test Model,测试模型,測試模型,Test Model,Tester le modèle,モデルテ�
 Verify Agent,验证智能体,驗證智能體,Verify Agent,Vérifier l'agent,エージェント検証,에이전트 검증,Проверить агента,Verificar agente,Agent überprüfen,Verificar agente,Verifikasi Agen,التحقق من الوكيل
 Unknown model provider: ,未知的模型提供商：,未知的模型提供商：,Unknown model provider: ,Fournisseur de modèle inconnu : ,不明なモデルプロバイダー：,알 수 없는 모델 제공자: ,Неизвестный поставщик модели: ,Proveedor de modelo desconocido: ,Unbekannter Modellanbieter: ,Fornecedor de modelo desconhecido: ,Penyedia model tidak dikenal: ,مزود نموذج غير معروف: 
 Agent URL,智能体地址,智能體地址,Agent URL,URL de l'agent,エージェントURL,에이전트 URL,URL агента,URL del agente,Agent-URL,URL do agente,URL Agen,عنوان الوكيل
+Embedding Model,向量模型,向量模型,Embedding Model,Modèle d'embedding,埋め込みモデル,임베딩 모델,Модель эмбеддинга,Modelo de embedding,Embedding-Modell,Modelo de embedding,Model Embedding,نموذج التضمين
+Provider,厂商,廠商,Provider,Fournisseur,プロバイダー,제공업체,Поставщик,Proveedor,Anbieter,Fornecedor,Penyedia,المزود
+Dimension,向量维度,向量維度,Dimension,Dimension,次元,차원,Размерность,Dimensión,Dimension,Dimensão,Dimensi,الأبعاد
+API Key,API Key,API Key,API Key,Clé API,APIキー,API 키,API-ключ,Clave API,API-Schlüssel,Chave de API,Kunci API,مفتاح API
+Embedding dimension mismatch: ,模型返回的向量维度与配置不一致：,模型返回的向量維度與配置不一致：,Embedding dimension mismatch: ,Dimension d'embedding incohérente : ,埋め込み次元が設定と一致しません：,임베딩 차원이 설정과 다릅니다: ,Размерность эмбеддинга не совпадает с настроенной: ,Dimensión de embedding no coincide: ,Embedding-Dimension stimmt nicht überein: ,Dimensão de embedding divergente: ,Dimensi embedding tidak cocok: ,عدم تطابق أبعاد التضمين: 
+Embedding OK,向量化成功,向量化成功,Embedding OK,Embedding réussi,埋め込み成功,임베딩 성공,Эмбеддинг успешен,Embedding correcto,Embedding erfolgreich,Embedding bem-sucedido,Embedding berhasil,نجح التضمين
