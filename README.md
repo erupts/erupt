@@ -207,7 +207,7 @@ Module catalog — [erupt.xyz/#!/module](https://www.erupt.xyz/#!/module) · API
 
 **WHY "HARNESS"** — Shipping AI to production needs more than an SDK: **governance** (RBAC) + **interoperability** (MCP) + **observability** (chat history, token tracking) + **operator-friendly config** (admin UI). All four, out of the box.
 
-**PROVIDERS** — OpenAI · Claude · Gemini · DeepSeek · Qwen · GLM · Doubao · Moonshot · MiniMax · Mistral · Grok · Fireworks · Together · OpenRouter · Requesty · Ollama (self-hosted) — hot-swappable from the admin UI, 50+ total.
+**PROVIDERS** — OpenAI · Claude · Gemini · DeepSeek · Qwen · GLM · Doubao · Moonshot · MiniMax · Mistral · Grok · Fireworks · Together · OpenRouter · Requesty · OrcaRouter · Ollama (self-hosted) — hot-swappable from the admin UI, 50+ total.
 
 | | |
 |---|---|
