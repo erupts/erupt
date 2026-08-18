@@ -18,22 +18,22 @@ mvn clean install -DskipTests
 mvn test -pl erupt-test
 
 # Run a specific test class
-mvn test -pl erupt-test -Dtest=EruptTest
+mvn test -pl erupt-test -Dtest=LambdaQueryTest
 
 # Run a specific test method
-mvn test -pl erupt-test -Dtest=EruptTest#modules
+mvn test -pl erupt-test -Dtest=LambdaQueryTest#lambdaQueryTest
 
 # Run the sample application for local testing
 cd erupt-sample && mvn spring-boot:run
 
-# Release build (GPG signing, Javadoc, publishes to Maven Central)
-mvn clean package -P release
+# Publish to Maven Central (GPG signing, Javadoc; wraps `mvn clean deploy -P release`)
+./scripts/deploy.sh
 
-# Update all module versions
-mvn versions:set -DnewVersion=x.x.x
+# Bump version across this repo AND satellite repos (erupt-web etc.)
+./scripts/bump-erupt.sh [--dry-run] x.x.x
 ```
 
-Java 17 required. Spring Boot 3.x. No Maven wrapper — use system `mvn`.
+Java 17 required. Spring Boot 3.5.x (pinned via `spring.boot.version` in the parent pom). No Maven wrapper — use system `mvn`.
 
 ## Architecture Overview
 
@@ -41,12 +41,12 @@ Erupt is a **low-code platform framework** that auto-generates admin UIs from Ja
 
 ### Module Structure
 
-The project is a multi-module Maven project (~25 modules):
+The project is a multi-module Maven project (~50 modules):
 
 | Group | Modules |
 |-------|---------|
 | Core | `erupt-annotation` (annotation declarations), `erupt-core` (runtime engine) |
-| Data | `erupt-data/erupt-data-jpa` (default), `erupt-data/erupt-data-mongodb`, and 11 more connectors |
+| Data | `erupt-data/erupt-data-{jpa,mongodb,memory,http,jdbc,es,ldap,k8s,s3,redis,file,feishu,notion}` — JPA is the default; the rest are pluggable connectors |
 | Platform | `erupt-upms` (user/permissions), `erupt-security`, `erupt-admin`, `erupt-web` (frontend assets) |
 | Starter | `erupt-starter/{erupt-spring-boot-starter,erupt-spring-boot-starter-all}` |
 | Templates | `erupt-tpl/erupt-tpl` (engine) + `erupt-tpl/{ant-design,element-ui,element-plus,amis}` (skins) |
@@ -54,12 +54,15 @@ The project is a multi-module Maven project (~25 modules):
 | Support | `erupt-support/{erupt-toolkit,erupt-excel,erupt-websocket}` (shared capabilities: cache/notify, import/export, realtime transport) |
 | Plugin | `erupt-plugin/{erupt-report,erupt-designer,erupt-job,erupt-generator,erupt-monitor,erupt-magic-api,erupt-notice,erupt-print,erupt-terminal}` |
 | Cloud | `erupt-cloud/{erupt-cloud-common,erupt-cloud-server,erupt-cloud-node,erupt-cloud-node-jpa}` |
+| Deploy | `erupt-deploy/erupt-docker` (all-in-one Docker image; has its own `deploy.sh`) |
 | Dev | `erupt-test` (JUnit 5 + H2), `erupt-sample` (runnable demo) |
+
+`erupt-plugin/erupt-template` is a scaffold for new plugin modules — it exists on disk but is intentionally excluded from the parent pom's `<modules>`.
 
 ### Core Patterns
 
 **1. Annotation-Driven UI Generation**
-`@Erupt` on a class + `@EruptField` on fields → auto-generates tables, forms, search, permissions. Sub-annotations `@View`, `@Edit`, `@Search`, `@EditType` control rendering behavior.
+`@Erupt` on a class + `@EruptField` on fields → auto-generates tables, forms, search, permissions. Sub-annotations `@View`, `@Edit`, `@Search`, `@EditType` control rendering behavior. `@EruptCube` (in erupt-annotation's `cube` package, with `@Dimension`/`@Measure`/`@Explore`) declares OLAP-style analytics views on entities — see `EruptOperateLog` for an example.
 
 **2. Dynamic Proxy Layer**
 `AnnotationProxy<T,R>` converts annotations to JSON for the frontend using Spring AOP. Key classes: `EruptProxy`, `EruptFieldProxy`, `AnnotationProxyPool`. Located in `erupt-core/.../proxy/`.
