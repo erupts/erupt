@@ -6,6 +6,7 @@ import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.EmbeddingSearchResult;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import org.junit.jupiter.api.Test;
+import xyz.erupt.ai_rag.constants.VectorStoreType;
 import xyz.erupt.ai_rag.core.VectorStoreCore;
 import xyz.erupt.ai_rag.store.MemoryVectorStore;
 
@@ -20,12 +21,11 @@ public class RagCoreTest {
     @Test
     public void vectorStoreRegistry() {
         MemoryVectorStore store = new MemoryVectorStore();
-        assertSame(store, VectorStoreCore.get(MemoryVectorStore.CODE));
-        // Blank type auto-selects MEMORY when no persistent SDK is registered
+        assertSame(store, VectorStoreCore.get(VectorStoreType.MEMORY));
+        // Null type auto-selects MEMORY when no persistent SDK is registered
         assertSame(store, VectorStoreCore.resolve(null));
-        assertSame(store, VectorStoreCore.resolve(" "));
-        // Unknown explicit type resolves to nothing instead of silently falling back
-        assertNull(VectorStoreCore.resolve("QDRANT"));
+        // An explicit type whose SDK is absent resolves to nothing instead of silently falling back
+        assertNull(VectorStoreCore.resolve(VectorStoreType.QDRANT));
     }
 
     @Test

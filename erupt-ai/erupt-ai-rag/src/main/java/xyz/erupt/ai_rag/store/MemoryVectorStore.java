@@ -4,6 +4,7 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import org.springframework.stereotype.Component;
+import xyz.erupt.ai_rag.constants.VectorStoreType;
 import xyz.erupt.ai_rag.core.VectorStoreCore;
 import xyz.erupt.ai_rag.prop.VectorStoreProp;
 
@@ -20,13 +21,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class MemoryVectorStore extends VectorStoreCore {
 
-    public static final String CODE = "MEMORY";
-
     private static final Map<String, InMemoryEmbeddingStore<TextSegment>> stores = new ConcurrentHashMap<>();
 
     @Override
-    public String code() {
-        return CODE;
+    public VectorStoreType code() {
+        return VectorStoreType.MEMORY;
     }
 
     @Override

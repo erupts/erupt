@@ -8,6 +8,7 @@ import io.milvus.param.ConnectParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
+import xyz.erupt.ai_rag.constants.VectorStoreType;
 import xyz.erupt.ai_rag.core.VectorStoreCore;
 import xyz.erupt.ai_rag.prop.VectorStoreProp;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -23,11 +24,9 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 @ConditionalOnClass(MilvusServiceClient.class)
 public class MilvusVectorStore extends VectorStoreCore {
 
-    public static final String CODE = "MILVUS";
-
     @Override
-    public String code() {
-        return CODE;
+    public VectorStoreType code() {
+        return VectorStoreType.MILVUS;
     }
 
     @Override

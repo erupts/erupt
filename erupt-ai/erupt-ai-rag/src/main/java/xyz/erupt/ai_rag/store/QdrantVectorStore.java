@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
+import xyz.erupt.ai_rag.constants.VectorStoreType;
 import xyz.erupt.ai_rag.core.VectorStoreCore;
 import xyz.erupt.ai_rag.prop.VectorStoreProp;
 
@@ -25,13 +26,11 @@ import java.util.concurrent.TimeUnit;
 @ConditionalOnClass(QdrantClient.class)
 public class QdrantVectorStore extends VectorStoreCore {
 
-    public static final String CODE = "QDRANT";
-
     private static final int DEFAULT_GRPC_PORT = 6334;
 
     @Override
-    public String code() {
-        return CODE;
+    public VectorStoreType code() {
+        return VectorStoreType.QDRANT;
     }
 
     @Override

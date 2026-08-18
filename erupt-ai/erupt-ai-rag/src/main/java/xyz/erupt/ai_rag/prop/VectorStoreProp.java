@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import xyz.erupt.ai_rag.constants.VectorStoreType;
 
 /**
  * Vector store is deployment infrastructure (its SDK must be on the classpath),
@@ -19,10 +20,10 @@ import org.springframework.stereotype.Component;
 public class VectorStoreProp {
 
     /**
-     * Store type code (QDRANT / MILVUS / MEMORY). Leave blank to auto-select:
-     * the single persistent implementation on the classpath, or MEMORY.
+     * Leave blank to auto-select: the single persistent implementation on the
+     * classpath, or MEMORY.
      */
-    private String type;
+    private VectorStoreType type;
 
     /**
      * QDRANT: host:6334 (gRPC, https:// prefix for TLS) | MILVUS: http://host:19530 | MEMORY: not needed

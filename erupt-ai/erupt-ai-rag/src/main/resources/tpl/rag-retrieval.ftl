@@ -206,13 +206,15 @@
             }
             summary.textContent = hits.length + (hits.length > 1 ? ' chunks' : ' chunk') + ' · ' + (Date.now() - start) + ' ms';
             box.innerHTML = hits.map(function (hit, i) {
-                var score = Math.max(0, Math.min(1, hit.score || 0));
-                var color = scoreColor(score);
+                // The backend GSON writes fractional doubles as strings to dodge JS precision loss
+                var score = Number(hit.score);
+                var pct = Math.max(0, Math.min(1, isFinite(score) ? score : 0));
+                var color = scoreColor(pct);
                 return '<div class="hit" style="animation-delay:' + (i * 40) + 'ms">'
                     + '<div class="meta"><span class="doc">' + esc(hit.document || '-') + '</span>'
                     + (hit.seq != null ? '<span class="seq">#' + hit.seq + '</span>' : '')
-                    + '<span class="score" style="color:' + color + '">' + (hit.score != null ? hit.score.toFixed(4) : '-') + '</span></div>'
-                    + '<div class="score-track"><div class="score-fill" style="width:' + (score * 100) + '%;background:' + color + '"></div></div>'
+                    + '<span class="score" style="color:' + color + '">' + (isFinite(score) ? score.toFixed(4) : '-') + '</span></div>'
+                    + '<div class="score-track"><div class="score-fill" style="width:' + (pct * 100) + '%;background:' + color + '"></div></div>'
                     + '<div class="text">' + esc(hit.text) + '</div>'
                     + '</div>';
             }).join('');
