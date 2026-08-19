@@ -6,6 +6,6 @@ package xyz.erupt.ai_rag.constants;
  */
 public enum VectorStoreType {
 
-    QDRANT, MILVUS, MEMORY
+    QDRANT, MILVUS, PGVECTOR, REDIS, MEMORY
 
 }

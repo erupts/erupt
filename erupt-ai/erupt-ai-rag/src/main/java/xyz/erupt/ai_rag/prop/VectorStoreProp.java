@@ -26,7 +26,10 @@ public class VectorStoreProp {
     private VectorStoreType type;
 
     /**
-     * QDRANT: host:6334 (gRPC, https:// prefix for TLS) | MILVUS: http://host:19530 | MEMORY: not needed
+     * QDRANT: host:6334 (gRPC, https:// prefix for TLS) | MILVUS: http://host:19530
+     * | PGVECTOR: postgresql://user:password@host:5432/db (blank = reuse the application datasource;
+     * password may be omitted and supplied via api-key) | REDIS: host:6379 (rediss:// prefix for TLS,
+     * blank = localhost) | MEMORY: not needed
      */
     private String uri;
 

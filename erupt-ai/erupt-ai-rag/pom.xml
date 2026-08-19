@@ -37,6 +37,19 @@
             <version>${langchain4j.version}-beta24</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-pgvector</artifactId>
+            <version>${langchain4j.version}-beta24</version>
+            <optional>true</optional>
+        </dependency>
+        <!-- Redis 8 vector sets (VADD/VSIM) via Jedis; the spring-boot managed jedis version predates vector set support -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>6.2.0</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>
