@@ -9,6 +9,8 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.Drill;
+import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -25,7 +27,11 @@ import xyz.erupt.upms.model.EruptUser;
  * @author YuePeng
  * date 2026/8/3
  */
-@Erupt(name = "AI Staff")
+@Erupt(
+        name = "AI Staff",
+        drills = @Drill(title = "Tasks", icon = "fa fa-tasks",
+                link = @Link(linkErupt = AiStaffTask.class, joinColumn = "staff.id"))
+)
 @Table(name = "e_ai_staff")
 @Getter
 @Setter

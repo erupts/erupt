@@ -28,6 +28,8 @@ public class SlackChannel extends StaffChannel {
 
     private static final String POST_MESSAGE_API = "https://slack.com/api/chat.postMessage";
 
+    private static final String AUTH_TEST_API = "https://slack.com/api/auth.test";
+
     @Override
     public String code() {
         return "Slack";
@@ -45,6 +47,16 @@ public class SlackChannel extends StaffChannel {
         JsonObject body = new JsonObject();
         body.addProperty("text", content);
         this.post(url, body.toString());
+    }
+
+    @Override
+    public boolean testConnect(JsonObject config) {
+        String botToken = str(config, "botToken");
+        if (StringUtils.isBlank(botToken)) return false;
+        JsonObject result = GsonFactory.getGson().fromJson(
+                this.post(AUTH_TEST_API, "{}", Map.of("Authorization", "Bearer " + botToken)), JsonObject.class);
+        if (!result.get("ok").getAsBoolean()) throw new EruptWebApiRuntimeException("Slack auth failed: " + result);
+        return true;
     }
 
     @Override

@@ -67,12 +67,20 @@ public class AiStaffChannelProxy implements DataProxy<AiStaffChannel>, OnChange<
 
     @Override
     public String exec(List<AiStaffChannel> data, Void unused, String[] param) {
+        boolean connect = param.length > 0 && "connect".equals(param[0]);
         for (AiStaffChannel channel : data) {
-            StaffChannel.get(channel.getType()).push(
-                    GsonFactory.getGson().fromJson(channel.getConfig(), JsonObject.class),
-                    I18nTranslate.$translate("This is a test message from Erupt AI Staff"));
+            JsonObject config = GsonFactory.getGson().fromJson(channel.getConfig(), JsonObject.class);
+            StaffChannel staffChannel = StaffChannel.get(channel.getType());
+            if (connect) {
+                if (!staffChannel.testConnect(config)) {
+                    throw new EruptWebApiRuntimeException(I18nTranslate.$translate("No verifiable credentials configured"));
+                }
+            } else {
+                staffChannel.push(config, I18nTranslate.$translate("This is a test message from Erupt AI Staff"));
+            }
         }
-        return "alert(" + GsonFactory.getGson().toJson(I18nTranslate.$translate("Test message sent")) + ")";
+        return "alert(" + GsonFactory.getGson().toJson(
+                I18nTranslate.$translate(connect ? "Credentials verified" : "Test message sent")) + ")";
     }
 
 }

@@ -12,6 +12,7 @@ import xyz.erupt.ai_staff.model.AiStaffTask;
 import xyz.erupt.ai_staff.model.AiStaffTaskLog;
 import xyz.erupt.ai_staff.service.AiStaffScheduler;
 import xyz.erupt.core.annotation.EruptScan;
+import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
@@ -64,9 +65,9 @@ public class EruptAiStaffAutoConfiguration implements EruptModule {
         List<MetaMenu> menus = new ArrayList<>();
         menus.add(MetaMenu.createRootMenu("$ai-staff", "AI Staff", "fa fa-user-circle", 26));
         menus.add(MetaMenu.createEruptClassMenu(AiStaff.class, menus.get(0), 10));
-        menus.add(MetaMenu.createEruptClassMenu(AiStaffTask.class, menus.get(0), 20));
-        menus.add(MetaMenu.createEruptClassMenu(AiStaffChannel.class, menus.get(0), 30));
-        menus.add(MetaMenu.createEruptClassMenu(AiStaffTaskLog.class, menus.get(0), 40));
+        menus.add(MetaMenu.createEruptClassMenu(AiStaffChannel.class, menus.get(0), 20));
+        menus.add(MetaMenu.createEruptClassMenu(AiStaffTask.class, menus.get(0), 30, MenuStatus.HIDE));
+        menus.add(MetaMenu.createEruptClassMenu(AiStaffTaskLog.class, menus.get(0), 40, MenuStatus.HIDE));
         return menus;
     }
 

@@ -44,8 +44,7 @@ public class AiStaffTask extends MetaModelUpdateVo {
     @ManyToOne
     @JoinColumn(name = "staff_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @EruptField(
-            views = @View(title = "Staff", column = "name"),
-            edit = @Edit(title = "Staff", notNull = true, type = EditType.REFERENCE_TABLE, search = @Search)
+            edit = @Edit(title = "Staff", type = EditType.REFERENCE_TABLE, search = @Search, show = false)
     )
     private AiStaff staff;
 

@@ -19,8 +19,10 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaUser;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.service.EruptTokenService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +41,9 @@ public class AiStaffService {
 
     @Resource
     private EruptDao eruptDao;
+
+    @Resource
+    private EruptTokenService eruptTokenService;
 
     @Async
     public void executeAsync(Long taskId) {
@@ -84,7 +89,16 @@ public class AiStaffService {
         // Work under the staff's bound account so AI role prompts and tool permissions apply
         EruptUser user = staff.getEruptUser();
         MetaContext.register(new MetaUser(user.getId(), user.getAccount(), user.getName()));
-        return LlmCore.getLLM(llm).chat(llmRequest, new ArrayList<>(List.of(UserMessage.from(userMessage))));
+        // AI tools authenticate via the session token, not MetaUser alone —
+        // open an ephemeral session for the bound account and close it after the turn
+        String token = Erupts.generateCode(24);
+        eruptTokenService.loginToken(user, token);
+        MetaContext.registerToken(token);
+        try {
+            return LlmCore.getLLM(llm).chat(llmRequest, new ArrayList<>(List.of(UserMessage.from(userMessage))));
+        } finally {
+            eruptTokenService.logoutToken(user.getAccount(), token);
+        }
     }
 
     // Report push failure must not fail the task: the work itself already succeeded

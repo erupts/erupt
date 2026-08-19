@@ -93,17 +93,30 @@ public class FeishuChannel extends StaffChannel {
     }
 
     @Override
+    public boolean testConnect(JsonObject config) {
+        if (StringUtils.isBlank(str(config, "appId"))) return false;
+        this.tenantToken(config);
+        return true;
+    }
+
+    @Override
     public void reply(JsonObject config, ChannelMessage message, String content) {
-        JsonObject auth = new JsonObject();
-        auth.addProperty("app_id", str(config, "appId"));
-        auth.addProperty("app_secret", str(config, "appSecret"));
-        JsonObject token = GsonFactory.getGson().fromJson(this.post(TENANT_TOKEN_API, auth.toString()), JsonObject.class);
         JsonObject body = new JsonObject();
         body.addProperty("receive_id", message.getReplyTo());
         body.addProperty("msg_type", "text");
         body.addProperty("content", textContent(content).toString());
         this.post(MESSAGE_API, body.toString(),
-                Map.of("Authorization", "Bearer " + str(token, "tenant_access_token")));
+                Map.of("Authorization", "Bearer " + this.tenantToken(config)));
+    }
+
+    private String tenantToken(JsonObject config) {
+        JsonObject auth = new JsonObject();
+        auth.addProperty("app_id", str(config, "appId"));
+        auth.addProperty("app_secret", str(config, "appSecret"));
+        JsonObject token = GsonFactory.getGson().fromJson(this.post(TENANT_TOKEN_API, auth.toString()), JsonObject.class);
+        String value = str(token, "tenant_access_token");
+        if (null == value) throw new EruptWebApiRuntimeException("Feishu get token failed: " + token);
+        return value;
     }
 
     private JsonObject textContent(String text) {

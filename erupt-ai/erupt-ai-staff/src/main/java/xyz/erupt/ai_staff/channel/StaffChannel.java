@@ -52,6 +52,14 @@ public abstract class StaffChannel {
     public abstract void push(JsonObject config, String content);
 
     /**
+     * Silently verify the channel's API credentials (no visible message sent);
+     * throws on failure, returns false when nothing verifiable is configured.
+     */
+    public boolean testConnect(JsonObject config) {
+        return false;
+    }
+
+    /**
      * Handle a platform callback (signature check, handshake, message parsing).
      * Returns the body to answer the platform immediately; each recognized user
      * message is handed to the listener and replied asynchronously via {@link #reply}.

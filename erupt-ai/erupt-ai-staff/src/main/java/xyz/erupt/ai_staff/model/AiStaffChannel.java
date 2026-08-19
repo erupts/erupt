@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.ai_staff.channel.StaffChannel;
 import xyz.erupt.ai_staff.proxy.AiStaffChannelProxy;
+import xyz.erupt.ai_staff.proxy.AiStaffChannelTestButtonHandler;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -15,10 +16,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
-import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 /**
@@ -31,8 +29,14 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 @Erupt(
         name = "Channel Integration",
         dataProxy = AiStaffChannelProxy.class,
-        rowOperation = @RowOperation(code = "testPush", icon = "fa fa-paper-plane", title = "Test Push",
-                mode = RowOperation.Mode.SINGLE, operationHandler = AiStaffChannelProxy.class)
+        rowOperation = {
+                @RowOperation(code = "testPush", icon = "fa fa-paper-plane", title = "Test Push",
+                        mode = RowOperation.Mode.SINGLE, operationHandler = AiStaffChannelProxy.class),
+                @RowOperation(code = "testConnect", icon = "fa fa-plug", title = "Test Connect",
+                        callHint = "",
+                        mode = RowOperation.Mode.SINGLE, operationHandler = AiStaffChannelProxy.class,
+                        operationParam = "connect")
+        }
 )
 @Table(name = "e_ai_staff_channel")
 @Getter
@@ -86,5 +90,12 @@ public class AiStaffChannel extends MetaModelUpdateVo {
                     codeEditType = @CodeEditorType(language = "json"))
     )
     private String config;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Test Connect", type = EditType.BUTTON,
+                    buttonType = @ButtonType(icon = "fa fa-plug", handler = AiStaffChannelTestButtonHandler.class))
+    )
+    private String testConnect;
 
 }

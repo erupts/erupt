@@ -90,10 +90,14 @@ public class WeComChannel extends StaffChannel {
     }
 
     @Override
+    public boolean testConnect(JsonObject config) {
+        if (StringUtils.isBlank(str(config, "corpId"))) return false;
+        this.accessToken(config);
+        return true;
+    }
+
+    @Override
     public void reply(JsonObject config, ChannelMessage message, String content) {
-        String tokenResult = this.httpGet(String.format(TOKEN_API, str(config, "corpId"), str(config, "corpSecret")));
-        String accessToken = str(GsonFactory.getGson().fromJson(tokenResult, JsonObject.class), "access_token");
-        if (null == accessToken) throw new EruptWebApiRuntimeException("WeCom get token failed: " + tokenResult);
         JsonObject markdown = new JsonObject();
         markdown.addProperty("content", content);
         JsonObject body = new JsonObject();
@@ -101,7 +105,14 @@ public class WeComChannel extends StaffChannel {
         body.addProperty("msgtype", "markdown");
         body.addProperty("agentid", str(config, "agentId"));
         body.add("markdown", markdown);
-        this.post(String.format(SEND_API, accessToken), body.toString());
+        this.post(String.format(SEND_API, this.accessToken(config)), body.toString());
+    }
+
+    private String accessToken(JsonObject config) {
+        String tokenResult = this.httpGet(String.format(TOKEN_API, str(config, "corpId"), str(config, "corpSecret")));
+        String accessToken = str(GsonFactory.getGson().fromJson(tokenResult, JsonObject.class), "access_token");
+        if (null == accessToken) throw new EruptWebApiRuntimeException("WeCom get token failed: " + tokenResult);
+        return accessToken;
     }
 
     @SneakyThrows
