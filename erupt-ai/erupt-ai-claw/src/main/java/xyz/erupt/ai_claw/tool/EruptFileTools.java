@@ -4,15 +4,13 @@ import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import xyz.erupt.ai_claw.util.ClawSandbox;
 import xyz.erupt.annotation.ai.AiToolbox;
-import xyz.erupt.core.constant.EruptConst;
-import xyz.erupt.core.context.MetaContext;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.StringJoiner;
 import java.util.stream.Stream;
@@ -131,16 +129,9 @@ public class EruptFileTools {
         }
     }
 
-    // Sandbox root of the current user, created on first access
+    // Sandbox root of the current user, shared with other claw tools
     private Path sandboxRoot() {
-        try {
-            Path root = Paths.get(System.getProperty("user.home"), EruptConst.ERUPT_DIR, MetaContext.getUser().getAccount())
-                    .toAbsolutePath().normalize();
-            Files.createDirectories(root);
-            return root;
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot initialize sandbox: " + e.getMessage(), e);
-        }
+        return ClawSandbox.root();
     }
 
     // Resolve a user-supplied path against the sandbox root, rejecting ".." and symlink escapes
