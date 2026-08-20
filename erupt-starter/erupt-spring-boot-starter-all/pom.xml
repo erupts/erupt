@@ -23,6 +23,12 @@
             <version>${project.parent.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-report</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
         <!-- Feature modules -->
         <dependency>
             <groupId>${erupt.groupId}</groupId>
@@ -78,7 +84,17 @@
         </dependency>
         <dependency>
             <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-ai-rag</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-ai-claw</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-ai-staff</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

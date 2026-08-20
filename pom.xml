@@ -84,7 +84,6 @@
         <module>erupt-tpl/erupt-tpl</module>
         <module>erupt-tpl/ant-design</module>
         <module>erupt-tpl/element-ui</module>
-        <module>erupt-tpl/amis</module>
         <module>erupt-tpl/element-plus</module>
 
         <!-- AI -->
