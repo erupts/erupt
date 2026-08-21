@@ -43,6 +43,15 @@ public class LLMRoleService {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Whether the user may use at least one of the given tools. Reuses {@link #getAllowedToolsByUid}
+     * (super-admins → every tool, others → their enabled roles' tools) and just checks for overlap.
+     */
+    public boolean canUseAnyTool(Long uid, Set<String> toolNames) {
+        if (toolNames == null || toolNames.isEmpty()) return false;
+        return getAllowedToolsByUid(uid).stream().anyMatch(toolNames::contains);
+    }
+
     public String getSystemPromptByUid(Long uid) {
         if (uid == null) return null;
         EruptUser user = eruptDao.find(EruptUser.class, uid);
