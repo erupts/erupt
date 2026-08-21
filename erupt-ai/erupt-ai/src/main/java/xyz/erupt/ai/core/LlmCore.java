@@ -2,6 +2,7 @@ package xyz.erupt.ai.core;
 
 import dev.langchain4j.agent.tool.ToolSpecifications;
 import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
@@ -193,6 +194,7 @@ public abstract class LlmCore {
                     listener.accept(SseListener.builder().call(callMsg).build());
                 }).onPartialThinking(thinking -> listener.accept(SseListener.builder().thinking(true).currMessage(thinking.text()).build())).start();
     }
+
     public ChatMemory creatMemory(List<ChatMessage> chatMessages) {
         return new ChatMemory() {
 
@@ -203,7 +205,17 @@ public abstract class LlmCore {
 
             @Override
             public void add(ChatMessage chatMessage) {
-                chatMessages.add(chatMessage);
+                // Qwen and many OpenAI-compatible endpoints reject requests whose system message
+                // is not the first element ("System message must be at the beginning"). langchain4j
+                // seeds this memory with history and only then adds the freshly generated system
+                // message, so a naive append would leave it in the wrong place. Keep exactly one
+                // system message, pinned to index 0 (mirrors MessageWindowChatMemory semantics).
+                if (chatMessage instanceof SystemMessage) {
+                    chatMessages.removeIf(SystemMessage.class::isInstance);
+                    chatMessages.add(0, chatMessage);
+                } else {
+                    chatMessages.add(chatMessage);
+                }
             }
 
             @Override
