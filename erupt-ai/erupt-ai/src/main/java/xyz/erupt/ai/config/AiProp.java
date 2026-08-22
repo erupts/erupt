@@ -26,7 +26,7 @@ public class AiProp {
 
     private int messageDelay = 30;
 
-    private Long sseTimeout = 10L * 60 * 1000;
+    private Long sseTimeout = 15L * 60 * 1000;
 
     // Max sequential tool invocations per chat turn; the ReAct loop aborts beyond this,
     // guarding against runaway tool-call loops
