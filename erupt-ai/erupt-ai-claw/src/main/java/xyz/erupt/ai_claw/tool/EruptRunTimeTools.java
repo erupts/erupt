@@ -39,13 +39,25 @@ public class EruptRunTimeTools {
         return profiles.length == 0 ? "No active profiles (using default)" : String.join(", ", profiles);
     }
 
+    // Mirrors Spring Boot Actuator's default sanitization keywords to avoid leaking
+    // credentials (e.g. spring.datasource.password, api keys) through the AI channel
+    private static final String[] SENSITIVE_KEY_WORDS = {
+            "password", "passwd", "secret", "token", "credential", "private", "key", "vcap_services"
+    };
+
     @Tool("Get a Spring application configuration property value by key (e.g. spring.datasource.url). " +
             "Reads from application.yml/properties and all active Spring Environment sources. " +
-            "Returns the resolved runtime value, not the raw file content.")
+            "Returns the resolved runtime value, not the raw file content. " +
+            "Sensitive properties (passwords, secrets, tokens, keys) are masked.")
     public String getProperty(
             @P("Spring property key, e.g. spring.datasource.url or erupt.ai.model") String key) {
         String value = environment.getProperty(key);
-        return value != null ? key + " = " + value : "Property not found: " + key;
+        if (value == null) return "Property not found: " + key;
+        String lowerKey = key.toLowerCase();
+        for (String word : SENSITIVE_KEY_WORDS) {
+            if (lowerKey.contains(word)) return key + " = ******";
+        }
+        return key + " = " + value;
     }
 
     @Tool("Get JVM heap memory usage of the current process: used, total, and max heap in MB.")
