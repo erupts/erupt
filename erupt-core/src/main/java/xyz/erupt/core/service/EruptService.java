@@ -116,6 +116,9 @@ public class EruptService {
 
     @SneakyThrows
     public void drillProcess(EruptModel eruptModel, BiConsumer<Link, Object> consumer) {
+        // Drill headers only exist on MVC threads; skip when called from non-request
+        // contexts such as AI tool execution (langchain4j worker threads)
+        if (!EruptSpringUtil.isMvcContext()) return;
         String drill = request.getHeader(EruptReqHeader.DRILL);
         if (null != drill) {
             String drillValue = request.getHeader(EruptReqHeader.DRILL_VALUE);

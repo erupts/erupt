@@ -12,6 +12,7 @@ import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.controller.EruptDataController;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.EruptRemoteRouterManager;
@@ -173,6 +174,10 @@ public class EruptModelTools {
     private void checkErupt(String eruptName, Function<PowerObject, Boolean> powerCheck) {
         String token = requireToken();
         MetaUserinfo user = requireLogin(token);
+        // Downstream permission handlers (e.g. UpmsPowerHandler) resolve the target erupt
+        // from MetaContext; on AI threads it still holds the /ai/chat request meta, so
+        // re-register it with the model being accessed (mirrors EruptSecurityInterceptor)
+        MetaContext.register(new MetaErupt(eruptName, eruptName));
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         if (null != eruptModel && !eruptModel.isRemote() && !eruptModel.getErupt().power().ai()) {
             throw new EruptWebApiRuntimeException("AI access is disabled for this Erupt model: " + eruptName);

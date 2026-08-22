@@ -106,7 +106,7 @@ public abstract class LlmCore {
             eruptAiServices.maxSequentialToolsInvocations(EruptSpringUtil.getBean(AiProp.class).getMaxSequentialToolsInvocations());
         }
         eruptAiServices.toolExecutionErrorHandler((throwable, e) -> {
-            log.error("Tool execution error [{}] e: {}", throwable.getMessage(), e);
+            log.error("Tool execution error [{}] e: {}", throwable.getMessage(), e, throwable);
             return new ToolErrorHandlerResult("Tool error: " + e.toString());
         });
         return eruptAiServices.build();
