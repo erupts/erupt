@@ -31,6 +31,7 @@ import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
+import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.naming.EruptRowOperationNaming;
 import xyz.erupt.core.query.Column;
@@ -99,6 +100,10 @@ public class EruptDataController {
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public Map<String, Object> getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        // erupt-cloud: forward to the owning node, which enforces its own permission checks
+        if (eruptModel.isRemote()) {
+            return EruptRemoteRouterManager.get().findById(eruptName, id);
+        }
         Erupts.powerLegal(eruptModel, powerObject -> powerObject.isEdit() || powerObject.isViewDetails() || powerObject.isPrint());
         eruptService.verifyIdPermissions(eruptModel, id);
         return preEruptDataService.getEruptData(eruptModel, id, false);
@@ -117,7 +122,7 @@ public class EruptDataController {
     @PostMapping("/{erupt}" + OPERATOR_PATH_STR + "/{code}/form-value")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @SneakyThrows
-    public Object eruptOperatorFormValue(@PathVariable("erupt") String eruptName, @PathVariable("code") String code, @RequestParam(required = false) List<Object> ids) {
+    public Object eruptOperatorFormValue(@PathVariable("erupt") String eruptName, @PathVariable("code") String code, @RequestParam(value = "ids", required = false) List<Object> ids) {
         if (null == ids) ids = new ArrayList<>();
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         RowOperation rowOperation = Arrays.stream(eruptModel.getErupt().rowOperation()).filter(it -> code.equals(it.code())).findFirst().orElseThrow(EruptNoLegalPowerException::new);

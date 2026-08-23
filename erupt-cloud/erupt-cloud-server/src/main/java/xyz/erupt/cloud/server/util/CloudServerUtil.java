@@ -10,12 +10,32 @@ import xyz.erupt.cloud.server.annotation.EruptCloudServer;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 
+import java.net.ConnectException;
+import java.net.NoRouteToHostException;
+import java.net.UnknownHostException;
+
 /**
  * @author YuePeng
  * date 2022/6/4 00:31
  */
 @Slf4j
 public class CloudServerUtil {
+
+    /**
+     * Whether a forward failure means the request never reached the node application (connection was
+     * never established). Only such failures are safe to fail over to another instance — a read
+     * timeout or an application error may have already been processed, and retrying could duplicate a
+     * write.
+     */
+    public static boolean isConnectFailure(Throwable e) {
+        while (null != e) {
+            if (e instanceof ConnectException || e instanceof UnknownHostException || e instanceof NoRouteToHostException) {
+                return true;
+            }
+            e = e.getCause();
+        }
+        return false;
+    }
 
     public static EruptCloudServer.Proxy findEruptCloudServerAnnotation() {
         EruptCloudServer eruptCloudServer = EruptApplication.getPrimarySource().getAnnotation(EruptCloudServer.class);

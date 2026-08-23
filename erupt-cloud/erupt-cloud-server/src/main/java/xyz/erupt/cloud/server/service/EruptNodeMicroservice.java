@@ -11,6 +11,7 @@ import xyz.erupt.jpa.dao.EruptDao;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -55,6 +56,21 @@ public class EruptNodeMicroservice {
     public void safeRemoveInstance(String nodeName, String accessToken) {
         this.findNodeByAppName(nodeName, accessToken);
         nodeWorker.run(); // Poll the availability of all IP instances under the nodeName
+    }
+
+    /**
+     * Precisely drop the instance locations a node reports while gracefully shutting down, so the
+     * server stops routing to it immediately instead of waiting for the survival check.
+     */
+    public void removeInstance(String nodeName, String accessToken, List<String> locations) {
+        this.findNodeByAppName(nodeName, accessToken);
+        if (null == locations || locations.isEmpty()) {
+            nodeWorker.run();
+            return;
+        }
+        for (String location : locations) {
+            nodeManager.removeNodeInstance(nodeName, location);
+        }
     }
 
 }

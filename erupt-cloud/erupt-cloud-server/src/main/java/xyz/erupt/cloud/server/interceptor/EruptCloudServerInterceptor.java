@@ -31,6 +31,7 @@ import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeContext;
 import xyz.erupt.cloud.server.node.NodeManager;
+import xyz.erupt.cloud.server.util.CloudServerUtil;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
@@ -53,9 +54,7 @@ import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author YuePeng
@@ -156,22 +155,25 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                     Optional.ofNullable(httpResponse.header(transferHeader)).ifPresent(it -> response.addHeader(transferHeader, it));
                 }
                 response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-                String body = httpResponse.body();
+                // Error: body is small, buffer it for logging and passthrough
                 if (httpResponse.getStatus() != HttpStatus.OK.value()) {
+                    String body = httpResponse.body();
                     log.error("{}: {} -> {}", metaNode.getNodeName(), path, body);
                     operationService.record(handler, new Exception(body));
                     response.setStatus(httpResponse.getStatus());
-                    response.getOutputStream().write(httpResponse.bodyBytes());
+                    response.getOutputStream().write(body.getBytes(StandardCharsets.UTF_8));
                     return false;
-                } else {
-                    operationService.record(handler, null);
                 }
+                operationService.record(handler, null);
                 if ((EruptRestPath.ERUPT_BUILD + "/" + erupt).equals(request.getServletPath())) {
-                    EruptBuildModel eruptBuildModel = GsonFactory.getGson().fromJson(body, EruptBuildModel.class);
+                    // Build: must buffer to rewrite node-name prefixes into the model
+                    EruptBuildModel eruptBuildModel = GsonFactory.getGson().fromJson(httpResponse.body(), EruptBuildModel.class);
                     this.eruptBuildProcess(eruptBuildModel, nodeName);
                     response.getOutputStream().write(GsonFactory.getGson().toJson(eruptBuildModel).getBytes(StandardCharsets.UTF_8));
                 } else {
-                    response.getOutputStream().write(httpResponse.bodyBytes());
+                    // Everything else (data / excel / file / large responses): stream through without full buffering
+                    StreamUtils.copy(httpResponse.bodyStream(), response.getOutputStream());
+                    response.flushBuffer();
                 }
                 NodeContext.remove();
                 return false;
@@ -187,13 +189,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         NodeContext.remove();
     }
 
-    private int count = 0;
-
-    public HttpResponse httpProxy(HttpServletRequest request, MetaNode metaNode, String path, String eruptName) {
-        if (count == Integer.MAX_VALUE) {
-            count = 0;
-        }
-        String location = metaNode.getLocations().toArray(new String[0])[metaNode.getLocations().size() <= 1 ? 0 : (count++ % metaNode.getLocations().size())];
+    public HttpResponse httpProxy(HttpServletRequest request, MetaNode metaNode, String path, String eruptName) throws Exception {
         Map<String, String> headers = new CaseInsensitiveMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
@@ -201,31 +197,61 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             headers.put(name, request.getHeader(name));
         }
         headers.remove(HttpHeaders.HOST);
+        // Strip the browser Origin — this is a trusted server-to-server forward, and the node rejects
+        // Origin-bearing (i.e. browser-direct) calls.
+        headers.remove(HttpHeaders.ORIGIN);
         headers.put(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken());
         headers.put(EruptMutualConst.TOKEN, eruptContextService.getCurrentToken());
         headers.put(EruptMutualConst.ERUPT, eruptName);
         headers.put(EruptMutualConst.USER, Base64Encoder.encode(GsonFactory.getGson().toJson(MetaContext.getUser())));
-        if (headers.containsKey(EruptReqHeader.DRILL_SOURCE_ERUPT)) {
-            headers.computeIfPresent(EruptReqHeader.DRILL_SOURCE_ERUPT, (k, dse) -> dse.substring(dse.lastIndexOf(".") + 1));
-        }
         //Process drill header
         if (headers.containsKey(EruptReqHeader.DRILL_SOURCE_ERUPT)) {
             headers.computeIfPresent(EruptReqHeader.DRILL_SOURCE_ERUPT, (k, dse) -> dse.substring(dse.lastIndexOf(".") + 1));
         }
-        HttpRequest httpRequest = HttpUtil.createRequest(Method.valueOf(request.getMethod()), location + path + (null == request.getQueryString() ? "" : "?" + request.getQueryString()));
-        try {
-            if (null != request.getContentType() && request.getContentType().contains("multipart/form-data")) {
-                for (Part part : request.getParts()) {
-                    httpRequest.form(part.getName(), StreamUtils.copyToByteArray(part.getInputStream()), part.getSubmittedFileName());
-                }
-            } else {
-                httpRequest.body(StreamUtils.copyToByteArray(request.getInputStream()));
+        String query = null == request.getQueryString() ? "" : "?" + request.getQueryString();
+        Method method = Method.valueOf(request.getMethod());
+        // Buffer the body once so it can be replayed to a failover instance without re-reading the
+        // (one-shot) servlet input stream.
+        boolean multipart = null != request.getContentType() && request.getContentType().contains("multipart/form-data");
+        List<Part> parts = multipart ? new ArrayList<>(request.getParts()) : null;
+        Map<Part, byte[]> partBodies = new java.util.IdentityHashMap<>();
+        byte[] body = null;
+        if (multipart) {
+            for (Part part : parts) {
+                partBodies.put(part, StreamUtils.copyToByteArray(part.getInputStream()));
             }
-            httpRequest.timeout(eruptCloudServerProp.getNodeRequestTimeout());
-            return httpRequest.addHeaders(headers).execute();
-        } catch (Exception e) {
-            throw new EruptWebApiRuntimeException(location + " -> " + e.getMessage());
+        } else {
+            body = StreamUtils.copyToByteArray(request.getInputStream());
         }
+        List<String> locations = nodeManager.pickLocations(metaNode);
+        Exception lastError = null;
+        for (int i = 0; i < locations.size(); i++) {
+            String location = locations.get(i);
+            try {
+                HttpRequest httpRequest = HttpUtil.createRequest(method, location + path + query);
+                if (multipart) {
+                    for (Part part : parts) {
+                        httpRequest.form(part.getName(), partBodies.get(part), part.getSubmittedFileName());
+                    }
+                } else {
+                    httpRequest.body(body);
+                }
+                httpRequest.timeout(eruptCloudServerProp.getNodeRequestTimeout());
+                // async execution keeps the body lazy so it can be streamed instead of fully buffered
+                return httpRequest.addHeaders(headers).executeAsync();
+            } catch (Exception e) {
+                lastError = e;
+                // Only fail over when the connection never reached the node — otherwise a retry could
+                // duplicate a write that the node already processed.
+                if (i + 1 < locations.size() && CloudServerUtil.isConnectFailure(e)) {
+                    log.warn("node {} instance {} unreachable, failing over: {}", metaNode.getNodeName(), location, e.getMessage());
+                    nodeManager.evictInstance(metaNode.getNodeName(), location);
+                    continue;
+                }
+                throw new EruptWebApiRuntimeException(location + " -> " + e.getMessage());
+            }
+        }
+        throw new EruptWebApiRuntimeException(metaNode.getNodeName() + " -> " + (null == lastError ? "no available instance" : lastError.getMessage()));
     }
 
     private void eruptBuildProcess(EruptBuildModel eruptBuildModel, String nodeName) {

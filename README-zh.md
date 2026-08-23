@@ -207,7 +207,7 @@ List<EruptUser> list = eruptDao.lambdaQuery(EruptUser.class)
 
 **为什么叫「HARNESS」** —— 把 AI 推到生产环境，需要的不只是 SDK：**治理**（RBAC）+ **互操作**（MCP）+ **可观测**（会话历史、Token 追踪）+ **运维友好**（管理界面配置）。四件事，一次配齐。
 
-**支持的大模型** —— OpenAI · Claude · Gemini · DeepSeek · 通义千问 · 智谱 GLM · 豆包 · Moonshot · MiniMax · Mistral · Grok · Fireworks · Together · OpenRouter · Requesty · Ollama（本地）—— 管理界面里随时热切换，共 50+ 个。
+**支持的大模型** —— OpenAI · Claude · Gemini · DeepSeek · 通义千问 · 智谱 GLM · 豆包 · Moonshot · MiniMax · Mistral · Grok · Fireworks · Together · OpenRouter · Requesty · OrcaRouter · Ollama（本地）—— 管理界面里随时热切换，共 50+ 个。
 
 | | |
 |---|---|

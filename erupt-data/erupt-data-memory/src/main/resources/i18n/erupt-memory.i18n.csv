@@ -1,0 +1,2 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+memory.primary_key_missing,主键值不能为空,主鍵值不能為空,Primary key value must not be empty,La valeur de la clé primaire ne doit pas être vide,主キーの値は空にできません,기본 키 값은 비어 있을 수 없습니다,Значение первичного ключа не может быть пустым,El valor de la clave primaria no debe estar vacío,Der Primärschlüsselwert darf nicht leer sein,O valor da chave primária não pode estar vazio,Nilai kunci utama tidak boleh kosong,يجب ألا تكون قيمة المفتاح الأساسي فارغة

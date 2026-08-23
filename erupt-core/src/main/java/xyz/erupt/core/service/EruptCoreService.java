@@ -15,6 +15,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.exception.EruptAnnotationException;
+import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.toolkit.TimeRecorder;
@@ -55,16 +56,26 @@ public class EruptCoreService implements ApplicationRunner {
         return ERUPT_LIST;
     }
 
+    public static boolean isRuntimeErupt(String eruptName) {
+        return RUNTIME_ERUPTS.contains(eruptName.toLowerCase());
+    }
+
     public static EruptModel getErupt(String eruptName) {
+        EruptModel eruptModel;
         if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
             if (null == ERUPTS.get(eruptName) || RUNTIME_ERUPTS.contains(eruptName.toLowerCase())) {
-                return ERUPTS.get(eruptName);
+                eruptModel = ERUPTS.get(eruptName);
             } else {
-                return EruptCoreService.initEruptModel(ERUPTS.get(eruptName).getClazz(), false);
+                eruptModel = EruptCoreService.initEruptModel(ERUPTS.get(eruptName).getClazz(), false);
             }
         } else {
-            return ERUPTS.get(eruptName);
+            eruptModel = ERUPTS.get(eruptName);
         }
+        // erupt-cloud: fall back to a remote node erupt when it is not registered locally
+        if (null == eruptModel && EruptRemoteRouterManager.isRemote(eruptName)) {
+            return EruptRemoteRouterManager.get().resolveErupt(eruptName);
+        }
+        return eruptModel;
     }
 
     // Dynamically register a prebuilt erupt model (replace if exists), effective without restart
@@ -100,6 +111,10 @@ public class EruptCoreService implements ApplicationRunner {
 
     @SneakyThrows
     public static EruptModel getEruptView(String eruptName) {
+        // erupt-cloud: remote erupts have no local class to clone; return the node's fetched schema
+        if (EruptRemoteRouterManager.isRemote(eruptName)) {
+            return EruptRemoteRouterManager.get().resolveEruptView(eruptName);
+        }
         EruptModel em = getErupt(eruptName).clone();
         for (EruptFieldModel fieldModel : em.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();

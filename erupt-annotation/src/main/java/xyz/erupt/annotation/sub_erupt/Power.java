@@ -29,6 +29,9 @@ public @interface Power {
 
     boolean copy() default true;
 
+    @Comment("Whether AI tools may inspect and operate on this Erupt model")
+    boolean ai() default true;
+
     @Transient
     @Comment("Dynamic handling of Power permissions")
     Class<? extends PowerHandler> powerHandler() default PowerHandler.class;

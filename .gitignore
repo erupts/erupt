@@ -16,7 +16,7 @@ HELP.md
 
 ### IntelliJ IDEA ###
 .idea/*
-!.idea/icon.png
+!.idea/icon.svg
 !.idea/runConfigurations/**
 !.idea/fileTemplates/**
 *.iws
@@ -29,7 +29,6 @@ HELP.md
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
 
 ### VS Code ###
 .vscode/

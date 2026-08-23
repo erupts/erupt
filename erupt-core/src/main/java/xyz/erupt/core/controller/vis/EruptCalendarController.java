@@ -36,7 +36,7 @@ public class EruptCalendarController {
     @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional
     @SneakyThrows
-    public R<Void> updateDate(@PathVariable String erupt, @RequestBody VisCalendarDateCommand command) {
+    public R<Void> updateDate(@PathVariable("erupt") String erupt, @RequestBody VisCalendarDateCommand command) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Erupts.powerLegal(eruptModel, PowerObject::isEdit);
         for (Vis vis : eruptModel.getErupt().vis()) {

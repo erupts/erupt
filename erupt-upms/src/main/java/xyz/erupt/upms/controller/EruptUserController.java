@@ -66,8 +66,6 @@ public class EruptUserController {
     /**
      * Login
      *
-     * @param verifyCode     Verification code
-     * @param verifyCodeMark Verification code identifier
      */
     @SneakyThrows
     @PostMapping(value = "/login")
@@ -116,9 +114,9 @@ public class EruptUserController {
     @PostMapping(value = "/change-pwd")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public R<Void> changePwd(@RequestBody ChangePwdBody body) {
-        String pwd = SecretUtil.decodeSecret(body.getPwd(), 3);
-        String newPwd = SecretUtil.decodeSecret(body.getNewPwd(), 3);
-        String newPwd2 = SecretUtil.decodeSecret(body.getNewPwd2(), 3);
+        String pwd = eruptAppProp.getPwdTransferEncrypt() ? SecretUtil.decodeSecret(body.getPwd(), 3) : body.getPwd();
+        String newPwd = eruptAppProp.getPwdTransferEncrypt() ? SecretUtil.decodeSecret(body.getNewPwd(), 3) : body.getNewPwd();
+        String newPwd2 = eruptAppProp.getPwdTransferEncrypt() ? SecretUtil.decodeSecret(body.getNewPwd2(), 3) : body.getNewPwd2();
         return eruptUserService.changePwd(eruptUserService.getCurrentAccount(), pwd, newPwd, newPwd2);
     }
 
@@ -167,8 +165,8 @@ public class EruptUserController {
      * @param height Height of the verification code
      */
     @GetMapping("/code-img")
-    public void createCode(HttpServletResponse response, @RequestParam long mark,
-                           @RequestParam(required = false, defaultValue = "38") Integer height) throws Exception {
+    public void createCode(HttpServletResponse response, @RequestParam("mark") long mark,
+                           @RequestParam(value = "height", required = false, defaultValue = "38") Integer height) throws Exception {
         // Clamp height to a sane captcha range to prevent resource abuse via oversized images
         height = Math.max(10, Math.min(height, 100));
         response.setContentType("image/jpeg"); // Set the response type format to image format

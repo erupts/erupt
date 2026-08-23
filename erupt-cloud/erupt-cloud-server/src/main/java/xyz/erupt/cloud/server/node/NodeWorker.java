@@ -37,8 +37,7 @@ public class NodeWorker implements Runnable {
     public void run() {
         for (MetaNode node : nodeManager.findAllNodes()) {
             if (node.getLocations().removeIf(location ->
-                    !CloudServerUtil.retryableNodeHealth(node.getNodeName(),
-                            location, 2, 200))) {
+                    !CloudServerUtil.retryableNodeHealth(node.getNodeName(), location, 2, 200))) {
                 nodeManager.putNode(node);
             }
         }

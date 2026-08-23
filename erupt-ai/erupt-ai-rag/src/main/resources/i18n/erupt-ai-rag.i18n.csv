@@ -1,0 +1,26 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+Knowledge Base,知识库,知識庫,Knowledge Base,Base de connaissances,ナレッジベース,지식 베이스,База знаний,Base de conocimiento,Wissensdatenbank,Base de conhecimento,Basis Pengetahuan,قاعدة المعرفة
+Knowledge Document,知识文档,知識文檔,Knowledge Document,Document de connaissances,ナレッジドキュメント,지식 문서,Документ знаний,Documento de conocimiento,Wissensdokument,Documento de conhecimento,Dokumen Pengetahuan,مستند المعرفة
+Knowledge Chunk,知识切片,知識切片,Knowledge Chunk,Fragment de connaissances,ナレッジチャンク,지식 청크,Фрагмент знаний,Fragmento de conocimiento,Wissensfragment,Fragmento de conhecimento,Potongan Pengetahuan,مقطع المعرفة
+Retrieval Test,检索测试,檢索測試,Retrieval Test,Test de récupération,検索テスト,검색 테스트,Тест поиска,Prueba de recuperación,Abruftest,Teste de recuperação,Uji Pengambilan,اختبار الاسترجاع
+Re-embed,重新向量化,重新向量化,Re-embed,Ré-embedder,再埋め込み,재임베딩,Повторное встраивание,Re-embeber,Neu einbetten,Reincorporar,Embedding Ulang,إعادة التضمين
+Chunk Size,切片大小,切片大小,Chunk Size,Taille des fragments,チャンクサイズ,청크 크기,Размер фрагмента,Tamaño del fragmento,Fragmentgröße,Tamanho do fragmento,Ukuran Potongan,حجم المقطع
+Chunk Overlap,切片重叠,切片重疊,Chunk Overlap,Chevauchement des fragments,チャンクオーバーラップ,청크 중첩,Перекрытие фрагментов,Superposición de fragmentos,Fragmentüberlappung,Sobreposição de fragmentos,Tumpang Tindih Potongan,تداخل المقاطع
+Top K,召回数量,召回數量,Top K,Top K,トップK,톱 K,Топ K,Top K,Top K,Top K,Top K,أفضل K
+Min Score,最低分数,最低分數,Min Score,Score minimum,最小スコア,최소 점수,Минимальный балл,Puntuación mínima,Mindestpunktzahl,Pontuação mínima,Skor Minimum,الحد الأدنى للدرجة
+Attachment,附件,附件,Attachment,Pièce jointe,添付ファイル,첨부 파일,Вложение,Adjunto,Anhang,Anexo,Lampiran,مرفق
+Content,内容,內容,Content,Contenu,コンテンツ,콘텐츠,Содержимое,Contenido,Inhalt,Conteúdo,Konten,المحتوى
+Chunks,切片数,切片數,Chunks,Fragments,チャンク数,청크 수,Фрагменты,Fragmentos,Fragmente,Fragmentos,Potongan,المقاطع
+Error Info,错误信息,錯誤信息,Error Info,Info d'erreur,エラー情報,오류 정보,Информация об ошибке,Información de error,Fehlerinfo,Informação de erro,Info Kesalahan,معلومات الخطأ
+Document,文档,文檔,Document,Document,ドキュメント,문서,Документ,Documento,Dokument,Documento,Dokumen,مستند
+Seq,序号,序號,Seq,Séq,順序,순번,Номер,Sec,Nr,Seq,Urutan,تسلسل
+Text,文本,文本,Text,Texte,テキスト,텍스트,Текст,Texto,Text,Texto,Teks,النص
+Vector ID,向量 ID,向量 ID,Vector ID,ID vectoriel,ベクトルID,벡터 ID,ID вектора,ID de vector,Vektor-ID,ID do vetor,ID Vektor,معرف المتجه
+Pending,待处理,待處理,Pending,En attente,保留中,대기 중,В ожидании,Pendiente,Ausstehend,Pendente,Menunggu,قيد الانتظار
+Embedding,向量化中,向量化中,Embedding,Embedding en cours,埋め込み中,임베딩 중,Встраивание,Embebiendo,Einbettung läuft,Incorporando,Sedang Embedding,جارٍ التضمين
+Ready,就绪,就緒,Ready,Prêt,準備完了,준비됨,Готово,Listo,Bereit,Pronto,Siap,جاهز
+Failed,失败,失敗,Failed,Échoué,失敗,실패,Не удалось,Fallido,Fehlgeschlagen,Falhou,Gagal,فشل
+rag.unknown_store,未知向量存储类型:,未知向量存儲類型:,Unknown vector store type:,Type de stockage vectoriel inconnu :,不明なベクトルストアタイプ:,알 수 없는 벡터 스토어 유형:,Неизвестный тип векторного хранилища:,Tipo de almacén vectorial desconocido:,Unbekannter Vektorspeichertyp:,Tipo de armazenamento vetorial desconhecido:,Tipe penyimpanan vektor tidak dikenal:,نوع مخزن متجهات غير معروف:
+rag.empty_content,请上传附件或填写内容,請上傳附件或填寫內容,Please upload an attachment or fill in the content,Veuillez téléverser une pièce jointe ou remplir le contenu,添付ファイルをアップロードするか内容を入力してください,첨부 파일을 업로드하거나 내용을 입력하세요,Загрузите вложение или заполните содержимое,Suba un adjunto o complete el contenido,Bitte einen Anhang hochladen oder Inhalt ausfüllen,Envie um anexo ou preencha o conteúdo,Unggah lampiran atau isi konten,يرجى رفع مرفق أو ملء المحتوى
+rag.kb_has_documents,请先删除该知识库下的文档,請先刪除該知識庫下的文檔,Delete the documents in this knowledge base first,Supprimez d'abord les documents de cette base de connaissances,先にこのナレッジベースのドキュメントを削除してください,먼저 이 지식 베이스의 문서를 삭제하세요,Сначала удалите документы из этой базы знаний,Elimine primero los documentos de esta base de conocimiento,Löschen Sie zuerst die Dokumente dieser Wissensdatenbank,Exclua primeiro os documentos desta base de conhecimento,Hapus dulu dokumen di basis pengetahuan ini,احذف مستندات قاعدة المعرفة هذه أولاً
+rag.illegal_attachment_path,非法的附件路径,非法的附件路徑,Illegal attachment path,Chemin de pièce jointe illégal,不正な添付ファイルパス,잘못된 첨부 파일 경로,Недопустимый путь вложения,Ruta de adjunto ilegal,Unzulässiger Anhangspfad,Caminho de anexo ilegal,Jalur lampiran ilegal,مسار مرفق غير قانوني

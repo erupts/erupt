@@ -23,6 +23,7 @@ import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
+import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
@@ -103,6 +104,10 @@ public class EruptModifyService {
     @SneakyThrows
     @Transactional
     public Object insertEruptData(EruptModel eruptModel, JsonObject data) {
+        // erupt-cloud: forward to the owning node, which runs its own validation/DataProxy pipeline
+        if (eruptModel.isRemote()) {
+            return EruptRemoteRouterManager.get().insert(eruptModel.getEruptName(), data);
+        }
         R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
         if (!validation.isSuccess()) {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
@@ -120,6 +125,10 @@ public class EruptModifyService {
     @SneakyThrows
     @Transactional
     public void updateEruptData(EruptModel eruptModel, JsonObject data) {
+        if (eruptModel.isRemote()) {
+            EruptRemoteRouterManager.get().update(eruptModel.getEruptName(), data);
+            return;
+        }
         R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
         if (!validation.isSuccess()) {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
@@ -130,15 +139,20 @@ public class EruptModifyService {
         Object old = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol()).get(o));
         Object realOld = eruptModel.getClazz().getDeclaredConstructor().newInstance();
         BeanUtils.copyProperties(old, realOld);
-        String maskedOld = EruptUtil.toMaskedJson(eruptModel, realOld);
-        OldEntityTL.set(maskedOld);
+        String oldData;
+        try {
+            oldData = EruptUtil.toMaskedJson(eruptModel, realOld);
+        } catch (Exception e) {
+            oldData = GsonFactory.getGson().toJson(realOld);
+        }
+        OldEntityTL.set(oldData);
         Object obj = EruptUtil.dataTarget(eruptModel, o, old, SceneEnum.EDIT);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
         DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).editData(eruptModel, obj);
         // Mask PASSWORD fields on both sides so plaintext credentials never reach the log
         JsonObject maskedData = data.deepCopy();
         EruptUtil.maskPasswordFields(eruptModel, maskedData);
-        this.modifyLog(eruptModel, "UPDATE", maskedOld + " -> " + maskedData);
+        this.modifyLog(eruptModel, "UPDATE", oldData + " -> " + maskedData);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterUpdate(obj)));
         applicationEventPublisher.publishEvent(new EruptEditEvent<>(eruptModel.getClazz(), obj, realOld));
     }
@@ -164,6 +178,10 @@ public class EruptModifyService {
     @SneakyThrows
     @Transactional
     public void deleteEruptData(EruptModel eruptModel, List<Object> ids, boolean verifyIdPermissions) {
+        if (eruptModel.isRemote()) {
+            EruptRemoteRouterManager.get().delete(eruptModel.getEruptName(), ids);
+            return;
+        }
         List<Object> deletedObjs = new ArrayList<>();
         for (Object id : ids) {
             if (verifyIdPermissions) {

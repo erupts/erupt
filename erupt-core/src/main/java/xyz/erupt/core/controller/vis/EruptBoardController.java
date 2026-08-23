@@ -37,7 +37,7 @@ public class EruptBoardController {
     @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional
     @SneakyThrows
-    public R<Void> updateGroup(@PathVariable String erupt, @RequestBody VisBoardGroupCommand command) {
+    public R<Void> updateGroup(@PathVariable("erupt") String erupt, @RequestBody VisBoardGroupCommand command) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Erupts.powerLegal(eruptModel, PowerObject::isEdit);
         for (Vis vis : eruptModel.getErupt().vis()) {

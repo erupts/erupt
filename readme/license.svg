@@ -1,0 +1,33 @@
+<svg viewBox="0 0 880 190" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue',Arial,sans-serif">
+    <rect x="4" y="4" width="872" height="182" rx="3" fill="#F5EDE0" stroke="#141414" stroke-width="3.5"/>
+    <rect x="4" y="4" width="872" height="34" rx="3" fill="#4FC8EC" stroke="#141414" stroke-width="3.5"/>
+    <rect x="4" y="30" width="872" height="8" fill="#4FC8EC"/>
+    <text x="22" y="27" font-size="15" font-weight="700" fill="#141414" font-family="'DejaVu Sans Mono',monospace">08 / LICENSE</text>
+    <text x="858" y="27" font-size="13" font-weight="700" fill="#141414" text-anchor="end" font-family="'DejaVu Sans Mono',monospace">fork-friendly</text>
+
+    <rect x="820" y="52" width="9" height="9" fill="#FF5C8A"/>
+    <rect x="833" y="52" width="9" height="9" fill="#7BD88F"/>
+    <rect x="820" y="65" width="9" height="9" fill="#141414"/>
+
+    <!-- license doc -->
+    <rect x="40" y="66" width="120" height="100" rx="3" fill="#FFFFFF" stroke="#141414" stroke-width="3"/>
+    <path d="M140 66 L160 86 L140 86 Z" fill="#4FC8EC" stroke="#141414" stroke-width="3" stroke-linejoin="round"/>
+    <rect x="56" y="96" width="70" height="6" fill="#141414"/>
+    <rect x="56" y="110" width="88" height="5" fill="#C9BFA8"/>
+    <rect x="56" y="122" width="88" height="5" fill="#C9BFA8"/>
+    <rect x="56" y="134" width="60" height="5" fill="#C9BFA8"/>
+    <rect x="56" y="150" width="44" height="10" fill="#4FC8EC" stroke="#141414" stroke-width="2"/>
+
+    <!-- big label -->
+    <text x="190" y="112" font-size="30" font-weight="800" fill="#141414">APACHE 2.0</text>
+    <text x="192" y="140" font-size="12" font-weight="700" fill="#6b6b6b" font-family="'DejaVu Sans Mono',monospace">free · open source · commercial use permitted</text>
+
+    <!-- permission chips -->
+    <g font-family="'DejaVu Sans Mono',monospace" font-size="11" font-weight="700">
+        <rect x="596" y="72" width="120" height="30" rx="3" fill="#7BD88F" stroke="#141414" stroke-width="3"/><text x="656" y="92" fill="#141414" text-anchor="middle">✓ COMMERCIAL</text>
+        <rect x="724" y="72" width="120" height="30" rx="3" fill="#4FC8EC" stroke="#141414" stroke-width="3"/><text x="784" y="92" fill="#141414" text-anchor="middle">✓ MODIFY</text>
+        <rect x="596" y="110" width="120" height="30" rx="3" fill="#F5C542" stroke="#141414" stroke-width="3"/><text x="656" y="130" fill="#141414" text-anchor="middle">✓ DISTRIBUTE</text>
+        <rect x="724" y="110" width="120" height="30" rx="3" fill="#FF5C8A" stroke="#141414" stroke-width="3"/><text x="784" y="130" fill="#141414" text-anchor="middle">✓ FORK</text>
+    </g>
+    <text x="596" y="160" font-size="10" fill="#6b6b6b" font-family="'DejaVu Sans Mono',monospace">AUTHOR — YuePeng · erupts@126.com</text>
+</svg>

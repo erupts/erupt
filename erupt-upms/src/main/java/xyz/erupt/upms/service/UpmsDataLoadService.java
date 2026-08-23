@@ -55,7 +55,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
     public void run(String... args) {
         if (eruptDao.lambdaQuery(EruptUser.class).count() <= 0) {
             try {
-                FileUtils.deleteDirectory(new File(System.getProperty("user.dir") + "/" + EruptConst.ERUPT_DIR));
+                FileUtils.deleteDirectory(new File(EruptConst.ERUPT_DIR_PATH));
             } catch (IOException e) {
                 log.error("Table 'e_upms_user' no user data. Re-initialization failed ：", e);
             }

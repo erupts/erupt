@@ -15,10 +15,7 @@ import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.tpl.engine.EngineConst;
 import xyz.erupt.upms.model.EruptUserVo;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -64,9 +61,8 @@ public class CloudNodeProcess implements DataProxy<CloudNode>, TagsFetchHandler<
             map.put(LambdaSee.field(CloudNode::getVersion), '-');
             map.put(LambdaSee.field(CloudNode::getEruptModuleNum), '-');
             try {
-                MetaNode metaNode = nodeManager.getNode(map.get(nodeNameField).toString());
-                Optional.ofNullable(nodeManager.getNode(map.get(nodeNameField).toString())).ifPresent(metaNode1 -> {
-                    Function<Collection<String>, Object> function = (it) -> null == it ? 0 : String.format("<a href='javascript:alert(`%s`);'>%d</a>", String.join("\\u000a", it), it.size());
+                Optional.ofNullable(nodeManager.getNode(map.get(nodeNameField).toString())).ifPresent(metaNode -> {
+                    Function<Collection<String>, Object> function = (it) -> null == it ? 0 : it.size();
                     map.put(LambdaSee.field(CloudNode::getEruptNum), function.apply(metaNode.getErupts()));
                     map.put(LambdaSee.field(CloudNode::getInstanceNum), metaNode.getLocations().size());
                     map.put(LambdaSee.field(CloudNode::getEruptModuleNum), function.apply(metaNode.getEruptModules()));
@@ -93,11 +89,17 @@ public class CloudNodeProcess implements DataProxy<CloudNode>, TagsFetchHandler<
     public void bindTplData(Map<String, Object> binding, String[] params) {
         CloudNode cloudNode = (CloudNode) binding.get(EngineConst.INJECT_ROW);
         MetaNode metaNode = nodeManager.getNode(cloudNode.getNodeName());
+        Map<String, List<String>> resources = new LinkedHashMap<>();
         if (null == metaNode) {
             binding.put("instances", "[]");
         } else {
             binding.put("instances", GsonFactory.getGson().toJson(metaNode.getLocations()));
+            resources.put("Erupt", metaNode.getErupts());
+            resources.put("Module", metaNode.getEruptModules());
+            Optional.ofNullable(metaNode.getResources()).ifPresent(resources::putAll);
         }
+        binding.put("resources", resources);
+        binding.put("active", params.length > 0 ? params[0] : "Erupt");
     }
 
 }

@@ -41,6 +41,9 @@ public class EruptNodeProp {
     // Heartbeat time (milliseconds)
     private int heartbeatTime = 15 * 1000;
 
+    // Graceful shutdown drain timeout (milliseconds): max wait for in-flight requests before exit
+    private int drainTimeout = 30 * 1000;
+
     private int count = 0;
 
     public String getBalanceAddress() {

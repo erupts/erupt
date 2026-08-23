@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptMenu;
@@ -25,6 +26,9 @@ public class EruptContextService {
 
     //Get the current request token
     public String getCurrentToken() {
+        // Off the MVC thread (e.g. AI tool execution on langchain4j workers) the request
+        // scope is unavailable; fall back to the token propagated through MetaContext
+        if (!EruptSpringUtil.isMvcContext()) return MetaContext.getToken();
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
         return StringUtils.isNotBlank(token) ? token : request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
     }

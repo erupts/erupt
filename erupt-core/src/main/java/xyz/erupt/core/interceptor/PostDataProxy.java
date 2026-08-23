@@ -13,7 +13,7 @@ import java.util.List;
 public class PostDataProxy {
 
     @Getter
-    private static List<Class<? extends DataProxy<Object>>> dataProxies = new ArrayList<>();
+    private static final List<Class<? extends DataProxy<Object>>> dataProxies = new ArrayList<>();
 
     public static void register(Class<? extends DataProxy<Object>> dataProxy) {
         dataProxies.add(dataProxy);

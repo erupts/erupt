@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1254 1254" role="img" aria-labelledby="title desc">
+    <title id="title">Brutalist Minimal Pentagon Logo</title>
+    <desc id="desc">Vector reconstruction of the selected first composition.</desc>
+
+    <rect width="1254" height="1254" fill="#000000"/>
+
+    <!-- Exact beam silhouettes traced from the selected first version. -->
+    <g fill="#F7F4EE">
+        <polygon points="9,1 174,2 459,870 293,870"/>
+        <polygon points="874,1 1163,1 383,554 334,402"/>
+        <polygon points="805,287 1251,612 1253,817 670,382"/>
+        <polygon points="909,593 1042,693 854,1252 684,1253"/>
+        <polygon points="1,901 773,901 718,1061 1,1060"/>
+    </g>
+
+    <!-- Exact center silhouette, recolored to the requested cyan. -->
+    <polygon fill="#09f" points="644,407 879,582 784,863 502,862 411,584"/>
+</svg>

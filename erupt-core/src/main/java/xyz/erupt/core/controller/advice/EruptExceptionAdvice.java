@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.view.EruptExceptionVo;
@@ -34,11 +35,19 @@ public class EruptExceptionAdvice {
         return e.r;
     }
 
+    // Client disconnected (e.g. SSE stream closed by browser) — nothing can be written back
+    @ExceptionHandler(AsyncRequestNotUsableException.class)
+    public void clientDisconnected(AsyncRequestNotUsableException e) {
+        log.warn("Client disconnected: {}", e.getMessage());
+    }
+
     @ResponseBody
     @ExceptionHandler(Exception.class)
     public EruptExceptionVo eruptException(Exception e, HttpServletRequest request, HttpServletResponse response) {
-        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         log.error(ERE, e);
+        // Response already committed (e.g. streaming) — writing a JSON body would fail
+        if (response.isCommitted()) return null;
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         return new EruptExceptionVo(request.getServletPath(), response.getStatus(), ERE, e instanceof RuntimeException ? e.getMessage() : null);
     }
 
