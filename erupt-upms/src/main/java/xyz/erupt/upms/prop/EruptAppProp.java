@@ -58,6 +58,9 @@ public class EruptAppProp {
     //Toggle for the reset password feature
     private Boolean resetPwd = true;
 
+    //Whether to prompt users who haven't changed the default password after login
+    private Boolean resetPwdPrompt = false;
+
     private Integer hash;
 
     private String version;
