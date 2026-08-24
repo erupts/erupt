@@ -25,9 +25,9 @@ public class EruptRowOperationNaming implements EruptRecordOperate.DynamicConfig
     @Override
     public String naming(String desc, String menuName, String eruptName, Method method) {
         EruptModel erupt = EruptCoreService.getErupt(eruptName);
-        // remote (erupt-cloud node) erupt has no local class/@Erupt to resolve the operation title against;
-        // still record the audit on the server, degraded to the operation code carried in the request path
-        if (null == erupt || erupt.isRemote()) {
+        // remote (erupt-cloud node) erupt is not registered locally; still record the audit
+        // on the server, degraded to the operation code carried in the request path
+        if (null == erupt) {
             return menuName + " | " + rowOperationCode();
         }
         return findRowOperation(erupt).title() + " | " + erupt.getErupt().name();

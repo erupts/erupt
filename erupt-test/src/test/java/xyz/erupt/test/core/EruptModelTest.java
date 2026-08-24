@@ -142,6 +142,28 @@ public class EruptModelTest extends EruptApplicationTests {
                 .getAsJsonObject("edit").getAsJsonObject("search").get("operator").getAsString());
     }
 
+    /**
+     * A remote (erupt-cloud node) placeholder has no local class, but getErupt() must
+     * still return a usable annotation (dynamic proxy with defaults) instead of null,
+     * so legacy callers like menu button generation do not NPE.
+     */
+    @Test
+    void testRemotePlaceholderEruptDefaults() {
+        EruptModel remote = new EruptModel("RemoteErupt", "node-1");
+        assertTrue(remote.isRemote());
+        assertNull(remote.getClazz());
+        Erupt erupt = remote.getErupt();
+        assertNotNull(erupt);
+        assertEquals("RemoteErupt", erupt.name());
+        assertEquals(Erupt.class, erupt.annotationType());
+        assertTrue(erupt.authVerify());
+        assertTrue(erupt.power().query());
+        assertTrue(erupt.power().ai());
+        assertEquals("id", erupt.primaryKeyCol());
+        assertEquals(0, erupt.rowOperation().length);
+        assertNotEquals(erupt, EruptCoreService.getErupt("InputModel").getErupt());
+    }
+
     // ─── Unified CRUD Validation ──────────────────────────────────────────────
 
     /**

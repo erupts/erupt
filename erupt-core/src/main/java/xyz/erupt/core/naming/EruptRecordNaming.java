@@ -24,8 +24,8 @@ public class EruptRecordNaming implements EruptRecordOperate.DynamicConfig {
                 return prefix + menuName;
             }
             EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-            // remote (erupt-cloud node) erupt has no local @Erupt annotation; fall back to the raw name
-            if (null != eruptModel && !eruptModel.isRemote()) {
+            // remote (erupt-cloud node) erupt is not registered locally; fall back to the raw name
+            if (null != eruptModel) {
                 return prefix + eruptModel.getErupt().name();
             } else {
                 return prefix + eruptName;

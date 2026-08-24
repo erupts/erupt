@@ -16,6 +16,7 @@ import xyz.erupt.core.util.CloneSupport;
 import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,10 +77,21 @@ public class EruptModel implements Cloneable {
         });
     }
 
-    // Lightweight placeholder for a remote (erupt-cloud node) erupt that has no local class
+    // Lightweight placeholder for a remote (erupt-cloud node) erupt that has no local class.
+    // 'erupt' is a dynamic proxy returning annotation defaults, so legacy callers that only
+    // read getErupt() (power, authVerify, etc.) keep working instead of throwing NPE.
     public EruptModel(String eruptName, String remoteNode) {
         this.eruptName = eruptName;
         this.remoteNode = remoteNode;
+        this.erupt = (Erupt) Proxy.newProxyInstance(Erupt.class.getClassLoader(), new Class[]{Erupt.class},
+                (proxy, method, args) -> switch (method.getName()) {
+                    case "name" -> eruptName;
+                    case "annotationType" -> Erupt.class;
+                    case "toString" -> "@" + Erupt.class.getName() + "(remote:" + eruptName + ")";
+                    case "hashCode" -> System.identityHashCode(proxy);
+                    case "equals" -> proxy == args[0];
+                    default -> method.getDefaultValue();
+                });
     }
 
     public boolean isRemote() {
@@ -87,7 +99,8 @@ public class EruptModel implements Cloneable {
     }
 
     public Erupt getErupt() {
-        ProxyContext.set(clazz);
+        // Remote placeholder has no local class; its proxied annotation needs no i18n context
+        if (null != clazz) ProxyContext.set(clazz);
         return erupt;
     }
 
