@@ -40,8 +40,32 @@ public class DingTalkChannel extends StaffChannel {
     }
 
     @Override
-    @SneakyThrows
     public void push(JsonObject config, String content) {
+        this.post(signedUrl(config), markdownBody(content));
+    }
+
+    @Override
+    public boolean testConnect(JsonObject config) {
+        if (StringUtils.isBlank(str(config, "webhook"))) return false;
+        // Post an empty-content text message: DingTalk rejects it before delivery
+        // (nothing visible is sent), yet it still passes the signature stage — enough
+        // to verify the webhook is reachable and, when a secret is set, that the sign matches.
+        JsonObject text = new JsonObject();
+        text.addProperty("content", "");
+        JsonObject body = new JsonObject();
+        body.addProperty("msgtype", "text");
+        body.add("text", text);
+        JsonObject result = GsonFactory.getGson().fromJson(this.post(signedUrl(config), body.toString()), JsonObject.class);
+        int errcode = result.has("errcode") ? result.get("errcode").getAsInt() : -1;
+        // 310000 with a secret configured means the signature did not match
+        if (StringUtils.isNotBlank(str(config, "secret")) && errcode == 310000) {
+            throw new EruptWebApiRuntimeException("DingTalk sign mismatch: " + str(result, "errmsg"));
+        }
+        return true;
+    }
+
+    @SneakyThrows
+    private String signedUrl(JsonObject config) {
         String url = str(config, "webhook");
         if (StringUtils.isBlank(url)) throw new EruptWebApiRuntimeException("DingTalk webhook not configured");
         String secret = str(config, "secret");
@@ -51,7 +75,7 @@ public class DingTalkChannel extends StaffChannel {
                     .encodeToString(hmacSha256(secret, timestamp + "\n" + secret)), StandardCharsets.UTF_8);
             url += "&timestamp=" + timestamp + "&sign=" + sign;
         }
-        this.post(url, markdownBody(content));
+        return url;
     }
 
     @Override
