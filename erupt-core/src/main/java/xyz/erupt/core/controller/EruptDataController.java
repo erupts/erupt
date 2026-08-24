@@ -99,7 +99,8 @@ public class EruptDataController {
     @GetMapping("/{erupt}/{id}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public Map<String, Object> getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
-        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        // Remote resolution: called in-process by AI tools (findEruptDataByPk) with node erupt names
+        EruptModel eruptModel = EruptCoreService.getEruptWithRemote(eruptName);
         // erupt-cloud: forward to the owning node, which enforces its own permission checks
         if (eruptModel.isRemote()) {
             return EruptRemoteRouterManager.get().findById(eruptName, id);

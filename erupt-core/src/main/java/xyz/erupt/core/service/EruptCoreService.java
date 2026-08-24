@@ -61,17 +61,24 @@ public class EruptCoreService implements ApplicationRunner {
     }
 
     public static EruptModel getErupt(String eruptName) {
-        EruptModel eruptModel;
         if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
             if (null == ERUPTS.get(eruptName) || RUNTIME_ERUPTS.contains(eruptName.toLowerCase())) {
-                eruptModel = ERUPTS.get(eruptName);
+                return ERUPTS.get(eruptName);
             } else {
-                eruptModel = EruptCoreService.initEruptModel(ERUPTS.get(eruptName).getClazz(), false);
+                return EruptCoreService.initEruptModel(ERUPTS.get(eruptName).getClazz(), false);
             }
         } else {
-            eruptModel = ERUPTS.get(eruptName);
+            return ERUPTS.get(eruptName);
         }
-        // erupt-cloud: fall back to a remote node erupt when it is not registered locally
+    }
+
+    /**
+     * Like {@link #getErupt}, but falls back to a remote (erupt-cloud node) placeholder when the
+     * erupt is not registered locally. Only call this from entry points that explicitly support
+     * remote routing (the returned placeholder has no local class or field metadata).
+     */
+    public static EruptModel getEruptWithRemote(String eruptName) {
+        EruptModel eruptModel = getErupt(eruptName);
         if (null == eruptModel && EruptRemoteRouterManager.isRemote(eruptName)) {
             return EruptRemoteRouterManager.get().resolveErupt(eruptName);
         }
