@@ -11,7 +11,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
-import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
@@ -20,7 +19,6 @@ import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
-import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.security.service.OperationService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
@@ -112,29 +110,18 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
             }
             case ERUPT -> {
                 EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-                $ep:
                 if (StringUtils.isNotBlank(parentEruptName)) {
+                    // The client claims this request serves a sub-form of parentEruptName; verify the
+                    // nesting relation against annotation metadata, then authorize by the parent's menu.
                     EruptModel eruptParentModel = EruptCoreService.getErupt(parentEruptName);
-                    for (EruptFieldModel model : eruptParentModel.getEruptFieldModels()) {
-                        if (eruptModel.getEruptName().equals(model.getFieldReturnName())) {
-                            if (authStr.equals(eruptModel.getEruptName())) {
-                                authStr = eruptParentModel.getEruptName();
-                            }
-                            eruptModel = eruptParentModel;
-                            break $ep;
-                        }
+                    if (null == eruptParentModel || !EruptCoreService.isEruptNested(eruptParentModel, eruptModel.getEruptName())) {
+                        response.setStatus(HttpStatus.NOT_FOUND.value());
+                        return false;
                     }
-                    for (RowOperation operation : eruptParentModel.getErupt().rowOperation()) {
-                        if (void.class != operation.eruptClass()) {
-                            if (eruptModel.getEruptName().equals(operation.eruptClass().getSimpleName())) {
-                                authStr = eruptParentModel.getEruptName();
-                                eruptModel = eruptParentModel;
-                                break $ep;
-                            }
-                        }
+                    if (authStr.equalsIgnoreCase(eruptModel.getEruptName())) {
+                        authStr = eruptParentModel.getEruptName();
                     }
-                    response.setStatus(HttpStatus.NOT_FOUND.value());
-                    return false;
+                    eruptModel = eruptParentModel;
                 }
                 if (!authStr.equalsIgnoreCase(eruptModel.getEruptName())) {
                     response.setStatus(HttpStatus.NOT_FOUND.value());

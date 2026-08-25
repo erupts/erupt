@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.exception.EruptAnnotationException;
@@ -83,6 +84,40 @@ public class EruptCoreService implements ApplicationRunner {
             return EruptRemoteRouterManager.get().resolveErupt(eruptName);
         }
         return eruptModel;
+    }
+
+    /**
+     * Whether {@code eruptName} is reachable from {@code parentModel} through nested structures:
+     * fields whose return type is a registered erupt (tab / multi-form / combine / reference)
+     * and rowOperation forms. The security layer uses this to authorize sub-erupt requests
+     * against the menu-bound ancestor erupt, so nesting depth is not limited to one level.
+     */
+    public static boolean isEruptNested(EruptModel parentModel, String eruptName) {
+        Set<String> visited = new HashSet<>();
+        Deque<EruptModel> queue = new ArrayDeque<>();
+        visited.add(parentModel.getEruptName().toLowerCase());
+        queue.add(parentModel);
+        while (!queue.isEmpty()) {
+            EruptModel node = queue.poll();
+            for (EruptFieldModel fieldModel : node.getEruptFieldModels()) {
+                if (nestedMatchOrEnqueue(fieldModel.getFieldReturnName(), eruptName, visited, queue)) return true;
+            }
+            for (RowOperation operation : node.getErupt().rowOperation()) {
+                if (void.class != operation.eruptClass()
+                        && nestedMatchOrEnqueue(operation.eruptClass().getSimpleName(), eruptName, visited, queue)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean nestedMatchOrEnqueue(String name, String target, Set<String> visited, Deque<EruptModel> queue) {
+        EruptModel model = getErupt(name);
+        if (null == model || !visited.add(model.getEruptName().toLowerCase())) return false;
+        if (model.getEruptName().equalsIgnoreCase(target)) return true;
+        queue.add(model);
+        return false;
     }
 
     // Dynamically register a prebuilt erupt model (replace if exists), effective without restart
