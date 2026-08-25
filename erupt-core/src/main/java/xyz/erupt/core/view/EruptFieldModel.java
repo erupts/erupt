@@ -60,6 +60,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
             // For Tab-type views, data must be managed as a one-to-many relationship using a generic collection, so the generic type name is extracted and re-assigned to fieldReturnName
             case TAB_TREE:
             case TAB_TABLE_ADD:
+            case MULTI_FORM:
             case TAB_TABLE_REFER:
             case CHECKBOX:
                 try {

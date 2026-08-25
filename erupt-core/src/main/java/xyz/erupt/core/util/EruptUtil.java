@@ -1,6 +1,7 @@
 package xyz.erupt.core.util;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
@@ -130,6 +131,7 @@ public class EruptUtil {
                         break;
                     case TAB_TABLE_REFER:
                     case TAB_TABLE_ADD:
+                    case MULTI_FORM:
                         EruptModel tabEruptModelRef = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
                         Collection<?> collectionRef = (Collection<?>) value;
                         List<Object> list = new ArrayList<>();
@@ -324,6 +326,18 @@ public class EruptUtil {
                     }
                 }
             }
+            if (edit.type() == EditType.MULTI_FORM && null != value && value.isJsonArray()) {
+                EruptModel subEruptModel = EruptCoreService.getErupt(field.getFieldReturnName());
+                if (null != subEruptModel) {
+                    JsonArray array = value.getAsJsonArray();
+                    for (int i = 0; i < array.size(); i++) {
+                        R<Void> nested = validateEruptValue(subEruptModel, array.get(i).getAsJsonObject());
+                        if (!nested.isSuccess()) {
+                            return R.error(edit.title() + " #" + (i + 1) + ": " + nested.getMessage());
+                        }
+                    }
+                }
+            }
             if (!AnnotationConst.EMPTY_STR.equals(edit.dynamic().condition())) {
                 if (null == value || value.isJsonNull()) {
                     Object dependFieldValue = null == jsonObject.get(edit.dynamic().dependField()) ? null : jsonObject.get(edit.dynamic().dependField()).getAsString();
@@ -431,7 +445,8 @@ public class EruptUtil {
                             && EruptConst.PASSWORD_PLACEHOLDER.equals(f.get(data))) {
                         // The client echoed the mask placeholder back unchanged -> keep the stored value.
                         // An explicitly cleared or newly typed value still overwrites below.
-                    } else if (eruptField.edit().type() == EditType.TAB_TABLE_ADD) {
+                    } else if (eruptField.edit().type() == EditType.TAB_TABLE_ADD
+                            || eruptField.edit().type() == EditType.MULTI_FORM) {
                         @SuppressWarnings("unchecked")
                         Collection<Object> s = (Collection<Object>) f.get(target);
                         if (null == s) {

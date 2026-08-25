@@ -95,6 +95,8 @@ public enum EditType {
     TAB_TABLE_REFER,
     @EditTypeMapping(desc = "Table add (one-to-many)", allowType = {JavaTypeEnum.object}, excelOperator = false)
     TAB_TABLE_ADD,
+    @EditTypeMapping(desc = "Multi form blocks (one-to-many)", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    MULTI_FORM,
     @EditTypeMapping(desc = "Table merge (one-to-one)", allowType = {JavaTypeEnum.object})
     COMBINE,
 }

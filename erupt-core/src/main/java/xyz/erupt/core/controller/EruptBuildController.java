@@ -50,6 +50,7 @@ public class EruptBuildController {
                     eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), m1);
                     break;
                 case TAB_TABLE_ADD:
+                case MULTI_FORM:
                 case TAB_TABLE_REFER:
                     eruptBuildModel.setTabErupts(Optional.ofNullable(eruptBuildModel.getTabErupts()).orElse(new LinkedHashMap<>()));
                     eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), getEruptBuild(fieldModel.getFieldReturnName()));
