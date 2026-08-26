@@ -161,13 +161,6 @@ public class EruptModelTools {
         return "success";
     }
 
-    @Tool("Generate erupt annotation code. Returns the erupt annotation reference documentation to guide code generation.")
-    public String geneEruptCode() throws Exception {
-        try (var in = getClass().getClassLoader().getResourceAsStream("erupt-annotation.md")) {
-            return new String(in.readAllBytes());
-        }
-    }
-
     // Enforce menu access + per-erupt power for the current user. Super admins bypass user checks,
     // but the model-level power.ai() opt-out still blocks AI usage regardless of role.
     // Remote erupts skip the local power check — the owning node runs its own permission pipeline.
