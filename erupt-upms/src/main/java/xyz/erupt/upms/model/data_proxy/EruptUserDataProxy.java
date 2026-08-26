@@ -8,9 +8,8 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
-import xyz.erupt.core.util.EncryptUtil;
 import xyz.erupt.core.view.R;
-import xyz.erupt.upms.constant.EncryptType;
+import xyz.erupt.upms.helper.UpmsSecurityHelper;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -42,14 +41,7 @@ public class EruptUserDataProxy implements DataProxy<EruptUser> {
             throw new EruptApiErrorTip(R.Status.WARNING, I18nTranslate.$translate("upms.pwd_required"), R.PromptWay.MESSAGE);
         }
         if (eruptUser.getPasswordA().equals(eruptUser.getPasswordB())) {
-            if (eruptUser.getEncrypt()) {
-                String salt = EncryptUtil.generateSalt();
-                eruptUser.setSalt(salt);
-                eruptUser.setEncryptType(EncryptType.SHA512);
-                eruptUser.setPassword(EncryptUtil.digestSHA512Salt(eruptUser.getPasswordA(), salt));
-            } else {
-                eruptUser.setPassword(eruptUser.getPasswordA());
-            }
+            UpmsSecurityHelper.applyPassword(eruptUser, eruptUser.getPasswordA(), eruptUser.getEncrypt());
         } else {
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("upms.pwd_two_inconsistent"));
         }

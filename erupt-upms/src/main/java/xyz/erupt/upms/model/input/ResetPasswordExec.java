@@ -6,9 +6,8 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
-import xyz.erupt.core.util.EncryptUtil;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.constant.EncryptType;
+import xyz.erupt.upms.helper.UpmsSecurityHelper;
 import xyz.erupt.upms.model.EruptUser;
 
 import java.util.List;
@@ -30,16 +29,7 @@ public class ResetPasswordExec implements OperationHandler<EruptUser, ResetPassw
         if (resetPassword.getPassword().equals(resetPassword.getPassword2())) {
             eruptUser.setResetPwdTime(null);
             eruptUser.setEncrypt(resetPassword.getEncrypt());
-            if (resetPassword.getEncrypt()) {
-                String salt = EncryptUtil.generateSalt();
-                eruptUser.setSalt(salt);
-                eruptUser.setEncryptType(EncryptType.SHA512);
-                eruptUser.setPassword(EncryptUtil.digestSHA512Salt(resetPassword.getPassword(), salt));
-            } else {
-                eruptUser.setSalt(null);
-                eruptUser.setEncryptType(null);
-                eruptUser.setPassword(resetPassword.getPassword());
-            }
+            UpmsSecurityHelper.applyPassword(eruptUser, resetPassword.getPassword(), resetPassword.getEncrypt());
             eruptDao.merge(eruptUser);
         } else {
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("upms.pwd_two_inconsistent"));

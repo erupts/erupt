@@ -22,6 +22,7 @@ import xyz.erupt.upms.constant.EncryptType;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.EruptLogin;
 import xyz.erupt.upms.fun.LoginProxy;
+import xyz.erupt.upms.helper.UpmsSecurityHelper;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptLoginLog;
@@ -114,13 +115,7 @@ public class EruptUserService {
     }
 
     public boolean checkPwd(String storedPassword, Boolean encrypt, String salt, String encryptType, String inputPwd) {
-        String checkPwd;
-        if (EncryptType.SHA512.equalsIgnoreCase(encryptType)) {
-            checkPwd = EncryptUtil.digestSHA512Salt(inputPwd, salt);
-        } else {
-            checkPwd = encrypt ? EncryptUtil.digest(inputPwd) : inputPwd;
-        }
-        return checkPwd.equals(storedPassword);
+        return UpmsSecurityHelper.checkPwd(storedPassword, encrypt, salt, encryptType, inputPwd);
     }
 
     public boolean checkVerifyCode(String account, String verifyCode, String verifyCodeMark) {

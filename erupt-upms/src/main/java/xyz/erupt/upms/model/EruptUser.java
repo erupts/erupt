@@ -19,6 +19,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.constant.RegexConst;
 import xyz.erupt.core.module.MetaUserinfo;
+import xyz.erupt.upms.helper.UpmsSecurityHelper;
 import xyz.erupt.upms.looker.LookerSelf;
 import xyz.erupt.upms.model.data_proxy.EruptOrgFetchHandler;
 import xyz.erupt.upms.model.data_proxy.EruptUserDataProxy;
@@ -52,7 +53,7 @@ import java.util.stream.Collectors;
 @EruptI18n
 @Getter
 @Setter
-public class EruptUser extends LookerSelf {
+public class EruptUser extends LookerSelf implements UpmsSecurityHelper.PasswordHolder {
 
     @Column(length = 1023)
     private String avatar;
