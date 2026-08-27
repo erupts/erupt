@@ -23,7 +23,7 @@ public enum EditType {
     @EditTypeSearch
     @EditTypeMapping(mapping = SliderType.class, desc = "Number slider", allowType = {JavaTypeEnum.number})
     SLIDER,
-    @EditTypeMapping(desc = "Color picker", allowType = {JavaTypeEnum.String})
+    @EditTypeMapping(mapping = ColorType.class, desc = "Color picker", allowType = {JavaTypeEnum.String})
     COLOR,
     @EditTypeSearch
     @EditTypeMapping(mapping = RateType.class, desc = "Rating", allowType = {JavaTypeEnum.number})
