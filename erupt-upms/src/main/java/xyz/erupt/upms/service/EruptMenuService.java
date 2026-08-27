@@ -81,10 +81,17 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     @Override
     public void afterAdd(EruptMenu eruptMenu) {
         if (null != eruptMenu.getValue()) {
+            EruptFunPermissions[] permissions = null;
             if (MenuTypeEnum.TABLE.getCode().equals(eruptMenu.getType()) || MenuTypeEnum.TREE.getCode().equals(eruptMenu.getType())) {
+                permissions = EruptFunPermissions.values();
+            } else if (MenuTypeEnum.FORM.getCode().equals(eruptMenu.getType())) {
+                // FORM view only carries add (first save) and edit (subsequent saves) semantics
+                permissions = new EruptFunPermissions[]{EruptFunPermissions.ADD, EruptFunPermissions.EDIT};
+            }
+            if (null != permissions) {
                 int i = 0;
                 EruptModel eruptModel = EruptCoreService.getErupt(eruptMenu.getValue());
-                for (EruptFunPermissions value : EruptFunPermissions.values()) {
+                for (EruptFunPermissions value : permissions) {
                     if (eruptModel == null || value.verifyPower(eruptModel.getErupt().power())) {
                         eruptDao.persist(new EruptMenu(
                                 Erupts.generateCode(), value.getName(), MenuTypeEnum.BUTTON.getCode(),
