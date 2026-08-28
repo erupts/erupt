@@ -269,8 +269,12 @@ public class EruptUtil {
                                 continue;
                             }
                         }
-                        if (null == condition.getExpression() || QueryExpression.AUTO == condition.getExpression()) {
-                            // SearchProxy resolves AUTO against ProxyContext, so point it at the owning field first.
+                        // Resolve the effective operator when it is locked by @Search config, or when the request
+                        // carries none. lockOperator forces the configured operator and ignores any client-supplied
+                        // one, so a crafted request cannot bypass the frontend restriction. SearchProxy resolves AUTO
+                        // against ProxyContext (so point it at the owning field first); the AUTO check is a fallback.
+                        if (edit.search().lockOperator()
+                                || null == condition.getExpression() || QueryExpression.AUTO == condition.getExpression()) {
                             ProxyContext.set(eruptFieldModel.getField(), false);
                             QueryExpression defaultOperator = edit.search().operator();
                             condition.setExpression(QueryExpression.AUTO == defaultOperator ? QueryExpression.EQ : defaultOperator);
