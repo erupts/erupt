@@ -1,6 +1,10 @@
 package xyz.erupt.job.service;
 
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.core.DefaultLockingTaskExecutor;
+import net.javacrumbs.shedlock.core.LockConfiguration;
+import net.javacrumbs.shedlock.core.LockProvider;
+import net.javacrumbs.shedlock.core.LockingTaskExecutor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.quartz.Job;
@@ -10,13 +14,15 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.job.config.EruptJobProp;
 import xyz.erupt.job.handler.EruptJobHandler;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author YuePeng
@@ -25,23 +31,52 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class EruptJobAction implements Job {
 
-    public static final String JOB_KEY = "erupt-job:distributed-lock:";
+    // ShedLock lock name prefix; the RedisLockProvider adds its own "job-lock" namespace on top
+    public static final String JOB_KEY = "erupt-job:";
 
     @Override
     public void execute(JobExecutionContext ctx) {
         JobDataMap jobDataMap = ctx.getJobDetail().getJobDataMap();
         EruptJob eruptJob = (EruptJob) jobDataMap.get(ctx.getJobDetail().getKey().getName());
-        trigger(eruptJob, (JavaMailSenderImpl) jobDataMap.get(EruptJobService.MAIL_SENDER_KEY));
+        JavaMailSenderImpl javaMailSender = (JavaMailSenderImpl) jobDataMap.get(EruptJobService.MAIL_SENDER_KEY);
+        // Scheduled fire: dedup across instances so the job runs on exactly one node
+        executeWithClusterLock(eruptJob, javaMailSender);
+    }
+
+    /**
+     * Run the job under a ShedLock cluster lock so a multi-instance deployment executes it on exactly
+     * one node. The lock is held for the whole execution ({@code lockAtMostFor} caps it as a crash-safety
+     * net) and kept for at least {@code lockAtLeastFor} afterwards to absorb clock skew between nodes.
+     * Only engaged when redis session is enabled; otherwise the job runs directly.
+     */
+    void executeWithClusterLock(EruptJob eruptJob, JavaMailSenderImpl javaMailSender) {
+        if (!EruptSpringUtil.getBean(EruptProp.class).isRedisSession()) {
+            trigger(eruptJob, javaMailSender);
+            return;
+        }
+        EruptJobProp prop = EruptSpringUtil.getBean(EruptJobProp.class);
+        LockingTaskExecutor executor = new DefaultLockingTaskExecutor(EruptSpringUtil.getBean(LockProvider.class));
+        LockConfiguration lockConfig = new LockConfiguration(
+                Instant.now(),
+                JOB_KEY + eruptJob.getCode(),
+                Duration.ofMillis(prop.getLockAtMostForMillis()),
+                Duration.ofMillis(prop.getLockAtLeastForMillis()));
+        try {
+            LockingTaskExecutor.TaskResult<Void> result = executor.executeWithLock(
+                    (LockingTaskExecutor.TaskWithResult<Void>) () -> {
+                        trigger(eruptJob, javaMailSender);
+                        return null;
+                    }, lockConfig);
+            if (!result.wasExecuted()) {
+                log.info("Job [{}] skipped: cluster lock held by another instance", eruptJob.getName());
+            }
+        } catch (Throwable t) {
+            log.error("Job [" + eruptJob.getName() + "] cluster-lock execution error", t);
+        }
     }
 
     @SuppressWarnings("StringConcatenationArgumentToLogCall")
     void trigger(EruptJob eruptJob, JavaMailSenderImpl javaMailSender) {
-        if (EruptSpringUtil.getBean(EruptProp.class).isRedisSession()) {
-            if (Boolean.FALSE.equals(EruptSpringUtil.getBean(EruptJobService.class).getStringRedisTemplate().opsForValue().setIfAbsent(JOB_KEY + eruptJob.getCode(), eruptJob.getCode(), 999, TimeUnit.MILLISECONDS))) {
-                log.info("The {} task has been executed in other nodes", eruptJob.getName());
-                return;
-            }
-        }
         EruptJobLog eruptJobLog = new EruptJobLog();
         eruptJobLog.setJobId(eruptJob.getId());
         eruptJobLog.setStartTime(new Date());
