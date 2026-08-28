@@ -33,7 +33,8 @@ public class AgentController {
     @EruptMenuAuth(AiConst.AI_CHAT)
     @GetMapping("/list")
     public R<List<AgentVo>> list() {
-        return R.ok(eruptDao.lambdaQuery(LLMAgent.class).eq(LLMAgent::getEnable, true).list().stream().map(it -> {
+        return R.ok(eruptDao.lambdaQuery(LLMAgent.class).eq(LLMAgent::getEnable, true)
+                .orderByAsc(LLMAgent::getSort).list().stream().map(it -> {
             AgentVo agentVo = new AgentVo();
             agentVo.setId(it.getId());
             agentVo.setName(it.getName());

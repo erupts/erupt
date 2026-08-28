@@ -1,1 +1,7 @@
 key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+Skill,技能,技能,Skill,Compétence,スキル,스킬,Навык,Habilidad,Fähigkeit,Habilidade,Keterampilan,مهارة
+Description,描述,描述,Description,Description,説明,설명,Описание,Descripción,Beschreibung,Descrição,Deskripsi,وصف
+Pinned,置顶,置頂,Pinned,Épinglé,固定,고정됨,Закреплено,Fijado,Angeheftet,Fixado,Disematkan,مثبت
+Uses,使用次数,使用次數,Uses,Utilisations,使用回数,사용 횟수,Использований,Usos,Verwendungen,Usos,Penggunaan,مرات الاستخدام
+Patches,修补次数,修補次數,Patches,Correctifs,パッチ数,패치 횟수,Патчи,Parches,Patches,Correções,Tambalan,تصحيحات
+Last Used,最近使用,最近使用,Last Used,Dernière utilisation,最終使用,마지막 사용,Последнее использование,Último uso,Zuletzt verwendet,Último uso,Terakhir Digunakan,آخر استخدام

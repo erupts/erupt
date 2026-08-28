@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -106,6 +107,25 @@ public class SkillStore {
         } catch (Exception e) {
             log.warn("Cannot write skill usage file in {}: {}", skillDir, e.getMessage());
         }
+    }
+
+    // Parse the "description:" value from the SKILL.md YAML frontmatter; null when absent
+    public static String readDescription(Path skillDir) {
+        try {
+            boolean inFrontmatter = false;
+            for (String line : Files.readAllLines(skillDir.resolve(SKILL_MD))) {
+                if (line.trim().equals("---")) {
+                    if (inFrontmatter) break;
+                    inFrontmatter = true;
+                    continue;
+                }
+                if (inFrontmatter && line.trim().toLowerCase(Locale.ROOT).startsWith("description:")) {
+                    return line.trim().substring("description:".length()).trim();
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     // A skill is pinned via SKILL.md frontmatter "pinned: true"; pinned skills are exempt from curation
