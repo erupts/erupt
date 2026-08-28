@@ -23,10 +23,7 @@ import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.prop.EruptUpmsProp;
-import xyz.erupt.upms.service.EruptContextService;
-import xyz.erupt.upms.service.EruptSessionService;
-import xyz.erupt.upms.service.EruptTokenService;
-import xyz.erupt.upms.service.EruptUserService;
+import xyz.erupt.upms.service.*;
 import xyz.erupt.upms.vo.EruptMenuVo;
 import xyz.erupt.upms.vo.EruptUserinfoVo;
 
@@ -59,6 +56,9 @@ public class EruptUserController {
 
     @Resource
     private EruptTokenService eruptTokenService;
+
+    @Resource
+    private EruptMenuService eruptMenuService;
 
     @Resource
     private EruptUpmsProp eruptUpmsProp;
@@ -140,7 +140,12 @@ public class EruptUserController {
 
     @GetMapping("/menu")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public List<EruptMenuVo> getMenu() {
+    public List<EruptMenuVo> getMenu(@RequestParam(value = "flush", required = false, defaultValue = "false") boolean flush) {
+        // flush=true rebuilds the current user's menu cache from the database,
+        // ensuring the latest menu changes are served instead of the stale cached copy
+        if (flush) {
+            eruptMenuService.flushMenuCache();
+        }
         List<EruptMenuVo> menus = sessionService.get(SessionKey.MENU_VIEW + eruptContextService.getCurrentToken(), new TypeToken<List<EruptMenuVo>>() {
         }.getType());
         menus.forEach(it -> it.setName(I18nTranslate.$translate(it.getName())));
