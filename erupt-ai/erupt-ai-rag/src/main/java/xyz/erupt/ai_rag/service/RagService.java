@@ -25,11 +25,15 @@ import xyz.erupt.ai_rag.model.KnowledgeBase;
 import xyz.erupt.ai_rag.model.KnowledgeChunk;
 import xyz.erupt.ai_rag.model.KnowledgeDocument;
 import xyz.erupt.ai_rag.prop.VectorStoreProp;
+import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.prop.EruptProp;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 
+import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -239,6 +243,13 @@ public class RagService {
     @SneakyThrows
     private String resolveContent(KnowledgeDocument doc) {
         if (StringUtils.isNotBlank(doc.getAttachment())) {
+            AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
+            if (null != attachmentProxy && !attachmentProxy.isLocalSave()) {
+                // remote-only storage: the file never lands on local disk, fetch it from the attachment domain
+                try (InputStream in = URI.create(attachmentProxy.fileDomain() + doc.getAttachment()).toURL().openStream()) {
+                    return new String(in.readAllBytes(), StandardCharsets.UTF_8);
+                }
+            }
             Path uploadRoot = Paths.get(eruptProp.getUploadPath()).toAbsolutePath().normalize();
             Path file = uploadRoot.resolve(StringUtils.removeStart(doc.getAttachment(), "/")).normalize();
             // Reject any path escaping the upload directory
