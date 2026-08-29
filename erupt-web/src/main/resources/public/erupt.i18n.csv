@@ -588,6 +588,7 @@ designer.group_fields,包含字段,包含字段,Fields in group,Fields in group,
 designer.collapsed,默认折叠,默認折疊,Collapsed,Collapsed,デフォルトで折りたたむ,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed
 designer.layout,页面布局,頁面佈局,Page Layout,Mise en page,ページレイアウト,페이지 레이아웃,Макет страницы,Diseño de página,Seitenlayout,Layout da página,Tata Letak Halaman,تخطيط الصفحة
 designer.form_size,表单尺寸,表單尺寸,Form Size,Taille du formulaire,フォームサイズ,폼 크기,Размер формы,Tamaño del formulario,Formulargröße,Tamanho do formulário,Ukuran Formulir,حجم النموذج
+designer.form_steps,分步表单,分步表單,Step Form,Formulaire par étapes,ステップフォーム,단계별 폼,Пошаговая форма,Formulario por pasos,Schrittformular,Formulário em etapas,Formulir Bertahap,نموذج متعدد الخطوات
 designer.page_size,每页条数,每頁條數,Page Size,Taille de page,1ページの件数,페이지당 행 수,Размер страницы,Tamaño de página,Seitengröße,Tamanho da página,Jumlah per Halaman,عدد العناصر في الصفحة
 designer.power_print,打印,列印,Print,Imprimer,印刷,인쇄,Печать,Imprimir,Drucken,Imprimir,Cetak,طباعة
 designer.vis.title,多视图,多視圖,Views,Vues,複数ビュー,다중 뷰,Представления,Vistas,Ansichten,Visualizações,Tampilan,العروض
