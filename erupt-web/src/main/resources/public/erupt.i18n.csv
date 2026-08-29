@@ -424,6 +424,13 @@ cube.report.config.add_group,添加分组,添加分組,Add Group,Ajouter un grou
 cube.report.config.apply_filters,应用条件,應用條件,Apply Filters,Appliquer les filtres,条件を適用,조건 적용,Применить фильтры,Aplicar filtros,Filter anwenden,Aplicar filtros,Terapkan filter,تطبيق الفلاتر
 cube.report.config.chart.treemap,树图,樹狀圖,Treemap,Carte arborescente,ツリーマップ,트리맵,Древовидная карта,Mapa de árbol,Baumkarte,Mapa de árvore,Treemap,خريطة الشجرة
 cube.report.config.chart.heatmap,热力图,熱力圖,Heatmap,Carte de chaleur,ヒートマップ,히트맵,Тепловая карта,Mapa de calor,Heatmap,Mapa de calor,Peta panas,خريطة الحرارة
+cube.report.config.chart.map,地图,地圖,Map,Carte,地図,지도,Карта,Mapa,Karte,Mapa,Peta,خريطة
+cube.report.config.map.select,选择地图,選擇地圖,Select map,Choisir une carte,地図を選択,지도 선택,Выбрать карту,Seleccionar mapa,Karte auswählen,Selecionar mapa,Pilih peta,اختر الخريطة
+cube.report.config.map.geo_url,GeoJSON 地址,GeoJSON 地址,GeoJSON URL,URL GeoJSON,GeoJSON URL,GeoJSON URL,URL GeoJSON,URL GeoJSON,GeoJSON-URL,URL GeoJSON,URL GeoJSON,رابط GeoJSON
+cube.report.config.map.geo_url_hint,中国区域数据可在阿里 DataV 地图选择器下载；生产环境建议下载后自托管,中國區域數據可在阿里 DataV 地圖選擇器下載；生產環境建議下載後自託管,China boundaries can be downloaded from the Alibaba DataV atlas; self-host the file in production,Téléchargez le GeoJSON et hébergez-le vous-même en production,GeoJSON をダウンロードして本番環境ではセルフホストしてください,GeoJSON을 다운로드하여 운영 환경에서는 자체 호스팅하세요,Скачайте GeoJSON и разместите файл самостоятельно в продакшене,Descargue el GeoJSON y alójelo usted mismo en producción,GeoJSON herunterladen und in Produktion selbst hosten,Baixe o GeoJSON e hospede-o você mesmo em produção,Unduh GeoJSON dan host sendiri di produksi,قم بتنزيل GeoJSON واستضافته ذاتيًا في الإنتاج
+cube.report.config.map.roam,缩放拖拽,縮放拖曳,Zoom & pan,Zoom et déplacement,ズームとパン,확대·이동,Масштаб и перемещение,Zoom y desplazamiento,Zoomen & Verschieben,Zoom e arrastar,Zoom & geser,تكبير وتحريك
+cube.report.config.map.match_by,区域匹配方式,區域匹配方式,Match regions by,Correspondance des régions,地域マッチング方式,지역 매칭 방식,Сопоставление регионов,Coincidencia de regiones,Regionszuordnung,Correspondência de regiões,Pencocokan wilayah,طريقة مطابقة المناطق
+cube.report.config.map.match_name,名称,名稱,Name,Nom,名前,이름,Имя,Nombre,Name,Nome,Nama,اسم
 cube.report.config.chart.text,富文本,富文本,Rich Text,Texte enrichi,リッチテキスト,서식 있는 텍스트,Форматированный текст,Texto enriquecido,Rich Text,Texto rico,Teks kaya,نص منسق
 cube.report.config.color_field,颜色字段,顏色字段,Color Field,Champ couleur,カラーフィールド,색상 필드,Поле цвета,Campo de color,Farbfeld,Campo de cor,Bidang warna,حقل اللون
 cube.report.config.x_field,X 轴字段,X 軸字段,X Field,Champ X,X フィールド,X 필드,Поле X,Campo X,X-Feld,Campo X,Bidang X,حقل X
@@ -772,6 +779,10 @@ smart_search.input_value_required,请输入值,請輸入值,Please enter a value
 edit_type.uploading,附件上传中请稍后,附件上傳中請稍後,Uploading attachment please wait,Téléchargement de la pièce jointe en cours,添付ファイルをアップロード中,첨부 파일 업로드 중,Загрузка вложения,Cargando archivo adjunto,Anhang wird hochgeladen,Enviando anexo,Mengunggah lampiran,جارٍ تحميل المرفق
 edit_type.upload_failed,上传失败,上傳失敗,Upload failed,Échec du téléchargement,アップロード失敗,업로드 실패,Ошибка загрузки,Error al subir,Upload fehlgeschlagen,Falha no envio,Gagal diunggah,فشل التحميل
 edit_type.signature,签名,簽名,Signature,Signature,署名,서명,Подпись,Firma,Unterschrift,Assinatura,Tanda Tangan,توقيع
+edit_type.prev_step,上一步,上一步,Previous,Précédent,前へ,이전,Назад,Anterior,Zurück,Anterior,Sebelumnya,السابق
+edit_type.next_step,下一步,下一步,Next,Suivant,次へ,다음,Далее,Siguiente,Weiter,Próximo,Berikutnya,التالي
+edit_type.color_presets,预设颜色,預設顏色,Presets,Préréglages,プリセット,프리셋,Пресеты,Preajustes,Voreinstellungen,Predefinições,Prasetel,الإعدادات المسبقة
+edit_type.step_required,不能为空,不能為空,cannot be empty,ne peut pas être vide,を入力してください,을(를) 입력하세요,не может быть пустым,no puede estar vacío,darf nicht leer sein,não pode estar vazio,tidak boleh kosong,لا يمكن أن يكون فارغًا
 amap.close_point_select,关闭点选,關閉點選,Disable Point Select,Désactiver la sélection,点選を無効化,점 선택 비활성화,Отключить выбор точки,Desactivar selección,Punktauswahl deaktivieren,Desativar seleção,Nonaktifkan Pemilihan,تعطيل التحديد
 amap.point_select,点击地图选点,點擊地圖選點,Click Map to Select,Cliquer sur la carte,地図をクリックして選択,지도 클릭으로 선택,Клик на карте для выбора,Clic en mapa para seleccionar,Auf Karte klicken,Clique no mapa,Klik Peta untuk Memilih,انقر على الخريطة
 amap.select_valid_address,请选择有效的地址,請選擇有效的地址,Please select a valid address,Sélectionner une adresse valide,有効な住所を選択してください,유효한 주소를 선택하세요,Выберите действительный адрес,Seleccione una dirección válida,Bitte eine gültige Adresse wählen,Selecione um endereço válido,Pilih alamat yang valid,اختر عنوانًا صحيحًا
@@ -1181,3 +1192,11 @@ ai.canvas.link_copied,已复制,已複製,Copied,Copié,コピーしました,�
 ai.canvas.source_title,页面源码,頁面源碼,Page source,Code source de la page,ページソース,페이지 소스,Исходный код страницы,Código fuente de la página,Seitenquelltext,Código-fonte da página,Sumber halaman,مصدر الصفحة
 ai.canvas.pick_element,选择元素,選擇元素,Pick element,Sélectionner un élément,要素を選択,요소 선택,Выбрать элемент,Seleccionar elemento,Element auswählen,Selecionar elemento,Pilih elemen,اختيار عنصر
 tree.batch_delete,批量删除,批量刪除,Batch delete,Suppression par lot,一括削除,일괄 삭제,Массовое удаление,Eliminación por lotes,Stapellöschung,Exclusão em lote,Hapus massal,حذف دفعي
+global.menu.refresh_success,菜单已刷新,選單已刷新,Menu refreshed,Menu actualisé,メニューを更新しました,메뉴가 새로고침되었습니다,Меню обновлено,Menú actualizado,Menü aktualisiert,Menu atualizado,Menu disegarkan,تم تحديث القائمة
+menu.expand,展开菜单,展開選單,Expand menu,Développer le menu,メニューを展開,메뉴 펼치기,Развернуть меню,Expandir menú,Menü erweitern,Expandir menu,Perluas menu,توسيع القائمة
+menu.collapse,收起菜单,收起選單,Collapse menu,Réduire le menu,メニューを折りたたむ,메뉴 접기,Свернуть меню,Contraer menú,Menü einklappen,Recolher menu,Ciutkan menu,طي القائمة
+menu.reset,重置菜单,重置選單,Reset menu,Réinitialiser le menu,メニューをリセット,메뉴 초기화,Сбросить меню,Restablecer menú,Menü zurücksetzen,Redefinir menu,Setel ulang menu,إعادة تعيين القائمة
+menu.reset_confirm,确定要重置菜单的排序和收藏吗？,確定要重置選單的排序和收藏嗎？,Reset menu order and favorites?,Réinitialiser l'ordre et les favoris du menu ?,メニューの並び順とお気に入りをリセットしますか？,메뉴 순서와 즐겨찾기를 초기화하시겠습니까?,Сбросить порядок меню и избранное?,¿Restablecer el orden del menú y los favoritos?,Menüreihenfolge und Favoriten zurücksetzen?,Redefinir a ordem do menu e os favoritos?,Setel ulang urutan menu dan favorit?,هل تريد إعادة تعيين ترتيب القائمة والمفضلة؟
+menu.reset_success,菜单已重置,選單已重置,Menu reset,Menu réinitialisé,メニューをリセットしました,메뉴가 초기화되었습니다,Меню сброшено,Menú restablecido,Menü zurückgesetzt,Menu redefinido,Menu disetel ulang,تمت إعادة تعيين القائمة
+menu.toggle_all,展开/收起全部,展開/收起全部,Expand/Collapse all,Tout développer/réduire,すべて展開/折りたたみ,모두 펼치기/접기,Развернуть/свернуть все,Expandir/contraer todo,Alle aus-/einklappen,Expandir/recolher tudo,Perluas/ciutkan semua,توسيع/طي الكل
+menu.split_mode,分栏菜单,分欄選單,Split menu,Menu divisé,分割メニュー,분할 메뉴,Раздельное меню,Menú dividido,Geteiltes Menü,Menu dividido,Menu terpisah,قائمة مقسمة
