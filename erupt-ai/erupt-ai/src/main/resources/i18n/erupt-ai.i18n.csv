@@ -33,7 +33,10 @@ Chat Records,会话记录,會話記錄,Chat Records,Historique des discussions,�
 Chat Title,会话标题,會話標題,Chat Title,Titre de la discussion,チャットタイトル,채팅 제목,Заголовок чата,Título del chat,Chat-Titel,Título do chat,Judul Obrolan,عنوان الدردشة
 User,用户,用戶,User,Utilisateur,ユーザー,사용자,Пользователь,Usuario,Benutzer,Usuário,Pengguna,مستخدم
 Created Time,创建时间,創建時間,Created Time,Heure de création,作成日時,생성 시간,Время создания,Hora de creación,Erstellungszeit,Hora de criação,Waktu Dibuat,وقت الإنشاء
-Advanced,高级设置,進階設定,Advanced,Avancé,詳細設定,고급 설정,Дополнительно,Avanzado,Erweitert,Avançado,Lanjutan,متقدم
+Basic Info,基本信息,基本資訊,Basic Info,Informations de base,基本情報,기본 정보,Основная информация,Información básica,Basisinformationen,Informações básicas,Info Dasar,معلومات أساسية
+Model identity and connection,模型标识与连接配置,模型標識與連接配置,Model identity and connection,Identité et connexion du modèle,モデル識別と接続設定,모델 식별 및 연결 설정,Идентификация модели и подключение,Identidad y conexión del modelo,Modellidentität und Verbindung,Identidade e conexão do modelo,Identitas dan koneksi model,هوية النموذج والاتصال
+Settings,参数设置,參數設定,Settings,Paramètres,設定,설정,Настройки,Configuración,Einstellungen,Configurações,Pengaturan,الإعدادات
+Runtime parameters,运行参数,運行參數,Runtime parameters,Paramètres d'exécution,実行時パラメータ,런타임 매개변수,Параметры выполнения,Parámetros de ejecución,Laufzeitparameter,Parâmetros de execução,Parameter runtime,معلمات التشغيل
 Refresh,刷新,刷新,Refresh,Actualiser,更新,새로 고침,Обновить,Actualizar,Aktualisieren,Atualizar,Segarkan,تحديث
 Test Connection,测试连接,測試連接,Test Connection,Tester la connexion,接続テスト,연결 테스트,Проверить подключение,Probar conexión,Verbindung testen,Testar conexão,Uji Koneksi,اختبار الاتصال
 Test Model,测试模型,測試模型,Test Model,Tester le modèle,モデルテスト,모델 테스트,Проверить модель,Probar modelo,Modell testen,Testar modelo,Uji Model,اختبار النموذج
