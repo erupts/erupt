@@ -1,5 +1,6 @@
 package xyz.erupt.ai_staff.channel.impl;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +26,8 @@ import java.util.function.Consumer;
 /**
  * Feishu (Lark): push via custom bot webhook (optional signed), inbound via
  * event subscription v2 (im.message.receive_v1, optionally AES-encrypted) —
- * replies via the IM API with a tenant access token.
+ * replies via the IM API with a tenant access token. Both directions carry an
+ * interactive card with a markdown element so LLM output renders as rich text.
  *
  * @author YuePeng
  * date 2026/8/3
@@ -60,8 +62,8 @@ public class FeishuChannel extends StaffChannel {
             body.addProperty("timestamp", String.valueOf(timestamp));
             body.addProperty("sign", Base64.getEncoder().encodeToString(hmacSha256(timestamp + "\n" + secret, "")));
         }
-        body.addProperty("msg_type", "text");
-        body.add("content", textContent(content));
+        body.addProperty("msg_type", "interactive");
+        body.add("card", markdownCard(content));
         this.post(url, body.toString());
     }
 
@@ -103,8 +105,8 @@ public class FeishuChannel extends StaffChannel {
     public void reply(JsonObject config, ChannelMessage message, String content) {
         JsonObject body = new JsonObject();
         body.addProperty("receive_id", message.getReplyTo());
-        body.addProperty("msg_type", "text");
-        body.addProperty("content", textContent(content).toString());
+        body.addProperty("msg_type", "interactive");
+        body.addProperty("content", markdownCard(content).toString());
         this.post(MESSAGE_API, body.toString(),
                 Map.of("Authorization", "Bearer " + this.tenantToken(config)));
     }
@@ -119,10 +121,16 @@ public class FeishuChannel extends StaffChannel {
         return value;
     }
 
-    private JsonObject textContent(String text) {
-        JsonObject content = new JsonObject();
-        content.addProperty("text", text);
-        return content;
+    // Interactive card carrying a single markdown element (Feishu markdown is a subset — tables unsupported)
+    private JsonObject markdownCard(String content) {
+        JsonObject markdown = new JsonObject();
+        markdown.addProperty("tag", "markdown");
+        markdown.addProperty("content", content);
+        JsonArray elements = new JsonArray();
+        elements.add(markdown);
+        JsonObject card = new JsonObject();
+        card.add("elements", elements);
+        return card;
     }
 
     // AES-256-CBC with key = SHA-256(encryptKey), IV = the first 16 bytes of the payload

@@ -23,7 +23,7 @@ public enum EditType {
     @EditTypeSearch
     @EditTypeMapping(mapping = SliderType.class, desc = "Number slider", allowType = {JavaTypeEnum.number})
     SLIDER,
-    @EditTypeMapping(desc = "Color picker", allowType = {JavaTypeEnum.String})
+    @EditTypeMapping(mapping = ColorType.class, desc = "Color picker", allowType = {JavaTypeEnum.String})
     COLOR,
     @EditTypeSearch
     @EditTypeMapping(mapping = RateType.class, desc = "Rating", allowType = {JavaTypeEnum.number})
@@ -95,6 +95,8 @@ public enum EditType {
     TAB_TABLE_REFER,
     @EditTypeMapping(desc = "Table add (one-to-many)", allowType = {JavaTypeEnum.object}, excelOperator = false)
     TAB_TABLE_ADD,
+    @EditTypeMapping(desc = "Multi form blocks (one-to-many)", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    MULTI_FORM,
     @EditTypeMapping(desc = "Table merge (one-to-one)", allowType = {JavaTypeEnum.object})
     COMBINE,
 }

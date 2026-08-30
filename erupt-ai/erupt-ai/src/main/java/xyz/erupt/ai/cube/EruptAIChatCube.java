@@ -40,7 +40,7 @@ public class EruptAIChatCube {
     @Dimension(title = "Model")
     private String model;
 
-    @Dimension(title = "Agent")
+    @Dimension(title = "Expert")
     private String agent;
 
     @Dimension(title = "Date")

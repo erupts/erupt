@@ -1,9 +1,7 @@
 package xyz.erupt.ai.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +14,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.sub_erupt.DragSort;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -29,7 +28,8 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * @author YuePeng
  * date 2025/2/22 16:21
  */
-@Erupt(name = "Agent", dataProxy = LLMAgent.class)
+@Erupt(name = "Expert", dataProxy = LLMAgent.class,
+        orderBy = "sort", dragSort = @DragSort(field = "sort"))
 @Table(name = "e_ai_llm_agent")
 @Getter
 @Setter
@@ -49,6 +49,18 @@ public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
             edit = @Edit(title = "Enabled", notNull = true)
     )
     private Boolean enable = true;
+
+    @EruptField
+    private Integer sort;
+
+    @ManyToOne
+    @JoinColumn(name = "llm_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    @EruptField(
+            views = @View(title = "LLM", column = "name"),
+            edit = @Edit(title = "LLM", type = EditType.REFERENCE_TABLE,
+                    desc = "Leave blank to use the default chat model")
+    )
+    private LLM llm;
 
     @EruptField(
             views = @View(title = "Prompt Handler"),
@@ -81,8 +93,8 @@ public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "Agent Config"),
-            edit = @Edit(title = "Agent Config", type = EditType.CODE_EDITOR, notNull = true,
+            views = @View(title = "Expert Config"),
+            edit = @Edit(title = "Expert Config", type = EditType.CODE_EDITOR, notNull = true,
                     codeEditType = @CodeEditorType(language = "json")
             )
     )

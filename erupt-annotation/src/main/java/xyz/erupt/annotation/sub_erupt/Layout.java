@@ -5,6 +5,10 @@ public @interface Layout {
     //Form size
     FormSize formSize() default FormSize.DEFAULT;
 
+    //Render the form as a step-by-step wizard: each DIVIDE field starts a new step,
+    //with its title/desc as the step title/description
+    boolean formSteps() default false;
+
     //Number of fixed columns on the left side of the table
     int tableLeftFixed() default 0;
 

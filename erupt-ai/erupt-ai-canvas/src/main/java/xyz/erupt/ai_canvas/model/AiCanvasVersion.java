@@ -11,8 +11,9 @@ import xyz.erupt.jpa.model.MetaModelCreateOnlyVo;
 
 /**
  * One generation round of a view: the user message and the page it produced.
- * Append-only; the designer switches the active version by copying its html
- * back onto the AiCanvas. Managed only through the designer API — not an
+ * Append-only and immutable; AiCanvas points at rows here via its active and
+ * publish version ids. The data model is not snapshotted — it is fixed on the
+ * canvas itself. Managed only through the designer API — not an
  * Erupt-visualized model.
  *
  * @author YuePeng
@@ -32,11 +33,7 @@ public class AiCanvasVersion extends MetaModelCreateOnlyVo {
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     private String message;
 
-    // Data source and style snapshot of this generation round
-    private String dataType;
-
-    private String targetModel;
-
+    // Style snapshot of this generation round; restored when the version is re-activated
     private String style;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
@@ -47,8 +44,6 @@ public class AiCanvasVersion extends MetaModelCreateOnlyVo {
         this.version = version;
         this.message = message;
         this.html = html;
-        this.dataType = view.getDataType();
-        this.targetModel = view.getTargetModel();
         this.style = view.getStyle();
     }
 

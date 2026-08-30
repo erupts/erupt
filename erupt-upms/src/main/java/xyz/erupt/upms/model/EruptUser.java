@@ -19,6 +19,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.constant.RegexConst;
 import xyz.erupt.core.module.MetaUserinfo;
+import xyz.erupt.upms.helper.UpmsSecurityHelper;
 import xyz.erupt.upms.looker.LookerSelf;
 import xyz.erupt.upms.model.data_proxy.EruptOrgFetchHandler;
 import xyz.erupt.upms.model.data_proxy.EruptUserDataProxy;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
         dataProxy = EruptUserDataProxy.class,
         linkTree = @LinkTree(field = "eruptOrg"),
         orderBy = "EruptUser.id",
-        layout = @Layout(tableLeftFixed = 1),
+        layout = @Layout(tableLeftFixed = 1, formSteps = true),
         rowOperation = @RowOperation(title = "Reset Password",
                 icon = "fa fa-refresh",
                 mode = RowOperation.Mode.SINGLE,
@@ -52,10 +53,16 @@ import java.util.stream.Collectors;
 @EruptI18n
 @Getter
 @Setter
-public class EruptUser extends LookerSelf {
+public class EruptUser extends LookerSelf implements UpmsSecurityHelper.PasswordHolder {
 
     @Column(length = 1023)
     private String avatar;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Account Info", type = EditType.DIVIDE)
+    )
+    private String accountStep;
 
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
@@ -117,11 +124,9 @@ public class EruptUser extends LookerSelf {
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "Organization", type = EditType.GROUP,
-                    groupType = @GroupType(fields = {"eruptOrg", "eruptPost", "headOrg", "divisionOrg"})
-            )
+            edit = @Edit(title = "Organization", type = EditType.DIVIDE)
     )
-    private String orgGroup;
+    private String orgStep;
 
     @ManyToOne
     @EruptField(
@@ -157,11 +162,9 @@ public class EruptUser extends LookerSelf {
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "Password", type = EditType.GROUP,
-                    groupType = @GroupType(fields = {"passwordA", "passwordB", "encrypt"})
-            )
+            edit = @Edit(title = "Password", type = EditType.DIVIDE)
     )
-    private String pwdGroup;
+    private String pwdStep;
 
     private String password;
 
@@ -203,11 +206,9 @@ public class EruptUser extends LookerSelf {
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "Security", type = EditType.GROUP,
-                    groupType = @GroupType(fields = {"expireDate", "whiteIp"}, collapsed = true)
-            )
+            edit = @Edit(title = "Security", type = EditType.DIVIDE)
     )
-    private String securityGroup;
+    private String securityStep;
 
     @EruptField(
             views = @View(title = "Account Expiry", sortable = true),

@@ -33,7 +33,8 @@ public class EruptSkillTools {
             if (!entry.isDirectory()) continue;
             File skillMd = new File(entry, "SKILL.md");
             if (!skillMd.exists()) continue;
-            result.add(entry.getName() + ": " + readDescription(skillMd));
+            String description = SkillStore.readDescription(entry.toPath());
+            result.add(entry.getName() + ": " + (null == description ? "(no description)" : description));
         }
         if (result.isEmpty()) return "No skills found in: " + SKILL_DIR;
         return String.join("\n", result);
@@ -168,23 +169,6 @@ public class EruptSkillTools {
     }
 
     // ======================== Private helpers ========================
-
-    private String readDescription(File skillMd) {
-        try {
-            boolean inFrontmatter = false;
-            for (String line : Files.readAllLines(skillMd.toPath())) {
-                if (line.trim().equals("---")) {
-                    inFrontmatter = !inFrontmatter;
-                    continue;
-                }
-                if (inFrontmatter && line.startsWith("description:")) {
-                    return line.replace("description:", "").trim();
-                }
-            }
-        } catch (Exception ignored) {
-        }
-        return "(no description)";
-    }
 
     private String readFileContent(File f) {
         try {

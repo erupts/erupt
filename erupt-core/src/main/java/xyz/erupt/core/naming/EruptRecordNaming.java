@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.view.EruptModel;
 
 import java.lang.reflect.Method;
 
@@ -21,8 +22,11 @@ public class EruptRecordNaming implements EruptRecordOperate.DynamicConfig {
             String prefix = desc + " | ";
             if (null != menuName) {
                 return prefix + menuName;
-            } else if (null != EruptCoreService.getErupt(eruptName)) {
-                return prefix + EruptCoreService.getErupt(eruptName).getErupt().name();
+            }
+            EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+            // remote (erupt-cloud node) erupt is not registered locally; fall back to the raw name
+            if (null != eruptModel) {
+                return prefix + eruptModel.getErupt().name();
             } else {
                 return prefix + eruptName;
             }

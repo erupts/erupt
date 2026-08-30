@@ -120,7 +120,7 @@ public class EruptModelTools {
                 ? DEFAULT_PAGE_SIZE : Math.min(pageSize, MAX_PAGE_SIZE));
         tableQuery.setCondition(null == conditions ? new ArrayList<>() : conditions);
         tableQuery.setSort(sort);
-        Page result = eruptService.getEruptData(EruptCoreService.getErupt(eruptName), tableQuery, null);
+        Page result = eruptService.getEruptData(EruptCoreService.getEruptWithRemote(eruptName), tableQuery, null);
         return GsonFactory.getGson().toJson(result);
     }
 
@@ -130,7 +130,7 @@ public class EruptModelTools {
             @P("JSON object representing the new record. Field names and types must match the model schema obtained from eruptSchema.") Map<String, Object> data) {
         checkErupt(eruptName, PowerObject::isAdd);
         JsonObject jsonObject = GsonFactory.getGson().toJsonTree(data).getAsJsonObject();
-        return "Insert success, Primary key:" + eruptModifyService.insertEruptData(EruptCoreService.getErupt(eruptName), jsonObject);
+        return "Insert success, Primary key:" + eruptModifyService.insertEruptData(EruptCoreService.getEruptWithRemote(eruptName), jsonObject);
     }
 
     @Tool("Fetch a single erupt model record by its primary key ID.")
@@ -148,7 +148,7 @@ public class EruptModelTools {
             @P("JSON object representing the updated record. Must include the primary key field. Obtain the full record via findEruptDataByPk first to avoid overwriting fields with null or incorrect values.") Map<String, Object> data) {
         checkErupt(eruptName, PowerObject::isEdit);
         JsonObject jsonObject = GsonFactory.getGson().toJsonTree(data).getAsJsonObject();
-        eruptModifyService.updateEruptData(EruptCoreService.getErupt(eruptName), jsonObject);
+        eruptModifyService.updateEruptData(EruptCoreService.getEruptWithRemote(eruptName), jsonObject);
         return "success";
     }
 
@@ -157,15 +157,8 @@ public class EruptModelTools {
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
             @P("List of primary key values identifying the records to delete. Use findEruptDataByPk or eruptDataQuery to confirm IDs before deletion.") List<Object> ids) {
         checkErupt(eruptName, PowerObject::isDelete);
-        eruptModifyService.deleteEruptData(EruptCoreService.getErupt(eruptName), ids, false);
+        eruptModifyService.deleteEruptData(EruptCoreService.getEruptWithRemote(eruptName), ids, false);
         return "success";
-    }
-
-    @Tool("Generate erupt annotation code. Returns the erupt annotation reference documentation to guide code generation.")
-    public String geneEruptCode() throws Exception {
-        try (var in = getClass().getClassLoader().getResourceAsStream("erupt-annotation.md")) {
-            return new String(in.readAllBytes());
-        }
     }
 
     // Enforce menu access + per-erupt power for the current user. Super admins bypass user checks,
@@ -178,7 +171,7 @@ public class EruptModelTools {
         // from MetaContext; on AI threads it still holds the /ai/chat request meta, so
         // re-register it with the model being accessed (mirrors EruptSecurityInterceptor)
         MetaContext.register(new MetaErupt(eruptName, eruptName));
-        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        EruptModel eruptModel = EruptCoreService.getEruptWithRemote(eruptName);
         if (null != eruptModel && !eruptModel.isRemote() && !eruptModel.getErupt().power().ai()) {
             throw new EruptWebApiRuntimeException("AI access is disabled for this Erupt model: " + eruptName);
         }

@@ -55,9 +55,7 @@ public abstract class StaffChannel {
      * Silently verify the channel's API credentials (no visible message sent);
      * throws on failure, returns false when nothing verifiable is configured.
      */
-    public boolean testConnect(JsonObject config) {
-        return false;
-    }
+    public abstract boolean testConnect(JsonObject config);
 
     /**
      * Handle a platform callback (signature check, handshake, message parsing).

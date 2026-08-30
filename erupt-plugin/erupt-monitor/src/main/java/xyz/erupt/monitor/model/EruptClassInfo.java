@@ -6,7 +6,10 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
-import xyz.erupt.annotation.sub_erupt.*;
+import xyz.erupt.annotation.sub_erupt.Drill;
+import xyz.erupt.annotation.sub_erupt.Link;
+import xyz.erupt.annotation.sub_erupt.Power;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -34,7 +37,6 @@ import xyz.erupt.upms.model.input.MenuPublishModal;
         power = @Power(add = false, edit = false, delete = false, export = false),
         // Rows come from an in-memory scan of EruptCoreService (~dozens–hundreds); paginate client-side
         // to avoid rebuilding the full list on every page/sort click
-        layout = @Layout(pagingType = Layout.PagingType.FRONT),
         drills = @Drill(
                 title = "Fields",
                 link = @Link(column = "name", linkErupt = EruptFieldInfo.class, joinColumn = "eruptName")

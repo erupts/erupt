@@ -26,6 +26,11 @@ public class LlmRequest {
 
     private Boolean autoCallTool = false;
 
+    // Inject the prompts of registered SystemPromptProviders (toolbox usage guidance).
+    // Only erupt-ai's own chat entry turns this on; programmatic callers (canvas,
+    // staff, notice...) build their own prompts and must not inherit them
+    private Boolean systemPromptProviders = false;
+
     private Boolean strictTools = true;
 
     private boolean thinking = false;

@@ -14,12 +14,19 @@ public @interface DateType {
     @Comment("Picker mode")
     PickerMode pickerMode() default PickerMode.ALL;
 
+    @Comment("Earliest selectable date (inclusive), format yyyy-MM-dd. Empty means unbounded")
+    String min() default "";
+
+    @Comment("Latest selectable date (inclusive), format yyyy-MM-dd. Empty means unbounded")
+    String max() default "";
+
     enum Type {
         DATE,
         TIME,
         DATE_TIME,
         MONTH,
         WEEK,
+        QUARTER,
         YEAR
     }
 

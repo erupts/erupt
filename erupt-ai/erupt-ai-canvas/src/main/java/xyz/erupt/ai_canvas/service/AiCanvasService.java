@@ -1,12 +1,12 @@
 package xyz.erupt.ai_canvas.service;
 
 import dev.langchain4j.data.message.ChatMessage;
-import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -45,6 +45,7 @@ import java.util.stream.Collectors;
  * @author YuePeng
  * date 2026/8/3
  */
+@Slf4j
 @Service
 public class AiCanvasService {
 
@@ -94,8 +95,7 @@ public class AiCanvasService {
     @Transactional
     public AiCanvasVersion generate(AiCanvas view, String message, String element) {
         List<ChatMessage> messages = new ArrayList<>();
-        messages.add(SystemMessage.from(this.buildSystem(view)));
-        messages.add(UserMessage.from(this.userMessage(view, message, element)));
+        messages.add(UserMessage.from(this.userMessage(this.draftHtml(view), message, element)));
         LLM llm = this.resolveLlm(view);
         String response = LlmCore.getLLM(llm).chat(this.llmRequest(view, llm), messages);
         return this.saveVersion(view, message, this.extractHtml(response));
@@ -109,10 +109,14 @@ public class AiCanvasService {
     }
 
     // ReAct: the provider's verification tool is the ONLY tool of the round —
-    // the global toolbox/MCP surface (autoCallTool) stays off during generation
+    // the global toolbox/MCP surface (autoCallTool) stays off during generation.
+    // The canvas prompt rides in agentPrompt: a SystemMessage placed in the chat
+    // context would be discarded by LlmCore's memory, which pins the system
+    // message composed from the request prompts at index 0
     private LlmRequest llmRequest(AiCanvas view, LLM llm) {
         LlmRequest llmRequest = llm.toLlmRequest();
         llmRequest.setAutoCallTool(false);
+        llmRequest.setAgentPrompt(this.buildSystem(view));
         Object verifyTool = this.provider(view.getDataType()).verifyTool();
         if (null != verifyTool) llmRequest.setTools(List.of(verifyTool));
         return llmRequest;
@@ -136,13 +140,12 @@ public class AiCanvasService {
             LLM llm = this.resolveLlm(view);
             LlmRequest llmRequest = this.llmRequest(view, llm);
             List<ChatMessage> context = new ArrayList<>();
-            context.add(SystemMessage.from(this.buildSystem(view)));
             AtomicBoolean clientGone = new AtomicBoolean(false);
             emitter.onCompletion(() -> clientGone.set(true));
             emitter.onTimeout(() -> clientGone.set(true));
             emitter.onError(t -> clientGone.set(true));
             StringBuilder response = new StringBuilder();
-            LlmCore.getLLM(llm).chatSse(llmRequest, this.userMessage(view, message, element), context, it -> {
+            LlmCore.getLLM(llm).chatSse(llmRequest, this.userMessage(this.draftHtml(view), message, element), context, it -> {
                 if (null != it.getThrowable()) {
                     if (!clientGone.get()) this.doneSse(emitter, null, it.getThrowable().getMessage());
                 } else if (it.isFinish()) {
@@ -190,21 +193,22 @@ public class AiCanvasService {
             versionMap.put("id", version.getId());
             versionMap.put("version", version.getVersion());
             versionMap.put("message", version.getMessage());
-            versionMap.put("dataType", version.getDataType());
-            versionMap.put("targetModel", version.getTargetModel());
             versionMap.put("style", version.getStyle());
             versionMap.put("createTime", String.valueOf(version.getCreateTime()));
             payload = Map.of("version", versionMap);
         } else {
+            // The SSE path answers errors in-band instead of throwing, so log here —
+            // otherwise a failed round leaves no server-side trace at all
+            log.error("AI canvas generation failed: {}", error);
             payload = Map.of("error", null == error ? "Unknown error" : error);
         }
         llmService.sendSseBody(emitter, new SseBody(SseEvent.DONE, GsonFactory.getGson().toJson(payload)));
         llmService.completeSse(emitter);
     }
 
-    // EruptDao calls carry their own transactions; called from both sync and SSE paths
+    // EruptDao calls carry their own transactions; called from both sync and SSE paths.
+    // The new version becomes the working draft only — publishing stays explicit
     private AiCanvasVersion saveVersion(AiCanvas view, String message, String html) {
-        view.setHtml(html);
         Number max = (Number) eruptDao.lambdaQuery(AiCanvasVersion.class)
                 .eq(AiCanvasVersion::getCanvasId, view.getId()).max(AiCanvasVersion::getVersion);
         AiCanvasVersion version = new AiCanvasVersion(view, null == max ? 1 : max.intValue() + 1, message, html);
@@ -214,11 +218,28 @@ public class AiCanvasService {
         return version;
     }
 
+    // Page source of the working draft (active version); null before the first generation
+    public String draftHtml(AiCanvas view) {
+        if (null == view.getActiveVersion()) return null;
+        AiCanvasVersion version = eruptDao.find(AiCanvasVersion.class, view.getActiveVersion());
+        return null == version ? null : version.getHtml();
+    }
+
+    // Page source served to viewers; null until the first explicit publish
+    public String publishedHtml(AiCanvas view) {
+        if (null == view.getPublishVersion()) return null;
+        AiCanvasVersion version = eruptDao.find(AiCanvasVersion.class, view.getPublishVersion());
+        return null == version ? null : version.getHtml();
+    }
+
     // System prompt: page skill + optional style + data source guide + model structure.
     // No requirement history is carried: the current html is the single source of
     // truth for everything past rounds produced (including manual tweaks); replaying
     // old requirements risks resurrecting abandoned instructions.
     private String buildSystem(AiCanvas view) {
+        if (StringUtils.isBlank(view.getDataType()) || StringUtils.isBlank(view.getTargetModel())) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai-canvas.model_not_configured"));
+        }
         CanvasModelProvider provider = this.provider(view.getDataType());
         StringBuilder system = new StringBuilder(this.skill());
         this.styleOf(view.getStyle()).ifPresent(style -> system.append("\n\n").append(this.stylePrompt(style)));
@@ -241,15 +262,27 @@ public class AiCanvasService {
 
             After all queries pass, output the complete HTML document as instructed. Never skip verification, and do not describe the tool calls in the final answer.""";
 
-    // Switch the active version: its html becomes the served page
+    // Switch the working draft; viewers keep seeing the published version.
+    // The style snapshot is restored so the next generation round stays
+    // consistent with the page being iterated on
     @Transactional
     public void activate(AiCanvas view, AiCanvasVersion version) {
-        view.setHtml(version.getHtml());
         view.setActiveVersion(version.getId());
+        view.setStyle(version.getStyle());
         eruptDao.merge(view);
     }
 
-    private String userMessage(AiCanvas view, String message, String element) {
+    // Point viewers at the working draft; versions are immutable so no copy is needed
+    @Transactional
+    public void publish(AiCanvas view) {
+        if (null == view.getActiveVersion()) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai-canvas.not_generated"));
+        }
+        view.setPublishVersion(view.getActiveVersion());
+        eruptDao.merge(view);
+    }
+
+    private String userMessage(String draftHtml, String message, String element) {
         StringBuilder user = new StringBuilder(message);
         // The user picked a concrete element on the preview: scope the change to it.
         // Framed as an explicit instruction so it is not drowned out by the
@@ -259,9 +292,9 @@ public class AiCanvasService {
             user.append("\n\n# Target Element\nThe requirement above refers to a specific element the user selected on the page, identified by the CSS selector `")
                     .append(element).append("`. Locate this element in the current page source below and apply the change there; leave the rest of the page untouched unless the requirement clearly implies wider edits. The selector is derived from the rendered DOM, so match by structure if it does not resolve verbatim — e.g. browsers insert an implicit <tbody> that the source may omit.");
         }
-        if (StringUtils.isNotBlank(view.getHtml())) {
+        if (StringUtils.isNotBlank(draftHtml)) {
             user.append("\n\n# Current Page Source\nRevise the page below against the requirement above and output the full document again.\n")
-                    .append(HTML_FENCE).append("\n").append(view.getHtml()).append("\n```");
+                    .append(HTML_FENCE).append("\n").append(draftHtml).append("\n```");
         }
         return user.toString();
     }
@@ -270,20 +303,31 @@ public class AiCanvasService {
         if (StringUtils.isBlank(response)) {
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai-canvas.empty_response"));
         }
+        String html = findHtmlDocument(response);
+        if (null == html) {
+            // Full raw response, the only material to diagnose why extraction failed
+            // (truncated output, refusal, wrong format...)
+            log.error("No HTML document found in the AI response:\n{}", response);
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai-canvas.bad_response"));
+        }
+        return html;
+    }
+
+    // Pure extraction: ```html fence first, then a bare document; null when neither is found
+    static String findHtmlDocument(String response) {
         int fence = response.indexOf(HTML_FENCE);
         if (fence >= 0) {
             int contentStart = fence + HTML_FENCE.length();
             int end = response.lastIndexOf("```");
             if (end > contentStart) return response.substring(contentStart, end).trim();
         }
-        // Fallback: the model answered with a bare document, no code fence
         int docStart = response.indexOf("<!DOCTYPE");
         if (docStart < 0) docStart = response.indexOf("<html");
         int docEnd = response.lastIndexOf("</html>");
         if (docStart >= 0 && docEnd > docStart) {
             return response.substring(docStart, docEnd + "</html>".length());
         }
-        throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai-canvas.bad_response"));
+        return null;
     }
 
     @SneakyThrows

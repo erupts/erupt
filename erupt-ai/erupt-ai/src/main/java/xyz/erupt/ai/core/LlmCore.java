@@ -3,6 +3,7 @@ package xyz.erupt.ai.core;
 import dev.langchain4j.agent.tool.ToolSpecifications;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
@@ -84,8 +85,12 @@ public abstract class LlmCore {
         eruptAiServices.systemMessageProvider((id) -> {
             AiProp aiProp = EruptSpringUtil.getBean(AiProp.class);
             StringBuffer systemPrompt = new StringBuffer(aiProp.getSystemPrompt());
-            SystemPromptProvider.getRegisteredProviders().forEach(provider ->
-                    systemPrompt.append("\n\n").append(provider.getPrompt()));
+            // Provider prompts advertise toolbox tools; injecting them into calls that
+            // did not opt in makes the model call tools that do not exist there
+            if (Boolean.TRUE.equals(llmRequest.getSystemPromptProviders())) {
+                SystemPromptProvider.getRegisteredProviders().forEach(provider ->
+                        systemPrompt.append("\n\n").append(provider.getPrompt()));
+            }
             String rolePrompt = EruptSpringUtil.getBean(LLMRoleService.class).getSystemPromptByUid(MetaContext.getUser().getUid());
             if (rolePrompt != null && !rolePrompt.isBlank()) {
                 systemPrompt.append("\n\n").append(rolePrompt);
@@ -108,6 +113,14 @@ public abstract class LlmCore {
         eruptAiServices.toolExecutionErrorHandler((throwable, e) -> {
             log.error("Tool execution error [{}] e: {}", throwable.getMessage(), e, throwable);
             return new ToolErrorHandlerResult("Tool error: " + e.toString());
+        });
+        // A hallucinated tool name aborts the whole round by default; answer the model
+        // with an error result instead so it can correct itself and continue
+        eruptAiServices.hallucinatedToolNameStrategy(request -> {
+            log.warn("LLM called a non-existent tool: {}", request.name());
+            return ToolExecutionResultMessage.from(request,
+                    "Error: there is no tool named '" + request.name()
+                            + "'. Only call the tools declared in this conversation.");
         });
         return eruptAiServices.build();
     }

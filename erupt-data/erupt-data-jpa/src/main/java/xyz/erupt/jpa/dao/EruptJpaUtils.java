@@ -174,10 +174,11 @@ public class EruptJpaUtils {
                                     .append(R_VAL_KEY).append(condition.getKey());
                             break;
                         case IN:
-                            if (!isReference) hql.append(EruptJpaUtils.AND).append(_key).append(" in (:").append(condition.getKey()).append(")");
+                            // _key resolves to the reference id path (field.id), so IN works for references too
+                            hql.append(EruptJpaUtils.AND).append(_key).append(" in (:").append(condition.getKey()).append(")");
                             break;
                         case NOT_IN:
-                            if (!isReference) hql.append(EruptJpaUtils.AND).append(_key).append(" not in (:").append(condition.getKey()).append(")");
+                            hql.append(EruptJpaUtils.AND).append(_key).append(" not in (:").append(condition.getKey()).append(")");
                             break;
                     }
                 } else {

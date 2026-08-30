@@ -60,8 +60,12 @@ public class ChatController {
                            @RequestParam(value = "agentId", required = false) Long agentId,
                            @RequestParam(value = "contextPrompt", required = false) String contextPrompt
     ) {
+        LLMAgent llmAgent = agentId == null ? null : eruptDao.find(LLMAgent.class, agentId);
         LLM llmModel;
-        if (llmId == null) {
+        if (llmAgent != null && llmAgent.getLlm() != null) {
+            // The expert pins its own model, overriding the chat's selection
+            llmModel = eruptDao.find(LLM.class, llmAgent.getLlm().getId());
+        } else if (llmId == null) {
             llmModel = eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).eq(LLM::getEnable, true).limit(1).one();
         } else {
             llmModel = eruptDao.find(LLM.class, llmId);
@@ -88,10 +92,6 @@ public class ChatController {
             chatMessage.setAgentId(agentId);
             eruptDao.persist(chatMessage);
             AiChat chat = eruptDao.find(AiChat.class, chatId);
-            LLMAgent llmAgent = null;
-            if (null != agentId) {
-                llmAgent = eruptDao.find(LLMAgent.class, agentId);
-            }
             llmService.sendSse(MetaContext.get(), autoToolCall, llmAgent, emitter, llm, llmModel, chatMessage,
                     message, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()), contextPrompt);
         }

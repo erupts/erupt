@@ -17,4 +17,7 @@ public @interface Search {
     @Comment("Default query operator, used when the request condition does not carry one; AUTO resolves by edit type")
     QueryExpression operator() default QueryExpression.AUTO;
 
+    @Comment("Lock the operator: hide the operator selector on the frontend and force the configured operator server-side, ignoring any client-supplied one")
+    boolean lockOperator() default false;
+
 }

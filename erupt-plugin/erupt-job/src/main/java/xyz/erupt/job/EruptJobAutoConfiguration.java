@@ -3,10 +3,16 @@ package xyz.erupt.job;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.core.LockProvider;
+import net.javacrumbs.shedlock.provider.redis.spring.RedisLockProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
@@ -48,6 +54,18 @@ public class EruptJobAutoConfiguration implements EruptModule {
 
     @Resource
     private EruptJobProp eruptJobProp;
+
+    /**
+     * ShedLock lock provider for multi-instance job dedup. Created only when redis session is enabled
+     * (erupt.redis-session=true) and a RedisConnectionFactory exists, so single-instance deployments
+     * pay nothing. {@link xyz.erupt.job.service.EruptJobAction} looks this bean up at fire time.
+     */
+    @Bean
+    @ConditionalOnBean(RedisConnectionFactory.class)
+    @ConditionalOnProperty(prefix = "erupt", name = "redis-session", havingValue = "true")
+    public LockProvider eruptJobLockProvider(RedisConnectionFactory redisConnectionFactory) {
+        return new RedisLockProvider(redisConnectionFactory);
+    }
 
     @Override
     @SneakyThrows

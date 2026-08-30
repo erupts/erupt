@@ -96,6 +96,12 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             HttpHeaders.CONTENT_DISPOSITION
     };
 
+    // tpl pages carried by a node are routed by an explicit "_node" query param (there is no erupt
+    // to key on); the path itself stays node-local and is forwarded verbatim.
+    private static final String URL_NODE_PARAM = "_node";
+
+    private static final String TPL_PATH = EruptRestPath.ERUPT_API + "/tpl/";
+
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,@NonNull Object handler) throws Exception {
         EruptRouter eruptRouter = null;
@@ -103,6 +109,31 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             eruptRouter = ((HandlerMethod) handler).getMethodAnnotation(EruptRouter.class);
         }
         if (null == eruptRouter) return true;
+        // tpl page carried by a node: routed by an explicit "_node" param, path stays node-local.
+        String tplNode = request.getParameter(URL_NODE_PARAM);
+        if (StringUtils.isNotBlank(tplNode) && request.getRequestURI().contains(TPL_PATH)) {
+            MetaNode metaNode = nodeManager.getNode(tplNode);
+            if (null == metaNode) {
+                throw new EruptWebApiRuntimeException("'" + tplNode + "' node not ready");
+            }
+            String token = eruptContextService.getCurrentToken();
+            if (null == token || null == eruptSessionService.get(SessionKey.TOKEN_OLINE + token)) {
+                response.sendError(HttpStatus.UNAUTHORIZED.value());
+                return false;
+            }
+            // menu-permission map keys strip the query string, so authorize by the tpl path
+            String uri = request.getRequestURI();
+            String authStr = uri.substring(uri.indexOf(TPL_PATH) + TPL_PATH.length());
+            if (null == eruptUserService.getEruptMenuByValue(authStr)) {
+                response.sendError(HttpStatus.FORBIDDEN.value());
+                return false;
+            }
+            NodeContext.set(metaNode);
+            MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
+            MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername()));
+            MetaContext.registerToken(token);
+            return proxyAndRespond(request, response, handler, metaNode, tplNode, null, null);
+        }
         if (EruptRouter.VerifyType.ERUPT == eruptRouter.verifyType()) {
             String erupt = null;
             String authErupt = null;
@@ -148,38 +179,46 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername()));
             MetaContext.register(new MetaErupt(erupt));
             MetaContext.registerToken(token);
-            String path = request.getRequestURI().replace(erupt, eruptName);
-            try (HttpResponse httpResponse = this.httpProxy(request, metaNode, path.substring(path.indexOf(EruptRestPath.ERUPT_API)), eruptName)) {
-                Optional.ofNullable(httpResponse.header("Content-Type")).ifPresent(response::setContentType);
-                for (String transferHeader : TRANSFER_HEADERS) {
-                    Optional.ofNullable(httpResponse.header(transferHeader)).ifPresent(it -> response.addHeader(transferHeader, it));
-                }
-                response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-                // Error: body is small, buffer it for logging and passthrough
-                if (httpResponse.getStatus() != HttpStatus.OK.value()) {
-                    String body = httpResponse.body();
-                    log.error("{}: {} -> {}", metaNode.getNodeName(), path, body);
-                    operationService.record(handler, new Exception(body));
-                    response.setStatus(httpResponse.getStatus());
-                    response.getOutputStream().write(body.getBytes(StandardCharsets.UTF_8));
-                    return false;
-                }
-                operationService.record(handler, null);
-                if ((EruptRestPath.ERUPT_BUILD + "/" + erupt).equals(request.getServletPath())) {
-                    // Build: must buffer to rewrite node-name prefixes into the model
-                    EruptBuildModel eruptBuildModel = GsonFactory.getGson().fromJson(httpResponse.body(), EruptBuildModel.class);
-                    this.eruptBuildProcess(eruptBuildModel, nodeName);
-                    response.getOutputStream().write(GsonFactory.getGson().toJson(eruptBuildModel).getBytes(StandardCharsets.UTF_8));
-                } else {
-                    // Everything else (data / excel / file / large responses): stream through without full buffering
-                    StreamUtils.copy(httpResponse.bodyStream(), response.getOutputStream());
-                    response.flushBuffer();
-                }
-                NodeContext.remove();
-                return false;
-            }
+            return proxyAndRespond(request, response, handler, metaNode, nodeName, erupt, eruptName);
         } else {
             return true;
+        }
+    }
+
+    // Forward the current request to the target node and stream its response back. eruptName == null
+    // means the path is forwarded verbatim (tpl pages); otherwise the node-name prefix in the path is
+    // rewritten to the node-local erupt name (and @Erupt build responses get their prefixes restored).
+    private boolean proxyAndRespond(HttpServletRequest request, HttpServletResponse response, Object handler,
+                                    MetaNode metaNode, String nodeName, String erupt, String eruptName) throws Exception {
+        String path = null == eruptName ? request.getRequestURI() : request.getRequestURI().replace(erupt, eruptName);
+        try (HttpResponse httpResponse = this.httpProxy(request, metaNode, path.substring(path.indexOf(EruptRestPath.ERUPT_API)), eruptName)) {
+            Optional.ofNullable(httpResponse.header("Content-Type")).ifPresent(response::setContentType);
+            for (String transferHeader : TRANSFER_HEADERS) {
+                Optional.ofNullable(httpResponse.header(transferHeader)).ifPresent(it -> response.addHeader(transferHeader, it));
+            }
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+            // Error: body is small, buffer it for logging and passthrough
+            if (httpResponse.getStatus() != HttpStatus.OK.value()) {
+                String body = httpResponse.body();
+                log.error("{}: {} -> {}", metaNode.getNodeName(), path, body);
+                operationService.record(handler, new Exception(body));
+                response.setStatus(httpResponse.getStatus());
+                response.getOutputStream().write(body.getBytes(StandardCharsets.UTF_8));
+                return false;
+            }
+            operationService.record(handler, null);
+            if (null != erupt && (EruptRestPath.ERUPT_BUILD + "/" + erupt).equals(request.getServletPath())) {
+                // Build: must buffer to rewrite node-name prefixes into the model
+                EruptBuildModel eruptBuildModel = GsonFactory.getGson().fromJson(httpResponse.body(), EruptBuildModel.class);
+                this.eruptBuildProcess(eruptBuildModel, nodeName);
+                response.getOutputStream().write(GsonFactory.getGson().toJson(eruptBuildModel).getBytes(StandardCharsets.UTF_8));
+            } else {
+                // Everything else (data / excel / file / large responses): stream through without full buffering
+                StreamUtils.copy(httpResponse.bodyStream(), response.getOutputStream());
+                response.flushBuffer();
+            }
+            NodeContext.remove();
+            return false;
         }
     }
 
@@ -202,7 +241,10 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         headers.remove(HttpHeaders.ORIGIN);
         headers.put(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken());
         headers.put(EruptMutualConst.TOKEN, eruptContextService.getCurrentToken());
-        headers.put(EruptMutualConst.ERUPT, eruptName);
+        // tpl page proxy carries no erupt; the node interceptor only checks this header when present
+        if (null != eruptName) {
+            headers.put(EruptMutualConst.ERUPT, eruptName);
+        }
         headers.put(EruptMutualConst.USER, Base64Encoder.encode(GsonFactory.getGson().toJson(MetaContext.getUser())));
         //Process drill header
         if (headers.containsKey(EruptReqHeader.DRILL_SOURCE_ERUPT)) {

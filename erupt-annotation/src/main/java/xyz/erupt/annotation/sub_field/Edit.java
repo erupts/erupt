@@ -85,6 +85,9 @@ public @interface Edit {
     @Match("#item.type().toString()=='DATE'")
     DateType dateType() default @DateType;
 
+    @Match("#item.type().toString()=='COLOR'")
+    ColorType colorType() default @ColorType;
+
     @Match("#item.type().toString()=='BOOLEAN'")
     BoolType boolType() default @BoolType;
 

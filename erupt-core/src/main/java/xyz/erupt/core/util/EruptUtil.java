@@ -1,6 +1,7 @@
 package xyz.erupt.core.util;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
@@ -130,6 +131,7 @@ public class EruptUtil {
                         break;
                     case TAB_TABLE_REFER:
                     case TAB_TABLE_ADD:
+                    case MULTI_FORM:
                         EruptModel tabEruptModelRef = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
                         Collection<?> collectionRef = (Collection<?>) value;
                         List<Object> list = new ArrayList<>();
@@ -267,8 +269,12 @@ public class EruptUtil {
                                 continue;
                             }
                         }
-                        if (null == condition.getExpression() || QueryExpression.AUTO == condition.getExpression()) {
-                            // SearchProxy resolves AUTO against ProxyContext, so point it at the owning field first.
+                        // Resolve the effective operator when it is locked by @Search config, or when the request
+                        // carries none. lockOperator forces the configured operator and ignores any client-supplied
+                        // one, so a crafted request cannot bypass the frontend restriction. SearchProxy resolves AUTO
+                        // against ProxyContext (so point it at the owning field first); the AUTO check is a fallback.
+                        if (edit.search().lockOperator()
+                                || null == condition.getExpression() || QueryExpression.AUTO == condition.getExpression()) {
                             ProxyContext.set(eruptFieldModel.getField(), false);
                             QueryExpression defaultOperator = edit.search().operator();
                             condition.setExpression(QueryExpression.AUTO == defaultOperator ? QueryExpression.EQ : defaultOperator);
@@ -321,6 +327,18 @@ public class EruptUtil {
                     R<Void> nested = validateEruptValue(EruptCoreService.getErupt(field.getFieldReturnName()), combine);
                     if (!nested.isSuccess()) {
                         return nested;
+                    }
+                }
+            }
+            if (edit.type() == EditType.MULTI_FORM && null != value && value.isJsonArray()) {
+                EruptModel subEruptModel = EruptCoreService.getErupt(field.getFieldReturnName());
+                if (null != subEruptModel) {
+                    JsonArray array = value.getAsJsonArray();
+                    for (int i = 0; i < array.size(); i++) {
+                        R<Void> nested = validateEruptValue(subEruptModel, array.get(i).getAsJsonObject());
+                        if (!nested.isSuccess()) {
+                            return R.error(edit.title() + " #" + (i + 1) + ": " + nested.getMessage());
+                        }
                     }
                 }
             }
@@ -431,7 +449,8 @@ public class EruptUtil {
                             && EruptConst.PASSWORD_PLACEHOLDER.equals(f.get(data))) {
                         // The client echoed the mask placeholder back unchanged -> keep the stored value.
                         // An explicitly cleared or newly typed value still overwrites below.
-                    } else if (eruptField.edit().type() == EditType.TAB_TABLE_ADD) {
+                    } else if (eruptField.edit().type() == EditType.TAB_TABLE_ADD
+                            || eruptField.edit().type() == EditType.MULTI_FORM) {
                         @SuppressWarnings("unchecked")
                         Collection<Object> s = (Collection<Object>) f.get(target);
                         if (null == s) {

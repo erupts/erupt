@@ -69,11 +69,12 @@ public class UpmsDataLoadService implements CommandLineRunner {
                                 EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.fromMetaMenu(metaMenu), LambdaSee.field(EruptMenu::getCode), metaMenu.getCode());
                                 metaMenu.setId(eruptMenu.getId());
                                 if (null != eruptMenu.getType() && null != eruptMenu.getValue()) {
-                                    if (MenuTypeEnum.TABLE.getCode().equals(eruptMenu.getType()) || MenuTypeEnum.TREE.getCode().equals(eruptMenu.getType())) {
+                                    EruptFunPermissions[] permissions = EruptFunPermissions.byMenuType(eruptMenu.getType());
+                                    if (null != permissions) {
                                         AtomicInteger i = new AtomicInteger();
                                         Optional.ofNullable(EruptCoreService.getErupt(eruptMenu.getValue())).ifPresent(it -> {
                                             Power power = it.getErupt().power();
-                                            for (EruptFunPermissions value : EruptFunPermissions.values()) {
+                                            for (EruptFunPermissions value : permissions) {
                                                 if (value.verifyPower(power)) {
                                                     eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                                                             UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value),
