@@ -126,6 +126,7 @@ public class LLMService {
                 llmRequest.setAgentPrompt(resolveAgentPrompt(llmAgent));
             }
             llmRequest.setAutoCallTool(autoToolCall);
+            llmRequest.setSystemPromptProviders(true);
             llmRequest.setContextPrompt(contextPrompt);
             List<ToolCallRecord> toolCallList = new ArrayList<>();
             // Clear a stale stop signal left over from a previous round

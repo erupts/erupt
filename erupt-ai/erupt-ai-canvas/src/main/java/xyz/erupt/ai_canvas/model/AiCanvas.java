@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai_canvas.handler.AiCanvasMenuHandler;
+import xyz.erupt.ai_canvas.handler.CanvasDataTypeFetchHandler;
+import xyz.erupt.ai_canvas.handler.CanvasTargetModelFetchHandler;
 import xyz.erupt.ai_canvas.proxy.AiCanvasDataProxy;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -14,20 +16,22 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.OpenWay;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
-import xyz.erupt.annotation.sub_field.Edit;
-import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.*;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.model.input.MenuPublishModal;
 
 /**
- * An AI generated view, built conversationally in the designer: pick a data
- * model, describe the page, iterate over versions. The active version's HTML
- * is stored here and served by {@code AiCanvasController}.
+ * An AI generated view over a single data model, built conversationally in the
+ * designer: describe the page, iterate over versions. The data model is fixed
+ * at creation — switching it mid-iteration would invalidate the version history
+ * and the verified queries embedded in past rounds; use a new canvas instead.
+ * Page sources live in {@link AiCanvasVersion} rows; this entity only points at
+ * them: activeVersion is the designer's working draft, publishVersion is what
+ * {@code AiCanvasController} serves to viewers.
  *
  * @author YuePeng
  * date 2026/8/3
@@ -65,14 +69,23 @@ public class AiCanvas extends MetaModelUpdateVo {
     )
     private String name;
 
-    // Data source type + model, chosen in the designer conversation panel
+    // Data source type + model: the canvas identity, fixed after creation
     @EruptField(
-            views = @View(title = "Data Type", width = "90px")
+            views = @View(title = "Data Type", width = "90px"),
+            edit = @Edit(title = "Data Type", notNull = true,
+                    readonly = @Readonly(add = false),
+                    type = EditType.CHOICE,
+                    choiceType = @ChoiceType(fetchHandler = CanvasDataTypeFetchHandler.class))
     )
     private String dataType;
 
     @EruptField(
-            views = @View(title = "Data Model", width = "150px")
+            views = @View(title = "Data Model", width = "150px"),
+            edit = @Edit(title = "Data Model", notNull = true,
+                    readonly = @Readonly(add = false),
+                    type = EditType.CHOICE,
+                    choiceType = @ChoiceType(fetchHandler = CanvasTargetModelFetchHandler.class,
+                            dependField = "dataType"))
     )
     private String targetModel;
 
@@ -88,14 +101,6 @@ public class AiCanvas extends MetaModelUpdateVo {
     @JoinColumn(name = "llm_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private LLM llm;
 
-    @Column(length = AnnotationConst.CONFIG_LENGTH)
-//    @EruptField(
-//            edit = @Edit(title = "HTML", type = EditType.CODE_EDITOR,
-//                    codeEditType = @CodeEditorType(language = "html"),
-//                    desc = "Active version's page source; manual tweaks are kept until the next generation")
-//    )
-    private String html;
-
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "Description", type = ViewType.HTML),
@@ -103,8 +108,11 @@ public class AiCanvas extends MetaModelUpdateVo {
     )
     private String remark;
 
-    // Currently active version row id
+    // Working-draft version row id shown in the designer; NOT what viewers see
     private Long activeVersion;
+
+    // Published version row id served to viewers; null until the first explicit publish
+    private Long publishVersion;
 
     @EruptField(
             views = @View(title = "Enable"),
