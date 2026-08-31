@@ -291,7 +291,6 @@ Claw shares the same role-based tool security as AI Harness — only whitelisted
 
 | MODULE | USE CASE | DOCS |
 |---|---|---|
-| `ERUPT CHART` | Reports & data visualization | [docs →](https://docs.erupt.xyz/modules/pro/erupt-chart) |
 | `ERUPT FLOW` | Workflow / approval engine | [docs →](https://docs.erupt.xyz/modules/pro/erupt-flow) |
 | `ERUPT SAAS` | Multi-tenant infrastructure | [docs →](https://docs.erupt.xyz/modules/pro/erupt-tenant) |
 | `ERUPT CUBE` | BI platform with semantic layer | [docs →](https://docs.erupt.xyz/modules/pro/erupt-cube) |
