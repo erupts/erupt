@@ -291,7 +291,6 @@ Claw 与 AI Harness 共享同一套基于 Role 的 Tool 安全机制 —— 非�
 
 | 模块 | 用途 | 文档 |
 |---|---|---|
-| `ERUPT CHART` | 报表图表 / 数据可视化 | [文档 →](https://docs.erupt.xyz/modules/pro/erupt-chart) |
 | `ERUPT FLOW` | 流程引擎 / 审批工作流 | [文档 →](https://docs.erupt.xyz/modules/pro/erupt-flow) |
 | `ERUPT SAAS` | 多租户基建 | [文档 →](https://docs.erupt.xyz/modules/pro/erupt-tenant) |
 | `ERUPT CUBE` | BI 平台（语义层 + 拖拽分析） | [文档 →](https://docs.erupt.xyz/modules/pro/erupt-cube) |
