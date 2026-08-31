@@ -44,7 +44,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
                         ifExpr = "item.defaultLLM === '×'",
                         mode = RowOperation.Mode.SINGLE, operationHandler = LLMDataProxy.class)
         },
-        layout = @Layout(tableLeftFixed = 1)
+        layout = @Layout(tableLeftFixed = 1, formSteps = true)
 )
 @Getter
 @Setter
@@ -52,6 +52,12 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 @Entity
 @EruptI18n
 public class LLM extends MetaModelUpdateVo {
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "Basic Info", desc = "Model identity and connection", type = EditType.DIVIDE)
+    )
+    private String basicStep;
 
     @EruptField(
             views = @View(title = "Model Name", width = "150px"),
@@ -100,11 +106,9 @@ public class LLM extends MetaModelUpdateVo {
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "Advanced", type = EditType.GROUP,
-                    groupType = @GroupType(fields = {"maxContext", "config", "remark"}, collapsed = true)
-            )
+            edit = @Edit(title = "Settings", desc = "Runtime parameters", type = EditType.DIVIDE)
     )
-    private String advancedGroup;
+    private String settingsStep;
 
     @EruptField(
             views = @View(title = "Context Memory Rounds"),

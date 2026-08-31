@@ -49,6 +49,19 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
         return new VerifyTool();
     }
 
+    // Erupt paging is 1-based; models routinely try 0-based indices. Also caps the
+    // page size for verification and mirrors the SDK default of EQ for bare conditions
+    static void normalizeQuery(TableQuery tableQuery) {
+        if (null == tableQuery.getPageIndex() || tableQuery.getPageIndex() < 1) tableQuery.setPageIndex(1);
+        if (null == tableQuery.getPageSize() || tableQuery.getPageSize() > VERIFY_MAX_ROWS) {
+            tableQuery.setPageSize(VERIFY_MAX_ROWS);
+        }
+        if (null != tableQuery.getCondition()) {
+            tableQuery.getCondition().stream().filter(it -> null == it.getExpression())
+                    .forEach(it -> it.setExpression(QueryExpression.EQ));
+        }
+    }
+
     public class VerifyTool {
 
         @Tool("""
@@ -62,15 +75,7 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
             EruptModel eruptModel = EruptCoreService.getErupt(model);
             if (null == eruptModel) return "Error: unknown model: " + model;
             TableQuery tableQuery = GsonFactory.getGson().fromJson(StringUtils.defaultIfBlank(queryJson, "{}"), TableQuery.class);
-            if (null == tableQuery.getPageIndex()) tableQuery.setPageIndex(1);
-            if (null == tableQuery.getPageSize() || tableQuery.getPageSize() > VERIFY_MAX_ROWS) {
-                tableQuery.setPageSize(VERIFY_MAX_ROWS);
-            }
-            // Mirror the SDK default: a condition without an expression means EQ
-            if (null != tableQuery.getCondition()) {
-                tableQuery.getCondition().stream().filter(it -> null == it.getExpression())
-                        .forEach(it -> it.setExpression(QueryExpression.EQ));
-            }
+            normalizeQuery(tableQuery);
             return GsonFactory.getGson().toJson(eruptService.getEruptData(eruptModel, tableQuery, null));
         }
 
@@ -126,6 +131,7 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
 
                 ```javascript
                 // Paged list. All query fields optional; defaults: pageIndex 1, pageSize 20.
+                // pageIndex is 1-BASED: the first page is 1, never 0.
                 // Resolves to {pageIndex, pageSize, total, totalPage, list: [row, ...]}
                 const page = await Erupt.table('Product', {
                   pageIndex: 1,

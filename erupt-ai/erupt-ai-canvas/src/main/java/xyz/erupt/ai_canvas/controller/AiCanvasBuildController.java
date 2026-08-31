@@ -1,6 +1,7 @@
 package xyz.erupt.ai_canvas.controller;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +18,7 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 
@@ -82,6 +84,7 @@ public class AiCanvasBuildController {
         vo.setStyle(view.getStyle());
         vo.setLlmId(null != view.getLlm() ? view.getLlm().getId() : null);
         vo.setActiveVersion(view.getActiveVersion());
+        vo.setPublishVersion(view.getPublishVersion());
         vo.setVersions(eruptDao.lambdaQuery(AiCanvasVersion.class)
                 .eq(AiCanvasVersion::getCanvasId, view.getId())
                 .orderByAsc(AiCanvasVersion::getVersion).list().stream().map(VersionVo::new).toList());
@@ -95,8 +98,6 @@ public class AiCanvasBuildController {
             throw new EruptWebApiRuntimeException("Message must not be blank");
         }
         AiCanvas view = this.view(code);
-        view.setDataType(body.getDataType());
-        view.setTargetModel(body.getTargetModel());
         view.setStyle(body.getStyle());
         view.setLlm(this.resolveLlm(body.getLlmId()));
         return R.ok(new VersionVo(aiViewService.generate(view, body.getMessage().trim(), body.getElement())));
@@ -108,8 +109,6 @@ public class AiCanvasBuildController {
     @GetMapping(value = "/generate-sse/{code}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter generateSse(@PathVariable("code") String code,
                                   @RequestParam("message") String message,
-                                  @RequestParam("dataType") String dataType,
-                                  @RequestParam("targetModel") String targetModel,
                                   @RequestParam(value = "style", required = false) String style,
                                   @RequestParam(value = "llmId", required = false) Long llmId,
                                   @RequestParam(value = "element", required = false) String element) {
@@ -117,8 +116,6 @@ public class AiCanvasBuildController {
             throw new EruptWebApiRuntimeException("Message must not be blank");
         }
         AiCanvas view = this.view(code);
-        view.setDataType(dataType);
-        view.setTargetModel(targetModel);
         view.setStyle(style);
         view.setLlm(this.resolveLlm(llmId));
         // Persist the selection right away; html and version follow when the stream finishes
@@ -150,6 +147,28 @@ public class AiCanvasBuildController {
         return R.ok();
     }
 
+    // Publish the working draft so viewers pick it up; until then version
+    // switches and new generations stay designer-only
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    @PostMapping("/publish/{code}")
+    public R<Void> publish(@PathVariable("code") String code) {
+        aiViewService.publish(this.view(code));
+        return R.ok();
+    }
+
+    // Draft preview for the designer: renders the working draft (active version)
+    // with the same SDK/token processing the viewer endpoint applies, and ignores
+    // the enable flag — disabling a page should not blind its designer
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    @GetMapping(value = "/preview/{code}", produces = "text/html;charset=utf-8")
+    public String preview(@PathVariable("code") String code, HttpServletRequest request) {
+        String draftHtml = aiViewService.draftHtml(this.view(code));
+        if (StringUtils.isBlank(draftHtml)) {
+            return AiCanvasController.tip(I18nTranslate.$translate("ai-canvas.not_generated"));
+        }
+        return AiCanvasController.render(draftHtml, request.getContextPath());
+    }
+
     private AiCanvas view(String code) {
         AiCanvas view = eruptDao.lambdaQuery(AiCanvas.class).eq(AiCanvas::getCode, code).one();
         if (null == view) throw new EruptWebApiRuntimeException("View not found: " + code);
@@ -172,8 +191,6 @@ public class AiCanvasBuildController {
     @Setter
     public static class GenerateBody {
         private String message;
-        private String dataType;
-        private String targetModel;
         private String style;
         private Long llmId;
         // CSS selector of the element the user picked on the preview
@@ -203,6 +220,7 @@ public class AiCanvasBuildController {
         private String style;
         private Long llmId;
         private Long activeVersion;
+        private Long publishVersion;
         private List<VersionVo> versions;
     }
 
@@ -232,8 +250,6 @@ public class AiCanvasBuildController {
         private Long id;
         private Integer version;
         private String message;
-        private String dataType;
-        private String targetModel;
         private String style;
         private String createTime;
 
@@ -241,8 +257,6 @@ public class AiCanvasBuildController {
             this.id = v.getId();
             this.version = v.getVersion();
             this.message = v.getMessage();
-            this.dataType = v.getDataType();
-            this.targetModel = v.getTargetModel();
             this.style = v.getStyle();
             this.createTime = null == v.getCreateTime() ? null : v.getCreateTime().toString();
         }
