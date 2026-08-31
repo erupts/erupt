@@ -3,9 +3,11 @@ package xyz.erupt.ai.controller;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.constants.AiConst;
@@ -16,8 +18,13 @@ import xyz.erupt.ai.model.AiChatMessage;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.service.LLMService;
+import xyz.erupt.ai.vo.LlmVo;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.service.EruptFileService;
 import xyz.erupt.core.view.R;
 import xyz.erupt.core.view.SimplePage;
 import xyz.erupt.jpa.dao.EruptDao;
@@ -27,6 +34,7 @@ import xyz.erupt.upms.service.EruptUserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author YuePeng
@@ -49,6 +57,11 @@ public class ChatController {
     @Resource
     private EruptUserService eruptUserService;
 
+    @Resource
+    private EruptFileService eruptFileService;
+
+    private static final Set<String> IMAGE_EXTENSIONS = Set.of("jpg", "jpeg", "png", "gif", "webp", "bmp");
+
     @EruptMenuAuth(AiConst.AI_CHAT)
     @GetMapping(value = "/send", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Transactional
@@ -58,7 +71,9 @@ public class ChatController {
                            @RequestParam(value = "autoToolCall", required = false, defaultValue = "true") Boolean autoToolCall,
                            @RequestParam(value = "llmId", required = false) Long llmId,
                            @RequestParam(value = "agentId", required = false) Long agentId,
-                           @RequestParam(value = "contextPrompt", required = false) String contextPrompt
+                           @RequestParam(value = "contextPrompt", required = false) String contextPrompt,
+                           // JSON array of attachment paths returned by /upload-image
+                           @RequestParam(value = "images", required = false) String images
     ) {
         LLMAgent llmAgent = agentId == null ? null : eruptDao.find(LLMAgent.class, agentId);
         LLM llmModel;
@@ -82,7 +97,7 @@ public class ChatController {
             llmService.sendSseMessage(emitter, "Request timed out, please try again");
         });
         emitter.onError((throwable) -> log.error("Sse Request failed chatId: {}", chatId, throwable));
-        if (message.isBlank()) {
+        if (message.isBlank() && StringUtils.isBlank(images)) {
             llmService.sendSseMessage(emitter, "Please enter a prompt");
             llmService.completeSse(emitter);
             return emitter;
@@ -90,6 +105,7 @@ public class ChatController {
             LlmCore llm = LlmCore.getLLM(llmModel.getLlm());
             AiChatMessage chatMessage = AiChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0);
             chatMessage.setAgentId(agentId);
+            chatMessage.setImages(checkImages(images));
             eruptDao.persist(chatMessage);
             AiChat chat = eruptDao.find(AiChat.class, chatId);
             llmService.sendSse(MetaContext.get(), autoToolCall, llmAgent, emitter, llm, llmModel, chatMessage,
@@ -97,6 +113,28 @@ public class ChatController {
         }
 
         return emitter;
+    }
+
+    // Validate the images param is a JSON array of image attachment paths before it is persisted
+    private String checkImages(String images) {
+        if (StringUtils.isBlank(images)) return null;
+        String[] paths = GsonFactory.getGson().fromJson(images, String[].class);
+        for (String path : paths) {
+            if (!IMAGE_EXTENSIONS.contains(StringUtils.substringAfterLast(path, ".").toLowerCase())) {
+                throw new EruptWebApiRuntimeException(I18nTranslate.$translate("Only image files are supported"));
+            }
+        }
+        return images;
+    }
+
+    @EruptMenuAuth(AiConst.AI_CHAT)
+    @PostMapping("/upload-image")
+    public R<String> uploadImage(@RequestParam("file") MultipartFile file) {
+        String extension = StringUtils.substringAfterLast(file.getOriginalFilename(), ".").toLowerCase();
+        if (!IMAGE_EXTENSIONS.contains(extension)) {
+            return R.error(I18nTranslate.$translate("Only image files are supported"));
+        }
+        return R.ok(eruptFileService.upload(file, eruptFileService.createPath(file)));
     }
 
     @EruptMenuAuth(AiConst.AI_CHAT)
@@ -144,6 +182,21 @@ public class ChatController {
         return R.ok();
     }
 
+
+    // Enabled models for the chat model picker; locked models are never exposed
+    // and credentials stay server-side
+    @EruptMenuAuth(AiConst.AI_CHAT)
+    @GetMapping("/llms")
+    public R<List<LlmVo>> llms() {
+        return R.ok(eruptDao.lambdaQuery(LLM.class).eq(LLM::getEnable, true)
+                .orderByAsc(LLM::getSort).list().stream().map(it -> {
+                    LlmVo llmVo = new LlmVo();
+                    llmVo.setId(it.getId());
+                    llmVo.setName(it.getName());
+                    llmVo.setDefaultLLM(it.getDefaultLLM());
+                    return llmVo;
+                }).toList());
+    }
 
     @EruptMenuAuth(AiConst.AI_CHAT)
     @GetMapping("/chats")

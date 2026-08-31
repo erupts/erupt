@@ -52,3 +52,5 @@ Embedding OK,向量化成功,向量化成功,Embedding OK,Embedding réussi,埋�
 LLM,大模型,大模型,Language Model,Modèle de langage,言語モデル,언어 모델,Языковая модель,Modelo de lenguaje,Sprachmodell,Modelo de linguagem,Model Bahasa,نموذج اللغة
 MCP,连接器,連接器,Connector,Connecteur,コネクタ,커넥터,Коннектор,Conector,Konnektor,Conector,Konektor,موصّل
 A2A,外部智能体,外部智能體,External Agent,Agent externe,外部エージェント,외부 에이전트,Внешний агент,Agente externo,Externer Agent,Agente externo,Agen Eksternal,وكيل خارجي
+Only image files are supported,仅支持上传图片文件,僅支持上傳圖片文件,Only image files are supported,Seuls les fichiers image sont pris en charge,画像ファイルのみアップロード可能です,이미지 파일만 업로드할 수 있습니다,Поддерживаются только файлы изображений,Solo se admiten archivos de imagen,Nur Bilddateien werden unterstützt,Apenas ficheiros de imagem são suportados,Hanya file gambar yang didukung,يتم دعم ملفات الصور فقط
+Illegal image path,非法的图片路径,非法的圖片路徑,Illegal image path,Chemin d'image illégal,不正な画像パスです,잘못된 이미지 경로,Недопустимый путь к изображению,Ruta de imagen no válida,Ungültiger Bildpfad,Caminho de imagem ilegal,Jalur gambar tidak valid,مسار صورة غير صالح

@@ -2,12 +2,16 @@ package xyz.erupt.ai.core;
 
 import dev.langchain4j.agent.tool.ToolSpecifications;
 import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.Content;
+import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.TokenStream;
 import dev.langchain4j.service.tool.ToolErrorHandlerResult;
 import dev.langchain4j.service.tool.ToolProvider;
 import dev.langchain4j.service.tool.ToolProviderResult;
@@ -73,12 +77,16 @@ public abstract class LlmCore {
     }
 
     public void chatSse(LlmRequest llmRequest, String userMessage, List<ChatMessage> chatContext, Consumer<SseListener> listener) {
+        this.chatSse(llmRequest, userMessage, null, chatContext, listener);
+    }
+
+    public void chatSse(LlmRequest llmRequest, String userMessage, List<ImageContent> images, List<ChatMessage> chatContext, Consumer<SseListener> listener) {
         StreamingChatModel streamingChatModel = this.buildStreamingChatModel(llmRequest, chatContext, listener);
         ChatMemory chatMemory = creatMemory(chatContext);
         AiServices<EruptAiChat> eruptAiServices = AiServices.builder(EruptAiChat.class)
                 .streamingChatModel(streamingChatModel).chatMemoryProvider((id) -> chatMemory);
         MetaContext metaContext = MetaContext.get();
-        this.streamingChat(this.buildAiServices(eruptAiServices, llmRequest, listener), userMessage, metaContext, listener);
+        this.streamingChat(this.buildAiServices(eruptAiServices, llmRequest, listener), userMessage, images, metaContext, listener);
     }
 
     private EruptAiChat buildAiServices(AiServices<EruptAiChat> eruptAiServices, LlmRequest llmRequest, Consumer<SseListener> listener) {
@@ -181,10 +189,19 @@ public abstract class LlmCore {
         };
     }
 
-    private void streamingChat(EruptAiChat eruptAiChat, String userMessage, MetaContext metaContext, Consumer<SseListener> listener) {
+    private void streamingChat(EruptAiChat eruptAiChat, String userMessage, List<ImageContent> images, MetaContext metaContext, Consumer<SseListener> listener) {
         MetaContext.set(metaContext);
         AtomicBoolean toolCalling = new AtomicBoolean(false);
-        eruptAiChat.streamChat(userMessage).onPartialResponse(partialResponse -> {
+        TokenStream tokenStream;
+        if (null == images || images.isEmpty()) {
+            tokenStream = eruptAiChat.streamChat(userMessage);
+        } else {
+            List<Content> contents = new ArrayList<>();
+            if (null != userMessage && !userMessage.isBlank()) contents.add(TextContent.from(userMessage));
+            contents.addAll(images);
+            tokenStream = eruptAiChat.streamChat(contents);
+        }
+        tokenStream.onPartialResponse(partialResponse -> {
                     toolCalling.set(true);
                     listener.accept(SseListener.builder().currMessage(partialResponse).build());
                 })
