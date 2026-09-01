@@ -27,11 +27,9 @@ public class EruptInternalNotice extends AbstractNoticeChannel {
 
     @Override
     public void send(EruptUser eruptUser, NoticeMessage noticeMessage) {
-        for (EruptWsSessionModel model : webSocketService.getAllSession()) {
-            if (model.getMetaUserinfo().getId().equals(eruptUser.getId())) {
-                webSocketService.send(model, SocketCommand.JS,
-                        "window.eruptNotice(" + noticeMessage.getId() + ",`" + noticeMessage.getTitle() + "`, `" + noticeMessage.getContent() + "`)");
-            }
+        for (EruptWsSessionModel model : webSocketService.getSessionsByUser(eruptUser.getId())) {
+            webSocketService.send(model, SocketCommand.JS,
+                    "window.eruptNotice(" + noticeMessage.getId() + ",`" + noticeMessage.getTitle() + "`, `" + noticeMessage.getContent() + "`)");
         }
     }
 

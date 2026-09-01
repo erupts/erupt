@@ -2,7 +2,6 @@ package xyz.erupt.webscoket.service;
 
 import jakarta.annotation.Resource;
 import jakarta.websocket.Session;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -29,16 +28,20 @@ public class EruptWebSocketService {
         return EruptChannelManager.getAllSession();
     }
 
+    public List<EruptWsSessionModel> getSessionsByUser(Long userId) {
+        return EruptChannelManager.getSessionsByUser(userId);
+    }
+
     public EruptWsSessionModel getCurrentSession() {
         return Optional.ofNullable(EruptChannelManager.getSession(eruptContextService.getCurrentToken())).orElseThrow(() ->
                 new EruptWebApiRuntimeException("not found websocket session")
         );
     }
 
-    @SneakyThrows
     public <T> void send(EruptWsSessionModel eruptWsSessionModel, SocketCommand command, T data) {
+        String payload = GsonFactory.getGson().toJson(Arrays.asList(command.getCommand(), data));
         for (Session session : eruptWsSessionModel.getSessions()) {
-            session.getBasicRemote().sendText(GsonFactory.getGson().toJson(Arrays.asList(command.getCommand(), data)));
+            EruptChannelManager.send(session, payload);
         }
     }
 
