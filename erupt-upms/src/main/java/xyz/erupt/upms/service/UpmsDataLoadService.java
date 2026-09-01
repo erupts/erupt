@@ -7,6 +7,8 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.MenuTypeEnum;
@@ -97,7 +99,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
                                 if (first) runnable.run();
                                 break;
                         }
-                    })
+                    }, this::runAfterCommit)
             ));
         }
         new ProjectUtil().projectStartLoaded("erupt-upms-user", first -> {
@@ -117,7 +119,22 @@ public class UpmsDataLoadService implements CommandLineRunner {
                     eruptDao.persistIfNotExist(EruptUser.class, eruptUser, LambdaSee.field(EruptUser::getAccount), eruptUser.getAccount());
                 }
             }
-        });
+        }, this::runAfterCommit);
+    }
+
+    // The seeding above runs inside the run() transaction while the .loaded marker is a plain file
+    // write; writing it only after commit keeps a rollback from leaving a marker without its data
+    private void runAfterCommit(Runnable task) {
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    task.run();
+                }
+            });
+        } else {
+            task.run();
+        }
     }
 
 }
