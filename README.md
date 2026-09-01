@@ -113,8 +113,21 @@ mvn spring-boot:run
 
 Paged. Searchable. Exportable. Role-gated. Add a field, refresh, it shows up.
 
+### D — STARTER
+
+[start.erupt.xyz](https://start.erupt.xyz) — pick modules in your browser, download a ready-to-run project. No local setup.
+
+### E — AI SKILL
+
+[skill.erupt.xyz](https://skill.erupt.xyz) — build a full admin panel with **zero development background**. Made for non-engineering roles (ops, HR, product, finance): describe your system in one sentence inside Claude Code or a similar AI agent, and the skill handles the rest — JDK, database (H2), login, CRUD, search, Excel, permissions all included. Only entities get written; UI and APIs render from annotations at runtime, so it costs ~1/20 the tokens of writing from scratch.
+
+```bash
+git clone https://github.com/plinian/erupt-skill.git ~/.claude/skills/erupt-admin
+```
+
+Then tell Claude Code: `"Build me a CRM admin panel"` → running system.
+
 > `NO INSTALL` — [demo.erupt.xyz](https://demo.erupt.xyz) (`guest / guest`)
-> `STARTER` — [start.erupt.xyz](https://start.erupt.xyz) generates a project in your browser
 > `FULL GUIDE` — [docs.erupt.xyz/guide/quick-start](https://docs.erupt.xyz/guide/quick-start)
 
 <details>

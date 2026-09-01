@@ -113,8 +113,21 @@ mvn spring-boot:run
 
 分页、搜索、导出、行列权限，全都有了。加一个字段，刷新，立刻出现。
 
+### D — 在线生成器
+
+[start.erupt.xyz](https://start.erupt.xyz) —— 在浏览器里勾选模块，下载即可运行的项目。本地零配置。
+
+### E — AI SKILL
+
+[skill.erupt.xyz](https://skill.erupt.xyz) —— **无任何开发背景**也能构建完整管理后台，专为非研发岗位（运营、HR、产品、财务）设计：在 Claude Code 等 AI 工具里用一句话描述你要的系统，其余全部由技能搞定 —— JDK、数据库（H2）、登录、增删改查、搜索、Excel、权限开箱即用。只写实体类，UI 和接口由注解在运行时渲染，token 消耗仅为从零手写的 1/20。
+
+```bash
+git clone https://github.com/plinian/erupt-skill.git ~/.claude/skills/erupt-admin
+```
+
+然后对 Claude Code 说：`"帮我生成一个 CRM 管理后台"` → 系统直接跑起来。
+
 > `零安装` —— [demo.erupt.xyz](https://demo.erupt.xyz)（`guest / guest`）
-> `起手项目` —— [start.erupt.xyz](https://start.erupt.xyz) 在浏览器里直接生成
 > `完整教程` —— [docs.erupt.xyz/guide/quick-start](https://docs.erupt.xyz/guide/quick-start)
 
 <details>
