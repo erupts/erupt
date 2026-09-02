@@ -314,7 +314,15 @@ Source-code delivery · one-time purchase · perpetual use.
 
 ---
 
-## 07 · CONTRIBUTING
+## 07 · TELEMETRY
+
+Erupt reports anonymous usage statistics — erupt version, installed modules, JDK, OS and database type, Spring Boot version, timezone — to guide compatibility and roadmap decisions. It never sends business data, credentials, hostnames, or anything IP-derived, and requests fail silently without ever blocking startup.
+
+Opt out with `erupt.telemetry.enabled: false` or the `ERUPT_TELEMETRY_DISABLED=1` environment variable; CI is skipped automatically.
+
+---
+
+## 08 · CONTRIBUTING
 
 Free and open source. Code, bug reports, ideas, use cases, blog posts — all welcome.
 
@@ -334,7 +342,7 @@ Read the [contribution guidelines](./.github/CONTRIBUTING.md), then open an [iss
 
 ---
 
-## 08 · LICENSE
+## 09 · LICENSE
 
 ![license.svg](readme/license.svg)
 

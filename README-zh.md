@@ -314,7 +314,15 @@ Claw 与 AI Harness 共享同一套基于 Role 的 Tool 安全机制 —— 非�
 
 ---
 
-## 07 · 参与贡献
+## 07 · 匿名统计
+
+Erupt 会上报匿名使用统计 —— erupt 版本、已装模块、JDK、操作系统与数据库类型、Spring Boot 版本、时区 —— 用于指导兼容性与路线图决策。绝不上报业务数据、凭据、主机名或任何可定位身份的信息，请求失败静默处理，绝不阻塞启动。
+
+关闭：`erupt.telemetry.enabled: false` 或环境变量 `ERUPT_TELEMETRY_DISABLED=1`；CI 环境自动跳过。
+
+---
+
+## 08 · 参与贡献
 
 免费且开源。提交代码、反馈缺陷、交流想法、分享案例、撰写博客 —— 一切贡献都欢迎。
 
@@ -334,7 +342,7 @@ Claw 与 AI Harness 共享同一套基于 Role 的 Tool 安全机制 —— 非�
 
 ---
 
-## 08 · LICENSE
+## 09 · LICENSE
 
 [Apache 2.0](./LICENSE) —— 免费 · 开源 · 可商用 · 可二次开发。
 
