@@ -20,10 +20,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.Dynamic;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
@@ -219,6 +216,13 @@ public class EruptUtil {
         return tags;
     }
 
+    public static List<String> getMentionList(TextareaType textareaType, Object data) {
+        List<String> mentions = new ArrayList<>(Arrays.asList(textareaType.mentions()));
+        Stream.of(textareaType.mentionFetchHandler()).filter(clazz -> !clazz.isInterface())
+                .forEach(clazz -> mentions.addAll(EruptSpringUtil.getBean(clazz).fetchTags(data, textareaType.mentionFetchHandlerParams())));
+        return mentions;
+    }
+
     public static Object convertObjectType(EruptFieldModel eruptFieldModel, Object obj) {
         if (null == obj) return null;
         if (null == eruptFieldModel) {
@@ -377,6 +381,12 @@ public class EruptUtil {
                                     return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.incorrect_format"));
                                 }
                             }
+                        }
+                        break;
+                    case TEXTAREA:
+                        // the frontend maxlength can be bypassed, so enforce it here as well
+                        if (value.getAsString().length() > edit.textareaType().length()) {
+                            return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.data.limit_length"));
                         }
                         break;
                 }

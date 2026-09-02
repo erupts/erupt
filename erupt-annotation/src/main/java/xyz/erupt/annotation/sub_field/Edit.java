@@ -73,6 +73,9 @@ public @interface Edit {
     @Match("#item.type().toString()=='INPUT'")
     InputType inputType() default @InputType;
 
+    @Match("#item.type().toString()=='TEXTAREA'")
+    TextareaType textareaType() default @TextareaType;
+
     @Match("#item.type().toString()=='NUMBER'")
     NumberType numberType() default @NumberType;
 

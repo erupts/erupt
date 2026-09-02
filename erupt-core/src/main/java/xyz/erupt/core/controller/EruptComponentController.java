@@ -97,6 +97,19 @@ public class EruptComponentController {
         return EruptUtil.getTagList(fieldModel.getEruptField().edit().tagsType(), o);
     }
 
+    //Gets the TEXTAREA component mention suggestions
+    @PostMapping("/textarea-mention/{erupt}/{field}")
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    public List<String> textareaMention(@PathVariable("erupt") String eruptName,
+                                        @PathVariable("field") String field,
+                                        @RequestBody JsonObject data
+    ) {
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
+        Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
+        return EruptUtil.getMentionList(fieldModel.getEruptField().edit().textareaType(), o);
+    }
+
     //BUTTON component click event, passes all current form values to the handler
     @SuppressWarnings("unchecked")
     @PostMapping("/button/{erupt}/{field}")
