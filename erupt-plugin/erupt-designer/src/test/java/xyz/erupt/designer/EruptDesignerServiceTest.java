@@ -91,4 +91,25 @@ public class EruptDesignerServiceTest {
         assertEquals(2, ((java.util.List<?>) typeField.getComponentValue()).size());
     }
 
+    @Test
+    public void textareaType() throws Exception {
+        DesignerForm form = new DesignerForm();
+        form.setClassName("Note");
+        form.setErupt(gson.fromJson("{name:'Note'}", JsonObject.class));
+        form.setFields(Arrays.asList(
+                field("content", "{title:'Content'}",
+                        "{title:'Content', type:'TEXTAREA', textareaType:{length:100}}")
+        ));
+
+        Edit edit = service.toEruptModel(form).getEruptFieldMap().get("content").getEruptField().edit();
+        assertEquals(EditType.TEXTAREA, edit.type());
+        assertEquals(100, edit.textareaType().length());
+        assertEquals(3, edit.textareaType().minRows()); // untouched member falls back to default
+
+        // what the frontend consumes: textareaType must survive the @Match filter and serialize
+        JsonObject contentJson = service.preview(form).getEruptModel().getEruptFieldModels().stream()
+                .filter(it -> "content".equals(it.getFieldName())).findFirst().orElseThrow().getEruptFieldJson();
+        assertEquals(100, contentJson.getAsJsonObject("edit").getAsJsonObject("textareaType").get("length").getAsInt());
+    }
+
 }
