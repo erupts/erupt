@@ -213,6 +213,39 @@
             text-transform: uppercase;
         }
 
+        /* ---- dark theme (html.dark) ---- */
+        html.dark .preloader {
+            background: #141414;
+            --pl-accent: #1677ff;
+        }
+
+        html.dark .pl-brand {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        html.dark #preloader-tip {
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        html.dark.brutalist-theme .preloader {
+            background-color: #141414;
+            --pl-accent: #f5f5f0;
+        }
+
+        html.dark.brutalist-theme .pl-ring {
+            --pl-ring-color: #f5f5f0 !important;
+        }
+
+        html.dark.brutalist-theme .pl-core,
+        html.dark.brutalist-theme .pl-brand {
+            background: none;
+            color: #f5f5f0;
+        }
+
+        html.dark.brutalist-theme .pl-core {
+            background: #f5f5f0;
+        }
+
         .preloader-hidden-add         { opacity: 1; display: flex; }
         .preloader-hidden-add-active  { opacity: 0; }
         .preloader-hidden             { display: none; }
@@ -221,7 +254,7 @@
             .pl-ring, .pl-core, .pl-brand, .pl-content, .preloader::before { animation: none; }
         }
     </style>
-<style>@-webkit-keyframes fa-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0)}to{-webkit-transform:rotate(359deg);transform:rotate(359deg)}}html{--ant-primary-color:#1890ff;--ant-primary-color-hover:#40a9ff;--ant-primary-color-active:#096dd9;--ant-primary-color-outline:rgba(24, 144, 255, .2);--ant-primary-1:#e6f7ff;--ant-primary-2:#bae7ff;--ant-primary-3:#91d5ff;--ant-primary-4:#69c0ff;--ant-primary-5:#40a9ff;--ant-primary-6:#1890ff;--ant-primary-7:#096dd9;--ant-primary-color-deprecated-pure: ;--ant-primary-color-deprecated-l-35:#cbe6ff;--ant-primary-color-deprecated-l-20:#7ec1ff;--ant-primary-color-deprecated-t-20:#46a6ff;--ant-primary-color-deprecated-t-50:#8cc8ff;--ant-primary-color-deprecated-f-12:rgba(24, 144, 255, .12);--ant-primary-color-active-deprecated-f-30:rgba(230, 247, 255, .3);--ant-primary-color-active-deprecated-d-02:#dcf4ff;--ant-success-color:#52c41a;--ant-success-color-hover:#73d13d;--ant-success-color-active:#389e0d;--ant-success-color-outline:rgba(82, 196, 26, .2);--ant-success-color-deprecated-bg:#f6ffed;--ant-success-color-deprecated-border:#b7eb8f;--ant-error-color:#ff4d4f;--ant-error-color-hover:#ff7875;--ant-error-color-active:#d9363e;--ant-error-color-outline:rgba(255, 77, 79, .2);--ant-error-color-deprecated-bg:#fff2f0;--ant-error-color-deprecated-border:#ffccc7;--ant-warning-color:#faad14;--ant-warning-color-hover:#ffc53d;--ant-warning-color-active:#d48806;--ant-warning-color-outline:rgba(250, 173, 20, .2);--ant-warning-color-deprecated-bg:#fffbe6;--ant-warning-color-deprecated-border:#ffe58f;--ant-info-color:#1890ff;--ant-info-color-deprecated-bg:#e6f7ff;--ant-info-color-deprecated-border:#91d5ff}body,html{width:100%;height:100%}*,:after,:before{box-sizing:border-box}html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-ms-overflow-style:scrollbar;-webkit-tap-highlight-color:transparent}html{--antd-wave-shadow-color:var(--ant-primary-color);--scroll-bar:0}body{counter-reset:katexEqnNo mmlEqnNo}html,body{width:100%;height:100%}*,*:before,*:after{box-sizing:border-box}html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-ms-overflow-style:scrollbar;-webkit-tap-highlight-color:rgba(0,0,0,0)}body{margin:0;color:#000000d9;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";font-variant:tabular-nums;line-height:1.5715;background-color:#fff;font-feature-settings:"tnum"}b{font-weight:bolder}html{--antd-wave-shadow-color:var(--ant-primary-color);--scroll-bar:0}body{scrollbar-color:rgba(0,0,0,.3) transparent;scrollbar-width:thin}body::-webkit-scrollbar{width:6px;height:6px}body::-webkit-scrollbar-track{box-shadow:inset 0 0 6px #0000004d}body::-webkit-scrollbar-thumb{background-color:transparent;outline:1px solid #333}html{touch-action:manipulation;direction:ltr;height:100%}html,body,app-root{height:100%}body{color:#000000d9;background-color:var(--alain-default-content-bg, #f5f7fa)}html{--ant-primary-color:#1890ff;--ant-primary-color-hover:#40a9ff;--ant-primary-color-active:#096dd9;--ant-primary-color-outline:rgba(24, 144, 255, .2);--ant-primary-1:#e6f7ff;--ant-primary-2:#bae7ff;--ant-primary-3:#91d5ff;--ant-primary-4:#69c0ff;--ant-primary-5:#40a9ff;--ant-primary-6:#1890ff;--ant-primary-7:#096dd9;--ant-primary-color-deprecated-pure: ;--ant-primary-color-deprecated-l-35:#cbe6ff;--ant-primary-color-deprecated-l-20:#7ec1ff;--ant-primary-color-deprecated-t-20:#46a6ff;--ant-primary-color-deprecated-t-50:#8cc8ff;--ant-primary-color-deprecated-f-12:rgba(24, 144, 255, .12);--ant-primary-color-active-deprecated-f-30:rgba(230, 247, 255, .3);--ant-primary-color-active-deprecated-d-02:#dcf4ff;--ant-success-color:#52c41a;--ant-success-color-hover:#73d13d;--ant-success-color-active:#389e0d;--ant-success-color-outline:rgba(82, 196, 26, .2);--ant-success-color-deprecated-bg:#f6ffed;--ant-success-color-deprecated-border:#b7eb8f;--ant-error-color:#ff4d4f;--ant-error-color-hover:#ff7875;--ant-error-color-active:#d9363e;--ant-error-color-outline:rgba(255, 77, 79, .2);--ant-error-color-deprecated-bg:#fff2f0;--ant-error-color-deprecated-border:#ffccc7;--ant-warning-color:#faad14;--ant-warning-color-hover:#ffc53d;--ant-warning-color-active:#d48806;--ant-warning-color-outline:rgba(250, 173, 20, .2);--ant-warning-color-deprecated-bg:#fffbe6;--ant-warning-color-deprecated-border:#ffe58f;--ant-info-color:#1890ff;--ant-info-color-deprecated-bg:#e6f7ff;--ant-info-color-deprecated-border:#91d5ff}html{--grey-1:#fff;--grey-2:#fafafa;--grey-3:#f5f5f5;--grey-4:#f0f0f0;--grey-5:#d9d9d9;--grey-6:#bfbfbf;--grey-7:#8c8c8c;--grey-8:#595959;--grey-9:#434343;--grey-10:#262626;--grey-11:#1f1f1f;--grey-12:#141414;--grey-13:#000}*{scrollbar-width:thin;scrollbar-color:#888888 #f1f1f1}html{--ant-border-color-split:#c9c9c9}@media print{*{font-family:Heiti SC,-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\5fae\8f6f\96c5\9ed1,Helvetica Neue,Helvetica,Arial,sans-serif!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}@page{size:A4 landscape;margin:10mm}}</style><link rel="stylesheet" href="styles-4JOQC7Y3.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles-4JOQC7Y3.css"></noscript></head>
+<style>@-webkit-keyframes fa-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0)}to{-webkit-transform:rotate(359deg);transform:rotate(359deg)}}html{--ant-primary-color:#1890ff;--ant-primary-color-hover:#40a9ff;--ant-primary-color-active:#096dd9;--ant-primary-color-outline:rgba(24, 144, 255, .2);--ant-primary-1:#e6f7ff;--ant-primary-2:#bae7ff;--ant-primary-3:#91d5ff;--ant-primary-4:#69c0ff;--ant-primary-5:#40a9ff;--ant-primary-6:#1890ff;--ant-primary-7:#096dd9;--ant-primary-color-deprecated-pure: ;--ant-primary-color-deprecated-l-35:#cbe6ff;--ant-primary-color-deprecated-l-20:#7ec1ff;--ant-primary-color-deprecated-t-20:#46a6ff;--ant-primary-color-deprecated-t-50:#8cc8ff;--ant-primary-color-deprecated-f-12:rgba(24, 144, 255, .12);--ant-primary-color-active-deprecated-f-30:rgba(230, 247, 255, .3);--ant-primary-color-active-deprecated-d-02:#dcf4ff;--ant-success-color:#52c41a;--ant-success-color-hover:#73d13d;--ant-success-color-active:#389e0d;--ant-success-color-outline:rgba(82, 196, 26, .2);--ant-success-color-deprecated-bg:#f6ffed;--ant-success-color-deprecated-border:#b7eb8f;--ant-error-color:#ff4d4f;--ant-error-color-hover:#ff7875;--ant-error-color-active:#d9363e;--ant-error-color-outline:rgba(255, 77, 79, .2);--ant-error-color-deprecated-bg:#fff2f0;--ant-error-color-deprecated-border:#ffccc7;--ant-warning-color:#faad14;--ant-warning-color-hover:#ffc53d;--ant-warning-color-active:#d48806;--ant-warning-color-outline:rgba(250, 173, 20, .2);--ant-warning-color-deprecated-bg:#fffbe6;--ant-warning-color-deprecated-border:#ffe58f;--ant-info-color:#1890ff;--ant-info-color-deprecated-bg:#e6f7ff;--ant-info-color-deprecated-border:#91d5ff}body,html{width:100%;height:100%}*,:after,:before{box-sizing:border-box}html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-ms-overflow-style:scrollbar;-webkit-tap-highlight-color:transparent}html{--antd-wave-shadow-color:var(--ant-primary-color);--scroll-bar:0}body{counter-reset:katexEqnNo mmlEqnNo}html,body{width:100%;height:100%}*,*:before,*:after{box-sizing:border-box}html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-ms-overflow-style:scrollbar;-webkit-tap-highlight-color:rgba(0,0,0,0)}body{margin:0;color:#000000d9;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";font-variant:tabular-nums;line-height:1.5715;background-color:#fff;font-feature-settings:"tnum"}b{font-weight:bolder}html{--antd-wave-shadow-color:var(--ant-primary-color);--scroll-bar:0}body{scrollbar-color:rgba(0,0,0,.3) transparent;scrollbar-width:thin}body::-webkit-scrollbar{width:6px;height:6px}body::-webkit-scrollbar-track{box-shadow:inset 0 0 6px #0000004d}body::-webkit-scrollbar-thumb{background-color:transparent;outline:1px solid #333}html{touch-action:manipulation;direction:ltr;height:100%}html,body,app-root{height:100%}body{color:#000000d9;background-color:var(--alain-default-content-bg, #f5f7fa)}html{--erupt-bg-layout:#f0f2f5;--erupt-bg-container:#fff;--erupt-bg-elevated:#fff;--erupt-bg-spotlight:#fafafa;--erupt-text:rgba(0, 0, 0, .88);--erupt-text-secondary:rgba(0, 0, 0, .65);--erupt-text-tertiary:rgba(0, 0, 0, .45);--erupt-text-quaternary:rgba(0, 0, 0, .25);--erupt-border:#d9d9d9;--ant-border-color-split:#c9c9c9;--erupt-fill:rgba(0, 0, 0, .11);--erupt-fill-secondary:rgba(0, 0, 0, .06);--erupt-fill-tertiary:rgba(0, 0, 0, .04);--erupt-scrollbar-track:#f1f1f1;--erupt-scrollbar-thumb:#888;--erupt-scrollbar-thumb-hover:#767676;--erupt-header-bg:#fff;--erupt-header-text:rgba(0, 0, 0, .88);--erupt-header-text-secondary:rgba(0, 0, 0, .65);--erupt-header-fill:rgba(0, 0, 0, .06);--erupt-header-fill-strong:rgba(0, 0, 0, .11);--erupt-header-active-bg:var(--ant-primary-1);--erupt-header-active-text:var(--ant-primary-color);--erupt-header-border:var(--ant-border-color-split)}html{--ant-primary-color:#1890ff;--ant-primary-color-hover:#40a9ff;--ant-primary-color-active:#096dd9;--ant-primary-color-outline:rgba(24, 144, 255, .2);--ant-primary-1:#e6f7ff;--ant-primary-2:#bae7ff;--ant-primary-3:#91d5ff;--ant-primary-4:#69c0ff;--ant-primary-5:#40a9ff;--ant-primary-6:#1890ff;--ant-primary-7:#096dd9;--ant-primary-color-deprecated-pure: ;--ant-primary-color-deprecated-l-35:#cbe6ff;--ant-primary-color-deprecated-l-20:#7ec1ff;--ant-primary-color-deprecated-t-20:#46a6ff;--ant-primary-color-deprecated-t-50:#8cc8ff;--ant-primary-color-deprecated-f-12:rgba(24, 144, 255, .12);--ant-primary-color-active-deprecated-f-30:rgba(230, 247, 255, .3);--ant-primary-color-active-deprecated-d-02:#dcf4ff;--ant-success-color:#52c41a;--ant-success-color-hover:#73d13d;--ant-success-color-active:#389e0d;--ant-success-color-outline:rgba(82, 196, 26, .2);--ant-success-color-deprecated-bg:#f6ffed;--ant-success-color-deprecated-border:#b7eb8f;--ant-error-color:#ff4d4f;--ant-error-color-hover:#ff7875;--ant-error-color-active:#d9363e;--ant-error-color-outline:rgba(255, 77, 79, .2);--ant-error-color-deprecated-bg:#fff2f0;--ant-error-color-deprecated-border:#ffccc7;--ant-warning-color:#faad14;--ant-warning-color-hover:#ffc53d;--ant-warning-color-active:#d48806;--ant-warning-color-outline:rgba(250, 173, 20, .2);--ant-warning-color-deprecated-bg:#fffbe6;--ant-warning-color-deprecated-border:#ffe58f;--ant-info-color:#1890ff;--ant-info-color-deprecated-bg:#e6f7ff;--ant-info-color-deprecated-border:#91d5ff}html{--grey-1:#fff;--grey-2:#fafafa;--grey-3:#f5f5f5;--grey-4:#f0f0f0;--grey-5:#d9d9d9;--grey-6:#bfbfbf;--grey-7:#8c8c8c;--grey-8:#595959;--grey-9:#434343;--grey-10:#262626;--grey-11:#1f1f1f;--grey-12:#141414;--grey-13:#000}*{scrollbar-width:thin;scrollbar-color:var(--erupt-scrollbar-thumb, #888888) var(--erupt-scrollbar-track, #f1f1f1)}@media print{*{font-family:Heiti SC,-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\5fae\8f6f\96c5\9ed1,Helvetica Neue,Helvetica,Arial,sans-serif!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}@page{size:A4 landscape;margin:10mm}}</style><link rel="stylesheet" href="styles-5PGJFLGH.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles-5PGJFLGH.css"></noscript></head>
 <body>
 <div class="preloader">
     <div class="pl-content">
@@ -256,6 +289,70 @@
         if (_nbPref === "true") {
             document.documentElement.classList.add("brutalist-theme");
         }
+        // Theme bundles: dark and compact are compiled as separate lazy
+        // stylesheets; using both loads the merged compact-dark bundle.
+        // One <link> is swapped between the three — shared with the settings
+        // drawer via window.eruptApply*Theme so the logic lives in one place.
+        // The <link> is created once, pre-bootstrap, and never removed: it must
+        // stay BEFORE Angular's runtime-injected component <style> tags, so the
+        // cascade order is identical whether a theme was on at load or toggled
+        // later (appending it at runtime let the bundle's @delon defaults beat
+        // equal-specificity component overrides, e.g. the reuse-tab bar).
+        var _themeLink = document.createElement("link");
+        _themeLink.id = "site-theme-style";
+        _themeLink.rel = "stylesheet";
+        _themeLink.disabled = true;
+        document.head.appendChild(_themeLink);
+        window.eruptSyncThemeBundles = function () {
+            var cls = document.documentElement.classList;
+            var dark = cls.contains("dark");
+            var compact = cls.contains("compact");
+            var href = dark && compact ? "style.compact-dark.css"
+                : dark ? "style.dark.css"
+                    : compact ? "style.compact.css" : null;
+            if (!href) {
+                _themeLink.disabled = true;
+                return;
+            }
+            href += "?_=" + __t__;
+            if (_themeLink.getAttribute("href") !== href) {
+                _themeLink.setAttribute("href", href);
+            }
+            _themeLink.disabled = false;
+        };
+        window.eruptApplyDarkTheme = function (dark) {
+            document.documentElement.classList.toggle("dark", dark);
+            window.eruptSyncThemeBundles();
+        };
+        window.eruptApplyCompactTheme = function (compact) {
+            document.documentElement.classList.toggle("compact", compact);
+            window.eruptSyncThemeBundles();
+        };
+        // dark-theme: "true" | "false" | "auto" (follow the OS color scheme)
+        var _darkPref = localStorage.getItem("dark-theme");
+        var _mqDark = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+        if (_darkPref === "true" || (_darkPref === "auto" && _mqDark && _mqDark.matches)) {
+            window.eruptApplyDarkTheme(true);
+        }
+        if (_mqDark && _mqDark.addEventListener) {
+            _mqDark.addEventListener("change", function (e) {
+                if (localStorage.getItem("dark-theme") === "auto") {
+                    window.eruptApplyDarkTheme(e.matches);
+                }
+            });
+        }
+        if (localStorage.getItem("compact-theme") === "true") {
+            window.eruptApplyCompactTheme(true);
+        }
+        // Dark sidebar in light mode — pure class toggle, styles in tokens.less
+        if (localStorage.getItem("aside-dark") === "true") {
+            document.documentElement.classList.add("aside-dark");
+        }
+        // A user-picked theme color (settings drawer) tints the preloader too.
+        var _tcPref = localStorage.getItem("theme-color");
+        if (_tcPref) {
+            _preloaderEl.style.setProperty("--pl-accent", _tcPref);
+        }
         var _colorCheckTimer = setInterval(function () {
             if (window.eruptSiteConfig !== undefined) {
                 clearInterval(_colorCheckTimer);
@@ -263,7 +360,16 @@
                 if (_nbPref === null && window.eruptSiteConfig.brutalistTheme) {
                     document.documentElement.classList.add("brutalist-theme");
                 }
-                if (window.eruptSiteConfig.theme && window.eruptSiteConfig.theme.primaryColor) {
+                if (_darkPref === null && window.eruptSiteConfig.darkTheme) {
+                    window.eruptApplyDarkTheme(true);
+                }
+                if (localStorage.getItem("compact-theme") === null && window.eruptSiteConfig.compactTheme) {
+                    window.eruptApplyCompactTheme(true);
+                }
+                if (localStorage.getItem("aside-dark") === null && window.eruptSiteConfig.asideDark) {
+                    document.documentElement.classList.add("aside-dark");
+                }
+                if (_tcPref === null && window.eruptSiteConfig.theme && window.eruptSiteConfig.theme.primaryColor) {
                     _preloaderEl.style.setProperty("--pl-accent", window.eruptSiteConfig.theme.primaryColor);
                 }
                 if (_brandEl) {
@@ -287,5 +393,5 @@
 </div>
 <![endif]-->
 <app-root></app-root>
-<link rel="modulepreload" href="chunk-F2T6AMPB.js"><link rel="modulepreload" href="chunk-3KBMUHR2.js"><link rel="modulepreload" href="chunk-5GMV77DJ.js"><link rel="modulepreload" href="chunk-IP72IKPT.js"><link rel="modulepreload" href="chunk-MCXKV7N2.js"><link rel="modulepreload" href="chunk-C26JPOMN.js"><link rel="modulepreload" href="chunk-GRFAS7LX.js"><link rel="modulepreload" href="chunk-OZTEH5Z3.js"><link rel="modulepreload" href="chunk-YWJAWARJ.js"><script src="polyfills-B7LGQ2G6.js" type="module"></script><script src="main-VPANI2NP.js" type="module"></script></body>
+<link rel="modulepreload" href="chunk-5M47H7BN.js"><link rel="modulepreload" href="chunk-VLEKRS73.js"><link rel="modulepreload" href="chunk-5GMV77DJ.js"><link rel="modulepreload" href="chunk-DHMCSD6M.js"><link rel="modulepreload" href="chunk-BO3BKEXD.js"><link rel="modulepreload" href="chunk-C26JPOMN.js"><link rel="modulepreload" href="chunk-H7AFU6Y3.js"><link rel="modulepreload" href="chunk-OZTEH5Z3.js"><link rel="modulepreload" href="chunk-YWJAWARJ.js"><script src="polyfills-B7LGQ2G6.js" type="module"></script><script src="main-EXD53JEK.js" type="module"></script></body>
 </html>
