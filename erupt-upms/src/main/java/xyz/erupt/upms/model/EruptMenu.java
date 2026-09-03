@@ -37,7 +37,7 @@ import java.time.LocalDateTime;
 @Erupt(
         name = "Menu Management",
         orderBy = "EruptMenu.sort asc",
-        tree = @Tree(pid = "parentMenu.id", expandLevel = 5),
+        tree = @Tree(pid = "parentMenu.id", expandLevel = 1),
         dataProxy = EruptMenuService.class,
         power = @Power(copy = false)
 )
