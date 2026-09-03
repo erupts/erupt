@@ -49,7 +49,7 @@ public class EruptReportAutoConfiguration implements EruptModule {
 
     @Override
     public void run() {
-        MenuTypeEnum.addMenuType(new VLModel("report", "Chart Report"));
+        MenuTypeEnum.addMenuType(new VLModel("bi", "Analytics Report","Report Code"));
     }
 
     @Override
