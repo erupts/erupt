@@ -69,7 +69,7 @@ public class EruptLoginLog extends BaseModel {
 
     @Dimension(title = "IP Region", sql = "region")
     @EruptField(
-            views = @View(title = "IP Source", desc = "Country | Region | Province | City | ISP", width = "250px", template = "value&&value.replace(/\\|/g,' | ')"),
+            views = @View(title = "IP Source", desc = "Country | Province | City | ISP | Country Code", width = "300px", template = "value&&value.replace(/\\|/g,' | ')"),
             edit = @Edit(title = "IP Source", search = @Search)
     )
     private String region;

@@ -1,16 +1,24 @@
 package xyz.erupt.upms.util;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.lionsoul.ip2region.DbConfig;
-import org.lionsoul.ip2region.DbSearcher;
-import org.lionsoul.ip2region.Util;
-import org.springframework.util.StreamUtils;
+import org.lionsoul.ip2region.xdb.Header;
+import org.lionsoul.ip2region.xdb.Searcher;
+import org.lionsoul.ip2region.xdb.Version;
+import xyz.erupt.upms.prop.EruptUpmsProp;
 
-import java.io.IOException;
+import java.io.File;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author YuePeng
@@ -58,32 +66,105 @@ public class IpUtil {
         }
     }
 
-    private static byte[] fileByte;
+    // ---- ip2region (xdb v2 format, vector-index cached, segments read from disk on demand) ----
 
-    static {
-        try (InputStream input = IpUtil.class.getClassLoader().getResourceAsStream("ip2region.db")) {
-            if (null == input) {
-                throw new RuntimeException("ip2region.db not found");
+    private static final long DOWNLOAD_RETRY_INTERVAL_MS = Duration.ofMinutes(10).toMillis();
+
+    private static volatile EruptUpmsProp.Ip2Region prop;
+
+    private static volatile Searcher searcher;
+
+    // Set when the xdb file exists but cannot be used; avoids re-parsing a broken file on every lookup
+    private static volatile boolean broken;
+
+    private static final AtomicBoolean downloading = new AtomicBoolean();
+
+    private static volatile long nextDownloadAt;
+
+    public static void init(EruptUpmsProp.Ip2Region ip2Region) {
+        prop = ip2Region;
+    }
+
+    /**
+     * Resolve the region of an IP address, e.g. {@code China|0|Beijing|Beijing|Aliyun}.
+     * Returns an empty string when the xdb is disabled, not yet available, or the IP cannot be resolved.
+     */
+    public static String getCityInfo(String ip) {
+        if (ip == null || ip.isEmpty()) return "";
+        Searcher s = searcher();
+        if (s == null) return "";
+        try {
+            // Searcher is not thread safe (shared RandomAccessFile); lookups are a few page reads so a lock is cheap
+            synchronized (s) {
+                return s.search(ip);
             }
-            fileByte = StreamUtils.copyToByteArray(input);
-        } catch (IOException e) {
-            log.warn("ip2region load error", e);
+        } catch (Exception e) {
+            log.debug("ip2region search failed for {}: {}", ip, e.getMessage());
+            return "";
         }
     }
 
-    @SneakyThrows
-    @SuppressWarnings("StringConcatenationArgumentToLogCall")
-    public static String getCityInfo(String ip) {
-        if (!Util.isIpAddress(ip)) {
-            log.warn("Error: Invalid ip address: {}", ip);
-            return "";
+    private static Searcher searcher() {
+        if (searcher != null) return searcher;
+        if (prop == null || !prop.isEnable() || broken) return null;
+        synchronized (IpUtil.class) {
+            if (searcher != null) return searcher;
+            File xdb = new File(prop.getPath());
+            if (!xdb.isFile()) {
+                download(xdb);
+                return null;
+            }
+            try {
+                Header header = Searcher.loadHeaderFromFile(xdb);
+                Searcher.verify(header, xdb.length());
+                Version version = Version.fromHeader(header);
+                searcher = Searcher.newWithVectorIndex(version, xdb, Searcher.loadVectorIndexFromFile(xdb));
+                log.info("ip2region loaded {} ({})", xdb.getAbsolutePath(), version.name);
+            } catch (Exception e) {
+                broken = true;
+                log.warn("ip2region xdb unusable, region lookup disabled: {} ({})", xdb.getAbsolutePath(), e.getMessage());
+            }
+            return searcher;
         }
-        try {
-            return new DbSearcher(new DbConfig(), fileByte).memorySearch(ip).getRegion();
-        } catch (Exception e) {
-            log.warn("ip2region error " + ip, e);
-            return null;
-        }
+    }
+
+    private static void download(File xdb) {
+        String url = prop.getDownloadUrl();
+        if (url == null || url.isEmpty() || System.currentTimeMillis() < nextDownloadAt) return;
+        if (!downloading.compareAndSet(false, true)) return;
+        Thread thread = new Thread(() -> {
+            Path target = xdb.toPath().toAbsolutePath();
+            Path tmp = target.resolveSibling(target.getFileName() + ".tmp");
+            try {
+                Files.createDirectories(target.getParent());
+                log.info("ip2region xdb missing, downloading {} -> {}", url, target);
+                HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL)
+                        .connectTimeout(Duration.ofSeconds(15)).build();
+                HttpRequest request = HttpRequest.newBuilder(URI.create(url)).timeout(Duration.ofMinutes(5)).GET().build();
+                HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+                if (response.statusCode() != 200) {
+                    throw new IllegalStateException("HTTP " + response.statusCode());
+                }
+                try (InputStream in = response.body()) {
+                    Files.copy(in, tmp, StandardCopyOption.REPLACE_EXISTING);
+                }
+                // Reject truncated / non-xdb downloads before publishing the file
+                Searcher.verifyFromFile(tmp.toFile());
+                Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+                log.info("ip2region xdb ready {}", target);
+            } catch (Exception e) {
+                nextDownloadAt = System.currentTimeMillis() + DOWNLOAD_RETRY_INTERVAL_MS;
+                log.warn("ip2region xdb download failed, retry in 10 minutes ({}): {}", url, e.getMessage());
+                try {
+                    Files.deleteIfExists(tmp);
+                } catch (Exception ignored) {
+                }
+            } finally {
+                downloading.set(false);
+            }
+        }, "ip2region-download");
+        thread.setDaemon(true);
+        thread.start();
     }
 
 }

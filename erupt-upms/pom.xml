@@ -54,7 +54,7 @@
         <dependency>
             <groupId>org.lionsoul</groupId>
             <artifactId>ip2region</artifactId>
-            <version>1.7.2</version>
+            <version>3.3.7</version>
         </dependency>
         <!--verification code-->
         <dependency>
