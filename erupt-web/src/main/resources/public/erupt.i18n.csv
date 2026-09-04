@@ -123,7 +123,19 @@ setting.nav,面包屑导航,面包屑導航,Breadcrumb nav,Navigation sur breadc
 setting.table-border,表格边框,表格邊框,Table bordered,Bordure de table,表の境界線,표테두리,Табличная боковая рама,Borde de tabla,Tabelle im rahmen,Borda da tabela,Batas tabel,إطار الجدول
 setting.color-weak,色弱模式,色弱模式,Color weak mode,Mode faible couleur,色弱モードです,색약 패턴,Слабая модель цвета,Modo débil de color,Das zerstörerische muster,Modo fraco da cor,Pola afektif,وضع ضعيف
 setting.color-gray,灰色模式,灰色模式,Grey mode,Le mode gris,グレーパターンです ,그레이 모드,Серая модель.,Andamento grigio,Das graue muster.,O modo cinzento,Mode abu,الوضع الرمادي
+setting.theme-color,主题色,主題色,Theme color,Couleur du thème,テーマカラー,테마 색상,Цвет темы,Color del tema,Themenfarbe,Cor do tema,Warna tema,لون السمة
+setting.header-color,顶栏颜色,頂欄顏色,Header color,Couleur de la barre,ヘッダーカラー,상단바 색상,Цвет шапки,Color de la barra,Kopfleistenfarbe,Cor da barra,Warna bilah atas,لون الشريط العلوي
+setting.group.appearance,外观,外觀,Appearance,Apparence,外観,모양,Внешний вид,Apariencia,Erscheinungsbild,Aparência,Tampilan,المظهر
+setting.group.navigation,导航,導航,Navigation,Navigation,ナビゲーション,내비게이션,Навигация,Navegación,Navigation,Navegação,Navigasi,التنقل
+setting.group.table,表格,表格,Table,Tableau,テーブル,표,Таблица,Tabla,Tabelle,Tabela,Tabel,الجدول
+setting.group.other,其他,其他,Others,Autres,その他,기타,Прочее,Otros,Sonstiges,Outros,Lainnya,أخرى
 setting.dark,夜间模式,夜間模式,Dark mode,Le mode nuit,ナイトモード,야간모드,Ночной режим,Modo nocturno,Die nachtmodus.,Modo de noite,Mode malam,الوضع الليلي
+setting.color-scheme,明暗模式,明暗模式,Color scheme,Mode de couleur,カラーモード,명암 모드,Цветовая схема,Esquema de color,Farbschema,Esquema de cores,Skema warna,وضع الألوان
+setting.theme-light,亮色,亮色,Light,Clair,ライト,라이트,Светлая,Claro,Hell,Claro,Terang,فاتح
+setting.theme-dark,暗色,暗色,Dark,Sombre,ダーク,다크,Тёмная,Oscuro,Dunkel,Escuro,Gelap,داكن
+setting.theme-auto,跟随系统,跟隨系統,System,Système,システム,시스템,Системная,Sistema,System,Sistema,Sistem,النظام
+setting.compact,紧凑模式,緊湊模式,Compact mode,Mode compact,コンパクトモード,컴팩트 모드,Компактный режим,Modo compacto,Kompaktmodus,Modo compacto,Mode ringkas,الوضع المضغوط
+setting.aside-dark,深色侧边栏,深色側邊欄,Dark sidebar,Barre latérale sombre,ダークサイドバー,다크 사이드바,Тёмная боковая панель,Barra lateral oscura,Dunkle Seitenleiste,Barra lateral escura,Bilah sisi gelap,شريط جانبي داكن
 setting.clear-cache,清理本地缓存,清理本地緩存,Clear Local Cache,Nettoyer votre cache local,로컬캐시지우기,로컬캐시청소,Очистка местного кэша,Limpiar el caché local,Räumen sie den lokalen bereich auf,Limpar o cache local,Bersihkan tembolok lokal,تنظيف التخزين المؤقت المحلي
 setting.clear,清理,清理,Clear,nettoyage,整理する,청소,очист,limpieza,Reinigen.,limpar,membersihkan,تنظيف
 setting.confirm,确认要清理所有的本地缓存吗？,確認要清理所有的本地緩存嗎？,Are you sure you want to clean up all local caches?,Confirmez que vous voulez nettoyer tout votre cache local?,全てのローカルキャッシュをクリアしますか？,로컬캐시를모두청소하시겠습니까?,Подтверждаю.,Confirma que quieres limpiar todo el caché local?,"Sind sie sicher, dass sie alle lokalen konten löschen möchten?",Confirma que queres limpar todo o cache local?,Konfirmasi untuk membersihkan semua tembolok lokal?,هل تم التأكيد على تنظيف جميع التخزين المؤقت المحلية؟
@@ -236,7 +248,7 @@ ai.chat.delete,删除,刪除,Delete,Supprimer,削除,삭제,Удалить,Elimi
 ai.chat.load_more,加载更多...,加載更多...,Load more...,Charger plus...,もっと読み込む...,더 불러오기...,Загрузить ещё...,Cargar más...,Mehr laden...,Carregar mais...,Muat lebih...,تحميل المزيد...
 ai.chat.thinking_process,思考过程,思考過程,Thinking process,Processus de réflexion,思考プロセス,사고 과정,Процесс мышления,Proceso de pensamiento,Denkprozess,Processo de pensamento,Proses berpikir,عملية التفكير
 ai.chat.thinking,思考中...,思考中...,Thinking...,En train de réfléchir...,考え中...,생각 중...,Думает...,Pensando...,Denkt...,Pensando...,Sedang berpikir...,جارٍ التفكير...
-ai.chat.agent,智能体：,智能體：,Agent:,Agent :,エージェント：,에이전트:,Агент:,Agente:,Agent:,Agente:,Agen:,الوكيل:
+ai.chat.agent,专家：,專家：,Expert:,Expert :,エキスパート：,전문가:,Эксперт:,Experto:,Experte:,Especialista:,Pakar:,الخبير:
 ai.chat.agent_unspecified,不指定,不指定,Unspecified,Non spécifié,指定なし,지정 안 함,Не указан,Sin especificar,Nicht angegeben,Não especificado,Tidak ditentukan,غير محدد
 ai.chat.auto_tool_call,自动工具调用：,自動工具調用：,Auto tool call:,Appel d'outil auto :,自動ツール呼び出し：,자동 도구 호출:,Авто вызов инструмента:,Llamada automática:,Auto-Tool-Aufruf:,Chamada automática:,Panggilan alat otomatis:,استدعاء أداة تلقائي:
 ai.chat.stop_generation,停止生成,停止生成,Stop generating,Arrêter la génération,生成を停止,생성 중지,Остановить генерацию,Detener generación,Generierung stoppen,Parar geração,Hentikan pembuatan,إيقاف الإنشاء
@@ -1162,7 +1174,10 @@ designer.bool.true,是,是,Yes,Oui,はい,예,Да,Sí,Ja,Sim,Ya,نعم
 designer.bool.false,否,否,No,Non,いいえ,아니오,Нет,No,Nein,Não,Tidak,لا
 designer.option.one,选项一,選項一,Option 1,Option 1,選択肢 1,옵션 1,Вариант 1,Opción 1,Option 1,Opção 1,Pilihan 1,الخيار 1
 designer.option.two,选项二,選項二,Option 2,Option 2,選択肢 2,옵션 2,Вариант 2,Opción 2,Option 2,Opção 2,Pilihan 2,الخيار 2
+setting.menu-mode,菜单模式,選單模式,Menu mode,Mode de menu,メニューモード,메뉴 모드,Режим меню,Modo de menú,Menümodus,Modo de menu,Mode menu,وضع القائمة
 setting.split-menu,分类导航,分類導航,Category Nav,Navigation par catégorie,カテゴリナビ,카테고리 탐색,Навигация по разделам,Navegación por categorías,Kategorienavigation,Navegação por categorias,Navigasi Kategori,التنقل بالفئات
+setting.dual-menu,双栏菜单,雙欄選單,Dual-column menu,Menu à deux colonnes,2列メニュー,이중 열 메뉴,Двухколоночное меню,Menú de dos columnas,Zweispaltiges Menü,Menu de duas colunas,Menu dua kolom,قائمة بعمودين
+setting.collapsed-text,收起菜单时显示文字,收起選單時顯示文字,Show labels when collapsed,Afficher les libellés en mode réduit,折りたたみ時にメニュー名を表示,접힘 시 메뉴 이름 표시,Показывать названия в свёрнутом меню,Mostrar etiquetas al contraer,Beschriftung im eingeklappten Menü anzeigen,Mostrar rótulos no menu recolhido,Tampilkan label saat diciutkan,عرض الأسماء عند طي القائمة
 global.back,返回,返回,Back,Retour,戻る,뒤로,Назад,Volver,Zurück,Voltar,Kembali,رجوع
 designer.type.callout,标注,標註,Callout,Callout,コールアウト,Callout,Callout,Callout,Callout,Callout,Callout,Callout
 designer.callout_content,标注内容,標註內容,Content,Contenu,コンテンツ,Content,Content,Content,Content,Content,Content,Content
@@ -1204,4 +1219,12 @@ menu.reset,重置菜单,重置選單,Reset menu,Réinitialiser le menu,メニュ
 menu.reset_confirm,确定要重置菜单的排序和收藏吗？,確定要重置選單的排序和收藏嗎？,Reset menu order and favorites?,Réinitialiser l'ordre et les favoris du menu ?,メニューの並び順とお気に入りをリセットしますか？,메뉴 순서와 즐겨찾기를 초기화하시겠습니까?,Сбросить порядок меню и избранное?,¿Restablecer el orden del menú y los favoritos?,Menüreihenfolge und Favoriten zurücksetzen?,Redefinir a ordem do menu e os favoritos?,Setel ulang urutan menu dan favorit?,هل تريد إعادة تعيين ترتيب القائمة والمفضلة؟
 menu.reset_success,菜单已重置,選單已重置,Menu reset,Menu réinitialisé,メニューをリセットしました,메뉴가 초기화되었습니다,Меню сброшено,Menú restablecido,Menü zurückgesetzt,Menu redefinido,Menu disetel ulang,تمت إعادة تعيين القائمة
 menu.toggle_all,展开/收起全部,展開/收起全部,Expand/Collapse all,Tout développer/réduire,すべて展開/折りたたみ,모두 펼치기/접기,Развернуть/свернуть все,Expandir/contraer todo,Alle aus-/einklappen,Expandir/recolher tudo,Perluas/ciutkan semua,توسيع/طي الكل
+menu.normal_mode,单栏菜单,單欄選單,Single-column menu,Menu à une colonne,1列メニュー,단일 열 메뉴,Одноколоночное меню,Menú de una columna,Einspaltiges Menü,Menu de uma coluna,Menu satu kolom,قائمة بعمود واحد
 menu.split_mode,分栏菜单,分欄選單,Split menu,Menu divisé,分割メニュー,분할 메뉴,Раздельное меню,Menú dividido,Geteiltes Menü,Menu dividido,Menu terpisah,قائمة مقسمة
+menu.dual_mode,双栏菜单,雙欄選單,Dual-column menu,Menu à deux colonnes,2列メニュー,이중 열 메뉴,Двухколоночное меню,Menú de dos columnas,Zweispaltiges Menü,Menu de duas colunas,Menu dua kolom,قائمة بعمودين
+ai.chat.upload_image,上传图片,上傳圖片,Upload image,Envoyer une image,画像をアップロード,이미지 업로드,Загрузить изображение,Subir imagen,Bild hochladen,Carregar imagem,Unggah gambar,تحميل صورة
+ai.chat.image_upload_failed,图片上传失败,圖片上傳失敗,Image upload failed,Échec de l'envoi de l'image,画像のアップロードに失敗しました,이미지 업로드 실패,Не удалось загрузить изображение,Error al subir la imagen,Bild-Upload fehlgeschlagen,Falha ao carregar imagem,Gagal mengunggah gambar,فشل تحميل الصورة
+ai.chat.image_message,[图片],[圖片],[Image],[Image],[画像],[이미지],[Изображение],[Imagen],[Bild],[Imagem],[Gambar],[صورة]
+ai.chat.model,模型,模型,Model,Modèle,モデル,모델,Модель,Modelo,Modell,Modelo,Model,النموذج
+designer.max_length,最大字数,最大字數,Max Length,Longueur max,最大文字数,최대 글자 수,Макс. длина,Longitud máx.,Max. Länge,Comprimento máx.,Panjang maks,الحد الأقصى للطول
+designer.max_length_unlimited,不限制,不限制,Unlimited,Illimité,無制限,제한 없음,Без ограничений,Sin límite,Unbegrenzt,Sem limite,Tak terbatas,غير محدود
