@@ -5,6 +5,7 @@ window.eruptSiteConfig = {
     desc: "Common Data Framework",
     dialogLogin: false,
     copyright: true, //是否保留显示版权信息
+    tabReuse: false, //是否开启多页签，默认不开启（用户在设置面板中的选择优先于该默认值）
     logoPath: null,
     logoFoldPath: null,
     loginLogoPath: null,
