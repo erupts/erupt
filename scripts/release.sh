@@ -2,7 +2,7 @@
 #
 # release.sh — Mechanical steps of the erupt release SOP, one phase per call.
 #
-# The /release skill (.claude/skills/release/SKILL.md) drives these phases in
+# The /release command (.claude/commands/release.md) drives these phases in
 # order and handles the judgement calls between them (version choice, reading
 # build output, confirming before irreversible steps). Every phase is safe to
 # re-run: it checks the current state first and skips work already done.

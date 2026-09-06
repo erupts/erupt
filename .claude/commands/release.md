@@ -1,12 +1,15 @@
 ---
-name: release
-description: Standard operating procedure for shipping a new erupt version — bump, Maven Central, Docker Hub, merge develop→master + tags on erupt/erupt-web/erupt-pro, GitHub + gitee sync. Use when the user says /release, "发新版", "发布 x.y.z", "release erupt", or asks to publish to Maven Central / Docker Hub / tag a release.
+description: Ship a new erupt version — frontend bundle, bump, Maven Central, Docker Hub, merge develop→master + tags on erupt/erupt-web/erupt-pro, GitHub + gitee sync
+argument-hint: <version, e.g. 2.1.2>
+allowed-tools: Bash, Read, Grep
 ---
 
 # erupt release SOP
 
-Usage: `/release <version>` (e.g. `/release 2.1.2`). Without a version, read the current one from
-`pom.xml`, propose the next patch, and ask before continuing.
+Release version: **$ARGUMENTS**
+
+If no version was given above, read the current one from `pom.xml`, propose the next patch version,
+and ask the user to confirm before continuing.
 
 All mechanical work lives in `scripts/release.sh <phase> [version]`. Run the phases **in the order
 below, one at a time**, read each phase's output before starting the next, and stop on the first
