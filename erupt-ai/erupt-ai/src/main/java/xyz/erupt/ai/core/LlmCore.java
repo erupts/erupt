@@ -89,6 +89,20 @@ public abstract class LlmCore {
         this.streamingChat(this.buildAiServices(eruptAiServices, llmRequest, listener), userMessage, images, metaContext, listener);
     }
 
+    /**
+     * AiServices runs the system message through a prompt template, where any
+     * {@code &#123;&#123;name&#125;&#125;} is a variable and an unknown one aborts the whole call with
+     * "Value for the variable 'name' is missing". The system message is assembled from
+     * free text nobody screens for that syntax: the configured system prompt, role and
+     * agent prompts stored in the database, and module prompts that may embed HTML
+     * templates. langchain4j offers no escape, so break the opening brace pair instead.
+     * User messages are already safe: {@code EruptAiChat} passes them through an explicit
+     * {@code &#123;&#123;it&#125;&#125;} template.
+     */
+    static String escapeTemplateVars(String prompt) {
+        return null == prompt ? null : prompt.replace("{{", "{ {");
+    }
+
     private EruptAiChat buildAiServices(AiServices<EruptAiChat> eruptAiServices, LlmRequest llmRequest, Consumer<SseListener> listener) {
         eruptAiServices.systemMessageProvider((id) -> {
             AiProp aiProp = EruptSpringUtil.getBean(AiProp.class);
@@ -109,7 +123,7 @@ public abstract class LlmCore {
             if (llmRequest.getContextPrompt() != null && !llmRequest.getContextPrompt().isBlank()) {
                 systemPrompt.append("\n\n").append(llmRequest.getContextPrompt());
             }
-            return systemPrompt.toString();
+            return escapeTemplateVars(systemPrompt.toString());
         });
         if (llmRequest.getAutoCallTool()) {
             eruptAiServices.toolProvider(buildTools(listener));
@@ -210,6 +224,7 @@ public abstract class LlmCore {
                     listener.accept(SseListener.builder()
                             .isFinish(true)
                             .usage(chatResponse.tokenUsage())
+                            .finishReason(chatResponse.finishReason())
                             .aiMessage(chatResponse.aiMessage()).build());
                 })
                 .onError(e -> {

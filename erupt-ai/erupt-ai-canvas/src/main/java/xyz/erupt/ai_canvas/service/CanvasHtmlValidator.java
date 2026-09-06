@@ -46,6 +46,8 @@ public final class CanvasHtmlValidator {
         String stripped = HTML_COMMENT.matcher(html).replaceAll("");
         String lower = stripped.toLowerCase(Locale.ROOT);
         if (!lower.contains("<html")) problems.add("no <html> element");
+        // Render-time injection (SDK, token) lands right after <head>, so a head is mandatory
+        if (!lower.contains("<head")) problems.add("no <head> element");
         if (!lower.contains("</html>")) problems.add("missing </html> — the document is incomplete, probably cut off");
         if (!lower.contains("<body")) problems.add("no <body> element");
         else if (!lower.contains("</body>")) problems.add("missing </body> — the document is incomplete, probably cut off");
@@ -57,6 +59,9 @@ public final class CanvasHtmlValidator {
         if (problems.isEmpty()) {
             scripts(stripped, problems);
             assets(stripped, lower, problems);
+            vue2Syntax(stripped, problems);
+            elementPlusGlobals(stripped, problems);
+            inDomTemplate(stripped, problems);
         }
         return problems;
     }
@@ -102,7 +107,9 @@ public final class CanvasHtmlValidator {
             if (src.find()) srcs.add(src.group(1).toLowerCase(Locale.ROOT));
         }
         int vue = indexOfSrc(srcs, "vue");
-        int element = indexOfSrc(srcs, "element");
+        // Match the core bundle by its exact stem: element-icons.min.js also contains "element"
+        int element = indexOfSrc(srcs, "element.min");
+        int icons = indexOfSrc(srcs, "element-icons");
         boolean usesVue = Pattern.compile("\\bVue\\.").matcher(html).find() || Pattern.compile("\\bcreateApp\\s*\\(").matcher(html).find();
         boolean usesElement = html.contains("ElementPlus") || lower.contains("<el-") || Pattern.compile("\\bElMessage(Box)?\\b").matcher(html).find();
         if (usesVue && vue < 0) {
@@ -119,6 +126,113 @@ public final class CanvasHtmlValidator {
         }
         if (Pattern.compile("\\baxios\\.").matcher(html).find() && indexOfSrc(srcs, "axios") < 0) {
             problems.add("the page uses axios but loads no axios script (prefer the Erupt SDK for data access)");
+        }
+        iconComponents(html, icons, problems);
+    }
+
+    // A PascalCase component inside <el-icon> is an Element Plus icon
+    private static final Pattern ICON_COMPONENT = Pattern.compile("<el-icon[^>]*>\\s*<([A-Z][A-Za-z0-9]*)", Pattern.CASE_INSENSITIVE);
+
+    /**
+     * The icon bundle is separate, exposes {@code ElementPlusIconsVue} and has no
+     * install function, so it must be loaded AND registered component by component.
+     * Miss either step and the icon resolves to nothing: Vue only warns, the button
+     * still renders, and the icon is silently absent.
+     */
+    private static void iconComponents(String html, int icons, List<String> problems) {
+        Matcher used = ICON_COMPONENT.matcher(html);
+        if (!used.find()) return;
+        if (icons < 0) {
+            problems.add("the page uses icon components such as <el-icon><" + used.group(1) + " /></el-icon> but loads no icon script; "
+                    + "add <script src=\"${base}/element-plus/element-icons.min.js\"></script>");
+            return;
+        }
+        boolean registered = Pattern.compile("ElementPlusIconsVue").matcher(html).find()
+                && Pattern.compile("\\.component\\s*\\(").matcher(html).find();
+        if (!registered) {
+            problems.add("the page uses icon components such as <el-icon><" + used.group(1) + " /></el-icon> but never registers them, "
+                    + "so they resolve to nothing. `ElementPlusIconsVue` has no install function; register it with "
+                    + "`Object.entries(ElementPlusIconsVue).forEach(([name, comp]) => app.component(name, comp));`");
+        }
+    }
+
+    // Element UI (Vue 2) patterns the model reaches for out of habit. Vue 3 removed
+    // these modifiers and attributes, and its compiler DROPS them without a warning:
+    // the page renders, the console stays clean, and the control simply never works.
+    // Nothing but a static check catches them, so each one is an error here
+    private static final List<String[]> VUE2_PATTERNS = List.of(
+            new String[]{"[.:@\\w-]\\.sync\\s*=",
+                    "uses the Vue 2 `.sync` modifier (e.g. `:visible.sync`); Vue 3 removed it and silently ignores the binding. "
+                            + "Element Plus dialogs and drawers bind with `v-model=\"flag\"`, other props with `v-model:prop=\"value\"`"},
+            new String[]{"\\.native\\s*=",
+                    "uses the Vue 2 `.native` modifier; Vue 3 removed it and silently ignores the listener. Bind the event directly, e.g. `@click`"},
+            new String[]{"\\sslot\\s*=\\s*[\"']",
+                    "uses the Vue 2 `slot=\"name\"` attribute; Vue 3 removed it. Use `<template #name>`"},
+            new String[]{"\\sslot-scope\\s*=",
+                    "uses the Vue 2 `slot-scope` attribute; Vue 3 removed it. Use `<template #default=\"{ row }\">`"},
+            new String[]{"\\bnew\\s+Vue\\s*\\(",
+                    "bootstraps with the Vue 2 `new Vue({...})`; the bundled Vue 3 global build has no Vue constructor. Use `Vue.createApp({...}).use(ElementPlus).mount('#app')`"},
+            new String[]{"\\bVue\\.(?:component|use|mixin|directive|filter|prototype)\\b",
+                    "calls a Vue 2 global API on `Vue` (component / use / mixin / directive / filter / prototype); these do not exist in Vue 3 and throw a TypeError. "
+                            + "Call them on the app instance returned by `Vue.createApp(...)`"},
+            new String[]{"(?:\\bicon|class)\\s*=\\s*[\"']el-icon-",
+                    "uses Element UI icon font classes (`el-icon-xxx`); Element Plus dropped that font, so the icon renders as nothing. "
+                            + "Use an icon component instead, e.g. `<el-icon><Plus /></el-icon>`"});
+
+    private static void vue2Syntax(String html, List<String> problems) {
+        for (String[] rule : VUE2_PATTERNS) {
+            if (Pattern.compile(rule[0], Pattern.CASE_INSENSITIVE).matcher(html).find()) {
+                problems.add("the page " + rule[1]);
+            }
+        }
+    }
+
+    // Vue template syntax has no meaning to the HTML parser, so finding any of it
+    // outside a script block means the page relies on an in-DOM template
+    private static final List<String> TEMPLATE_MARKERS = List.of(
+            "\\{\\{[^{}]{1,200}}}",
+            "<el-[a-z-]+[\\s/>]",
+            "\\sv-(?:if|else|else-if|for|model|show|bind|on|html|text|slot)\\b",
+            "\\s@[a-zA-Z][\\w.-]*\\s*=");
+
+    /**
+     * Markup inside the mount element is parsed by the browser before Vue compiles
+     * it, and the HTML parser corrupts it silently: custom elements cannot
+     * self-close, so following siblings are swallowed as children, and attribute
+     * names are lowercased, so camelCase props never arrive. The page must keep its
+     * markup in a {@code <script type="text/x-template">} block instead, where the
+     * content stays raw text that Vue compiles itself.
+     */
+    private static void inDomTemplate(String html, List<String> problems) {
+        if (!Pattern.compile("\\bcreateApp\\s*\\(").matcher(html).find()) return;
+        String outsideScripts = SCRIPT_BLOCK.matcher(html).replaceAll(" ");
+        for (String marker : TEMPLATE_MARKERS) {
+            if (Pattern.compile(marker, Pattern.CASE_INSENSITIVE).matcher(outsideScripts).find()) {
+                problems.add("the page writes Vue template markup directly in the document body; the browser parses it before Vue does, "
+                        + "silently swallowing siblings after a self-closing custom element and lowercasing camelCase props. "
+                        + "Move the markup into a `<script type=\"text/x-template\" id=\"page-tpl\">` block, leave the mount element empty, "
+                        + "and point the component at it with `template: '#page-tpl'`");
+                return;
+            }
+        }
+    }
+
+    // Helpers that live on the single `ElementPlus` global the UMD bundle exposes.
+    // Referencing them bare throws a ReferenceError the moment the handler runs
+    private static final List<String> ELEMENT_PLUS_HELPERS = List.of("ElMessage", "ElMessageBox", "ElNotification", "ElLoading");
+
+    private static void elementPlusGlobals(String html, List<String> problems) {
+        for (String helper : ELEMENT_PLUS_HELPERS) {
+            // A use that is not already qualified as ElementPlus.<helper>
+            if (!Pattern.compile("(?<![.\\w])" + helper + "\\b").matcher(html).find()) continue;
+            // ...and that the page never brought into scope itself
+            boolean declared = Pattern.compile("(?:const|let|var)\\s*\\{[^}]*\\b" + helper + "\\b[^}]*}\\s*=\\s*ElementPlus").matcher(html).find()
+                    || Pattern.compile("(?:const|let|var)\\s+" + helper + "\\s*=").matcher(html).find()
+                    || Pattern.compile("window\\." + helper + "\\s*=").matcher(html).find();
+            if (!declared) {
+                problems.add("the page calls `" + helper + "` as a global, but the Element Plus bundle only defines `ElementPlus`; "
+                        + "this throws \"" + helper + " is not defined\". Destructure it first: `const {" + helper + "} = ElementPlus;`");
+            }
         }
     }
 

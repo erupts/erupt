@@ -25,6 +25,14 @@ public interface CanvasModelProvider {
     // Teaches the LLM how pages query this source (SDK functions, shapes); Markdown
     String queryGuide();
 
+    // Teaches the LLM how pages create / update / delete rows of this source
+    // (SDK functions, payload shapes, form rules); Markdown. Injected only when a
+    // binding of this type allows at least one write; null means the source is
+    // read-only and the allow* switches of its bindings are ignored
+    default String writeGuide() {
+        return null;
+    }
+
     // Object with langchain4j @Tool methods the LLM calls during generation to
     // verify its planned queries actually work (ReAct); null disables verification
     default Object verifyTool() {

@@ -88,6 +88,8 @@ public class AiCanvasController {
         return insertAtHead(html, "<script src=\"" + contextPath + SDK_PATH + "\"></script>");
     }
 
+    // Every stored page passed CanvasHtmlValidator, which requires a <head>;
+    // the prepend fallback only guards direct callers
     private static String insertAtHead(String html, String tag) {
         int head = html.indexOf("<head>");
         if (head >= 0) {

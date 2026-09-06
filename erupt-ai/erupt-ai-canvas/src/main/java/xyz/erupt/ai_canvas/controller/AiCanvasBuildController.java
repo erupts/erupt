@@ -88,7 +88,16 @@ public class AiCanvasBuildController {
         vo.setVersions(eruptDao.lambdaQuery(AiCanvasVersion.class)
                 .eq(AiCanvasVersion::getCanvasId, view.getId())
                 .orderByAsc(AiCanvasVersion::getVersion).list().stream().map(VersionVo::new).toList());
+        vo.setGenerating(aiViewService.generatingState(view.getId()));
         return R.ok(vo);
+    }
+
+    // Polled by the designer while a round is in flight, including one it did not
+    // start itself; answers null as soon as the round is done, stopped or gone
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    @GetMapping("/generating/{code}")
+    public R<AiCanvasService.GeneratingState> generating(@PathVariable("code") String code) {
+        return R.ok(aiViewService.generatingState(this.view(code).getId()));
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
@@ -217,11 +226,14 @@ public class AiCanvasBuildController {
         private String dataType;
         private String model;
         private String purpose;
+        // Write operations the page may offer on this model (add / update / delete); empty = read-only
+        private List<String> writes;
 
         public ModelVo(AiCanvasModel binding) {
             this.dataType = binding.getDataType();
             this.model = binding.getModel();
             this.purpose = binding.getPurpose();
+            this.writes = AiCanvasService.allowedWrites(binding);
         }
     }
 
@@ -235,6 +247,8 @@ public class AiCanvasBuildController {
         private Long activeVersion;
         private Long publishVersion;
         private List<VersionVo> versions;
+        // Round already in flight when the designer was opened; null when idle
+        private AiCanvasService.GeneratingState generating;
     }
 
     @Getter

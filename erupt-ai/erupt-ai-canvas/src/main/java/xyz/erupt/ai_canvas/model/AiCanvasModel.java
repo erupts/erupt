@@ -21,7 +21,9 @@ import xyz.erupt.jpa.model.BaseModel;
  * One data model bound to an {@link AiCanvas}, edited as a MULTI_FORM block on
  * the canvas form. Each binding carries its own data source type, so one page
  * may read from several providers; the service groups bindings by type when it
- * composes the generation prompt.
+ * composes the generation prompt. The allow* switches declare which write
+ * operations the generated page may offer on the model (all off = read-only);
+ * the visitor's own permissions are still enforced server-side on every call.
  *
  * @author YuePeng
  * date 2026/9/6
@@ -63,5 +65,23 @@ public class AiCanvasModel extends BaseModel {
             edit = @Edit(title = "Purpose", inputType = @InputType(fullSpan = true))
     )
     private String purpose;
+
+    @EruptField(
+            views = @View(title = "Allow Add"),
+            edit = @Edit(title = "Allow Add", notNull = true)
+    )
+    private Boolean allowAdd = false;
+
+    @EruptField(
+            views = @View(title = "Allow Edit"),
+            edit = @Edit(title = "Allow Edit", notNull = true)
+    )
+    private Boolean allowEdit = false;
+
+    @EruptField(
+            views = @View(title = "Allow Delete"),
+            edit = @Edit(title = "Allow Delete", notNull = true)
+    )
+    private Boolean allowDelete = false;
 
 }
