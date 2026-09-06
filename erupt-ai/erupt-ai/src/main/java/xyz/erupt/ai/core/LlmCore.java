@@ -30,6 +30,7 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.prompt.SystemPromptProvider;
 import xyz.erupt.core.util.EruptSpringUtil;
 
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -60,6 +61,11 @@ public abstract class LlmCore {
 
     public LlmConfig config() {
         return new LlmConfig();
+    }
+
+    // Per-request HTTP timeout every adapter must pass to its model builder
+    protected Duration requestTimeout() {
+        return EruptSpringUtil.getBean(AiProp.class).getRequestTimeout();
     }
 
     public abstract ChatModel buildChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages);

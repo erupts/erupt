@@ -5,6 +5,8 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+
 /**
  * @author YuePeng
  * date 2025/2/25 22:19
@@ -26,7 +28,12 @@ public class AiProp {
 
     private int messageDelay = 30;
 
+    // Browser-facing SSE emitter timeout (milliseconds)
     private Long sseTimeout = 15L * 60 * 1000;
+
+    // Read timeout for a single HTTP request to the LLM provider. langchain4j defaults
+    // to 60s, far too short for long non-streaming generations such as canvas pages
+    private Duration requestTimeout = Duration.ofMinutes(15);
 
     // Max sequential tool invocations per chat turn; the ReAct loop aborts beyond this,
     // guarding against runaway tool-call loops
