@@ -197,6 +197,10 @@
     <profiles>
         <profile>
             <id>release</id>
+            <properties>
+                <central.autoPublish>false</central.autoPublish>
+                <central.waitUntil>uploaded</central.waitUntil>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -238,8 +242,11 @@
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
-                            <!--                            <autoPublish>true</autoPublish>-->
-                            <!--                            <waitUntil>published</waitUntil>-->
+                            <!-- Both default to the plugin's behaviour (manual publish in the Central
+                                 Portal, return once uploaded); scripts/release.sh overrides them with
+                                 -Dcentral.autoPublish=true -Dcentral.waitUntil=validated -->
+                            <autoPublish>${central.autoPublish}</autoPublish>
+                            <waitUntil>${central.waitUntil}</waitUntil>
                         </configuration>
                     </plugin>
                     <plugin>

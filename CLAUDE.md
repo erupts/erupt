@@ -31,6 +31,10 @@ cd erupt-sample && mvn spring-boot:run
 
 # Bump version across this repo AND satellite repos (erupt-web etc.)
 ./scripts/bump-erupt.sh [--dry-run] x.x.x
+
+# Full release SOP (frontend build, bump, Maven Central, Docker Hub, merge+tag, gitee sync)
+# Driven phase by phase by the /release skill (.claude/skills/release/SKILL.md)
+./scripts/release.sh <preflight|frontend|bump|maven|docker|publish|start|verify> [x.x.x]
 ```
 
 Java 17 required. Spring Boot 3.5.x (pinned via `spring.boot.version` in the parent pom). No Maven wrapper — use system `mvn`.
