@@ -9,10 +9,10 @@
 #
 # Usage:
 #   scripts/release.sh preflight <version>   # tools, credentials, clean trees, version unused
-#   scripts/release.sh frontend              # build erupt-web into erupt/erupt-web/public, commit
+#   scripts/release.sh frontend              # erupt-web/build.sh (yarn build -> public), commit
 #   scripts/release.sh bump <version>        # bump poms (main + satellites), commit "upgrade to <version>"
-#   scripts/release.sh maven                 # mvn clean deploy -P release (Maven Central)
-#   scripts/release.sh docker                # build + push erupts/erupt:<version> to Docker Hub
+#   scripts/release.sh maven                 # scripts/deploy.sh with AUTO_PUBLISH=1 (Maven Central)
+#   scripts/release.sh docker                # erupt-deploy/erupt-docker/deploy.sh (Docker Hub)
 #   scripts/release.sh publish <version>     # merge develop -> master, tag, push (GitHub + gitee)
 #   scripts/release.sh start <version>       # bump ERUPT_VER in erupt-start landing page, push
 #   scripts/release.sh verify <version>      # tags on both remotes, Maven Central, Docker Hub
@@ -121,11 +121,10 @@ phase_preflight() {
 }
 
 phase_frontend() {
-    say "Building erupt-web frontend into erupt/erupt-web/src/main/resources/public"
-    git -C "$WEB_SRC_DIR" pull --ff-only
-    yarn --cwd "$WEB_SRC_DIR" run build
+    say "Building erupt-web frontend via erupt-web/build.sh"
+    # build.sh uses paths relative to erupt/erupt-web: pulls ../../erupt-web, yarn build, git add public
+    (cd "$ERUPT_DIR/erupt-web" && bash build.sh)
     cd "$ERUPT_DIR"
-    git add erupt-web/src/main/resources/public
     if git diff --cached --quiet; then
         skip "frontend bundle unchanged, nothing to commit"
     else
@@ -159,18 +158,14 @@ phase_bump() {
 }
 
 phase_maven() {
-    say "Deploying to Maven Central (mvn clean deploy -P release)"
-    cd "$ERUPT_DIR"
-    local flags=(-P release -Dcentral.autoPublish=true -Dcentral.waitUntil=validated)
-    [ "${SKIP_TESTS:-0}" = "1" ] && flags+=(-DskipTests)
-    mvn clean deploy "${flags[@]}"
+    say "Deploying to Maven Central via scripts/deploy.sh"
+    AUTO_PUBLISH=1 SKIP_TESTS="${SKIP_TESTS:-0}" "$ERUPT_DIR/scripts/deploy.sh"
     ok "deployment uploaded and validated; Central publishes it automatically (autoPublish=true)"
-    echo "    track it at https://central.sonatype.com/publishing/deployments"
 }
 
 phase_docker() {
     local ver; ver=$(project_version)
-    say "Building and pushing $DOCKER_IMAGE:$ver"
+    say "Building and pushing $DOCKER_IMAGE:$ver via erupt-deploy/erupt-docker/deploy.sh"
     if ! docker info >/dev/null 2>&1; then
         warn "starting Docker Desktop"
         open -a Docker
@@ -179,12 +174,7 @@ phase_docker() {
     fi
     python3 -c 'import json,sys;d=json.load(open(sys.argv[1]));sys.exit(0 if "https://index.docker.io/v1/" in d.get("auths",{}) else 1)' \
         "$HOME/.docker/config.json" 2>/dev/null || die "not logged in to Docker Hub; run: docker login"
-    cd "$DOCKER_DIR"
-    mvn clean package -DskipTests
-    docker build -t "$DOCKER_IMAGE:$ver" -t "$DOCKER_IMAGE:latest" .
-    docker push "$DOCKER_IMAGE:$ver"
-    docker push "$DOCKER_IMAGE:latest"
-    ok "pushed $DOCKER_IMAGE:$ver and :latest"
+    DOCKER_IMAGE="$DOCKER_IMAGE" "$DOCKER_DIR/deploy.sh"
 }
 
 phase_publish() {

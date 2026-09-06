@@ -28,22 +28,22 @@ Repos involved (siblings under `~/git`, override with `CODE_DIR`):
    clean and on develop, tag unused on both remotes. Read-only. Fix anything it reports before
    continuing; do not work around a red check.
 
-2. **`frontend`** — pulls `~/git/erupt-web`, runs the production build into
-   `erupt/erupt-web/src/main/resources/public`, commits `update erupt-web` if the bundle changed.
+2. **`frontend`** — runs `erupt-web/build.sh` (pulls `~/git/erupt-web`, production build into
+   `erupt/erupt-web/src/main/resources/public`) and commits `update erupt-web` if the bundle changed.
    Skip only if the user says the frontend is already current in this release.
 
 3. **`bump <version>`** — runs `scripts/bump-erupt.sh` (main repo via `versions:set`, satellite
    poms by text edit) and commits `upgrade to <version>` in erupt. Satellites are left **bumped but
    uncommitted**; tell the user they need their own commit/tag/push and list them.
 
-4. **`maven`** — `mvn clean deploy -P release -Dcentral.autoPublish=true -Dcentral.waitUntil=validated`.
-   Runs the test suite; `SKIP_TESTS=1` only if the user asks. Takes several minutes; run it in the
+4. **`maven`** — runs `scripts/deploy.sh` with `AUTO_PUBLISH=1` (`mvn clean deploy -P release`
+   plus `-Dcentral.autoPublish=true -Dcentral.waitUntil=validated`). Runs the test suite; `SKIP_TESTS=1` only if the user asks. Takes several minutes; run it in the
    background and wait for the notification. On a validation failure, the Central Portal shows the
    reason at https://central.sonatype.com/publishing/deployments — quote it to the user. Never
    re-run bump between maven and docker: both must ship the same version.
 
-5. **`docker`** — packages `erupt-deploy/erupt-docker`, builds `erupts/erupt:<version>` and
-   `:latest`, pushes both. Starts Docker Desktop if it is down. If it reports no Docker Hub login,
+5. **`docker`** — starts Docker Desktop if it is down, then runs `erupt-deploy/erupt-docker/deploy.sh`,
+   which packages the module, builds `erupts/erupt:<version>` and `:latest` and pushes both. If it reports no Docker Hub login,
    ask the user to run `! docker login` and re-run the phase.
 
 6. **`publish <version>`** — for each repo in `TAG_REPOS` (default `erupt erupt-web erupt-pro`):
