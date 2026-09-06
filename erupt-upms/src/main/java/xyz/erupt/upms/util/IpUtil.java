@@ -3,6 +3,7 @@ package xyz.erupt.upms.util;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.lionsoul.ip2region.xdb.Header;
+import org.lionsoul.ip2region.xdb.LongByteArray;
 import org.lionsoul.ip2region.xdb.Searcher;
 import org.lionsoul.ip2region.xdb.Version;
 import xyz.erupt.upms.prop.EruptUpmsProp;
@@ -10,15 +11,7 @@ import xyz.erupt.upms.prop.EruptUpmsProp;
 import java.io.File;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.time.Duration;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 /**
  * @author YuePeng
@@ -66,20 +59,18 @@ public class IpUtil {
         }
     }
 
-    // ---- ip2region (xdb v2 format, vector-index cached, segments read from disk on demand) ----
+    // ---- ip2region (xdb v2 format) ----
 
-    private static final long DOWNLOAD_RETRY_INTERVAL_MS = Duration.ofMinutes(10).toMillis();
+    // Bundled copy, loaded fully into memory when no external file is configured
+    static final String CLASSPATH_XDB = "ip2region_v4.xdb";
 
     private static volatile EruptUpmsProp.Ip2Region prop;
 
     private static volatile Searcher searcher;
 
-    // Set when the xdb file exists but cannot be used; avoids re-parsing a broken file on every lookup
+    // Set when neither the configured file nor the bundled copy is usable;
+    // avoids re-parsing a broken database on every lookup
     private static volatile boolean broken;
-
-    private static final AtomicBoolean downloading = new AtomicBoolean();
-
-    private static volatile long nextDownloadAt;
 
     public static void init(EruptUpmsProp.Ip2Region ip2Region) {
         prop = ip2Region;
@@ -90,7 +81,7 @@ public class IpUtil {
      * Returns an empty string when the xdb is disabled, not yet available, or the IP cannot be resolved.
      */
     public static String getCityInfo(String ip) {
-        if (ip == null || ip.isEmpty()) return "";
+        if (ip == null || !isIpLiteral(ip)) return "";
         Searcher s = searcher();
         if (s == null) return "";
         try {
@@ -104,67 +95,69 @@ public class IpUtil {
         }
     }
 
+    private static final Pattern IPV4 = Pattern.compile("(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}");
+
+    // Loose on purpose: it only has to reject hostnames and junk, the searcher parses the rest
+    private static final Pattern IPV6 = Pattern.compile("[0-9A-Fa-f:]*:[0-9A-Fa-f:.]*");
+
+    /**
+     * ip2region's own parser is lenient enough to turn "unknown", "1.2.3" or a
+     * hostname into a bogus "Reserved" region, and {@link #getIpAddr} can return
+     * exactly those, so screen the address before looking it up. Public because
+     * anything consuming {@link #getIpAddr} needs the same guard.
+     */
+    public static boolean isIpLiteral(String ip) {
+        if (ip.isEmpty()) return false;
+        return ip.indexOf(':') >= 0 ? IPV6.matcher(ip).matches() : IPV4.matcher(ip).matches();
+    }
+
     private static Searcher searcher() {
-        if (searcher != null) return searcher;
+        // Checked before the cached instance so disabling actually disables
         if (prop == null || !prop.isEnable() || broken) return null;
+        if (searcher != null) return searcher;
         synchronized (IpUtil.class) {
             if (searcher != null) return searcher;
-            File xdb = new File(prop.getPath());
-            if (!xdb.isFile()) {
-                download(xdb);
-                return null;
+            String path = prop.getPath();
+            File xdb = null == path || path.isBlank() ? null : new File(path);
+            if (null != xdb && xdb.isFile()) {
+                // An external file wins: it is how a deployment ships a newer or a v6 database
+                try {
+                    Header header = Searcher.loadHeaderFromFile(xdb);
+                    Searcher.verify(header, xdb.length());
+                    Version version = Version.fromHeader(header);
+                    // Only the vector index is held; segments are read from disk per lookup
+                    searcher = Searcher.newWithVectorIndex(version, xdb, Searcher.loadVectorIndexFromFile(xdb));
+                    log.info("ip2region loaded {} ({})", xdb.getAbsolutePath(), version.name);
+                    return searcher;
+                } catch (Exception e) {
+                    // Fall through to the bundled copy rather than losing region lookup for the
+                    // whole JVM: a truncated or stale external file is a configuration mistake,
+                    // and the warning names it. Only a missing bundled copy disables the feature
+                    log.warn("ip2region xdb unusable, falling back to the bundled database: {} ({})",
+                            xdb.getAbsolutePath(), e.getMessage());
+                }
             }
-            try {
-                Header header = Searcher.loadHeaderFromFile(xdb);
-                Searcher.verify(header, xdb.length());
-                Version version = Version.fromHeader(header);
-                searcher = Searcher.newWithVectorIndex(version, xdb, Searcher.loadVectorIndexFromFile(xdb));
-                log.info("ip2region loaded {} ({})", xdb.getAbsolutePath(), version.name);
+            // Nothing configured, or what was configured is unusable: fall back to the copy
+            // shipped inside the jar, so a deployment resolves regions with no setup at all
+            try (InputStream in = IpUtil.class.getClassLoader().getResourceAsStream(CLASSPATH_XDB)) {
+                if (null != in) {
+                    LongByteArray content = Searcher.loadContentFromInputStream(in);
+                    Header header = Searcher.loadHeaderFromBuffer(content);
+                    Searcher.verify(header, content.length());
+                    Version version = Version.fromHeader(header);
+                    searcher = Searcher.newWithBuffer(version, content);
+                    log.info("ip2region loaded from classpath {} ({})", CLASSPATH_XDB, version.name);
+                    return searcher;
+                }
             } catch (Exception e) {
-                broken = true;
-                log.warn("ip2region xdb unusable, region lookup disabled: {} ({})", xdb.getAbsolutePath(), e.getMessage());
+                log.warn("ip2region classpath xdb unusable ({}): {}", CLASSPATH_XDB, e.getMessage());
             }
-            return searcher;
+            // Only reachable when the bundled resource was stripped from the jar
+            log.warn("ip2region database unavailable, region lookup disabled");
+            broken = true;
+            return null;
         }
     }
 
-    private static void download(File xdb) {
-        String url = prop.getDownloadUrl();
-        if (url == null || url.isEmpty() || System.currentTimeMillis() < nextDownloadAt) return;
-        if (!downloading.compareAndSet(false, true)) return;
-        Thread thread = new Thread(() -> {
-            Path target = xdb.toPath().toAbsolutePath();
-            Path tmp = target.resolveSibling(target.getFileName() + ".tmp");
-            try {
-                Files.createDirectories(target.getParent());
-                log.info("ip2region xdb missing, downloading {} -> {}", url, target);
-                HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL)
-                        .connectTimeout(Duration.ofSeconds(15)).build();
-                HttpRequest request = HttpRequest.newBuilder(URI.create(url)).timeout(Duration.ofMinutes(5)).GET().build();
-                HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
-                if (response.statusCode() != 200) {
-                    throw new IllegalStateException("HTTP " + response.statusCode());
-                }
-                try (InputStream in = response.body()) {
-                    Files.copy(in, tmp, StandardCopyOption.REPLACE_EXISTING);
-                }
-                // Reject truncated / non-xdb downloads before publishing the file
-                Searcher.verifyFromFile(tmp.toFile());
-                Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-                log.info("ip2region xdb ready {}", target);
-            } catch (Exception e) {
-                nextDownloadAt = System.currentTimeMillis() + DOWNLOAD_RETRY_INTERVAL_MS;
-                log.warn("ip2region xdb download failed, retry in 10 minutes ({}): {}", url, e.getMessage());
-                try {
-                    Files.deleteIfExists(tmp);
-                } catch (Exception ignored) {
-                }
-            } finally {
-                downloading.set(false);
-            }
-        }, "ip2region-download");
-        thread.setDaemon(true);
-        thread.start();
-    }
 
 }

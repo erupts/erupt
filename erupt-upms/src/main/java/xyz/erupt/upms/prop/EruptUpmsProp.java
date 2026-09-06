@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.upms.util.IpUtil;
 
-import java.io.File;
 
 /**
  * @author YuePeng
@@ -47,11 +46,11 @@ public class EruptUpmsProp {
         //Disable to skip region lookup entirely
         private boolean enable = true;
 
-        //Local path of the ip2region xdb file (v4 or v6); the vector index is cached in memory, segments are read from disk on demand
-        private String path = EruptConst.ERUPT_DIR_PATH + File.separator + "ip2region_v4.xdb";
-
-        //Downloaded to `path` on first lookup when the file is missing; set empty to disable auto download
-        private String downloadUrl = "https://cdn.jsdelivr.net/gh/lionsoul2014/ip2region@master/data/ip2region_v4.xdb";
+        //Optional external xdb (v4 or v6) that overrides the copy bundled in erupt-upms.
+        //Point it at a newer or a v6 database when the bundled one is too old; only its
+        //vector index is held in memory and segments are read from disk per lookup.
+        //Empty means use the bundled v4 database, which needs no setup and no network.
+        private String path = "";
 
     }
 
