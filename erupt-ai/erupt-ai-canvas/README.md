@@ -6,10 +6,11 @@ Describe a page in natural language, pick the Erupt models it reads from, and th
 
 ## How it works
 
-1. **AI Canvas** menu → create a record: name, optional dedicated LLM.
-2. Row operation **Designer** opens the conversational designer: pick a data model and style, describe the page, iterate over versions. Each round builds a prompt from:
+1. **AI Canvas** menu → create a record: name and the data models the page reads from — one MULTI_FORM block per model (data source type, model, optional purpose hint). Bindings can be edited later, e.g. to pull in a related model.
+2. Row operation **Designer** opens the conversational designer: pick a style, describe the page, iterate over versions. Each round builds a prompt from:
    - a built-in API skill (`prompts/ai-canvas-skill.md`) teaching the model the `data/table` list API, `TableQuery`/`Page` shapes, token handling and bundled frontend assets;
-   - the field structure (field name / title / edit type / java type) of the target model, resolved at runtime;
+   - one data-access guide per bound data source type;
+   - the field structure (field name / title / edit type / java type) of every bound model plus its purpose hint, resolved at runtime;
    - the user message — plus the current HTML when regenerating, so edits become revisions.
 3. The returned ```html``` block is stored per version; the active version is what visitors see.
 4. The **Path** column shows the access route of each page.

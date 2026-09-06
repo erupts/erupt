@@ -21,6 +21,7 @@ import xyz.erupt.ai.service.LLMService;
 import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.ai_canvas.fun.CanvasModelProvider;
 import xyz.erupt.ai_canvas.model.AiCanvas;
+import xyz.erupt.ai_canvas.model.AiCanvasModel;
 import xyz.erupt.ai_canvas.model.AiCanvasVersion;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
@@ -38,9 +39,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Builds the generation prompt (page skill + data source guide + model
- * structure + user message), sends it to the LLM and files the returned HTML
- * as a new version of the view.
+ * Builds the generation prompt (page skill + one data source guide per bound
+ * provider + the structure of every bound model + user message), sends it to
+ * the LLM and files the returned HTML as a new version of the view.
  *
  * @author YuePeng
  * date 2026/8/3
@@ -108,8 +109,8 @@ public class AiCanvasService {
         return llm;
     }
 
-    // ReAct: the provider's verification tool is the ONLY tool of the round —
-    // the global toolbox/MCP surface (autoCallTool) stays off during generation.
+    // ReAct: the verification tools of the bound providers are the ONLY tools of
+    // the round — the global toolbox/MCP surface (autoCallTool) stays off during generation.
     // The canvas prompt rides in agentPrompt: a SystemMessage placed in the chat
     // context would be discarded by LlmCore's memory, which pins the system
     // message composed from the request prompts at index 0
@@ -117,8 +118,9 @@ public class AiCanvasService {
         LlmRequest llmRequest = llm.toLlmRequest();
         llmRequest.setAutoCallTool(false);
         llmRequest.setAgentPrompt(this.buildSystem(view));
-        Object verifyTool = this.provider(view.getDataType()).verifyTool();
-        if (null != verifyTool) llmRequest.setTools(List.of(verifyTool));
+        List<Object> verifyTools = groupByType(orderedBindings(view)).keySet().stream()
+                .map(type -> this.provider(type).verifyTool()).filter(Objects::nonNull).toList();
+        if (!verifyTools.isEmpty()) llmRequest.setTools(verifyTools);
         return llmRequest;
     }
 
@@ -232,21 +234,59 @@ public class AiCanvasService {
         return null == version ? null : version.getHtml();
     }
 
-    // System prompt: page skill + optional style + data source guide + model structure.
-    // No requirement history is carried: the current html is the single source of
-    // truth for everything past rounds produced (including manual tweaks); replaying
-    // old requirements risks resurrecting abandoned instructions.
+    // System prompt: page skill + optional style + one query guide per bound data
+    // source type + the structure of every bound model. No requirement history is
+    // carried: the current html is the single source of truth for everything past
+    // rounds produced (including manual tweaks); replaying old requirements risks
+    // resurrecting abandoned instructions.
     private String buildSystem(AiCanvas view) {
-        if (StringUtils.isBlank(view.getDataType()) || StringUtils.isBlank(view.getTargetModel())) {
+        List<AiCanvasModel> bindings = orderedBindings(view);
+        if (bindings.isEmpty() || bindings.stream().anyMatch(it ->
+                StringUtils.isBlank(it.getDataType()) || StringUtils.isBlank(it.getModel()))) {
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai-canvas.model_not_configured"));
         }
-        CanvasModelProvider provider = this.provider(view.getDataType());
+        Map<String, List<AiCanvasModel>> byType = groupByType(bindings);
         StringBuilder system = new StringBuilder(this.skill());
         this.styleOf(view.getStyle()).ifPresent(style -> system.append("\n\n").append(this.stylePrompt(style)));
-        system.append("\n\n").append(provider.queryGuide());
-        if (null != provider.verifyTool()) system.append("\n\n").append(VERIFY_PROMPT);
-        system.append("\n\n# Data Model\n").append(provider.describe(view.getTargetModel()));
+        boolean verify = false;
+        for (String type : byType.keySet()) {
+            CanvasModelProvider provider = this.provider(type);
+            system.append("\n\n").append(provider.queryGuide());
+            verify |= null != provider.verifyTool();
+        }
+        if (verify) system.append("\n\n").append(VERIFY_PROMPT);
+        system.append("\n\n# Data Models\n");
+        if (bindings.size() > 1) {
+            system.append("The page may read from every model listed below; join or combine them as the requirement demands, ")
+                    .append("and use each model only through the Data Access section of its own data source type.\n");
+        }
+        byType.forEach((type, models) -> {
+            CanvasModelProvider provider = this.provider(type);
+            for (AiCanvasModel binding : models) {
+                system.append("\n");
+                if (byType.size() > 1) system.append("Data source type: `").append(type).append("`\n");
+                system.append(provider.describe(binding.getModel()));
+                if (StringUtils.isNotBlank(binding.getPurpose())) {
+                    system.append("\nPurpose in this page: ").append(binding.getPurpose().trim());
+                }
+            }
+        });
         return system.toString();
+    }
+
+    // Bindings in creation order (id), so the prompt is stable across rounds;
+    // unsaved rows (null id) sort last
+    public static List<AiCanvasModel> orderedBindings(AiCanvas view) {
+        if (null == view.getModels()) return List.of();
+        return view.getModels().stream()
+                .sorted(Comparator.comparing(AiCanvasModel::getId, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+    }
+
+    // Group by data source type, keeping the first-seen order of types
+    static Map<String, List<AiCanvasModel>> groupByType(List<AiCanvasModel> bindings) {
+        return bindings.stream().collect(Collectors.groupingBy(AiCanvasModel::getDataType,
+                LinkedHashMap::new, Collectors.toList()));
     }
 
     // ReAct contract shown to the LLM whenever the provider ships a verification tool

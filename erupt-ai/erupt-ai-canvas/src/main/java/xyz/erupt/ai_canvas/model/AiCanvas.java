@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai_canvas.handler.AiCanvasMenuHandler;
-import xyz.erupt.ai_canvas.handler.CanvasDataTypeFetchHandler;
-import xyz.erupt.ai_canvas.handler.CanvasTargetModelFetchHandler;
 import xyz.erupt.ai_canvas.proxy.AiCanvasDataProxy;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -18,17 +16,19 @@ import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.*;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.model.input.MenuPublishModal;
 
+import java.util.Set;
+
 /**
- * An AI generated view over a single data model, built conversationally in the
- * designer: describe the page, iterate over versions. The data model is fixed
- * at creation — switching it mid-iteration would invalidate the version history
- * and the verified queries embedded in past rounds; use a new canvas instead.
+ * An AI generated view over one or more data models, built conversationally in
+ * the designer: describe the page, iterate over versions. Bindings live in
+ * {@link AiCanvasModel} rows edited as MULTI_FORM blocks; they may be extended
+ * later (e.g. to pull in a related model), the current page source stays the
+ * single source of truth for what past rounds produced.
  * Page sources live in {@link AiCanvasVersion} rows; this entity only points at
  * them: activeVersion is the designer's working draft, publishVersion is what
  * {@code AiCanvasController} serves to viewers.
@@ -69,25 +69,16 @@ public class AiCanvas extends MetaModelUpdateVo {
     )
     private String name;
 
-    // Data source type + model: the canvas identity, fixed after creation
+    // Data models the page reads from, one MULTI_FORM block per binding. EAGER:
+    // generation runs on a detached copy in an async thread (generateSse) and
+    // always needs the bindings; a canvas binds only a handful of models
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "canvas_id")
     @EruptField(
-            views = @View(title = "Data Type", width = "90px"),
-            edit = @Edit(title = "Data Type", notNull = true,
-                    readonly = @Readonly(add = false),
-                    type = EditType.CHOICE,
-                    choiceType = @ChoiceType(fetchHandler = CanvasDataTypeFetchHandler.class))
+            views = @View(title = "Data Models"),
+            edit = @Edit(title = "Data Models", notNull = true, type = EditType.MULTI_FORM)
     )
-    private String dataType;
-
-    @EruptField(
-            views = @View(title = "Data Model", width = "150px"),
-            edit = @Edit(title = "Data Model", notNull = true,
-                    readonly = @Readonly(add = false),
-                    type = EditType.CHOICE,
-                    choiceType = @ChoiceType(fetchHandler = CanvasTargetModelFetchHandler.class,
-                            dependField = "dataType"))
-    )
-    private String targetModel;
+    private Set<AiCanvasModel> models;
 
     // Page style code from prompts/style.json, chosen in the designer
     @EruptField(

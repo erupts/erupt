@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai_canvas.model.AiCanvas;
+import xyz.erupt.ai_canvas.model.AiCanvasModel;
 import xyz.erupt.ai_canvas.model.AiCanvasVersion;
 import xyz.erupt.ai_canvas.service.AiCanvasService;
 import xyz.erupt.annotation.fun.VLModel;
@@ -79,8 +80,7 @@ public class AiCanvasBuildController {
         AiCanvas view = this.view(code);
         DesignerVo vo = new DesignerVo();
         vo.setName(view.getName());
-        vo.setDataType(view.getDataType());
-        vo.setTargetModel(view.getTargetModel());
+        vo.setModels(AiCanvasService.orderedBindings(view).stream().map(ModelVo::new).toList());
         vo.setStyle(view.getStyle());
         vo.setLlmId(null != view.getLlm() ? view.getLlm().getId() : null);
         vo.setActiveVersion(view.getActiveVersion());
@@ -213,10 +213,23 @@ public class AiCanvasBuildController {
 
     @Getter
     @Setter
+    public static class ModelVo {
+        private String dataType;
+        private String model;
+        private String purpose;
+
+        public ModelVo(AiCanvasModel binding) {
+            this.dataType = binding.getDataType();
+            this.model = binding.getModel();
+            this.purpose = binding.getPurpose();
+        }
+    }
+
+    @Getter
+    @Setter
     public static class DesignerVo {
         private String name;
-        private String dataType;
-        private String targetModel;
+        private List<ModelVo> models;
         private String style;
         private Long llmId;
         private Long activeVersion;

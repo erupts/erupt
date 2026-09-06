@@ -27,4 +27,4 @@ Only reach for a CDN when the requirement needs a library that is not bundled (e
 - Show a loading state while fetching, an empty state when there is no data, and surface API errors visibly.
 - Tables must be paginated (wired to `pageIndex`/`total`).
 
-A "Data Access" section follows describing how this page queries its data source, and a "Data Model" section describes the structures available — use only what they document.
+One "Data Access" section per data source type follows, describing how this page queries that source, and a "Data Models" section describes the structure of every model the page may read — use only what they document.
