@@ -1,0 +1,21 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 📖 Documentation & FAQ
+    url: https://docs.erupt.xyz/en/guide/faq
+    about: Most "how do I ..." questions are already answered in the docs. Start here.
+
+  - name: 💬 Q&A / Discussions
+    url: https://github.com/erupts/erupt/discussions
+    about: Usage questions, design feedback, and "is this possible?" — ask here instead of opening an issue.
+
+  - name: 🚀 Try it first
+    url: https://demo.erupt.xyz
+    about: Live demo (erupt / erupt). Please confirm the behaviour on the latest version before filing a bug.
+
+  - name: 🤝 Integration, partnership or commercial modules
+    url: https://docs.erupt.xyz/en/guide/community
+    about: Building on Erupt, embedding it in a product, or asking about Chart / Flow / Tenant / Cube — reach out via the community channels or erupts@126.com.
+
+  - name: 🇨🇳 Gitee 镜像仓库
+    url: https://gitee.com/erupt/erupt
+    about: 国内访问 GitHub 不畅时，可在 Gitee 提交 issue。

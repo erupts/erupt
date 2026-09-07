@@ -7,32 +7,54 @@ assignees: ''
 
 ---
 
-**Describe the bug**
+<!--
+Usage questions ("how do I ...") belong in Discussions, not here:
+https://github.com/erupts/erupt/discussions
+-->
+
+### Version information
+
+- JDK version: (e.g. openjdk_17, openjdk_21)
+- Erupt version: (please confirm the issue still exists on the latest release)
+- Spring Boot version:
+- Database: (MySQL / PostgreSQL / Oracle / SQL Server / DM / MongoDB / H2)
+
+### Describe the bug
+
 A clear and concise description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+### To reproduce
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+Minimal reproduction — the entity plus annotations are usually enough:
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+```java
+@Erupt(name = "xxx")
+@Entity
+public class Test {
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+}
+```
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+Steps:
 
-**Additional context**
-Add any other context about the problem here.
+1. ...
+2. ...
+
+### Expected behavior
+
+What you expected to happen instead.
+
+### Stack trace / logs
+
+<!-- Please remove tokens, passwords, and any other sensitive information. -->
+
+```
+```
+
+### Screenshots
+
+If the problem is in the generated UI, a screenshot helps a lot.
+
+### Additional context
+
+Anything else we should know — custom `DataProxy`, multi-tenant setup, reverse proxy, etc.
