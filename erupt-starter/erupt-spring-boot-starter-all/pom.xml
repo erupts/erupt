@@ -75,6 +75,11 @@
             <artifactId>erupt-terminal</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-remote</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <!-- AI -->
         <dependency>

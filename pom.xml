@@ -108,6 +108,7 @@
         <module>erupt-plugin/erupt-notice</module>
         <module>erupt-plugin/erupt-print</module>
         <module>erupt-plugin/erupt-terminal</module>
+        <module>erupt-plugin/erupt-remote</module>
 
         <!-- Cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>
