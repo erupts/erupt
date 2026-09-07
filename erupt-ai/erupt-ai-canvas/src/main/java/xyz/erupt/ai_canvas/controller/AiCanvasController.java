@@ -13,6 +13,7 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.service.EruptUserService;
 
 /**
  * Returns the published page HTML stored in the database. The frontend route
@@ -45,9 +46,16 @@ public class AiCanvasController {
     @Resource
     private AiCanvasService aiCanvasService;
 
+    @Resource
+    private EruptUserService eruptUserService;
+
     @GetMapping(value = HTML_PATH + "/{code}", produces = "text/html;charset=utf-8")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public String html(@PathVariable("code") String code, HttpServletRequest request) {
+        // A published canvas is opened through a menu whose value is its code; designers may open any canvas
+        if (null == eruptUserService.getEruptMenuByValue(code) && null == eruptUserService.getEruptMenuByValue(AiCanvas.MENU_VALUE)) {
+            return tip(I18nTranslate.$translate("ai-canvas.forbidden"));
+        }
         AiCanvas view = eruptDao.lambdaQuery(AiCanvas.class).eq(AiCanvas::getCode, code).one();
         if (null == view) {
             return tip(I18nTranslate.$translate("ai-canvas.not_generated"));

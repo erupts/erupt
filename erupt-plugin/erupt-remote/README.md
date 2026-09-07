@@ -4,8 +4,8 @@ Browser-based remote access for Erupt: VNC desktops and SSH terminals over WebSo
 
 Manage remote hosts in the auto-generated `Remote Host` table, then click **Connect** to open the desktop page
 (an in-app route, `/remote/{id}`). The server bridges a binary WebSocket (`/erupt-remote`) to the host's VNC port and renders it with
-[noVNC](https://github.com/novnc/noVNC). Access is gated by the `erupt-upms` token, the `RemoteHost` menu permission and
-a one-time ticket; the browser can never choose the target address itself.
+[noVNC](https://github.com/novnc/noVNC). Access is gated by the `erupt-upms` token, the `RemoteHost` menu permission (`@EruptMenuAuth` on the ticket API,
+the same check on the WebSocket) and a one-time ticket; the browser can never choose the target address itself.
 
 When a password is stored for a host the server answers the VNC authentication on the browser's behalf, so the
 credential never leaves the backend. Without a stored password (or with servers that only offer other security types,

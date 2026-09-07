@@ -52,7 +52,7 @@ public class RemoteEndpoint {
             return;
         }
         EruptUserService userService = EruptSpringUtil.getBean(EruptUserService.class);
-        if (userService.getEruptMenuByValue(RemoteHost.class.getSimpleName(), token) == null) {
+        if (userService.getEruptMenuByValue(RemoteHost.MENU_VALUE, token) == null) {
             session.close(new CloseReason(() -> CODE_FORBIDDEN, "Forbidden"));
             return;
         }

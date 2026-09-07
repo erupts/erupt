@@ -22,6 +22,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.annotation.EruptMenuAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,7 @@ public class AiCanvasBuildController {
     @Resource
     private AiProp aiProp;
 
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping("/models")
     public R<List<ModelGroup>> models() {
@@ -60,6 +62,7 @@ public class AiCanvasBuildController {
     }
 
     // Light projection: demoHtml stays server-side, it is only prompt material
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping("/styles")
     public R<List<StyleVo>> styles() {
@@ -67,6 +70,7 @@ public class AiCanvasBuildController {
     }
 
     // Enabled chat models the designer can pick from; the default one leads
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping("/llms")
     public R<List<LlmVo>> llms() {
@@ -74,6 +78,7 @@ public class AiCanvasBuildController {
                 .orderByDesc(LLM::getDefaultLLM).list().stream().map(LlmVo::new).toList());
     }
 
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping("/{code}")
     public R<DesignerVo> info(@PathVariable("code") String code) {
@@ -94,12 +99,14 @@ public class AiCanvasBuildController {
 
     // Polled by the designer while a round is in flight, including one it did not
     // start itself; answers null as soon as the round is done, stopped or gone
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping("/generating/{code}")
     public R<AiCanvasService.GeneratingState> generating(@PathVariable("code") String code) {
         return R.ok(aiViewService.generatingState(this.view(code).getId()));
     }
 
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @PostMapping("/generate/{code}")
     public R<VersionVo> generate(@PathVariable("code") String code, @RequestBody GenerateBody body) {
@@ -114,6 +121,7 @@ public class AiCanvasBuildController {
 
     // Streaming variant of generate; EventSource is GET-only, so the token
     // arrives as the _token URL parameter (PARAM verify)
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     @GetMapping(value = "/generate-sse/{code}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter generateSse(@PathVariable("code") String code,
@@ -137,6 +145,7 @@ public class AiCanvasBuildController {
 
     // Explicit stop: the running round is discarded; without this signal a mere
     // disconnect (page refresh) still persists the generated version
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @PostMapping("/stop/{code}")
     public R<Void> stop(@PathVariable("code") String code) {
@@ -144,6 +153,7 @@ public class AiCanvasBuildController {
         return R.ok();
     }
 
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @PostMapping("/active/{code}/{versionId}")
     public R<Void> active(@PathVariable("code") String code, @PathVariable("versionId") Long versionId) {
@@ -158,6 +168,7 @@ public class AiCanvasBuildController {
 
     // Publish the working draft so viewers pick it up; until then version
     // switches and new generations stay designer-only
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @PostMapping("/publish/{code}")
     public R<Void> publish(@PathVariable("code") String code) {
@@ -168,6 +179,7 @@ public class AiCanvasBuildController {
     // Draft preview for the designer: renders the working draft (active version)
     // with the same SDK/token processing the viewer endpoint applies, and ignores
     // the enable flag — disabling a page should not blind its designer
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping(value = "/preview/{code}", produces = "text/html;charset=utf-8")
     public String preview(@PathVariable("code") String code, HttpServletRequest request) {

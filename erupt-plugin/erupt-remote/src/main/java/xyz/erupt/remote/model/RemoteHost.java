@@ -42,6 +42,9 @@ import xyz.erupt.remote.model.data_proxy.RemoteHostDataProxy;
 @EruptI18n
 public class RemoteHost extends MetaModelUpdateVo {
 
+    /** Menu value of the auto-generated table menu; also the permission key for the remote APIs */
+    public static final String MENU_VALUE = "RemoteHost";
+
     public static final String PROTOCOL_VNC = "VNC";
 
     public static final String PROTOCOL_SSH = "SSH";

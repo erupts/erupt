@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.Erupts;
@@ -14,14 +13,15 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.remote.model.RemoteHost;
 import xyz.erupt.remote.service.RemoteTicketService;
 import xyz.erupt.remote.util.RemoteCrypto;
+import xyz.erupt.upms.annotation.EruptMenuAuth;
 import xyz.erupt.upms.service.EruptContextService;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Issues one-time session tickets for the desktop page.
- * The {erupt} path segment carries the menu permission check ({@code RemoteHost}).
+ * Issues one-time session tickets for the remote views.
+ * Every endpoint requires the {@code RemoteHost} menu, enforced by {@link EruptMenuAuth}.
  *
  * @author YuePeng
  */
@@ -41,10 +41,9 @@ public class RemoteController {
     @Resource
     private EruptContextService eruptContextService;
 
-    @GetMapping("/{erupt}/ticket/{id}")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
-    public R<Map<String, Object>> ticket(@PathVariable("erupt") String erupt, @PathVariable("id") Long id) {
-        Erupts.requireTrue(RemoteHost.class.getSimpleName().equals(erupt), "Unsupported erupt: " + erupt);
+    @GetMapping("/ticket/{id}")
+    @EruptMenuAuth(RemoteHost.MENU_VALUE)
+    public R<Map<String, Object>> ticket(@PathVariable("id") Long id) {
         RemoteHost host = eruptDao.find(RemoteHost.class, id);
         Erupts.requireNonNull(host, I18nTranslate.$translate("remote.host_not_found"));
         Erupts.requireTrue(Boolean.TRUE.equals(host.getEnabled()), I18nTranslate.$translate("remote.host_disabled"));
