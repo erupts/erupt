@@ -1,5 +1,6 @@
 package xyz.erupt.ai_canvas.fun;
 
+import xyz.erupt.ai_canvas.model.AiCanvasModel;
 import xyz.erupt.annotation.fun.VLModel;
 
 import java.util.List;
@@ -35,7 +36,12 @@ public interface CanvasModelProvider {
 
     // Object with langchain4j @Tool methods the LLM calls during generation to
     // verify its planned queries actually work (ReAct); null disables verification
-    default Object verifyTool() {
+    /**
+     * ReAct verification tool for the LLM round, or {@code null} when the source cannot verify.
+     *
+     * @param bindings the canvas bindings of this data source type; write dry runs must honour their switches
+     */
+    default Object verifyTool(List<AiCanvasModel> bindings) {
         return null;
     }
 

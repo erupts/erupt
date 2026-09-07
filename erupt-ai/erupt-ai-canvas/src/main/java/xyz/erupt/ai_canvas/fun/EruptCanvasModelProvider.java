@@ -12,6 +12,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.ai_canvas.model.AiCanvasModel;
+import xyz.erupt.ai_canvas.service.AiCanvasService;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -21,6 +23,8 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.controller.EruptDataController;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptService;
@@ -67,8 +71,8 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
     }
 
     @Override
-    public Object verifyTool() {
-        return new VerifyTool();
+    public Object verifyTool(List<AiCanvasModel> bindings) {
+        return new VerifyTool(bindings);
     }
 
     // Erupt paging is 1-based; models routinely try 0-based indices. Also caps the
@@ -98,6 +102,15 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
                 case "update", "edit", "modify" -> UPDATE;
                 case "delete", "remove" -> DELETE;
                 default -> null;
+            };
+        }
+
+        /** Name used by the SDK and by {@link AiCanvasService#allowedWrites} */
+        public String sdkName() {
+            return switch (this) {
+                case ADD -> "add";
+                case UPDATE -> "update";
+                case DELETE -> "delete";
             };
         }
 
@@ -141,7 +154,33 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
         return json.substring(0, VERIFY_MAX_CHARS) + "\n... (truncated, " + json.length() + " chars in total)";
     }
 
+
+    // The generation request is authorized at login level, so MetaContext carries no erupt model.
+    // Power handlers, filters and DataProxy hooks read the model from MetaContext exactly as the
+    // runtime /erupt-api/data routes register it, so every dry run runs under the same context.
+    static String withErupt(EruptModel eruptModel, java.util.function.Supplier<String> verification) {
+        MetaErupt previous = MetaContext.getErupt();
+        MetaContext.register(new MetaErupt(eruptModel.getEruptName(), eruptModel.getEruptName()));
+        try {
+            return verification.get();
+        } finally {
+            MetaContext.register(previous);
+        }
+    }
+
     public class VerifyTool {
+
+        // Canvas bindings of this data source type: the designer's switches are the first gate of every write
+        private final List<AiCanvasModel> bindings;
+
+        VerifyTool(List<AiCanvasModel> bindings) {
+            this.bindings = null == bindings ? List.of() : bindings;
+        }
+
+        private boolean enabledByCanvas(String model, WriteOp op) {
+            return bindings.stream().filter(it -> model.equals(it.getModel()))
+                    .anyMatch(it -> AiCanvasService.allowedWrites(it).contains(op.sdkName()));
+        }
 
         @Tool("""
                 Execute the paged list query the page will run, to VERIFY it works before embedding it.
@@ -155,7 +194,7 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
             if (null == eruptModel) return "Error: unknown model: " + model;
             TableQuery tableQuery = GsonFactory.getGson().fromJson(StringUtils.defaultIfBlank(queryJson, "{}"), TableQuery.class);
             normalizeQuery(tableQuery);
-            return GsonFactory.getGson().toJson(eruptService.getEruptData(eruptModel, tableQuery, null));
+            return withErupt(eruptModel, () -> GsonFactory.getGson().toJson(eruptService.getEruptData(eruptModel, tableQuery, null)));
         }
 
         @Tool("""
@@ -194,6 +233,11 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
             if (null == eruptModel) return "Error: unknown model: " + model;
             EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
             if (null == fieldModel) return "Error: unknown field: " + field;
+            return withErupt(eruptModel, () -> this.referenceQuery(eruptModel, fieldModel, field, queryJson, dependValue));
+        }
+
+        private String referenceQuery(EruptModel eruptModel, EruptFieldModel fieldModel, String field, String queryJson, String dependValue) {
+            String model = eruptModel.getEruptName();
             EditType type = fieldModel.getEruptField().edit().type();
             String depend = StringUtils.defaultIfBlank(dependValue, null);
             try {
@@ -225,6 +269,15 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
             if (null == eruptModel) return "Error: unknown model: " + model;
             WriteOp op = WriteOp.parse(operation);
             if (null == op) return "Error: unknown operation: " + operation + " (expected add | update | delete)";
+            return withErupt(eruptModel, () -> this.dryRunWrite(eruptModel, op, payloadJson));
+        }
+
+        private String dryRunWrite(EruptModel eruptModel, WriteOp op, String payloadJson) {
+            String model = eruptModel.getEruptName();
+            if (!this.enabledByCanvas(model, op)) {
+                return "Error: " + op.sdkName() + " is not enabled for " + model
+                        + " in this canvas's model settings — leave this operation out of the page";
+            }
             if (!op.permitted(PowerInvoke.getPowerObject(eruptModel))) {
                 return "Error: " + op.name().toLowerCase() + " is not permitted on " + model
                         + " (disabled by the model's power config or the current user's role) — leave this operation out of the page";

@@ -128,8 +128,9 @@ public class AiCanvasService {
         LlmRequest llmRequest = llm.toLlmRequest();
         llmRequest.setAutoCallTool(false);
         llmRequest.setAgentPrompt(this.buildSystem(view));
-        List<Object> verifyTools = groupByType(orderedBindings(view)).keySet().stream()
-                .map(type -> this.provider(type).verifyTool()).filter(Objects::nonNull).toList();
+        Map<String, List<AiCanvasModel>> byType = groupByType(orderedBindings(view));
+        List<Object> verifyTools = byType.keySet().stream()
+                .map(type -> this.provider(type).verifyTool(byType.get(type))).filter(Objects::nonNull).toList();
         if (!verifyTools.isEmpty()) llmRequest.setTools(verifyTools);
         return llmRequest;
     }
@@ -448,7 +449,7 @@ public class AiCanvasService {
             if (null != provider.writeGuide() && entry.getValue().stream().anyMatch(it -> !allowedWrites(it).isEmpty())) {
                 system.append("\n\n").append(provider.writeGuide());
             }
-            verify |= null != provider.verifyTool();
+            verify |= null != provider.verifyTool(entry.getValue());
         }
         if (verify) system.append("\n\n").append(VERIFY_PROMPT);
         system.append("\n\n# Data Models\n");
