@@ -51,7 +51,7 @@ public class EruptSuperInterceptor implements AsyncHandlerInterceptor {
                 }
                 MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
                 MetaContext.registerToken(token);
-                MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername()));
+                MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername(), metaUserinfo.getTenantId()));
             }
             if (null != eruptMenuAuth) {
                 if (null == eruptUserService.getEruptMenuByValue(eruptMenuAuth.value())) {

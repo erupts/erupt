@@ -1,10 +1,12 @@
 package xyz.erupt.upms.service;
 
+import com.google.gson.reflect.TypeToken;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.MenuStatus;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -52,6 +54,14 @@ public class EruptTokenService {
         eruptSessionService.put(SessionKey.MENU_VIEW + token, GsonFactory.getGson().toJson(eruptMenuVos), tokenExpire, TimeUnit.MINUTES);
         eruptSessionService.put(SessionKey.USER_INFO + token, GsonFactory.getGson().toJson(metaUserinfo), tokenExpire, TimeUnit.MINUTES);
         eruptSessionService.put(SessionKey.TOKEN_OLINE + token, metaUserinfo.getAccount(), tokenExpire, TimeUnit.MINUTES);
+    }
+
+    // Menu view cached at login for the given token, with names translated; null if the session is gone
+    public List<EruptMenuVo> menuView(String token) {
+        List<EruptMenuVo> menus = eruptSessionService.get(SessionKey.MENU_VIEW + token, new TypeToken<List<EruptMenuVo>>() {
+        }.getType());
+        if (null != menus) menus.forEach(it -> it.setName(I18nTranslate.$translate(it.getName())));
+        return menus;
     }
 
     public boolean tokenExist(String token) {

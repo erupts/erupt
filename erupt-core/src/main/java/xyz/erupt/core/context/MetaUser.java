@@ -17,10 +17,17 @@ public class MetaUser {
 
     private String name; // user display name
 
+    private String tenantId; // tenant of the session, null for platform users
+
     public MetaUser(Long uid, String account, String name) {
         this.uid = uid;
         this.account = account;
         this.name = name;
+    }
+
+    public MetaUser(Long uid, String account, String name, String tenantId) {
+        this(uid, account, name);
+        this.tenantId = tenantId;
     }
 
     public MetaUser() {

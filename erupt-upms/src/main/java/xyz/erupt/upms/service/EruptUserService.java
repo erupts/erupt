@@ -223,10 +223,13 @@ public class EruptUserService {
         return getEruptMenuValues(token).stream().collect(Collectors.toMap(it -> it, it -> true));
     }
 
-    //Get the current user ID
+    // Current user's id in the platform (EruptUser) id space. A tenant session has no such id:
+    // its uid lives in the tenant user table and collides with platform ids, so every consumer
+    // (HyperModel audit columns, per-user queries in plugins, login checks) must see null instead.
     public Long getCurrentUid() {
         MetaUserinfo metaUserinfo = getSimpleUserInfo();
-        return null == metaUserinfo ? null : metaUserinfo.getId();
+        if (null == metaUserinfo || null != metaUserinfo.getTenantId()) return null;
+        return metaUserinfo.getId();
     }
 
     //Get basic info of the currently logged-in user (from cache)
@@ -242,7 +245,7 @@ public class EruptUserService {
 
     //Get the current logged-in user object (from database)
     public EruptUser getCurrentEruptUser() {
-        Long uid = this.getCurrentUid();
+        Long uid = this.getCurrentUid(); // null for tenant sessions, see getCurrentUid()
         return null == uid ? null : eruptDao.getEntityManager().find(EruptUser.class, uid);
     }
 
