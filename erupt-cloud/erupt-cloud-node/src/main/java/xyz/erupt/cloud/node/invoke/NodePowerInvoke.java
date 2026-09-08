@@ -1,7 +1,7 @@
 package xyz.erupt.cloud.node.invoke;
 
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
+import xyz.erupt.cloud.common.http.CloudHttp;
+import org.springframework.web.client.RestClient;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.PowerHandler;
@@ -29,20 +29,24 @@ public class NodePowerInvoke implements PowerHandler {
     @Resource
     private EruptNodeProp eruptNodeProp;
 
+    @Resource
+    private RestClient serverRestClient;
+
     @Override
     public void handler(PowerObject power) {
         EruptModel eruptModel = EruptCoreService.getErupt(MetaContext.getErupt().getName());
-        try (HttpResponse res = HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.ERUPT_POWER)
-                .form("nodeName", eruptNodeProp.getNodeName()).form("eruptName", eruptModel.getEruptName())
-                .header(EruptMutualConst.TOKEN, MetaContext.getToken()).execute()){
-            PowerObject remotePowerObject = GsonFactory.getGson().fromJson(res.body(), PowerObject.class);
-            if (power.isAdd()) power.setAdd(remotePowerObject.isAdd());
-            if (power.isDelete()) power.setDelete(remotePowerObject.isDelete());
-            if (power.isEdit()) power.setEdit(remotePowerObject.isEdit());
-            if (power.isViewDetails()) power.setViewDetails(remotePowerObject.isViewDetails());
-            if (power.isExport()) power.setExport(remotePowerObject.isExport());
-            if (power.isImportable()) power.setImportable(remotePowerObject.isImportable());
-        }
+        String body = serverRestClient.get().uri(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.ERUPT_POWER, builder -> builder
+                        .queryParam("nodeName", eruptNodeProp.getNodeName())
+                        .queryParam("eruptName", eruptModel.getEruptName()).build())
+                .headers(CloudHttp.header(EruptMutualConst.TOKEN, MetaContext.getToken()))
+                .retrieve().body(String.class);
+        PowerObject remotePowerObject = GsonFactory.getGson().fromJson(body, PowerObject.class);
+        if (power.isAdd()) power.setAdd(remotePowerObject.isAdd());
+        if (power.isDelete()) power.setDelete(remotePowerObject.isDelete());
+        if (power.isEdit()) power.setEdit(remotePowerObject.isEdit());
+        if (power.isViewDetails()) power.setViewDetails(remotePowerObject.isViewDetails());
+        if (power.isExport()) power.setExport(remotePowerObject.isExport());
+        if (power.isImportable()) power.setImportable(remotePowerObject.isImportable());
     }
 
 }

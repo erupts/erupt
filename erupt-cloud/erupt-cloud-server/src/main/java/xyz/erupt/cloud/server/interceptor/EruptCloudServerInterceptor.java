@@ -1,10 +1,13 @@
 package xyz.erupt.cloud.server.interceptor;
 
-import cn.hutool.core.codec.Base64Encoder;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
-import cn.hutool.http.Method;
+import java.net.URI;
+import xyz.erupt.cloud.common.http.CloudHttp;
+import org.springframework.web.client.RestClient;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
+import org.springframework.core.io.ByteArrayResource;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -27,7 +30,6 @@ import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
-import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeContext;
 import xyz.erupt.cloud.server.node.NodeManager;
@@ -85,7 +87,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
     private OperationService operationService;
 
     @Resource
-    private EruptCloudServerProp eruptCloudServerProp;
+    private RestClient nodeRestClient;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -191,35 +193,36 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
     private boolean proxyAndRespond(HttpServletRequest request, HttpServletResponse response, Object handler,
                                     MetaNode metaNode, String nodeName, String erupt, String eruptName) throws Exception {
         String path = null == eruptName ? request.getRequestURI() : request.getRequestURI().replace(erupt, eruptName);
-        try (HttpResponse httpResponse = this.httpProxy(request, metaNode, path.substring(path.indexOf(EruptRestPath.ERUPT_API)), eruptName)) {
-            Optional.ofNullable(httpResponse.header("Content-Type")).ifPresent(response::setContentType);
+        return this.httpProxy(request, metaNode, path.substring(path.indexOf(EruptRestPath.ERUPT_API)), eruptName, (clientRequest, httpResponse) -> {
+            Optional.ofNullable(httpResponse.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE)).ifPresent(response::setContentType);
             for (String transferHeader : TRANSFER_HEADERS) {
-                Optional.ofNullable(httpResponse.header(transferHeader)).ifPresent(it -> response.addHeader(transferHeader, it));
+                Optional.ofNullable(httpResponse.getHeaders().getFirst(transferHeader)).ifPresent(it -> response.addHeader(transferHeader, it));
             }
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+            int status = httpResponse.getStatusCode().value();
             // Error: body is small, buffer it for logging and passthrough
-            if (httpResponse.getStatus() != HttpStatus.OK.value()) {
-                String body = httpResponse.body();
+            if (status != HttpStatus.OK.value()) {
+                String body = Optional.ofNullable(httpResponse.bodyTo(String.class)).orElse("");
                 log.error("{}: {} -> {}", metaNode.getNodeName(), path, body);
                 operationService.record(handler, new Exception(body));
-                response.setStatus(httpResponse.getStatus());
+                response.setStatus(status);
                 response.getOutputStream().write(body.getBytes(StandardCharsets.UTF_8));
                 return false;
             }
             operationService.record(handler, null);
             if (null != erupt && (EruptRestPath.ERUPT_BUILD + "/" + erupt).equals(request.getServletPath())) {
                 // Build: must buffer to rewrite node-name prefixes into the model
-                EruptBuildModel eruptBuildModel = GsonFactory.getGson().fromJson(httpResponse.body(), EruptBuildModel.class);
+                EruptBuildModel eruptBuildModel = GsonFactory.getGson().fromJson(httpResponse.bodyTo(String.class), EruptBuildModel.class);
                 this.eruptBuildProcess(eruptBuildModel, nodeName);
                 response.getOutputStream().write(GsonFactory.getGson().toJson(eruptBuildModel).getBytes(StandardCharsets.UTF_8));
             } else {
                 // Everything else (data / excel / file / large responses): stream through without full buffering
-                StreamUtils.copy(httpResponse.bodyStream(), response.getOutputStream());
+                StreamUtils.copy(httpResponse.getBody(), response.getOutputStream());
                 response.flushBuffer();
             }
             NodeContext.remove();
             return false;
-        }
+        });
     }
 
     @Override
@@ -228,39 +231,63 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         NodeContext.remove();
     }
 
-    public HttpResponse httpProxy(HttpServletRequest request, MetaNode metaNode, String path, String eruptName) throws Exception {
+    // Hop-by-hop and body-framing headers belong to the outgoing connection; the JDK client rejects
+    // them, and Accept-Encoding is dropped so the node streams an identity body we can pass through
+    private static final String[] DROP_HEADERS = {
+            HttpHeaders.HOST, HttpHeaders.ORIGIN, HttpHeaders.CONTENT_LENGTH, HttpHeaders.CONNECTION,
+            HttpHeaders.TRANSFER_ENCODING, HttpHeaders.EXPECT, HttpHeaders.UPGRADE, HttpHeaders.ACCEPT_ENCODING
+    };
+
+    /**
+     * Forward the incoming servlet request to the node and hand the node response to {@code responder}
+     * while it is still open, so large bodies can be streamed instead of buffered.
+     */
+    private boolean httpProxy(HttpServletRequest request, MetaNode metaNode, String path, String eruptName,
+                              RestClient.RequestHeadersSpec.ExchangeFunction<Boolean> responder) throws Exception {
         Map<String, String> headers = new CaseInsensitiveMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String name = headerNames.nextElement();
             headers.put(name, request.getHeader(name));
         }
-        headers.remove(HttpHeaders.HOST);
-        // Strip the browser Origin — this is a trusted server-to-server forward, and the node rejects
-        // Origin-bearing (i.e. browser-direct) calls.
-        headers.remove(HttpHeaders.ORIGIN);
+        // Origin is stripped on purpose: this is a trusted server-to-server forward, and the node
+        // rejects Origin-bearing (i.e. browser-direct) calls.
+        for (String drop : DROP_HEADERS) headers.remove(drop);
         headers.put(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken());
         headers.put(EruptMutualConst.TOKEN, eruptContextService.getCurrentToken());
         // tpl page proxy carries no erupt; the node interceptor only checks this header when present
         if (null != eruptName) {
             headers.put(EruptMutualConst.ERUPT, eruptName);
         }
-        headers.put(EruptMutualConst.USER, Base64Encoder.encode(GsonFactory.getGson().toJson(MetaContext.getUser())));
+        headers.put(EruptMutualConst.USER, CloudHttp.base64(GsonFactory.getGson().toJson(MetaContext.getUser())));
         //Process drill header
         if (headers.containsKey(EruptReqHeader.DRILL_SOURCE_ERUPT)) {
             headers.computeIfPresent(EruptReqHeader.DRILL_SOURCE_ERUPT, (k, dse) -> dse.substring(dse.lastIndexOf(".") + 1));
         }
         String query = null == request.getQueryString() ? "" : "?" + request.getQueryString();
-        Method method = Method.valueOf(request.getMethod());
+        HttpMethod method = HttpMethod.valueOf(request.getMethod());
         // Buffer the body once so it can be replayed to a failover instance without re-reading the
         // (one-shot) servlet input stream.
         boolean multipart = null != request.getContentType() && request.getContentType().contains("multipart/form-data");
-        List<Part> parts = multipart ? new ArrayList<>(request.getParts()) : null;
-        Map<Part, byte[]> partBodies = new java.util.IdentityHashMap<>();
+        MultiValueMap<String, Object> form = null;
         byte[] body = null;
         if (multipart) {
-            for (Part part : parts) {
-                partBodies.put(part, StreamUtils.copyToByteArray(part.getInputStream()));
+            // The multipart body is re-encoded by Spring with its own boundary
+            headers.remove(HttpHeaders.CONTENT_TYPE);
+            form = new LinkedMultiValueMap<>();
+            for (Part part : request.getParts()) {
+                byte[] bytes = StreamUtils.copyToByteArray(part.getInputStream());
+                String filename = part.getSubmittedFileName();
+                if (null == filename) {
+                    form.add(part.getName(), new String(bytes, StandardCharsets.UTF_8));
+                } else {
+                    form.add(part.getName(), new ByteArrayResource(bytes) {
+                        @Override
+                        public String getFilename() {
+                            return filename;
+                        }
+                    });
+                }
             }
         } else {
             body = StreamUtils.copyToByteArray(request.getInputStream());
@@ -270,17 +297,15 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         for (int i = 0; i < locations.size(); i++) {
             String location = locations.get(i);
             try {
-                HttpRequest httpRequest = HttpUtil.createRequest(method, location + path + query);
-                if (multipart) {
-                    for (Part part : parts) {
-                        httpRequest.form(part.getName(), partBodies.get(part), part.getSubmittedFileName());
-                    }
-                } else {
+                // The servlet URI and query string are already encoded: pass them through untouched
+                RestClient.RequestBodySpec httpRequest = nodeRestClient.method(method).uri(URI.create(location + path + query))
+                        .headers(it -> headers.forEach(it::set));
+                if (null != form) {
+                    httpRequest.contentType(MediaType.MULTIPART_FORM_DATA).body(form);
+                } else if (body.length > 0) {
                     httpRequest.body(body);
                 }
-                httpRequest.timeout(eruptCloudServerProp.getNodeRequestTimeout());
-                // async execution keeps the body lazy so it can be streamed instead of fully buffered
-                return httpRequest.addHeaders(headers).executeAsync();
+                return httpRequest.exchange(responder);
             } catch (Exception e) {
                 lastError = e;
                 // Only fail over when the connection never reached the node — otherwise a retry could

@@ -34,11 +34,6 @@
             <artifactId>erupt-cloud-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-http</artifactId>
-            <version>5.8.25</version>
-        </dependency>
     </dependencies>
 </project>
 

@@ -1,6 +1,6 @@
 package xyz.erupt.cloud.node.config;
 
-import cn.hutool.core.codec.Base64Decoder;
+import xyz.erupt.cloud.common.http.CloudHttp;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -60,7 +60,7 @@ public class EruptNodeInterceptor implements WebMvcConfigurer, AsyncHandlerInter
         }
         MetaContext.registerToken(request.getHeader(EruptMutualConst.TOKEN));
         Optional.ofNullable(request.getHeader(EruptMutualConst.USER)).ifPresent(it ->
-                MetaContext.register(GsonFactory.getGson().fromJson(Base64Decoder.decodeStr(it), MetaUser.class)));
+                MetaContext.register(GsonFactory.getGson().fromJson(CloudHttp.base64Decode(it), MetaUser.class)));
         MetaContext.register(new MetaErupt(request.getHeader(EruptMutualConst.ERUPT)));
         IN_FLIGHT.incrementAndGet();
         return true;

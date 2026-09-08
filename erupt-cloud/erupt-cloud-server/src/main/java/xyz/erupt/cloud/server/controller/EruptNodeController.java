@@ -1,7 +1,9 @@
 package xyz.erupt.cloud.server.controller;
 
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
+import java.util.Optional;
+import xyz.erupt.cloud.common.http.CloudHttp;
+import org.springframework.web.client.RestClient;
+import org.springframework.http.ResponseEntity;
 import com.google.gson.reflect.TypeToken;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,6 +38,9 @@ public class EruptNodeController {
     @Resource
     private EruptContextService eruptContextService;
 
+    @Resource
+    private RestClient nodeRestClient;
+
     //Remove instance
     @GetMapping("/remove-instance/{nodeName}")
     @EruptMenuAuth(CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION)
@@ -51,17 +56,17 @@ public class EruptNodeController {
         MetaNode metaNode = nodeManager.getNode(nodeName);
         if (null == metaNode || metaNode.getLocations().isEmpty())
             throw new EruptWebApiRuntimeException("'" + nodeName + "' node not ready");
-        try (HttpResponse httpResponse = HttpUtil.createGet(metaNode.getLocations().iterator().next() + EruptRestPath.ERUPT_TOOL + "/" + EruptConst.ERUPT_LOG)
-                .header(EruptMutualConst.TOKEN, eruptContextService.getCurrentToken()).header(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken())
-                .form("size", size).form("offset", offset).execute()) {
-            if (httpResponse.getStatus() == 200) {
-                return GsonFactory.getGson().fromJson(httpResponse.body(), new TypeToken<List<LogMessage>>() {
-                        }.getType()
-                );
-            } else {
-                httpServletResponse.setStatus(httpResponse.getStatus());
-                return null;
-            }
+        ResponseEntity<String> httpResponse = CloudHttp.exchange(nodeRestClient.get()
+                .uri(metaNode.getLocations().iterator().next() + EruptRestPath.ERUPT_TOOL + "/" + EruptConst.ERUPT_LOG,
+                        builder -> builder.queryParam("size", size).queryParamIfPresent("offset", Optional.ofNullable(offset)).build())
+                .headers(CloudHttp.header(EruptMutualConst.TOKEN, eruptContextService.getCurrentToken()))
+                .header(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken()));
+        if (httpResponse.getStatusCode().value() == 200) {
+            return GsonFactory.getGson().fromJson(httpResponse.getBody(), new TypeToken<List<LogMessage>>() {
+            }.getType());
+        } else {
+            httpServletResponse.setStatus(httpResponse.getStatusCode().value());
+            return null;
         }
     }
 
