@@ -32,8 +32,16 @@ public class I18nTranslate {
     }
 
     public String translate(String key) {
+        return this.translate(this.currentLang(), key);
+    }
+
+    /**
+     * Effective language of the current request: the "Lang" header when it names a loaded
+     * language, otherwise the configured default. Resolve it once when translating many keys.
+     */
+    public String currentLang() {
         String lang = getLang();
-        return this.translate(lang == null ? eruptProp.getDefaultLocales() : lang, key);
+        return lang == null ? eruptProp.getDefaultLocales() : lang;
     }
 
     public String translate(String lang, String key) {
