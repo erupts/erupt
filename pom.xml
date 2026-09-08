@@ -48,6 +48,11 @@
         <java.version>17</java.version>
         <langchain4j.version>1.14.1</langchain4j.version>
         <spring.boot.version>3.5.16</spring.boot.version>
+        <!-- Versions converged here because several third-party jars pull different releases:
+             nashorn (asm 7) vs json-smart (asm 9), kotlin-stdlib (annotations 13) vs ours, oshi vs pty4j (jna) -->
+        <asm.version>9.9.1</asm.version>
+        <jna.version>5.18.1</jna.version>
+        <jetbrains.annotations.version>24.0.1</jetbrains.annotations.version>
     </properties>
 
     <modules>
@@ -136,6 +141,46 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-tree</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-analysis</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-commons</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-util</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>${jna.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna-platform</artifactId>
+                <version>${jna.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${jetbrains.annotations.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -148,7 +193,6 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>24.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

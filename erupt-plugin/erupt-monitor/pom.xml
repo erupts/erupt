@@ -32,7 +32,7 @@
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
-            <version>5.8.3</version>
+            <version>6.9.1</version>
         </dependency>
         <!-- optional: only used by the datasource pool monitor, guarded by @ConditionalOnClass -->
         <dependency>
