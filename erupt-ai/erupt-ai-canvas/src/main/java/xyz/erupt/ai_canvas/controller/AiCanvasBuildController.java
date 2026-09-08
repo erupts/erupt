@@ -5,10 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai_canvas.model.AiCanvas;
 import xyz.erupt.ai_canvas.model.AiCanvasModel;
@@ -43,9 +40,6 @@ public class AiCanvasBuildController {
 
     @Resource
     private EruptDao eruptDao;
-
-    @Resource
-    private AiProp aiProp;
 
     @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
@@ -106,41 +100,28 @@ public class AiCanvasBuildController {
         return R.ok(aiViewService.generatingState(this.view(code).getId()));
     }
 
+    // Start a generation round and return at once. The designer follows the round through
+    // the same /generating poll it uses after a reload, so there is a single progress path
     @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @PostMapping("/generate/{code}")
-    public R<VersionVo> generate(@PathVariable("code") String code, @RequestBody GenerateBody body) {
+    public R<Void> generate(@PathVariable("code") String code, @RequestBody GenerateBody body) {
         if (StringUtils.isBlank(body.getMessage())) {
             throw new EruptWebApiRuntimeException("Message must not be blank");
         }
         AiCanvas view = this.view(code);
+        if (null != aiViewService.generatingState(view.getId())) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai-canvas.already_generating"));
+        }
         view.setStyle(body.getStyle());
         view.setLlm(this.resolveLlm(body.getLlmId()));
-        return R.ok(new VersionVo(aiViewService.generate(view, body.getMessage().trim(), body.getElement())));
-    }
-
-    // Streaming variant of generate; EventSource is GET-only, so the token
-    // arrives as the _token URL parameter (PARAM verify)
-    @EruptMenuAuth(AiCanvas.MENU_VALUE)
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    @GetMapping(value = "/generate-sse/{code}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter generateSse(@PathVariable("code") String code,
-                                  @RequestParam("message") String message,
-                                  @RequestParam(value = "style", required = false) String style,
-                                  @RequestParam(value = "llmId", required = false) Long llmId,
-                                  @RequestParam(value = "element", required = false) String element) {
-        if (StringUtils.isBlank(message)) {
-            throw new EruptWebApiRuntimeException("Message must not be blank");
-        }
-        AiCanvas view = this.view(code);
-        view.setStyle(style);
-        view.setLlm(this.resolveLlm(llmId));
-        // Persist the selection right away; html and version follow when the stream finishes
+        // Persist the selection right away; html and version follow when the round finishes
         eruptDao.mergeAndFlush(view);
         eruptDao.detach(view);
-        SseEmitter emitter = new SseEmitter(aiProp.getSseTimeout());
-        aiViewService.generateSse(MetaContext.get(), view, message.trim(), element, emitter);
-        return emitter;
+        String message = body.getMessage().trim();
+        aiViewService.beginRound(view.getId(), message);
+        aiViewService.generateAsync(MetaContext.get(), view, message, body.getElement());
+        return R.ok();
     }
 
     // Explicit stop: the running round is discarded; without this signal a mere

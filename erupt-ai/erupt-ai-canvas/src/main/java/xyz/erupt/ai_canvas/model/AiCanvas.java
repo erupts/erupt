@@ -73,7 +73,7 @@ public class AiCanvas extends MetaModelUpdateVo {
     private String name;
 
     // Data models the page reads from, one MULTI_FORM block per binding. EAGER:
-    // generation runs on a detached copy in an async thread (generateSse) and
+    // generation runs on a detached copy in an async thread (generateAsync) and
     // always needs the bindings; a canvas binds only a handful of models
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "canvas_id")

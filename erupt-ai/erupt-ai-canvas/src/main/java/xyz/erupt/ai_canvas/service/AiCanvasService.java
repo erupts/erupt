@@ -12,14 +12,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.config.AiProp;
-import xyz.erupt.ai.constants.SseEvent;
 import xyz.erupt.ai.core.LlmCore;
 import xyz.erupt.ai.core.LlmRequest;
 import xyz.erupt.ai.model.LLM;
-import xyz.erupt.ai.service.LLMService;
-import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.ai_canvas.fun.CanvasModelProvider;
 import xyz.erupt.ai_canvas.model.AiCanvas;
 import xyz.erupt.ai_canvas.model.AiCanvasModel;
@@ -35,7 +31,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -66,8 +61,6 @@ public class AiCanvasService {
 
     private static List<CanvasStyle> styles;
 
-    @Resource
-    private LLMService llmService;
 
     @Resource
     private EruptDao eruptDao;
@@ -95,21 +88,6 @@ public class AiCanvasService {
             throw new EruptWebApiRuntimeException("Unknown data source type: " + type);
         }
         return provider;
-    }
-
-    @Transactional
-    public AiCanvasVersion generate(AiCanvas view, String message, String element) {
-        List<ChatMessage> messages = new ArrayList<>();
-        messages.add(UserMessage.from(this.userMessage(this.draftHtml(view), message, element)));
-        LLM llm = this.resolveLlm(view);
-        LlmRequest llmRequest = this.llmRequest(view, llm);
-        this.markGenerating(view.getId(), message);
-        try {
-            String response = LlmCore.getLLM(llm).chat(llmRequest, messages);
-            return this.finishRound(view, message, llm, llmRequest, messages, response, false, null);
-        } finally {
-            this.clearGenerating(view.getId());
-        }
     }
 
     private LLM resolveLlm(AiCanvas view) {
@@ -168,6 +146,12 @@ public class AiCanvasService {
         private long startedAt;
         private long beatAt;
         private String message;
+        /**
+         * Set when the round ended in failure. Such a marker is terminal: the designer
+         * polls the same endpoint for progress and for the outcome, so the failure is
+         * parked here briefly and consumed by the first read that sees it.
+         */
+        private String error;
 
         public GeneratingState() {
         }
@@ -221,7 +205,32 @@ public class AiCanvasService {
             this.clearGenerating(canvasId);
             return null;
         }
+        // A failed round is reported once, to whoever polls first, then forgotten
+        if (null != state.getError()) this.clearGenerating(canvasId);
         return state;
+    }
+
+    // How long a failure stays readable when nobody is polling (e.g. the designer was closed)
+    static final long ERROR_TTL_MS = 60 * 1000L;
+
+    private void failGenerating(Long canvasId, String message, String error) {
+        // The async path has no caller to throw to, so log here — otherwise a failed
+        // round leaves no server-side trace at all
+        log.error("AI canvas generation failed: {}", error);
+        GeneratingState state = new GeneratingState(message);
+        state.setError(null == error ? "Unknown error" : error);
+        eruptSessionService.put(RUNNING_KEY + canvasId,
+                GsonFactory.getGson().toJson(state), ERROR_TTL_MS, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Open a round synchronously, before the async work is dispatched: the designer
+     * starts polling as soon as the start request returns, so the marker must already
+     * be there. Also clears a stale stop signal left over from a previous round.
+     */
+    public void beginRound(Long canvasId, String message) {
+        eruptSessionService.remove(STOP_KEY + canvasId);
+        this.markGenerating(canvasId, message);
     }
 
     // A round is alive while its last heartbeat is younger than the marker lifetime
@@ -230,34 +239,26 @@ public class AiCanvasService {
     }
 
     /**
-     * Streaming variant: forwards tokens to the emitter as they arrive, then
-     * files the version and answers DONE with either the version or an error.
-     * Only an explicit stop discards the round — a mere disconnect (page
-     * refresh, network hiccup) still persists the version, it shows on reload.
+     * Run one generation round in the background. The designer learns about progress
+     * and outcome solely through the running marker ({@link #generatingState}), the same
+     * way it does after a page reload: alive while the round runs, gone once a version
+     * is filed, carrying an error when it failed. Only an explicit stop discards the
+     * round — a closed designer still gets its version persisted.
+     * The caller must have opened the marker with {@link #beginRound} first.
      */
     @Async
-    public void generateSse(MetaContext metaContext, AiCanvas view, String message, String element, SseEmitter emitter) {
+    public void generateAsync(MetaContext metaContext, AiCanvas view, String message, String element) {
         try {
             MetaContext.set(metaContext);
-            // Clear a stale stop signal left over from a previous round
-            eruptSessionService.remove(STOP_KEY + view.getId());
             LLM llm = this.resolveLlm(view);
             LlmRequest llmRequest = this.llmRequest(view, llm);
             List<ChatMessage> context = new ArrayList<>();
-            AtomicBoolean clientGone = new AtomicBoolean(false);
-            emitter.onCompletion(() -> clientGone.set(true));
-            emitter.onTimeout(() -> clientGone.set(true));
-            emitter.onError(t -> clientGone.set(true));
             StringBuilder response = new StringBuilder();
-            // The marker is what the designer reads after a refresh; the stream itself
-            // is gone by then. Cleared on every terminal path below, and self-expiring
-            // when the container dies mid-round
-            this.markGenerating(view.getId(), message);
             AtomicLong lastBeat = new AtomicLong(System.currentTimeMillis());
+            // The token stream is used only for its heartbeat: every chunk proves the round is alive
             LlmCore.getLLM(llm).chatSse(llmRequest, this.userMessage(this.draftHtml(view), message, element), context, it -> {
                 if (null != it.getThrowable()) {
-                    this.clearGenerating(view.getId());
-                    if (!clientGone.get()) this.doneSse(emitter, null, it.getThrowable().getMessage());
+                    this.failGenerating(view.getId(), message, it.getThrowable().getMessage());
                 } else if (it.isFinish()) {
                     // Stopped by the user: discard the round, no version is filed
                     if (this.stopRequested(view.getId())) {
@@ -268,38 +269,26 @@ public class AiCanvasService {
                         String text = null != it.getAiMessage() && null != it.getAiMessage().text()
                                 ? it.getAiMessage().text() : response.toString();
                         boolean cutOff = FinishReason.LENGTH == it.getFinishReason();
-                        AiCanvasVersion version = this.finishRound(view, message, llm, llmRequest, context, text, cutOff, step -> {
-                            // Validation and the repair round run here, after the last token:
-                            // renew the marker so a refresh still shows the round as running
-                            this.heartbeatGenerating(view.getId(), message);
-                            if (!clientGone.get()) llmService.sendSseBody(emitter, new SseBody(SseEvent.CALL, step));
-                        });
-                        if (!clientGone.get()) this.doneSse(emitter, version, null);
-                    } catch (Exception e) {
-                        if (!clientGone.get()) this.doneSse(emitter, null, e.getMessage());
-                    } finally {
+                        // Validation and the repair round run here, after the last token:
+                        // renew the marker so the designer keeps showing the round as running
+                        this.finishRound(view, message, llm, llmRequest, context, text, cutOff,
+                                step -> this.heartbeatGenerating(view.getId(), message));
                         // Only here is the round genuinely over, repair round included
                         this.clearGenerating(view.getId());
+                    } catch (Exception e) {
+                        this.failGenerating(view.getId(), message, e.getMessage());
                     }
                 } else if (null != it.getCall()) {
                     this.beat(view.getId(), message, lastBeat);
-                    // ReAct verification round: surface the tool name so the designer can show progress
-                    if (!clientGone.get()) {
-                        llmService.sendSseBody(emitter, new SseBody(SseEvent.CALL, it.getCall()));
-                    }
                 } else if (null != it.getCurrMessage()) {
                     // Thinking tokens keep the round alive too, they just are not page source
                     this.beat(view.getId(), message, lastBeat);
                     if (it.isThinking()) return;
                     response.append(it.getCurrMessage());
-                    if (!clientGone.get()) {
-                        llmService.sendSseBody(emitter, new SseBody(SseEvent.TOKEN, it.getCurrMessage()));
-                    }
                 }
             });
         } catch (Exception e) {
-            this.clearGenerating(view.getId());
-            this.doneSse(emitter, null, e.getMessage());
+            this.failGenerating(view.getId(), message, e.getMessage());
         }
     }
 
@@ -324,27 +313,6 @@ public class AiCanvasService {
 
     private boolean stopRequested(Long canvasId) {
         return eruptSessionService.exist(STOP_KEY + canvasId);
-    }
-
-    // Single completion protocol: DONE carries either {version: {...}} or {error: "..."}
-    private void doneSse(SseEmitter emitter, AiCanvasVersion version, String error) {
-        Map<String, Object> payload;
-        if (null != version) {
-            Map<String, Object> versionMap = new HashMap<>();
-            versionMap.put("id", version.getId());
-            versionMap.put("version", version.getVersion());
-            versionMap.put("message", version.getMessage());
-            versionMap.put("style", version.getStyle());
-            versionMap.put("createTime", String.valueOf(version.getCreateTime()));
-            payload = Map.of("version", versionMap);
-        } else {
-            // The SSE path answers errors in-band instead of throwing, so log here —
-            // otherwise a failed round leaves no server-side trace at all
-            log.error("AI canvas generation failed: {}", error);
-            payload = Map.of("error", null == error ? "Unknown error" : error);
-        }
-        llmService.sendSseBody(emitter, new SseBody(SseEvent.DONE, GsonFactory.getGson().toJson(payload)));
-        llmService.completeSse(emitter);
     }
 
     // Progress label of the repair round, surfaced to the designer like a tool call
