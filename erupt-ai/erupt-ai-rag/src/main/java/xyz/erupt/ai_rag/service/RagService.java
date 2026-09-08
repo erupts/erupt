@@ -4,6 +4,7 @@ import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.EmbeddingSearchResult;
 import dev.langchain4j.store.embedding.EmbeddingStore;
@@ -179,7 +180,7 @@ public class RagService {
         if (result.matches().isEmpty()) {
             return List.of();
         }
-        List<String> vectorIds = result.matches().stream().map(m -> m.embeddingId()).collect(Collectors.toList());
+        List<String> vectorIds = result.matches().stream().map(EmbeddingMatch::embeddingId).collect(Collectors.toList());
         // Chunk text lives in the database (single source of truth), look it up by vector id
         Map<String, KnowledgeChunk> chunkByVectorId = eruptDao.lambdaQuery(KnowledgeChunk.class)
                 .in(KnowledgeChunk::getVectorId, vectorIds).list()

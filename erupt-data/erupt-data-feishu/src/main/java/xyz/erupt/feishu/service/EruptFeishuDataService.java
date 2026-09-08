@@ -160,7 +160,7 @@ public class EruptFeishuDataService extends EruptBeanDataService<Map<String, Obj
         if (element.isJsonPrimitive()) return primitive(element.getAsJsonPrimitive());
         if (element.isJsonArray()) {
             JsonArray array = element.getAsJsonArray();
-            if (array.size() > 0 && array.get(0).isJsonObject()) {
+            if (!array.isEmpty() && array.get(0).isJsonObject()) {
                 StringBuilder sb = new StringBuilder();
                 for (JsonElement segment : array) sb.append(segmentText(segment));
                 return sb.toString();

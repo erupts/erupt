@@ -16,22 +16,8 @@ import xyz.erupt.ldap.annotation.EruptLdap;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.BasicAttribute;
-import javax.naming.directory.BasicAttributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.ModificationItem;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import javax.naming.directory.*;
+import java.util.*;
 
 /**
  * LDAP-backed data source using the JDK's built-in JNDI provider. Models annotated
@@ -244,8 +230,7 @@ public class EruptLdapDataService extends EruptBeanDataService<Map<String, Objec
 
     private Attribute toAttribute(String name, Object value) {
         if (null == value) return null;
-        if (value instanceof Collection) {
-            Collection<?> collection = (Collection<?>) value;
+        if (value instanceof Collection<?> collection) {
             if (collection.isEmpty()) return null;
             BasicAttribute attr = new BasicAttribute(name);
             for (Object item : collection) if (null != item) attr.add(String.valueOf(item));
@@ -271,7 +256,7 @@ public class EruptLdapDataService extends EruptBeanDataService<Map<String, Objec
                 default -> { /* other operators are re-evaluated by the base class */ }
             }
         }
-        if (pushdown.length() == 0) return ldap.filter();
+        if (pushdown.isEmpty()) return ldap.filter();
         return "(&" + ldap.filter() + pushdown + ")";
     }
 
