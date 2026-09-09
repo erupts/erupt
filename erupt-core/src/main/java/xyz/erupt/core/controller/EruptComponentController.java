@@ -23,6 +23,7 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,11 +57,19 @@ public class EruptComponentController {
         if (val.length() < autoCompleteType.triggerLength()) {
             throw new EruptWebApiRuntimeException("char length must >= " + autoCompleteType.triggerLength());
         }
-        try {
-            return EruptSpringUtil.getBean(autoCompleteType.handler()).completeHandler(o, val, autoCompleteType.param());
-        } catch (Exception e) {
-            throw new EruptApiErrorTip(e.getMessage(), R.PromptWay.MESSAGE);
+        List<Object> result = new ArrayList<>();
+        String keyword = val.toLowerCase();
+        for (String value : autoCompleteType.values()) {
+            if (value.toLowerCase().contains(keyword)) result.add(value);
         }
+        if (!autoCompleteType.handler().isInterface()) {
+            try {
+                result.addAll(EruptSpringUtil.getBean(autoCompleteType.handler()).completeHandler(o, val, autoCompleteType.param()));
+            } catch (Exception e) {
+                throw new EruptApiErrorTip(e.getMessage(), R.PromptWay.MESSAGE);
+            }
+        }
+        return result;
     }
 
     //Gets the CHOICE component drop-down list

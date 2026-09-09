@@ -47,4 +47,12 @@ public class AutoCompleteModel extends BaseModel {
                             triggerLength = 1))
     )
     private String product;
+
+    // static candidates only, no handler
+    @EruptField(
+            views = @View(title = "Country"),
+            edit = @Edit(title = "Country", type = EditType.AUTO_COMPLETE,
+                    autoCompleteType = @AutoCompleteType(values = {"China", "Canada", "Chile"}))
+    )
+    private String country;
 }

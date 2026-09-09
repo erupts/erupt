@@ -292,6 +292,26 @@ public class EruptControllerTest extends EruptApplicationTests {
         assertNotNull(resp.getBody());
     }
 
+    /**
+     * Static candidates declared via @AutoCompleteType(values) are filtered case-insensitively
+     * by the input and served without any handler.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    void testAutoCompleteStaticValues() {
+        String erupt = AutoCompleteModel.class.getSimpleName();
+        ResponseEntity<List> resp = rest.exchange(
+                "/erupt-api/comp/auto-complete/" + erupt + "/country?val=ch",
+                HttpMethod.POST,
+                new HttpEntity<>(Map.of(), authHeaders),
+                List.class);
+        assertEquals(HttpStatus.OK, resp.getStatusCode());
+        List<Object> items = resp.getBody();
+        assertNotNull(items);
+        assertTrue(items.contains("China") && items.contains("Chile"), "matching candidates must be returned");
+        assertFalse(items.contains("Canada"), "non-matching candidates must be filtered out");
+    }
+
     // ─── EruptTabController ───────────────────────────────────────────────────
 
     /**

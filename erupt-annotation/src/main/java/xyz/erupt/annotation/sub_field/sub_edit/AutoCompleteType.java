@@ -8,8 +8,12 @@ import java.beans.Transient;
 public @interface AutoCompleteType {
 
     @Transient
-    @Comment("Dynamically generates the autocomplete list")
-    Class<? extends AutoCompleteHandler> handler();
+    @Comment("Predefined candidates, matched case-insensitively against the input; combined with handler results")
+    String[] values() default {};
+
+    @Transient
+    @Comment("Dynamically generates the autocomplete list; the interface itself means no handler")
+    Class<? extends AutoCompleteHandler> handler() default AutoCompleteHandler.class;
 
     @Transient
     @Comment("Accessible from the handler")
