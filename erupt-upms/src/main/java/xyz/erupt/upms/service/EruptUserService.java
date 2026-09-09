@@ -29,8 +29,8 @@ import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.util.IpUtil;
+import xyz.erupt.upms.util.IpWhiteListMatcher;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -97,10 +97,8 @@ public class EruptUserService {
                     return new LoginModel(false, String.format("The account has become invalid at %s.", DateUtil.getSimpleFormatDate(eruptUser.getExpireDate())));
                 }
             }
-            if (StringUtils.isNotBlank(eruptUser.getWhiteIp())) {
-                if (Arrays.stream(eruptUser.getWhiteIp().split("\n")).noneMatch(ip -> ip.equals(requestIp))) {
-                    return new LoginModel(false, "Your IP address does not have the authority to access.");
-                }
+            if (!IpWhiteListMatcher.isAllowed(requestIp, eruptUser.getWhiteIp())) {
+                return new LoginModel(false, "Your IP address does not have the authority to access.");
             }
             if (this.checkPwd(eruptUser, pwd)) {
                 sessionService.remove(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
