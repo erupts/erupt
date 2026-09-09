@@ -319,6 +319,10 @@ public class EruptUtil {
             if (edit.notNull()) {
                 if (null == value || value.isJsonNull()) {
                     return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                } else if (value.isJsonArray() && value.getAsJsonArray().isEmpty()) {
+                    // List-valued components (MULTI_FORM, TAB_TABLE_ADD, CHECKBOX, TAB_TREE, MULTI_CHOICE ...)
+                    // submit [] when nothing was chosen, which is as empty as null
+                    return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
                 } else if (String.class.getSimpleName().equals(field.getFieldReturnName())) {
                     if (StringUtils.isBlank(value.getAsString())) {
                         return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));

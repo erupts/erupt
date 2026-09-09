@@ -14,6 +14,7 @@ import xyz.erupt.core.util.SecretUtil;
 import xyz.erupt.test.EruptApplicationTests;
 import xyz.erupt.test.model.edit.AutoCompleteModel;
 import xyz.erupt.test.model.edit.ChoiceModel;
+import xyz.erupt.test.model.edit.MultiFormModel;
 import xyz.erupt.test.model.edit.TabTableAddModel;
 import xyz.erupt.test.model.erupt.AuthVerifyModel;
 import xyz.erupt.test.model.erupt.RowOperationModel;
@@ -237,6 +238,33 @@ public class EruptControllerTest extends EruptApplicationTests {
         // ⑦ Verify gone
         assertNull(findIdByName(erupt, uniqueName + "-updated", "key"),
                 "record must not be found after delete");
+    }
+
+    /**
+     * A required MULTI_FORM field rejects an empty block list (the frontend submits [] when
+     * no block was added), and each block is validated against the child model.
+     */
+    @Test
+    void testRequiredMultiFormValidation() {
+        String erupt = MultiFormModel.class.getSimpleName();
+        String title = "mf-" + System.nanoTime();
+
+        ResponseEntity<Map> empty = post("/erupt-api/data/modify/" + erupt, "{\"title\":\"" + title + "\",\"items\":[]}");
+        assertEquals(HttpStatus.OK, empty.getStatusCode());
+        assertFalse((Boolean) getBody(empty).get("success"), "an empty required MULTI_FORM must be rejected");
+        assertTrue(String.valueOf(getBody(empty).get("message")).startsWith("Items"), "message must name the field");
+
+        ResponseEntity<Map> missing = post("/erupt-api/data/modify/" + erupt, "{\"title\":\"" + title + "\"}");
+        assertFalse((Boolean) getBody(missing).get("success"), "an absent required MULTI_FORM must be rejected");
+
+        ResponseEntity<Map> badChild = post("/erupt-api/data/modify/" + erupt, "{\"title\":\"" + title + "\",\"items\":[{}]}");
+        assertFalse((Boolean) getBody(badChild).get("success"), "a block missing a required child field must be rejected");
+        assertTrue(String.valueOf(getBody(badChild).get("message")).contains("#1"), "message must point at the block");
+
+        ResponseEntity<Map> ok = post("/erupt-api/data/modify/" + erupt,
+                "{\"title\":\"" + title + "\",\"items\":[{\"name\":\"child\"}]}");
+        assertEquals(HttpStatus.OK, ok.getStatusCode());
+        assertTrue((Boolean) getBody(ok).get("success"), "a filled block must pass: " + getBody(ok).get("message"));
     }
 
     /**
