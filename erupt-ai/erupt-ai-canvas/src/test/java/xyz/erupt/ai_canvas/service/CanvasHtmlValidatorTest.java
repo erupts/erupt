@@ -8,8 +8,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * The validator decides whether a generated page is filed or sent back for a
- * repair round, so both directions matter: real breakage must be caught and
- * ordinary modern JavaScript must pass untouched.
+ * repair round, so both directions matter: truncation and syntax breakage must
+ * be caught, while any complete page must pass no matter how it uses the
+ * frameworks (in-DOM templates, bare helpers, Vue 2 leftovers are the prompt's
+ * concern, not the validator's).
  *
  * @author YuePeng
  * date 2026/9/6
@@ -100,133 +102,11 @@ class CanvasHtmlValidatorTest {
     }
 
     @Test
-    void frameworkUsedWithoutItsScriptIsReported() {
-        String head = "<script src=\"${base}/erupt-canvas-sdk.js\"></script>";
-        String body = "<div id=\"app\"></div><script type=\"text/x-template\" id=\"t\"><el-button>x</el-button></script>"
-                + "<script>Vue.createApp({template: '#t'}).use(ElementPlus).mount('#app');</script>";
-        List<String> problems = CanvasHtmlValidator.validate(page(head, body));
-        assertEquals(2, problems.size());
-        assertTrue(problems.get(0).contains("Vue"));
-        assertTrue(problems.get(1).contains("Element Plus"));
-    }
-
-    @Test
-    void elementPlusBeforeVueIsReported() {
-        String head = """
-                <script src="${base}/erupt-canvas-sdk.js"></script>
-                <script src="${base}/element-plus/element.min.js"></script>
-                <script src="${base}/element-plus/vue3.js"></script>
-                """;
-        List<String> problems = CanvasHtmlValidator.validate(page(head, "<div id=\"app\"></div><script>Vue.createApp({}).mount('#app')</script>"));
-        assertEquals(1, problems.size());
-        assertTrue(problems.get(0).contains("before vue3.js"));
-    }
-
-    @Test
-    void vue2DialogBindingIsReported() {
-        // The exact shape that renders fine and never opens: Vue 3 drops `.sync` silently
-        String body = """
-                <div id="app"></div>
-                <script type="text/x-template" id="t">
-                  <div>
-                    <el-button @click="show = true">new</el-button>
-                    <el-dialog :visible.sync="show" title="t"><p>x</p></el-dialog>
-                  </div>
-                </script>
-                <script>Vue.createApp({template: '#t', data() { return {show: false}; }}).use(ElementPlus).mount('#app');</script>
-                """;
-        List<String> problems = CanvasHtmlValidator.validate(page(ASSETS, body));
-        assertEquals(1, problems.size());
-        assertTrue(problems.get(0).contains(".sync"), problems.get(0));
-        assertTrue(problems.get(0).contains("v-model"), problems.get(0));
-    }
-
-    @Test
-    void otherVue2LeftoversAreReported() {
-        assertTrue(firstProblem("<span @click.native=\"go\"></span>").contains(".native"));
-        assertTrue(firstProblem("<el-table><template slot=\"header\"><b/></template></el-table>").contains("slot="));
-        assertTrue(firstProblem("<el-table><template slot-scope=\"s\"><b/></template></el-table>").contains("slot-scope"));
-        assertTrue(firstProblem("<script>new Vue({el: '#x'});</script>").contains("new Vue"));
-        assertTrue(firstProblem("<script>Vue.component('x', {});</script>").contains("global API"));
-        assertTrue(firstProblem("<el-button icon=\"el-icon-plus\">add</el-button>").contains("icon font"));
-        assertTrue(firstProblem("<i class=\"el-icon-search\"></i>").contains("icon font"));
-    }
-
-    @Test
-    void bareElementPlusHelpersAreReported() {
-        String body = "<div id=\"app\"></div><script>Vue.createApp({methods: {f() { ElMessage.success('ok'); }}}).mount('#app');</script>";
-        List<String> problems = CanvasHtmlValidator.validate(page(ASSETS, body));
-        assertEquals(1, problems.size());
-        assertTrue(problems.get(0).contains("ElMessage"), problems.get(0));
-        assertTrue(problems.get(0).contains("ElementPlus"), problems.get(0));
-    }
-
-    @Test
-    void destructuredOrQualifiedHelpersPass() {
-        String destructured = "<div id=\"app\"></div><script>const {ElMessage, ElMessageBox} = ElementPlus;"
-                + " Vue.createApp({methods: {f() { ElMessage.success('ok'); ElMessageBox.confirm('y'); }}}).use(ElementPlus).mount('#app');</script>";
-        assertEquals(List.of(), CanvasHtmlValidator.validate(page(ASSETS, destructured)));
-        String qualified = "<div id=\"app\"></div><script>Vue.createApp({methods: {f() { ElementPlus.ElMessage.success('ok'); }}}).use(ElementPlus).mount('#app');</script>";
-        assertEquals(List.of(), CanvasHtmlValidator.validate(page(ASSETS, qualified)));
-    }
-
-    private static final String ICON_ASSETS = ASSETS + "<script src=\"${base}/element-plus/element-icons.min.js\"></script>\n";
-
-    private static String iconPage(String head, String setup) {
-        return page(head, "<div id=\"app\"></div>"
-                + "<script type=\"text/x-template\" id=\"t\"><el-button><el-icon><Plus /></el-icon>add</el-button></script>"
-                + "<script>const app = Vue.createApp({template: '#t'}); app.use(ElementPlus); " + setup + " app.mount('#app');</script>");
-    }
-
-    @Test
-    void iconComponentsWithoutTheirScriptAreReported() {
-        List<String> problems = CanvasHtmlValidator.validate(iconPage(ASSETS, ""));
-        assertEquals(1, problems.size());
-        assertTrue(problems.get(0).contains("element-icons.min.js"), problems.get(0));
-        assertTrue(problems.get(0).contains("Plus"), problems.get(0));
-    }
-
-    @Test
-    void unregisteredIconComponentsAreReported() {
-        List<String> problems = CanvasHtmlValidator.validate(iconPage(ICON_ASSETS, ""));
-        assertEquals(1, problems.size());
-        assertTrue(problems.get(0).contains("never registers them"), problems.get(0));
-    }
-
-    @Test
-    void registeredIconComponentsPass() {
-        String register = "Object.entries(ElementPlusIconsVue).forEach(([n, c]) => app.component(n, c));";
-        assertEquals(List.of(), CanvasHtmlValidator.validate(iconPage(ICON_ASSETS, register)));
-    }
-
-    @Test
-    void iconBundleIsNotMistakenForTheCoreBundle() {
-        // element-icons.min.js also contains "element"; loading only it must still
-        // report the missing core bundle rather than silently passing
-        String head = "<script src=\"${base}/erupt-canvas-sdk.js\"></script>"
-                + "<script src=\"${base}/element-plus/vue3.js\"></script>"
-                + "<script src=\"${base}/element-plus/element-icons.min.js\"></script>";
-        String body = "<div id=\"app\"></div><script type=\"text/x-template\" id=\"t\"><el-button>x</el-button></script>"
-                + "<script>Vue.createApp({template: '#t'}).use(ElementPlus).mount('#app');</script>";
-        List<String> problems = CanvasHtmlValidator.validate(page(head, body));
-        assertEquals(1, problems.size());
-        assertTrue(problems.get(0).contains("loads no Element Plus script"), problems.get(0));
-    }
-
-    @Test
-    void inDomTemplateIsReported() {
-        // Each of these markers means the browser, not Vue, parses the markup first
-        for (String markup : List.of(
-                "<el-table :data=\"rows\"></el-table>",
-                "<p>{{ total }}</p>",
-                "<span v-if=\"ok\">y</span>",
-                "<button @click=\"go\">go</button>")) {
-            String body = "<div id=\"app\">" + markup + "</div>"
-                    + "<script>Vue.createApp({}).use(ElementPlus).mount('#app');</script>";
-            List<String> problems = CanvasHtmlValidator.validate(page(ASSETS, body));
-            assertEquals(1, problems.size(), markup);
-            assertTrue(problems.get(0).contains("text/x-template"), problems.get(0));
-        }
+    void frameworkStyleIsNotValidated() {
+        // In-DOM template, bare ElMessage, Vue 2 leftovers, missing framework scripts: none of it is a validation error
+        String inDom = "<div id=\"app\"><el-table :data=\"rows\"><template slot=\"header\"><b/></template></el-table><p>{{ total }}</p></div>"
+                + "<script>Vue.createApp({methods: {f() { ElMessage.success('ok'); }}}).mount('#app');</script>";
+        assertEquals(List.of(), CanvasHtmlValidator.validate(page("<script src=\"${base}/erupt-canvas-sdk.js\"></script>", inDom)));
     }
 
     @Test
@@ -240,15 +120,6 @@ class CanvasHtmlValidatorTest {
         String plain = "<table id=\"grid\"><tr><td>x</td></tr></table>"
                 + "<script>Erupt.table('P', {}).then(p => { document.getElementById('grid').textContent = p.total; });</script>";
         assertEquals(List.of(), CanvasHtmlValidator.validate(page(ASSETS, plain)));
-    }
-
-    /** Wraps a markup snippet the way a correct page would, so only the tested defect fires */
-    private static String firstProblem(String snippet) {
-        String body = "<div id=\"app\"></div><script type=\"text/x-template\" id=\"t\"><div>" + snippet
-                + "</div></script><script>Vue.createApp({template: '#t'}).use(ElementPlus).mount('#app');</script>";
-        List<String> problems = CanvasHtmlValidator.validate(page(ASSETS, body));
-        assertFalse(problems.isEmpty(), "expected a problem for: " + snippet);
-        return problems.get(0);
     }
 
     @Test

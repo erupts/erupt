@@ -34,30 +34,31 @@ This is **Element Plus 2.14 on Vue 3.5**, NOT Element UI on Vue 2. Vue 2 syntax 
 | any other `.sync` modifier | `v-model:propName="value"` |
 | `@click.native="fn"` | `@click="fn"` |
 | `slot="header"` / `slot-scope="scope"` | `<template #header>` / `<template #default="{ row }">` |
-| `new Vue({el: '#app', ...})` | `Vue.createApp({...}).use(ElementPlus).mount('#app')` |
-| `Vue.component/use/mixin/directive/prototype` | the same methods on the app object from `Vue.createApp(...)` |
+| `new Vue({el: '#app', ...})` or `Vue.createApp(...)` | `Erupt.app({...})` — see Bootstrap below |
+| `Vue.component/use/mixin/directive/prototype` | the same methods on the app object returned by `Erupt.app(...)` |
 | `icon="el-icon-plus"`, `<i class="el-icon-search">` | `<el-icon><Plus /></el-icon>` — Element Plus dropped the icon font, see Icons below |
 | `el-button type="text"` | `el-button link` |
 
-**Globals.** The bundle defines exactly two globals: `Vue` and `ElementPlus`. Helper functions are properties of `ElementPlus`, so bare `ElMessage` / `ElMessageBox` throws `ElMessage is not defined`. Destructure what you use at the top of the script:
+**Bootstrap.** Never call `Vue.createApp` or register plugins and icons yourself. `Erupt.app(options)` from the SDK does all of it: it creates the app, installs Element Plus, registers every icon component when the icon script is loaded, exposes `ElMessage`, `ElMessageBox`, `ElNotification` and `ElLoading` as globals, relays runtime errors to the designer and mounts on `#app` (pass a selector as the second argument to mount elsewhere). It returns the app instance.
 
 ```javascript
-const {createApp, ref, reactive, computed, onMounted} = Vue;
-const {ElMessage, ElMessageBox} = ElementPlus;
+const {ref, reactive, computed, onMounted} = Vue;
+Erupt.app({
+  template: '#page-tpl',
+  setup() {
+    const rows = ref([]);
+    onMounted(async () => {
+      try { rows.value = (await Erupt.table('Product', {pageIndex: 1})).list; }
+      catch (e) { ElMessage.error(e.message); }
+    });
+    return {rows};
+  }
+});
 ```
 
-`app.use(ElementPlus)` also registers `$alert`, `$confirm`, `$loading`, `$message`, `$msgbox`, `$notify` and `$prompt` on the Options API, so `this.$message` works too. Prefer the destructured names: they also work inside `setup()` and in plain helper functions, where `this` is not available.
+Composition helpers still come from `Vue` (`const {ref} = Vue`). `Erupt.app` also registers `$message`, `$confirm`, `$loading` and the other Options API helpers, so `this.$message` works in `methods`.
 
-**Icons.** Icons ship as a separate bundle exposing `ElementPlusIconsVue`. It has NO install function, so `app.use(ElementPlusIconsVue)` does NOT work. Register the components once on the app, then use them by name:
-
-```javascript
-const app = Vue.createApp({ template: '#page-tpl', /* ... */ });
-app.use(ElementPlus);
-Object.entries(ElementPlusIconsVue).forEach(([name, comp]) => app.component(name, comp));
-app.mount('#app');
-```
-
-Always wrap an icon in `<el-icon>`; the names are PascalCase:
+**Icons.** Load `element-icons.min.js` when the page uses icons; `Erupt.app` registers the components, so use them by their PascalCase names wrapped in `<el-icon>`:
 
 ```html
 <el-button type="primary"><el-icon><Plus /></el-icon>New</el-button>
@@ -82,11 +83,10 @@ Put the app markup in a `<script type="text/x-template">` block and point the co
 </script>
 
 <script>
-  const {ElMessage} = ElementPlus;
-  Vue.createApp({
+  Erupt.app({
     template: '#page-tpl',
     data() { return {rows: []}; }
-  }).use(ElementPlus).mount('#app');
+  });
 </script>
 ```
 
@@ -96,6 +96,8 @@ NEVER write component markup, mustache interpolation or `v-*` / `@` / `:` bindin
 - HTML attribute names are case-insensitive and get lowercased, so `:someProp` silently becomes `:someprop` and the prop never arrives.
 
 Inside `<script type="text/x-template">` the content is raw text that Vue compiles itself, so both problems disappear and you may write self-closing tags and camelCase freely.
+
+When modifying an existing page that already boots with `Vue.createApp(...)`, keep its bootstrap as it is unless the request is about it.
 
 ## Page Design Requirements
 

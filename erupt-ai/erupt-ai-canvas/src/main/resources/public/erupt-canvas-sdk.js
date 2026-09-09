@@ -46,8 +46,8 @@
     });
     // Vue reports template compile errors and render failures through the console only.
     // The bundled Vue is the production build, which strips these warnings entirely, so this
-    // hook is a safety net for pages that pull a development build from a CDN. Static defects
-    // such as unresolved components are caught by CanvasHtmlValidator before a version is filed
+    // hook is a safety net for pages that pull a development build from a CDN; pages booted
+    // through Erupt.app also relay render errors via app.config.errorHandler
     ['warn', 'error'].forEach(function (level) {
         var original = console[level];
         console[level] = function () {
@@ -119,9 +119,45 @@
         });
     }
 
+    // Element Plus helpers live on the single `ElementPlus` global of the UMD bundle;
+    // Erupt.app exposes them under their own names so pages can call ElMessage directly
+    var ELEMENT_HELPERS = ['ElMessage', 'ElMessageBox', 'ElNotification', 'ElLoading'];
+
+    // Boot a Vue 3 + Element Plus app with all the boilerplate the UMD bundles need:
+    // createApp, use(ElementPlus), register every icon component when the icon bundle
+    // is loaded, expose the Element Plus helpers as globals, relay render errors to the
+    // designer, and mount. Vue / ElementPlus are resolved at call time, never at SDK
+    // load time: the SDK tag precedes the framework scripts in <head>.
+    function app(options, selector) {
+        var Vue = window.Vue, ElementPlus = window.ElementPlus, icons = window.ElementPlusIconsVue;
+        if (!Vue || !Vue.createApp) {
+            throw new Error('Erupt.app: Vue is not loaded; add <script src="' + base + '/element-plus/vue3.js"></script> before this script');
+        }
+        var instance = Vue.createApp(options || {});
+        if (ElementPlus) {
+            instance.use(ElementPlus);
+            ELEMENT_HELPERS.forEach(function (name) {
+                // A page that already destructured the helper keeps its own binding
+                if (!(name in window) && ElementPlus[name]) window[name] = ElementPlus[name];
+            });
+        }
+        if (icons) {
+            Object.keys(icons).forEach(function (name) { instance.component(name, icons[name]); });
+        }
+        instance.config.errorHandler = function (err, vm, info) {
+            report('vue', (err && err.message ? err.message : String(err)) + (info ? ' (' + info + ')' : ''));
+            console.error(err);
+        };
+        instance.mount(selector || '#app');
+        return instance;
+    }
+
     window.Erupt = {
         base: base,
         token: token,
+        // Vue 3 + Element Plus bootstrap; options are the root component (template / setup / data ...),
+        // selector defaults to '#app'. Returns the app instance
+        app: app,
         // Paged query. query: {pageIndex, pageSize, sort: [{field, direction}], condition: [{key, value, expression}]}
         // Resolves to {pageIndex, pageSize, total, totalPage, list}
         table: function (model, query) {
