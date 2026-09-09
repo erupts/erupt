@@ -3,6 +3,7 @@ package xyz.erupt.designer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Test;
+import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.view.EruptBuildModel;
@@ -31,6 +32,34 @@ public class EruptDesignerServiceTest {
         if (null != viewJson) field.setView(gson.fromJson(viewJson, JsonObject.class));
         if (null != editJson) field.setEdit(gson.fromJson(editJson, JsonObject.class));
         return field;
+    }
+
+    /** HIDDEN / EMPTY / TPL go through the string template field; TPL config is disguised onto @Tpl. */
+    @Test
+    public void hiddenEmptyAndTplTypes() throws Exception {
+        DesignerForm form = new DesignerForm();
+        form.setClassName("TplDemo");
+        form.setErupt(gson.fromJson("{name:'Tpl Demo'}", JsonObject.class));
+        form.setFields(Arrays.asList(
+                field("token", "{title:'Token'}", "{title:'Token', type:'HIDDEN'}"),
+                field("gap", null, "{title:'Gap', type:'EMPTY'}"),
+                field("chart", null, "{title:'Chart', type:'TPL', tplType:{path:'/tpl/chart.html', engine:'FreeMarker', enable:true}}")
+        ));
+
+        EruptModel model = service.toEruptModel(form);
+
+        EruptFieldModel token = model.getEruptFieldMap().get("token");
+        assertEquals(EditType.HIDDEN, token.getEruptField().edit().type());
+        assertEquals(String.class.getSimpleName(), token.getFieldReturnName());
+        assertEquals(1, token.getEruptField().views().length);
+
+        // no view json → no table column
+        assertEquals(0, model.getEruptFieldMap().get("gap").getEruptField().views().length);
+
+        Tpl tpl = model.getEruptFieldMap().get("chart").getEruptField().edit().tplType();
+        assertTrue(tpl.enable());
+        assertEquals("/tpl/chart.html", tpl.path());
+        assertEquals(Tpl.Engine.FreeMarker, tpl.engine());
     }
 
     @Test
