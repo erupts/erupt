@@ -5,7 +5,6 @@ import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.expr.ExprBool;
-import xyz.erupt.annotation.fun.AutoCompleteHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
@@ -110,7 +109,7 @@ public @interface Edit {
     HtmlEditorType htmlEditorType() default @HtmlEditorType(HtmlEditorType.Type.CKEDITOR);
 
     @Match("#item.type().toString()=='AUTO_COMPLETE'")
-    AutoCompleteType autoCompleteType() default @AutoCompleteType(handler = AutoCompleteHandler.class);
+    AutoCompleteType autoCompleteType() default @AutoCompleteType;
 
     @Match("#item.type().toString()=='REFERENCE_TREE'")
     ReferenceTreeType referenceTreeType() default @ReferenceTreeType;

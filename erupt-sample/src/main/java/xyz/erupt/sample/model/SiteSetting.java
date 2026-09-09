@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -23,7 +22,7 @@ import xyz.erupt.file.service.EruptFileDataService;
  *
  * @author YuePeng
  */
-@Erupt(name = "Site Setting (single record)", power = @Power(export = false, importable = false))
+@Erupt(name = "Site Setting (single record)")
 @EruptDataProcessor(EruptFileDataService.DATA_PROCESSOR)
 @EruptFile(value = "data/site-setting.conf", type = FileType.PROPERTIES, single = true)
 @Getter

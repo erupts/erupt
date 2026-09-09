@@ -12,10 +12,9 @@ exclude:
   - name: All
     paths:
       - erupt-web/src/main/resources
-      - erupt-tpl-ui
-      - erupt-core/src/main/java/xyz/erupt/core/i18n
-      - erupt-data/erupt-jpa/src/main/java/xyz/erupt/jpa/advice/JpaExceptionAdvice.java
-      - erupt-ai/src/main/java/xyz/erupt/ai/controller/McpController.java
+      - erupt-tpl/ant-design
+      - erupt-tpl/element-plus
+      - erupt-tpl/element-ui
   - name: deprecation
   - name: UncheckedWarning
   # SpEL in @Match/@ExprBool uses runtime-injected context variables (#item, #value) that static analysis cannot resolve

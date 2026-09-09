@@ -27,7 +27,7 @@ import xyz.erupt.core.annotation.EruptDataProcessor;
 @Erupt(
         name = "Skill",
         primaryKeyCol = "name",
-        power = @Power(add = false, edit = false, delete = false, export = false)
+        power = @Power(add = false, edit = false, delete = false)
 )
 @EruptDataProcessor(SkillDataService.DATA_PROCESSOR)
 @EruptI18n

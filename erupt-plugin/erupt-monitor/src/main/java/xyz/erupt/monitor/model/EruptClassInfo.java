@@ -34,7 +34,7 @@ import xyz.erupt.upms.model.input.MenuPublishModal;
 @Erupt(
         name = "Erupt Class Registry",
         primaryKeyCol = "name",
-        power = @Power(add = false, edit = false, delete = false, export = false),
+        power = @Power(add = false, edit = false, delete = false),
         // Rows come from an in-memory scan of EruptCoreService (~dozens–hundreds); paginate client-side
         // to avoid rebuilding the full list on every page/sort click
         drills = @Drill(
