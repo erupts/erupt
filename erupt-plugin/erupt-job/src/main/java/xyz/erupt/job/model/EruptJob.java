@@ -40,7 +40,7 @@ import xyz.erupt.toolkit.notify.RedisNotifyDataProxy;
 @Erupt(
         name = "Job Config",
         dataProxy = EruptJobDataProcess.class,
-        drills = @Drill(title = "Log", icon = "fa fa-sliders", link = @Link(linkErupt = EruptJobLog.class, joinColumn = "jobId")),
+        drills = @Drill(title = "Log", icon = "fa fa-rectangle-list", link = @Link(linkErupt = EruptJobLog.class, joinColumn = "jobId")),
         rowOperation = @RowOperation(code = "action", icon = "fa fa-play", title = "Execute Once", mode = RowOperation.Mode.SINGLE, eruptClass = EruptJobExecDialog.class, operationHandler = EruptJobDataProcess.class)
 )
 @PreDataProxy(value = RedisNotifyDataProxy.class, params = JobMessageListener.JOB_TOPIC)

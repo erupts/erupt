@@ -53,7 +53,7 @@ public class EruptMonitorAutoConfiguration implements EruptModule, WebMvcConfigu
     public List<MetaMenu> initMenus() {
         List<MetaMenu> metaMenus = new ArrayList<>();
         String router = MenuTypeEnum.ROUTER.getCode();
-        MetaMenu root = MetaMenu.createRootMenu("monitor", "System Monitoring", "fa fa-bullseye", 10);
+        MetaMenu root = MetaMenu.createRootMenu("monitor", "System Monitoring", "fa fa-gauge-high", 10);
         metaMenus.add(root);
         metaMenus.add(MetaMenu.createSimpleMenu(MonitorConstant.MENU_SERVER, "Service Monitoring", MonitorConstant.MENU_SERVER, root, 10, router));
         metaMenus.add(MetaMenu.createSimpleMenu(MonitorConstant.MENU_REDIS, "Cache Monitoring", MonitorConstant.MENU_REDIS, root, 20, router));

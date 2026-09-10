@@ -39,7 +39,7 @@ import xyz.erupt.upms.handler.ViaMenuValueCtrl;
         linkTree = @LinkTree(field = "cloudNodeGroup"),
         rowOperation = {
                 @RowOperation(
-                        title = "View Token", icon = "fa fa-shield", mode = RowOperation.Mode.SINGLE,
+                        title = "View Token", icon = "fa fa-shield-halved", mode = RowOperation.Mode.SINGLE,
                         show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION),
                         type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/node-info.ftl", embedType = PageEmbedType.MICRO_FRONTEND)
                 ),

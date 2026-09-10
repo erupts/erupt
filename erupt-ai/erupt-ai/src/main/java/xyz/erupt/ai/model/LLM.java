@@ -40,7 +40,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
                 @RowOperation(title = "Model Test", icon = "fa fa-comments",
                         tpl = @Tpl(path = "/tpl/ai-chat.ftl", height = "85vh"),
                         mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL),
-                @RowOperation(title = "Default Chat Model", icon = "fa fa-magic",
+                @RowOperation(title = "Default Chat Model", icon = "fa fa-wand-magic-sparkles",
                         ifExpr = "item.defaultLLM !== true",
                         mode = RowOperation.Mode.SINGLE, operationHandler = LLMDataProxy.class)
         },

@@ -45,7 +45,7 @@ public class EruptAiCanvasAutoConfiguration implements EruptModule {
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
         menus.add(MetaMenu.createSimpleMenu(AiCanvas.class.getSimpleName(), "AI Canvas", AiCanvas.class.getSimpleName(),
-                null, 27, "fa fa-television", MenuTypeEnum.TABLE.getCode(), MenuStatus.OPEN));
+                null, 27, "fa fa-diagram-project", MenuTypeEnum.TABLE.getCode(), MenuStatus.OPEN));
         return menus;
     }
 

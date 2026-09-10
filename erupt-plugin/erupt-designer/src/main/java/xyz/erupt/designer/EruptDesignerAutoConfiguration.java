@@ -50,7 +50,7 @@ public class EruptDesignerAutoConfiguration implements EruptModule {
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
         MetaMenu menu = MetaMenu.createEruptClassMenu(DesignerEntity.class, null, 45);
-        menu.setIcon("fa fa-object-group");
+        menu.setIcon("fa fa-pen-ruler");
         menus.add(menu);
         return menus;
     }

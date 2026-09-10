@@ -63,7 +63,7 @@ public class EruptAiStaffAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$ai-staff", "AI Staff", "fa fa-user-circle", 26));
+        menus.add(MetaMenu.createRootMenu("$ai-staff", "AI Staff", "fa fa-robot", 26));
         menus.add(MetaMenu.createEruptClassMenu(AiStaff.class, menus.get(0), 10));
         menus.add(MetaMenu.createEruptClassMenu(AiStaffChannel.class, menus.get(0), 20));
         menus.add(MetaMenu.createEruptClassMenu(AiStaffTask.class, menus.get(0), 30, MenuStatus.HIDE));

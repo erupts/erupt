@@ -30,7 +30,7 @@ import xyz.erupt.remote.model.data_proxy.RemoteHostDataProxy;
         dataProxy = RemoteHostDataProxy.class,
         orderBy = "id desc",
         rowOperation = @RowOperation(
-                title = "Connect", icon = "fa fa-desktop",
+                title = "Connect", icon = "fa fa-display",
                 mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL,
                 tpl = @Tpl(path = "/remote/{id}", openWay = OpenWay.ROUTER)
         )

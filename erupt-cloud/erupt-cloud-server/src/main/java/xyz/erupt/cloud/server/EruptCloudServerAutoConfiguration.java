@@ -45,7 +45,7 @@ public class EruptCloudServerAutoConfiguration implements EruptModule {
 
     @Override
     public List<MetaMenu> initMenus() {
-        MetaMenu nodeManager = MetaMenu.createRootMenu("$NodeManager", "Micronode Management", "fa fa-cloud", 70);
+        MetaMenu nodeManager = MetaMenu.createRootMenu("$NodeManager", "Micronode Management", "fa fa-circle-nodes", 70);
         MetaMenu nodeMenu = MetaMenu.createEruptClassMenu(CloudNode.class, nodeManager, 20);
         return Arrays.asList(nodeManager,
                 MetaMenu.createEruptClassMenu(CloudNodeGroup.class, nodeManager, 10, MenuTypeEnum.TREE, MenuStatus.HIDE),

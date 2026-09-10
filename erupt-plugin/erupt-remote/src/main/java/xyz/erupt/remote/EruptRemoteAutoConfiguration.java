@@ -47,7 +47,7 @@ public class EruptRemoteAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        MetaMenu root = MetaMenu.createRootMenu("$remote", "Remote Desktop", "fa fa-desktop", 56);
+        MetaMenu root = MetaMenu.createRootMenu("$remote", "Remote Desktop", "fa fa-display", 56);
         menus.add(root);
         menus.add(MetaMenu.createEruptClassMenu(RemoteHost.class, root, 10));
         return menus;
