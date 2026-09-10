@@ -1,11 +1,9 @@
 package xyz.erupt.core.util;
 
 import org.springframework.util.CollectionUtils;
-import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.core.constant.EruptConst;
-import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.TreeModel;
@@ -50,60 +48,26 @@ public class DataHandlerUtil {
         return null;
     }
 
+    /**
+     * Prepare queried rows for the client. Values stay raw — the wording of a BOOLEAN or the label
+     * of a CHOICE belongs to whoever displays them, and a client that has to edit, filter or sort
+     * by a value needs the value itself. Only PASSWORD is rewritten, because its clear text must
+     * never leave the server.
+     */
     public static void convertDataToEruptView(EruptModel eruptModel, Collection<Map<String, Object>> list) {
-        Map<String, Map<String, String>> choiceItems = new HashMap<>();
         for (Map<String, Object> map : list) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 EruptFieldModel fieldModel = cycleFindFieldByKey(eruptModel, entry.getKey());
-                if (null == fieldModel) {
+                if (null == fieldModel || null == entry.getValue()) {
                     continue;
                 }
-                Edit edit = fieldModel.getEruptField().edit();
-                // PASSWORD columns never reach the client in clear text, regardless of view configuration.
-                // Covers both the table view and the excel export, which share this pipeline.
                 for (View view : fieldModel.getEruptField().views()) {
                     if (ViewType.PASSWORD == view.type()) {
-                        if (null != entry.getValue()) {
-                            map.put(entry.getKey(), EruptConst.PASSWORD_PLACEHOLDER);
-                        }
+                        map.put(entry.getKey(), EruptConst.PASSWORD_PLACEHOLDER);
                     }
-                }
-                switch (edit.type()) {
-                    case REFERENCE_TREE:
-                    case REFERENCE_TABLE:
-                    case COMBINE:
-                        String[] _keys = entry.getKey().split("_");
-                        for (View view : fieldModel.getEruptField().views()) {
-                            if (view.column().equals(_keys[_keys.length - 1])) {
-                                EruptFieldModel vef = EruptCoreService.getErupt(fieldModel.getFieldReturnName()).getEruptFieldMap().get(view.column());
-                                map.put(entry.getKey(), convertColumnValue(eruptModel, vef, entry.getValue(), choiceItems));
-                            }
-                        }
-                        break;
-                    default:
-                        map.put(entry.getKey(), convertColumnValue(eruptModel, fieldModel, entry.getValue(), choiceItems));
-                        break;
                 }
             }
         }
     }
-
-    private static Object convertColumnValue(EruptModel eruptModel, EruptFieldModel fieldModel, Object value, Map<String, Map<String, String>> choiceItems) {
-        if (null == value) return null;
-        Edit edit = fieldModel.getEruptField().edit();
-        switch (edit.type()) {
-            case CHOICE:
-                Map<String, String> cm = choiceItems.get(fieldModel.getFieldName());
-                if (null == cm) {
-                    cm = EruptUtil.getChoiceMap(eruptModel, edit);
-                    choiceItems.put(fieldModel.getFieldName(), cm);
-                }
-                return cm.get(value.toString());
-            case BOOLEAN:
-                return (Boolean) value ? edit.boolType().trueText() : edit.boolType().falseText();
-        }
-        return value;
-    }
-
 
 }
