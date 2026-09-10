@@ -47,7 +47,7 @@ import xyz.erupt.upms.model.input.MenuPublishModal;
                 mode = RowOperation.Mode.SINGLE,
                 // table rows carry the boolType display text, not a boolean; the symbols below are
                 // locale-stable (absent from i18n CSVs) so this comparison works in every language
-                ifExpr = "item.published === '×'",
+                ifExpr = "item.published !== true",
                 eruptClass = MenuPublishModal.class,
                 operationHandler = EruptClassPublishMenu.class
         )

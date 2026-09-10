@@ -41,7 +41,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
                         tpl = @Tpl(path = "/tpl/ai-chat.ftl", height = "85vh"),
                         mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL),
                 @RowOperation(title = "Default Chat Model", icon = "fa fa-magic",
-                        ifExpr = "item.defaultLLM === '×'",
+                        ifExpr = "item.defaultLLM !== true",
                         mode = RowOperation.Mode.SINGLE, operationHandler = LLMDataProxy.class)
         },
         layout = @Layout(tableLeftFixed = 1, formSteps = true)
