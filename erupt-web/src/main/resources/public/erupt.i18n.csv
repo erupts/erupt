@@ -596,6 +596,16 @@ designer.type.group,分组,分組,Group,Group,グループ,Group,Group,Group,Gro
 designer.type.tab_tree,多选树,多選樹,Tab Tree,Tab Tree,複数選択ツリー,Tab Tree,Tab Tree,Tab Tree,Tab Tree,Tab Tree,Tab Tree,Tab Tree
 designer.type.tab_table_refer,一对多引用,一對多引用,Tab Table Refer,Tab Table Refer,1対多参照,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer,Tab Table Refer
 designer.type.combine,一对一,一對一,Combine,Combine,1対1,Combine,Combine,Combine,Combine,Combine,Combine,Combine
+designer.type.empty,占位,佔位,Empty,Vide,空白,빈칸,Пусто,Vacío,Leer,Vazio,Kosong,فارغ
+designer.type.tpl,自定义模板,自定義模板,Template,Modèle,テンプレート,템플릿,Шаблон,Plantilla,Vorlage,Modelo,Templat,قالب
+designer.type.button,按钮,按鈕,Button,Bouton,ボタン,버튼,Кнопка,Botón,Schaltfläche,Botão,Tombol,زر
+designer.type.multi_form,多表单块,多表單塊,Multi Form,Multi-formulaire,複数フォーム,다중 폼,Мультиформа,Multiformulario,Mehrfachformular,Multiformulário,Multi Formulir,نماذج متعددة
+designer.handler.disabled_tip,该组件需要 Java Handler 实现，请使用注解方式建模,該組件需要 Java Handler 實現，請使用注解方式建模,This component needs a Java handler; use annotation-based modeling,Ce composant nécessite un handler Java ; utilisez la modélisation par annotation,このコンポーネントは Java ハンドラーが必要です。アノテーション方式でモデリングしてください,이 컴포넌트는 Java 핸들러가 필요합니다. 어노테이션 방식으로 모델링하세요,Этот компонент требует Java-обработчика; используйте аннотации,Este componente necesita un handler Java; use el modelado por anotación,Diese Komponente benötigt einen Java-Handler; verwenden Sie annotationsbasierte Modellierung,Este componente precisa de um handler Java; use modelagem baseada em anotações,Komponen ini membutuhkan handler Java; gunakan pemodelan berbasis anotasi,يتطلب هذا المكوّن معالج Java؛ استخدم نمذجة الشرح
+designer.tpl_path,模板路径,模板路徑,Template path,Chemin du modèle,テンプレートパス,템플릿 경로,Путь к шаблону,Ruta de la plantilla,Vorlagenpfad,Caminho do modelo,Jalur templat,مسار القالب
+designer.tpl_engine,模板引擎,模板引擎,Template engine,Moteur de modèle,テンプレートエンジン,템플릿 엔진,Движок шаблонов,Motor de plantillas,Template-Engine,Motor de modelos,Mesin templat,محرك القوالب
+designer.tpl_path_required,请填写模板路径,請填寫模板路徑,Template path is required,Le chemin du modèle est requis,テンプレートパスを入力してください,템플릿 경로를 입력하세요,Укажите путь к шаблону,La ruta de la plantilla es obligatoria,Vorlagenpfad ist erforderlich,O caminho do modelo é obrigatório,Jalur templat wajib diisi,مسار القالب مطلوب
+designer.auto_complete_values,预定义候选值,預定義候選值,Predefined values,Valeurs prédéfinies,定義済み候補,사전 정의 값,Предопределённые значения,Valores predefinidos,Vordefinierte Werte,Valores predefinidos,Nilai yang ditentukan,قيم محددة مسبقاً
+designer.trigger_length,触发字符数,觸發字符數,Trigger length,Longueur de déclenchement,トリガー文字数,트리거 글자 수,Длина для срабатывания,Longitud de activación,Auslöselänge,Comprimento de acionamento,Panjang pemicu,طول التشغيل
 designer.group_fields,包含字段,包含字段,Fields in group,Fields in group,含まれるフィールド,Fields in group,Fields in group,Fields in group,Fields in group,Fields in group,Fields in group,Fields in group
 designer.collapsed,默认折叠,默認折疊,Collapsed,Collapsed,デフォルトで折りたたむ,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed,Collapsed
 designer.layout,页面布局,頁面佈局,Page Layout,Mise en page,ページレイアウト,페이지 레이아웃,Макет страницы,Diseño de página,Seitenlayout,Layout da página,Tata Letak Halaman,تخطيط الصفحة

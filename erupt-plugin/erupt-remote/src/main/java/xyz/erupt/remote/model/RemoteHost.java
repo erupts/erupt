@@ -57,7 +57,7 @@ public class RemoteHost extends MetaModelUpdateVo {
 
     @Column(length = 16)
     @EruptField(
-            views = @View(title = "Protocol", width = "90px"),
+            views = @View(title = "Protocol", width = "120px"),
             edit = @Edit(title = "Protocol", notNull = true, type = EditType.CHOICE, search = @Search,
                     choiceType = @ChoiceType(vl = {
                             @VL(value = PROTOCOL_VNC, label = "VNC (desktop)"),

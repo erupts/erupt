@@ -51,6 +51,7 @@ public class VncSession implements RemoteBridge, Runnable {
     private final long startTime = System.currentTimeMillis();
     @Getter
     private volatile long lastActivity = startTime;
+    @Getter
     private volatile boolean closed;
     private Socket socket;
 
@@ -293,10 +294,6 @@ public class VncSession implements RemoteBridge, Runnable {
                 }
             }
         }
-    }
-
-    public boolean isClosed() {
-        return closed;
     }
 
     private static class AuthException extends Exception {
