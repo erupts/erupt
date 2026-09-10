@@ -142,6 +142,10 @@ public class EruptModifyService {
         if (null == fieldModel || StringUtils.isBlank(fieldModel.getEruptField().edit().title())) {
             throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.not_editable") + ": " + fieldName, R.PromptWay.MESSAGE);
         }
+        // the field may opt out even when its model allows cell editing
+        if (!fieldModel.getEruptField().edit().cellEdit()) {
+            throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.not_editable") + ": " + fieldName, R.PromptWay.MESSAGE);
+        }
         Readonly readonly = fieldModel.getEruptField().edit().readonly();
         if (readonly.edit() && !readonly.allowChange()) {
             throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.not_editable") + ": " + fieldName, R.PromptWay.MESSAGE);

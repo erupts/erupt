@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
@@ -17,7 +18,8 @@ import xyz.erupt.jpa.model.BaseModel;
 @Setter
 @Entity
 @Erupt(name = "AuthVerify - Public Access",
-        authVerify = false
+        authVerify = false,
+        power = @Power(cellEdit = true)
 )
 public class AuthVerifyModel extends BaseModel {
 
@@ -38,4 +40,11 @@ public class AuthVerifyModel extends BaseModel {
             edit = @Edit(title = "Description")
     )
     private String description;
+
+    // editable in the form, but deliberately not one cell at a time
+    @EruptField(
+            views = @View(title = "Locked"),
+            edit = @Edit(title = "Locked", cellEdit = false)
+    )
+    private String locked;
 }

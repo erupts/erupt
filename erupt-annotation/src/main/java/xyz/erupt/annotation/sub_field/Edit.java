@@ -47,6 +47,11 @@ public @interface Edit {
     @EruptProperty(alias = "readOnly")
     Readonly readonly() default @Readonly(add = false, edit = false);
 
+    @Comment("Whether this field may be edited directly in the table, when the model allows it. " +
+            "Turn it off for a field the form should still edit but a single cell should not, " +
+            "such as one that may only change together with another")
+    boolean cellEdit() default true;
+
     @Comment("Form placeholder hint")
     String placeHolder() default "";
 

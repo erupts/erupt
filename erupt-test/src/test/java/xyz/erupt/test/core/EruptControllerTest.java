@@ -17,6 +17,7 @@ import xyz.erupt.test.model.edit.ChoiceModel;
 import xyz.erupt.test.model.edit.MultiFormModel;
 import xyz.erupt.test.model.edit.TabTableAddModel;
 import xyz.erupt.test.model.erupt.AuthVerifyModel;
+import xyz.erupt.test.model.erupt.CellEditOffModel;
 import xyz.erupt.test.model.erupt.RowOperationModel;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.prop.EruptUpmsProp;
@@ -290,6 +291,18 @@ public class EruptControllerTest extends EruptApplicationTests {
                 """
                         {"id":"99999999","field":"value","value":"x"}
                         """), "missing row must be rejected");
+
+        // ⑥ a field that opted out stays form-only, even though the model allows cell editing
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"locked","value":"x"}
+                        """.formatted(id)), "a field with cellEdit = false must be rejected");
+
+        // ⑦ a model that never opted in rejects the request outright
+        assertCellRejected(post("/erupt-api/data/modify/" + CellEditOffModel.class.getSimpleName() + "/update-cell",
+                """
+                        {"id":"1","field":"name","value":"x"}
+                        """), "a model without cellEdit must be rejected");
 
         post("/erupt-api/data/modify/" + erupt + "/delete", "[" + id + "]");
     }
