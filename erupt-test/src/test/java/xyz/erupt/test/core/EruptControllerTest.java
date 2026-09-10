@@ -241,6 +241,67 @@ public class EruptControllerTest extends EruptApplicationTests {
     }
 
     /**
+     * In-table cell editing: one field of one row is updated without submitting the whole form,
+     * every other field is left untouched, and the same validation rules still apply.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    void testHttpUpdateCell() {
+        String erupt = AuthVerifyModel.class.getSimpleName();
+        String uniqueName = "cell-test-" + System.nanoTime();
+        post("/erupt-api/data/modify/" + erupt,
+                """
+                        {"key":"%s","value":"v","description":"desc"}
+                        """.formatted(uniqueName));
+        Long id = findIdByName(erupt, uniqueName, "key");
+        assertNotNull(id, "must find persisted record after add");
+
+        // ① patch one field
+        ResponseEntity<Map> resp = post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"value","value":"v2"}
+                        """.formatted(id));
+        assertEquals(HttpStatus.OK, resp.getStatusCode(), "update-cell must return 200");
+        assertTrue((Boolean) getBody(resp).get("success"), "update-cell must succeed");
+
+        // ② only that field changed
+        Map<String, Object> row = getBody(get("/erupt-api/data/" + erupt + "/" + id));
+        assertEquals("v2", row.get("value"), "patched field must be updated");
+        assertEquals(uniqueName, row.get("key"), "untouched field must keep its value");
+        assertEquals("desc", row.get("description"), "untouched field must keep its value");
+
+        // ③ a required field still cannot be emptied through a cell edit
+        ResponseEntity<Map> blank = post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"value","value":""}
+                        """.formatted(id));
+        assertFalse((Boolean) getBody(blank).get("success"), "notNull must still be enforced");
+        assertEquals("v2", getBody(get("/erupt-api/data/" + erupt + "/" + id)).get("value"),
+                "rejected cell edit must not persist");
+
+        // ④ unknown field is rejected
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"notAField","value":"x"}
+                        """.formatted(id)), "unknown field must be rejected");
+
+        // ⑤ a row the caller cannot see (here: does not exist) is rejected
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"99999999","field":"value","value":"x"}
+                        """), "missing row must be rejected");
+
+        post("/erupt-api/data/modify/" + erupt + "/delete", "[" + id + "]");
+    }
+
+    // rejected means: not an HTTP 200 carrying success = true
+    @SuppressWarnings("unchecked")
+    private void assertCellRejected(ResponseEntity<Map> resp, String message) {
+        assertTrue(resp.getStatusCode() != HttpStatus.OK
+                || !Boolean.TRUE.equals(getBody(resp).get("success")), message);
+    }
+
+    /**
      * A required MULTI_FORM field rejects an empty block list (the frontend submits [] when
      * no block was added), and each block is validated against the child model.
      */

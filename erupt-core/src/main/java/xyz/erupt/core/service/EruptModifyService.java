@@ -1,6 +1,11 @@
 package xyz.erupt.core.service;
 
 import com.google.gson.JsonObject;
+import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.view.EruptFieldModel;
+import xyz.erupt.annotation.sub_field.Readonly;
+import com.google.gson.JsonElement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -120,6 +125,77 @@ public class EruptModifyService {
         Object pk = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol()).get(obj);
         this.modifyLog(eruptModel, "ADD", EruptUtil.toMaskedJson(eruptModel, obj));
         return pk;
+    }
+
+    /**
+     * Update a single field of one row — the write behind in-table cell editing.
+     * <p>
+     * The whole edit pipeline is reused (permission check, field validation, DataProxy
+     * before/after hooks, operate log, edit event); only the target field differs from the
+     * stored row, so readonly, PASSWORD and collection semantics of {@link EruptUtil#dataTarget}
+     * apply unchanged to every other field.
+     */
+    @SneakyThrows
+    @Transactional
+    public void updateEruptCell(EruptModel eruptModel, String id, String fieldName, JsonElement value) {
+        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(fieldName);
+        if (null == fieldModel || StringUtils.isBlank(fieldModel.getEruptField().edit().title())) {
+            throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.not_editable") + ": " + fieldName, R.PromptWay.MESSAGE);
+        }
+        Readonly readonly = fieldModel.getEruptField().edit().readonly();
+        if (readonly.edit() && !readonly.allowChange()) {
+            throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.not_editable") + ": " + fieldName, R.PromptWay.MESSAGE);
+        }
+        if (eruptModel.isRemote()) {
+            // the owning node runs its own validation / DataProxy pipeline
+            JsonObject remote = new JsonObject();
+            remote.addProperty(eruptModel.getErupt().primaryKeyCol(), id);
+            remote.add(fieldName, value);
+            EruptRemoteRouterManager.get().update(eruptModel.getEruptName(), remote);
+            return;
+        }
+        eruptService.verifyIdPermissions(eruptModel, id);
+        Field pkField = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol());
+        Object old = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
+                .findDataById(eruptModel, TypeUtil.typeStrConvertObject(id, pkField.getType()));
+        if (null == old) {
+            throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.row_not_exist") + ": " + id, R.PromptWay.MESSAGE);
+        }
+        // the patched value alone is enough, except for a @Dynamic rule that reads another field —
+        // only then is the stored row serialized, which for JPA entities would touch lazy associations
+        JsonObject merged = AnnotationConst.EMPTY_STR.equals(fieldModel.getEruptField().edit().dynamic().condition())
+                ? new JsonObject() : GsonFactory.getGson().toJsonTree(old).getAsJsonObject();
+        merged.add(fieldName, value);
+        R<Void> validation = EruptUtil.validateEruptField(eruptModel, fieldModel, merged);
+        if (!validation.isSuccess()) {
+            throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
+        }
+        Object realOld = eruptModel.getClazz().getDeclaredConstructor().newInstance();
+        // reflective copy: runtime-generated carrier classes (erupt-designer) have no accessors
+        EruptUtil.copyEruptFields(eruptModel, old, realOld);
+        String oldData;
+        try {
+            oldData = EruptUtil.toMaskedJson(eruptModel, realOld);
+        } catch (Exception e) {
+            oldData = GsonFactory.getGson().toJson(realOld);
+        }
+        OldEntityTL.set(oldData);
+        // carrier holds the patched field only; every other field of the stored row is left as is
+        Object data = eruptModel.getClazz().getDeclaredConstructor().newInstance();
+        Field field = fieldModel.getField();
+        field.setAccessible(true);
+        field.set(data, value.isJsonNull() ? null
+                : GsonFactory.getGson().fromJson(value, field.getGenericType()));
+        EruptUtil.dataTargetField(fieldModel, data, old, SceneEnum.EDIT);
+        Object obj = old;
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
+        DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).editData(eruptModel, obj);
+        JsonObject maskedCell = new JsonObject();
+        maskedCell.add(fieldName, value);
+        EruptUtil.maskPasswordFields(eruptModel, maskedCell);
+        this.modifyLog(eruptModel, "UPDATE", oldData + " -> " + maskedCell);
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterUpdate(obj)));
+        applicationEventPublisher.publishEvent(new EruptEditEvent<>(eruptModel.getClazz(), obj, realOld));
     }
 
     @SneakyThrows
