@@ -30,8 +30,7 @@ public class PowerObject {
 
     private boolean copy = true;
 
-    // opt-in: a table only offers in-place cell editing when the model asks for it
-    private boolean cellEdit = false;
+    private boolean cellEdit = true;
 
     private boolean ai = true;
 

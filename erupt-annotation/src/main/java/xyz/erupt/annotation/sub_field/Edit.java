@@ -48,8 +48,9 @@ public @interface Edit {
     Readonly readonly() default @Readonly(add = false, edit = false);
 
     @Comment("Whether this field may be edited directly in the table, when the model allows it. " +
-            "Turn it off for a field the form should still edit but a single cell should not, " +
-            "such as one that may only change together with another")
+            "A single cell is validated as a whole row, so a cross-field rule needs no help here; " +
+            "turn it off for a field the form should still edit but a grid cell should not, " +
+            "such as a secret that has no place in an in-table popover")
     boolean cellEdit() default true;
 
     @Comment("Form placeholder hint")

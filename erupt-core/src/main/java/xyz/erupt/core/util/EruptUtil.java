@@ -328,10 +328,10 @@ public class EruptUtil {
     }
 
     /**
-     * Validate one field of a submitted payload. Split out of {@link #validateEruptValue} so a
-     * partial update (single cell) can run exactly the same rules on just the field it changes.
+     * Validate one field of a submitted payload. Split out of {@link #validateEruptValue} to keep
+     * the per-field rules readable; every caller validates a whole row.
      */
-    public static R<Void> validateEruptField(EruptModel eruptModel, EruptFieldModel field, JsonObject jsonObject) {
+    private static R<Void> validateEruptField(EruptModel eruptModel, EruptFieldModel field, JsonObject jsonObject) {
         {
             Edit edit = field.getEruptField().edit();
             JsonElement value = jsonObject.get(field.getFieldName());

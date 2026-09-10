@@ -87,7 +87,8 @@ public class LLM extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "API Domain"),
-            edit = @Edit(title = "API Domain", notNull = true)
+            // the stored key is posted to whatever this points at, so redirect it in the form only
+            edit = @Edit(title = "API Domain", notNull = true, cellEdit = false)
     )
     private String apiUrl;
 

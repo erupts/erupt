@@ -38,7 +38,9 @@ public class EruptRole extends HyperModelUpdateVo {
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "code"),
-            edit = @Edit(title = "code", notNull = true, search = @Search(operator = QueryExpression.LIKE))
+            // every permission binding and @Match expression keys off this code
+            edit = @Edit(title = "code", notNull = true, cellEdit = false,
+                    search = @Search(operator = QueryExpression.LIKE))
     )
     private String code;
 

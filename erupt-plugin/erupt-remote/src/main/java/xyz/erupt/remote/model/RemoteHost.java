@@ -96,7 +96,8 @@ public class RemoteHost extends MetaModelUpdateVo {
 
     @Column(length = 8192)
     @EruptField(
-            edit = @Edit(title = "Private Key", type = EditType.TEXTAREA,
+            // a private key is pasted whole in the form, never nudged one cell at a time
+            edit = @Edit(title = "Private Key", type = EditType.TEXTAREA, cellEdit = false,
                     desc = "PEM private key for SSH public-key authentication; takes precedence over the password",
                     dynamic = @Dynamic(dependField = "protocol", condition = "value === 'SSH'"))
     )

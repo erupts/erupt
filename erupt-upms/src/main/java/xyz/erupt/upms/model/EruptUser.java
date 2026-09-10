@@ -67,7 +67,9 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "Account", sortable = true),
-            edit = @Edit(title = "Account", desc = "Login account", notNull = true, search = @Search(operator = QueryExpression.LIKE))
+            // security state: granted, revoked and identified through a reviewed form, never a grid cell
+            edit = @Edit(title = "Account", desc = "Login account", notNull = true, cellEdit = false,
+                    search = @Search(operator = QueryExpression.LIKE))
     )
     private String account;
 
@@ -84,6 +86,7 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
                     search = @Search,
                     type = EditType.BOOLEAN,
                     notNull = true,
+                    cellEdit = false,
                     boolType = @BoolType(
                             trueText = "Activate",
                             falseText = "Locked"
@@ -105,7 +108,7 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
     @EruptField(
             views = @View(title = "Admin User", sortable = true),
             edit = @Edit(
-                    title = "Admin User", notNull = true, search = @Search
+                    title = "Admin User", notNull = true, search = @Search, cellEdit = false
             )
     )
     private Boolean isAdmin = false;
@@ -146,7 +149,7 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
     @CollectionTable(name = "e_upms_user_org_head", joinColumns = @JoinColumn(name = "id"))
     @EruptField(
             views = @View(title = "Responsible Org", column = "name"),
-            edit = @Edit(title = "Responsible Org", type = EditType.MULTI_CHOICE, multiChoiceType =
+            edit = @Edit(title = "Responsible Org", type = EditType.MULTI_CHOICE, cellEdit = false, multiChoiceType =
             @MultiChoiceType(type = MultiChoiceType.Type.SELECT, fetchHandler = EruptOrgFetchHandler.class))
     )
     private Set<Long> headOrg;
@@ -155,7 +158,7 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
     @CollectionTable(name = "e_upms_user_org_division", joinColumns = @JoinColumn(name = "id"))
     @EruptField(
             views = @View(title = "Supervising Org", column = "name"),
-            edit = @Edit(title = "Supervising Org", type = EditType.MULTI_CHOICE, multiChoiceType =
+            edit = @Edit(title = "Supervising Org", type = EditType.MULTI_CHOICE, cellEdit = false, multiChoiceType =
             @MultiChoiceType(type = MultiChoiceType.Type.SELECT, fetchHandler = EruptOrgFetchHandler.class))
     )
     private Set<Long> divisionOrg;
@@ -212,7 +215,7 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
 
     @EruptField(
             views = @View(title = "Account Expiry", sortable = true),
-            edit = @Edit(title = "Account Expiry")
+            edit = @Edit(title = "Account Expiry", cellEdit = false)
     )
     private Date expireDate;
 
@@ -229,7 +232,8 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
             views = @View(title = "Role"),
             edit = @Edit(
                     title = "Role",
-                    type = EditType.CHECKBOX
+                    type = EditType.CHECKBOX,
+                    cellEdit = false
             )
     )
     private Set<EruptRole> roles;
@@ -239,7 +243,8 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
             edit = @Edit(
                     title = "IP Whitelist",
                     desc = "Separate IPs with newline; leave empty for no auth check",
-                    type = EditType.TEXTAREA
+                    type = EditType.TEXTAREA,
+                    cellEdit = false
             )
     )
     private String whiteIp;

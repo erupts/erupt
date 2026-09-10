@@ -11,7 +11,6 @@ import org.springframework.util.LinkedCaseInsensitiveMap;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptTag;
-import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -71,7 +70,6 @@ public class EruptDesignerService {
         model.setEruptName(Optional.ofNullable(form.getClassName()).orElse(EruptDesignerTemplate.class.getSimpleName()));
         Optional.ofNullable(form.getErupt()).ifPresent(it -> {
             if (!it.has(LambdaSee.method(Erupt::vis))) it.add(LambdaSee.method(Erupt::vis), new JsonArray());
-            this.defaultCellEdit(it);
             model.setErupt(JsonAnnotationProxy.proxy(model.getErupt(), it));
         });
         model.setEruptFieldModels(new ArrayList<>());
@@ -103,20 +101,6 @@ public class EruptDesignerService {
             model.getEruptFieldMap().put(fieldModel.getFieldName(), fieldModel);
         }
         return model;
-    }
-
-    /**
-     * Designed models are data grids first, so they offer in-place cell editing unless the design
-     * turns it off — the opposite of the annotation default, which stays off so hand-written
-     * models opt in deliberately.
-     */
-    private void defaultCellEdit(JsonObject erupt) {
-        String powerMember = LambdaSee.method(Erupt::power);
-        String cellEditMember = LambdaSee.method(Power::cellEdit);
-        JsonObject power = erupt.has(powerMember) && erupt.get(powerMember).isJsonObject()
-                ? erupt.getAsJsonObject(powerMember) : new JsonObject();
-        if (!power.has(cellEditMember)) power.addProperty(cellEditMember, true);
-        erupt.add(powerMember, power);
     }
 
     // publish: save design config → register runtime model, effective without restart

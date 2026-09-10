@@ -1,7 +1,6 @@
 package xyz.erupt.core.service;
 
 import com.google.gson.JsonObject;
-import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.annotation.sub_field.Readonly;
@@ -130,7 +129,7 @@ public class EruptModifyService {
     /**
      * Update a single field of one row — the write behind in-table cell editing.
      * <p>
-     * The whole edit pipeline is reused (permission check, field validation, DataProxy
+     * The whole edit pipeline is reused (permission check, whole-row validation, DataProxy
      * before/after hooks, operate log, edit event); only the target field differs from the
      * stored row, so readonly, PASSWORD and collection semantics of {@link EruptUtil#dataTarget}
      * apply unchanged to every other field.
@@ -165,12 +164,12 @@ public class EruptModifyService {
         if (null == old) {
             throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.row_not_exist") + ": " + id, R.PromptWay.MESSAGE);
         }
-        // the patched value alone is enough, except for a @Dynamic rule that reads another field —
-        // only then is the stored row serialized, which for JPA entities would touch lazy associations
-        JsonObject merged = AnnotationConst.EMPTY_STR.equals(fieldModel.getEruptField().edit().dynamic().condition())
-                ? new JsonObject() : GsonFactory.getGson().toJsonTree(old).getAsJsonObject();
+        // the stored row patched with the new value is validated as a whole, so a single cell runs
+        // exactly the rules the edit form runs: every field's own rules, a @Dynamic rule that reads
+        // another field, and DataProxy#validate against a complete entity
+        JsonObject merged = GsonFactory.getGson().toJsonTree(old).getAsJsonObject();
         merged.add(fieldName, value);
-        R<Void> validation = EruptUtil.validateEruptField(eruptModel, fieldModel, merged);
+        R<Void> validation = EruptUtil.validateEruptValue(eruptModel, merged);
         if (!validation.isSuccess()) {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
         }
