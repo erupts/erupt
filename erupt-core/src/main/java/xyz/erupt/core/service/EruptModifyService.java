@@ -3,7 +3,6 @@ package xyz.erupt.core.service;
 import com.google.gson.JsonObject;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.view.EruptFieldModel;
-import xyz.erupt.annotation.sub_field.Readonly;
 import com.google.gson.JsonElement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -145,8 +144,10 @@ public class EruptModifyService {
         if (!fieldModel.getEruptField().edit().cellEdit()) {
             throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.not_editable") + ": " + fieldName, R.PromptWay.MESSAGE);
         }
-        Readonly readonly = fieldModel.getEruptField().edit().readonly();
-        if (readonly.edit() && !readonly.allowChange()) {
+        // a cell writes exactly where the row form offers an enabled control, so a field the form
+        // renders read-only is refused whatever allowChange says: that flag exists so a row
+        // operation or handler can still set the value, not so a hand-built cell patch can
+        if (fieldModel.getEruptField().edit().readonly().edit()) {
             throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.not_editable") + ": " + fieldName, R.PromptWay.MESSAGE);
         }
         if (eruptModel.isRemote()) {

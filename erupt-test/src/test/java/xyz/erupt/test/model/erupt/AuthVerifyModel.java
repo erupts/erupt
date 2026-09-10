@@ -6,6 +6,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
@@ -45,4 +46,11 @@ public class AuthVerifyModel extends BaseModel {
             edit = @Edit(title = "Locked", cellEdit = false)
     )
     private String locked;
+
+    // read-only in the form; allowChange keeps the value settable by a handler, never by a cell
+    @EruptField(
+            views = @View(title = "Frozen"),
+            edit = @Edit(title = "Frozen", readonly = @Readonly)
+    )
+    private String frozen;
 }

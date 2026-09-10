@@ -299,7 +299,14 @@ public class EruptControllerTest extends EruptApplicationTests {
                         {"id":"%d","field":"locked","value":"x"}
                         """.formatted(id)), "a field with cellEdit = false must be rejected");
 
-        // ⑦ a model that opted out rejects the request outright
+        // ⑦ a field the form renders read-only is refused, even though allowChange leaves the
+        // form endpoint able to set it
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"frozen","value":"x"}
+                        """.formatted(id)), "a readonly field must be rejected");
+
+        // ⑧ a model that opted out rejects the request outright
         assertCellRejected(post("/erupt-api/data/modify/" + CellEditOffModel.class.getSimpleName() + "/update-cell",
                 """
                         {"id":"1","field":"name","value":"x"}
