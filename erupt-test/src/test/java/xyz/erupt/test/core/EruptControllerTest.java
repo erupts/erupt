@@ -18,6 +18,7 @@ import xyz.erupt.test.model.edit.MultiFormModel;
 import xyz.erupt.test.model.edit.TabTableAddModel;
 import xyz.erupt.test.model.erupt.AuthVerifyModel;
 import xyz.erupt.test.model.erupt.CellEditOffModel;
+import xyz.erupt.test.model.erupt.CellEditRowModel;
 import xyz.erupt.test.model.erupt.RowOperationModel;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.prop.EruptUpmsProp;
@@ -298,11 +299,60 @@ public class EruptControllerTest extends EruptApplicationTests {
                         {"id":"%d","field":"locked","value":"x"}
                         """.formatted(id)), "a field with cellEdit = false must be rejected");
 
-        // ⑦ a model that never opted in rejects the request outright
+        // ⑦ a model that opted out rejects the request outright
         assertCellRejected(post("/erupt-api/data/modify/" + CellEditOffModel.class.getSimpleName() + "/update-cell",
                 """
                         {"id":"1","field":"name","value":"x"}
-                        """), "a model without cellEdit must be rejected");
+                        """), "a model with cellEdit = false must be rejected");
+
+        post("/erupt-api/data/modify/" + erupt + "/delete", "[" + id + "]");
+    }
+
+    /**
+     * A single cell is validated as a whole row: the rules of every other field and
+     * DataProxy#validate run against the stored row patched with the new value, so a cell edit
+     * cannot slip past a cross-field rule that no single field violates on its own.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    void testHttpUpdateCellValidatesWholeRow() {
+        String erupt = CellEditRowModel.class.getSimpleName();
+        String uniqueTitle = "cell-row-" + System.nanoTime();
+        // the row starts out consistent: DRAFT needs no content
+        post("/erupt-api/data/modify/" + erupt,
+                """
+                        {"title":"%s","content":"","status":"DRAFT"}
+                        """.formatted(uniqueTitle));
+        Long id = findIdByName(erupt, uniqueTitle, "title");
+        assertNotNull(id, "must find persisted record after add");
+
+        // ① publishing while content is blank breaks a rule that neither field breaks alone
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"status","value":"PUBLISHED"}
+                        """.formatted(id)), "DataProxy#validate must run on a cell edit");
+        assertEquals("DRAFT", getBody(get("/erupt-api/data/" + erupt + "/" + id)).get("status"),
+                "rejected cell edit must not persist");
+
+        // ② the same patch is accepted once the row as a whole satisfies the rule
+        ResponseEntity<Map> filled = post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"content","value":"body"}
+                        """.formatted(id));
+        assertTrue((Boolean) getBody(filled).get("success"), "unrelated cell edit must succeed");
+        ResponseEntity<Map> published = post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"status","value":"PUBLISHED"}
+                        """.formatted(id));
+        assertTrue((Boolean) getBody(published).get("success"), "consistent cell edit must succeed");
+        assertEquals("PUBLISHED", getBody(get("/erupt-api/data/" + erupt + "/" + id)).get("status"),
+                "accepted cell edit must persist");
+
+        // ③ the patched field keeps its own rules on top of the whole-row ones
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"title","value":" "}
+                        """.formatted(id)), "notNull of the patched field must still be enforced");
 
         post("/erupt-api/data/modify/" + erupt + "/delete", "[" + id + "]");
     }
