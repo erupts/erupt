@@ -86,7 +86,6 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
                     search = @Search,
                     type = EditType.BOOLEAN,
                     notNull = true,
-                    cellEdit = false,
                     boolType = @BoolType(
                             trueText = "Activate",
                             falseText = "Locked"
@@ -149,7 +148,7 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
     @CollectionTable(name = "e_upms_user_org_head", joinColumns = @JoinColumn(name = "id"))
     @EruptField(
             views = @View(title = "Responsible Org", column = "name"),
-            edit = @Edit(title = "Responsible Org", type = EditType.MULTI_CHOICE, cellEdit = false, multiChoiceType =
+            edit = @Edit(title = "Responsible Org", type = EditType.MULTI_CHOICE, multiChoiceType =
             @MultiChoiceType(type = MultiChoiceType.Type.SELECT, fetchHandler = EruptOrgFetchHandler.class))
     )
     private Set<Long> headOrg;
@@ -158,7 +157,7 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
     @CollectionTable(name = "e_upms_user_org_division", joinColumns = @JoinColumn(name = "id"))
     @EruptField(
             views = @View(title = "Supervising Org", column = "name"),
-            edit = @Edit(title = "Supervising Org", type = EditType.MULTI_CHOICE, cellEdit = false, multiChoiceType =
+            edit = @Edit(title = "Supervising Org", type = EditType.MULTI_CHOICE, multiChoiceType =
             @MultiChoiceType(type = MultiChoiceType.Type.SELECT, fetchHandler = EruptOrgFetchHandler.class))
     )
     private Set<Long> divisionOrg;
@@ -232,8 +231,7 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
             views = @View(title = "Role"),
             edit = @Edit(
                     title = "Role",
-                    type = EditType.CHECKBOX,
-                    cellEdit = false
+                    type = EditType.CHECKBOX
             )
     )
     private Set<EruptRole> roles;
@@ -243,8 +241,7 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
             edit = @Edit(
                     title = "IP Whitelist",
                     desc = "Separate IPs with newline; leave empty for no auth check",
-                    type = EditType.TEXTAREA,
-                    cellEdit = false
+                    type = EditType.TEXTAREA
             )
     )
     private String whiteIp;

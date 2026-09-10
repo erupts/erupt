@@ -8,7 +8,7 @@ public class OpenRouter extends OpenAI {
 
     @Override
     public String model() {
-        return "openai/gpt-4o";
+        return "deepseek/deepseek-r1";
     }
 
     @Override
