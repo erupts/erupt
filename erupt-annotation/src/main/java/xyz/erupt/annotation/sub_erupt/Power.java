@@ -29,6 +29,9 @@ public @interface Power {
 
     boolean copy() default true;
 
+    @Comment("Whether rows may be edited one cell at a time, directly in the table")
+    boolean cellEdit() default false;
+
     @Comment("Whether AI tools may inspect and operate on this Erupt model")
     boolean ai() default true;
 

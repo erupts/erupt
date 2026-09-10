@@ -30,6 +30,9 @@ public class PowerObject {
 
     private boolean copy = true;
 
+    // opt-in: a table only offers in-place cell editing when the model asks for it
+    private boolean cellEdit = false;
+
     private boolean ai = true;
 
     public PowerObject(Power power) {
@@ -42,6 +45,7 @@ public class PowerObject {
         this.importable = power.importable();
         this.print = power.print();
         this.copy = power.copy();
+        this.cellEdit = power.cellEdit();
         this.ai = power.ai();
     }
 

@@ -20,6 +20,16 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-data-jdbc</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.53.4.0</version>
+        </dependency>
+        <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
         </dependency>

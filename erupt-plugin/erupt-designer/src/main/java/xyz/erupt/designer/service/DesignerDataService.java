@@ -1,30 +1,30 @@
 package xyz.erupt.designer.service;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.query.Condition;
-import xyz.erupt.annotation.query.Sort;
-import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.IEruptDataService;
+import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
-import xyz.erupt.designer.model.DesignerData;
-import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.jpa.model.BaseModel;
+import xyz.erupt.designer.store.DesignerStore;
+import xyz.erupt.jdbc.support.JdbcModelTable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Row data layer for designer models: each record is one JSON row in e_designer_data,
- * schema-free on any RDBMS. Conditions / sorting / paging are evaluated in memory —
- * designer models are runways, heavy data should graduate to annotation development.
+ * Row data layer for designer models: one SQLite table per design (see {@link DesignerStore}),
+ * filtering / sorting / paging pushed down as SQL through {@link JdbcModelTable}.
+ * <p>
+ * Scalar fields are native columns. Reference fields ({@code {id,label,...}}) and multi-value
+ * fields are JSON text columns queried with SQLite's json_extract / json_each, so reference
+ * search by id and multi-choice search by value both run in the database.
  *
  * @author YuePeng
  * date 2026-06-12
@@ -37,140 +37,96 @@ public class DesignerDataService implements IEruptDataService {
     }
 
     @Resource
-    private EruptDao eruptDao;
+    private DesignerStore store;
 
-    private final Gson gson = GsonFactory.getGson();
+    private final JdbcModelTable table = new JdbcModelTable(
+            model -> store.getTemplate(), model -> DesignerStore.tableName(model.getEruptName())) {
+
+        // reference columns sort by their label
+        @Override
+        protected String column(EruptModel model, EruptFieldModel field) {
+            if (Map.class.isAssignableFrom(field.getField().getType())) {
+                return "json_extract(" + field.getFieldName() + ", '$.label')";
+            }
+            return field.getFieldName();
+        }
+
+        @Override
+        protected String condition(EruptModel model, EruptFieldModel field, Condition condition, String p, Map<String, Object> params) {
+            Class<?> type = field.getField().getType();
+            String name = field.getFieldName();
+            if (Map.class.isAssignableFrom(type)) {
+                // reference search arrives as the linked row id
+                String id = "json_extract(" + name + ", '$.id')";
+                return switch (condition.getExpression()) {
+                    case EQ -> bind(params, p, numeric(condition.getValue()), id + " = :" + p);
+                    case NEQ -> bind(params, p, numeric(condition.getValue()), id + " <> :" + p);
+                    case IN -> bind(params, p, numeric(condition.getValue()), id + " in (:" + p + ")");
+                    case NOT_IN -> bind(params, p, numeric(condition.getValue()), id + " not in (:" + p + ")");
+                    case NULL -> name + " is null";
+                    case NOT_NULL -> name + " is not null";
+                    default -> null;
+                };
+            }
+            if (Collection.class.isAssignableFrom(type)) {
+                // multi-value search matches any element of the JSON array
+                String each = "exists (select 1 from json_each(" + model.getEruptName() + "." + name + ") where json_each.value ";
+                return switch (condition.getExpression()) {
+                    case EQ -> bind(params, p, condition.getValue(), each + "= :" + p + ")");
+                    case NEQ -> "not " + bind(params, p, condition.getValue(), each + "= :" + p + ")");
+                    case IN -> bind(params, p, condition.getValue(), each + "in (:" + p + "))");
+                    case NOT_IN -> "not " + bind(params, p, condition.getValue(), each + "in (:" + p + "))");
+                    case NULL -> name + " is null";
+                    case NOT_NULL -> name + " is not null";
+                    default -> null;
+                };
+            }
+            return null;
+        }
+    };
 
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
-        DesignerData row = this.findRow(eruptModel, id);
-        return null == row ? null : gson.fromJson(row.getData(), eruptModel.getClazz());
+        return table.findById(eruptModel, id);
     }
 
     @Override
     public Page queryList(EruptModel eruptModel, Page page, EruptQuery eruptQuery) {
-        List<Map<String, Object>> rows = this.loadRows(eruptModel).stream()
-                .filter(it -> this.match(it, eruptQuery.getConditions())).collect(Collectors.toList());
-        if (null != page.getSort() && !page.getSort().isEmpty()) {
-            Comparator<Map<String, Object>> comparator = null;
-            for (Sort sort : page.getSort()) {
-                @SuppressWarnings("unchecked")
-                Comparator<Map<String, Object>> c = Comparator.comparing(it ->
-                        (Comparable<Object>) it.get(sort.getField()), Comparator.nullsFirst(Comparator.naturalOrder()));
-                if (sort.getDirection() == xyz.erupt.annotation.query.Direction.DESC) c = c.reversed();
-                comparator = null == comparator ? c : comparator.thenComparing(c);
-            }
-            rows.sort(comparator);
-        }
-        page.setTotal((long) rows.size());
-        int from = Math.min((page.getPageIndex() - 1) * page.getPageSize(), rows.size());
-        page.setList(rows.subList(from, Math.min(from + page.getPageSize(), rows.size())));
-        return page;
+        return table.query(eruptModel, page, eruptQuery);
     }
 
     @Override
     public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery eruptQuery) {
-        return this.loadRows(eruptModel).stream()
-                .filter(it -> this.match(it, eruptQuery.getConditions()))
-                .map(it -> {
-                    Map<String, Object> map = new LinkedHashMap<>();
-                    for (Column column : columns) map.put(column.getAlias(), it.get(column.getName()));
-                    return map;
-                }).collect(Collectors.toList());
+        return table.queryColumn(eruptModel, columns, eruptQuery);
     }
 
     @Override
-    @Transactional
     public void addData(EruptModel eruptModel, Object object) {
-        DesignerData row = new DesignerData();
-        row.setModel(eruptModel.getEruptName());
-        eruptDao.persistAndFlush(row);
-        ((BaseModel) object).setId(row.getId());
-        row.setData(gson.toJson(object));
-        eruptDao.merge(row);
+        table.insert(eruptModel, object);
     }
 
     @Override
-    @Transactional
     public void editData(EruptModel eruptModel, Object object) {
-        DesignerData row = this.findRow(eruptModel, ((BaseModel) object).getId());
-        if (null != row) {
-            row.setData(gson.toJson(object));
-            eruptDao.merge(row);
-        }
+        table.update(eruptModel, object);
     }
 
     @Override
-    @Transactional
     public void deleteData(EruptModel eruptModel, Object object) {
-        DesignerData row = this.findRow(eruptModel, ((BaseModel) object).getId());
-        if (null != row) eruptDao.delete(row);
+        table.delete(eruptModel, object);
     }
 
-    private DesignerData findRow(EruptModel eruptModel, Object id) {
-        return eruptDao.lambdaQuery(DesignerData.class)
-                .eq(DesignerData::getModel, eruptModel.getEruptName())
-                .eq(DesignerData::getId, Long.valueOf(id.toString())).one();
+    private static String bind(Map<String, Object> params, String p, Object value, String sql) {
+        params.put(p, value);
+        return sql;
     }
 
-    private List<Map<String, Object>> loadRows(EruptModel eruptModel) {
-        return eruptDao.lambdaQuery(DesignerData.class)
-                .eq(DesignerData::getModel, eruptModel.getEruptName()).list()
-                .stream().map(it -> {
-                    JsonObject json = gson.fromJson(it.getData(), JsonObject.class);
-                    json.addProperty("id", it.getId());
-                    Map<String, Object> map = gson.fromJson(json, LinkedHashMap.class);
-                    // flatten reference fields {id,label..} into field_column entries for direct table column rendering
-                    new ArrayList<>(map.entrySet()).stream().filter(e -> e.getValue() instanceof Map)
-                            .forEach(e -> ((Map<?, ?>) e.getValue()).forEach((k, v) ->
-                                    map.put(e.getKey() + "_" + k, v)));
-                    return map;
-                }).collect(Collectors.toList());
-    }
-
-    private boolean match(Map<String, Object> row, List<Condition> conditions) {
-        if (null == conditions) return true;
-        for (Condition condition : conditions) {
-            Object value = row.get(condition.getKey());
-            Object target = condition.getValue();
-            boolean pass = switch (condition.getExpression()) {
-                case LIKE -> null != value && value.toString().contains(target.toString());
-                case EQ -> this.eq(value, target);
-                case NEQ -> !this.eq(value, target);
-                case IN ->
-                        target instanceof Collection && ((Collection<?>) target).stream().anyMatch(it -> this.eq(value, it));
-                case RANGE -> {
-                    List<?> range = (List<?>) target;
-                    yield this.compare(value, range.get(0)) >= 0 && this.compare(value, range.get(1)) <= 0;
-                }
-                case GT -> this.compare(value, target) > 0;
-                case GTE -> this.compare(value, target) >= 0;
-                case LT -> this.compare(value, target) < 0;
-                case LTE -> this.compare(value, target) <= 0;
-                case NULL -> null == value;
-                case NOT_NULL -> null != value;
-                default -> true;
-            };
-            if (!pass) return false;
+    // ids are stored as JSON integers; bind numeric-looking client values as numbers so SQLite compares them numerically
+    private static Object numeric(Object value) {
+        if (value instanceof Collection<?> collection) {
+            return collection.stream().map(DesignerDataService::numeric).collect(Collectors.toList());
         }
-        return true;
-    }
-
-    private boolean eq(Object value, Object target) {
-        if (Objects.equals(value, target)) return true;
-        if (null == value || null == target) return false;
-        if (value instanceof Number && target instanceof Number) {
-            return ((Number) value).doubleValue() == ((Number) target).doubleValue();
-        }
-        return value.toString().equals(target.toString());
-    }
-
-    private int compare(Object value, Object target) {
-        if (null == value) return -1;
-        if (value instanceof Number && target instanceof Number) {
-            return Double.compare(((Number) value).doubleValue(), ((Number) target).doubleValue());
-        }
-        return value.toString().compareTo(target.toString());
+        if (value instanceof String text && text.matches("-?\\d+")) return Long.valueOf(text);
+        return value;
     }
 
 }

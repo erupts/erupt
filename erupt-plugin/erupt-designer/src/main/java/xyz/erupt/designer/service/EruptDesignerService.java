@@ -11,6 +11,7 @@ import org.springframework.util.LinkedCaseInsensitiveMap;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptTag;
+import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -26,15 +27,14 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.designer.model.DesignerEntity;
 import xyz.erupt.designer.pojo.DesignerForm;
 import xyz.erupt.designer.proxy.JsonAnnotationProxy;
+import xyz.erupt.designer.store.DesignerStore;
 import xyz.erupt.designer.template.EruptDesignerTemplate;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Convert designer json to a runtime {@link EruptModel}: the template class supplies real
@@ -52,6 +52,9 @@ public class EruptDesignerService {
     @Resource
     private EruptDao eruptDao;
 
+    @Resource
+    private DesignerStore designerStore;
+
     @SneakyThrows
     public EruptModel toEruptModel(DesignerForm form) {
         // template class supplies annotation instances; the real carrier class is generated via bytecode (real fields → full Gson/reflection pipeline)
@@ -68,6 +71,7 @@ public class EruptDesignerService {
         model.setEruptName(Optional.ofNullable(form.getClassName()).orElse(EruptDesignerTemplate.class.getSimpleName()));
         Optional.ofNullable(form.getErupt()).ifPresent(it -> {
             if (!it.has(LambdaSee.method(Erupt::vis))) it.add(LambdaSee.method(Erupt::vis), new JsonArray());
+            this.defaultCellEdit(it);
             model.setErupt(JsonAnnotationProxy.proxy(model.getErupt(), it));
         });
         model.setEruptFieldModels(new ArrayList<>());
@@ -99,6 +103,20 @@ public class EruptDesignerService {
         return model;
     }
 
+    /**
+     * Designed models are data grids first, so they offer in-place cell editing unless the design
+     * turns it off — the opposite of the annotation default, which stays off so hand-written
+     * models opt in deliberately.
+     */
+    private void defaultCellEdit(JsonObject erupt) {
+        String powerMember = LambdaSee.method(Erupt::power);
+        String cellEditMember = LambdaSee.method(Power::cellEdit);
+        JsonObject power = erupt.has(powerMember) && erupt.get(powerMember).isJsonObject()
+                ? erupt.getAsJsonObject(powerMember) : new JsonObject();
+        if (!power.has(cellEditMember)) power.addProperty(cellEditMember, true);
+        erupt.add(powerMember, power);
+    }
+
     // publish: save design config → register runtime model, effective without restart
     @Transactional
     public void publish(String className, DesignerForm form) {
@@ -111,13 +129,58 @@ public class EruptDesignerService {
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("designer.enter_function_name"));
         }
         this.checkNotRealErupt(entity.getClassName());
+        this.assignFieldIds(form);
         EruptModel model = this.toEruptModel(form);
+        // storage first: a failed DDL leaves the design unsaved rather than saved-but-unusable.
+        // renames run before columns are added, so "rename a to b" plus "add a new field a"
+        // in one publish cannot collide
+        this.renameColumns(entity.getClassName(), entity.getConfig(), form);
+        designerStore.ensureTable(model);
         entity.setConfig(GsonFactory.getGson().toJson(form));
         entity.setName(form.getErupt().get(eruptNameMember).getAsString());
         entity.setPublishTime(new Date());
         entity.setUpdateTime(new Date());
         eruptDao.merge(entity);
         EruptCoreService.registerErupt(model);
+    }
+
+    // Give every field an identity that outlives its name. Duplicates are reissued because a
+    // copied field arrives carrying the id of the field it was copied from.
+    private void assignFieldIds(DesignerForm form) {
+        Set<String> used = new HashSet<>();
+        for (DesignerForm.DesignerField field : Optional.ofNullable(form.getFields()).orElse(new ArrayList<>())) {
+            if (null == field.getId() || field.getId().isEmpty() || !used.add(field.getId())) {
+                field.setId(UUID.randomUUID().toString().replace("-", "").substring(0, 12));
+                used.add(field.getId());
+            }
+        }
+    }
+
+    /**
+     * A field whose identity is already known under a different column name was renamed, so move
+     * the column and its data with it. Without this the new name would simply be added as an empty
+     * column and every value the field held would be stranded under the old one.
+     * <p>
+     * Designs published before field ids existed carry none, so nothing matches and the publish
+     * behaves as it did before — the first publish after the upgrade seeds the ids.
+     */
+    private void renameColumns(String className, String publishedConfig, DesignerForm form) {
+        if (null == publishedConfig || publishedConfig.isEmpty()) return;
+        Map<String, String> columnById = new HashMap<>();
+        DesignerForm published = GsonFactory.getGson().fromJson(publishedConfig, DesignerForm.class);
+        for (DesignerForm.DesignerField field : Optional.ofNullable(published.getFields()).orElse(new ArrayList<>())) {
+            if (null != field.getId() && !field.getId().isEmpty()) {
+                columnById.put(field.getId(), field.getFieldName());
+            }
+        }
+        for (DesignerForm.DesignerField field : Optional.ofNullable(form.getFields()).orElse(new ArrayList<>())) {
+            String published0 = columnById.get(field.getId());
+            if (null == published0 || published0.equals(field.getFieldName())) continue;
+            if (!designerStore.renameColumn(className, published0, field.getFieldName())) {
+                log.warn("Designer {}: cannot rename column {} to {}, data stays under the old name",
+                        className, published0, field.getFieldName());
+            }
+        }
     }
 
     public DesignerEntity loadDesign(String className) {
@@ -133,8 +196,9 @@ public class EruptDesignerService {
             if (null == entity.getConfig() || entity.getConfig().isEmpty()) continue;
             try {
                 this.checkNotRealErupt(entity.getClassName());
-                EruptCoreService.registerErupt(this.toEruptModel(
-                        GsonFactory.getGson().fromJson(entity.getConfig(), DesignerForm.class)));
+                EruptModel model = this.toEruptModel(GsonFactory.getGson().fromJson(entity.getConfig(), DesignerForm.class));
+                designerStore.ensureTable(model);
+                EruptCoreService.registerErupt(model);
             } catch (Exception e) {
                 log.warn("Designer model register failed: {} → {}", entity.getClassName(), e.getMessage());
             }

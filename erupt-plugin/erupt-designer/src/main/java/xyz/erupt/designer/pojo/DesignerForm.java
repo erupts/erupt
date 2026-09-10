@@ -37,6 +37,11 @@ public class DesignerForm {
     @Setter
     public static class DesignerField {
 
+        // immutable field identity, assigned on first publish. It survives renames, so the
+        // storage layer can move an existing column instead of leaving its data orphaned
+        // under the old name. Absent on designs published before ids existed.
+        private String id;
+
         private String fieldName;
 
         // explicit java type, e.g. Integer / Long / Double / BigDecimal

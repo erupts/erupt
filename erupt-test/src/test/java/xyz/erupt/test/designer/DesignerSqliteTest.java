@@ -187,6 +187,41 @@ public class DesignerSqliteTest extends EruptApplicationTests {
         assertEquals(Boolean.TRUE, this.field(loaded, "active"));
     }
 
+    /**
+     * Renaming a field moves its column, so the values it already holds follow the new name
+     * instead of being stranded under the old one.
+     */
+    @Test
+    void renamingAFieldKeepsItsData() {
+        DesignerForm first = gson.fromJson(FORM, DesignerForm.class);
+        designerService.publish(CLASS_NAME, first);
+        EruptModel model = EruptCoreService.getErupt(CLASS_NAME);
+        IEruptDataService service = DataProcessorManager.getEruptDataProcessor(model.getClazz());
+        Object row = gson.fromJson("{\"name\":\"alpha\",\"qty\":3}", model.getClazz());
+        service.addData(model, row);
+        Long id = ((BaseModel) row).getId();
+
+        // the published design now carries ids; rename "name" to "label" through a fresh publish
+        DesignerForm renamed = gson.fromJson(
+                designerService.loadDesign(CLASS_NAME).getConfig(), DesignerForm.class);
+        DesignerForm.DesignerField nameField = renamed.getFields().stream()
+                .filter(f -> "name".equals(f.getFieldName())).findFirst().orElseThrow();
+        assertNotNull(nameField.getId(), "publish must seed a stable field id");
+        nameField.setFieldName("label");
+        designerService.publish(CLASS_NAME, renamed);
+
+        EruptModel evolved = EruptCoreService.getErupt(CLASS_NAME);
+        Object loaded = service.findDataById(evolved, id);
+        assertNotNull(loaded);
+        assertEquals("alpha", this.field(loaded, "label"), "renamed column must keep its value");
+        assertEquals(3, ((Number) this.field(loaded, "qty")).intValue(), "other fields are untouched");
+        // the old column is gone rather than left behind holding the data
+        assertFalse(store.getTemplate().getJdbcTemplate()
+                        .queryForList("pragma table_info(" + DesignerStore.tableName(CLASS_NAME) + ")").stream()
+                        .anyMatch(it -> "name".equalsIgnoreCase(String.valueOf(it.get("name")))),
+                "the old column must not survive the rename");
+    }
+
     @Test
     void rejectsUnsafeFieldNames() {
         DesignerForm form = gson.fromJson(FORM, DesignerForm.class);

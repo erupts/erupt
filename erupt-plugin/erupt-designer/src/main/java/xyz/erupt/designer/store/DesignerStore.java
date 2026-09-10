@@ -105,6 +105,24 @@ public class DesignerStore {
         }
     }
 
+    /**
+     * Move an existing column so a renamed field keeps the data it already holds. Returns false
+     * without touching the table when the rename cannot be applied safely: the table or the source
+     * column does not exist yet, or the target name is already taken by another column (a column
+     * left behind by a deleted field, say). Skipping is deliberate — the source column and its data
+     * survive under the old name and the caller reports it, which beats destroying either side.
+     */
+    public boolean renameColumn(String className, String from, String to) {
+        String table = tableName(className);
+        Set<String> columns = this.columns(table);
+        if (!columns.contains(from.toLowerCase()) || columns.contains(to.toLowerCase())) {
+            return false;
+        }
+        template.getJdbcTemplate().execute("alter table " + table + " rename column "
+                + this.legalColumn(from) + " to " + this.legalColumn(to));
+        return true;
+    }
+
     public void dropTable(String className) {
         template.getJdbcTemplate().execute("drop table if exists " + tableName(className));
     }
