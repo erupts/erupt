@@ -86,6 +86,8 @@ public class EruptDesignerService {
             EditType editType = Optional.ofNullable(designerField.getEdit())
                     .filter(it -> it.has(editTypeMember))
                     .map(it -> EditType.valueOf(it.get(editTypeMember).getAsString())).orElse(EditType.INPUT);
+            // settle a concrete view type on the design json before it is proxied
+            designerField.viewType();
             EruptFieldModel fieldModel = new EruptFieldModel(this.templateField(editType), false);
             fieldModel.setField(dynamicClass.getDeclaredField(designerField.getFieldName()));
             fieldModel.setFieldName(designerField.getFieldName());

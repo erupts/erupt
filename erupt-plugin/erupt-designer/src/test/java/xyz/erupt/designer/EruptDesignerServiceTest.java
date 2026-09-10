@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -118,6 +119,30 @@ public class EruptDesignerServiceTest {
         EruptFieldModel typeField = cloned.getEruptFieldModels().stream()
                 .filter(it -> "type".equals(it.getFieldName())).findFirst().orElseThrow();
         assertEquals(2, ((java.util.List<?>) typeField.getComponentValue()).size());
+    }
+
+    /** AUTO never resolves for a designed field, so the view type is settled from the edit type. */
+    @Test
+    public void viewType() throws Exception {
+        DesignerForm form = new DesignerForm();
+        form.setClassName("Label");
+        form.setErupt(gson.fromJson("{name:'Label'}", JsonObject.class));
+        form.setFields(Arrays.asList(
+                field("color", "{title:'Color'}", "{title:'Color', type:'COLOR'}"),
+                field("createTime", "{title:'Created'}", "{title:'Created', type:'DATE', dateType:{type:'DATE_TIME'}}"),
+                field("remark", "{title:'Remark'}", "{title:'Remark', type:'TEXTAREA'}"),
+                field("cover", "{title:'Cover', type:'IMAGE'}", "{title:'Cover', type:'ATTACHMENT'}")
+        ));
+
+        EruptModel model = service.toEruptModel(form);
+        assertEquals(ViewType.COLOR, model.getEruptFieldMap().get("color").getEruptField().views()[0].type());
+        assertEquals(ViewType.DATE_TIME, model.getEruptFieldMap().get("createTime").getEruptField().views()[0].type());
+        assertEquals(ViewType.TEXT, model.getEruptFieldMap().get("remark").getEruptField().views()[0].type());
+        // an explicit view type wins over the derived one
+        assertEquals(ViewType.IMAGE, model.getEruptFieldMap().get("cover").getEruptField().views()[0].type());
+
+        // settled on the design itself, so a publish persists it
+        assertEquals("COLOR", form.getFields().get(0).getView().get("type").getAsString());
     }
 
     @Test
