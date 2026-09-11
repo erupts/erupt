@@ -270,6 +270,23 @@ public class MyTools {
 
 LLM 提供商、MCP 服务器、Agent —— 全部通过内置管理界面配置。无需重启。
 
+### 字段助手
+
+> 生成表单里的任意文本字段都自带一个行内写作助手。无需接线，只要 schema 说这个字段是文本，它就在。
+
+`生成` · `润色` · `续写` · `扩写` · `精简` —— 也可以直接告诉它怎么写。结果流式写回字段，一键撤销。
+
+<table>
+  <tr>
+    <td width="50%"><img src="readme/ai-field-assistant-dark.png" alt="AI 字段助手 · 暗色" width="100%"/></td>
+    <td width="50%"><img src="readme/ai-field-assistant-wizard.png" alt="AI 字段助手 · 分步表单" width="100%"/></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><img src="readme/ai-field-assistant-detail.png" alt="AI 字段助手 · 弹窗" width="62%"/></td>
+  </tr>
+</table>
+
+
 ---
 
 ## 04 · AI CLAW

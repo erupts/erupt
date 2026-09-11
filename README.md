@@ -270,6 +270,23 @@ public class MyTools {
 
 LLM providers, MCP servers, agents — all managed through the built-in admin UI. No restarts.
 
+### FIELD ASSISTANT
+
+> Any text field in any generated form gets an inline writing assistant. Nothing to wire up — it appears wherever the schema says the field holds text.
+
+`GENERATE` · `POLISH` · `CONTINUE` · `EXPAND` · `SHORTEN` — or just tell it what to write. Streams into the field, and one click undoes it.
+
+<table>
+  <tr>
+    <td width="50%"><img src="readme/ai-field-assistant-dark.png" alt="AI field assistant · dark" width="100%"/></td>
+    <td width="50%"><img src="readme/ai-field-assistant-wizard.png" alt="AI field assistant · stepped form" width="100%"/></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><img src="readme/ai-field-assistant-detail.png" alt="AI field assistant · dialog" width="62%"/></td>
+  </tr>
+</table>
+
+
 ---
 
 ## 04 · AI CLAW
