@@ -14,10 +14,14 @@ import xyz.erupt.ai.core.LlmRequest;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.vo.AiFieldRequest;
 import xyz.erupt.ai.vo.SseBody;
+import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -68,7 +72,7 @@ public class AiFieldService {
 
     /** Reads the component type off the built field json; unknown names simply carry no rule */
     public static EditType editTypeOf(JsonObject edit) {
-        String name = asString(edit, "type");
+        String name = asString(edit, LambdaSee.method(Edit::type));
         if (StringUtils.isBlank(name)) return null;
         try {
             return EditType.valueOf(name);
@@ -90,7 +94,7 @@ public class AiFieldService {
 
     public String buildSystemPrompt(EruptModel eruptModel, EruptFieldModel fieldModel, EditType editType,
                                     AiFieldRequest.Action action) {
-        JsonObject edit = fieldModel.getEruptFieldJson().getAsJsonObject("edit");
+        JsonObject edit = fieldModel.getEruptFieldJson().getAsJsonObject(LambdaSee.method(EruptField::edit));
         StringBuilder sb = new StringBuilder();
         sb.append("You fill in one field of a data entry form in an admin system. ")
                 .append("You produce the field's value and nothing else — never a preamble, never a sign-off, ")
@@ -99,8 +103,8 @@ public class AiFieldService {
         if (StringUtils.isNotBlank(eruptModel.getErupt().desc())) {
             sb.append(" — ").append(eruptModel.getErupt().desc());
         }
-        sb.append("\nField to write: ").append(asString(edit, "title"));
-        String desc = asString(edit, "desc");
+        sb.append("\nField to write: ").append(asString(edit, LambdaSee.method(Edit::title)));
+        String desc = asString(edit, LambdaSee.method(Edit::desc));
         if (StringUtils.isNotBlank(desc)) sb.append(" — ").append(desc);
         sb.append("\n");
         // Field-level authoring guidance from @Edit(prompt = "..."), the model owner's own words.
@@ -150,7 +154,7 @@ public class AiFieldService {
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             String name = fieldModel.getFieldName();
             if (name.equals(targetField) || !form.containsKey(name)) continue;
-            JsonObject edit = fieldModel.getEruptFieldJson().getAsJsonObject("edit");
+            JsonObject edit = fieldModel.getEruptFieldJson().getAsJsonObject(LambdaSee.method(EruptField::edit));
             if (null == edit) continue;
             if (EXCLUDED_TYPES.contains(editTypeOf(edit))) continue;
             String value = stringify(form.get(name));
@@ -158,7 +162,7 @@ public class AiFieldService {
             if (value.length() > MAX_SIBLING_LENGTH) {
                 value = value.substring(0, MAX_SIBLING_LENGTH) + "…";
             }
-            String title = asString(edit, "title");
+            String title = asString(edit, LambdaSee.method(Edit::title));
             sb.append("- ").append(StringUtils.isBlank(title) ? name : title).append(": ").append(value).append("\n");
         }
         return sb.toString();
@@ -181,12 +185,14 @@ public class AiFieldService {
     // Length cap the component itself enforces, so the model is not asked for text the form will reject
     private static Integer maxLength(JsonObject edit, EditType editType) {
         JsonObject type = switch (editType) {
-            case INPUT -> edit.getAsJsonObject("inputType");
-            case TEXTAREA -> edit.getAsJsonObject("textareaType");
+            case INPUT -> edit.getAsJsonObject(LambdaSee.method(Edit::inputType));
+            case TEXTAREA -> edit.getAsJsonObject(LambdaSee.method(Edit::textareaType));
             default -> null;
         };
-        if (null == type || !type.has("length") || type.get("length").isJsonNull()) return null;
-        return type.get("length").getAsInt();
+        // Both sub-annotations name the cap the same way
+        String length = LambdaSee.method(InputType::length);
+        if (null == type || !type.has(length) || type.get(length).isJsonNull()) return null;
+        return type.get(length).getAsInt();
     }
 
     /**
