@@ -212,6 +212,27 @@ More scenarios — [erupt.xyz/#!/contrast](https://www.erupt.xyz/#!/contrast)
 
 Module catalog — [erupt.xyz/#!/module](https://www.erupt.xyz/#!/module) · API reference — [javadoc.erupt.xyz](https://javadoc.erupt.xyz)
 
+### MODEL GRAPH
+
+> Every `@Erupt` entity, every relation between them, drawn from the same annotations that build the UI. No extra configuration — the map exists because the model does.
+
+| | |
+|---|---|
+| `OVERVIEW` | Every model grouped by module. Read the shape of the whole system at a glance. |
+| `MATRIX` | Module-to-module coupling as a heat map. The diagonal is coupling inside a module; everything off it is a dependency between modules. |
+| `LINEAGE` | Pick one model and follow what points at it and what it points at, to a depth you choose. |
+
+<table>
+  <tr>
+    <td width="50%"><img src="readme/model-graph-overview.png" alt="Model Graph · Overview" width="100%"/></td>
+    <td width="50%"><img src="readme/model-graph-matrix.png" alt="Model Graph · Matrix" width="100%"/></td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="readme/model-graph-lineage.png" alt="Model Graph · Lineage" width="100%"/></td>
+  </tr>
+</table>
+
+
 ---
 
 ## 03 · AI HARNESS

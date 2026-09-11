@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Model Graph</title>
+    <style>
+        :root {
+            --bg: #f6f7f9;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --border-soft: #eef0f3;
+            --fg: #111827;
+            --muted: #6b7280;
+            --faint: #9ca3af;
+            --accent: #2563eb;
+            --accent-soft: #eff6ff;
+            --line: #cbd2da;
+            --radius: 8px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            background: var(--bg); color: var(--fg);
+            height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            display: flex; align-items: center; gap: 12px; flex: none;
+            padding: 0 16px; height: 48px;
+            background: var(--surface); border-bottom: 1px solid var(--border);
+        }
+        header .brand { font-size: 14px; font-weight: 600; letter-spacing: -.01em; }
+        header .stat { color: var(--muted); font-size: 12px; }
+        header .stat b { color: var(--fg); font-weight: 600; }
+        .spacer { flex: 1; }
+        .seg { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 2px; }
+        .seg button {
+            font: inherit; font-size: 12px; padding: 3px 12px; cursor: pointer;
+            border: 0; background: transparent; color: var(--muted); border-radius: 6px;
+        }
+        .seg button.on { background: var(--surface); color: var(--fg); box-shadow: 0 1px 2px rgba(16,24,40,.08); }
+        .depth { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+
+        .main { flex: 1; display: flex; min-height: 0; }
+
+        aside {
+            width: 228px; flex: none; background: var(--surface);
+            border-right: 1px solid var(--border); display: flex; flex-direction: column;
+        }
+        .search { padding: 10px; border-bottom: 1px solid var(--border-soft); }
+        .search input {
+            width: 100%; padding: 6px 10px; font: inherit; font-size: 12px; color: var(--fg);
+            border: 1px solid var(--border); border-radius: 6px; outline: none; background: var(--bg);
+        }
+        .search input:focus { border-color: var(--accent); background: var(--surface); }
+        .tree { flex: 1; overflow: auto; padding: 6px 0 16px; }
+        .grp {
+            display: flex; align-items: center; gap: 6px; padding: 7px 12px 4px;
+            font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--faint);
+        }
+        .grp .dot { width: 6px; height: 6px; border-radius: 50%; flex: none; }
+        .grp .n { margin-left: auto; font-weight: 500; letter-spacing: 0; }
+        .item {
+            display: flex; align-items: center; gap: 6px; padding: 4px 12px 4px 22px; cursor: pointer;
+            font-size: 12px; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .item:hover { background: var(--bg); }
+        .item.on { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+        .item .tag { margin-left: auto; font-size: 9px; color: var(--faint); }
+        .item.cube::before { content: '◇'; color: #059669; font-size: 10px; }
+        .item.remote::before { content: '☁'; color: #94a3b8; font-size: 10px; }
+
+        .content { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        .stage { flex: 1; overflow: auto; position: relative; }
+        .hint { position: absolute; inset: 0; display: grid; place-items: center; color: var(--faint); font-size: 12px; }
+
+        /* tree */
+        svg { display: block; }
+        .card { cursor: pointer; }
+        .card rect.box { fill: var(--surface); stroke: var(--border); stroke-width: 1; }
+        .card:hover rect.box { stroke: var(--accent); }
+        .card.root rect.box { stroke: #cdd7e6; filter: drop-shadow(0 2px 6px rgba(16,24,40,.10)); }
+        .card.cube rect.box { stroke-dasharray: 3 2.5; }
+        .card.rt rect.box { stroke: #059669; stroke-width: 1.7; }
+        .card.remote rect.box { stroke-dasharray: 1 3; stroke: #a5b0be; }
+        .card .nm { font-size: 11.5px; fill: var(--fg); }
+        .card.root .nm { font-size: 14px; font-weight: 600; }
+        .card .sub { font-size: 9.5px; fill: var(--faint); }
+        .link { fill: none; stroke: var(--line); stroke-width: 1.2; }
+        .link.reference { stroke: #9aa3af; }
+        .link.tab { stroke: #3b82f6; }
+        .link.embed { stroke: #8b5cf6; }
+        .link.drill { stroke: #f59e0b; stroke-dasharray: 4 3; }
+        .link.operation { stroke: #cbd5e1; stroke-dasharray: 2 3; }
+        .link.cubeOf, .link.table, .link.join { stroke: #10b981; stroke-dasharray: 4 3; }
+        .lbl { font-size: 9.5px; fill: var(--faint); }
+        .colhead { font-size: 9.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; fill: var(--faint); }
+
+        /* overview */
+        .zone rect { fill: #fbfcfd; stroke: var(--border-soft); }
+        .zone .zt { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; fill: var(--muted); }
+        .zone .zc { font-size: 10px; fill: var(--faint); }
+        .fade { opacity: .22; }
+
+        /* matrix */
+        .matrix { padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .matrix table { border-collapse: separate; border-spacing: 0; font-size: 11px; }
+        .matrix th, .matrix td { padding: 0; }
+        .matrix .rh {
+            text-align: right; padding-right: 10px; white-space: nowrap; color: #374151;
+            font-weight: 500; height: 24px; font-size: 11px;
+        }
+        .matrix .ch { height: 104px; width: 26px; vertical-align: bottom; padding-bottom: 6px; }
+        .matrix .ch span {
+            display: inline-block; transform: rotate(-90deg); transform-origin: left bottom;
+            white-space: nowrap; font-weight: 500; color: #374151; font-size: 11px;
+            margin-left: 17px; letter-spacing: .01em;
+        }
+        .matrix .cell {
+            width: 26px; height: 24px; text-align: center; cursor: pointer;
+            border: 1px solid var(--surface); background: #f1f3f5; color: transparent; border-radius: 3px;
+        }
+        .matrix .cell.has { color: #fff; font-weight: 600; }
+        .matrix .cell.self { border-radius: 7px; }
+        .matrix .cell:hover { outline: 2px solid var(--accent); outline-offset: -1px; }
+        .matrix .tot { width: 34px; text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
+        .matrix .cap { font-size: 11px; color: var(--faint); margin-top: 16px; max-width: 620px; text-align: center; }
+        .matrix .hl { background: var(--accent-soft) !important; }
+
+        /* layers */
+        .lyr-tag { font-size: 9.5px; font-weight: 600; letter-spacing: .08em; fill: var(--faint); }
+        .lyr-band { fill: #fbfcfd; }
+        .dimmed { opacity: .12; }
+
+        /* impact */
+        .impact { padding: 18px 20px 30px; max-width: 980px; }
+        .impact .note { font-size: 11.5px; color: var(--faint); margin-bottom: 14px; max-width: 660px; }
+        .impact table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .impact th {
+            text-align: left; font-size: 9.5px; font-weight: 600; letter-spacing: .07em;
+            text-transform: uppercase; color: var(--faint); padding: 0 10px 6px 0;
+        }
+        .impact td { padding: 5px 10px 5px 0; border-bottom: 1px solid var(--border-soft); white-space: nowrap; }
+        .impact tr:hover td { background: var(--surface); }
+        .impact .nm { cursor: pointer; font-weight: 500; }
+        .impact .nm:hover { color: var(--accent); }
+        .impact .nm .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+        .impact .mod { color: var(--muted); }
+        .impact .num { text-align: right; width: 54px; font-variant-numeric: tabular-nums; font-weight: 600; }
+        .impact .bar { width: 100%; }
+        .impact .bar span { display: inline-block; height: 11px; border-radius: 2px; vertical-align: middle; }
+        .impact .hop { color: var(--faint); font-size: 10.5px; }
+
+        /* audit */
+        .audit { padding: 18px 20px 30px; max-width: 1080px; }
+        .sect { margin-bottom: 22px; }
+        .sect h3 {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+            font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted);
+        }
+        .sect h3 .cnt {
+            font-size: 10px; padding: 1px 7px; border-radius: 999px; letter-spacing: 0;
+            background: var(--border-soft); color: var(--muted);
+        }
+        .sect h3 .cnt.warn { background: #fef2f2; color: #b91c1c; }
+        .sect .note { font-size: 11.5px; color: var(--faint); margin-bottom: 10px; }
+        .row {
+            display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+            padding: 8px 12px; background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); margin-bottom: 6px;
+        }
+        .row .tname {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px;
+            color: var(--muted); margin-right: 6px; min-width: 132px;
+        }
+        .pill {
+            padding: 2px 9px; border-radius: 999px; font-size: 11.5px; cursor: pointer;
+            background: var(--bg); border: 1px solid var(--border); color: #374151; white-space: nowrap;
+        }
+        .pill:hover { border-color: var(--accent); color: var(--accent); }
+        .pill .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; vertical-align: 1px; }
+        .arrow { color: var(--faint); font-size: 11px; }
+        .cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+        .ok { font-size: 12px; color: var(--faint); padding: 6px 0; }
+
+        /* detail */
+        .detail { flex: none; max-height: 246px; overflow: auto; background: var(--surface); border-top: 1px solid var(--border); }
+        .detail .dh {
+            display: flex; align-items: center; gap: 8px; padding: 8px 14px; position: sticky; top: 0;
+            background: var(--surface); border-bottom: 1px solid var(--border-soft);
+            font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--faint);
+        }
+        .detail table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .detail td { padding: 5px 10px; border-bottom: 1px solid var(--border-soft); white-space: nowrap; }
+        .detail tr:hover td { background: var(--bg); }
+        .detail .dir { width: 74px; color: var(--faint); font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; }
+        .detail .mdl { cursor: pointer; font-weight: 500; }
+        .detail .mdl:hover { color: var(--accent); }
+        .detail .mod { color: var(--muted); }
+        .detail .kind { width: 96px; }
+        .detail .kind i { display: inline-block; width: 14px; border-top: 2px solid; margin-right: 6px; vertical-align: 4px; }
+        .detail .fld { color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
+        .detail .none { padding: 14px; color: var(--faint); font-size: 12px; }
+        .detail .dtab {
+            cursor: pointer; padding: 2px 9px; border-radius: 999px; letter-spacing: .04em;
+            color: var(--faint); border: 1px solid transparent;
+        }
+        .detail .dtab.on { color: var(--fg); background: var(--bg); border-color: var(--border); }
+        .detail .dtab:hover { color: var(--fg); }
+        .detail .yes { color: #059669; }
+        .detail .no { color: var(--border); }
+        .detail .ref { cursor: pointer; color: var(--accent); }
+        .cfg { display: grid; grid-template-columns: 132px 1fr; gap: 6px 14px; padding: 12px 14px; font-size: 12px; }
+        .cfg dt { color: var(--faint); }
+        .cfg dd { color: var(--fg); word-break: break-all; }
+        .cfg .chip2 {
+            display: inline-block; padding: 1px 8px; margin: 0 4px 4px 0; border-radius: 999px;
+            background: var(--bg); border: 1px solid var(--border); font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <span class="brand">Model Graph</span>
+    <span class="stat" id="stat"></span>
+    <span class="spacer"></span>
+    <span class="depth" id="depth-box">depth
+        <span class="seg">
+            <button data-d="1">1</button><button data-d="2" class="on">2</button><button data-d="3">3</button><button data-d="4">4</button><button data-d="5">5</button>
+        </span>
+    </span>
+    <div class="seg">
+        <button id="tab-tree" class="on">Lineage</button>
+        <button id="tab-layers">Layers</button>
+        <button id="tab-overview">Overview</button>
+        <button id="tab-matrix">Matrix</button>
+        <button id="tab-impact">Impact</button>
+        <button id="tab-audit">Audit</button>
+    </div>
+</header>
+<div class="main">
+    <aside>
+        <div class="search"><input id="q" type="search" placeholder="Search model…" autocomplete="off"></div>
+        <div class="tree" id="list"></div>
+    </aside>
+    <div class="content">
+        <div class="stage" id="stage"><div class="hint" id="hint">Loading…</div></div>
+        <div class="detail" id="detail"></div>
+    </div>
+</div>
+<script>
+(function () {
+    var TOKEN = new URLSearchParams(location.search).get('_token');
+    var BASE = location.pathname.split('/erupt-api/')[0];
+    var NS = 'http://www.w3.org/2000/svg';
+    var PALETTE = ['#2563eb', '#059669', '#d97706', '#db2777', '#7c3aed', '#0891b2',
+        '#dc2626', '#4f46e5', '#65a30d', '#c026d3', '#ea580c', '#475569'];
+    // Only real data relations carry dependency direction; drill / row operation are navigation
+    var STRUCTURAL = {reference: 1, tab: 1, embed: 1};
+    var KIND_COLOR = {
+        reference: '#9aa3af', tab: '#3b82f6', embed: '#8b5cf6', drill: '#f59e0b',
+        operation: '#cbd5e1', cubeOf: '#10b981', table: '#10b981', join: '#10b981'
+    };
+
+    var stage = document.getElementById('stage');
+    var hint = document.getElementById('hint');
+    var listBox = document.getElementById('list');
+    var detail = document.getElementById('detail');
+
+    var nodes = [], links = [], byId = {}, colorOf = {}, modules = [];
+    var outOf = {}, inOf = {};
+    var mode = 'tree', current = null, keyword = '', depth = 2, audit = null;
+    var detailCache = {}, detailTab = 'relations';
+
+    fetch(BASE + '/erupt-api/erupt-graph/view?_token=' + encodeURIComponent(TOKEN || ''))
+        .then(function (r) { return r.json(); })
+        .then(boot)
+        .catch(function (e) { hint.textContent = 'Failed to load: ' + e; });
+
+    function boot(res) {
+        nodes = res.nodes || [];
+        if (!nodes.length) { hint.textContent = 'No erupt model is registered'; return; }
+        nodes.forEach(function (n) {
+            n.group = n.source || 'unknown';
+            byId[n.id] = n;
+            outOf[n.id] = [];
+            inOf[n.id] = [];
+            if (modules.indexOf(n.group) < 0) modules.push(n.group);
+        });
+        audit = res.audit || {cycles: [], sharedTables: [], orphans: [], unpublished: []};
+        links = (res.edges || []).filter(function (e) { return byId[e.from] && byId[e.to]; });
+        links.forEach(function (l) {
+            l.s = byId[l.from];
+            l.t = byId[l.to];
+            outOf[l.from].push(l);
+            inOf[l.to].push(l);
+        });
+        modules.sort();
+        modules.forEach(function (m, i) { colorOf[m] = PALETTE[i % PALETTE.length]; });
+        nodes.sort(function (a, b) { return a.name.localeCompare(b.name); });
+
+        var remoteCount = nodes.filter(function (n) { return n.kind === 'remote'; }).length;
+        document.getElementById('stat').innerHTML = '<b>' + nodes.filter(function (n) { return n.kind === 'erupt'; }).length
+            + '</b> models · <b>' + nodes.filter(function (n) { return n.kind === 'cube'; }).length
+            + '</b> cubes · <b>' + links.length + '</b> relations · <b>' + modules.length + '</b> modules'
+            + (remoteCount ? ' · <b>' + remoteCount + '</b> remote' : '');
+
+        renderList();
+        select(nodes.slice().sort(function (a, b) { return deg(b) - deg(a); })[0].id);
+    }
+
+    function deg(n) { return outOf[n.id].length + inOf[n.id].length; }
+
+    /* ---------------- left list ---------------- */
+
+    function renderList() {
+        var groups = {};
+        nodes.forEach(function (n) {
+            if (keyword && n.name.toLowerCase().indexOf(keyword) < 0
+                && (n.label || '').toLowerCase().indexOf(keyword) < 0) return;
+            (groups[n.group] = groups[n.group] || []).push(n);
+        });
+        var html = '';
+        Object.keys(groups).sort().forEach(function (g) {
+            html += '<div class="grp"><span class="dot" style="background:' + colorOf[g] + '"></span>'
+                + esc(g) + '<span class="n">' + groups[g].length + '</span></div>';
+            groups[g].forEach(function (n) {
+                html += '<div class="item' + (n.kind === 'erupt' ? '' : ' ' + n.kind) + (current === n.id ? ' on' : '')
+                    + '" data-id="' + esc(n.id) + '" title="' + esc(n.label || n.name) + '">'
+                    + esc(n.name) + '<span class="tag">' + deg(n) + '</span></div>';
+            });
+        });
+        listBox.innerHTML = html || '<div class="grp">no match</div>';
+        each(listBox.querySelectorAll('.item'), function (row) {
+            row.onclick = function () { select(row.getAttribute('data-id')); };
+        });
+    }
+
+    document.getElementById('q').addEventListener('input', function (e) {
+        keyword = e.target.value.trim().toLowerCase();
+        renderList();
+        if (mode === 'overview') drawOverview();
+    });
+
+    /* ---------------- view switching ---------------- */
+
+    document.getElementById('tab-tree').onclick = function () { setMode('tree'); };
+    document.getElementById('tab-overview').onclick = function () { setMode('overview'); };
+    document.getElementById('tab-matrix').onclick = function () { setMode('matrix'); };
+    document.getElementById('tab-audit').onclick = function () { setMode('audit'); };
+    document.getElementById('tab-layers').onclick = function () { setMode('layers'); };
+    document.getElementById('tab-impact').onclick = function () { setMode('impact'); };
+    each(document.querySelectorAll('#depth-box button'), function (b) {
+        b.onclick = function () {
+            depth = +b.getAttribute('data-d');
+            each(document.querySelectorAll('#depth-box button'), function (x) { x.className = x === b ? 'on' : ''; });
+            if (mode === 'tree') drawTree(byId[current]);
+        };
+    });
+
+    function setMode(next) {
+        mode = next;
+        ['tree', 'layers', 'overview', 'matrix', 'impact', 'audit'].forEach(function (m) {
+            document.getElementById('tab-' + m).className = next === m ? 'on' : '';
+        });
+        document.getElementById('depth-box').style.visibility = next === 'tree' ? 'visible' : 'hidden';
+        if (next === 'matrix') { drawMatrix(); return; }
+        if (next === 'audit') { drawAudit(); return; }
+        if (next === 'layers') { drawLayers(); return; }
+        if (next === 'impact') { drawImpact(); return; }
+        if (next === 'tree') drawTree(byId[current]); else drawOverview();
+        relationTable(byId[current]);
+    }
+
+    function select(id) {
+        current = id;
+        renderList();
+        if (mode !== 'tree') { setMode('tree'); return; }
+        drawTree(byId[id]);
+        relationTable(byId[id]);
+        var row = listBox.querySelector('.item.on');
+        if (row) row.scrollIntoView({block: 'nearest'});
+    }
+
+    /* ---------------- lineage tree ----------------
+       Each side is turned into a real tree (a model appears once, on the shallowest level it is
+       reached), so edges never cross and a transitive chain reads as one path. */
+
+    var CARD_W = 158, CARD_H = 32, GAP_Y = 9, COL_GAP = 116, ROOT_W = 196, ROOT_H = 60;
+
+    // Breadth first on purpose: a model must land on the shallowest level that reaches it, or a
+    // direct relation gets buried one column deeper just because a sibling was expanded first.
+    function subtree(id, dir) {
+        var seen = {};
+        seen[id] = true;
+        var roots = [];
+        var frontier = [{id: id, item: null}];
+        for (var d = 0; d < depth && frontier.length; d++) {
+            var next = [];
+            frontier.forEach(function (parent) {
+                (dir === 'out' ? outOf[parent.id] : inOf[parent.id]).forEach(function (l) {
+                    var other = dir === 'out' ? l.t : l.s;
+                    if (seen[other.id]) return;
+                    seen[other.id] = true;
+                    var item = {node: other, link: l, kids: []};
+                    if (parent.item) parent.item.kids.push(item); else roots.push(item);
+                    next.push({id: other.id, item: item});
+                });
+            });
+            frontier = next;
+        }
+        return roots;
+    }
+
+    // Reingold-Tilford, cut to the bone: a leaf takes one slot, a parent centres on its children
+    function assign(items, slot) {
+        items.forEach(function (it) {
+            if (!it.kids.length) {
+                it.slot = slot.v;
+                slot.v += 1;
+            } else {
+                assign(it.kids, slot);
+                it.slot = (it.kids[0].slot + it.kids[it.kids.length - 1].slot) / 2;
+            }
+        });
+    }
+
+    function flatten(items, level, acc) {
+        items.forEach(function (it) {
+            it.level = level;
+            acc.push(it);
+            flatten(it.kids, level + 1, acc);
+        });
+        return acc;
+    }
+
+    function drawTree(root) {
+        hint.style.display = 'none';
+        var outs = subtree(root.id, 'out');
+        var ins = subtree(root.id, 'in');
+        var slotOut = {v: 0}, slotIn = {v: 0};
+        assign(outs, slotOut);
+        assign(ins, slotIn);
+        var flatOut = flatten(outs, 0, []), flatIn = flatten(ins, 0, []);
+        var rows = Math.max(slotOut.v, slotIn.v, 1);
+        var levelsOut = flatOut.reduce(function (m, it) { return Math.max(m, it.level + 1); }, 0);
+        var levelsIn = flatIn.reduce(function (m, it) { return Math.max(m, it.level + 1); }, 0);
+
+        var box = stage.getBoundingClientRect();
+        var unit = CARD_H + GAP_Y;
+        var height = Math.max(box.height - 2, rows * unit + 96);
+        var span = ROOT_W + (levelsIn + levelsOut) * (CARD_W + COL_GAP);
+        var width = Math.max(box.width - 2, span + 60);
+        var midY = height / 2;
+        var startX = Math.max(24, (width - span) / 2);
+        var rootX = startX + levelsIn * (CARD_W + COL_GAP);
+
+        var svg = el('svg', {width: width, height: height, viewBox: '0 0 ' + width + ' ' + height});
+        var gLink = el('g', {}), gCard = el('g', {});
+        svg.appendChild(gLink);
+        svg.appendChild(gCard);
+
+        var centerOut = slotOut.v ? (slotOut.v - 1) / 2 : 0;
+        var centerIn = slotIn.v ? (slotIn.v - 1) / 2 : 0;
+
+        place(flatOut, 'out');
+        place(flatIn, 'in');
+
+        function place(list, dir) {
+            var center = dir === 'out' ? centerOut : centerIn;
+            list.forEach(function (it) {
+                it.x = dir === 'out'
+                    ? rootX + ROOT_W + COL_GAP + it.level * (CARD_W + COL_GAP)
+                    : rootX - COL_GAP - CARD_W - it.level * (CARD_W + COL_GAP);
+                it.y = midY + (it.slot - center) * unit - CARD_H / 2;
+            });
+            list.forEach(function (it) {
+                var parent = findParent(list, it);
+                var from, to;
+                if (dir === 'out') {
+                    from = parent ? [parent.x + CARD_W, parent.y + CARD_H / 2] : [rootX + ROOT_W, midY];
+                    to = [it.x, it.y + CARD_H / 2];
+                } else {
+                    from = [it.x + CARD_W, it.y + CARD_H / 2];
+                    to = parent ? [parent.x, parent.y + CARD_H / 2] : [rootX, midY];
+                }
+                gLink.appendChild(el('path', {'class': 'link ' + it.link.kind, d: curve(from, to)}));
+                // Label hugs the child card, one per row — anchored mid-edge they pile up on the hub
+                if (it.level === 0 && it.link.label) {
+                    if (dir === 'out') {
+                        gCard.appendChild(text(to[0] - 9, to[1] - 5, clip(it.link.label, 18), 'lbl', 'end'));
+                    } else {
+                        gCard.appendChild(text(from[0] + 9, from[1] - 5, clip(it.link.label, 18), 'lbl'));
+                    }
+                }
+                gCard.appendChild(card(it.node, it.x, it.y, CARD_W, CARD_H, false));
+            });
+        }
+
+        if (levelsIn) svg.appendChild(text(startX, 26, 'Referenced by · ' + flatIn.length, 'colhead'));
+        if (levelsOut) svg.appendChild(text(rootX + ROOT_W + COL_GAP, 26, 'References · ' + flatOut.length, 'colhead'));
+        gCard.appendChild(card(root, rootX, midY - ROOT_H / 2, ROOT_W, ROOT_H, true));
+        if (!flatIn.length && !flatOut.length) {
+            svg.appendChild(text(rootX + ROOT_W / 2, midY + ROOT_H, 'No relation to any other model', 'lbl', 'middle'));
+        }
+        stage.innerHTML = '';
+        stage.appendChild(svg);
+    }
+
+    function findParent(list, child) {
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].kids.indexOf(child) >= 0) return list[i];
+        }
+        return null;
+    }
+
+    function curve(a, b) {
+        var dx = Math.abs(b[0] - a[0]) * 0.45;
+        return 'M' + a[0] + ',' + a[1] + 'C' + (a[0] + dx) + ',' + a[1] + ' '
+            + (b[0] - dx) + ',' + b[1] + ' ' + b[0] + ',' + b[1];
+    }
+
+    function card(node, x, y, w, h, root, compact) {
+        var g = el('g', {'class': 'card' + (root ? ' root' : '') + (node.kind === 'erupt' ? '' : ' ' + node.kind)
+            + (node.runtime ? ' rt' : '')});
+        g.appendChild(el('rect', {'class': 'box', x: x, y: y, width: w, height: h, rx: 7}));
+        g.appendChild(el('path', {fill: colorOf[node.group], d: bar(x, y, h)}));
+        if (root) {
+            g.appendChild(text(x + 15, y + 24, clip(node.name, 21), 'nm'));
+            g.appendChild(text(x + 15, y + 42, node.group + ' · '
+                + (node.kind === 'cube' ? node.dimensions + 'D / ' + node.measures + 'M' : node.fields + ' fields'), 'sub'));
+        } else if (compact) {
+            g.appendChild(text(x + 12, y + h / 2 + 4, clip(node.name, 19), 'nm'));
+        } else {
+            g.appendChild(text(x + 12, y + 14, clip(node.name, 18), 'nm'));
+            g.appendChild(text(x + 12, y + 25, node.group, 'sub'));
+        }
+        g.appendChild(el('title', {}, node.name + ' — ' + (node.label || '') + ' · ' + node.group));
+        g.addEventListener('click', function () { select(node.id); });
+        return g;
+    }
+
+    function bar(x, y, h) {
+        return 'M' + (x + 3) + ',' + y + 'H' + (x + 7) + 'V' + (y + h) + 'H' + (x + 3)
+            + 'A7,7 0 0 1 ' + x + ',' + (y + h - 7) + 'V' + (y + 7) + 'A7,7 0 0 1 ' + (x + 3) + ',' + y + 'Z';
+    }
+
+    /* ---------------- layers ----------------
+       Audit proves the structural graph is acyclic, so it can be levelled: a model sits one row
+       above the deepest thing it depends on. Row 0 is the bedrock everything else stands on. */
+
+    var LY_H = 30, LY_GAP_X = 14, LY_GAP_Y = 76, LY_PAD = 70;
+
+    function structural(l) { return STRUCTURAL[l.kind]; }
+
+    function levels() {
+        var level = {}, visiting = {};
+        function walk(id) {
+            if (level[id] != null) return level[id];
+            if (visiting[id]) return 0;
+            visiting[id] = true;
+            var deep = -1;
+            outOf[id].forEach(function (l) {
+                if (!structural(l) || l.t.id === id) return;
+                deep = Math.max(deep, walk(l.t.id));
+            });
+            visiting[id] = false;
+            level[id] = deep + 1;
+            return level[id];
+        }
+        nodes.forEach(function (n) { if (touchedStructurally(n)) walk(n.id); });
+        return level;
+    }
+
+    function touchedStructurally(n) {
+        return outOf[n.id].some(structural) || inOf[n.id].some(structural);
+    }
+
+    function drawLayers() {
+        var level = levels();
+        var rows = {};
+        nodes.forEach(function (n) {
+            if (level[n.id] == null) return;
+            (rows[level[n.id]] = rows[level[n.id]] || []).push(n);
+        });
+        var keys = Object.keys(rows).map(Number).sort(function (a, b) { return a - b; });
+        var hidden = nodes.filter(function (n) { return level[n.id] == null; }).length;
+        if (!keys.length) { stage.innerHTML = '<div class="hint">No structural relation to level</div>'; return; }
+
+        var box = stage.getBoundingClientRect();
+        var width = Math.max(box.width - 2, 900);
+        var avail = width - LY_PAD - 30;
+        // A wide layer wraps onto more rows instead of forcing the whole board to scroll sideways
+        var wrapped = {}, heights = {};
+        keys.forEach(function (k) {
+            // group a layer by module so same-coloured boxes sit together and edges cross less
+            rows[k].sort(function (a, b) {
+                return a.group === b.group ? a.name.localeCompare(b.name) : a.group.localeCompare(b.group);
+            });
+            var lines = [[]], used = 0;
+            rows[k].forEach(function (n) {
+                var w = cardW(n);
+                if (used + w > avail && lines[lines.length - 1].length) {
+                    lines.push([]);
+                    used = 0;
+                }
+                lines[lines.length - 1].push(n);
+                used += w + LY_GAP_X;
+            });
+            wrapped[k] = lines;
+            heights[k] = lines.length * (LY_H + 10) + 34;
+        });
+        var total = keys.reduce(function (sum, k) { return sum + heights[k]; }, 0);
+        var height = Math.max(box.height - 2, total + 34);
+
+        var svg = el('svg', {width: width, height: height, viewBox: '0 0 ' + width + ' ' + height});
+        var gBand = el('g', {}), gLink = el('g', {}), gCard = el('g', {});
+        svg.appendChild(gBand);
+        svg.appendChild(gLink);
+        svg.appendChild(gCard);
+
+        var placed = {};
+        var cursor = height - 16;
+        keys.forEach(function (k, i) {
+            // bedrock at the bottom: dependencies point downwards, the way a stack is drawn
+            var h = heights[k];
+            var top = cursor - h;
+            cursor = top;
+            if (i % 2 === 0) gBand.appendChild(el('rect', {'class': 'lyr-band', x: 0, y: top, width: width, height: h}));
+            gBand.appendChild(text(16, top + 26, 'L' + k + ' · ' + rows[k].length, 'lyr-tag'));
+            wrapped[k].forEach(function (line, li) {
+                var lineW = line.reduce(function (sum, n) { return sum + cardW(n) + LY_GAP_X; }, -LY_GAP_X);
+                var x = Math.max(LY_PAD, (width - lineW) / 2);
+                var y = top + 16 + li * (LY_H + 10);
+                line.forEach(function (n) {
+                    placed[n.id] = {x: x, y: y, w: cardW(n)};
+                    x += cardW(n) + LY_GAP_X;
+                });
+            });
+        });
+
+        var paths = [];
+        links.forEach(function (l) {
+            if (!structural(l) || l.s.id === l.t.id) return;
+            var a = placed[l.s.id], b = placed[l.t.id];
+            if (!a || !b) return;
+            var from = [a.x + a.w / 2, a.y + LY_H];
+            var to = [b.x + b.w / 2, b.y];
+            var path = el('path', {'class': 'link ' + l.kind, d: vCurve(from, to)});
+            paths.push({el: path, from: l.s.id, to: l.t.id});
+            gLink.appendChild(path);
+        });
+
+        nodes.forEach(function (n) {
+            var p = placed[n.id];
+            if (!p) return;
+            var c = card(n, p.x, p.y, p.w, LY_H, false, true);
+            if (n.id === current) c.setAttribute('class', c.getAttribute('class') + ' root');
+            c.addEventListener('mouseenter', function () { spotlight(paths, n.id); });
+            c.addEventListener('mouseleave', function () { spotlight(paths, null); });
+            gCard.appendChild(c);
+        });
+
+        if (hidden) {
+            svg.appendChild(text(16, 22, hidden + ' models have no structural relation and are not shown', 'lbl'));
+        }
+        stage.innerHTML = '';
+        stage.appendChild(svg);
+    }
+
+    // Hovering a box is the only way a dense layer stays readable: everything unrelated steps back
+    function spotlight(paths, id) {
+        paths.forEach(function (p) {
+            var on = !id || p.from === id || p.to === id;
+            p.el.setAttribute('class', 'link ' + (on ? '' : 'dimmed ') + p.el.getAttribute('class').split(' ').pop());
+        });
+    }
+
+    function cardW(n) { return Math.max(96, Math.min(168, n.name.length * 6.6 + 22)); }
+
+    function vCurve(a, b) {
+        var dy = Math.abs(b[1] - a[1]) * 0.42;
+        return 'M' + a[0] + ',' + a[1] + 'C' + a[0] + ',' + (a[1] + dy) + ' '
+            + b[0] + ',' + (b[1] - dy) + ' ' + b[0] + ',' + b[1];
+    }
+
+    /* ---------------- impact ----------------
+       Reverse reachability: who breaks if this model changes, counted per hop. */
+
+    function impactOf(id) {
+        var seen = {}, hops = [];
+        seen[id] = true;
+        var frontier = [id];
+        while (frontier.length && hops.length < 8) {
+            var next = [];
+            frontier.forEach(function (fid) {
+                inOf[fid].forEach(function (l) {
+                    if (!structural(l) || seen[l.s.id]) return;
+                    seen[l.s.id] = true;
+                    next.push(l.s.id);
+                });
+            });
+            if (!next.length) break;
+            hops.push(next.length);
+            frontier = next;
+        }
+        var total = 0;
+        hops.forEach(function (n) { total += n; });
+        return {total: total, hops: hops};
+    }
+
+    function drawImpact() {
+        var HOP_COLOR = ['#2563eb', '#60a5fa', '#bfdbfe'];
+        var list = nodes.filter(function (n) { return n.kind !== 'remote'; })
+            .map(function (n) { return {node: n, impact: impactOf(n.id)}; })
+            .filter(function (r) { return r.impact.total > 0; })
+            .sort(function (a, b) { return b.impact.total - a.impact.total; });
+        var max = list.length ? list[0].impact.total : 1;
+
+        var html = '<div class="impact"><div class="note">'
+            + 'How many models break if this one changes, following data relations backwards. '
+            + 'The bar splits the count by distance: solid is one hop away, lighter shades are two and three or more. '
+            + 'A high number is not a defect — it marks the models that need care.</div>'
+            + '<table><tr><th>Model</th><th>Module</th><th class="num">Impact</th><th class="bar">By distance</th></tr>';
+        list.forEach(function (r) {
+            html += '<tr><td class="nm" data-id="' + esc(r.node.id) + '"><span class="dot" style="background:'
+                + colorOf[r.node.group] + '"></span>' + esc(r.node.name) + '</td>'
+                + '<td class="mod">' + esc(r.node.group) + '</td>'
+                + '<td class="num">' + r.impact.total + '</td><td class="bar">';
+            r.impact.hops.forEach(function (n, i) {
+                html += '<span style="width:' + (n / max * 320) + 'px;background:'
+                    + HOP_COLOR[Math.min(i, HOP_COLOR.length - 1)] + '" title="' + (i + 1) + ' hop: ' + n + '"></span>';
+            });
+            html += ' <span class="hop">' + r.impact.hops.join(' / ') + '</span></td></tr>';
+        });
+        html += '</table></div>';
+        stage.innerHTML = html;
+        each(stage.querySelectorAll('.nm'), function (td) {
+            td.onclick = function () { select(td.getAttribute('data-id')); };
+        });
+        detail.innerHTML = '<div class="dh">Click a model to open its lineage</div>';
+    }
+
+    /* ---------------- module overview ----------------
+       The whole registry as module zones. Only cross-module edges are drawn: inside a module
+       every box is one hop away anyway, and drawing those turns the board into hatching. */
+
+    var CELL_W = 148, CELL_H = 26, CELL_GAP = 7, ZONE_PAD = 14, ZONE_GAP = 18, ZONE_HEAD = 26;
+
+    function drawOverview() {
+        hint.style.display = 'none';
+        var groups = {};
+        nodes.forEach(function (n) { (groups[n.group] = groups[n.group] || []).push(n); });
+        var names = Object.keys(groups).sort(function (a, b) { return groups[b].length - groups[a].length; });
+        var box = stage.getBoundingClientRect();
+        var width = Math.max(box.width - 2, 900);
+        var x = ZONE_GAP, y = ZONE_GAP, rowH = 0, placed = {}, zones = [];
+        names.forEach(function (name) {
+            var list = groups[name];
+            var cols = Math.min(3, Math.max(1, Math.round(Math.sqrt(list.length / 1.6))));
+            var rows = Math.ceil(list.length / cols);
+            var w = ZONE_PAD * 2 + cols * CELL_W + (cols - 1) * CELL_GAP;
+            var h = ZONE_HEAD + ZONE_PAD + rows * CELL_H + (rows - 1) * CELL_GAP + ZONE_PAD - 6;
+            if (x + w > width - ZONE_GAP && x > ZONE_GAP) { x = ZONE_GAP; y += rowH + ZONE_GAP; rowH = 0; }
+            zones.push({name: name, list: list, x: x, y: y, w: w, h: h});
+            list.forEach(function (n, i) {
+                placed[n.id] = {
+                    x: x + ZONE_PAD + (i % cols) * (CELL_W + CELL_GAP),
+                    y: y + ZONE_HEAD + ZONE_PAD - 6 + Math.floor(i / cols) * (CELL_H + CELL_GAP)
+                };
+            });
+            x += w + ZONE_GAP;
+            rowH = Math.max(rowH, h);
+        });
+        var height = Math.max(box.height - 2, y + rowH + ZONE_GAP);
+
+        var svg = el('svg', {width: width, height: height, viewBox: '0 0 ' + width + ' ' + height});
+        var gZone = el('g', {}), gLink = el('g', {}), gCard = el('g', {});
+        svg.appendChild(gZone);
+        svg.appendChild(gLink);
+        svg.appendChild(gCard);
+
+        zones.forEach(function (z) {
+            var g = el('g', {'class': 'zone'});
+            g.appendChild(el('rect', {x: z.x, y: z.y, width: z.w, height: z.h, rx: 10}));
+            g.appendChild(el('circle', {cx: z.x + ZONE_PAD + 3, cy: z.y + 17, r: 3.5, fill: colorOf[z.name]}));
+            g.appendChild(text(z.x + ZONE_PAD + 14, z.y + 20, z.name, 'zt'));
+            g.appendChild(text(z.x + z.w - ZONE_PAD, z.y + 20, z.list.length, 'zc', 'end'));
+            gZone.appendChild(g);
+        });
+
+        links.forEach(function (l) {
+            if (l.s.group === l.t.group) return;
+            var a = placed[l.s.id], b = placed[l.t.id];
+            if (!a || !b) return;
+            var rightward = a.x < b.x;
+            var from = [rightward ? a.x + CELL_W : a.x, a.y + CELL_H / 2];
+            var to = [rightward ? b.x : b.x + CELL_W, b.y + CELL_H / 2];
+            gLink.appendChild(el('path', {'class': 'link ' + l.kind, d: arc(from, to), 'stroke-opacity': .4}));
+        });
+
+        nodes.forEach(function (n) {
+            var p = placed[n.id];
+            var c = card(n, p.x, p.y, CELL_W, CELL_H, false, true);
+            var dim = keyword && n.name.toLowerCase().indexOf(keyword) < 0
+                && (n.label || '').toLowerCase().indexOf(keyword) < 0;
+            if (dim) c.setAttribute('class', c.getAttribute('class') + ' fade');
+            if (n.id === current) c.setAttribute('class', c.getAttribute('class') + ' root');
+            gCard.appendChild(c);
+        });
+
+        stage.innerHTML = '';
+        stage.appendChild(svg);
+    }
+
+    function arc(a, b) {
+        var mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+        var dx = b[0] - a[0], dy = b[1] - a[1];
+        var d = Math.sqrt(dx * dx + dy * dy) || 1;
+        var lift = Math.min(90, d * 0.18);
+        return 'M' + a[0] + ',' + a[1] + 'Q' + (mx - dy / d * lift) + ',' + (my + dx / d * lift) + ' ' + b[0] + ',' + b[1];
+    }
+
+    /* ---------------- module matrix ---------------- */
+
+    function drawMatrix() {
+        var counts = {}, max = 0, maxSelf = 0;
+        modules.forEach(function (a) { counts[a] = {}; modules.forEach(function (b) { counts[a][b] = 0; }); });
+        links.forEach(function (l) { counts[l.s.group][l.t.group]++; });
+        modules.forEach(function (a) {
+            modules.forEach(function (b) {
+                if (a === b) maxSelf = Math.max(maxSelf, counts[a][b]);
+                else max = Math.max(max, counts[a][b]);
+            });
+        });
+
+        var html = '<div class="matrix"><table><tr><th></th>';
+        modules.forEach(function (m) {
+            html += '<th class="ch"><span style="color:' + colorOf[m] + '">' + esc(m) + '</span></th>';
+        });
+        html += '<th class="ch"><span style="color:#9ca3af">out</span></th></tr>';
+        modules.forEach(function (a, ri) {
+            var rowTotal = 0;
+            modules.forEach(function (b) { if (a !== b) rowTotal += counts[a][b]; });
+            html += '<tr><td class="rh" data-r="' + ri + '"><span style="color:' + colorOf[a] + '">■</span> ' + esc(a) + '</td>';
+            modules.forEach(function (b, ci) {
+                var v = counts[a][b];
+                var self = a === b;
+                var bg = v === 0 ? '#f1f3f5'
+                    : self ? shade(v / (maxSelf || 1), 220, 10)
+                        : shade(v / (max || 1), 217, 72);
+                html += '<td class="cell' + (v ? ' has' : '') + (self ? ' self' : '') + '" data-r="' + ri + '" data-c="' + ci
+                    + '" style="background:' + bg + '" title="' + esc(a) + ' → ' + esc(b)
+                    + ' : ' + v + '">' + (v || '') + '</td>';
+            });
+            html += '<td class="tot">' + (rowTotal || '') + '</td></tr>';
+        });
+        html += '<tr><td class="rh" style="color:#9ca3af">in</td>';
+        modules.forEach(function (b) {
+            var t = 0;
+            modules.forEach(function (a) { if (a !== b) t += counts[a][b]; });
+            html += '<td class="tot">' + (t || '') + '</td>';
+        });
+        html += '<td></td></tr></table>'
+            + '<div class="cap">Row → column: how many relations point from the row module into the column module. '
+            + 'The rounded diagonal is inside-module coupling. Click any cell for the relations behind it.</div></div>';
+        stage.innerHTML = html;
+
+        each(stage.querySelectorAll('.cell'), function (cell) {
+            cell.onclick = function () {
+                var a = modules[+cell.getAttribute('data-r')], b = modules[+cell.getAttribute('data-c')];
+                cellTable(a, b);
+            };
+        });
+        detail.innerHTML = '<div class="dh">Pick a cell to list its relations</div>';
+    }
+
+    // Cross-module traffic rides a blue ramp, inside-module coupling a neutral one: the eye
+    // separates "who depends on whom" from "how dense is this module" without reading numbers
+    function shade(t, hue, sat) {
+        var l = 88 - Math.round(Math.pow(t, 0.6) * 42);
+        return 'hsl(' + hue + ', ' + sat + '%, ' + l + '%)';
+    }
+
+    /* ---------------- audit ---------------- */
+
+    function drawAudit() {
+        var html = '<div class="audit">';
+
+        html += section('Dependency cycles', audit.cycles.length, true,
+            'Models that reference each other in a loop, following data relations only (reference / sub table / embedded). '
+            + 'A self reference such as a parent field is a tree, not a cycle, and is not listed.');
+        if (!audit.cycles.length) html += '<div class="ok">No cycle. Every data relation runs one way.</div>';
+        audit.cycles.forEach(function (cycle) {
+            html += '<div class="row">' + cycle.map(pill).join('<span class="arrow">→</span>')
+                + '<span class="arrow">↺</span></div>';
+        });
+
+        html += '</div><div class="audit" style="padding-top:0">';
+        html += section('Models sharing one table', audit.sharedTables.length, false,
+            'Several @Erupt classes mapped onto the same physical table — erupt\'s narrower-projection idiom. '
+            + 'Worth knowing before changing a column: the edit reaches every model in the row.');
+        if (!audit.sharedTables.length) html += '<div class="ok">Every model owns its own table.</div>';
+        audit.sharedTables.forEach(function (g) {
+            html += '<div class="row"><span class="tname">' + esc(g.table) + '</span>'
+                + g.models.map(pill).join('') + '</div>';
+        });
+
+        html += section('Isolated models', audit.orphans.length, false,
+            'No relation points at them and they point at nothing: logs, registries and settings usually, '
+            + 'but this is also where a forgotten model hides.');
+        html += audit.orphans.length
+            ? '<div class="row cloud">' + audit.orphans.map(pill).join('') + '</div>'
+            : '<div class="ok">Every model is connected.</div>';
+
+        html += section('Entity models with no menu', audit.unpublished.length, false,
+            'Table-backed models nothing in the menu tree points to. A sub table or a popup form is '
+            + 'legitimately menu-less, so read this as candidates, not as defects.');
+        html += audit.unpublished.length
+            ? '<div class="row cloud">' + audit.unpublished.map(pill).join('') + '</div>'
+            : '<div class="ok">Every entity model is reachable from a menu.</div>';
+
+        html += '</div>';
+        stage.innerHTML = html;
+        each(stage.querySelectorAll('.pill'), function (el2) {
+            el2.onclick = function () { select(el2.getAttribute('data-id')); };
+        });
+        detail.innerHTML = '<div class="dh">Click any model to open its lineage</div>';
+    }
+
+    function section(title, count, warn, note) {
+        return '<div class="sect"><h3>' + esc(title) + '<span class="cnt' + (warn && count ? ' warn' : '') + '">'
+            + count + '</span></h3><div class="note">' + note + '</div></div>';
+    }
+
+    function pill(name) {
+        var node = byId[name];
+        var color = node ? colorOf[node.group] : '#cbd5e1';
+        return '<span class="pill" data-id="' + esc(name) + '"><span class="dot" style="background:' + color
+            + '"></span>' + esc(node ? node.name : name) + '</span>';
+    }
+
+    /* ---------------- detail tables ---------------- */
+
+    // The bottom panel is the model's own file: its relations, its fields, its @Erupt config
+    function relationTable(node) {
+        if (!node) return;
+        paintDetail(node);
+        if (detailTab !== 'relations' && !detailCache[node.id]) loadDetail(node);
+    }
+
+    function loadDetail(node) {
+        fetch(BASE + '/erupt-api/erupt-graph/detail/' + encodeURIComponent(node.id)
+            + '?_token=' + encodeURIComponent(TOKEN || ''))
+            .then(function (r) { return r.json(); })
+            .then(function (d) {
+                detailCache[node.id] = d || {};
+                if (current === node.id) paintDetail(node);
+            })
+            .catch(function () { detailCache[node.id] = {}; });
+    }
+
+    function paintDetail(node) {
+        var d = detailCache[node.id];
+        var rel = outOf[node.id].length + inOf[node.id].length;
+        var head = '<div class="dh"><span>' + esc(node.name) + '</span>'
+            + tab('relations', 'Relations', rel)
+            + tab('fields', node.kind === 'cube' ? 'Dimensions' : 'Fields',
+                node.kind === 'cube' ? node.dimensions + node.measures : node.fields)
+            + tab('config', 'Config', null) + '</div>';
+        var body;
+        if (detailTab === 'relations') {
+            body = relationRows(node);
+        } else if (!d) {
+            body = '<div class="none">Loading…</div>';
+        } else {
+            body = detailTab === 'fields' ? fieldRows(node, d) : configRows(node, d);
+        }
+        detail.innerHTML = head + body;
+        each(detail.querySelectorAll('.dtab'), function (t) {
+            t.onclick = function () {
+                detailTab = t.getAttribute('data-t');
+                if (detailTab !== 'relations' && !detailCache[node.id]) loadDetail(node);
+                paintDetail(node);
+            };
+        });
+        each(detail.querySelectorAll('.mdl, .ref'), function (td) {
+            td.onclick = function () { select(td.getAttribute('data-id')); };
+        });
+    }
+
+    function tab(key, label, count) {
+        return '<span class="dtab' + (detailTab === key ? ' on' : '') + '" data-t="' + key + '">'
+            + label + (count == null ? '' : ' ' + count) + '</span>';
+    }
+
+    function relationRows(node) {
+        var rows = [];
+        outOf[node.id].forEach(function (l) { rows.push(['references', l.t, l]); });
+        inOf[node.id].forEach(function (l) { rows.push(['referenced by', l.s, l]); });
+        if (!rows.length) return '<div class="none">No relation to any other model.</div>';
+        var html = '<table>';
+        rows.forEach(function (r) {
+            html += '<tr><td class="dir">' + esc(r[0]) + '</td>'
+                + '<td class="mdl" data-id="' + esc(r[1].id) + '">' + esc(r[1].name) + '</td>'
+                + '<td class="mod">' + esc(r[1].group) + '</td>'
+                + '<td class="kind"><i style="border-color:' + (KIND_COLOR[r[2].kind] || '#cbd5e1') + '"></i>'
+                + esc(r[2].kind) + '</td>'
+                + '<td class="fld">' + esc(r[2].label || '') + '</td></tr>';
+        });
+        return html + '</table>';
+    }
+
+    function fieldRows(node, d) {
+        if (node.kind === 'cube') {
+            if (!d.cubeItems || !d.cubeItems.length) return '<div class="none">No dimension or measure.</div>';
+            var h = '<table>';
+            d.cubeItems.forEach(function (it) {
+                h += '<tr><td class="dir">' + esc(it.role) + '</td><td class="mdl">' + esc(it.name) + '</td>'
+                    + '<td class="mod">' + esc(it.title) + '</td><td class="kind">' + esc(it.type) + '</td>'
+                    + '<td class="fld">' + esc(it.sql) + '</td></tr>';
+            });
+            return h + '</table>';
+        }
+        if (!d.fields || !d.fields.length) return '<div class="none">No field.</div>';
+        var html = '<table>';
+        d.fields.forEach(function (f) {
+            html += '<tr><td class="fld" style="width:150px">' + esc(f.name) + '</td>'
+                + '<td style="width:180px">' + esc(f.title) + '</td>'
+                + '<td class="mod" style="width:130px">' + esc(f.type) + '</td>'
+                + '<td style="width:70px" class="' + (f.required ? 'yes' : 'no') + '">'
+                + (f.required ? 'required' : '—') + '</td>'
+                + '<td style="width:70px" class="' + (f.searchable ? 'yes' : 'no') + '">'
+                + (f.searchable ? 'search' : '—') + '</td>'
+                + '<td>' + (f.reference
+                    ? '<span class="ref" data-id="' + esc(f.reference) + '">→ ' + esc(f.reference) + '</span>' : '')
+                + '</td></tr>';
+        });
+        return html + '</table>';
+    }
+
+    function configRows(node, d) {
+        function row(k, v) { return v ? '<dt>' + k + '</dt><dd>' + v + '</dd>' : ''; }
+        var chips = function (list) {
+            return (list || []).map(function (x) { return '<span class="chip2">' + esc(x) + '</span>'; }).join('');
+        };
+        return '<dl class="cfg">'
+            + row('display name', esc(d.label || node.label || ''))
+            + row('description', esc(d.desc || ''))
+            + row('module', esc(d.source || node.group))
+            + row('kind', node.kind + (d.runtime ? ' · runtime registered' : ''))
+            + row('table', d.table ? '<span class="fld">' + esc(d.table) + '</span>' : '')
+            + row('primary key', esc(d.primaryKey || ''))
+            + row('permissions', chips(d.power))
+            + row('data proxy', chips(d.dataProxy))
+            + '</dl>';
+    }
+
+    function cellTable(a, b) {
+        var rows = links.filter(function (l) { return l.s.group === a && l.t.group === b; })
+            .map(function (l) { return [l.s.name + ' →', l.t, l]; });
+        render(a + ' → ' + b + ' · ' + rows.length + ' relations', rows);
+    }
+
+    function render(title, rows) {
+        var html = '<div class="dh">' + esc(title) + '</div>';
+        if (!rows.length) {
+            detail.innerHTML = html + '<div class="none">Nothing here.</div>';
+            return;
+        }
+        html += '<table>';
+        rows.forEach(function (r) {
+            var kind = r[2].kind;
+            html += '<tr><td class="dir">' + esc(r[0]) + '</td>'
+                + '<td class="mdl" data-id="' + esc(r[1].id) + '">' + esc(r[1].name) + '</td>'
+                + '<td class="mod">' + esc(r[1].group) + '</td>'
+                + '<td class="kind"><i style="border-color:' + (KIND_COLOR[kind] || '#cbd5e1') + '"></i>' + esc(kind) + '</td>'
+                + '<td class="fld">' + esc(r[2].label || '') + '</td></tr>';
+        });
+        detail.innerHTML = html + '</table>';
+        each(detail.querySelectorAll('.mdl'), function (td) {
+            td.onclick = function () { select(td.getAttribute('data-id')); };
+        });
+    }
+
+    /* ---------------- helpers ---------------- */
+
+    function el(tag, attrs, txt) {
+        var n = document.createElementNS(NS, tag);
+        for (var k in attrs) n.setAttribute(k, attrs[k]);
+        if (txt != null) n.textContent = txt;
+        return n;
+    }
+
+    function text(x, y, txt, cls, anchor) {
+        return el('text', {x: x, y: y, 'class': cls, 'text-anchor': anchor || 'start'}, txt);
+    }
+
+    function clip(s, max) {
+        s = String(s == null ? '' : s);
+        return s.length > max ? s.slice(0, max - 1) + '…' : s;
+    }
+
+    function esc(s) {
+        var d = document.createElement('div');
+        d.textContent = s == null ? '' : s;
+        return d.innerHTML;
+    }
+
+    function each(list, fn) { Array.prototype.forEach.call(list, fn); }
+
+    window.addEventListener('resize', function () {
+        if (!nodes.length) return;
+        if (mode === 'tree') drawTree(byId[current]);
+        else if (mode === 'overview') drawOverview();
+        else if (mode === 'layers') drawLayers();
+    });
+})();
+</script>
+</body>
+</html>

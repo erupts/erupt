@@ -212,6 +212,27 @@ List<EruptUser> list = eruptDao.lambdaQuery(EruptUser.class)
 
 模块列表 —— [erupt.xyz/#!/module](https://www.erupt.xyz/#!/module) · API 文档 —— [javadoc.erupt.xyz](https://javadoc.erupt.xyz)
 
+### 模型关系图
+
+> 所有 `@Erupt` 实体和它们之间的关系，直接由生成界面的那套注解画出来。不需要额外配置，模型存在，图就存在。
+
+| | |
+|---|---|
+| `总览` | 按模块分组展示全部模型，一眼看清整个系统的结构。 |
+| `矩阵` | 模块之间的耦合热力图。对角线是模块内部耦合，其余格子是跨模块依赖。 |
+| `血缘` | 选中一个模型，按指定深度追溯谁引用了它、它又引用了谁。 |
+
+<table>
+  <tr>
+    <td width="50%"><img src="readme/model-graph-overview.png" alt="模型关系图 · 总览" width="100%"/></td>
+    <td width="50%"><img src="readme/model-graph-matrix.png" alt="模型关系图 · 矩阵" width="100%"/></td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="readme/model-graph-lineage.png" alt="模型关系图 · 血缘" width="100%"/></td>
+  </tr>
+</table>
+
+
 ---
 
 ## 03 · AI HARNESS
