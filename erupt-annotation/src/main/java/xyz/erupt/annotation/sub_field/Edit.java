@@ -27,6 +27,13 @@ public @interface Edit {
     @Language("markdown")
     String prompt() default "";
 
+    @Comment("Whether the inline AI writing assistant is offered on this field. Only text-bearing " +
+            "components carry it, and it shows up only when the erupt-ai module is installed")
+    @Match("#item.type().toString()=='AUTO' || #item.type().toString()=='INPUT' " +
+            "|| #item.type().toString()=='TEXTAREA' || #item.type().toString()=='HTML_EDITOR' " +
+            "|| #item.type().toString()=='CODE_EDITOR' || #item.type().toString()=='MARKDOWN'")
+    boolean ai() default true;
+
     @Comment("Whether the field is required")
     boolean notNull() default false;
 
