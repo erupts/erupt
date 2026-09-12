@@ -1,4 +1,4 @@
-package xyz.erupt.graph.vo;
+package xyz.erupt.atlas.vo;
 
 import java.util.List;
 

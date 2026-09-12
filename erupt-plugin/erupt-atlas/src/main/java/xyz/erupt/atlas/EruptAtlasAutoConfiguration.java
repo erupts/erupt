@@ -1,4 +1,4 @@
-package xyz.erupt.graph;
+package xyz.erupt.atlas;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -7,8 +7,8 @@ import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.core.util.EruptSpringUtil;
-import xyz.erupt.graph.constant.GraphConstant;
-import xyz.erupt.graph.service.EruptGraphService;
+import xyz.erupt.atlas.constant.AtlasConstant;
+import xyz.erupt.atlas.service.EruptAtlasService;
 import xyz.erupt.tpl.service.EruptTplService;
 
 import java.util.Collections;
@@ -19,26 +19,26 @@ import java.util.List;
  */
 @Configuration
 @ComponentScan
-public class EruptGraphAutoConfiguration implements EruptModule {
+public class EruptAtlasAutoConfiguration implements EruptModule {
 
     static {
-        EruptModuleInvoke.addEruptModule(EruptGraphAutoConfiguration.class);
+        EruptModuleInvoke.addEruptModule(EruptAtlasAutoConfiguration.class);
     }
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-graph").description("Erupt model relationship graph").build();
+        return ModuleInfo.builder().name("erupt-atlas").description("Erupt model atlas: relations, lineage and structural audit").build();
     }
 
     @Override
     public void run() {
         // EruptModule callbacks run on a bare instance, not the Spring bean: resolve it here
-        EruptSpringUtil.getBean(EruptGraphService.class).scanCubes();
+        EruptSpringUtil.getBean(EruptAtlasService.class).scanCubes();
     }
 
     @Override
     public List<MetaMenu> initMenus() {
-        MetaMenu menu = MetaMenu.createSimpleMenu("erupt-graph", "Model Graph", GraphConstant.MENU_GRAPH,
+        MetaMenu menu = MetaMenu.createSimpleMenu("erupt-atlas", "Model Atlas", AtlasConstant.MENU_ATLAS,
                 null, 60, EruptTplService.TPL);
         menu.setIcon("fa fa-diagram-project");
         return Collections.singletonList(menu);

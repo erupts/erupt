@@ -212,7 +212,7 @@ List<EruptUser> list = eruptDao.lambdaQuery(EruptUser.class)
 
 模块列表 —— [erupt.xyz/#!/module](https://www.erupt.xyz/#!/module) · API 文档 —— [javadoc.erupt.xyz](https://javadoc.erupt.xyz)
 
-### 模型关系图
+### 模型图谱
 
 > 所有 `@Erupt` 实体和它们之间的关系，直接由生成界面的那套注解画出来。不需要额外配置，模型存在，图就存在。
 
@@ -224,11 +224,11 @@ List<EruptUser> list = eruptDao.lambdaQuery(EruptUser.class)
 
 <table>
   <tr>
-    <td width="50%"><img src="readme/model-graph-overview.png" alt="模型关系图 · 总览" width="100%"/></td>
-    <td width="50%"><img src="readme/model-graph-matrix.png" alt="模型关系图 · 矩阵" width="100%"/></td>
+    <td width="50%"><img src="readme/model-atlas-overview.png" alt="模型图谱 · 总览" width="100%"/></td>
+    <td width="50%"><img src="readme/model-atlas-matrix.png" alt="模型图谱 · 矩阵" width="100%"/></td>
   </tr>
   <tr>
-    <td colspan="2"><img src="readme/model-graph-lineage.png" alt="模型关系图 · 血缘" width="100%"/></td>
+    <td colspan="2"><img src="readme/model-atlas-lineage.png" alt="模型图谱 · 血缘" width="100%"/></td>
   </tr>
 </table>
 

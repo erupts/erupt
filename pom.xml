@@ -118,7 +118,7 @@
         <module>erupt-plugin/erupt-print</module>
         <module>erupt-plugin/erupt-terminal</module>
         <module>erupt-plugin/erupt-remote</module>
-        <module>erupt-plugin/erupt-graph</module>
+        <module>erupt-plugin/erupt-atlas</module>
 
         <!-- Cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>

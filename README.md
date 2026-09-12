@@ -212,7 +212,7 @@ More scenarios — [erupt.xyz/#!/contrast](https://www.erupt.xyz/#!/contrast)
 
 Module catalog — [erupt.xyz/#!/module](https://www.erupt.xyz/#!/module) · API reference — [javadoc.erupt.xyz](https://javadoc.erupt.xyz)
 
-### MODEL GRAPH
+### MODEL ATLAS
 
 > Every `@Erupt` entity, every relation between them, drawn from the same annotations that build the UI. No extra configuration — the map exists because the model does.
 
@@ -224,11 +224,11 @@ Module catalog — [erupt.xyz/#!/module](https://www.erupt.xyz/#!/module) · API
 
 <table>
   <tr>
-    <td width="50%"><img src="readme/model-graph-overview.png" alt="Model Graph · Overview" width="100%"/></td>
-    <td width="50%"><img src="readme/model-graph-matrix.png" alt="Model Graph · Matrix" width="100%"/></td>
+    <td width="50%"><img src="readme/model-atlas-overview.png" alt="Model Atlas · Overview" width="100%"/></td>
+    <td width="50%"><img src="readme/model-atlas-matrix.png" alt="Model Atlas · Matrix" width="100%"/></td>
   </tr>
   <tr>
-    <td colspan="2"><img src="readme/model-graph-lineage.png" alt="Model Graph · Lineage" width="100%"/></td>
+    <td colspan="2"><img src="readme/model-atlas-lineage.png" alt="Model Atlas · Lineage" width="100%"/></td>
   </tr>
 </table>
 

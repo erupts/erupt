@@ -82,7 +82,7 @@
         </dependency>
         <dependency>
             <groupId>${erupt.groupId}</groupId>
-            <artifactId>erupt-graph</artifactId>
+            <artifactId>erupt-atlas</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

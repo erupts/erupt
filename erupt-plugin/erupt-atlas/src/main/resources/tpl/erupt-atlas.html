@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Model Graph</title>
+    <title>Model Atlas</title>
     <style>
         :root {
             --bg: #f6f7f9;
@@ -223,7 +223,7 @@
 </head>
 <body>
 <header>
-    <span class="brand">Model Graph</span>
+    <span class="brand">Model Atlas</span>
     <span class="stat" id="stat"></span>
     <span class="spacer"></span>
     <span class="depth" id="depth-box">depth
@@ -274,7 +274,7 @@
     var mode = 'tree', current = null, keyword = '', depth = 2, audit = null;
     var detailCache = {}, detailTab = 'relations';
 
-    fetch(BASE + '/erupt-api/erupt-graph/view?_token=' + encodeURIComponent(TOKEN || ''))
+    fetch(BASE + '/erupt-api/erupt-atlas/view?_token=' + encodeURIComponent(TOKEN || ''))
         .then(function (r) { return r.json(); })
         .then(boot)
         .catch(function (e) { hint.textContent = 'Failed to load: ' + e; });
@@ -952,7 +952,7 @@
     }
 
     function loadDetail(node) {
-        fetch(BASE + '/erupt-api/erupt-graph/detail/' + encodeURIComponent(node.id)
+        fetch(BASE + '/erupt-api/erupt-atlas/detail/' + encodeURIComponent(node.id)
             + '?_token=' + encodeURIComponent(TOKEN || ''))
             .then(function (r) { return r.json(); })
             .then(function (d) {

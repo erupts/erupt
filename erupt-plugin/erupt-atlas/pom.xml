@@ -9,9 +9,9 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>erupt-graph</artifactId>
-    <name>Erupt : Graph</name>
-    <description>erupt graph → runtime model relationship graph built from the live erupt registry</description>
+    <artifactId>erupt-atlas</artifactId>
+    <name>Erupt : Atlas</name>
+    <description>erupt atlas → runtime model atlas built from the live erupt registry: relations, lineage and structural audit</description>
 
     <dependencies>
         <dependency>

@@ -1,4 +1,4 @@
-package xyz.erupt.graph.service;
+package xyz.erupt.atlas.service;
 
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.ObjectProvider;
@@ -25,8 +25,8 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
-import xyz.erupt.graph.vo.GraphView;
-import xyz.erupt.graph.vo.ModelDetail;
+import xyz.erupt.atlas.vo.AtlasView;
+import xyz.erupt.atlas.vo.ModelDetail;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptMenu;
 
@@ -55,7 +55,7 @@ import java.util.regex.Pattern;
  * @author YuePeng
  */
 @Service
-public class EruptGraphService {
+public class EruptAtlasService {
 
     // Cube ids are namespaced: a class may carry both @Erupt and @EruptCube (see EruptOperateLog)
     private static final String CUBE_PREFIX = "cube#";
@@ -86,10 +86,10 @@ public class EruptGraphService {
                 new TypeFilter[]{new AnnotationTypeFilter(EruptCube.class)}, cubeClasses::add);
     }
 
-    public GraphView build() {
-        List<GraphView.Node> nodes = new ArrayList<>();
+    public AtlasView build() {
+        List<AtlasView.Node> nodes = new ArrayList<>();
         // from|to|kind → label, so ten fields pointing at the same model stay one readable edge
-        Map<String, GraphView.Edge> edges = new LinkedHashMap<>();
+        Map<String, AtlasView.Edge> edges = new LinkedHashMap<>();
         Map<String, EruptModel> index = new LinkedCaseInsensitiveMap<>();
         Map<String, String> tables = new LinkedCaseInsensitiveMap<>();
         for (EruptModel model : EruptCoreService.getErupts()) {
@@ -106,8 +106,8 @@ public class EruptGraphService {
             this.cubeEdges(cubeClass, index, tables, edges);
         }
         this.remoteNodes(nodes);
-        List<GraphView.Edge> edgeList = new ArrayList<>(edges.values());
-        return new GraphView(nodes, edgeList, this.audit(nodes, edgeList));
+        List<AtlasView.Edge> edgeList = new ArrayList<>(edges.values());
+        return new AtlasView(nodes, edgeList, this.audit(nodes, edgeList));
     }
 
     /**
@@ -115,18 +115,18 @@ public class EruptGraphService {
      * heartbeat only carries the dotted name, and pulling every node's schema would put N HTTP
      * calls on the path of opening the page, so these arrive as nodes without relations.
      */
-    private void remoteNodes(List<GraphView.Node> nodes) {
+    private void remoteNodes(List<AtlasView.Node> nodes) {
         EruptRemoteRouter router = EruptRemoteRouterManager.get();
         if (null == router) return;
         for (String remoteName : router.remoteEruptNames()) {
             int dot = remoteName.lastIndexOf(EruptConst.DOT);
             String node = dot > 0 ? remoteName.substring(0, dot) : "remote";
             String simple = dot > 0 ? remoteName.substring(dot + 1) : remoteName;
-            nodes.add(new GraphView.Node(remoteName, simple, simple, node, "remote", false, 0, 0, 0, null));
+            nodes.add(new AtlasView.Node(remoteName, simple, simple, node, "remote", false, 0, 0, 0, null));
         }
     }
 
-    private void modelEdges(EruptModel model, Map<String, EruptModel> index, Map<String, GraphView.Edge> edges) {
+    private void modelEdges(EruptModel model, Map<String, EruptModel> index, Map<String, AtlasView.Edge> edges) {
         String from = model.getEruptName();
         for (EruptFieldModel fieldModel : model.getEruptFieldModels()) {
             EruptModel target = index.get(String.valueOf(fieldModel.getFieldReturnName()));
@@ -145,7 +145,7 @@ public class EruptGraphService {
     }
 
     private void cubeEdges(Class<?> cubeClass, Map<String, EruptModel> index,
-                           Map<String, String> tables, Map<String, GraphView.Edge> edges) {
+                           Map<String, String> tables, Map<String, AtlasView.Edge> edges) {
         String from = CUBE_PREFIX + cubeClass.getSimpleName();
         EruptCube cube = cubeClass.getAnnotation(EruptCube.class);
         // a class carrying both annotations analyses the very model it is declared on
@@ -167,13 +167,13 @@ public class EruptGraphService {
         }
     }
 
-    private void addEdge(Map<String, GraphView.Edge> edges, String from, String to, String label, String kind) {
+    private void addEdge(Map<String, AtlasView.Edge> edges, String from, String to, String label, String kind) {
         String key = from + "|" + to + "|" + kind;
-        GraphView.Edge exist = edges.get(key);
+        AtlasView.Edge exist = edges.get(key);
         if (null == exist) {
-            edges.put(key, new GraphView.Edge(from, to, label, kind));
+            edges.put(key, new AtlasView.Edge(from, to, label, kind));
         } else if (null != label && null != exist.label() && !exist.label().contains(label)) {
-            edges.put(key, new GraphView.Edge(from, to, exist.label() + ", " + label, kind));
+            edges.put(key, new AtlasView.Edge(from, to, exist.label() + ", " + label, kind));
         }
     }
 
@@ -247,18 +247,18 @@ public class EruptGraphService {
 
     /* ---------------- audit ---------------- */
 
-    private GraphView.Audit audit(List<GraphView.Node> nodes, List<GraphView.Edge> edges) {
-        return new GraphView.Audit(cycles(nodes, edges), sharedTables(nodes), orphans(nodes, edges), unpublished(nodes));
+    private AtlasView.Audit audit(List<AtlasView.Node> nodes, List<AtlasView.Edge> edges) {
+        return new AtlasView.Audit(cycles(nodes, edges), sharedTables(nodes), orphans(nodes, edges), unpublished(nodes));
     }
 
     /**
      * Tarjan: every strongly connected component bigger than one node is a dependency cycle.
      * A self reference (a tree's parent field) is a single-node component and stays out of the report.
      */
-    private static List<List<String>> cycles(List<GraphView.Node> nodes, Collection<GraphView.Edge> edges) {
+    private static List<List<String>> cycles(List<AtlasView.Node> nodes, Collection<AtlasView.Edge> edges) {
         Map<String, List<String>> adj = new HashMap<>();
-        for (GraphView.Node node : nodes) adj.put(node.id(), new ArrayList<>());
-        for (GraphView.Edge edge : edges) {
+        for (AtlasView.Node node : nodes) adj.put(node.id(), new ArrayList<>());
+        for (AtlasView.Edge edge : edges) {
             if (STRUCTURAL.contains(edge.kind()) && !edge.from().equals(edge.to())) {
                 adj.get(edge.from()).add(edge.to());
             }
@@ -268,7 +268,7 @@ public class EruptGraphService {
         Set<String> onStack = new HashSet<>();
         List<List<String>> found = new ArrayList<>();
         int[] counter = {0};
-        for (GraphView.Node node : nodes) {
+        for (AtlasView.Node node : nodes) {
             if (!index.containsKey(node.id())) {
                 strongConnect(node.id(), adj, index, low, stack, onStack, counter, found);
             }
@@ -307,29 +307,29 @@ public class EruptGraphService {
 
     // Several @Erupt classes mapped onto one physical table: erupt's own narrower-projection idiom
     // (EruptUser and its three view models), and the place a careless schema change bites twice
-    private static List<GraphView.SharedTable> sharedTables(List<GraphView.Node> nodes) {
+    private static List<AtlasView.SharedTable> sharedTables(List<AtlasView.Node> nodes) {
         Map<String, List<String>> byTable = new TreeMap<>();
-        for (GraphView.Node node : nodes) {
+        for (AtlasView.Node node : nodes) {
             if (null == node.table()) continue;
             byTable.computeIfAbsent(node.table(), it -> new ArrayList<>()).add(node.name());
         }
-        List<GraphView.SharedTable> shared = new ArrayList<>();
+        List<AtlasView.SharedTable> shared = new ArrayList<>();
         byTable.forEach((table, models) -> {
-            if (models.size() > 1) shared.add(new GraphView.SharedTable(table, models));
+            if (models.size() > 1) shared.add(new AtlasView.SharedTable(table, models));
         });
         shared.sort((a, b) -> b.models().size() - a.models().size());
         return shared;
     }
 
     // Models no relation touches: usually logs and registries, sometimes something forgotten
-    private static List<String> orphans(List<GraphView.Node> nodes, Collection<GraphView.Edge> edges) {
+    private static List<String> orphans(List<AtlasView.Node> nodes, Collection<AtlasView.Edge> edges) {
         Set<String> touched = new HashSet<>();
-        for (GraphView.Edge edge : edges) {
+        for (AtlasView.Edge edge : edges) {
             touched.add(edge.from());
             touched.add(edge.to());
         }
         List<String> list = new ArrayList<>();
-        for (GraphView.Node node : nodes) {
+        for (AtlasView.Node node : nodes) {
             if ("erupt".equals(node.kind()) && !touched.contains(node.id())) list.add(node.name());
         }
         return list;
@@ -339,7 +339,7 @@ public class EruptGraphService {
      * Entity-backed models with no menu bound to them. A sub-table or a popup form legitimately
      * has no menu, so this is a candidate list to read, not a defect list to clear.
      */
-    private List<String> unpublished(List<GraphView.Node> nodes) {
+    private List<String> unpublished(List<AtlasView.Node> nodes) {
         EruptDao eruptDao = eruptDaoProvider.getIfAvailable();
         if (null == eruptDao) return new ArrayList<>();
         Set<String> bound = new LinkedHashSet<>();
@@ -347,27 +347,27 @@ public class EruptGraphService {
             if (null != menu.getValue()) bound.add(menu.getValue().toLowerCase());
         }
         List<String> list = new ArrayList<>();
-        for (GraphView.Node node : nodes) {
+        for (AtlasView.Node node : nodes) {
             if (!"erupt".equals(node.kind()) || null == node.table()) continue;
             if (!bound.contains(node.name().toLowerCase())) list.add(node.name());
         }
         return list;
     }
 
-    private static GraphView.Node eruptNode(EruptModel model) {
-        return new GraphView.Node(model.getEruptName(), model.getEruptName(), model.getErupt().name(),
+    private static AtlasView.Node eruptNode(EruptModel model) {
+        return new AtlasView.Node(model.getEruptName(), model.getEruptName(), model.getErupt().name(),
                 source(model.getClazz()), "erupt", EruptCoreService.isRuntimeErupt(model.getEruptName()),
                 model.getEruptFieldModels().size(), 0, 0, tableOf(model.getClazz()));
     }
 
-    private static GraphView.Node cubeNode(Class<?> cubeClass) {
+    private static AtlasView.Node cubeNode(Class<?> cubeClass) {
         EruptCube cube = cubeClass.getAnnotation(EruptCube.class);
         int dimensions = 0, measures = 0;
         for (Field field : cubeClass.getDeclaredFields()) {
             if (null != field.getAnnotation(Dimension.class)) dimensions++;
             if (null != field.getAnnotation(Measure.class)) measures++;
         }
-        return new GraphView.Node(CUBE_PREFIX + cubeClass.getSimpleName(), cubeClass.getSimpleName(), cube.name(),
+        return new AtlasView.Node(CUBE_PREFIX + cubeClass.getSimpleName(), cubeClass.getSimpleName(), cube.name(),
                 source(cubeClass), "cube", false, 0, dimensions, measures, null);
     }
 
