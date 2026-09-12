@@ -35,6 +35,11 @@ public class MetaContext {
 
     private String token;
 
+    // Language the console is running in for this request (e.g. zh-CN), resolved from the
+    // request and carried here so threads detached from the request - async SSE generation,
+    // tool execution - can still answer in the language the user picked
+    private String lang;
+
     private Map<String, Object> vars = new HashMap<>();
 
     public static MetaErupt getErupt() {
@@ -47,6 +52,10 @@ public class MetaContext {
 
     public static String getToken() {
         return threadLocal.get().token;
+    }
+
+    public static String getLang() {
+        return threadLocal.get().lang;
     }
 
     public static Map<String, Object> getVars() {
@@ -65,6 +74,10 @@ public class MetaContext {
 
     public static void registerToken(String token) {
         threadLocal.get().setToken(token);
+    }
+
+    public static void registerLang(String lang) {
+        threadLocal.get().setLang(lang);
     }
 
     public static void registerVar(String key, Object value) {

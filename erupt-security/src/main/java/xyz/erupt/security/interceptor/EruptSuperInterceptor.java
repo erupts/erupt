@@ -10,6 +10,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaUser;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.annotation.EruptMenuAuth;
@@ -33,10 +34,17 @@ public class EruptSuperInterceptor implements AsyncHandlerInterceptor {
     @Resource
     private EruptUserService eruptUserService;
 
+    @Resource
+    private I18nTranslate i18nTranslate;
+
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,@NonNull Object handler) throws IOException {
         if (handler instanceof HandlerMethod handlerMethod) {
+            // Mapped on /**, so every controller call passes through here: pin the language now
+            // and anything downstream reads it without having to hold on to the request. Async
+            // work (SSE generation, tool execution) gets it with the MetaContext it restores.
+            MetaContext.registerLang(i18nTranslate.currentLang());
             EruptLoginAuth eruptAuth = handlerMethod.getMethodAnnotation(EruptLoginAuth.class);
             EruptMenuAuth eruptMenuAuth = handlerMethod.getMethodAnnotation(EruptMenuAuth.class);
             if (null != eruptAuth || null != eruptMenuAuth) {

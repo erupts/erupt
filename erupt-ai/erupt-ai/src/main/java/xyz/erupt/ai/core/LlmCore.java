@@ -28,6 +28,7 @@ import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.prompt.SystemPromptProvider;
+import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptSpringUtil;
 
 import java.time.Duration;
@@ -109,10 +110,34 @@ public abstract class LlmCore {
         return null == prompt ? null : prompt.replace("{{", "{ {");
     }
 
+    /**
+     * Answer in the language the console is set to. The model otherwise replies in whatever
+     * language it leans towards - usually the one the system prompt happens to be written in -
+     * so a user working in an English console gets Chinese answers. The request language travels
+     * on {@link MetaContext}, which is restored on the async generation thread; calls with no
+     * request behind them (scheduled AI staff, startup tasks) fall back to the configured default.
+     */
+    static String languagePrompt() {
+        String lang = MetaContext.getLang();
+        if (null == lang || lang.isBlank()) {
+            lang = EruptSpringUtil.getBean(EruptProp.class).getDefaultLocales();
+        }
+        if (null == lang || lang.isBlank()) return null;
+        String displayName = Locale.forLanguageTag(lang).getDisplayName(Locale.ENGLISH);
+        if (displayName.isBlank()) return null;
+        return "Answer in " + displayName + " (language tag " + lang + "), whatever language the user writes in,"
+                + " unless the user asks for another language. Code, identifiers and quoted source text keep"
+                + " their original form.";
+    }
+
     private EruptAiChat buildAiServices(AiServices<EruptAiChat> eruptAiServices, LlmRequest llmRequest, Consumer<SseListener> listener) {
         eruptAiServices.systemMessageProvider((id) -> {
             AiProp aiProp = EruptSpringUtil.getBean(AiProp.class);
             StringBuffer systemPrompt = new StringBuffer(aiProp.getSystemPrompt());
+            // Right after the base prompt, so a role, expert or module prompt that pins a
+            // language of its own still has the last word
+            String languagePrompt = languagePrompt();
+            if (null != languagePrompt) systemPrompt.append("\n\n").append(languagePrompt);
             // Provider prompts advertise toolbox tools; injecting them into calls that
             // did not opt in makes the model call tools that do not exist there
             if (Boolean.TRUE.equals(llmRequest.getSystemPromptProviders())) {

@@ -17,11 +17,12 @@ import java.time.Duration;
 @ConfigurationProperties("erupt.ai")
 public class AiProp {
 
+    // No language is named here on purpose: the reply language follows the console the
+    // request came from, and a hint in this prompt would only pull the model away from it
     private String systemPrompt = """
-            You are Erupt AI, and you are better at having conversations in English and Chinese.
-            You will provide users with safe, helpful, and accurate responses. At the same time,
-            you will refuse any answers related to terrorism, racial discrimination,
-            or pornographic violence and other such issues.
+            You are Erupt AI. You will provide users with safe, helpful, and accurate responses.
+            At the same time, you will refuse any answers related to terrorism, racial
+            discrimination, or pornographic violence and other such issues.
             """;
 
     private int messageChunkSize = 20;
