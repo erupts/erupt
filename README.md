@@ -219,16 +219,14 @@ Module catalog — [erupt.xyz/#!/module](https://www.erupt.xyz/#!/module) · API
 | | |
 |---|---|
 | `OVERVIEW` | Every model grouped by module. Read the shape of the whole system at a glance. |
-| `MATRIX` | Module-to-module coupling as a heat map. The diagonal is coupling inside a module; everything off it is a dependency between modules. |
-| `LINEAGE` | Pick one model and follow what points at it and what it points at, to a depth you choose. |
+| `LAYERS` | How deep the graph runs: what everything stands on, and the few chains the depth comes from. |
+| `LINEAGE` · `MATRIX` · `IMPACT` | One model's neighbourhood, module-to-module coupling, and what breaks if a model changes. |
+| `FIELDS` · `POWER` · `AUDIT` | Every field of every model, declared `@Power` against the menu buttons behind it, and a health report: cycles, shared tables, isolated models. |
 
 <table>
   <tr>
-    <td width="50%"><img src="readme/model-atlas-overview.png" alt="Model Atlas · Overview" width="100%"/></td>
-    <td width="50%"><img src="readme/model-atlas-matrix.png" alt="Model Atlas · Matrix" width="100%"/></td>
-  </tr>
-  <tr>
-    <td colspan="2"><img src="readme/model-atlas-lineage.png" alt="Model Atlas · Lineage" width="100%"/></td>
+    <td width="50%"><img src="readme/model-atlas-overview.jpg" alt="Model Atlas · Overview" width="100%"/></td>
+    <td width="50%"><img src="readme/model-atlas-layers.jpg" alt="Model Atlas · Layers" width="100%"/></td>
   </tr>
 </table>
 

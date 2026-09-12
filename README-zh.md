@@ -219,16 +219,14 @@ List<EruptUser> list = eruptDao.lambdaQuery(EruptUser.class)
 | | |
 |---|---|
 | `总览` | 按模块分组展示全部模型，一眼看清整个系统的结构。 |
-| `矩阵` | 模块之间的耦合热力图。对角线是模块内部耦合，其余格子是跨模块依赖。 |
-| `血缘` | 选中一个模型，按指定深度追溯谁引用了它、它又引用了谁。 |
+| `层级` | 依赖有多深：整个系统站在什么之上，以及深度真正来自哪几条链。 |
+| `血缘` · `矩阵` · `影响面` | 单个模型的上下游、模块间耦合热力图，以及改动一个模型会波及谁。 |
+| `字段` · `权限` · `体检` | 全库字段拉平、`@Power` 与菜单按钮的对账，以及循环依赖、共用表、孤立模型的体检报告。 |
 
 <table>
   <tr>
-    <td width="50%"><img src="readme/model-atlas-overview.png" alt="模型图谱 · 总览" width="100%"/></td>
-    <td width="50%"><img src="readme/model-atlas-matrix.png" alt="模型图谱 · 矩阵" width="100%"/></td>
-  </tr>
-  <tr>
-    <td colspan="2"><img src="readme/model-atlas-lineage.png" alt="模型图谱 · 血缘" width="100%"/></td>
+    <td width="50%"><img src="readme/model-atlas-overview.jpg" alt="模型图谱 · 总览" width="100%"/></td>
+    <td width="50%"><img src="readme/model-atlas-layers.jpg" alt="模型图谱 · 层级" width="100%"/></td>
   </tr>
 </table>
 
