@@ -130,16 +130,21 @@
         .matrix .hl { background: var(--accent-soft) !important; }
 
         /* layers */
-        .lyr-tag { font-size: 9.5px; font-weight: 600; letter-spacing: .08em; fill: var(--faint); }
-        .lyr-num { font-size: 9.5px; fill: var(--faint); }
-        .dgrp rect { fill-opacity: .045; stroke-opacity: .28; stroke-width: 1; }
-        .dgrp .dlbl { font-size: 9.5px; font-weight: 600; letter-spacing: .05em; fill: var(--muted); }
-        .lyr-band { fill: #fbfcfd; }
-        .dimmed { opacity: .12; }
-        .link.faded { opacity: .22; }
-        .card.fold rect.box { fill: var(--bg); stroke-dasharray: 4 3; }
-        .card.fold .nm { fill: var(--muted); }
-        .card .cnt { font-size: 10px; fill: var(--faint); font-variant-numeric: tabular-nums; }
+        .lv { padding: 18px 20px 30px; max-width: 1200px; }
+        .lv .sect { margin-bottom: 14px; }
+        .lvbar { display: flex; gap: 3px; margin-bottom: 16px; }
+        .lvbar .seg {
+            height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+            gap: 6px; font-size: 10px; font-weight: 600; letter-spacing: .05em; color: #fff; min-width: 40px;
+        }
+        .lvbar .seg b { font-weight: 600; opacity: .75; }
+        .lv .lvl { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--border-soft); }
+        .lv .lvl:last-child { border-bottom: 0; }
+        .lv .lvl .tag {
+            flex: none; width: 56px; padding-top: 3px; font-size: 10px; font-weight: 600;
+            letter-spacing: .05em; color: var(--faint); font-variant-numeric: tabular-nums;
+        }
+        .lv .chain { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; padding: 5px 0; }
 
         /* domain bar */
         .dbar {
@@ -165,20 +170,20 @@
         /* impact */
         .impact { padding: 18px 20px 30px; max-width: 980px; }
         .impact .note { font-size: 11.5px; color: var(--faint); margin-bottom: 14px; max-width: 660px; }
-        .impact table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        .impact th {
+        .impact table, .lv table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .impact th, .lv th {
             text-align: left; font-size: 9.5px; font-weight: 600; letter-spacing: .07em;
             text-transform: uppercase; color: var(--faint); padding: 0 10px 6px 0;
         }
-        .impact td { padding: 5px 10px 5px 0; border-bottom: 1px solid var(--border-soft); white-space: nowrap; }
-        .impact tr:hover td { background: var(--surface); }
-        .impact .nm { cursor: pointer; font-weight: 500; }
-        .impact .nm:hover { color: var(--accent); }
-        .impact .nm .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
-        .impact .mod { color: var(--muted); }
-        .impact .num { text-align: right; width: 54px; font-variant-numeric: tabular-nums; font-weight: 600; }
-        .impact .bar { width: 100%; }
-        .impact .bar span { display: inline-block; height: 11px; border-radius: 2px; vertical-align: middle; }
+        .impact td, .lv td { padding: 5px 10px 5px 0; border-bottom: 1px solid var(--border-soft); white-space: nowrap; }
+        .impact tr:hover td, .lv tr:hover td { background: var(--surface); }
+        .impact .nm, .lv .nm { cursor: pointer; font-weight: 500; }
+        .impact .nm:hover, .lv .nm:hover { color: var(--accent); }
+        .impact .nm .dot, .lv .nm .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+        .impact .mod, .lv .mod { color: var(--muted); }
+        .impact .num, .lv .num { text-align: right; width: 54px; font-variant-numeric: tabular-nums; font-weight: 600; }
+        .impact .bar, .lv .bar { width: 100%; }
+        .impact .bar span, .lv .bar span { display: inline-block; height: 11px; border-radius: 2px; vertical-align: middle; }
         .impact .hop { color: var(--faint); font-size: 10.5px; }
 
         /* audit */
@@ -613,13 +618,10 @@
     }
 
     /* ---------------- layers ----------------
-       Audit proves the structural graph is acyclic, so it can be levelled: a model sits one row
-       above the deepest thing it depends on. Row 0 is the bedrock everything else stands on.
-       Inside a layer the models are boxed by domain, so a card carries two facts at once: how
-       deep it sits, and who owns it. Focus one domain and every other one folds to a single box. */
-
-    var LY_H = 30, LY_GAP_X = 12, LY_PAD = 62, LY_HEAD = 26, LY_FOOT = 12;
-    var BLK_PAD = 7, BLK_HEAD = 16, BLK_GAP = 18, LY_ROW_H = BLK_HEAD + LY_H + 16;
+       Audit proves the structural graph is acyclic, so it can be levelled: a model sits one
+       level above the deepest thing it depends on, L0 being the bedrock. Drawn as a board this
+       said very little — most models are shallow — so it is read as a report: how the depth is
+       distributed, what the whole system stands on, and the few chains that actually run deep. */
 
     function structural(l) { return STRUCTURAL[l.kind]; }
 
@@ -646,7 +648,7 @@
         return outOf[n.id].some(structural) || inOf[n.id].some(structural);
     }
 
-    /* ---- domain bar: which module owns the board ---- */
+    /* ---- domain bar: scopes the three tables below ---- */
 
     function renderDomainBar() {
         var html = '<span class="cap">Domain</span>'
@@ -668,195 +670,121 @@
         drawLayers();
     }
 
-    // One block per domain per layer: the cards it owns, or a single box when it is out of focus
-    function layerBlocks(list, level, avail) {
-        var byDomain = {}, blocks = [];
-        list.forEach(function (n) { (byDomain[n.group] = byDomain[n.group] || []).push(n); });
-        domainsBySize.forEach(function (d) {
-            var group = byDomain[d];
-            if (!group) return;
-            group.sort(function (a, b) { return a.name.localeCompare(b.name); });
-            // A lone model folds to nothing smaller than itself, so leave it open
-            if (domainFocus && d !== domainFocus && group.length > 1) {
-                var fold = {id: 'fold:' + d + ':' + level, domain: d, list: group};
-                fold.w = foldW(fold);
-                blocks.push({domain: d, units: [fold], w: fold.w, framed: false, head: true});
-                return;
+    function inFocus(n) { return !domainFocus || n.group === domainFocus; }
+
+    // The one path that makes a model deep: from a model nothing depends on, always step to the
+    // deepest thing it needs. Chains, not bands, are where the depth axis carries information.
+    function deepChains(level) {
+        var out = [], seen = {};
+        nodes.forEach(function (n) {
+            if ((level[n.id] || 0) < 2 || inOf[n.id].some(structural)) return;
+            var path = [n], cur = n, guard = {};
+            guard[n.id] = true;
+            for (; ;) {
+                var next = null;
+                outOf[cur.id].forEach(function (l) {
+                    if (!structural(l) || guard[l.t.id]) return;
+                    if (!next || (level[l.t.id] || 0) > (level[next.id] || 0)) next = l.t;
+                });
+                if (!next) break;
+                guard[next.id] = true;
+                path.push(next);
+                cur = next;
             }
-            var units = group.map(function (n) { return {id: n.id, node: n, domain: d, w: cardW(n)}; });
-            // A domain too wide for one line keeps its own frame on each line it spills onto
-            var run = [], runW = 0, head = true;
-            var flush = function () {
-                blocks.push({domain: d, units: run, w: runW + BLK_PAD * 2, framed: true, head: head});
-                run = [];
-                runW = 0;
-                head = false;
-            };
-            units.forEach(function (u) {
-                if (run.length && runW + LY_GAP_X + u.w + BLK_PAD * 2 > avail) flush();
-                runW += (run.length ? LY_GAP_X : 0) + u.w;
-                run.push(u);
-            });
-            if (run.length) flush();
+            var key = path.map(function (p) { return p.id; }).join('>');
+            if (path.length >= 3 && !seen[key]) {
+                seen[key] = true;
+                out.push(path);
+            }
         });
-        return blocks;
+        return out.sort(function (a, b) { return b.length - a.length; }).slice(0, 10);
     }
 
     function drawLayers() {
         var level = levels();
-        var rows = {};
-        nodes.forEach(function (n) {
-            if (level[n.id] == null) return;
-            (rows[level[n.id]] = rows[level[n.id]] || []).push(n);
-        });
-        var keys = Object.keys(rows).map(Number).sort(function (a, b) { return a - b; });
-        var loose = nodes.filter(function (n) { return level[n.id] == null; }).length;
+        var placed = nodes.filter(function (n) { return level[n.id] != null; });
+        var loose = nodes.length - placed.length;
         var note = document.getElementById('dnote');
-        if (note) {
-            note.textContent = [
-                loose ? loose + ' models carry no structural relation and are not drawn' : '',
-                domainFocus ? 'other domains are folded — click a folded box to open it' : ''
-            ].filter(Boolean).join(' · ');
-        }
-        if (!keys.length) { stage.innerHTML = '<div class="hint">No structural relation to level</div>'; return; }
+        if (note) note.textContent = loose + ' models carry no structural relation and are not levelled';
+        if (!placed.length) { stage.innerHTML = '<div class="hint">No structural relation to level</div>'; return; }
 
-        var box = stage.getBoundingClientRect();
-        var width = Math.max(box.width - 2, 900);
-        var avail = width - LY_PAD - 24;
+        var byLevel = {};
+        placed.forEach(function (n) { (byLevel[level[n.id]] = byLevel[level[n.id]] || []).push(n); });
+        var keys = Object.keys(byLevel).map(Number).sort(function (a, b) { return a - b; });
+        var top = keys[keys.length - 1];
+        var chains = deepChains(level).filter(function (p) { return p.some(inFocus); });
+        var base = (byLevel[0] || []).map(function (n) { return {node: n, on: impactOf(n.id).total, direct: dependents(n)}; })
+            .filter(function (r) { return inFocus(r.node); })
+            .sort(function (a, b) { return b.on - a.on || a.node.name.localeCompare(b.node.name); });
+        var maxOn = base.reduce(function (m, r) { return Math.max(m, r.on); }, 1);
 
-        var unitOf = {}, unitDomain = {}, banded = {}, heights = {};
-        keys.forEach(function (k) {
-            var blocks = layerBlocks(rows[k], k, avail);
-            blocks.forEach(function (b) {
-                b.units.forEach(function (u) {
-                    unitDomain[u.id] = b.domain;
-                    if (u.node) unitOf[u.node.id] = u.id;
-                    else u.list.forEach(function (n) { unitOf[n.id] = u.id; });
+        var html = '<div class="lv"><div class="tiles">'
+            + tile(top + 1, 'Levels deep', false)
+            + tile(placed.length, 'Models levelled', false)
+            + tile((byLevel[0] || []).length, 'Foundation models', false)
+            + tile(chains.length ? chains[0].length : 0, 'Longest chain', false)
+            + '</div>';
+
+        // Distribution first: it is the fact the old board buried — almost everything is shallow
+        html += '<div class="lvbar">';
+        keys.slice().reverse().forEach(function (k) {
+            var n = byLevel[k].length;
+            var shade = Math.round(92 - (k / Math.max(top, 1)) * 52);
+            // the shallow levels are the palest bands, so their label has to flip to dark ink
+            html += '<div class="seg" style="flex:' + n + ';background:hsl(217,' + (18 + k * 6) + '%,' + shade + '%)'
+                + ';color:' + (shade > 62 ? '#334155' : '#fff') + '"'
+                + ' title="' + n + ' models sit ' + k + ' levels above the bedrock">L' + k + '<b>' + n + '</b></div>';
+        });
+        html += '</div>';
+
+        html += sect('Foundation', base.length, false,
+            'Level 0: models that depend on nothing. Everything else stands on these, so a column change here '
+            + 'travels the furthest — the count is how many models break transitively.',
+            base.length
+                ? '<table><tr><th>Model</th><th>Module</th><th class="num">Stands on it</th>'
+                + '<th class="num">Direct</th><th class="bar"></th></tr>'
+                + base.map(function (r) {
+                    return '<tr><td class="nm" data-id="' + esc(r.node.id) + '"><span class="dot" style="background:'
+                        + colorOf[r.node.group] + '"></span>' + esc(r.node.name) + '</td>'
+                        + '<td class="mod">' + esc(r.node.group) + '</td>'
+                        + '<td class="num">' + r.on + '</td><td class="num">' + r.direct + '</td>'
+                        + '<td class="bar"><span style="width:' + (r.on / maxOn * 260) + 'px;background:#2563eb"></span></td></tr>';
+                }).join('') + '</table>'
+                : ok('No foundation model in this domain.'));
+
+        html += sect('Deep chains', chains.length, false,
+            'Where the depth actually comes from: start at a model nothing depends on and follow the deepest '
+            + 'dependency each step. Everything not on one of these lines is one or two levels from the bedrock.',
+            chains.length
+                ? chains.map(function (path) {
+                    return '<div class="chain">' + path.map(function (n) { return pill(n.id); })
+                        .join('<span class="arrow">&rarr;</span>') + '</div>';
+                }).join('')
+                : ok('No chain runs deeper than two levels.'));
+
+        html += sect('By level', placed.length, false,
+            'Every levelled model, deepest level first. A model sits one level above the deepest thing it needs, '
+            + 'so reading down a level is reading one step closer to the bedrock.',
+            keys.slice().reverse().map(function (k) {
+                var list = byLevel[k].filter(inFocus).slice().sort(function (a, b) {
+                    return a.group === b.group ? a.name.localeCompare(b.name) : a.group.localeCompare(b.group);
                 });
-            });
-            var lines = [[]], lineW = 0;
-            blocks.forEach(function (b) {
-                if (lineW && lineW + BLK_GAP + b.w > avail) { lines.push([]); lineW = 0; }
-                lineW += (lineW ? BLK_GAP : 0) + b.w;
-                lines[lines.length - 1].push(b);
-            });
-            banded[k] = lines;
-            heights[k] = LY_HEAD + lines.length * LY_ROW_H + LY_FOOT;
+                if (!list.length) return '';
+                return '<div class="lvl"><span class="tag">L' + k + ' · ' + list.length + '</span>'
+                    + '<span class="cloud">' + list.map(function (n) { return pill(n.id); }).join('') + '</span></div>';
+            }).join(''));
+
+        stage.innerHTML = html + '</div>';
+        each(stage.querySelectorAll('.pill, .nm'), function (e2) {
+            e2.onclick = function () { select(e2.getAttribute('data-id')); };
         });
-        var total = keys.reduce(function (sum, k) { return sum + heights[k]; }, 0);
-        var height = Math.max(box.height - 2, total + 20);
-
-        var svg = el('svg', {width: width, height: height, viewBox: '0 0 ' + width + ' ' + height});
-        var gBand = el('g', {}), gBlock = el('g', {}), gLink = el('g', {}), gCard = el('g', {});
-        svg.appendChild(gBand);
-        svg.appendChild(gBlock);
-        svg.appendChild(gLink);
-        svg.appendChild(gCard);
-
-        var placed = {}, units = [];
-        var cursor = height - 10;
-        keys.forEach(function (k, i) {
-            // bedrock at the bottom: dependencies point downwards, the way a stack is drawn
-            var h = heights[k];
-            var top = cursor - h;
-            cursor = top;
-            if (i % 2 === 0) gBand.appendChild(el('rect', {'class': 'lyr-band', x: 0, y: top, width: width, height: h}));
-            gBand.appendChild(text(14, top + 18, 'L' + k, 'lyr-tag'));
-            gBand.appendChild(text(14, top + 31, rows[k].length, 'lyr-num'));
-            banded[k].forEach(function (line, li) {
-                var rowTop = top + LY_HEAD + li * LY_ROW_H;
-                var x = LY_PAD;
-                line.forEach(function (b) {
-                    if (b.framed) {
-                        var g = el('g', {'class': 'dgrp'});
-                        g.appendChild(el('rect', {
-                            x: x, y: rowTop, width: b.w, height: BLK_HEAD + LY_H + 7, rx: 8,
-                            fill: colorOf[b.domain], stroke: colorOf[b.domain]
-                        }));
-                        if (b.head) g.appendChild(text(x + BLK_PAD + 1, rowTop + 12, clip(b.domain, 22), 'dlbl'));
-                        gBlock.appendChild(g);
-                    }
-                    var cx = x + (b.framed ? BLK_PAD : 0);
-                    b.units.forEach(function (u) {
-                        placed[u.id] = {x: cx, y: rowTop + BLK_HEAD, w: u.w};
-                        units.push(u);
-                        cx += u.w + LY_GAP_X;
-                    });
-                    x += b.w + BLK_GAP;
-                });
-            });
-        });
-
-        var paths = [], drawn = {};
-        links.forEach(function (l) {
-            if (!structural(l)) return;
-            var a = unitOf[l.from], b = unitOf[l.to];
-            if (!a || !b || a === b) return;
-            // several relations into the same folded domain collapse to one thicker line
-            var hit = drawn[a + '>' + b];
-            if (hit) {
-                hit.n++;
-                hit.el.setAttribute('stroke-width', Math.min(3.4, 1.2 + (hit.n - 1) * 0.6));
-                return;
-            }
-            var pa = placed[a], pb = placed[b];
-            if (!pa || !pb) return;
-            // with a domain in focus, a relation between two other domains is background noise
-            var off = domainFocus && unitDomain[a] !== domainFocus && unitDomain[b] !== domainFocus;
-            var base = 'link ' + l.kind + (off ? ' faded' : '');
-            var path = el('path', {
-                'class': base,
-                d: vCurve([pa.x + pa.w / 2, pa.y + LY_H], [pb.x + pb.w / 2, pb.y])
-            });
-            hit = {el: path, from: a, to: b, n: 1, base: base};
-            drawn[a + '>' + b] = hit;
-            paths.push(hit);
-            gLink.appendChild(path);
-        });
-
-        units.forEach(function (u) {
-            var p = placed[u.id];
-            var g = u.node ? card(u.node, p.x, p.y, p.w, LY_H, false, true) : foldBox(u, p.x, p.y, p.w, LY_H);
-            var holdsCurrent = u.node ? u.node.id === current : u.list.some(function (n) { return n.id === current; });
-            if (holdsCurrent) g.setAttribute('class', g.getAttribute('class') + ' root');
-            g.addEventListener('mouseenter', function () { spotlight(paths, u.id); });
-            g.addEventListener('mouseleave', function () { spotlight(paths, null); });
-            gCard.appendChild(g);
-        });
-
-        stage.innerHTML = '';
-        stage.appendChild(svg);
+        detail.innerHTML = '<div class="dh">Click a model to open its lineage</div>';
     }
 
-    // An out-of-focus domain folds into one box per layer: the dependency still reads,
-    // without a dozen boxes competing for the eye
-    function foldBox(u, x, y, w, h) {
-        var g = el('g', {'class': 'card fold'});
-        g.appendChild(el('rect', {'class': 'box', x: x, y: y, width: w, height: h, rx: 7}));
-        g.appendChild(el('path', {fill: colorOf[u.domain], d: bar(x, y, h)}));
-        g.appendChild(text(x + 12, y + h / 2 + 4, clip(u.domain, 16), 'nm'));
-        g.appendChild(text(x + w - 11, y + h / 2 + 4, u.list.length, 'cnt', 'end'));
-        g.appendChild(el('title', {}, u.domain + ' · ' + u.list.length + ' models — click to open this domain'));
-        g.addEventListener('click', function () { focusDomain(u.domain); });
-        return g;
-    }
-
-    // Hovering a box is the only way a dense layer stays readable: everything unrelated steps back
-    function spotlight(paths, id) {
-        paths.forEach(function (p) {
-            var on = !id || p.from === id || p.to === id;
-            p.el.setAttribute('class', p.base + (on ? '' : ' dimmed'));
-        });
-    }
-
-    function cardW(n) { return Math.max(96, Math.min(168, n.name.length * 6.6 + 22)); }
-
-    function foldW(u) { return Math.max(112, Math.min(196, u.domain.length * 6.6 + 56)); }
-
-    function vCurve(a, b) {
-        var dy = Math.abs(b[1] - a[1]) * 0.42;
-        return 'M' + a[0] + ',' + a[1] + 'C' + a[0] + ',' + (a[1] + dy) + ' '
-            + b[0] + ',' + (b[1] - dy) + ' ' + b[0] + ',' + b[1];
+    function dependents(n) {
+        var seen = {};
+        inOf[n.id].forEach(function (l) { if (structural(l)) seen[l.s.id] = 1; });
+        return Object.keys(seen).length;
     }
 
     /* ---------------- impact ----------------
