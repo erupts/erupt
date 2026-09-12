@@ -131,8 +131,36 @@
 
         /* layers */
         .lyr-tag { font-size: 9.5px; font-weight: 600; letter-spacing: .08em; fill: var(--faint); }
+        .lyr-num { font-size: 9.5px; fill: var(--faint); }
+        .dgrp rect { fill-opacity: .045; stroke-opacity: .28; stroke-width: 1; }
+        .dgrp .dlbl { font-size: 9.5px; font-weight: 600; letter-spacing: .05em; fill: var(--muted); }
         .lyr-band { fill: #fbfcfd; }
         .dimmed { opacity: .12; }
+        .link.faded { opacity: .22; }
+        .card.fold rect.box { fill: var(--bg); stroke-dasharray: 4 3; }
+        .card.fold .nm { fill: var(--muted); }
+        .card .cnt { font-size: 10px; fill: var(--faint); font-variant-numeric: tabular-nums; }
+
+        /* domain bar */
+        .dbar {
+            display: flex; align-items: center; flex-wrap: wrap; gap: 6px; flex: none;
+            padding: 8px 12px; background: var(--surface); border-bottom: 1px solid var(--border);
+        }
+        .dbar[hidden] { display: none; }
+        .dbar .cap {
+            font-size: 9.5px; font-weight: 600; letter-spacing: .07em;
+            text-transform: uppercase; color: var(--faint); margin-right: 2px;
+        }
+        .dbar .chip {
+            display: inline-flex; align-items: center; gap: 5px; font: inherit; font-size: 11px;
+            padding: 2px 9px; cursor: pointer; color: var(--muted);
+            background: var(--bg); border: 1px solid var(--border); border-radius: 999px;
+        }
+        .dbar .chip:hover { color: var(--fg); }
+        .dbar .chip.on { color: var(--fg); background: var(--surface); border-color: var(--accent); }
+        .dbar .chip i { width: 6px; height: 6px; border-radius: 50%; }
+        .dbar .chip b { font-weight: 500; color: var(--faint); }
+        .dbar .note { margin-left: auto; font-size: 11px; color: var(--faint); }
 
         /* impact */
         .impact { padding: 18px 20px 30px; max-width: 980px; }
@@ -246,6 +274,7 @@
         <div class="tree" id="list"></div>
     </aside>
     <div class="content">
+        <div class="dbar" id="dbar" hidden></div>
         <div class="stage" id="stage"><div class="hint" id="hint">Loading…</div></div>
         <div class="detail" id="detail"></div>
     </div>
@@ -265,6 +294,7 @@
     };
 
     var stage = document.getElementById('stage');
+    var dbar = document.getElementById('dbar');
     var hint = document.getElementById('hint');
     var listBox = document.getElementById('list');
     var detail = document.getElementById('detail');
@@ -272,6 +302,7 @@
     var nodes = [], links = [], byId = {}, colorOf = {}, modules = [];
     var outOf = {}, inOf = {};
     var mode = 'tree', current = null, keyword = '', depth = 2, audit = null;
+    var domainsBySize = [], domainSize = {}, domainFocus = null;
     var detailCache = {}, detailTab = 'relations';
 
     fetch(BASE + '/erupt-api/erupt-atlas/view?_token=' + encodeURIComponent(TOKEN || ''))
@@ -299,6 +330,11 @@
         });
         modules.sort();
         modules.forEach(function (m, i) { colorOf[m] = PALETTE[i % PALETTE.length]; });
+        nodes.forEach(function (n) { domainSize[n.group] = (domainSize[n.group] || 0) + 1; });
+        // biggest domain first, so a domain keeps the same place in every layer
+        domainsBySize = modules.slice().sort(function (a, b) {
+            return domainSize[b] - domainSize[a] || a.localeCompare(b);
+        });
         nodes.sort(function (a, b) { return a.name.localeCompare(b.name); });
 
         var remoteCount = nodes.filter(function (n) { return n.kind === 'remote'; }).length;
@@ -308,6 +344,7 @@
             + (remoteCount ? ' · <b>' + remoteCount + '</b> remote' : '');
 
         renderList();
+        renderDomainBar();
         select(nodes.slice().sort(function (a, b) { return deg(b) - deg(a); })[0].id);
     }
 
@@ -366,6 +403,7 @@
             document.getElementById('tab-' + m).className = next === m ? 'on' : '';
         });
         document.getElementById('depth-box').style.visibility = next === 'tree' ? 'visible' : 'hidden';
+        dbar.hidden = next !== 'layers';
         if (next === 'matrix') { drawMatrix(); return; }
         if (next === 'audit') { drawAudit(); return; }
         if (next === 'layers') { drawLayers(); return; }
@@ -549,9 +587,12 @@
 
     /* ---------------- layers ----------------
        Audit proves the structural graph is acyclic, so it can be levelled: a model sits one row
-       above the deepest thing it depends on. Row 0 is the bedrock everything else stands on. */
+       above the deepest thing it depends on. Row 0 is the bedrock everything else stands on.
+       Inside a layer the models are boxed by domain, so a card carries two facts at once: how
+       deep it sits, and who owns it. Focus one domain and every other one folds to a single box. */
 
-    var LY_H = 30, LY_GAP_X = 14, LY_GAP_Y = 76, LY_PAD = 70;
+    var LY_H = 30, LY_GAP_X = 12, LY_PAD = 62, LY_HEAD = 26, LY_FOOT = 12;
+    var BLK_PAD = 7, BLK_HEAD = 16, BLK_GAP = 18, LY_ROW_H = BLK_HEAD + LY_H + 16;
 
     function structural(l) { return STRUCTURAL[l.kind]; }
 
@@ -578,6 +619,62 @@
         return outOf[n.id].some(structural) || inOf[n.id].some(structural);
     }
 
+    /* ---- domain bar: which module owns the board ---- */
+
+    function renderDomainBar() {
+        var html = '<span class="cap">Domain</span>'
+            + '<button class="chip' + (domainFocus ? '' : ' on') + '" data-d="">All</button>';
+        domainsBySize.forEach(function (d) {
+            html += '<button class="chip' + (domainFocus === d ? ' on' : '') + '" data-d="' + esc(d) + '">'
+                + '<i style="background:' + colorOf[d] + '"></i>' + esc(d) + '<b>' + domainSize[d] + '</b></button>';
+        });
+        dbar.innerHTML = html + '<span class="note" id="dnote"></span>';
+        each(dbar.querySelectorAll('.chip'), function (b) {
+            b.onclick = function () { focusDomain(b.getAttribute('data-d') || null); };
+        });
+    }
+
+    // Clicking the domain already in focus releases it, so the chip doubles as a toggle
+    function focusDomain(d) {
+        domainFocus = domainFocus === d ? null : d;
+        renderDomainBar();
+        drawLayers();
+    }
+
+    // One block per domain per layer: the cards it owns, or a single box when it is out of focus
+    function layerBlocks(list, level, avail) {
+        var byDomain = {}, blocks = [];
+        list.forEach(function (n) { (byDomain[n.group] = byDomain[n.group] || []).push(n); });
+        domainsBySize.forEach(function (d) {
+            var group = byDomain[d];
+            if (!group) return;
+            group.sort(function (a, b) { return a.name.localeCompare(b.name); });
+            // A lone model folds to nothing smaller than itself, so leave it open
+            if (domainFocus && d !== domainFocus && group.length > 1) {
+                var fold = {id: 'fold:' + d + ':' + level, domain: d, list: group};
+                fold.w = foldW(fold);
+                blocks.push({domain: d, units: [fold], w: fold.w, framed: false, head: true});
+                return;
+            }
+            var units = group.map(function (n) { return {id: n.id, node: n, domain: d, w: cardW(n)}; });
+            // A domain too wide for one line keeps its own frame on each line it spills onto
+            var run = [], runW = 0, head = true;
+            var flush = function () {
+                blocks.push({domain: d, units: run, w: runW + BLK_PAD * 2, framed: true, head: head});
+                run = [];
+                runW = 0;
+                head = false;
+            };
+            units.forEach(function (u) {
+                if (run.length && runW + LY_GAP_X + u.w + BLK_PAD * 2 > avail) flush();
+                runW += (run.length ? LY_GAP_X : 0) + u.w;
+                run.push(u);
+            });
+            if (run.length) flush();
+        });
+        return blocks;
+    }
+
     function drawLayers() {
         var level = levels();
         var rows = {};
@@ -586,99 +683,148 @@
             (rows[level[n.id]] = rows[level[n.id]] || []).push(n);
         });
         var keys = Object.keys(rows).map(Number).sort(function (a, b) { return a - b; });
-        var hidden = nodes.filter(function (n) { return level[n.id] == null; }).length;
+        var loose = nodes.filter(function (n) { return level[n.id] == null; }).length;
+        var note = document.getElementById('dnote');
+        if (note) {
+            note.textContent = [
+                loose ? loose + ' models carry no structural relation and are not drawn' : '',
+                domainFocus ? 'other domains are folded — click a folded box to open it' : ''
+            ].filter(Boolean).join(' · ');
+        }
         if (!keys.length) { stage.innerHTML = '<div class="hint">No structural relation to level</div>'; return; }
 
         var box = stage.getBoundingClientRect();
         var width = Math.max(box.width - 2, 900);
-        var avail = width - LY_PAD - 30;
-        // A wide layer wraps onto more rows instead of forcing the whole board to scroll sideways
-        var wrapped = {}, heights = {};
+        var avail = width - LY_PAD - 24;
+
+        var unitOf = {}, unitDomain = {}, banded = {}, heights = {};
         keys.forEach(function (k) {
-            // group a layer by module so same-coloured boxes sit together and edges cross less
-            rows[k].sort(function (a, b) {
-                return a.group === b.group ? a.name.localeCompare(b.name) : a.group.localeCompare(b.group);
+            var blocks = layerBlocks(rows[k], k, avail);
+            blocks.forEach(function (b) {
+                b.units.forEach(function (u) {
+                    unitDomain[u.id] = b.domain;
+                    if (u.node) unitOf[u.node.id] = u.id;
+                    else u.list.forEach(function (n) { unitOf[n.id] = u.id; });
+                });
             });
-            var lines = [[]], used = 0;
-            rows[k].forEach(function (n) {
-                var w = cardW(n);
-                if (used + w > avail && lines[lines.length - 1].length) {
-                    lines.push([]);
-                    used = 0;
-                }
-                lines[lines.length - 1].push(n);
-                used += w + LY_GAP_X;
+            var lines = [[]], lineW = 0;
+            blocks.forEach(function (b) {
+                if (lineW && lineW + BLK_GAP + b.w > avail) { lines.push([]); lineW = 0; }
+                lineW += (lineW ? BLK_GAP : 0) + b.w;
+                lines[lines.length - 1].push(b);
             });
-            wrapped[k] = lines;
-            heights[k] = lines.length * (LY_H + 10) + 34;
+            banded[k] = lines;
+            heights[k] = LY_HEAD + lines.length * LY_ROW_H + LY_FOOT;
         });
         var total = keys.reduce(function (sum, k) { return sum + heights[k]; }, 0);
-        var height = Math.max(box.height - 2, total + 34);
+        var height = Math.max(box.height - 2, total + 20);
 
         var svg = el('svg', {width: width, height: height, viewBox: '0 0 ' + width + ' ' + height});
-        var gBand = el('g', {}), gLink = el('g', {}), gCard = el('g', {});
+        var gBand = el('g', {}), gBlock = el('g', {}), gLink = el('g', {}), gCard = el('g', {});
         svg.appendChild(gBand);
+        svg.appendChild(gBlock);
         svg.appendChild(gLink);
         svg.appendChild(gCard);
 
-        var placed = {};
-        var cursor = height - 16;
+        var placed = {}, units = [];
+        var cursor = height - 10;
         keys.forEach(function (k, i) {
             // bedrock at the bottom: dependencies point downwards, the way a stack is drawn
             var h = heights[k];
             var top = cursor - h;
             cursor = top;
             if (i % 2 === 0) gBand.appendChild(el('rect', {'class': 'lyr-band', x: 0, y: top, width: width, height: h}));
-            gBand.appendChild(text(16, top + 26, 'L' + k + ' · ' + rows[k].length, 'lyr-tag'));
-            wrapped[k].forEach(function (line, li) {
-                var lineW = line.reduce(function (sum, n) { return sum + cardW(n) + LY_GAP_X; }, -LY_GAP_X);
-                var x = Math.max(LY_PAD, (width - lineW) / 2);
-                var y = top + 16 + li * (LY_H + 10);
-                line.forEach(function (n) {
-                    placed[n.id] = {x: x, y: y, w: cardW(n)};
-                    x += cardW(n) + LY_GAP_X;
+            gBand.appendChild(text(14, top + 18, 'L' + k, 'lyr-tag'));
+            gBand.appendChild(text(14, top + 31, rows[k].length, 'lyr-num'));
+            banded[k].forEach(function (line, li) {
+                var rowTop = top + LY_HEAD + li * LY_ROW_H;
+                var x = LY_PAD;
+                line.forEach(function (b) {
+                    if (b.framed) {
+                        var g = el('g', {'class': 'dgrp'});
+                        g.appendChild(el('rect', {
+                            x: x, y: rowTop, width: b.w, height: BLK_HEAD + LY_H + 7, rx: 8,
+                            fill: colorOf[b.domain], stroke: colorOf[b.domain]
+                        }));
+                        if (b.head) g.appendChild(text(x + BLK_PAD + 1, rowTop + 12, clip(b.domain, 22), 'dlbl'));
+                        gBlock.appendChild(g);
+                    }
+                    var cx = x + (b.framed ? BLK_PAD : 0);
+                    b.units.forEach(function (u) {
+                        placed[u.id] = {x: cx, y: rowTop + BLK_HEAD, w: u.w};
+                        units.push(u);
+                        cx += u.w + LY_GAP_X;
+                    });
+                    x += b.w + BLK_GAP;
                 });
             });
         });
 
-        var paths = [];
+        var paths = [], drawn = {};
         links.forEach(function (l) {
-            if (!structural(l) || l.s.id === l.t.id) return;
-            var a = placed[l.s.id], b = placed[l.t.id];
-            if (!a || !b) return;
-            var from = [a.x + a.w / 2, a.y + LY_H];
-            var to = [b.x + b.w / 2, b.y];
-            var path = el('path', {'class': 'link ' + l.kind, d: vCurve(from, to)});
-            paths.push({el: path, from: l.s.id, to: l.t.id});
+            if (!structural(l)) return;
+            var a = unitOf[l.from], b = unitOf[l.to];
+            if (!a || !b || a === b) return;
+            // several relations into the same folded domain collapse to one thicker line
+            var hit = drawn[a + '>' + b];
+            if (hit) {
+                hit.n++;
+                hit.el.setAttribute('stroke-width', Math.min(3.4, 1.2 + (hit.n - 1) * 0.6));
+                return;
+            }
+            var pa = placed[a], pb = placed[b];
+            if (!pa || !pb) return;
+            // with a domain in focus, a relation between two other domains is background noise
+            var off = domainFocus && unitDomain[a] !== domainFocus && unitDomain[b] !== domainFocus;
+            var base = 'link ' + l.kind + (off ? ' faded' : '');
+            var path = el('path', {
+                'class': base,
+                d: vCurve([pa.x + pa.w / 2, pa.y + LY_H], [pb.x + pb.w / 2, pb.y])
+            });
+            hit = {el: path, from: a, to: b, n: 1, base: base};
+            drawn[a + '>' + b] = hit;
+            paths.push(hit);
             gLink.appendChild(path);
         });
 
-        nodes.forEach(function (n) {
-            var p = placed[n.id];
-            if (!p) return;
-            var c = card(n, p.x, p.y, p.w, LY_H, false, true);
-            if (n.id === current) c.setAttribute('class', c.getAttribute('class') + ' root');
-            c.addEventListener('mouseenter', function () { spotlight(paths, n.id); });
-            c.addEventListener('mouseleave', function () { spotlight(paths, null); });
-            gCard.appendChild(c);
+        units.forEach(function (u) {
+            var p = placed[u.id];
+            var g = u.node ? card(u.node, p.x, p.y, p.w, LY_H, false, true) : foldBox(u, p.x, p.y, p.w, LY_H);
+            var holdsCurrent = u.node ? u.node.id === current : u.list.some(function (n) { return n.id === current; });
+            if (holdsCurrent) g.setAttribute('class', g.getAttribute('class') + ' root');
+            g.addEventListener('mouseenter', function () { spotlight(paths, u.id); });
+            g.addEventListener('mouseleave', function () { spotlight(paths, null); });
+            gCard.appendChild(g);
         });
 
-        if (hidden) {
-            svg.appendChild(text(16, 22, hidden + ' models have no structural relation and are not shown', 'lbl'));
-        }
         stage.innerHTML = '';
         stage.appendChild(svg);
+    }
+
+    // An out-of-focus domain folds into one box per layer: the dependency still reads,
+    // without a dozen boxes competing for the eye
+    function foldBox(u, x, y, w, h) {
+        var g = el('g', {'class': 'card fold'});
+        g.appendChild(el('rect', {'class': 'box', x: x, y: y, width: w, height: h, rx: 7}));
+        g.appendChild(el('path', {fill: colorOf[u.domain], d: bar(x, y, h)}));
+        g.appendChild(text(x + 12, y + h / 2 + 4, clip(u.domain, 16), 'nm'));
+        g.appendChild(text(x + w - 11, y + h / 2 + 4, u.list.length, 'cnt', 'end'));
+        g.appendChild(el('title', {}, u.domain + ' · ' + u.list.length + ' models — click to open this domain'));
+        g.addEventListener('click', function () { focusDomain(u.domain); });
+        return g;
     }
 
     // Hovering a box is the only way a dense layer stays readable: everything unrelated steps back
     function spotlight(paths, id) {
         paths.forEach(function (p) {
             var on = !id || p.from === id || p.to === id;
-            p.el.setAttribute('class', 'link ' + (on ? '' : 'dimmed ') + p.el.getAttribute('class').split(' ').pop());
+            p.el.setAttribute('class', p.base + (on ? '' : ' dimmed'));
         });
     }
 
     function cardW(n) { return Math.max(96, Math.min(168, n.name.length * 6.6 + 22)); }
+
+    function foldW(u) { return Math.max(112, Math.min(196, u.domain.length * 6.6 + 56)); }
 
     function vCurve(a, b) {
         var dy = Math.abs(b[1] - a[1]) * 0.42;
