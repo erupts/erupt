@@ -171,19 +171,11 @@
         .dbar .chip b { font-weight: 500; color: var(--faint); }
         .dbar .note { margin-left: auto; font-size: 11px; color: var(--faint); }
 
-        /* fields + power */
-        .lv .fld-name code, .lv .fld-pill code {
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: #374151;
-        }
-        .lv .fld-pill { cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-        .lv .fld-pill b { font-weight: 600; color: var(--faint); font-size: 10px; }
-        .lv .flags { display: flex; flex-wrap: wrap; gap: 4px; }
+        /* power */
         .lv .flag {
             display: inline-block; padding: 0 7px; border-radius: 999px; font-size: 10px;
             background: var(--bg); border: 1px solid var(--border-soft); color: var(--muted); white-space: nowrap;
         }
-        .lv .flag.req { color: #b45309; border-color: #fde68a; background: #fffbeb; }
-        .lv .flag.ref { cursor: pointer; color: var(--accent); border-color: #dbeafe; background: var(--accent-soft); }
         .lv .flag.warn { color: #b91c1c; border-color: #fecaca; background: #fef2f2; }
         .lv table.pw th.pw-h { width: 30px; height: 72px; padding: 0 0 6px; vertical-align: bottom; }
         .lv table.pw th.pw-h span {
@@ -325,7 +317,6 @@
         <button id="tab-layers">Layers</button>
         <button id="tab-overview">Overview</button>
         <button id="tab-matrix">Matrix</button>
-        <button id="tab-fields">Fields</button>
         <button id="tab-power">Power</button>
         <button id="tab-impact">Impact</button>
         <button id="tab-audit">Audit</button>
@@ -433,7 +424,7 @@
         document.getElementById('q').placeholder = t('Search model…');
         document.getElementById('depth-label').textContent = t('depth');
         [['tree', 'Lineage'], ['layers', 'Layers'], ['overview', 'Overview'],
-            ['matrix', 'Matrix'], ['fields', 'Fields'], ['power', 'Power'],
+            ['matrix', 'Matrix'], ['power', 'Power'],
             ['impact', 'Impact'], ['audit', 'Audit']].forEach(function (kv) {
             document.getElementById('tab-' + kv[0]).textContent = t(kv[1]);
         });
@@ -482,7 +473,6 @@
         keyword = e.target.value.trim().toLowerCase();
         renderList();
         if (mode === 'overview') drawOverview();
-        else if (mode === 'fields') drawFields();
         else if (mode === 'power') drawPower();
     });
 
@@ -492,7 +482,6 @@
     document.getElementById('tab-overview').onclick = function () { setMode('overview'); };
     document.getElementById('tab-matrix').onclick = function () { setMode('matrix'); };
     document.getElementById('tab-audit').onclick = function () { setMode('audit'); };
-    document.getElementById('tab-fields').onclick = function () { setMode('fields'); };
     document.getElementById('tab-power').onclick = function () { setMode('power'); };
     document.getElementById('tab-layers').onclick = function () { setMode('layers'); };
     document.getElementById('tab-impact').onclick = function () { setMode('impact'); };
@@ -506,13 +495,12 @@
 
     function setMode(next) {
         mode = next;
-        ['tree', 'layers', 'overview', 'matrix', 'fields', 'power', 'impact', 'audit'].forEach(function (m) {
+        ['tree', 'layers', 'overview', 'matrix', 'power', 'impact', 'audit'].forEach(function (m) {
             document.getElementById('tab-' + m).className = next === m ? 'on' : '';
         });
         document.getElementById('depth-box').style.visibility = next === 'tree' ? 'visible' : 'hidden';
         // the domain chips scope every table-shaped view, not just the layers report
-        dbar.hidden = ['layers', 'fields', 'power'].indexOf(next) < 0;
-        if (next === 'fields') { drawFields(); return; }
+        dbar.hidden = ['layers', 'power'].indexOf(next) < 0;
         if (next === 'power') { drawPower(); return; }
         if (next === 'matrix') { drawMatrix(); return; }
         if (next === 'audit') { drawAudit(); return; }
@@ -747,8 +735,7 @@
     function focusDomain(d) {
         domainFocus = domainFocus === d ? null : d;
         renderDomainBar();
-        if (mode === 'fields') drawFields();
-        else if (mode === 'power') drawPower();
+        if (mode === 'power') drawPower();
         else drawLayers();
     }
 
@@ -868,12 +855,7 @@
         return Object.keys(seen).length;
     }
 
-    /* ---------------- fields ----------------
-       The model views answer what depends on what; this one answers which column the change
-       lands on. Loaded on first open: a row per field of every model is too much to carry in
-       the graph payload. */
-
-    var fieldRows = null, powerRows = null;
+    var powerRows = null;
 
     function lazy(path, hold, draw) {
         if (hold()) { draw(); return; }
@@ -887,93 +869,9 @@
             .catch(function (e) { stage.innerHTML = '<div class="hint">' + esc(t('Failed to load') + ': ' + e) + '</div>'; });
     }
 
-    function fieldsHeld(set) {
-        if (set) fieldRows = set;
-        return fieldRows;
-    }
-
     function powerHeld(set) {
         if (set) powerRows = set;
         return powerRows;
-    }
-
-    function drawFields() {
-        if (!fieldRows) { lazy('fields', fieldsHeld, drawFields); return; }
-        var note = document.getElementById('dnote');
-        if (note) note.textContent = t('the search box filters this table too');
-
-        var scoped = fieldRows.filter(function (f) { return !domainFocus || f.module === domainFocus; });
-        var rows = scoped.filter(function (f) {
-            return !keyword || f.name.toLowerCase().indexOf(keyword) >= 0
-                || (f.title || '').toLowerCase().indexOf(keyword) >= 0
-                || f.model.toLowerCase().indexOf(keyword) >= 0
-                || (f.label || '').toLowerCase().indexOf(keyword) >= 0;
-        });
-
-        // A name carried by many models is a shape the system repeats, and the first thing to
-        // look at before adding another one
-        var byName = {};
-        scoped.forEach(function (f) { (byName[f.name] = byName[f.name] || []).push(f); });
-        var shared = Object.keys(byName).filter(function (n) { return byName[n].length > 2; })
-            .sort(function (a, b) { return byName[b].length - byName[a].length || a.localeCompare(b); })
-            .slice(0, 24);
-
-        var html = '<div class="lv"><div class="tiles">'
-            + tile(scoped.length, t('Fields'), false)
-            + tile(Object.keys(byName).length, t('Distinct names'), false)
-            + tile(scoped.filter(function (f) { return f.reference; }).length, t('Reference fields'), false)
-            + tile(scoped.filter(function (f) { return f.required; }).length, t('Required'), false)
-            + '</div>';
-
-        html += sect(t('Repeated across models'), shared.length, false,
-            t('One field name carried by three models or more. Shared shape, shared migration: these are the columns a change reaches in several places at once.'),
-            shared.length
-                ? '<div class="cloud">' + shared.map(function (n) {
-                    return '<span class="pill fld-pill" data-f="' + esc(n) + '"><code>' + esc(n) + '</code>'
-                        + '<b>' + byName[n].length + '</b></span>';
-                }).join('') + '</div>'
-                : ok(t('No field name is shared by three models.')));
-
-        html += sect(t('All fields'), rows.length, false,
-            t('Every field of every model, with the edit component it renders as. A reference field points at another model and is what draws the lines on the graph.'),
-            rows.length
-                ? '<table><tr><th>' + esc(t('Field')) + '</th><th>' + esc(t('Title')) + '</th>'
-                + '<th>' + esc(t('Component')) + '</th><th>' + esc(t('Model')) + '</th>'
-                + '<th>' + esc(t('Module')) + '</th><th>' + esc(t('Flags')) + '</th></tr>'
-                + rows.slice(0, 600).map(function (f) {
-                    return '<tr><td class="fld-name"><code>' + esc(f.name) + '</code></td>'
-                        + '<td>' + esc(f.title || '') + '</td>'
-                        + '<td class="mod">' + esc(f.type) + '</td>'
-                        + '<td class="nm" data-id="' + esc(f.model) + '" title="' + esc(f.model) + '">'
-                        + '<span class="dot" style="background:' + (colorOf[f.module] || '#cbd5e1') + '"></span>'
-                        + esc(f.label || f.model) + '</td>'
-                        + '<td class="mod">' + esc(f.module) + '</td>'
-                        + '<td class="flags">'
-                        + (f.required ? '<span class="flag req">' + esc(t('required')) + '</span>' : '')
-                        + (f.searchable ? '<span class="flag">' + esc(t('search')) + '</span>' : '')
-                        + (f.reference ? '<span class="flag ref" data-id="' + esc(f.reference) + '">&rarr; '
-                            + esc(listName(byId[f.reference] || {name: f.reference})) + '</span>' : '')
-                        + '</td></tr>';
-                }).join('')
-                + '</table>'
-                + (rows.length > 600 ? '<div class="note" style="margin:10px 0 0">' + rows.length
-                    + ' ' + esc(t('rows match, the first 600 are listed')) + '</div>' : '')
-                : ok(t('No field matches.')));
-
-        stage.innerHTML = html + '</div>';
-        each(stage.querySelectorAll('.nm, .flag.ref'), function (e2) {
-            e2.onclick = function () { select(e2.getAttribute('data-id')); };
-        });
-        each(stage.querySelectorAll('.fld-pill'), function (e2) {
-            e2.onclick = function () {
-                var q = document.getElementById('q');
-                q.value = e2.getAttribute('data-f');
-                keyword = q.value.toLowerCase();
-                renderList();
-                drawFields();
-            };
-        });
-        detail.innerHTML = '<div class="dh">' + esc(t('Click a model to open its lineage')) + '</div>';
     }
 
     /* ---------------- power ----------------

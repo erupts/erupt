@@ -19,7 +19,6 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.atlas.vo.AtlasView;
-import xyz.erupt.atlas.vo.FieldRow;
 import xyz.erupt.atlas.vo.PowerRow;
 import xyz.erupt.atlas.vo.ModelDetail;
 import xyz.erupt.core.constant.EruptConst;
@@ -383,28 +382,6 @@ public class EruptAtlasService {
             if (!bound.contains(node.name().toLowerCase())) list.add(node.name());
         }
         return list;
-    }
-
-    /**
-     * Every field of every model, flattened. Rebuilt per request like everything else here, so a
-     * model registered at runtime brings its fields along.
-     */
-    public List<FieldRow> fields() {
-        Map<String, EruptModel> index = new LinkedCaseInsensitiveMap<>();
-        for (EruptModel it : EruptCoreService.getErupts()) index.put(it.getEruptName(), it);
-        List<FieldRow> rows = new ArrayList<>();
-        for (EruptModel model : EruptCoreService.getErupts()) {
-            String label = i18n(model.getClazz(), model.getErupt().name());
-            String module = source(model.getClazz());
-            for (EruptFieldModel fieldModel : model.getEruptFieldModels()) {
-                Edit edit = fieldModel.getEruptField().edit();
-                EruptModel ref = index.get(String.valueOf(fieldModel.getFieldReturnName()));
-                rows.add(new FieldRow(model.getEruptName(), label, module, fieldModel.getFieldName(),
-                        i18n(model.getClazz(), edit.title()), edit.type().name(), edit.notNull(),
-                        edit.search().value(), null == ref ? null : ref.getEruptName()));
-            }
-        }
-        return rows;
     }
 
     /**

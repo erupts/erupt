@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.atlas.constant.AtlasConstant;
 import xyz.erupt.atlas.service.EruptAtlasService;
 import xyz.erupt.atlas.vo.AtlasView;
-import xyz.erupt.atlas.vo.FieldRow;
 import xyz.erupt.atlas.vo.PowerRow;
 import xyz.erupt.atlas.vo.ModelDetail;
 import xyz.erupt.upms.annotation.EruptMenuAuth;
@@ -31,13 +30,7 @@ public class EruptAtlasController {
         return eruptAtlasService.build();
     }
 
-    // Both are fetched only when their tab is opened: neither belongs in the graph payload
-    @GetMapping("/fields")
-    @EruptMenuAuth(AtlasConstant.MENU_ATLAS)
-    public List<FieldRow> fields() {
-        return eruptAtlasService.fields();
-    }
-
+    // Fetched only when its tab is opened: it does not belong in the graph payload
     @GetMapping("/power")
     @EruptMenuAuth(AtlasConstant.MENU_ATLAS)
     public List<PowerRow> power() {
