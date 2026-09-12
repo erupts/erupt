@@ -43,11 +43,15 @@
             --r-dot: 50%;
         }
 
+        /* No backdrop on purpose: the shell already paints one behind this
+           frame — a plain surface, a dark one, or the Liquid Glass field — and
+           a white rectangle stamped on top of it fits none of them. An iframe
+           renders transparent when its own document does, so leaving the
+           background off here is all it takes. Do not put one back. */
         body {
-            /* same backdrop as the app preloader (index.html) */
-            background: #fff url('assets/passport/passport-bg.svg') no-repeat center center / cover;
             overflow: hidden;
         }
+
 
         @keyframes rise {
             from { opacity: 0; transform: translate(4px, 6px); }
@@ -205,7 +209,7 @@
             position: absolute;
             left: 0; top: 48px; bottom: 0;
             width: 170px;
-            background: #fff;
+            background: var(--paper);
             border-right: var(--bw) solid var(--line);
             border-radius: 0 0 0 var(--r-lg);
         }
