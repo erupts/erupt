@@ -6,13 +6,18 @@ import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.context.OldEntityTL;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.remote.model.RemoteHost;
+import xyz.erupt.remote.service.RemoteHostAccess;
 import xyz.erupt.remote.util.RemoteCrypto;
+import xyz.erupt.core.invoke.DataProxyContext;
+
+import java.util.List;
 
 /**
  * Encrypts credentials before they are stored and keeps them out of the browser.
@@ -28,6 +33,15 @@ public class RemoteHostDataProxy implements DataProxy<RemoteHost> {
 
     @Resource
     private RemoteCrypto remoteCrypto;
+
+    @Resource
+    private RemoteHostAccess remoteHostAccess;
+
+    // The menu permission lets a user into the table; the authorized users decide which rows it holds
+    @Override
+    public String beforeFetch(List<Condition> conditions) {
+        return remoteHostAccess.rowFilter(DataProxyContext.currentClass().getSimpleName());
+    }
 
     @Override
     public void beforeAdd(RemoteHost host) {

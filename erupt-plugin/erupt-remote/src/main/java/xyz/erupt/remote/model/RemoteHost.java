@@ -2,6 +2,10 @@ package xyz.erupt.remote.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +23,9 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.remote.model.data_proxy.RemoteHostDataProxy;
+import xyz.erupt.upms.model.EruptUserByRoleView;
+
+import java.util.Set;
 
 /**
  * A remote machine that can be opened from the browser as a VNC desktop or an SSH terminal.
@@ -108,6 +115,26 @@ public class RemoteHost extends MetaModelUpdateVo {
             edit = @Edit(title = "Enabled", type = EditType.BOOLEAN, notNull = true, search = @Search, boolType = @BoolType)
     )
     private Boolean enabled = true;
+
+    /**
+     * Who may see and open this host. The menu permission says a user may work with remote hosts at
+     * all; this says which ones, and nothing else grants them: a host reaches exactly the users
+     * named here, and naming nobody keeps it to the super admins.
+     * <p>
+     * Reuses the narrow user projection erupt already picks users with, rather than mapping a fifth
+     * view onto e_upms_user.
+     */
+    @ManyToMany
+    @JoinTable(name = "e_remote_host_user",
+            joinColumns = @JoinColumn(name = "host_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            foreignKey = @ForeignKey(name = "fk_remote_host_user_host"),
+            inverseForeignKey = @ForeignKey(name = "fk_remote_host_user_user"))
+    @EruptField(
+            edit = @Edit(title = "Authorized Users", type = EditType.TAB_TABLE_REFER,
+                    desc = "Users allowed to see and open this host. Nobody else sees it, whatever their role grants; a host with no one named here is visible to super admins only")
+    )
+    private Set<EruptUserByRoleView> authUsers;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(

@@ -7,6 +7,21 @@ Manage remote hosts in the auto-generated `Remote Host` table, then click **Conn
 [noVNC](https://github.com/novnc/noVNC). Access is gated by the `erupt-upms` token, the `RemoteHost` menu permission (`@EruptMenuAuth` on the ticket API,
 the same check on the WebSocket) and a one-time ticket; the browser can never choose the target address itself.
 
+## Authorized users
+
+The menu permission says a user works with remote hosts at all; **Authorized Users** on a host says which ones,
+and nothing else grants them.
+
+| | |
+|---|---|
+| one or more named | exactly those users see the host and may connect, whatever their role grants |
+| nobody named | super admins only |
+| super admin | sees every host, always |
+
+The list is filtered in the query, and the ticket endpoint repeats the check: a host left out of the table is
+also refused when its id is typed by hand, and a host whose authorization changed after a page was loaded is
+judged on its current state at the next connect.
+
 When a password is stored for a host the server answers the VNC authentication on the browser's behalf, so the
 credential never leaves the backend. Without a stored password (or with servers that only offer other security types,
 e.g. macOS Apple Remote Desktop authentication) the RFB handshake is relayed transparently and noVNC prompts the user.
