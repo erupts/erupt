@@ -28,6 +28,7 @@ English &nbsp;|&nbsp; [中文](README-zh.md)
   <a href="https://www.erupt.xyz"><code><b>[ WEBSITE ]</b></code></a>&nbsp;&nbsp;
   <a href="https://demo.erupt.xyz"><code><b>[ LIVE DEMO ]</b></code></a>&nbsp;&nbsp;
   <a href="https://start.erupt.xyz"><code><b>[ START PROJECT ]</b></code></a>&nbsp;&nbsp;
+  <a href="https://skill.erupt.xyz"><code><b>[ AI SKILL ]</b></code></a>&nbsp;&nbsp;
   <a href="https://docs.erupt.xyz"><code><b>[ DOCS ]</b></code></a>
 </p>
 
