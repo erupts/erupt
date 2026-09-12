@@ -34,7 +34,7 @@ public class EruptPrintTpl extends HyperModelUpdateVo {
             views = @View(title = "Content"),
             edit = @Edit(
                     title = "Content", type = EditType.HTML_EDITOR, notNull = true,
-                    htmlEditorType = @HtmlEditorType(HtmlEditorType.Type.UEDITOR)
+                    htmlEditorType = @HtmlEditorType(HtmlEditorType.Type.CKEDITOR)
             )
     )
     private String content;
