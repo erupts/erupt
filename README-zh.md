@@ -276,11 +276,8 @@ LLM 提供商、MCP 服务器、Agent —— 全部通过内置管理界面配�
 
 <table>
   <tr>
-    <td width="50%"><img src="readme/ai-field-assistant-dark.png" alt="AI 字段助手 · 暗色" width="100%"/></td>
-    <td width="50%"><img src="readme/ai-field-assistant-wizard.png" alt="AI 字段助手 · 分步表单" width="100%"/></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center"><img src="readme/ai-field-assistant-detail.png" alt="AI 字段助手 · 弹窗" width="62%"/></td>
+    <td width="50%"><img src="readme/ai-field-assistant-dark.jpg" alt="AI 字段助手 · 暗色" width="100%"/></td>
+    <td width="50%"><img src="readme/ai-field-assistant-chat.jpg" alt="AI 字段助手 · 对话面板" width="100%"/></td>
   </tr>
 </table>
 

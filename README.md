@@ -276,11 +276,8 @@ LLM providers, MCP servers, agents — all managed through the built-in admin UI
 
 <table>
   <tr>
-    <td width="50%"><img src="readme/ai-field-assistant-dark.png" alt="AI field assistant · dark" width="100%"/></td>
-    <td width="50%"><img src="readme/ai-field-assistant-wizard.png" alt="AI field assistant · stepped form" width="100%"/></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center"><img src="readme/ai-field-assistant-detail.png" alt="AI field assistant · dialog" width="62%"/></td>
+    <td width="50%"><img src="readme/ai-field-assistant-dark.jpg" alt="AI field assistant · dark" width="100%"/></td>
+    <td width="50%"><img src="readme/ai-field-assistant-chat.jpg" alt="AI field assistant · chat panel" width="100%"/></td>
   </tr>
 </table>
 
