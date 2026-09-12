@@ -19,6 +19,8 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.atlas.vo.AtlasView;
+import xyz.erupt.atlas.vo.FieldRow;
+import xyz.erupt.atlas.vo.PowerRow;
 import xyz.erupt.atlas.vo.ModelDetail;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.i18n.I18nTranslate;
@@ -83,6 +85,12 @@ public class EruptAtlasService {
     private static final String PACKAGE_PREFIX = "xyz.erupt.";
 
     private static final String I18N_PATH = "/i18n/erupt-atlas.i18n.csv";
+
+    // The default in @Power(powerHandler): nothing was plugged in
+    private static final String POWER_HANDLER = "PowerHandler";
+
+    // UPMSUtil writes a function button as EruptName@CODE
+    private static final char FUN_PERMISSION_SEPARATOR = '@';
 
     private static List<String> i18nKeys;
 
@@ -258,10 +266,13 @@ public class EruptAtlasService {
         if (power.edit()) on.add("edit");
         if (power.delete()) on.add("delete");
         if (power.query()) on.add("query");
+        if (power.viewDetails()) on.add("detail");
         if (power.export()) on.add("export");
         if (power.importable()) on.add("import");
         if (power.print()) on.add("print");
         if (power.copy()) on.add("copy");
+        if (power.cellEdit()) on.add("cellEdit");
+        if (power.ai()) on.add("ai");
         return on;
     }
 
@@ -372,6 +383,61 @@ public class EruptAtlasService {
             if (!bound.contains(node.name().toLowerCase())) list.add(node.name());
         }
         return list;
+    }
+
+    /**
+     * Every field of every model, flattened. Rebuilt per request like everything else here, so a
+     * model registered at runtime brings its fields along.
+     */
+    public List<FieldRow> fields() {
+        Map<String, EruptModel> index = new LinkedCaseInsensitiveMap<>();
+        for (EruptModel it : EruptCoreService.getErupts()) index.put(it.getEruptName(), it);
+        List<FieldRow> rows = new ArrayList<>();
+        for (EruptModel model : EruptCoreService.getErupts()) {
+            String label = i18n(model.getClazz(), model.getErupt().name());
+            String module = source(model.getClazz());
+            for (EruptFieldModel fieldModel : model.getEruptFieldModels()) {
+                Edit edit = fieldModel.getEruptField().edit();
+                EruptModel ref = index.get(String.valueOf(fieldModel.getFieldReturnName()));
+                rows.add(new FieldRow(model.getEruptName(), label, module, fieldModel.getFieldName(),
+                        i18n(model.getClazz(), edit.title()), edit.type().name(), edit.notNull(),
+                        edit.search().value(), null == ref ? null : ref.getEruptName()));
+            }
+        }
+        return rows;
+    }
+
+    /**
+     * Declared power next to the function buttons the menu tree actually carries. Without
+     * erupt-data-jpa there is no menu table to read, and the button side comes back empty.
+     */
+    public List<PowerRow> power() {
+        Map<String, String> menuType = new LinkedCaseInsensitiveMap<>();
+        Map<String, Set<String>> buttons = new LinkedCaseInsensitiveMap<>();
+        EruptDao eruptDao = eruptDaoProvider.getIfAvailable();
+        if (null != eruptDao) {
+            for (EruptMenu menu : eruptDao.lambdaQuery(EruptMenu.class).list()) {
+                String value = menu.getValue();
+                if (null == value) continue;
+                int at = value.indexOf(FUN_PERMISSION_SEPARATOR);
+                if (at > 0) {
+                    buttons.computeIfAbsent(value.substring(0, at), k -> new LinkedHashSet<>())
+                            .add(value.substring(at + 1).toUpperCase());
+                } else if (!menuType.containsKey(value)) {
+                    menuType.put(value, menu.getType());
+                }
+            }
+        }
+        List<PowerRow> rows = new ArrayList<>();
+        for (EruptModel model : EruptCoreService.getErupts()) {
+            Power power = model.getErupt().power();
+            String handler = power.powerHandler().getSimpleName();
+            rows.add(new PowerRow(model.getEruptName(), i18n(model.getClazz(), model.getErupt().name()),
+                    source(model.getClazz()), menuType.get(model.getEruptName()), powers(power),
+                    new ArrayList<>(buttons.getOrDefault(model.getEruptName(), new LinkedHashSet<>())),
+                    POWER_HANDLER.equals(handler) ? null : handler));
+        }
+        return rows;
     }
 
     /**

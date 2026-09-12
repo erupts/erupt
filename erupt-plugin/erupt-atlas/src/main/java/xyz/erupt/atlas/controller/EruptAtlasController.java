@@ -8,8 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.atlas.constant.AtlasConstant;
 import xyz.erupt.atlas.service.EruptAtlasService;
 import xyz.erupt.atlas.vo.AtlasView;
+import xyz.erupt.atlas.vo.FieldRow;
+import xyz.erupt.atlas.vo.PowerRow;
 import xyz.erupt.atlas.vo.ModelDetail;
 import xyz.erupt.upms.annotation.EruptMenuAuth;
+
+import java.util.List;
 
 /**
  * @author YuePeng
@@ -25,6 +29,19 @@ public class EruptAtlasController {
     @EruptMenuAuth(AtlasConstant.MENU_ATLAS)
     public AtlasView view() {
         return eruptAtlasService.build();
+    }
+
+    // Both are fetched only when their tab is opened: neither belongs in the graph payload
+    @GetMapping("/fields")
+    @EruptMenuAuth(AtlasConstant.MENU_ATLAS)
+    public List<FieldRow> fields() {
+        return eruptAtlasService.fields();
+    }
+
+    @GetMapping("/power")
+    @EruptMenuAuth(AtlasConstant.MENU_ATLAS)
+    public List<PowerRow> power() {
+        return eruptAtlasService.power();
     }
 
     // Fetched when a model is opened: field lists for the whole registry would dwarf the graph
