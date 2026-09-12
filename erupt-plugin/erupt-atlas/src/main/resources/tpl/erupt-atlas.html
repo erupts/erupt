@@ -69,6 +69,10 @@
         .item:hover { background: var(--bg); }
         .item.on { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
         .item .tag { margin-left: auto; font-size: 9px; color: var(--faint); }
+        .item .cls {
+            font-size: 9.5px; color: var(--faint); overflow: hidden;
+            text-overflow: ellipsis; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
         .item.cube::before { content: '◇'; color: #059669; font-size: 10px; }
         .item.remote::before { content: '☁'; color: #94a3b8; font-size: 10px; }
 
@@ -286,7 +290,7 @@
     <span class="brand">Model Atlas</span>
     <span class="stat" id="stat"></span>
     <span class="spacer"></span>
-    <span class="depth" id="depth-box">depth
+    <span class="depth" id="depth-box"><span id="depth-label">depth</span>
         <span class="seg">
             <button data-d="1">1</button><button data-d="2" class="on">2</button><button data-d="3">3</button><button data-d="4">4</button><button data-d="5">5</button>
         </span>
@@ -313,7 +317,12 @@
 </div>
 <script>
 (function () {
-    var TOKEN = new URLSearchParams(location.search).get('_token');
+    var QS = new URLSearchParams(location.search);
+    var TOKEN = QS.get('_token');
+    // The admin hands a tpl page its language on the URL; pass it on so the registry answers
+    // in the same language the rest of the console is speaking
+    var AUTH = '_token=' + encodeURIComponent(TOKEN || '')
+        + (QS.get('_lang') ? '&_lang=' + encodeURIComponent(QS.get('_lang')) : '');
     var BASE = location.pathname.split('/erupt-api/')[0];
     var NS = 'http://www.w3.org/2000/svg';
     var PALETTE = ['#2563eb', '#059669', '#d97706', '#db2777', '#7c3aed', '#0891b2',
@@ -336,15 +345,22 @@
     var mode = 'tree', current = null, keyword = '', depth = 2, audit = null;
     var domainsBySize = [], domainSize = {}, domainFocus = null;
     var detailCache = {}, detailTab = 'relations';
+    // Filled from the module's own i18n csv, keyed by the English text: a string the csv never
+    // heard of simply stays English
+    var TEXT = {};
 
-    fetch(BASE + '/erupt-api/erupt-atlas/view?_token=' + encodeURIComponent(TOKEN || ''))
+    function t(s) { return TEXT[s] || s; }
+
+    fetch(BASE + '/erupt-api/erupt-atlas/view?' + AUTH)
         .then(function (r) { return r.json(); })
         .then(boot)
-        .catch(function (e) { hint.textContent = 'Failed to load: ' + e; });
+        .catch(function (e) { hint.textContent = t('Failed to load') + ': ' + e; });
 
     function boot(res) {
+        TEXT = res.text || {};
+        chrome();
         nodes = res.nodes || [];
-        if (!nodes.length) { hint.textContent = 'No erupt model is registered'; return; }
+        if (!nodes.length) { hint.textContent = t('No erupt model is registered'); return; }
         nodes.forEach(function (n) {
             n.group = n.source || 'unknown';
             byId[n.id] = n;
@@ -371,9 +387,10 @@
 
         var remoteCount = nodes.filter(function (n) { return n.kind === 'remote'; }).length;
         document.getElementById('stat').innerHTML = '<b>' + nodes.filter(function (n) { return n.kind === 'erupt'; }).length
-            + '</b> models · <b>' + nodes.filter(function (n) { return n.kind === 'cube'; }).length
-            + '</b> cubes · <b>' + links.length + '</b> relations · <b>' + modules.length + '</b> modules'
-            + (remoteCount ? ' · <b>' + remoteCount + '</b> remote' : '');
+            + '</b> ' + t('models') + ' · <b>' + nodes.filter(function (n) { return n.kind === 'cube'; }).length
+            + '</b> ' + t('cubes') + ' · <b>' + links.length + '</b> ' + t('relations')
+            + ' · <b>' + modules.length + '</b> ' + t('modules')
+            + (remoteCount ? ' · <b>' + remoteCount + '</b> ' + t('remote') : '');
 
         renderList();
         renderDomainBar();
@@ -381,6 +398,22 @@
     }
 
     function deg(n) { return outOf[n.id].length + inOf[n.id].length; }
+
+    // The header is markup, not script, so it is translated in place after the payload lands
+    function chrome() {
+        document.title = t('Model Atlas');
+        document.querySelector('.brand').textContent = t('Model Atlas');
+        document.getElementById('q').placeholder = t('Search model…');
+        document.getElementById('depth-label').textContent = t('depth');
+        [['tree', 'Lineage'], ['layers', 'Layers'], ['overview', 'Overview'],
+            ['matrix', 'Matrix'], ['impact', 'Impact'], ['audit', 'Audit']].forEach(function (kv) {
+            document.getElementById('tab-' + kv[0]).textContent = t(kv[1]);
+        });
+    }
+
+    // What a model is called in the admin, translated by the server; the class name carries it
+    // when a model has no @Erupt name of its own
+    function listName(n) { return n.label || n.name; }
 
     /* ---------------- left list ---------------- */
 
@@ -395,10 +428,20 @@
         Object.keys(groups).sort().forEach(function (g) {
             html += '<div class="grp"><span class="dot" style="background:' + colorOf[g] + '"></span>'
                 + esc(g) + '<span class="n">' + groups[g].length + '</span></div>';
+            // sorted by what the row reads as, not by the class name behind it
+            groups[g].sort(function (a, b) { return listName(a).localeCompare(listName(b)); });
+            // three models may all be called User maintenance: the class name settles which is which
+            var seen = {};
+            groups[g].forEach(function (n) { seen[listName(n)] = (seen[listName(n)] || 0) + 1; });
             groups[g].forEach(function (n) {
+                // the @Erupt name is what the model is called in the admin; the class name is
+                // still what you search by, and it stays one hover away
                 html += '<div class="item' + (n.kind === 'erupt' ? '' : ' ' + n.kind) + (current === n.id ? ' on' : '')
-                    + '" data-id="' + esc(n.id) + '" title="' + esc(n.label || n.name) + '">'
-                    + esc(n.name) + '<span class="tag">' + deg(n) + '</span></div>';
+                    + '" data-id="' + esc(n.id) + '" title="' + esc(n.name)
+                    + (n.label && n.label !== n.name ? ' — ' + esc(n.label) : '') + '">'
+                    + esc(listName(n))
+                    + (seen[listName(n)] > 1 ? '<span class="cls">' + esc(n.name) + '</span>' : '')
+                    + '<span class="tag">' + deg(n) + '</span></div>';
             });
         });
         listBox.innerHTML = html || '<div class="grp">no match</div>';
@@ -569,11 +612,11 @@
             });
         }
 
-        if (levelsIn) svg.appendChild(text(startX, 26, 'Referenced by · ' + flatIn.length, 'colhead'));
-        if (levelsOut) svg.appendChild(text(rootX + ROOT_W + COL_GAP, 26, 'References · ' + flatOut.length, 'colhead'));
+        if (levelsIn) svg.appendChild(text(startX, 26, t('Referenced by') + ' · ' + flatIn.length, 'colhead'));
+        if (levelsOut) svg.appendChild(text(rootX + ROOT_W + COL_GAP, 26, t('References') + ' · ' + flatOut.length, 'colhead'));
         gCard.appendChild(card(root, rootX, midY - ROOT_H / 2, ROOT_W, ROOT_H, true));
         if (!flatIn.length && !flatOut.length) {
-            svg.appendChild(text(rootX + ROOT_W / 2, midY + ROOT_H, 'No relation to any other model', 'lbl', 'middle'));
+            svg.appendChild(text(rootX + ROOT_W / 2, midY + ROOT_H, t('No relation to any other model'), 'lbl', 'middle'));
         }
         stage.innerHTML = '';
         stage.appendChild(svg);
@@ -597,15 +640,17 @@
             + (node.runtime ? ' rt' : '')});
         g.appendChild(el('rect', {'class': 'box', x: x, y: y, width: w, height: h, rx: 7}));
         g.appendChild(el('path', {fill: colorOf[node.group], d: bar(x, y, h)}));
+        // A card reads as the model is named in the admin; the class name rides the second line
+        // where there is room for it, and the tooltip always carries both
         if (root) {
-            g.appendChild(text(x + 15, y + 24, clip(node.name, 21), 'nm'));
-            g.appendChild(text(x + 15, y + 42, node.group + ' · '
-                + (node.kind === 'cube' ? node.dimensions + 'D / ' + node.measures + 'M' : node.fields + ' fields'), 'sub'));
+            g.appendChild(text(x + 15, y + 24, clip(listName(node), 21), 'nm'));
+            g.appendChild(text(x + 15, y + 42, node.name + ' · '
+                + (node.kind === 'cube' ? node.dimensions + 'D / ' + node.measures + 'M' : node.fields + ' ' + t('fields')), 'sub'));
         } else if (compact) {
-            g.appendChild(text(x + 12, y + h / 2 + 4, clip(node.name, 19), 'nm'));
+            g.appendChild(text(x + 12, y + h / 2 + 4, clip(listName(node), 19), 'nm'));
         } else {
-            g.appendChild(text(x + 12, y + 14, clip(node.name, 18), 'nm'));
-            g.appendChild(text(x + 12, y + 25, node.group, 'sub'));
+            g.appendChild(text(x + 12, y + 14, clip(listName(node), 18), 'nm'));
+            g.appendChild(text(x + 12, y + 25, clip(node.name, 20), 'sub'));
         }
         g.appendChild(el('title', {}, node.name + ' — ' + (node.label || '') + ' · ' + node.group));
         g.addEventListener('click', function () { select(node.id); });
@@ -651,8 +696,8 @@
     /* ---- domain bar: scopes the three tables below ---- */
 
     function renderDomainBar() {
-        var html = '<span class="cap">Domain</span>'
-            + '<button class="chip' + (domainFocus ? '' : ' on') + '" data-d="">All</button>';
+        var html = '<span class="cap">' + esc(t('Domain')) + '</span>'
+            + '<button class="chip' + (domainFocus ? '' : ' on') + '" data-d="">' + esc(t('All')) + '</button>';
         domainsBySize.forEach(function (d) {
             html += '<button class="chip' + (domainFocus === d ? ' on' : '') + '" data-d="' + esc(d) + '">'
                 + '<i style="background:' + colorOf[d] + '"></i>' + esc(d) + '<b>' + domainSize[d] + '</b></button>';
@@ -705,8 +750,8 @@
         var placed = nodes.filter(function (n) { return level[n.id] != null; });
         var loose = nodes.length - placed.length;
         var note = document.getElementById('dnote');
-        if (note) note.textContent = loose + ' models carry no structural relation and are not levelled';
-        if (!placed.length) { stage.innerHTML = '<div class="hint">No structural relation to level</div>'; return; }
+        if (note) note.textContent = loose + ' ' + t('models carry no structural relation and are not levelled');
+        if (!placed.length) { stage.innerHTML = '<div class="hint">' + esc(t('No structural relation to level')) + '</div>'; return; }
 
         var byLevel = {};
         placed.forEach(function (n) { (byLevel[level[n.id]] = byLevel[level[n.id]] || []).push(n); });
@@ -719,10 +764,10 @@
         var maxOn = base.reduce(function (m, r) { return Math.max(m, r.on); }, 1);
 
         var html = '<div class="lv"><div class="tiles">'
-            + tile(top + 1, 'Levels deep', false)
-            + tile(placed.length, 'Models levelled', false)
-            + tile((byLevel[0] || []).length, 'Foundation models', false)
-            + tile(chains.length ? chains[0].length : 0, 'Longest chain', false)
+            + tile(top + 1, t('Levels deep'), false)
+            + tile(placed.length, t('Models levelled'), false)
+            + tile((byLevel[0] || []).length, t('Foundation models'), false)
+            + tile(chains.length ? chains[0].length : 0, t('Longest chain'), false)
             + '</div>';
 
         // Distribution first: it is the fact the old board buried — almost everything is shallow
@@ -737,34 +782,33 @@
         });
         html += '</div>';
 
-        html += sect('Foundation', base.length, false,
-            'Level 0: models that depend on nothing. Everything else stands on these, so a column change here '
-            + 'travels the furthest — the count is how many models break transitively.',
+        html += sect(t('Foundation'), base.length, false,
+            t('Level 0: models that depend on nothing. Everything else stands on these, so a column change here travels the furthest — the count is how many models break transitively.'),
             base.length
-                ? '<table><tr><th>Model</th><th>Module</th><th class="num">Stands on it</th>'
-                + '<th class="num">Direct</th><th class="bar"></th></tr>'
+                ? '<table><tr><th>' + esc(t('Model')) + '</th><th>' + esc(t('Module')) + '</th>'
+                + '<th class="num">' + esc(t('Stands on it')) + '</th>'
+                + '<th class="num">' + esc(t('Direct')) + '</th><th class="bar"></th></tr>'
                 + base.map(function (r) {
-                    return '<tr><td class="nm" data-id="' + esc(r.node.id) + '"><span class="dot" style="background:'
-                        + colorOf[r.node.group] + '"></span>' + esc(r.node.name) + '</td>'
+                    return '<tr><td class="nm" data-id="' + esc(r.node.id) + '" title="' + esc(r.node.name) + '">'
+                        + '<span class="dot" style="background:' + colorOf[r.node.group] + '"></span>'
+                        + esc(listName(r.node)) + '</td>'
                         + '<td class="mod">' + esc(r.node.group) + '</td>'
                         + '<td class="num">' + r.on + '</td><td class="num">' + r.direct + '</td>'
                         + '<td class="bar"><span style="width:' + (r.on / maxOn * 260) + 'px;background:#2563eb"></span></td></tr>';
                 }).join('') + '</table>'
-                : ok('No foundation model in this domain.'));
+                : ok(t('No foundation model in this domain.')));
 
-        html += sect('Deep chains', chains.length, false,
-            'Where the depth actually comes from: start at a model nothing depends on and follow the deepest '
-            + 'dependency each step. Everything not on one of these lines is one or two levels from the bedrock.',
+        html += sect(t('Deep chains'), chains.length, false,
+            t('Where the depth actually comes from: start at a model nothing depends on and follow the deepest dependency each step. Everything not on one of these lines is one or two levels from the bedrock.'),
             chains.length
                 ? chains.map(function (path) {
                     return '<div class="chain">' + path.map(function (n) { return pill(n.id); })
                         .join('<span class="arrow">&rarr;</span>') + '</div>';
                 }).join('')
-                : ok('No chain runs deeper than two levels.'));
+                : ok(t('No chain runs deeper than two levels.')));
 
-        html += sect('By level', placed.length, false,
-            'Every levelled model, deepest level first. A model sits one level above the deepest thing it needs, '
-            + 'so reading down a level is reading one step closer to the bedrock.',
+        html += sect(t('By level'), placed.length, false,
+            t('Every levelled model, deepest level first. A model sits one level above the deepest thing it needs, so reading down a level is reading one step closer to the bedrock.'),
             keys.slice().reverse().map(function (k) {
                 var list = byLevel[k].filter(inFocus).slice().sort(function (a, b) {
                     return a.group === b.group ? a.name.localeCompare(b.name) : a.group.localeCompare(b.group);
@@ -778,7 +822,7 @@
         each(stage.querySelectorAll('.pill, .nm'), function (e2) {
             e2.onclick = function () { select(e2.getAttribute('data-id')); };
         });
-        detail.innerHTML = '<div class="dh">Click a model to open its lineage</div>';
+        detail.innerHTML = '<div class="dh">' + esc(t('Click a model to open its lineage')) + '</div>';
     }
 
     function dependents(n) {
@@ -821,13 +865,14 @@
         var max = list.length ? list[0].impact.total : 1;
 
         var html = '<div class="impact"><div class="note">'
-            + 'How many models break if this one changes, following data relations backwards. '
-            + 'The bar splits the count by distance: solid is one hop away, lighter shades are two and three or more. '
-            + 'A high number is not a defect — it marks the models that need care.</div>'
-            + '<table><tr><th>Model</th><th>Module</th><th class="num">Impact</th><th class="bar">By distance</th></tr>';
+            + esc(t('How many models break if this one changes, following data relations backwards. The bar splits the count by distance: solid is one hop away, lighter shades are two and three or more. A high number is not a defect — it marks the models that need care.')) + '</div>'
+            + '<table><tr><th>' + esc(t('Model')) + '</th><th>' + esc(t('Module')) + '</th>'
+            + '<th class="num">' + esc(t('Impact')) + '</th>'
+            + '<th class="bar">' + esc(t('By distance')) + '</th></tr>';
         list.forEach(function (r) {
-            html += '<tr><td class="nm" data-id="' + esc(r.node.id) + '"><span class="dot" style="background:'
-                + colorOf[r.node.group] + '"></span>' + esc(r.node.name) + '</td>'
+            html += '<tr><td class="nm" data-id="' + esc(r.node.id) + '" title="' + esc(r.node.name) + '">'
+                + '<span class="dot" style="background:' + colorOf[r.node.group] + '"></span>'
+                + esc(listName(r.node)) + '</td>'
                 + '<td class="mod">' + esc(r.node.group) + '</td>'
                 + '<td class="num">' + r.impact.total + '</td><td class="bar">';
             r.impact.hops.forEach(function (n, i) {
@@ -841,7 +886,7 @@
         each(stage.querySelectorAll('.nm'), function (td) {
             td.onclick = function () { select(td.getAttribute('data-id')); };
         });
-        detail.innerHTML = '<div class="dh">Click a model to open its lineage</div>';
+        detail.innerHTML = '<div class="dh">' + esc(t('Click a model to open its lineage')) + '</div>';
     }
 
     /* ---------------- module overview ----------------
@@ -960,13 +1005,12 @@
         });
         html += '<tr><td class="rh" style="color:#9ca3af">in</td>';
         modules.forEach(function (b) {
-            var t = 0;
-            modules.forEach(function (a) { if (a !== b) t += counts[a][b]; });
-            html += '<td class="tot">' + (t || '') + '</td>';
+            var total = 0;
+            modules.forEach(function (a) { if (a !== b) total += counts[a][b]; });
+            html += '<td class="tot">' + (total || '') + '</td>';
         });
         html += '<td></td></tr></table>'
-            + '<div class="cap">Row → column: how many relations point from the row module into the column module. '
-            + 'The rounded diagonal is inside-module coupling. Click any cell for the relations behind it.</div></div>';
+            + '<div class="cap">' + esc(t('Row → column: how many relations point from the row module into the column module. The rounded diagonal is inside-module coupling. Click any cell for the relations behind it.')) + '</div></div>';
         stage.innerHTML = html;
 
         each(stage.querySelectorAll('.cell'), function (cell) {
@@ -975,7 +1019,7 @@
                 cellTable(a, b);
             };
         });
-        detail.innerHTML = '<div class="dh">Pick a cell to list its relations</div>';
+        detail.innerHTML = '<div class="dh">' + esc(t('Pick a cell to list its relations')) + '</div>';
     }
 
     // Cross-module traffic rides a blue ramp, inside-module coupling a neutral one: the eye
@@ -992,51 +1036,47 @@
         var orphans = audit.orphans, unpublished = audit.unpublished;
 
         var html = '<div class="audit"><div class="tiles">'
-            + tile(cycles.length, 'Dependency cycles', true)
-            + tile(shared.length, 'Shared tables', false)
-            + tile(orphans.length, 'Isolated models', false)
-            + tile(unpublished.length, 'Entity, no menu', false)
+            + tile(cycles.length, t('Dependency cycles'), true)
+            + tile(shared.length, t('Shared tables'), false)
+            + tile(orphans.length, t('Isolated models'), false)
+            + tile(unpublished.length, t('Entity, no menu'), false)
             + '</div><div class="grid">';
 
-        html += sect('Dependency cycles', cycles.length, true,
-            'Models that reference each other in a loop, following data relations only (reference / sub table / embedded). '
-            + 'A self reference such as a parent field is a tree, not a cycle, and is not listed.',
+        html += sect(t('Dependency cycles'), cycles.length, true,
+            t('Models that reference each other in a loop, following data relations only (reference / sub table / embedded). A self reference such as a parent field is a tree, not a cycle, and is not listed.'),
             cycles.length
                 ? cycles.map(function (cycle) {
                     return '<div class="row">' + cycle.map(pill).join('<span class="arrow">&rarr;</span>')
                         + '<span class="arrow">&#8634;</span></div>';
                 }).join('')
-                : ok('No cycle. Every data relation runs one way.'));
+                : ok(t('No cycle. Every data relation runs one way.')));
 
-        html += sect('Models sharing one table', shared.length, false,
-            'Several @Erupt classes mapped onto the same physical table — erupt\'s narrower-projection idiom. '
-            + 'Worth knowing before changing a column: the edit reaches every model in the row.',
+        html += sect(t('Models sharing one table'), shared.length, false,
+            t('Several @Erupt classes mapped onto the same physical table — the narrower-projection idiom. Worth knowing before changing a column: the edit reaches every model in the row.'),
             shared.length
                 ? shared.map(function (g) {
                     return '<div class="row"><span class="tname">' + esc(g.table) + '</span>'
                         + '<span class="cloud">' + g.models.map(pill).join('') + '</span></div>';
                 }).join('')
-                : ok('Every model owns its own table.'));
+                : ok(t('Every model owns its own table.')));
 
-        html += sect('Isolated models', orphans.length, false,
-            'No relation points at them and they point at nothing: logs, registries and settings usually, '
-            + 'but this is also where a forgotten model hides.',
+        html += sect(t('Isolated models'), orphans.length, false,
+            t('No relation points at them and they point at nothing: logs, registries and settings usually, but this is also where a forgotten model hides.'),
             orphans.length
                 ? '<div class="cloud">' + orphans.map(pill).join('') + '</div>'
-                : ok('Every model is connected.'));
+                : ok(t('Every model is connected.')));
 
-        html += sect('Entity models with no menu', unpublished.length, false,
-            'Table-backed models nothing in the menu tree points to. A sub table or a popup form is '
-            + 'legitimately menu-less, so read this as candidates, not as defects.',
+        html += sect(t('Entity models with no menu'), unpublished.length, false,
+            t('Table-backed models nothing in the menu tree points to. A sub table or a popup form is legitimately menu-less, so read this as candidates, not as defects.'),
             unpublished.length
                 ? '<div class="cloud">' + unpublished.map(pill).join('') + '</div>'
-                : ok('Every entity model is reachable from a menu.'));
+                : ok(t('Every entity model is reachable from a menu.')));
 
         stage.innerHTML = html + '</div></div>';
         each(stage.querySelectorAll('.pill'), function (el2) {
             el2.onclick = function () { select(el2.getAttribute('data-id')); };
         });
-        detail.innerHTML = '<div class="dh">Click any model to open its lineage</div>';
+        detail.innerHTML = '<div class="dh">' + esc(t('Click any model to open its lineage')) + '</div>';
     }
 
     // Only a cycle is a defect; the other three are things worth knowing, so only it turns red
@@ -1059,8 +1099,9 @@
     function pill(name) {
         var node = byId[name];
         var color = node ? colorOf[node.group] : '#cbd5e1';
-        return '<span class="pill" data-id="' + esc(name) + '"><span class="dot" style="background:' + color
-            + '"></span>' + esc(node ? node.name : name) + '</span>';
+        return '<span class="pill" data-id="' + esc(name) + '" title="' + esc(name) + '">'
+            + '<span class="dot" style="background:' + color + '"></span>'
+            + esc(node ? listName(node) : name) + '</span>';
     }
 
     /* ---------------- detail tables ---------------- */
@@ -1073,8 +1114,7 @@
     }
 
     function loadDetail(node) {
-        fetch(BASE + '/erupt-api/erupt-atlas/detail/' + encodeURIComponent(node.id)
-            + '?_token=' + encodeURIComponent(TOKEN || ''))
+        fetch(BASE + '/erupt-api/erupt-atlas/detail/' + encodeURIComponent(node.id) + '?' + AUTH)
             .then(function (r) { return r.json(); })
             .then(function (d) {
                 detailCache[node.id] = d || {};
@@ -1087,15 +1127,15 @@
         var d = detailCache[node.id];
         var rel = outOf[node.id].length + inOf[node.id].length;
         var head = '<div class="dh"><span>' + esc(node.name) + '</span>'
-            + tab('relations', 'Relations', rel)
-            + tab('fields', node.kind === 'cube' ? 'Dimensions' : 'Fields',
+            + tab('relations', t('Relations'), rel)
+            + tab('fields', node.kind === 'cube' ? t('Dimensions') : t('Fields'),
                 node.kind === 'cube' ? node.dimensions + node.measures : node.fields)
-            + tab('config', 'Config', null) + '</div>';
+            + tab('config', t('Config'), null) + '</div>';
         var body;
         if (detailTab === 'relations') {
             body = relationRows(node);
         } else if (!d) {
-            body = '<div class="none">Loading…</div>';
+            body = '<div class="none">' + esc(t('Loading…')) + '</div>';
         } else {
             body = detailTab === 'fields' ? fieldRows(node, d) : configRows(node, d);
         }
@@ -1119,13 +1159,14 @@
 
     function relationRows(node) {
         var rows = [];
-        outOf[node.id].forEach(function (l) { rows.push(['references', l.t, l]); });
-        inOf[node.id].forEach(function (l) { rows.push(['referenced by', l.s, l]); });
-        if (!rows.length) return '<div class="none">No relation to any other model.</div>';
+        outOf[node.id].forEach(function (l) { rows.push([t('references'), l.t, l]); });
+        inOf[node.id].forEach(function (l) { rows.push([t('referenced by'), l.s, l]); });
+        if (!rows.length) return '<div class="none">' + esc(t('No relation to any other model.')) + '</div>';
         var html = '<table>';
         rows.forEach(function (r) {
             html += '<tr><td class="dir">' + esc(r[0]) + '</td>'
-                + '<td class="mdl" data-id="' + esc(r[1].id) + '">' + esc(r[1].name) + '</td>'
+                + '<td class="mdl" data-id="' + esc(r[1].id) + '" title="' + esc(r[1].name) + '">'
+                + esc(listName(r[1])) + '</td>'
                 + '<td class="mod">' + esc(r[1].group) + '</td>'
                 + '<td class="kind"><i style="border-color:' + (KIND_COLOR[r[2].kind] || '#cbd5e1') + '"></i>'
                 + esc(r[2].kind) + '</td>'
@@ -1136,7 +1177,9 @@
 
     function fieldRows(node, d) {
         if (node.kind === 'cube') {
-            if (!d.cubeItems || !d.cubeItems.length) return '<div class="none">No dimension or measure.</div>';
+            if (!d.cubeItems || !d.cubeItems.length) {
+                return '<div class="none">' + esc(t('No dimension or measure.')) + '</div>';
+            }
             var h = '<table>';
             d.cubeItems.forEach(function (it) {
                 h += '<tr><td class="dir">' + esc(it.role) + '</td><td class="mdl">' + esc(it.name) + '</td>'
@@ -1145,16 +1188,16 @@
             });
             return h + '</table>';
         }
-        if (!d.fields || !d.fields.length) return '<div class="none">No field.</div>';
+        if (!d.fields || !d.fields.length) return '<div class="none">' + esc(t('No field.')) + '</div>';
         var html = '<table>';
         d.fields.forEach(function (f) {
             html += '<tr><td class="fld" style="width:150px">' + esc(f.name) + '</td>'
                 + '<td style="width:180px">' + esc(f.title) + '</td>'
                 + '<td class="mod" style="width:130px">' + esc(f.type) + '</td>'
                 + '<td style="width:70px" class="' + (f.required ? 'yes' : 'no') + '">'
-                + (f.required ? 'required' : '—') + '</td>'
+                + (f.required ? esc(t('required')) : '—') + '</td>'
                 + '<td style="width:70px" class="' + (f.searchable ? 'yes' : 'no') + '">'
-                + (f.searchable ? 'search' : '—') + '</td>'
+                + (f.searchable ? esc(t('search')) : '—') + '</td>'
                 + '<td>' + (f.reference
                     ? '<span class="ref" data-id="' + esc(f.reference) + '">→ ' + esc(f.reference) + '</span>' : '')
                 + '</td></tr>';
@@ -1168,34 +1211,35 @@
             return (list || []).map(function (x) { return '<span class="chip2">' + esc(x) + '</span>'; }).join('');
         };
         return '<dl class="cfg">'
-            + row('display name', esc(d.label || node.label || ''))
-            + row('description', esc(d.desc || ''))
-            + row('module', esc(d.source || node.group))
-            + row('kind', node.kind + (d.runtime ? ' · runtime registered' : ''))
-            + row('table', d.table ? '<span class="fld">' + esc(d.table) + '</span>' : '')
-            + row('primary key', esc(d.primaryKey || ''))
-            + row('permissions', chips(d.power))
-            + row('data proxy', chips(d.dataProxy))
+            + row(esc(t('display name')), esc(d.label || node.label || ''))
+            + row(esc(t('description')), esc(d.desc || ''))
+            + row(esc(t('module')), esc(d.source || node.group))
+            + row(esc(t('kind')), node.kind + (d.runtime ? ' · ' + esc(t('runtime registered')) : ''))
+            + row(esc(t('table')), d.table ? '<span class="fld">' + esc(d.table) + '</span>' : '')
+            + row(esc(t('primary key')), esc(d.primaryKey || ''))
+            + row(esc(t('permissions')), chips(d.power))
+            + row(esc(t('data proxy')), chips(d.dataProxy))
             + '</dl>';
     }
 
     function cellTable(a, b) {
         var rows = links.filter(function (l) { return l.s.group === a && l.t.group === b; })
-            .map(function (l) { return [l.s.name + ' →', l.t, l]; });
-        render(a + ' → ' + b + ' · ' + rows.length + ' relations', rows);
+            .map(function (l) { return [listName(l.s) + ' →', l.t, l]; });
+        render(a + ' → ' + b + ' · ' + rows.length + ' ' + t('relations'), rows);
     }
 
     function render(title, rows) {
         var html = '<div class="dh">' + esc(title) + '</div>';
         if (!rows.length) {
-            detail.innerHTML = html + '<div class="none">Nothing here.</div>';
+            detail.innerHTML = html + '<div class="none">' + esc(t('Nothing here.')) + '</div>';
             return;
         }
         html += '<table>';
         rows.forEach(function (r) {
             var kind = r[2].kind;
             html += '<tr><td class="dir">' + esc(r[0]) + '</td>'
-                + '<td class="mdl" data-id="' + esc(r[1].id) + '">' + esc(r[1].name) + '</td>'
+                + '<td class="mdl" data-id="' + esc(r[1].id) + '" title="' + esc(r[1].name) + '">'
+                + esc(listName(r[1])) + '</td>'
                 + '<td class="mod">' + esc(r[1].group) + '</td>'
                 + '<td class="kind"><i style="border-color:' + (KIND_COLOR[kind] || '#cbd5e1') + '"></i>' + esc(kind) + '</td>'
                 + '<td class="fld">' + esc(r[2].label || '') + '</td></tr>';

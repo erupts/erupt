@@ -6,6 +6,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
@@ -57,6 +58,7 @@ import java.util.Date;
                 )
         }
 )
+@EruptI18n
 @Getter
 @Setter
 public class DesignerEntity extends HyperModelUpdateVo {

@@ -6,6 +6,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -19,6 +20,7 @@ import xyz.erupt.upms.helper.HyperModelUpdateVo;
 @Entity
 @Table(name = "e_print_tpl")
 @Erupt(name = "Print Template")
+@EruptI18n
 public class EruptPrintTpl extends HyperModelUpdateVo {
 
     private String code;

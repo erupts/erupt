@@ -6,30 +6,39 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
+import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.cube.Dimension;
 import xyz.erupt.annotation.cube.EruptCube;
 import xyz.erupt.annotation.cube.Explore;
 import xyz.erupt.annotation.cube.Join;
 import xyz.erupt.annotation.cube.Measure;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
+import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.atlas.vo.AtlasView;
+import xyz.erupt.atlas.vo.ModelDetail;
 import xyz.erupt.core.constant.EruptConst;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptRemoteRouter;
 import xyz.erupt.core.util.EruptSpringUtil;
-import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
-import xyz.erupt.atlas.vo.AtlasView;
-import xyz.erupt.atlas.vo.ModelDetail;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptMenu;
 
+
+
+import java.nio.charset.StandardCharsets;
+import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.BufferedReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayDeque;
@@ -73,6 +82,10 @@ public class EruptAtlasService {
 
     private static final String PACKAGE_PREFIX = "xyz.erupt.";
 
+    private static final String I18N_PATH = "/i18n/erupt-atlas.i18n.csv";
+
+    private static List<String> i18nKeys;
+
     // @EruptCube classes are plain classes, not erupt models, so they are discovered by scan once
     private final List<Class<?>> cubeClasses = new ArrayList<>();
 
@@ -107,7 +120,7 @@ public class EruptAtlasService {
         }
         this.remoteNodes(nodes);
         List<AtlasView.Edge> edgeList = new ArrayList<>(edges.values());
-        return new AtlasView(nodes, edgeList, this.audit(nodes, edgeList));
+        return new AtlasView(nodes, edgeList, this.audit(nodes, edgeList), this.pageText());
     }
 
     /**
@@ -135,12 +148,16 @@ public class EruptAtlasService {
         }
         for (Drill drill : model.getErupt().drills()) {
             EruptModel target = index.get(drill.link().linkErupt().getSimpleName());
-            if (null != target) this.addEdge(edges, from, target.getEruptName(), drill.title(), "drill");
+            if (null != target) {
+                this.addEdge(edges, from, target.getEruptName(), i18n(model.getClazz(), drill.title()), "drill");
+            }
         }
         for (RowOperation operation : model.getErupt().rowOperation()) {
             if (void.class == operation.eruptClass()) continue;
             EruptModel target = index.get(operation.eruptClass().getSimpleName());
-            if (null != target) this.addEdge(edges, from, target.getEruptName(), operation.title(), "operation");
+            if (null != target) {
+                this.addEdge(edges, from, target.getEruptName(), i18n(model.getClazz(), operation.title()), "operation");
+            }
         }
     }
 
@@ -199,12 +216,14 @@ public class EruptAtlasService {
             // The proxied annotation already resolved AUTO into the component actually rendered
             Edit edit = fieldModel.getEruptField().edit();
             EruptModel ref = index.get(String.valueOf(fieldModel.getFieldReturnName()));
-            fields.add(new ModelDetail.Field(fieldModel.getFieldName(), edit.title(), edit.type().name(),
+            fields.add(new ModelDetail.Field(fieldModel.getFieldName(), i18n(model.getClazz(), edit.title()),
+                    edit.type().name(),
                     edit.notNull(), edit.search().value(), null == ref ? null : ref.getEruptName()));
         }
         List<String> dataProxy = new ArrayList<>();
         for (Class<? extends DataProxy<?>> proxy : erupt.dataProxy()) dataProxy.add(proxy.getSimpleName());
-        return new ModelDetail(model.getEruptName(), erupt.name(), erupt.desc(), source(model.getClazz()),
+        return new ModelDetail(model.getEruptName(), i18n(model.getClazz(), erupt.name()),
+                i18n(model.getClazz(), erupt.desc()), source(model.getClazz()),
                 tableOf(model.getClazz()), "erupt", EruptCoreService.isRuntimeErupt(model.getEruptName()),
                 erupt.primaryKeyCol(), powers(erupt.power()), dataProxy, fields, new ArrayList<>());
     }
@@ -217,16 +236,17 @@ public class EruptAtlasService {
             for (Field field : cubeClass.getDeclaredFields()) {
                 Dimension dimension = field.getAnnotation(Dimension.class);
                 if (null != dimension) {
-                    items.add(new ModelDetail.CubeItem(field.getName(), dimension.title(), "dimension",
+                    items.add(new ModelDetail.CubeItem(field.getName(), i18n(cubeClass, dimension.title()), "dimension",
                             dimension.type().name(), dimension.sql()));
                 }
                 Measure measure = field.getAnnotation(Measure.class);
                 if (null != measure) {
-                    items.add(new ModelDetail.CubeItem(field.getName(), measure.title(), "measure",
+                    items.add(new ModelDetail.CubeItem(field.getName(), i18n(cubeClass, measure.title()), "measure",
                             measure.type().name(), measure.sql()));
                 }
             }
-            return new ModelDetail(simpleName, cube.name(), cube.description(), source(cubeClass), null,
+            return new ModelDetail(simpleName, i18n(cubeClass, cube.name()), i18n(cubeClass, cube.description()),
+                    source(cubeClass), null,
                     "cube", false, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), items);
         }
         return null;
@@ -354,8 +374,65 @@ public class EruptAtlasService {
         return list;
     }
 
+    /**
+     * The page is a static file, so it cannot be rendered in the caller's language: hand it the
+     * module's own CSV, translated. Keys are the English text, which is what the page falls back
+     * to, so a string missing from the CSV still renders.
+     */
+    private Map<String, String> pageText() {
+        Map<String, String> text = new LinkedHashMap<>();
+        for (String key : i18nKeys()) text.put(key, I18nTranslate.$translate(key));
+        return text;
+    }
+
+    // Read once: the key column of this module's i18n file
+    private static synchronized List<String> i18nKeys() {
+        if (null != i18nKeys) return i18nKeys;
+        List<String> keys = new ArrayList<>();
+        try (InputStream is = EruptAtlasService.class.getResourceAsStream(I18N_PATH)) {
+            if (null != is) {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+                    String line;
+                    boolean header = true;
+                    while (null != (line = reader.readLine())) {
+                        if (header) {
+                            header = false;
+                            continue;
+                        }
+                        String key = csvKey(line);
+                        if (!key.isEmpty()) keys.add(key);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(I18N_PATH, e);
+        }
+        i18nKeys = keys;
+        return keys;
+    }
+
+    // The first cell, quoted when the English text carries a comma
+    private static String csvKey(String line) {
+        if (line.startsWith("\"")) {
+            int end = line.indexOf('"', 1);
+            return end < 0 ? "" : line.substring(1, end);
+        }
+        int comma = line.indexOf(',');
+        return comma < 0 ? line.trim() : line.substring(0, comma).trim();
+    }
+
+    /**
+     * Annotation text follows the framework rule: a class opts into translation with
+     * {@link EruptI18n}, so a user model named the same as a framework key is left alone.
+     */
+    private static String i18n(Class<?> clazz, String text) {
+        if (null == text || text.isEmpty() || null == clazz.getAnnotation(EruptI18n.class)) return text;
+        return I18nTranslate.$translate(text);
+    }
+
     private static AtlasView.Node eruptNode(EruptModel model) {
-        return new AtlasView.Node(model.getEruptName(), model.getEruptName(), model.getErupt().name(),
+        return new AtlasView.Node(model.getEruptName(), model.getEruptName(),
+                i18n(model.getClazz(), model.getErupt().name()),
                 source(model.getClazz()), "erupt", EruptCoreService.isRuntimeErupt(model.getEruptName()),
                 model.getEruptFieldModels().size(), 0, 0, tableOf(model.getClazz()));
     }
@@ -367,7 +444,8 @@ public class EruptAtlasService {
             if (null != field.getAnnotation(Dimension.class)) dimensions++;
             if (null != field.getAnnotation(Measure.class)) measures++;
         }
-        return new AtlasView.Node(CUBE_PREFIX + cubeClass.getSimpleName(), cubeClass.getSimpleName(), cube.name(),
+        return new AtlasView.Node(CUBE_PREFIX + cubeClass.getSimpleName(), cubeClass.getSimpleName(),
+                i18n(cubeClass, cube.name()),
                 source(cubeClass), "cube", false, 0, dimensions, measures, null);
     }
 

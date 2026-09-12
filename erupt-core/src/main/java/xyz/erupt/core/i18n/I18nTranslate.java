@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.constant.EruptMutualConst;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptSpringUtil;
 
@@ -48,14 +49,18 @@ public class I18nTranslate {
         return I18nRunner.getI18nValue(lang, key);
     }
 
+    /**
+     * Header first, then the {@code _lang} URL parameter: a tpl page is opened as a document,
+     * so the admin can only pass its language on the URL. Unknown languages fall through to null
+     * and the caller settles on the configured default.
+     */
     public String getLang() {
         try {
-            String lang = request.getHeader("Lang");
-            if (I18nRunner.langs().contains(lang)) {
-                return lang;
-            } else {
-                return null;
+            String lang = request.getHeader(EruptMutualConst.LANG);
+            if (!I18nRunner.langs().contains(lang)) {
+                lang = request.getParameter(EruptMutualConst.URL_PARAM_LANG);
             }
+            return I18nRunner.langs().contains(lang) ? lang : null;
         } catch (Exception ignored) {
             return null;
         }

@@ -1,6 +1,7 @@
 package xyz.erupt.atlas.vo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * A snapshot of the live erupt registry as a graph. Nothing here is persisted: every call
@@ -9,7 +10,7 @@ import java.util.List;
  *
  * @author YuePeng
  */
-public record AtlasView(List<Node> nodes, List<Edge> edges, Audit audit) {
+public record AtlasView(List<Node> nodes, List<Edge> edges, Audit audit, Map<String, String> text) {
 
     /** kind: "erupt" (@Erupt model), "cube" (@EruptCube), "remote" (served by an erupt-cloud node) */
     public record Node(String id, String name, String label, String source, String kind,
