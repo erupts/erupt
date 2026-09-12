@@ -182,10 +182,32 @@
         .impact .hop { color: var(--faint); font-size: 10.5px; }
 
         /* audit */
-        .audit { padding: 18px 20px 30px; max-width: 1080px; }
-        .sect { margin-bottom: 22px; }
+        .audit { padding: 18px 20px 30px; max-width: 1460px; }
+        .tiles {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+            gap: 10px; margin-bottom: 16px;
+        }
+        .tile {
+            padding: 9px 14px 11px; background: var(--surface);
+            border: 1px solid var(--border); border-radius: var(--radius);
+        }
+        .tile .n { font-size: 21px; font-weight: 600; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+        .tile .t {
+            font-size: 9.5px; font-weight: 600; letter-spacing: .07em;
+            text-transform: uppercase; color: var(--faint); margin-top: 1px;
+        }
+        /* zero is the good answer everywhere on this board, so it never shouts */
+        .tile.zero .n { color: var(--border); }
+        .tile.warn { background: #fef2f2; border-color: #fecaca; }
+        .tile.warn .n { color: #b91c1c; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 14px; align-items: start; }
+        .sect {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 13px 15px 15px;
+        }
+        .sect.warn { border-color: #fecaca; }
         .sect h3 {
-            display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+            display: flex; align-items: center; gap: 8px; margin-bottom: 5px;
             font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted);
         }
         .sect h3 .cnt {
@@ -193,25 +215,30 @@
             background: var(--border-soft); color: var(--muted);
         }
         .sect h3 .cnt.warn { background: #fef2f2; color: #b91c1c; }
-        .sect .note { font-size: 11.5px; color: var(--faint); margin-bottom: 10px; }
+        .sect .note { font-size: 11.5px; line-height: 1.55; color: var(--faint); margin-bottom: 11px; }
         .row {
             display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
-            padding: 8px 12px; background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); margin-bottom: 6px;
+            padding: 7px 10px; background: var(--bg); border: 1px solid var(--border-soft);
+            border-radius: 7px; margin-bottom: 6px;
         }
+        .row:last-child { margin-bottom: 0; }
         .row .tname {
             font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px;
-            color: var(--muted); margin-right: 6px; min-width: 132px;
+            color: var(--muted); margin-right: 4px;
         }
         .pill {
             padding: 2px 9px; border-radius: 999px; font-size: 11.5px; cursor: pointer;
-            background: var(--bg); border: 1px solid var(--border); color: #374151; white-space: nowrap;
+            background: var(--surface); border: 1px solid var(--border); color: #374151; white-space: nowrap;
         }
         .pill:hover { border-color: var(--accent); color: var(--accent); }
         .pill .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; vertical-align: 1px; }
         .arrow { color: var(--faint); font-size: 11px; }
         .cloud { display: flex; flex-wrap: wrap; gap: 6px; }
-        .ok { font-size: 12px; color: var(--faint); padding: 6px 0; }
+        .ok {
+            display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted);
+            padding: 8px 11px; background: var(--bg); border: 1px solid var(--border-soft); border-radius: 7px;
+        }
+        .ok .tick { color: #059669; font-weight: 600; }
 
         /* detail */
         .detail { flex: none; max-height: 246px; overflow: auto; background: var(--surface); border-top: 1px solid var(--border); }
@@ -1033,52 +1060,72 @@
     /* ---------------- audit ---------------- */
 
     function drawAudit() {
-        var html = '<div class="audit">';
+        var cycles = audit.cycles, shared = audit.sharedTables;
+        var orphans = audit.orphans, unpublished = audit.unpublished;
 
-        html += section('Dependency cycles', audit.cycles.length, true,
+        var html = '<div class="audit"><div class="tiles">'
+            + tile(cycles.length, 'Dependency cycles', true)
+            + tile(shared.length, 'Shared tables', false)
+            + tile(orphans.length, 'Isolated models', false)
+            + tile(unpublished.length, 'Entity, no menu', false)
+            + '</div><div class="grid">';
+
+        html += sect('Dependency cycles', cycles.length, true,
             'Models that reference each other in a loop, following data relations only (reference / sub table / embedded). '
-            + 'A self reference such as a parent field is a tree, not a cycle, and is not listed.');
-        if (!audit.cycles.length) html += '<div class="ok">No cycle. Every data relation runs one way.</div>';
-        audit.cycles.forEach(function (cycle) {
-            html += '<div class="row">' + cycle.map(pill).join('<span class="arrow">→</span>')
-                + '<span class="arrow">↺</span></div>';
-        });
+            + 'A self reference such as a parent field is a tree, not a cycle, and is not listed.',
+            cycles.length
+                ? cycles.map(function (cycle) {
+                    return '<div class="row">' + cycle.map(pill).join('<span class="arrow">&rarr;</span>')
+                        + '<span class="arrow">&#8634;</span></div>';
+                }).join('')
+                : ok('No cycle. Every data relation runs one way.'));
 
-        html += '</div><div class="audit" style="padding-top:0">';
-        html += section('Models sharing one table', audit.sharedTables.length, false,
+        html += sect('Models sharing one table', shared.length, false,
             'Several @Erupt classes mapped onto the same physical table — erupt\'s narrower-projection idiom. '
-            + 'Worth knowing before changing a column: the edit reaches every model in the row.');
-        if (!audit.sharedTables.length) html += '<div class="ok">Every model owns its own table.</div>';
-        audit.sharedTables.forEach(function (g) {
-            html += '<div class="row"><span class="tname">' + esc(g.table) + '</span>'
-                + g.models.map(pill).join('') + '</div>';
-        });
+            + 'Worth knowing before changing a column: the edit reaches every model in the row.',
+            shared.length
+                ? shared.map(function (g) {
+                    return '<div class="row"><span class="tname">' + esc(g.table) + '</span>'
+                        + '<span class="cloud">' + g.models.map(pill).join('') + '</span></div>';
+                }).join('')
+                : ok('Every model owns its own table.'));
 
-        html += section('Isolated models', audit.orphans.length, false,
+        html += sect('Isolated models', orphans.length, false,
             'No relation points at them and they point at nothing: logs, registries and settings usually, '
-            + 'but this is also where a forgotten model hides.');
-        html += audit.orphans.length
-            ? '<div class="row cloud">' + audit.orphans.map(pill).join('') + '</div>'
-            : '<div class="ok">Every model is connected.</div>';
+            + 'but this is also where a forgotten model hides.',
+            orphans.length
+                ? '<div class="cloud">' + orphans.map(pill).join('') + '</div>'
+                : ok('Every model is connected.'));
 
-        html += section('Entity models with no menu', audit.unpublished.length, false,
+        html += sect('Entity models with no menu', unpublished.length, false,
             'Table-backed models nothing in the menu tree points to. A sub table or a popup form is '
-            + 'legitimately menu-less, so read this as candidates, not as defects.');
-        html += audit.unpublished.length
-            ? '<div class="row cloud">' + audit.unpublished.map(pill).join('') + '</div>'
-            : '<div class="ok">Every entity model is reachable from a menu.</div>';
+            + 'legitimately menu-less, so read this as candidates, not as defects.',
+            unpublished.length
+                ? '<div class="cloud">' + unpublished.map(pill).join('') + '</div>'
+                : ok('Every entity model is reachable from a menu.'));
 
-        html += '</div>';
-        stage.innerHTML = html;
+        stage.innerHTML = html + '</div></div>';
         each(stage.querySelectorAll('.pill'), function (el2) {
             el2.onclick = function () { select(el2.getAttribute('data-id')); };
         });
         detail.innerHTML = '<div class="dh">Click any model to open its lineage</div>';
     }
 
-    function section(title, count, warn, note) {
-        return '<div class="sect"><h3>' + esc(title) + '<span class="cnt' + (warn && count ? ' warn' : '') + '">'
-            + count + '</span></h3><div class="note">' + note + '</div></div>';
+    // Only a cycle is a defect; the other three are things worth knowing, so only it turns red
+    function tile(count, title, warn) {
+        var cls = count ? (warn ? ' warn' : '') : ' zero';
+        return '<div class="tile' + cls + '"><div class="n">' + count + '</div>'
+            + '<div class="t">' + esc(title) + '</div></div>';
+    }
+
+    function sect(title, count, warn, note, body) {
+        return '<div class="sect' + (warn && count ? ' warn' : '') + '"><h3>' + esc(title)
+            + '<span class="cnt' + (warn && count ? ' warn' : '') + '">' + count + '</span></h3>'
+            + '<div class="note">' + note + '</div>' + body + '</div>';
+    }
+
+    function ok(msg) {
+        return '<div class="ok"><span class="tick">&#10003;</span>' + esc(msg) + '</div>';
     }
 
     function pill(name) {
