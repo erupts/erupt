@@ -255,8 +255,10 @@ public class AiCanvasBuildController {
 
         public StyleVo(AiCanvasService.CanvasStyle style) {
             this.id = style.getId();
-            this.name = style.getName();
-            this.description = style.getDescription();
+            // style.json holds the English source: it is both the prompt text and the i18n key,
+            // so only the picker shown to the user is translated, never what the model reads
+            this.name = I18nTranslate.$translate(style.getName());
+            this.description = I18nTranslate.$translate(style.getDescription());
             if (null != style.getSystem()) {
                 this.mode = style.getSystem().getMode();
                 this.palette = style.getSystem().getChartPalette();
