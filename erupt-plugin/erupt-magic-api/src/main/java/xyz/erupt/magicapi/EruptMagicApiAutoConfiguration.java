@@ -52,7 +52,7 @@ public class EruptMagicApiAutoConfiguration implements EruptModule {
         AtomicInteger sort = new AtomicInteger();
         List<MetaMenu> metaMenus = new ArrayList<>();
         MetaMenu metaMenu = MetaMenu.createSimpleMenu(menuKey, "Online IDE", MagicApiTpl.MAGIC_API_PERMISSION, null, 50, EruptTplService.TPL);
-        metaMenu.setIcon("fa fa-bullseye");
+        metaMenu.setIcon("fa fa-bolt");
         metaMenus.add(metaMenu);
         metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + FUNCTION.toLowerCase(), "Function", MAGIC_API_MENU_PREFIX + FUNCTION.toUpperCase(), metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
         metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + DATASOURCE.toLowerCase(), "Data Source", MAGIC_API_MENU_PREFIX + DATASOURCE.toUpperCase(), metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));

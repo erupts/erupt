@@ -51,8 +51,10 @@ public class Erupts {
         return generateCode(8);
     }
 
+    // Explicitly SecureRandom-backed: the static RandomStringUtils methods used java.util.Random
+    // before commons-lang3 3.16 and are deprecated, so do not rely on the resolved version's behaviour
     public static String generateCode(int length) {
-        return RandomStringUtils.randomAlphanumeric(length);
+        return RandomStringUtils.secure().nextAlphanumeric(length);
     }
 
 }

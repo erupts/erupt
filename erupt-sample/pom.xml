@@ -6,7 +6,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>2.1.1</version>
+        <version>2.2.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -32,9 +32,9 @@
         </dependency>
     </dependencies>
 
-<!-- To convert it into a runnable jar, simply uncomment the following code. -->
-<!--    <build>-->
-<!--        <plugins>-->
+    <build>
+        <plugins>
+            <!-- To convert it into a runnable jar, simply uncomment the following code. -->
 <!--            <plugin>-->
 <!--                <groupId>org.springframework.boot</groupId>-->
 <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
@@ -49,11 +49,6 @@
 <!--                    </execution>-->
 <!--                </executions>-->
 <!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
-
-    <build>
-        <plugins>
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>

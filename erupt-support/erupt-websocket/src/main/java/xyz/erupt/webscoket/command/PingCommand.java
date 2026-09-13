@@ -3,6 +3,7 @@ package xyz.erupt.webscoket.command;
 import jakarta.websocket.Session;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.webscoket.channel.EruptChannelManager;
 import xyz.erupt.webscoket.command.base.SocketCommand;
 
 import java.util.Collections;
@@ -25,7 +26,7 @@ public class PingCommand extends SocketCommand<Void> {
 
     @Override
     public void handler(Session session, Void message) {
-        session.getAsyncRemote().sendText(GsonFactory.getGson().toJson(Collections.singletonList("pong")));
+        EruptChannelManager.send(session, GsonFactory.getGson().toJson(Collections.singletonList("pong")));
     }
 
 }

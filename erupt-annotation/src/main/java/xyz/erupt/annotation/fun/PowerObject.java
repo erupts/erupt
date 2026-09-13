@@ -30,6 +30,8 @@ public class PowerObject {
 
     private boolean copy = true;
 
+    private boolean cellEdit = true;
+
     private boolean ai = true;
 
     public PowerObject(Power power) {
@@ -42,6 +44,7 @@ public class PowerObject {
         this.importable = power.importable();
         this.print = power.print();
         this.copy = power.copy();
+        this.cellEdit = power.cellEdit();
         this.ai = power.ai();
     }
 

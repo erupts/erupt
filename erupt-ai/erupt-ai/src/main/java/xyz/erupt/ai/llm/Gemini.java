@@ -45,6 +45,7 @@ public class Gemini extends LlmCore {
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
+                .timeout(requestTimeout())
                 .build();
     }
 
@@ -56,6 +57,7 @@ public class Gemini extends LlmCore {
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
+                .timeout(requestTimeout())
                 .build();
     }
 

@@ -3,8 +3,10 @@ package xyz.erupt.designer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Test;
+import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -31,6 +33,34 @@ public class EruptDesignerServiceTest {
         if (null != viewJson) field.setView(gson.fromJson(viewJson, JsonObject.class));
         if (null != editJson) field.setEdit(gson.fromJson(editJson, JsonObject.class));
         return field;
+    }
+
+    /** HIDDEN / EMPTY / TPL go through the string template field; TPL config is disguised onto @Tpl. */
+    @Test
+    public void hiddenEmptyAndTplTypes() throws Exception {
+        DesignerForm form = new DesignerForm();
+        form.setClassName("TplDemo");
+        form.setErupt(gson.fromJson("{name:'Tpl Demo'}", JsonObject.class));
+        form.setFields(Arrays.asList(
+                field("token", "{title:'Token'}", "{title:'Token', type:'HIDDEN'}"),
+                field("gap", null, "{title:'Gap', type:'EMPTY'}"),
+                field("chart", null, "{title:'Chart', type:'TPL', tplType:{path:'/tpl/chart.html', engine:'FreeMarker', enable:true}}")
+        ));
+
+        EruptModel model = service.toEruptModel(form);
+
+        EruptFieldModel token = model.getEruptFieldMap().get("token");
+        assertEquals(EditType.HIDDEN, token.getEruptField().edit().type());
+        assertEquals(String.class.getSimpleName(), token.getFieldReturnName());
+        assertEquals(1, token.getEruptField().views().length);
+
+        // no view json → no table column
+        assertEquals(0, model.getEruptFieldMap().get("gap").getEruptField().views().length);
+
+        Tpl tpl = model.getEruptFieldMap().get("chart").getEruptField().edit().tplType();
+        assertTrue(tpl.enable());
+        assertEquals("/tpl/chart.html", tpl.path());
+        assertEquals(Tpl.Engine.FreeMarker, tpl.engine());
     }
 
     @Test
@@ -89,6 +119,51 @@ public class EruptDesignerServiceTest {
         EruptFieldModel typeField = cloned.getEruptFieldModels().stream()
                 .filter(it -> "type".equals(it.getFieldName())).findFirst().orElseThrow();
         assertEquals(2, ((java.util.List<?>) typeField.getComponentValue()).size());
+    }
+
+    /** AUTO never resolves for a designed field, so the view type is settled from the edit type. */
+    @Test
+    public void viewType() throws Exception {
+        DesignerForm form = new DesignerForm();
+        form.setClassName("Label");
+        form.setErupt(gson.fromJson("{name:'Label'}", JsonObject.class));
+        form.setFields(Arrays.asList(
+                field("color", "{title:'Color'}", "{title:'Color', type:'COLOR'}"),
+                field("createTime", "{title:'Created'}", "{title:'Created', type:'DATE', dateType:{type:'DATE_TIME'}}"),
+                field("remark", "{title:'Remark'}", "{title:'Remark', type:'TEXTAREA'}"),
+                field("cover", "{title:'Cover', type:'IMAGE'}", "{title:'Cover', type:'ATTACHMENT'}")
+        ));
+
+        EruptModel model = service.toEruptModel(form);
+        assertEquals(ViewType.COLOR, model.getEruptFieldMap().get("color").getEruptField().views()[0].type());
+        assertEquals(ViewType.DATE_TIME, model.getEruptFieldMap().get("createTime").getEruptField().views()[0].type());
+        assertEquals(ViewType.TEXT, model.getEruptFieldMap().get("remark").getEruptField().views()[0].type());
+        // an explicit view type wins over the derived one
+        assertEquals(ViewType.IMAGE, model.getEruptFieldMap().get("cover").getEruptField().views()[0].type());
+
+        // settled on the design itself, so a publish persists it
+        assertEquals("COLOR", form.getFields().get(0).getView().get("type").getAsString());
+    }
+
+    @Test
+    public void textareaType() throws Exception {
+        DesignerForm form = new DesignerForm();
+        form.setClassName("Note");
+        form.setErupt(gson.fromJson("{name:'Note'}", JsonObject.class));
+        form.setFields(Arrays.asList(
+                field("content", "{title:'Content'}",
+                        "{title:'Content', type:'TEXTAREA', textareaType:{length:100}}")
+        ));
+
+        Edit edit = service.toEruptModel(form).getEruptFieldMap().get("content").getEruptField().edit();
+        assertEquals(EditType.TEXTAREA, edit.type());
+        assertEquals(100, edit.textareaType().length());
+        assertEquals(3, edit.textareaType().minRows()); // untouched member falls back to default
+
+        // what the frontend consumes: textareaType must survive the @Match filter and serialize
+        JsonObject contentJson = service.preview(form).getEruptModel().getEruptFieldModels().stream()
+                .filter(it -> "content".equals(it.getFieldName())).findFirst().orElseThrow().getEruptFieldJson();
+        assertEquals(100, contentJson.getAsJsonObject("edit").getAsJsonObject("textareaType").get("length").getAsInt());
     }
 
 }

@@ -1,7 +1,11 @@
 package xyz.erupt.cloud.node.task;
 
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
+import xyz.erupt.cloud.common.http.CloudHttp;
+import org.springframework.web.client.RestClient;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import com.google.gson.Gson;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
@@ -26,7 +30,6 @@ import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.view.EruptModel;
 
 import java.net.Inet4Address;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -53,6 +56,9 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
     private boolean runner = true;
 
     private final Gson gson = GsonFactory.getGson();
+
+    @Resource
+    private RestClient serverRestClient;
 
     private final String instanceId = RandomStringUtils.randomAlphabetic(6);
 
@@ -117,11 +123,10 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
             nodeInfoHandlers.forEach(handler -> handler.handle(nodeInfo));
             this.nodeAddresses = nodeInfo.getNodeAddress();
             try {
-                try (HttpResponse httpResponse = HttpUtil.createPost(address + CloudRestApiConst.REGISTER_NODE)
-                        .body(gson.toJson(nodeInfo)).execute()) {
-                    if (!httpResponse.isOk()) {
-                        log.error("{} -> Http error: {}", address, httpResponse.body());
-                    }
+                ResponseEntity<String> httpResponse = CloudHttp.exchange(serverRestClient.post().uri(address + CloudRestApiConst.REGISTER_NODE)
+                        .contentType(MediaType.APPLICATION_JSON).body(gson.toJson(nodeInfo)));
+                if (!httpResponse.getStatusCode().is2xxSuccessful()) {
+                    log.error("{} -> Http error: {}", address, httpResponse.getBody());
                 }
                 if (this.errorConnect) {
                     this.errorConnect = false;
@@ -143,16 +148,17 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
         this.runner = false;
         // 1. Deregister this instance's addresses so the server stops routing new requests to it
         //    immediately, instead of waiting for the survival check to notice the node is gone.
-        try (HttpResponse httpResponse = HttpUtil.createPost(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.REMOVE_INSTANCE_NODE)
-                .form(new HashMap<String, Object>() {{
-                    put("nodeName", eruptNodeProp.getNodeName());
-                    put("accessToken", eruptNodeProp.getAccessToken());
-                    if (null != nodeAddresses && nodeAddresses.length > 0) {
-                        put("locations", String.join(",", nodeAddresses));
-                    }
-                }}).execute()) {
-            if (!httpResponse.isOk()) {
-                log.error("deregister failed: {}", httpResponse.body());
+        try {
+            MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+            form.add("nodeName", eruptNodeProp.getNodeName());
+            form.add("accessToken", eruptNodeProp.getAccessToken());
+            if (null != nodeAddresses && nodeAddresses.length > 0) {
+                form.add("locations", String.join(",", nodeAddresses));
+            }
+            ResponseEntity<String> httpResponse = CloudHttp.exchange(serverRestClient.post().uri(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.REMOVE_INSTANCE_NODE)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED).body(form));
+            if (!httpResponse.getStatusCode().is2xxSuccessful()) {
+                log.error("deregister failed: {}", httpResponse.getBody());
             }
         } catch (Exception e) {
             log.error("deregister error: {}", e.getMessage());

@@ -64,7 +64,7 @@ public class MarkdownCodec implements FileCodec {
                 }
                 StringBuilder rest = new StringBuilder();
                 for (int i = end + 1; i < lines.length; i++) {
-                    if (rest.length() > 0 || i > end + 1) rest.append('\n');
+                    if (!rest.isEmpty() || i > end + 1) rest.append('\n');
                     rest.append(lines[i]);
                 }
                 body = rest.toString().stripLeading();

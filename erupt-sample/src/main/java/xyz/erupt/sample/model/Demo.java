@@ -7,9 +7,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
-import xyz.erupt.annotation.sub_field.Edit;
-import xyz.erupt.annotation.sub_field.Readonly;
-import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.*;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
@@ -57,5 +55,17 @@ public class Demo extends BaseModel {
             edit = @Edit(title = "Date", search = @Search)
     )
     private Date date;
+
+    // TEMP-PROBE: exercises the cell editors for tag, color and slider columns
+    @EruptField(views = @View(title = "Tags"), edit = @Edit(title = "Tags", type = EditType.TAGS))
+    private String tagsVal;
+
+    @EruptField(views = @View(title = "Color", type = ViewType.COLOR),
+            edit = @Edit(title = "Color", type = EditType.COLOR))
+    private String colorVal;
+
+    @EruptField(views = @View(title = "Progress", type = ViewType.PROGRESS),
+            edit = @Edit(title = "Progress", type = EditType.SLIDER))
+    private Integer progressVal;
 
 }

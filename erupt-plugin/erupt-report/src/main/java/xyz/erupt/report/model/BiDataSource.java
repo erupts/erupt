@@ -66,7 +66,8 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
 
     @EruptField(
             views = @View(title = "Connection String", type = ViewType.HTML),
-            edit = @Edit(title = "Connection String", type = EditType.TEXTAREA, notNull = true)
+            // a JDBC string carries credentials and driver directives; the grid must not touch it
+            edit = @Edit(title = "Connection String", type = EditType.TEXTAREA, notNull = true, cellEdit = false)
     )
     private String url;
 

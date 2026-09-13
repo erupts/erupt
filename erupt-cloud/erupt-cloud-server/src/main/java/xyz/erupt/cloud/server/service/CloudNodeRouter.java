@@ -1,10 +1,9 @@
 package xyz.erupt.cloud.server.service;
 
-import cn.hutool.core.codec.Base64Encoder;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
-import cn.hutool.http.Method;
+import xyz.erupt.cloud.common.http.CloudHttp;
+import org.springframework.web.client.RestClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import jakarta.annotation.PostConstruct;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
-import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeManager;
 import xyz.erupt.cloud.server.util.CloudServerUtil;
@@ -54,7 +52,8 @@ public class CloudNodeRouter implements EruptRemoteRouter {
     private NodeManager nodeManager;
 
     @Resource
-    private EruptCloudServerProp eruptCloudServerProp;
+    private RestClient nodeRestClient;
+
 
     private static final Type MAP_TYPE = new TypeToken<Map<String, Object>>() {
     }.getType();
@@ -97,7 +96,7 @@ public class CloudNodeRouter implements EruptRemoteRouter {
     @Override
     public String proxy(String eruptName, HttpMethod httpMethod, String pathTemplate, Object body) {
         String path = pathTemplate.replace(EruptRestPath.ERUPT_NAME_HOLDER, "/" + simpleName(eruptName));
-        return exchange(eruptName, Method.valueOf(httpMethod.name()), path, body);
+        return exchange(eruptName, httpMethod, path, body);
     }
 
     @Override
@@ -144,7 +143,7 @@ public class CloudNodeRouter implements EruptRemoteRouter {
      * @param path      node erupt-api path (relative to the node location)
      * @param body      request body to serialize as JSON, or null
      */
-    private String exchange(String eruptName, Method method, String path, Object body) {
+    private String exchange(String eruptName, HttpMethod method, String path, Object body) {
         String nodeName = nodeName(eruptName);
         MetaNode metaNode = nodeManager.getNode(nodeName);
         if (null == metaNode) {
@@ -155,18 +154,18 @@ public class CloudNodeRouter implements EruptRemoteRouter {
         Exception lastError = null;
         for (int i = 0; i < locations.size(); i++) {
             String location = locations.get(i);
-            HttpRequest httpRequest = HttpUtil.createRequest(method, location + path)
-                    .header(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken())
-                    .header(EruptMutualConst.TOKEN, MetaContext.getToken())
-                    .header(EruptMutualConst.ERUPT, simpleName(eruptName))
-                    .header(EruptMutualConst.USER, Base64Encoder.encode(GsonFactory.getGson().toJson(MetaContext.getUser())))
-                    .timeout(eruptCloudServerProp.getNodeRequestTimeout());
-            if (null != payload) {
-                httpRequest.body(payload);
-            }
-            try (HttpResponse httpResponse = httpRequest.execute()) {
-                String responseBody = httpResponse.body();
-                if (httpResponse.getStatus() != HttpStatus.OK.value()) {
+            try {
+                RestClient.RequestBodySpec httpRequest = nodeRestClient.method(method).uri(location + path)
+                        .header(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken())
+                        .headers(CloudHttp.header(EruptMutualConst.TOKEN, MetaContext.getToken()))
+                        .header(EruptMutualConst.ERUPT, simpleName(eruptName))
+                        .header(EruptMutualConst.USER, CloudHttp.base64(GsonFactory.getGson().toJson(MetaContext.getUser())));
+                if (null != payload) {
+                    httpRequest.contentType(MediaType.APPLICATION_JSON).body(payload);
+                }
+                ResponseEntity<String> httpResponse = CloudHttp.exchange(httpRequest);
+                String responseBody = httpResponse.getBody();
+                if (httpResponse.getStatusCode().value() != HttpStatus.OK.value()) {
                     throw new EruptWebApiRuntimeException(nodeName + " -> " + responseBody);
                 }
                 return responseBody;

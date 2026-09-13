@@ -38,7 +38,7 @@ public class EruptAiClawAutoConfiguration implements EruptModule {
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
         // Reuse the shared "AI Manager" root created by erupt-ai; menus are de-duplicated by code on persist
-        MetaMenu ai = MetaMenu.createRootMenu("$ai", "AI Manager", "fa fa-magic", 25);
+        MetaMenu ai = MetaMenu.createRootMenu("$ai", "AI Manager", "fa fa-wand-magic-sparkles", 25);
         menus.add(ai);
         menus.add(MetaMenu.createEruptClassMenu(EruptSkill.class, ai, 60));
         return menus;

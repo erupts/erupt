@@ -50,7 +50,8 @@ public class EruptOpenApi extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "Token Validity Period", desc = "minutes", sortable = true),
-            edit = @Edit(title = "Token Validity Period", desc = "minutes", numberType = @NumberType(min = 1), notNull = true)
+            edit = @Edit(title = "Token Validity Period", desc = "minutes", cellEdit = false,
+                    numberType = @NumberType(min = 1), notNull = true)
     )
     private Integer expire = 3600;
 

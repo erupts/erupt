@@ -64,7 +64,7 @@ public class EruptRedisDataService extends EruptBeanDataService<Object> {
     @Override
     public void addData(EruptModel eruptModel, Object object) {
         String key = this.key(eruptModel, object);
-        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key))) {
+        if (stringRedisTemplate.hasKey(key)) {
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("redis.key_exists") + " → " + key);
         }
         stringRedisTemplate.opsForHash().putAll(key, this.toHash(object));

@@ -29,6 +29,11 @@ public @interface Power {
 
     boolean copy() default true;
 
+    @Comment("Whether rows may be edited one cell at a time, directly in the table. " +
+            "A cell runs the same pipeline as the edit form, so turn it off only for a table " +
+            "whose rows should always be changed as a reviewed whole")
+    boolean cellEdit() default true;
+
     @Comment("Whether AI tools may inspect and operate on this Erupt model")
     boolean ai() default true;
 

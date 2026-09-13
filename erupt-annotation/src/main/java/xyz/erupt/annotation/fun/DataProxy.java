@@ -49,6 +49,13 @@ public interface DataProxy<@Comment("Erupt object") MODEL> extends MetaProxy<MOD
         return null;
     }
 
+    /**
+     * Rewrites the rows a table query is about to return. The row form is unaffected, because it
+     * reads a record through its own endpoint, but in-table cell editing seeds its editor from the
+     * row shown here: a field rewritten for display (masked, formatted, turned into markup) would
+     * be written back in that form. Rewrite view-only fields, or mark an editable one
+     * {@code @Edit(cellEdit = false)}.
+     */
     @Comment("Post-fetch result processing")
     default void afterFetch(@Comment("query result") Collection<Map<String, Object>> list) {
     }

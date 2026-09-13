@@ -8,6 +8,8 @@ import xyz.erupt.webscoket.model.EruptWsSessionModel;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -22,26 +24,53 @@ public class EruptChannelManager {
     // <sessionId,token>
     private static final Map<String, String> sessionTokenMap = new ConcurrentHashMap<>();
 
+    // <sessionId,sender> serialized async writer per connection
+    private static final Map<String, EruptWsSender> senderMap = new ConcurrentHashMap<>();
+
+    // <userId,tokens> index for user-targeted push
+    private static final Map<Long, Set<String>> userTokenMap = new ConcurrentHashMap<>();
+
     public static void register(String token, Session session) {
-        sessionMap.computeIfAbsent(token, k -> new EruptWsSessionModel(EruptSpringUtil.getBean(EruptUserService.class)
-                .getSimpleUserInfoByToken(token), new Vector<>()));
-        sessionMap.get(token).getSessions().add(session);
+        senderMap.put(session.getId(), new EruptWsSender(session));
+        sessionMap.compute(token, (k, model) -> {
+            if (null == model) {
+                model = new EruptWsSessionModel(EruptSpringUtil.getBean(EruptUserService.class)
+                        .getSimpleUserInfoByToken(token), new CopyOnWriteArrayList<>());
+            }
+            model.getSessions().add(session);
+            userTokenMap.computeIfAbsent(model.getMetaUserinfo().getId(), id -> ConcurrentHashMap.newKeySet()).add(token);
+            return model;
+        });
         sessionTokenMap.put(session.getId(), token);
     }
 
     public static void close(Session session) {
-        Optional.ofNullable(sessionTokenMap.remove(session.getId())).ifPresent(it -> {
-            if (sessionMap.get(it).getSessions().size() <= 1) {
-                sessionMap.remove(it);
-            } else {
-                sessionMap.get(it).getSessions().remove(session);
-            }
-        });
+        senderMap.remove(session.getId());
+        Optional.ofNullable(sessionTokenMap.remove(session.getId())).ifPresent(token ->
+                sessionMap.computeIfPresent(token, (k, model) -> {
+                    model.getSessions().remove(session);
+                    if (!model.getSessions().isEmpty()) return model;
+                    userTokenMap.computeIfPresent(model.getMetaUserinfo().getId(), (id, tokens) -> {
+                        tokens.remove(token);
+                        return tokens.isEmpty() ? null : tokens;
+                    });
+                    return null;
+                })
+        );
+    }
 
+    public static void send(Session session, String text) {
+        Optional.ofNullable(senderMap.get(session.getId())).ifPresent(sender -> sender.send(text));
     }
 
     public static EruptWsSessionModel getSession(String token) {
         return sessionMap.get(token);
+    }
+
+    public static List<EruptWsSessionModel> getSessionsByUser(Long userId) {
+        return Optional.ofNullable(userTokenMap.get(userId)).map(tokens -> tokens.stream()
+                .map(sessionMap::get).filter(Objects::nonNull).collect(Collectors.toList())
+        ).orElse(Collections.emptyList());
     }
 
     public static List<EruptWsSessionModel> getAllSession() {

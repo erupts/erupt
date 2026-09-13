@@ -63,7 +63,8 @@ public class EmbeddingLLM extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "API Domain"),
-            edit = @Edit(title = "API Domain")
+            // the stored key is posted to whatever this points at, so redirect it in the form only
+            edit = @Edit(title = "API Domain", cellEdit = false)
     )
     private String apiUrl;
 

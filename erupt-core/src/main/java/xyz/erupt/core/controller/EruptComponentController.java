@@ -23,6 +23,7 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,11 +57,19 @@ public class EruptComponentController {
         if (val.length() < autoCompleteType.triggerLength()) {
             throw new EruptWebApiRuntimeException("char length must >= " + autoCompleteType.triggerLength());
         }
-        try {
-            return EruptSpringUtil.getBean(autoCompleteType.handler()).completeHandler(o, val, autoCompleteType.param());
-        } catch (Exception e) {
-            throw new EruptApiErrorTip(e.getMessage(), R.PromptWay.MESSAGE);
+        List<Object> result = new ArrayList<>();
+        String keyword = val.toLowerCase();
+        for (String value : autoCompleteType.values()) {
+            if (value.toLowerCase().contains(keyword)) result.add(value);
         }
+        if (!autoCompleteType.handler().isInterface()) {
+            try {
+                result.addAll(EruptSpringUtil.getBean(autoCompleteType.handler()).completeHandler(o, val, autoCompleteType.param()));
+            } catch (Exception e) {
+                throw new EruptApiErrorTip(e.getMessage(), R.PromptWay.MESSAGE);
+            }
+        }
+        return result;
     }
 
     //Gets the CHOICE component drop-down list
@@ -95,6 +104,19 @@ public class EruptComponentController {
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
         Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
         return EruptUtil.getTagList(fieldModel.getEruptField().edit().tagsType(), o);
+    }
+
+    //Gets the TEXTAREA component mention suggestions
+    @PostMapping("/textarea-mention/{erupt}/{field}")
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    public List<String> textareaMention(@PathVariable("erupt") String eruptName,
+                                        @PathVariable("field") String field,
+                                        @RequestBody JsonObject data
+    ) {
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
+        Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
+        return EruptUtil.getMentionList(fieldModel.getEruptField().edit().textareaType(), o);
     }
 
     //BUTTON component click event, passes all current form values to the handler

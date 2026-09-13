@@ -59,7 +59,7 @@ public class EruptAiAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$ai", "AI Manager", "fa fa-magic", 25));
+        menus.add(MetaMenu.createRootMenu("$ai", "AI Manager", "fa fa-wand-magic-sparkles", 25));
         menus.add(MetaMenu.createEruptClassMenu(LLM.class, menus.get(0), 10));
         menus.add(MetaMenu.createEruptClassMenu(EmbeddingLLM.class, menus.get(0), 15));
         menus.add(MetaMenu.createEruptClassMenu(McpServer.class, menus.get(0), 20));

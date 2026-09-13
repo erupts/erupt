@@ -106,11 +106,18 @@ public class EruptExcelService {
                         Optional.ofNullable(val).ifPresent(it -> {
                             String str = it.toString();
                             if (edit.type() == EditType.BOOLEAN || view.type() == ViewType.BOOLEAN) {
-                                if (edit.boolType().trueText().equals(str)) {
+                                // the query returns the raw value; the exported sheet carries the wording
+                                if (it instanceof Boolean bool) {
+                                    cell.setCellValue(bool ? edit.boolType().trueText() : edit.boolType().falseText());
+                                } else if (edit.boolType().trueText().equals(str)) {
                                     cell.setCellValue(edit.boolType().trueText());
                                 } else if (edit.boolType().falseText().equals(str)) {
                                     cell.setCellValue(edit.boolType().falseText());
                                 }
+                            } else if (edit.type() == EditType.CHOICE) {
+                                // likewise a choice arrives as its stored value; the sheet shows its label
+                                String label = EruptUtil.getChoiceMap(eruptModel, edit).get(str);
+                                cell.setCellValue(null == label ? str : label);
                             } else if (edit.type() == EditType.DATE) {
                                 boolean dateOnly = edit.dateType().type() == DateType.Type.DATE;
                                 cell.getCellStyle().setDataFormat(dateOnly ? (short) 14 : (short) 22);

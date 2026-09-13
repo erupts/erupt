@@ -1,9 +1,12 @@
 package xyz.erupt.ai.ask;
 
 import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.Content;
 import dev.langchain4j.service.TokenStream;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
+
+import java.util.List;
 
 public interface EruptAiChat {
 
@@ -15,5 +18,9 @@ public interface EruptAiChat {
 
     @UserMessage("{{it}}")
     TokenStream streamChat(@V("it") String userMessage);
+
+    // Multimodal variant (text + images): a List<Content> argument makes AiServices
+    // build the user message from the contents directly, no template parsing involved
+    TokenStream streamChat(List<Content> contents);
 
 }

@@ -12,8 +12,8 @@ import xyz.erupt.jpa.model.MetaModelCreateOnlyVo;
 /**
  * One generation round of a view: the user message and the page it produced.
  * Append-only and immutable; AiCanvas points at rows here via its active and
- * publish version ids. The data model is not snapshotted — it is fixed on the
- * canvas itself. Managed only through the designer API — not an
+ * publish version ids. The bound data models are not snapshotted — they live
+ * on the canvas itself. Managed only through the designer API — not an
  * Erupt-visualized model.
  *
  * @author YuePeng

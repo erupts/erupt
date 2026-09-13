@@ -20,10 +20,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.Dynamic;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
@@ -219,6 +216,13 @@ public class EruptUtil {
         return tags;
     }
 
+    public static List<String> getMentionList(TextareaType textareaType, Object data) {
+        List<String> mentions = new ArrayList<>(Arrays.asList(textareaType.mentions()));
+        Stream.of(textareaType.mentionFetchHandler()).filter(clazz -> !clazz.isInterface())
+                .forEach(clazz -> mentions.addAll(EruptSpringUtil.getBean(clazz).fetchTags(data, textareaType.mentionFetchHandlerParams())));
+        return mentions;
+    }
+
     public static Object convertObjectType(EruptFieldModel eruptFieldModel, Object obj) {
         if (null == obj) return null;
         if (null == eruptFieldModel) {
@@ -310,10 +314,33 @@ public class EruptUtil {
 
     public static R<Void> validateEruptValue(EruptModel eruptModel, JsonObject jsonObject) {
         for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
+            R<Void> result = validateEruptField(eruptModel, field, jsonObject);
+            if (!result.isSuccess()) {
+                return result;
+            }
+        }
+        try {
+            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.validate(GsonFactory.getGson().fromJson(jsonObject.toString(), eruptModel.getClazz()))));
+        } catch (EruptException e) {
+            return R.error(e.getMessage());
+        }
+        return R.ok();
+    }
+
+    /**
+     * Validate one field of a submitted payload. Split out of {@link #validateEruptValue} to keep
+     * the per-field rules readable; every caller validates a whole row.
+     */
+    private static R<Void> validateEruptField(EruptModel eruptModel, EruptFieldModel field, JsonObject jsonObject) {
+        {
             Edit edit = field.getEruptField().edit();
             JsonElement value = jsonObject.get(field.getFieldName());
             if (edit.notNull()) {
                 if (null == value || value.isJsonNull()) {
+                    return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                } else if (value.isJsonArray() && value.getAsJsonArray().isEmpty()) {
+                    // List-valued components (MULTI_FORM, TAB_TABLE_ADD, CHECKBOX, TAB_TREE, MULTI_CHOICE ...)
+                    // submit [] when nothing was chosen, which is as empty as null
                     return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
                 } else if (String.class.getSimpleName().equals(field.getFieldReturnName())) {
                     if (StringUtils.isBlank(value.getAsString())) {
@@ -379,13 +406,14 @@ public class EruptUtil {
                             }
                         }
                         break;
+                    case TEXTAREA:
+                        // the frontend maxlength can be bypassed, so enforce it here as well
+                        if (value.getAsString().length() > edit.textareaType().length()) {
+                            return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.data.limit_length"));
+                        }
+                        break;
                 }
             }
-        }
-        try {
-            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.validate(GsonFactory.getGson().fromJson(jsonObject.toString(), eruptModel.getClazz()))));
-        } catch (EruptException e) {
-            return R.error(e.getMessage());
         }
         return R.ok();
     }
@@ -436,6 +464,18 @@ public class EruptUtil {
     // Copy the non-empty data source of object A to object B
     public static Object dataTarget(EruptModel eruptModel, Object data, Object target, SceneEnum sceneEnum) {
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+            dataTargetField(fieldModel, data, target, sceneEnum);
+        }
+        return target;
+    }
+
+    /**
+     * Copy one field from the submitted carrier onto the stored entity. Split out of
+     * {@link #dataTarget} so a partial update (single cell) applies exactly the same readonly,
+     * PASSWORD placeholder, auto-trim and collection semantics to the field it changes.
+     */
+    public static void dataTargetField(EruptFieldModel fieldModel, Object data, Object target, SceneEnum sceneEnum) {
+        {
             EruptField eruptField = fieldModel.getEruptField();
             boolean readonly = sceneEnum == SceneEnum.EDIT ? eruptField.edit().readonly().edit() : eruptField.edit().readonly().add();
             if (eruptField.edit().readonly().allowChange()) {
@@ -472,7 +512,23 @@ public class EruptUtil {
                 }
             }
         }
-        return target;
+    }
+
+    /**
+     * Reflective field-by-field copy driven by the erupt model. Unlike bean-property copying this
+     * also works for runtime-generated carrier classes (erupt-designer), which declare plain
+     * fields and no accessors.
+     */
+    public static void copyEruptFields(EruptModel eruptModel, Object source, Object target) {
+        for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+            Field field = fieldModel.getField();
+            try {
+                field.setAccessible(true);
+                field.set(target, field.get(source));
+            } catch (IllegalAccessException e) {
+                log.error("erupt data copy error", e);
+            }
+        }
     }
 
     // Clear the default values generated by serialized objects (verified through JSON strings)

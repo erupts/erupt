@@ -40,8 +40,8 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
                 @RowOperation(title = "Model Test", icon = "fa fa-comments",
                         tpl = @Tpl(path = "/tpl/ai-chat.ftl", height = "85vh"),
                         mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL),
-                @RowOperation(title = "Default Chat Model", icon = "fa fa-magic",
-                        ifExpr = "item.defaultLLM === '×'",
+                @RowOperation(title = "Default Chat Model", icon = "fa fa-wand-magic-sparkles",
+                        ifExpr = "item.defaultLLM !== true",
                         mode = RowOperation.Mode.SINGLE, operationHandler = LLMDataProxy.class)
         },
         layout = @Layout(tableLeftFixed = 1, formSteps = true)
@@ -87,7 +87,8 @@ public class LLM extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "API Domain"),
-            edit = @Edit(title = "API Domain", notNull = true)
+            // the stored key is posted to whatever this points at, so redirect it in the form only
+            edit = @Edit(title = "API Domain", notNull = true, cellEdit = false)
     )
     private String apiUrl;
 

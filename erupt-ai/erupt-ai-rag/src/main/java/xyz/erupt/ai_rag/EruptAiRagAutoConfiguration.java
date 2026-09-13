@@ -39,7 +39,7 @@ public class EruptAiRagAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$rag", "Knowledge Base", "fa fa-book", 27));
+        menus.add(MetaMenu.createRootMenu("$rag", "Knowledge Base", "fa fa-brain", 27));
         menus.add(MetaMenu.createEruptClassMenu(KnowledgeBase.class, menus.get(0), 10));
         menus.add(MetaMenu.createEruptClassMenu(KnowledgeDocument.class, menus.get(0), 20));
         menus.add(MetaMenu.createEruptClassMenu(KnowledgeChunk.class, menus.get(0), 30, MenuStatus.HIDE));

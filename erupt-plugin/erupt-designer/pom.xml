@@ -5,7 +5,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>2.1.1</version>
+        <version>2.2.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -18,6 +18,16 @@
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-upms</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-data-jdbc</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.53.4.0</version>
         </dependency>
         <dependency>
             <groupId>net.bytebuddy</groupId>

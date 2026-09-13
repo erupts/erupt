@@ -205,7 +205,7 @@ public class EruptNotionDataService extends EruptBeanDataService<Map<String, Obj
                 StringBuilder sb = new StringBuilder();
                 for (JsonElement element : value.getAsJsonArray()) {
                     JsonObject person = element.getAsJsonObject();
-                    if (sb.length() > 0) sb.append(", ");
+                    if (!sb.isEmpty()) sb.append(", ");
                     sb.append(person.has("name") ? person.get("name").getAsString() : person.get("id").getAsString());
                 }
                 return sb.toString();

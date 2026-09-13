@@ -74,8 +74,12 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     }
 
 
+    // Rebuild the current platform session's menu cache. getCurrentEruptUser() is null for
+    // sessions not backed by an EruptUser row (tenant users); those must never be rebuilt here,
+    // since their uid collides with platform users.
     public void flushMenuCache() {
-        eruptTokenService.loginToken(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
+        EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
+        if (null != eruptUser) eruptTokenService.loginToken(eruptUser, eruptContextService.getCurrentToken());
     }
 
     @Override

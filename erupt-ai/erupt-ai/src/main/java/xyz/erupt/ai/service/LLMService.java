@@ -2,6 +2,9 @@ package xyz.erupt.ai.service;
 
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.Content;
+import dev.langchain4j.data.message.ImageContent;
+import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
@@ -25,20 +28,32 @@ import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.ai.vo.ToolCallRecord;
+import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.service.EruptSessionService;
 
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -59,6 +74,9 @@ public class LLMService {
 
     @Resource
     private EruptSessionService eruptSessionService;
+
+    @Resource
+    private EruptProp eruptProp;
 
     public String send(String prompt) {
         return this.send(List.of(UserMessage.from(prompt)));
@@ -90,7 +108,7 @@ public class LLMService {
         Collections.reverse(chatMessages);
         for (AiChatMessage message : chatMessages) {
             if (message.getSenderType() == ChatSenderType.USER) {
-                messages.add(UserMessage.from(message.getContent()));
+                messages.add(this.buildUserMessage(message.getContent(), message.getImages()));
             } else if (message.getSenderType() == ChatSenderType.MODEL) {
                 if (message.getThinkingContent() != null) {
                     messages.add(AiMessage.builder().text(message.getContent()).thinking(message.getThinkingContent()).build());
@@ -100,6 +118,47 @@ public class LLMService {
             }
         }
         return messages;
+    }
+
+    // User message with optional image attachments; text-only messages keep the plain form
+    private UserMessage buildUserMessage(String content, String imagesJson) {
+        List<ImageContent> images = this.readImages(imagesJson);
+        if (images.isEmpty()) return UserMessage.from(content);
+        List<Content> contents = new ArrayList<>();
+        if (StringUtils.isNotBlank(content)) contents.add(TextContent.from(content));
+        contents.addAll(images);
+        return UserMessage.from(contents);
+    }
+
+    public List<ImageContent> readImages(String imagesJson) {
+        if (StringUtils.isBlank(imagesJson)) return Collections.emptyList();
+        return Arrays.stream(GsonFactory.getGson().fromJson(imagesJson, String[].class))
+                .map(this::readImage).collect(Collectors.toList());
+    }
+
+    // Resolve a chat image attachment into base64 content; mirrors the local/remote
+    // storage handling of RagService#resolveContent
+    @SneakyThrows
+    private ImageContent readImage(String path) {
+        byte[] bytes;
+        AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
+        if (null != attachmentProxy && !attachmentProxy.isLocalSave()) {
+            // remote-only storage: the file never lands on local disk, fetch it from the attachment domain
+            try (InputStream in = URI.create(attachmentProxy.fileDomain() + path).toURL().openStream()) {
+                bytes = in.readAllBytes();
+            }
+        } else {
+            Path uploadRoot = Paths.get(eruptProp.getUploadPath()).toAbsolutePath().normalize();
+            Path file = uploadRoot.resolve(StringUtils.removeStart(path, "/")).normalize();
+            // Reject any path escaping the upload directory
+            if (!file.startsWith(uploadRoot)) {
+                throw new EruptWebApiRuntimeException(I18nTranslate.$translate("Illegal image path"));
+            }
+            bytes = Files.readAllBytes(file);
+        }
+        String ext = path.substring(path.lastIndexOf('.') + 1).toLowerCase();
+        String mimeType = "jpg".equals(ext) ? "image/jpeg" : "image/" + ext;
+        return ImageContent.from(Base64.getEncoder().encodeToString(bytes), mimeType);
     }
 
     @SneakyThrows
@@ -141,7 +200,7 @@ public class LLMService {
             emitter.onCompletion(() -> emitterClosed.set(true));
             emitter.onTimeout(() -> emitterClosed.set(true));
             emitter.onError(t -> emitterClosed.set(true));
-            llm.chatSse(llmRequest, userMessage, chatContext, it -> {
+            llm.chatSse(llmRequest, userMessage, this.readImages(chatMessage.getImages()), chatContext, it -> {
                 // Stopped by user: the upstream stream may keep emitting, discard everything
                 if (stopped.get()) return;
                 if (null != it.getToolResult()) {

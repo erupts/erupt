@@ -6,8 +6,10 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.service.EruptCoreService;
-import xyz.erupt.designer.model.DesignerData;
 import xyz.erupt.designer.model.DesignerEntity;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import xyz.erupt.designer.store.DesignerStore;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import java.util.Date;
@@ -24,6 +26,9 @@ public class DesignerEntityDataProxy implements DataProxy<DesignerEntity> {
 
     @Resource
     private EruptDao eruptDao;
+
+    @Resource
+    private DesignerStore designerStore;
 
     @Override
     public void beforeAdd(DesignerEntity entity) {
@@ -43,7 +48,18 @@ public class DesignerEntityDataProxy implements DataProxy<DesignerEntity> {
     @Override
     public void afterDelete(DesignerEntity entity) {
         EruptCoreService.unregisterErupt(entity.getClassName());
-        eruptDao.lambdaQuery(DesignerData.class).eq(DesignerData::getModel, entity.getClassName()).delete();
+        // dropping the table is irreversible and the store is outside the JPA transaction,
+        // so wait for the commit rather than destroying data a rollback would have kept
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    designerStore.dropTable(entity.getClassName());
+                }
+            });
+        } else {
+            designerStore.dropTable(entity.getClassName());
+        }
     }
 
 }

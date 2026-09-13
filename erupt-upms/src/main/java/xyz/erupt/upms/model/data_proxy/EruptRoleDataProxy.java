@@ -4,12 +4,9 @@ import jakarta.annotation.Resource;
 import jakarta.persistence.Transient;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptRole;
-import xyz.erupt.upms.service.EruptUserService;
 
-import java.util.List;
 
 /**
  * @author YuePeng
@@ -20,17 +17,7 @@ public class EruptRoleDataProxy implements DataProxy<EruptRole> {
 
     @Resource
     @Transient
-    private EruptUserService eruptUserService;
-
-    @Resource
-    @Transient
     private EruptDao eruptDao;
-
-    @Override
-    public String beforeFetch(List<Condition> conditions) {
-        if (eruptUserService.getCurrentEruptUser().getIsAdmin()) return null;
-        return "EruptRole.createUser.id = " + eruptUserService.getCurrentUid();
-    }
 
     @Override
     public void beforeAdd(EruptRole eruptRole) {

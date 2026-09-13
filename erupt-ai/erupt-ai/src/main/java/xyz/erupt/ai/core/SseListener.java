@@ -2,6 +2,7 @@ package xyz.erupt.ai.core;
 
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.model.chat.StreamingChatModel;
+import dev.langchain4j.model.output.FinishReason;
 import dev.langchain4j.model.output.TokenUsage;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +31,9 @@ public class SseListener {
     private TokenUsage usage;
 
     private AiMessage aiMessage;
+
+    // Why the model stopped (STOP, LENGTH = cut off by the max output tokens, ...); set with isFinish
+    private FinishReason finishReason;
 
     private StreamingChatModel streamingChatModel;
 

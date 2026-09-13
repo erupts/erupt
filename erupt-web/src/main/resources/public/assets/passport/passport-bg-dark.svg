@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Dark-theme variant of passport-bg.svg: no opaque ground (the page's
+     token background color shows through), hairlines flipped to light ink. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+    <g fill="none" stroke="#e2e8f0" stroke-opacity="0.06">
+        <circle cx="180" cy="180" r="260" stroke-width="1"/>
+        <circle cx="180" cy="180" r="380" stroke-width="1"/>
+        <circle cx="180" cy="180" r="520" stroke-width="1"/>
+
+        <circle cx="1420" cy="880" r="220" stroke-width="1"/>
+        <circle cx="1420" cy="880" r="340" stroke-width="1"/>
+        <circle cx="1420" cy="880" r="480" stroke-width="1"/>
+    </g>
+
+    <g stroke="#e2e8f0" stroke-opacity="0.07" stroke-width="1">
+        <line x1="0" y1="720" x2="1600" y2="560"/>
+    </g>
+</svg>

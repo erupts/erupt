@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.util.UrlPathHelper;
 import xyz.erupt.core.constant.EruptConst;
@@ -19,7 +22,9 @@ import xyz.erupt.core.prop.EruptProp;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,6 +50,16 @@ public class MvcConfig implements WebMvcConfigurer {
         converters.add(0, new GsonHttpMessageConverter(GsonFactory.getGson()) {
             @Override
             protected boolean supports(@NonNull Class<?> clazz) {
+                // erupt endpoints returning bare java.util containers must also go through
+                // GsonFactory, otherwise safe-long serialization is bypassed (Jackson fallback)
+                // and 64-bit ids lose precision in the browser
+                if (Map.class.isAssignableFrom(clazz) || Collection.class.isAssignableFrom(clazz)) {
+                    RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+                    if (attributes instanceof ServletRequestAttributes servletRequestAttributes
+                            && servletRequestAttributes.getRequest().getRequestURI().contains(EruptRestPath.ERUPT_API)) {
+                        return super.supports(clazz);
+                    }
+                }
                 for (String pack : gsonMessageConverterPackage) {
                     if (clazz.getName().startsWith(pack)) {
                         return super.supports(clazz);

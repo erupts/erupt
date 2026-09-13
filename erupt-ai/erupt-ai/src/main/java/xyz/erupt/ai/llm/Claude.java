@@ -47,6 +47,7 @@ public class Claude extends LlmCore {
                 .topP(llmRequest.getTop_p())
                 .strictTools(llmRequest.getStrictTools())
                 .temperature(llmRequest.getTemperature())
+                .timeout(requestTimeout())
                 .build();
     }
 
@@ -60,6 +61,7 @@ public class Claude extends LlmCore {
                 .strictTools(llmRequest.getStrictTools())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
+                .timeout(requestTimeout())
                 .build();
     }
 

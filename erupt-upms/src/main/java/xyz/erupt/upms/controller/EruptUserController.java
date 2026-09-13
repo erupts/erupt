@@ -1,11 +1,11 @@
 package xyz.erupt.upms.controller;
 
-import com.google.gson.reflect.TypeToken;
 import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
@@ -101,7 +101,7 @@ public class EruptUserController {
         }
         if (loginModel.isPass()) {
             EruptUser eruptUser = loginModel.getEruptUser();
-            loginModel.setToken(Erupts.generateCode(16));
+            loginModel.setToken(Erupts.generateCode(22)); // 22 alphanumerics ~ 131 bits, meets the 128-bit session id guideline
             loginModel.setExpire(LocalDateTime.now().plusMinutes(eruptUpmsProp.getExpireTimeByLogin()));
             loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
             if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
@@ -140,16 +140,18 @@ public class EruptUserController {
 
     @GetMapping("/menu")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public List<EruptMenuVo> getMenu(@RequestParam(value = "flush", required = false, defaultValue = "false") boolean flush) {
+    @SneakyThrows
+    public List<EruptMenuVo> getMenu(@RequestParam(value = "flush", required = false, defaultValue = "false") boolean flush, HttpServletResponse response) {
+        // Platform sessions only: a tenant session has its own menu API (erupt-tenant) and must
+        // never be resolved against EruptUser, whose ids collide with tenant user ids
+        if (null != eruptUserService.getSimpleUserInfo().getTenantId()) {
+            response.sendError(HttpStatus.FORBIDDEN.value());
+            return null;
+        }
         // flush=true rebuilds the current user's menu cache from the database,
         // ensuring the latest menu changes are served instead of the stale cached copy
-        if (flush) {
-            eruptMenuService.flushMenuCache();
-        }
-        List<EruptMenuVo> menus = sessionService.get(SessionKey.MENU_VIEW + eruptContextService.getCurrentToken(), new TypeToken<List<EruptMenuVo>>() {
-        }.getType());
-        menus.forEach(it -> it.setName(I18nTranslate.$translate(it.getName())));
-        return menus;
+        if (flush) eruptMenuService.flushMenuCache();
+        return eruptTokenService.menuView(eruptContextService.getCurrentToken());
     }
 
     @GetMapping(value = "/logout")

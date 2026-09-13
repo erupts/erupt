@@ -19,6 +19,7 @@ public enum MenuTypeEnum {
     LINK("link", "Open Link in Frame", "URL"),
     NEW_WINDOW("newWindow", "Open Link in New Window", "URL"),
     THIS_WINDOW("selfWindow", "Open Link in Current Window", "URL"),
+    MICRO_LINK("mlink", "Open Link in Micro Frontend", "URL"),
     FILL("fill", "Full Screen", "Fill Router Address"),
     ROUTER("router", "Page Route", "Router Address");
 

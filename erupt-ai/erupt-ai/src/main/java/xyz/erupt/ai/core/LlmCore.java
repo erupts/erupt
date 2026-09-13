@@ -2,12 +2,16 @@ package xyz.erupt.ai.core;
 
 import dev.langchain4j.agent.tool.ToolSpecifications;
 import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.Content;
+import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.TokenStream;
 import dev.langchain4j.service.tool.ToolErrorHandlerResult;
 import dev.langchain4j.service.tool.ToolProvider;
 import dev.langchain4j.service.tool.ToolProviderResult;
@@ -24,8 +28,10 @@ import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.prompt.SystemPromptProvider;
+import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptSpringUtil;
 
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -58,6 +64,11 @@ public abstract class LlmCore {
         return new LlmConfig();
     }
 
+    // Per-request HTTP timeout every adapter must pass to its model builder
+    protected Duration requestTimeout() {
+        return EruptSpringUtil.getBean(AiProp.class).getRequestTimeout();
+    }
+
     public abstract ChatModel buildChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages);
 
     public abstract StreamingChatModel buildStreamingChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages, Consumer<SseListener> listener);
@@ -73,18 +84,60 @@ public abstract class LlmCore {
     }
 
     public void chatSse(LlmRequest llmRequest, String userMessage, List<ChatMessage> chatContext, Consumer<SseListener> listener) {
+        this.chatSse(llmRequest, userMessage, null, chatContext, listener);
+    }
+
+    public void chatSse(LlmRequest llmRequest, String userMessage, List<ImageContent> images, List<ChatMessage> chatContext, Consumer<SseListener> listener) {
         StreamingChatModel streamingChatModel = this.buildStreamingChatModel(llmRequest, chatContext, listener);
         ChatMemory chatMemory = creatMemory(chatContext);
         AiServices<EruptAiChat> eruptAiServices = AiServices.builder(EruptAiChat.class)
                 .streamingChatModel(streamingChatModel).chatMemoryProvider((id) -> chatMemory);
         MetaContext metaContext = MetaContext.get();
-        this.streamingChat(this.buildAiServices(eruptAiServices, llmRequest, listener), userMessage, metaContext, listener);
+        this.streamingChat(this.buildAiServices(eruptAiServices, llmRequest, listener), userMessage, images, metaContext, listener);
+    }
+
+    /**
+     * AiServices runs the system message through a prompt template, where any
+     * {@code &#123;&#123;name&#125;&#125;} is a variable and an unknown one aborts the whole call with
+     * "Value for the variable 'name' is missing". The system message is assembled from
+     * free text nobody screens for that syntax: the configured system prompt, role and
+     * agent prompts stored in the database, and module prompts that may embed HTML
+     * templates. langchain4j offers no escape, so break the opening brace pair instead.
+     * User messages are already safe: {@code EruptAiChat} passes them through an explicit
+     * {@code &#123;&#123;it&#125;&#125;} template.
+     */
+    static String escapeTemplateVars(String prompt) {
+        return null == prompt ? null : prompt.replace("{{", "{ {");
+    }
+
+    /**
+     * Answer in the language the console is set to. The model otherwise replies in whatever
+     * language it leans towards - usually the one the system prompt happens to be written in -
+     * so a user working in an English console gets Chinese answers. The request language travels
+     * on {@link MetaContext}, which is restored on the async generation thread; calls with no
+     * request behind them (scheduled AI staff, startup tasks) fall back to the configured default.
+     */
+    static String languagePrompt() {
+        String lang = MetaContext.getLang();
+        if (null == lang || lang.isBlank()) {
+            lang = EruptSpringUtil.getBean(EruptProp.class).getDefaultLocales();
+        }
+        if (null == lang || lang.isBlank()) return null;
+        String displayName = Locale.forLanguageTag(lang).getDisplayName(Locale.ENGLISH);
+        if (displayName.isBlank()) return null;
+        return "Answer in " + displayName + " (language tag " + lang + "), whatever language the user writes in,"
+                + " unless the user asks for another language. Code, identifiers and quoted source text keep"
+                + " their original form.";
     }
 
     private EruptAiChat buildAiServices(AiServices<EruptAiChat> eruptAiServices, LlmRequest llmRequest, Consumer<SseListener> listener) {
         eruptAiServices.systemMessageProvider((id) -> {
             AiProp aiProp = EruptSpringUtil.getBean(AiProp.class);
             StringBuffer systemPrompt = new StringBuffer(aiProp.getSystemPrompt());
+            // Right after the base prompt, so a role, expert or module prompt that pins a
+            // language of its own still has the last word
+            String languagePrompt = languagePrompt();
+            if (null != languagePrompt) systemPrompt.append("\n\n").append(languagePrompt);
             // Provider prompts advertise toolbox tools; injecting them into calls that
             // did not opt in makes the model call tools that do not exist there
             if (Boolean.TRUE.equals(llmRequest.getSystemPromptProviders())) {
@@ -101,7 +154,7 @@ public abstract class LlmCore {
             if (llmRequest.getContextPrompt() != null && !llmRequest.getContextPrompt().isBlank()) {
                 systemPrompt.append("\n\n").append(llmRequest.getContextPrompt());
             }
-            return systemPrompt.toString();
+            return escapeTemplateVars(systemPrompt.toString());
         });
         if (llmRequest.getAutoCallTool()) {
             eruptAiServices.toolProvider(buildTools(listener));
@@ -181,10 +234,19 @@ public abstract class LlmCore {
         };
     }
 
-    private void streamingChat(EruptAiChat eruptAiChat, String userMessage, MetaContext metaContext, Consumer<SseListener> listener) {
+    private void streamingChat(EruptAiChat eruptAiChat, String userMessage, List<ImageContent> images, MetaContext metaContext, Consumer<SseListener> listener) {
         MetaContext.set(metaContext);
         AtomicBoolean toolCalling = new AtomicBoolean(false);
-        eruptAiChat.streamChat(userMessage).onPartialResponse(partialResponse -> {
+        TokenStream tokenStream;
+        if (null == images || images.isEmpty()) {
+            tokenStream = eruptAiChat.streamChat(userMessage);
+        } else {
+            List<Content> contents = new ArrayList<>();
+            if (null != userMessage && !userMessage.isBlank()) contents.add(TextContent.from(userMessage));
+            contents.addAll(images);
+            tokenStream = eruptAiChat.streamChat(contents);
+        }
+        tokenStream.onPartialResponse(partialResponse -> {
                     toolCalling.set(true);
                     listener.accept(SseListener.builder().currMessage(partialResponse).build());
                 })
@@ -193,6 +255,7 @@ public abstract class LlmCore {
                     listener.accept(SseListener.builder()
                             .isFinish(true)
                             .usage(chatResponse.tokenUsage())
+                            .finishReason(chatResponse.finishReason())
                             .aiMessage(chatResponse.aiMessage()).build());
                 })
                 .onError(e -> {

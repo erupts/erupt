@@ -31,6 +31,10 @@ cd erupt-sample && mvn spring-boot:run
 
 # Bump version across this repo AND satellite repos (erupt-web etc.)
 ./scripts/bump-erupt.sh [--dry-run] x.x.x
+
+# Full release SOP (frontend build, bump, Maven Central, Docker Hub, merge+tag, gitee sync)
+# Driven phase by phase by the /release command (.claude/commands/release.md)
+./scripts/release.sh <preflight|frontend|bump|maven|docker|publish|start|verify> [x.x.x]
 ```
 
 Java 17 required. Spring Boot 3.5.x (pinned via `spring.boot.version` in the parent pom). No Maven wrapper — use system `mvn`.
@@ -52,7 +56,7 @@ The project is a multi-module Maven project (~50 modules):
 | Templates | `erupt-tpl/erupt-tpl` (engine) + `erupt-tpl/{ant-design,element-ui,element-plus,amis}` (skins) |
 | AI | `erupt-ai/{erupt-ai,erupt-ai-canvas,erupt-ai-claw,erupt-ai-staff,erupt-ai-rag}` (LLM + MCP via langchain4j; RAG knowledge base with Qdrant/Milvus) |
 | Support | `erupt-support/{erupt-toolkit,erupt-excel,erupt-websocket}` (shared capabilities: cache/notify, import/export, realtime transport) |
-| Plugin | `erupt-plugin/{erupt-report,erupt-designer,erupt-job,erupt-generator,erupt-monitor,erupt-magic-api,erupt-notice,erupt-print,erupt-terminal}` |
+| Plugin | `erupt-plugin/{erupt-report,erupt-designer,erupt-job,erupt-generator,erupt-monitor,erupt-magic-api,erupt-notice,erupt-print,erupt-terminal,erupt-remote}` |
 | Cloud | `erupt-cloud/{erupt-cloud-common,erupt-cloud-server,erupt-cloud-node,erupt-cloud-node-jpa}` |
 | Deploy | `erupt-deploy/erupt-docker` (all-in-one Docker image; has its own `deploy.sh`) |
 | Dev | `erupt-test` (JUnit 5 + H2), `erupt-sample` (runnable demo) |

@@ -27,6 +27,7 @@
 <p align="center">
   <a href="https://demo.erupt.xyz"><code><b>[ 在线体验 ]</b></code></a>&nbsp;&nbsp;
   <a href="https://start.erupt.xyz"><code><b>[ 创建项目 ]</b></code></a>&nbsp;&nbsp;
+  <a href="https://skill.erupt.xyz"><code><b>[ AI 技能 ]</b></code></a>&nbsp;&nbsp;
   <a href="https://docs.erupt.xyz"><code><b>[ 文档 ]</b></code></a>&nbsp;&nbsp;
   <a href="https://www.erupt.xyz"><code><b>[ 官网 ]</b></code></a>
 </p>
@@ -113,8 +114,21 @@ mvn spring-boot:run
 
 分页、搜索、导出、行列权限，全都有了。加一个字段，刷新，立刻出现。
 
+### D — 在线生成器
+
+[start.erupt.xyz](https://start.erupt.xyz) —— 在浏览器里勾选模块，下载即可运行的项目。本地零配置。
+
+### E — AI SKILL
+
+[skill.erupt.xyz](https://skill.erupt.xyz) —— **无任何开发背景**也能构建完整管理后台，专为非研发岗位（运营、HR、产品、财务）设计：在 Claude Code 等 AI 工具里用一句话描述你要的系统，其余全部由技能搞定 —— JDK、数据库（H2）、登录、增删改查、搜索、Excel、权限开箱即用。只写实体类，UI 和接口由注解在运行时渲染，token 消耗仅为从零手写的 1/20。
+
+```bash
+git clone https://github.com/plinian/erupt-skill.git ~/.claude/skills/erupt-admin
+```
+
+然后对 Claude Code 说：`"帮我生成一个 CRM 管理后台"` → 系统直接跑起来。
+
 > `零安装` —— [demo.erupt.xyz](https://demo.erupt.xyz)（`guest / guest`）
-> `起手项目` —— [start.erupt.xyz](https://start.erupt.xyz) 在浏览器里直接生成
 > `完整教程` —— [docs.erupt.xyz/guide/quick-start](https://docs.erupt.xyz/guide/quick-start)
 
 <details>
@@ -184,6 +198,8 @@ List<EruptUser> list = eruptDao.lambdaQuery(EruptUser.class)
 
 ## 02 · 开箱即用
 
+<p align="center"><img src="readme/workbench.jpg" alt="Erupt · 工作台" width="100%"/></p>
+
 | | |
 |---|---|
 | `UI 自动生成` | 表格、表单、搜索、分页、树视图、甘特图、卡片视图、20+ 表单组件 —— 全部由 `@View` / `@Edit` / `@Search` 驱动。 |
@@ -198,6 +214,25 @@ List<EruptUser> list = eruptDao.lambdaQuery(EruptUser.class)
 > `该引入哪个 AI 模块？` —— 要原生 LLM / MCP 能力、自己写 agent，选 `erupt-ai`；想直接给 admin 装个开箱即用的 AI 助手，选 `erupt-ai-claw`（已传递依赖 `erupt-ai`，只需引这一个）。
 
 模块列表 —— [erupt.xyz/#!/module](https://www.erupt.xyz/#!/module) · API 文档 —— [javadoc.erupt.xyz](https://javadoc.erupt.xyz)
+
+### 模型图谱
+
+> 所有 `@Erupt` 实体和它们之间的关系，直接由生成界面的那套注解画出来。不需要额外配置，模型存在，图就存在。
+
+| | |
+|---|---|
+| `总览` | 按模块分组展示全部模型，一眼看清整个系统的结构。 |
+| `层级` | 依赖有多深：整个系统站在什么之上，以及深度真正来自哪几条链。 |
+| `血缘` · `矩阵` · `影响面` | 单个模型的上下游、模块间耦合热力图，以及改动一个模型会波及谁。 |
+| `字段` · `权限` · `体检` | 全库字段拉平、`@Power` 与菜单按钮的对账，以及循环依赖、共用表、孤立模型的体检报告。 |
+
+<table>
+  <tr>
+    <td width="50%"><img src="readme/model-atlas-overview.jpg" alt="模型图谱 · 总览" width="100%"/></td>
+    <td width="50%"><img src="readme/model-atlas-layers.jpg" alt="模型图谱 · 层级" width="100%"/></td>
+  </tr>
+</table>
+
 
 ---
 
@@ -235,6 +270,20 @@ public class MyTools {
 ```
 
 LLM 提供商、MCP 服务器、Agent —— 全部通过内置管理界面配置。无需重启。
+
+### 字段助手
+
+> 生成表单里的任意文本字段都自带一个行内写作助手。无需接线，只要 schema 说这个字段是文本，它就在。
+
+`生成` · `润色` · `续写` · `扩写` · `精简` —— 也可以直接告诉它怎么写。结果流式写回字段，一键撤销。
+
+<table>
+  <tr>
+    <td width="50%"><img src="readme/ai-field-assistant-dark.jpg" alt="AI 字段助手 · 暗色" width="100%"/></td>
+    <td width="50%"><img src="readme/ai-field-assistant-chat.jpg" alt="AI 字段助手 · 对话面板" width="100%"/></td>
+  </tr>
+</table>
+
 
 ---
 
@@ -301,7 +350,15 @@ Claw 与 AI Harness 共享同一套基于 Role 的 Tool 安全机制 —— 非�
 
 ---
 
-## 07 · 参与贡献
+## 07 · 匿名统计
+
+Erupt 会上报匿名使用统计 —— erupt 版本、已装模块、JDK、操作系统与数据库类型、Spring Boot 版本、时区 —— 用于指导兼容性与路线图决策。绝不上报业务数据、凭据、主机名或任何可定位身份的信息，请求失败静默处理，绝不阻塞启动。
+
+关闭：`erupt.telemetry.enabled: false` 或环境变量 `ERUPT_TELEMETRY_DISABLED=1`；CI 环境自动跳过。
+
+---
+
+## 08 · 参与贡献
 
 免费且开源。提交代码、反馈缺陷、交流想法、分享案例、撰写博客 —— 一切贡献都欢迎。
 
@@ -321,7 +378,7 @@ Claw 与 AI Harness 共享同一套基于 Role 的 Tool 安全机制 —— 非�
 
 ---
 
-## 08 · LICENSE
+## 09 · LICENSE
 
 [Apache 2.0](./LICENSE) —— 免费 · 开源 · 可商用 · 可二次开发。
 

@@ -26,7 +26,7 @@ import xyz.erupt.jpa.model.BaseModel;
  */
 @Erupt(
         name = "Knowledge Chunk", dataProxy = KnowledgeChunkDataProxy.class,
-        power = @Power(add = false, importable = false),
+        power = @Power(add = false),
         orderBy = "id"
 )
 @Getter

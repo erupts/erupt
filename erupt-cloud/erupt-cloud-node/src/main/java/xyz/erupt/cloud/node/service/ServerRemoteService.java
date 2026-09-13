@@ -1,7 +1,7 @@
 package xyz.erupt.cloud.node.service;
 
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
+import xyz.erupt.cloud.common.http.CloudHttp;
+import org.springframework.web.client.RestClient;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
@@ -23,39 +23,36 @@ public class ServerRemoteService {
     @Resource
     private EruptNodeProp eruptNodeProp;
 
+    @Resource
+    private RestClient serverRestClient;
+
     // Verify menu permissions
     public boolean getMenuCodePermission(String menuValue) {
-        try (HttpResponse res = HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + EruptRestPath.ERUPT_CODE_PERMISSION + "/" + menuValue)
-                .header(EruptMutualConst.TOKEN, MetaContext.getToken()).execute()) {
-            String permissionResult = res.body();
-            return Boolean.parseBoolean(permissionResult);
-        }
+        String permissionResult = serverRestClient.get().uri(eruptNodeProp.getBalanceAddress() + EruptRestPath.ERUPT_CODE_PERMISSION + "/" + menuValue)
+                .headers(CloudHttp.header(EruptMutualConst.TOKEN, MetaContext.getToken()))
+                .retrieve().body(String.class);
+        return Boolean.parseBoolean(permissionResult);
     }
 
     public MetaUserinfo getRemoteUserInfo() {
-        try (HttpResponse res = HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.ERUPT_USER_INFO + "/" + eruptNodeProp.getNodeName())
-                .header(EruptMutualConst.TOKEN, MetaContext.getToken())
+        String userinfo = serverRestClient.get().uri(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.ERUPT_USER_INFO + "/" + eruptNodeProp.getNodeName())
+                .headers(CloudHttp.header(EruptMutualConst.TOKEN, MetaContext.getToken()))
                 .header(CloudCommonConst.HEADER_ACCESS_TOKEN, eruptNodeProp.getAccessToken())
-                .execute()) {
-            String userinfo = res.body();
-            return GsonFactory.getGson().fromJson(userinfo, MetaUserinfo.class);
-        }
+                .retrieve().body(String.class);
+        return GsonFactory.getGson().fromJson(userinfo, MetaUserinfo.class);
     }
 
     public String getNodeConfig() {
-        try (HttpResponse res = HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.NODE_CONFIG + "/" + eruptNodeProp.getNodeName())
-                .header(CloudCommonConst.HEADER_ACCESS_TOKEN, eruptNodeProp.getAccessToken()).execute()) {
-            return res.body();
-        }
+        return serverRestClient.get().uri(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.NODE_CONFIG + "/" + eruptNodeProp.getNodeName())
+                .header(CloudCommonConst.HEADER_ACCESS_TOKEN, eruptNodeProp.getAccessToken())
+                .retrieve().body(String.class);
     }
 
     public String getNodeGroupConfig() {
-        try (HttpResponse res = HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.NODE_GROUP_CONFIG + "/" + eruptNodeProp.getNodeName())
+        return serverRestClient.get().uri(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.NODE_GROUP_CONFIG + "/" + eruptNodeProp.getNodeName(),
+                        builder -> builder.queryParam(CloudCommonConst.HEADER_ACCESS_TOKEN, eruptNodeProp.getAccessToken()).build())
                 .header(CloudCommonConst.HEADER_ACCESS_TOKEN, eruptNodeProp.getAccessToken())
-                .form(CloudCommonConst.HEADER_ACCESS_TOKEN, eruptNodeProp.getAccessToken())
-                .execute()){
-            return res.body();
-        }
+                .retrieve().body(String.class);
     }
 
 }

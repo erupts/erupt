@@ -5,12 +5,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai_canvas.model.AiCanvas;
+import xyz.erupt.ai_canvas.model.AiCanvasModel;
 import xyz.erupt.ai_canvas.model.AiCanvasVersion;
 import xyz.erupt.ai_canvas.service.AiCanvasService;
 import xyz.erupt.annotation.fun.VLModel;
@@ -21,6 +19,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.annotation.EruptMenuAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +41,7 @@ public class AiCanvasBuildController {
     @Resource
     private EruptDao eruptDao;
 
-    @Resource
-    private AiProp aiProp;
-
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping("/models")
     public R<List<ModelGroup>> models() {
@@ -59,6 +56,7 @@ public class AiCanvasBuildController {
     }
 
     // Light projection: demoHtml stays server-side, it is only prompt material
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping("/styles")
     public R<List<StyleVo>> styles() {
@@ -66,6 +64,7 @@ public class AiCanvasBuildController {
     }
 
     // Enabled chat models the designer can pick from; the default one leads
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping("/llms")
     public R<List<LlmVo>> llms() {
@@ -73,14 +72,14 @@ public class AiCanvasBuildController {
                 .orderByDesc(LLM::getDefaultLLM).list().stream().map(LlmVo::new).toList());
     }
 
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping("/{code}")
     public R<DesignerVo> info(@PathVariable("code") String code) {
         AiCanvas view = this.view(code);
         DesignerVo vo = new DesignerVo();
         vo.setName(view.getName());
-        vo.setDataType(view.getDataType());
-        vo.setTargetModel(view.getTargetModel());
+        vo.setModels(AiCanvasService.orderedBindings(view).stream().map(ModelVo::new).toList());
         vo.setStyle(view.getStyle());
         vo.setLlmId(null != view.getLlm() ? view.getLlm().getId() : null);
         vo.setActiveVersion(view.getActiveVersion());
@@ -88,46 +87,46 @@ public class AiCanvasBuildController {
         vo.setVersions(eruptDao.lambdaQuery(AiCanvasVersion.class)
                 .eq(AiCanvasVersion::getCanvasId, view.getId())
                 .orderByAsc(AiCanvasVersion::getVersion).list().stream().map(VersionVo::new).toList());
+        vo.setGenerating(aiViewService.generatingState(view.getId()));
         return R.ok(vo);
     }
 
+    // Polled by the designer while a round is in flight, including one it did not
+    // start itself; answers null as soon as the round is done, stopped or gone
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    @GetMapping("/generating/{code}")
+    public R<AiCanvasService.GeneratingState> generating(@PathVariable("code") String code) {
+        return R.ok(aiViewService.generatingState(this.view(code).getId()));
+    }
+
+    // Start a generation round and return at once. The designer follows the round through
+    // the same /generating poll it uses after a reload, so there is a single progress path
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @PostMapping("/generate/{code}")
-    public R<VersionVo> generate(@PathVariable("code") String code, @RequestBody GenerateBody body) {
+    public R<Void> generate(@PathVariable("code") String code, @RequestBody GenerateBody body) {
         if (StringUtils.isBlank(body.getMessage())) {
             throw new EruptWebApiRuntimeException("Message must not be blank");
         }
         AiCanvas view = this.view(code);
+        if (null != aiViewService.generatingState(view.getId())) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai-canvas.already_generating"));
+        }
         view.setStyle(body.getStyle());
         view.setLlm(this.resolveLlm(body.getLlmId()));
-        return R.ok(new VersionVo(aiViewService.generate(view, body.getMessage().trim(), body.getElement())));
-    }
-
-    // Streaming variant of generate; EventSource is GET-only, so the token
-    // arrives as the _token URL parameter (PARAM verify)
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    @GetMapping(value = "/generate-sse/{code}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter generateSse(@PathVariable("code") String code,
-                                  @RequestParam("message") String message,
-                                  @RequestParam(value = "style", required = false) String style,
-                                  @RequestParam(value = "llmId", required = false) Long llmId,
-                                  @RequestParam(value = "element", required = false) String element) {
-        if (StringUtils.isBlank(message)) {
-            throw new EruptWebApiRuntimeException("Message must not be blank");
-        }
-        AiCanvas view = this.view(code);
-        view.setStyle(style);
-        view.setLlm(this.resolveLlm(llmId));
-        // Persist the selection right away; html and version follow when the stream finishes
+        // Persist the selection right away; html and version follow when the round finishes
         eruptDao.mergeAndFlush(view);
         eruptDao.detach(view);
-        SseEmitter emitter = new SseEmitter(aiProp.getSseTimeout());
-        aiViewService.generateSse(MetaContext.get(), view, message.trim(), element, emitter);
-        return emitter;
+        String message = body.getMessage().trim();
+        aiViewService.beginRound(view.getId(), message);
+        aiViewService.generateAsync(MetaContext.get(), view, message, body.getElement());
+        return R.ok();
     }
 
     // Explicit stop: the running round is discarded; without this signal a mere
     // disconnect (page refresh) still persists the generated version
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @PostMapping("/stop/{code}")
     public R<Void> stop(@PathVariable("code") String code) {
@@ -135,6 +134,7 @@ public class AiCanvasBuildController {
         return R.ok();
     }
 
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @PostMapping("/active/{code}/{versionId}")
     public R<Void> active(@PathVariable("code") String code, @PathVariable("versionId") Long versionId) {
@@ -149,6 +149,7 @@ public class AiCanvasBuildController {
 
     // Publish the working draft so viewers pick it up; until then version
     // switches and new generations stay designer-only
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @PostMapping("/publish/{code}")
     public R<Void> publish(@PathVariable("code") String code) {
@@ -159,6 +160,7 @@ public class AiCanvasBuildController {
     // Draft preview for the designer: renders the working draft (active version)
     // with the same SDK/token processing the viewer endpoint applies, and ignores
     // the enable flag — disabling a page should not blind its designer
+    @EruptMenuAuth(AiCanvas.MENU_VALUE)
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping(value = "/preview/{code}", produces = "text/html;charset=utf-8")
     public String preview(@PathVariable("code") String code, HttpServletRequest request) {
@@ -213,15 +215,33 @@ public class AiCanvasBuildController {
 
     @Getter
     @Setter
+    public static class ModelVo {
+        private String dataType;
+        private String model;
+        private String purpose;
+        // Write operations the page may offer on this model (add / update / delete); empty = read-only
+        private List<String> writes;
+
+        public ModelVo(AiCanvasModel binding) {
+            this.dataType = binding.getDataType();
+            this.model = binding.getModel();
+            this.purpose = binding.getPurpose();
+            this.writes = AiCanvasService.allowedWrites(binding);
+        }
+    }
+
+    @Getter
+    @Setter
     public static class DesignerVo {
         private String name;
-        private String dataType;
-        private String targetModel;
+        private List<ModelVo> models;
         private String style;
         private Long llmId;
         private Long activeVersion;
         private Long publishVersion;
         private List<VersionVo> versions;
+        // Round already in flight when the designer was opened; null when idle
+        private AiCanvasService.GeneratingState generating;
     }
 
     @Getter
@@ -235,8 +255,10 @@ public class AiCanvasBuildController {
 
         public StyleVo(AiCanvasService.CanvasStyle style) {
             this.id = style.getId();
-            this.name = style.getName();
-            this.description = style.getDescription();
+            // style.json holds the English source: it is both the prompt text and the i18n key,
+            // so only the picker shown to the user is translated, never what the model reads
+            this.name = I18nTranslate.$translate(style.getName());
+            this.description = I18nTranslate.$translate(style.getDescription());
             if (null != style.getSystem()) {
                 this.mode = style.getSystem().getMode();
                 this.palette = style.getSystem().getChartPalette();

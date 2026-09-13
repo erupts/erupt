@@ -22,6 +22,9 @@ spring:
       host: localhost
       port: 6379
 erupt:
+  remote:
+    # AES key for stored VNC passwords; optional, defaults to an auto-generated .erupt/remote.key
+    secret-key: ${ERUPT_REMOTE_SECRET_KEY:}
   ai:
     claw:
       enabled: true

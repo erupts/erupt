@@ -46,7 +46,7 @@ public enum EditType {
     @EditTypeMapping(mapping = AutoCompleteType.class, desc = "Auto complete", allowType = {JavaTypeEnum.String})
     AUTO_COMPLETE,
     @EditTypeSearch
-    @EditTypeMapping(desc = "Multi-line text area", allowType = {JavaTypeEnum.String}, nameInfer = {"remark"})
+    @EditTypeMapping(mapping = TextareaType.class, desc = "Multi-line text area", allowType = {JavaTypeEnum.String}, nameInfer = {"remark"})
     TEXTAREA,
     @EditTypeSearch
     @EditTypeMapping(mapping = HtmlEditorType.class, desc = "Rich text editor", allowType = {JavaTypeEnum.String})

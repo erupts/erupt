@@ -55,7 +55,9 @@ public class EruptJobAction implements Job {
             return;
         }
         EruptJobProp prop = EruptSpringUtil.getBean(EruptJobProp.class);
-        LockingTaskExecutor executor = new DefaultLockingTaskExecutor(EruptSpringUtil.getBean(LockProvider.class));
+        // Look the bean up in the container directly: EruptSpringUtil.getBean(Class) would reflection-instantiate
+        // the LockProvider interface (it carries no stereotype annotation), which is impossible.
+        LockingTaskExecutor executor = new DefaultLockingTaskExecutor(EruptSpringUtil.getApplicationContext().getBean(LockProvider.class));
         LockConfiguration lockConfig = new LockConfiguration(
                 Instant.now(),
                 JOB_KEY + eruptJob.getCode(),

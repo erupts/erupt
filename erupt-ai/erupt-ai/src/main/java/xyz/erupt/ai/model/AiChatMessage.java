@@ -40,6 +40,10 @@ public class AiChatMessage extends BaseModel {
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     private String toolCalls;
 
+    // JSON array of image attachment paths sent with a user message: ["/2026-08-31/xxx.png"]
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
+    private String images;
+
     private LocalDateTime createdAt;
 
     private Long agentId;

@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Model Atlas</title>
+    <style>
+        :root {
+            --bg: #f6f7f9;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --border-soft: #eef0f3;
+            --fg: #111827;
+            --muted: #6b7280;
+            --faint: #9ca3af;
+            --accent: #2563eb;
+            --accent-soft: #eff6ff;
+            --line: #cbd2da;
+            --radius: 8px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            background: var(--bg); color: var(--fg);
+            height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            display: flex; align-items: center; gap: 12px; flex: none;
+            padding: 0 16px; height: 48px;
+            background: var(--surface); border-bottom: 1px solid var(--border);
+        }
+        header .brand { font-size: 14px; font-weight: 600; letter-spacing: -.01em; }
+        header .stat { color: var(--muted); font-size: 12px; }
+        header .stat b { color: var(--fg); font-weight: 600; }
+        .spacer { flex: 1; }
+        .seg { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 2px; }
+        .seg button {
+            font: inherit; font-size: 12px; padding: 3px 12px; cursor: pointer;
+            border: 0; background: transparent; color: var(--muted); border-radius: 6px;
+        }
+        .seg button.on { background: var(--surface); color: var(--fg); box-shadow: 0 1px 2px rgba(16,24,40,.08); }
+        .depth { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+
+        .main { flex: 1; display: flex; min-height: 0; }
+
+        aside {
+            width: 228px; flex: none; background: var(--surface);
+            border-right: 1px solid var(--border); display: flex; flex-direction: column;
+        }
+        .search { padding: 10px; border-bottom: 1px solid var(--border-soft); }
+        .search input {
+            width: 100%; padding: 6px 10px; font: inherit; font-size: 12px; color: var(--fg);
+            border: 1px solid var(--border); border-radius: 6px; outline: none; background: var(--bg);
+        }
+        .search input:focus { border-color: var(--accent); background: var(--surface); }
+        .tree { flex: 1; overflow: auto; padding: 6px 0 16px; }
+        .grp {
+            display: flex; align-items: center; gap: 6px; padding: 7px 12px 4px;
+            font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--faint);
+        }
+        .grp .dot { width: 6px; height: 6px; border-radius: 50%; flex: none; }
+        .grp .n { margin-left: auto; font-weight: 500; letter-spacing: 0; }
+        .item {
+            display: flex; align-items: center; gap: 6px; padding: 4px 12px 4px 22px; cursor: pointer;
+            font-size: 12px; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .item:hover { background: var(--bg); }
+        .item.on { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+        .item .tag { margin-left: auto; font-size: 9px; color: var(--faint); }
+        .item .cls {
+            font-size: 9.5px; color: var(--faint); overflow: hidden;
+            text-overflow: ellipsis; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+        .item.cube::before { content: '◇'; color: #059669; font-size: 10px; }
+        .item.remote::before { content: '☁'; color: #94a3b8; font-size: 10px; }
+
+        .content { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        .stage { flex: 1; overflow: auto; position: relative; }
+        .hint { position: absolute; inset: 0; display: grid; place-items: center; color: var(--faint); font-size: 12px; }
+
+        /* tree */
+        svg { display: block; }
+        .card { cursor: pointer; }
+        .card rect.box { fill: var(--surface); stroke: var(--border); stroke-width: 1; }
+        .card:hover rect.box { stroke: var(--accent); }
+        .card.root rect.box { stroke: #cdd7e6; filter: drop-shadow(0 2px 6px rgba(16,24,40,.10)); }
+        .card.cube rect.box { stroke-dasharray: 3 2.5; }
+        .card.rt rect.box { stroke: #059669; stroke-width: 1.7; }
+        .card.remote rect.box { stroke-dasharray: 1 3; stroke: #a5b0be; }
+        .card .nm { font-size: 11.5px; fill: var(--fg); }
+        .card.root .nm { font-size: 14px; font-weight: 600; }
+        .card .sub { font-size: 9.5px; fill: var(--faint); }
+        .link { fill: none; stroke: var(--line); stroke-width: 1.2; }
+        .link.reference { stroke: #9aa3af; }
+        .link.tab { stroke: #3b82f6; }
+        .link.embed { stroke: #8b5cf6; }
+        .link.drill { stroke: #f59e0b; stroke-dasharray: 4 3; }
+        .link.operation { stroke: #cbd5e1; stroke-dasharray: 2 3; }
+        .link.cubeOf, .link.table, .link.join { stroke: #10b981; stroke-dasharray: 4 3; }
+        .lbl { font-size: 9.5px; fill: var(--faint); }
+        .colhead { font-size: 9.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; fill: var(--faint); }
+
+        /* overview */
+        .zone rect { fill: #fbfcfd; stroke: var(--border-soft); }
+        .zone .zt { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; fill: var(--muted); }
+        .zone .zc { font-size: 10px; fill: var(--faint); }
+        .fade { opacity: .22; }
+
+        /* matrix */
+        .matrix { padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .matrix table { border-collapse: separate; border-spacing: 0; font-size: 11px; }
+        .matrix th, .matrix td { padding: 0; }
+        .matrix .rh {
+            text-align: right; padding-right: 10px; white-space: nowrap; color: #374151;
+            font-weight: 500; height: 24px; font-size: 11px;
+        }
+        .matrix .ch { height: 104px; width: 26px; vertical-align: bottom; padding-bottom: 6px; }
+        .matrix .ch span {
+            display: inline-block; transform: rotate(-90deg); transform-origin: left bottom;
+            white-space: nowrap; font-weight: 500; color: #374151; font-size: 11px;
+            margin-left: 17px; letter-spacing: .01em;
+        }
+        .matrix .cell {
+            width: 26px; height: 24px; text-align: center; cursor: pointer;
+            border: 1px solid var(--surface); background: #f1f3f5; color: transparent; border-radius: 3px;
+        }
+        .matrix .cell.has { color: #fff; font-weight: 600; }
+        .matrix .cell.self { border-radius: 7px; }
+        .matrix .cell:hover { outline: 2px solid var(--accent); outline-offset: -1px; }
+        .matrix .tot { width: 34px; text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
+        .matrix .cap { font-size: 11px; color: var(--faint); margin-top: 16px; max-width: 620px; text-align: center; }
+        .matrix .hl { background: var(--accent-soft) !important; }
+
+        /* layers */
+        .lv { padding: 18px 20px 30px; max-width: 1200px; }
+        .lv .sect { margin-bottom: 14px; }
+        .lvbar { display: flex; gap: 3px; margin-bottom: 16px; }
+        .lvbar .seg {
+            height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+            gap: 6px; font-size: 10px; font-weight: 600; letter-spacing: .05em; color: #fff; min-width: 40px;
+        }
+        .lvbar .seg b { font-weight: 600; opacity: .75; }
+        .lv .lvl { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--border-soft); }
+        .lv .lvl:last-child { border-bottom: 0; }
+        .lv .lvl .tag {
+            flex: none; width: 56px; padding-top: 3px; font-size: 10px; font-weight: 600;
+            letter-spacing: .05em; color: var(--faint); font-variant-numeric: tabular-nums;
+        }
+        .lv .chain { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; padding: 5px 0; }
+
+        /* domain bar */
+        .dbar {
+            display: flex; align-items: center; flex-wrap: wrap; gap: 6px; flex: none;
+            padding: 8px 12px; background: var(--surface); border-bottom: 1px solid var(--border);
+        }
+        .dbar[hidden] { display: none; }
+        .dbar .cap {
+            font-size: 9.5px; font-weight: 600; letter-spacing: .07em;
+            text-transform: uppercase; color: var(--faint); margin-right: 2px;
+        }
+        .dbar .chip {
+            display: inline-flex; align-items: center; gap: 5px; font: inherit; font-size: 11px;
+            padding: 2px 9px; cursor: pointer; color: var(--muted);
+            background: var(--bg); border: 1px solid var(--border); border-radius: 999px;
+        }
+        .dbar .chip:hover { color: var(--fg); }
+        .dbar .chip.on { color: var(--fg); background: var(--surface); border-color: var(--accent); }
+        .dbar .chip i { width: 6px; height: 6px; border-radius: 50%; }
+        .dbar .chip b { font-weight: 500; color: var(--faint); }
+        .dbar .note { margin-left: auto; font-size: 11px; color: var(--faint); }
+
+        /* power */
+        .lv .flag {
+            display: inline-block; padding: 0 7px; border-radius: 999px; font-size: 10px;
+            background: var(--bg); border: 1px solid var(--border-soft); color: var(--muted); white-space: nowrap;
+        }
+        .lv .flag.warn { color: #b91c1c; border-color: #fecaca; background: #fef2f2; }
+        .lv table.pw th.pw-h { width: 30px; height: 72px; padding: 0 0 6px; vertical-align: bottom; }
+        .lv table.pw th.pw-h span {
+            display: inline-block; transform: rotate(-90deg); transform-origin: left bottom;
+            white-space: nowrap; font-size: 9.5px; letter-spacing: .02em; margin-left: 19px;
+        }
+        .lv table.pw th.pw-h.gated span { color: #374151; font-weight: 600; }
+        .lv table.pw td.pw-c { text-align: center; color: var(--border); font-size: 11px; }
+        .lv table.pw td.pw-c.on { color: #059669; }
+        .lv table.pw td.pw-c.gap { color: #b91c1c; font-weight: 700; }
+        .lv .nomenu { color: var(--faint); font-size: 10px; font-style: normal; }
+
+        /* impact */
+        .impact { padding: 18px 20px 30px; max-width: 980px; }
+        .impact .note { font-size: 11.5px; color: var(--faint); margin-bottom: 14px; max-width: 660px; }
+        .impact table, .lv table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .impact th, .lv th {
+            text-align: left; font-size: 9.5px; font-weight: 600; letter-spacing: .07em;
+            text-transform: uppercase; color: var(--faint); padding: 0 10px 6px 0;
+        }
+        .impact td, .lv td { padding: 5px 10px 5px 0; border-bottom: 1px solid var(--border-soft); white-space: nowrap; }
+        .impact tr:hover td, .lv tr:hover td { background: var(--surface); }
+        .impact .nm, .lv .nm { cursor: pointer; font-weight: 500; }
+        .impact .nm:hover, .lv .nm:hover { color: var(--accent); }
+        .impact .nm .dot, .lv .nm .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+        .impact .mod, .lv .mod { color: var(--muted); }
+        .impact .num, .lv .num { text-align: right; width: 54px; font-variant-numeric: tabular-nums; font-weight: 600; }
+        .impact .bar, .lv .bar { width: 100%; }
+        .impact .bar span, .lv .bar span { display: inline-block; height: 11px; border-radius: 2px; vertical-align: middle; }
+        .impact .hop { color: var(--faint); font-size: 10.5px; }
+
+        /* audit */
+        .audit { padding: 18px 20px 30px; max-width: 1460px; }
+        .tiles {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+            gap: 10px; margin-bottom: 16px;
+        }
+        .tile {
+            padding: 9px 14px 11px; background: var(--surface);
+            border: 1px solid var(--border); border-radius: var(--radius);
+        }
+        .tile .n { font-size: 21px; font-weight: 600; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+        .tile .t {
+            font-size: 9.5px; font-weight: 600; letter-spacing: .07em;
+            text-transform: uppercase; color: var(--faint); margin-top: 1px;
+        }
+        /* zero is the good answer everywhere on this board, so it never shouts */
+        .tile.zero .n { color: var(--border); }
+        .tile.warn { background: #fef2f2; border-color: #fecaca; }
+        .tile.warn .n { color: #b91c1c; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 14px; align-items: start; }
+        .sect {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 13px 15px 15px;
+        }
+        .sect.warn { border-color: #fecaca; }
+        .sect h3 {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 5px;
+            font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted);
+        }
+        .sect h3 .cnt {
+            font-size: 10px; padding: 1px 7px; border-radius: 999px; letter-spacing: 0;
+            background: var(--border-soft); color: var(--muted);
+        }
+        .sect h3 .cnt.warn { background: #fef2f2; color: #b91c1c; }
+        .sect .note { font-size: 11.5px; line-height: 1.55; color: var(--faint); margin-bottom: 11px; }
+        .row {
+            display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+            padding: 7px 10px; background: var(--bg); border: 1px solid var(--border-soft);
+            border-radius: 7px; margin-bottom: 6px;
+        }
+        .row:last-child { margin-bottom: 0; }
+        .row .tname {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px;
+            color: var(--muted); margin-right: 4px;
+        }
+        .pill {
+            padding: 2px 9px; border-radius: 999px; font-size: 11.5px; cursor: pointer;
+            background: var(--surface); border: 1px solid var(--border); color: #374151; white-space: nowrap;
+        }
+        .pill:hover { border-color: var(--accent); color: var(--accent); }
+        .pill .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; vertical-align: 1px; }
+        .arrow { color: var(--faint); font-size: 11px; }
+        .cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+        .ok {
+            display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted);
+            padding: 8px 11px; background: var(--bg); border: 1px solid var(--border-soft); border-radius: 7px;
+        }
+        .ok .tick { color: #059669; font-weight: 600; }
+
+        /* detail */
+        .detail { flex: none; max-height: 246px; overflow: auto; background: var(--surface); border-top: 1px solid var(--border); }
+        .detail .dh {
+            display: flex; align-items: center; gap: 8px; padding: 8px 14px; position: sticky; top: 0;
+            background: var(--surface); border-bottom: 1px solid var(--border-soft);
+            font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--faint);
+        }
+        .detail table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .detail td { padding: 5px 10px; border-bottom: 1px solid var(--border-soft); white-space: nowrap; }
+        .detail tr:hover td { background: var(--bg); }
+        .detail .dir { width: 74px; color: var(--faint); font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; }
+        .detail .mdl { cursor: pointer; font-weight: 500; }
+        .detail .mdl:hover { color: var(--accent); }
+        .detail .mod { color: var(--muted); }
+        .detail .kind { width: 96px; }
+        .detail .kind i { display: inline-block; width: 14px; border-top: 2px solid; margin-right: 6px; vertical-align: 4px; }
+        .detail .fld { color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
+        .detail .none { padding: 14px; color: var(--faint); font-size: 12px; }
+        .detail .dtab {
+            cursor: pointer; padding: 2px 9px; border-radius: 999px; letter-spacing: .04em;
+            color: var(--faint); border: 1px solid transparent;
+        }
+        .detail .dtab.on { color: var(--fg); background: var(--bg); border-color: var(--border); }
+        .detail .dtab:hover { color: var(--fg); }
+        .detail .yes { color: #059669; }
+        .detail .no { color: var(--border); }
+        .detail .ref { cursor: pointer; color: var(--accent); }
+        .cfg { display: grid; grid-template-columns: 132px 1fr; gap: 6px 14px; padding: 12px 14px; font-size: 12px; }
+        .cfg dt { color: var(--faint); }
+        .cfg dd { color: var(--fg); word-break: break-all; }
+        .cfg .chip2 {
+            display: inline-block; padding: 1px 8px; margin: 0 4px 4px 0; border-radius: 999px;
+            background: var(--bg); border: 1px solid var(--border); font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <span class="brand">Model Atlas</span>
+    <span class="stat" id="stat"></span>
+    <span class="spacer"></span>
+    <span class="depth" id="depth-box"><span id="depth-label">depth</span>
+        <span class="seg">
+            <button data-d="1">1</button><button data-d="2" class="on">2</button><button data-d="3">3</button><button data-d="4">4</button><button data-d="5">5</button>
+        </span>
+    </span>
+    <div class="seg">
+        <button id="tab-tree" class="on">Lineage</button>
+        <button id="tab-layers">Layers</button>
+        <button id="tab-overview">Overview</button>
+        <button id="tab-matrix">Matrix</button>
+        <button id="tab-power">Power</button>
+        <button id="tab-impact">Impact</button>
+        <button id="tab-audit">Audit</button>
+    </div>
+</header>
+<div class="main">
+    <aside>
+        <div class="search"><input id="q" type="search" placeholder="Search model…" autocomplete="off"></div>
+        <div class="tree" id="list"></div>
+    </aside>
+    <div class="content">
+        <div class="dbar" id="dbar" hidden></div>
+        <div class="stage" id="stage"><div class="hint" id="hint">Loading…</div></div>
+        <div class="detail" id="detail"></div>
+    </div>
+</div>
+<script>
+(function () {
+    var QS = new URLSearchParams(location.search);
+    var TOKEN = QS.get('_token');
+    // The admin hands a tpl page its language on the URL; pass it on so the registry answers
+    // in the same language the rest of the console is speaking
+    var AUTH = '_token=' + encodeURIComponent(TOKEN || '')
+        + (QS.get('_lang') ? '&_lang=' + encodeURIComponent(QS.get('_lang')) : '');
+    var BASE = location.pathname.split('/erupt-api/')[0];
+    var NS = 'http://www.w3.org/2000/svg';
+    var PALETTE = ['#2563eb', '#059669', '#d97706', '#db2777', '#7c3aed', '#0891b2',
+        '#dc2626', '#4f46e5', '#65a30d', '#c026d3', '#ea580c', '#475569'];
+    // Only real data relations carry dependency direction; drill / row operation are navigation
+    var STRUCTURAL = {reference: 1, tab: 1, embed: 1};
+    var KIND_COLOR = {
+        reference: '#9aa3af', tab: '#3b82f6', embed: '#8b5cf6', drill: '#f59e0b',
+        operation: '#cbd5e1', cubeOf: '#10b981', table: '#10b981', join: '#10b981'
+    };
+
+    var stage = document.getElementById('stage');
+    var dbar = document.getElementById('dbar');
+    var hint = document.getElementById('hint');
+    var listBox = document.getElementById('list');
+    var detail = document.getElementById('detail');
+
+    var nodes = [], links = [], byId = {}, colorOf = {}, modules = [];
+    var outOf = {}, inOf = {};
+    var mode = 'tree', current = null, keyword = '', depth = 2, audit = null;
+    var domainsBySize = [], domainSize = {}, domainFocus = null;
+    var detailCache = {}, detailTab = 'relations';
+    // Filled from the module's own i18n csv, keyed by the English text: a string the csv never
+    // heard of simply stays English
+    var TEXT = {};
+
+    function t(s) { return TEXT[s] || s; }
+
+    fetch(BASE + '/erupt-api/erupt-atlas/view?' + AUTH)
+        .then(function (r) { return r.json(); })
+        .then(boot)
+        .catch(function (e) { hint.textContent = t('Failed to load') + ': ' + e; });
+
+    function boot(res) {
+        TEXT = res.text || {};
+        chrome();
+        nodes = res.nodes || [];
+        if (!nodes.length) { hint.textContent = t('No erupt model is registered'); return; }
+        nodes.forEach(function (n) {
+            n.group = n.source || 'unknown';
+            byId[n.id] = n;
+            outOf[n.id] = [];
+            inOf[n.id] = [];
+            if (modules.indexOf(n.group) < 0) modules.push(n.group);
+        });
+        audit = res.audit || {cycles: [], sharedTables: [], orphans: [], unpublished: []};
+        links = (res.edges || []).filter(function (e) { return byId[e.from] && byId[e.to]; });
+        links.forEach(function (l) {
+            l.s = byId[l.from];
+            l.t = byId[l.to];
+            outOf[l.from].push(l);
+            inOf[l.to].push(l);
+        });
+        modules.sort();
+        modules.forEach(function (m, i) { colorOf[m] = PALETTE[i % PALETTE.length]; });
+        nodes.forEach(function (n) { domainSize[n.group] = (domainSize[n.group] || 0) + 1; });
+        // biggest domain first, so a domain keeps the same place in every layer
+        domainsBySize = modules.slice().sort(function (a, b) {
+            return domainSize[b] - domainSize[a] || a.localeCompare(b);
+        });
+        nodes.sort(function (a, b) { return a.name.localeCompare(b.name); });
+
+        var remoteCount = nodes.filter(function (n) { return n.kind === 'remote'; }).length;
+        document.getElementById('stat').innerHTML = '<b>' + nodes.filter(function (n) { return n.kind === 'erupt'; }).length
+            + '</b> ' + t('models') + ' · <b>' + nodes.filter(function (n) { return n.kind === 'cube'; }).length
+            + '</b> ' + t('cubes') + ' · <b>' + links.length + '</b> ' + t('relations')
+            + ' · <b>' + modules.length + '</b> ' + t('modules')
+            + (remoteCount ? ' · <b>' + remoteCount + '</b> ' + t('remote') : '');
+
+        renderList();
+        renderDomainBar();
+        // Opened from the class registry: land on that model; otherwise start from the busiest one
+        var wanted = QS.get('erupt');
+        select(wanted && byId[wanted] ? wanted
+            : nodes.slice().sort(function (a, b) { return deg(b) - deg(a); })[0].id);
+    }
+
+    function deg(n) { return outOf[n.id].length + inOf[n.id].length; }
+
+    // The header is markup, not script, so it is translated in place after the payload lands
+    function chrome() {
+        document.title = t('Model Atlas');
+        document.querySelector('.brand').textContent = t('Model Atlas');
+        document.getElementById('q').placeholder = t('Search model…');
+        document.getElementById('depth-label').textContent = t('depth');
+        [['tree', 'Lineage'], ['layers', 'Layers'], ['overview', 'Overview'],
+            ['matrix', 'Matrix'], ['power', 'Power'],
+            ['impact', 'Impact'], ['audit', 'Audit']].forEach(function (kv) {
+            document.getElementById('tab-' + kv[0]).textContent = t(kv[1]);
+        });
+    }
+
+    // What a model is called in the admin, translated by the server; the class name carries it
+    // when a model has no @Erupt name of its own
+    function listName(n) { return n.label || n.name; }
+
+    /* ---------------- left list ---------------- */
+
+    function renderList() {
+        var groups = {};
+        nodes.forEach(function (n) {
+            if (keyword && n.name.toLowerCase().indexOf(keyword) < 0
+                && (n.label || '').toLowerCase().indexOf(keyword) < 0) return;
+            (groups[n.group] = groups[n.group] || []).push(n);
+        });
+        var html = '';
+        Object.keys(groups).sort().forEach(function (g) {
+            html += '<div class="grp"><span class="dot" style="background:' + colorOf[g] + '"></span>'
+                + esc(g) + '<span class="n">' + groups[g].length + '</span></div>';
+            // sorted by what the row reads as, not by the class name behind it
+            groups[g].sort(function (a, b) { return listName(a).localeCompare(listName(b)); });
+            // three models may all be called User maintenance: the class name settles which is which
+            var seen = {};
+            groups[g].forEach(function (n) { seen[listName(n)] = (seen[listName(n)] || 0) + 1; });
+            groups[g].forEach(function (n) {
+                // the @Erupt name is what the model is called in the admin; the class name is
+                // still what you search by, and it stays one hover away
+                html += '<div class="item' + (n.kind === 'erupt' ? '' : ' ' + n.kind) + (current === n.id ? ' on' : '')
+                    + '" data-id="' + esc(n.id) + '" title="' + esc(n.name)
+                    + (n.label && n.label !== n.name ? ' — ' + esc(n.label) : '') + '">'
+                    + esc(listName(n))
+                    + (seen[listName(n)] > 1 ? '<span class="cls">' + esc(n.name) + '</span>' : '')
+                    + '<span class="tag">' + deg(n) + '</span></div>';
+            });
+        });
+        listBox.innerHTML = html || '<div class="grp">no match</div>';
+        each(listBox.querySelectorAll('.item'), function (row) {
+            row.onclick = function () { select(row.getAttribute('data-id')); };
+        });
+    }
+
+    document.getElementById('q').addEventListener('input', function (e) {
+        keyword = e.target.value.trim().toLowerCase();
+        renderList();
+        if (mode === 'overview') drawOverview();
+        else if (mode === 'power') drawPower();
+    });
+
+    /* ---------------- view switching ---------------- */
+
+    document.getElementById('tab-tree').onclick = function () { setMode('tree'); };
+    document.getElementById('tab-overview').onclick = function () { setMode('overview'); };
+    document.getElementById('tab-matrix').onclick = function () { setMode('matrix'); };
+    document.getElementById('tab-audit').onclick = function () { setMode('audit'); };
+    document.getElementById('tab-power').onclick = function () { setMode('power'); };
+    document.getElementById('tab-layers').onclick = function () { setMode('layers'); };
+    document.getElementById('tab-impact').onclick = function () { setMode('impact'); };
+    each(document.querySelectorAll('#depth-box button'), function (b) {
+        b.onclick = function () {
+            depth = +b.getAttribute('data-d');
+            each(document.querySelectorAll('#depth-box button'), function (x) { x.className = x === b ? 'on' : ''; });
+            if (mode === 'tree') drawTree(byId[current]);
+        };
+    });
+
+    function setMode(next) {
+        mode = next;
+        ['tree', 'layers', 'overview', 'matrix', 'power', 'impact', 'audit'].forEach(function (m) {
+            document.getElementById('tab-' + m).className = next === m ? 'on' : '';
+        });
+        document.getElementById('depth-box').style.visibility = next === 'tree' ? 'visible' : 'hidden';
+        // the domain chips scope every table-shaped view, not just the layers report
+        dbar.hidden = ['layers', 'power'].indexOf(next) < 0;
+        if (next === 'power') { drawPower(); return; }
+        if (next === 'matrix') { drawMatrix(); return; }
+        if (next === 'audit') { drawAudit(); return; }
+        if (next === 'layers') { drawLayers(); return; }
+        if (next === 'impact') { drawImpact(); return; }
+        if (next === 'tree') drawTree(byId[current]); else drawOverview();
+        relationTable(byId[current]);
+    }
+
+    function select(id) {
+        current = id;
+        renderList();
+        if (mode !== 'tree') { setMode('tree'); return; }
+        drawTree(byId[id]);
+        relationTable(byId[id]);
+        var row = listBox.querySelector('.item.on');
+        if (row) row.scrollIntoView({block: 'nearest'});
+    }
+
+    /* ---------------- lineage tree ----------------
+       Each side is turned into a real tree (a model appears once, on the shallowest level it is
+       reached), so edges never cross and a transitive chain reads as one path. */
+
+    var CARD_W = 158, CARD_H = 32, GAP_Y = 9, COL_GAP = 116, ROOT_W = 196, ROOT_H = 60;
+
+    // Breadth first on purpose: a model must land on the shallowest level that reaches it, or a
+    // direct relation gets buried one column deeper just because a sibling was expanded first.
+    function subtree(id, dir) {
+        var seen = {};
+        seen[id] = true;
+        var roots = [];
+        var frontier = [{id: id, item: null}];
+        for (var d = 0; d < depth && frontier.length; d++) {
+            var next = [];
+            frontier.forEach(function (parent) {
+                (dir === 'out' ? outOf[parent.id] : inOf[parent.id]).forEach(function (l) {
+                    var other = dir === 'out' ? l.t : l.s;
+                    if (seen[other.id]) return;
+                    seen[other.id] = true;
+                    var item = {node: other, link: l, kids: []};
+                    if (parent.item) parent.item.kids.push(item); else roots.push(item);
+                    next.push({id: other.id, item: item});
+                });
+            });
+            frontier = next;
+        }
+        return roots;
+    }
+
+    // Reingold-Tilford, cut to the bone: a leaf takes one slot, a parent centres on its children
+    function assign(items, slot) {
+        items.forEach(function (it) {
+            if (!it.kids.length) {
+                it.slot = slot.v;
+                slot.v += 1;
+            } else {
+                assign(it.kids, slot);
+                it.slot = (it.kids[0].slot + it.kids[it.kids.length - 1].slot) / 2;
+            }
+        });
+    }
+
+    function flatten(items, level, acc) {
+        items.forEach(function (it) {
+            it.level = level;
+            acc.push(it);
+            flatten(it.kids, level + 1, acc);
+        });
+        return acc;
+    }
+
+    function drawTree(root) {
+        hint.style.display = 'none';
+        var outs = subtree(root.id, 'out');
+        var ins = subtree(root.id, 'in');
+        var slotOut = {v: 0}, slotIn = {v: 0};
+        assign(outs, slotOut);
+        assign(ins, slotIn);
+        var flatOut = flatten(outs, 0, []), flatIn = flatten(ins, 0, []);
+        var rows = Math.max(slotOut.v, slotIn.v, 1);
+        var levelsOut = flatOut.reduce(function (m, it) { return Math.max(m, it.level + 1); }, 0);
+        var levelsIn = flatIn.reduce(function (m, it) { return Math.max(m, it.level + 1); }, 0);
+
+        var box = stage.getBoundingClientRect();
+        var unit = CARD_H + GAP_Y;
+        var height = Math.max(box.height - 2, rows * unit + 96);
+        var span = ROOT_W + (levelsIn + levelsOut) * (CARD_W + COL_GAP);
+        var width = Math.max(box.width - 2, span + 60);
+        var midY = height / 2;
+        var startX = Math.max(24, (width - span) / 2);
+        var rootX = startX + levelsIn * (CARD_W + COL_GAP);
+
+        var svg = el('svg', {width: width, height: height, viewBox: '0 0 ' + width + ' ' + height});
+        var gLink = el('g', {}), gCard = el('g', {});
+        svg.appendChild(gLink);
+        svg.appendChild(gCard);
+
+        var centerOut = slotOut.v ? (slotOut.v - 1) / 2 : 0;
+        var centerIn = slotIn.v ? (slotIn.v - 1) / 2 : 0;
+
+        place(flatOut, 'out');
+        place(flatIn, 'in');
+
+        function place(list, dir) {
+            var center = dir === 'out' ? centerOut : centerIn;
+            list.forEach(function (it) {
+                it.x = dir === 'out'
+                    ? rootX + ROOT_W + COL_GAP + it.level * (CARD_W + COL_GAP)
+                    : rootX - COL_GAP - CARD_W - it.level * (CARD_W + COL_GAP);
+                it.y = midY + (it.slot - center) * unit - CARD_H / 2;
+            });
+            list.forEach(function (it) {
+                var parent = findParent(list, it);
+                var from, to;
+                if (dir === 'out') {
+                    from = parent ? [parent.x + CARD_W, parent.y + CARD_H / 2] : [rootX + ROOT_W, midY];
+                    to = [it.x, it.y + CARD_H / 2];
+                } else {
+                    from = [it.x + CARD_W, it.y + CARD_H / 2];
+                    to = parent ? [parent.x, parent.y + CARD_H / 2] : [rootX, midY];
+                }
+                gLink.appendChild(el('path', {'class': 'link ' + it.link.kind, d: curve(from, to)}));
+                // Label hugs the child card, one per row — anchored mid-edge they pile up on the hub
+                if (it.level === 0 && it.link.label) {
+                    if (dir === 'out') {
+                        gCard.appendChild(text(to[0] - 9, to[1] - 5, clip(it.link.label, 18), 'lbl', 'end'));
+                    } else {
+                        gCard.appendChild(text(from[0] + 9, from[1] - 5, clip(it.link.label, 18), 'lbl'));
+                    }
+                }
+                gCard.appendChild(card(it.node, it.x, it.y, CARD_W, CARD_H, false));
+            });
+        }
+
+        if (levelsIn) svg.appendChild(text(startX, 26, t('Referenced by') + ' · ' + flatIn.length, 'colhead'));
+        if (levelsOut) svg.appendChild(text(rootX + ROOT_W + COL_GAP, 26, t('References') + ' · ' + flatOut.length, 'colhead'));
+        gCard.appendChild(card(root, rootX, midY - ROOT_H / 2, ROOT_W, ROOT_H, true));
+        if (!flatIn.length && !flatOut.length) {
+            svg.appendChild(text(rootX + ROOT_W / 2, midY + ROOT_H, t('No relation to any other model'), 'lbl', 'middle'));
+        }
+        stage.innerHTML = '';
+        stage.appendChild(svg);
+    }
+
+    function findParent(list, child) {
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].kids.indexOf(child) >= 0) return list[i];
+        }
+        return null;
+    }
+
+    function curve(a, b) {
+        var dx = Math.abs(b[0] - a[0]) * 0.45;
+        return 'M' + a[0] + ',' + a[1] + 'C' + (a[0] + dx) + ',' + a[1] + ' '
+            + (b[0] - dx) + ',' + b[1] + ' ' + b[0] + ',' + b[1];
+    }
+
+    function card(node, x, y, w, h, root, compact) {
+        var g = el('g', {'class': 'card' + (root ? ' root' : '') + (node.kind === 'erupt' ? '' : ' ' + node.kind)
+            + (node.runtime ? ' rt' : '')});
+        g.appendChild(el('rect', {'class': 'box', x: x, y: y, width: w, height: h, rx: 7}));
+        g.appendChild(el('path', {fill: colorOf[node.group], d: bar(x, y, h)}));
+        // A card reads as the model is named in the admin; the class name rides the second line
+        // where there is room for it, and the tooltip always carries both
+        if (root) {
+            g.appendChild(text(x + 15, y + 24, clip(listName(node), 21), 'nm'));
+            g.appendChild(text(x + 15, y + 42, node.name + ' · '
+                + (node.kind === 'cube' ? node.dimensions + 'D / ' + node.measures + 'M' : node.fields + ' ' + t('fields')), 'sub'));
+        } else if (compact) {
+            g.appendChild(text(x + 12, y + h / 2 + 4, clip(listName(node), 19), 'nm'));
+        } else {
+            g.appendChild(text(x + 12, y + 14, clip(listName(node), 18), 'nm'));
+            g.appendChild(text(x + 12, y + 25, clip(node.name, 20), 'sub'));
+        }
+        g.appendChild(el('title', {}, node.name + ' — ' + (node.label || '') + ' · ' + node.group));
+        g.addEventListener('click', function () { select(node.id); });
+        return g;
+    }
+
+    function bar(x, y, h) {
+        return 'M' + (x + 3) + ',' + y + 'H' + (x + 7) + 'V' + (y + h) + 'H' + (x + 3)
+            + 'A7,7 0 0 1 ' + x + ',' + (y + h - 7) + 'V' + (y + 7) + 'A7,7 0 0 1 ' + (x + 3) + ',' + y + 'Z';
+    }
+
+    /* ---------------- layers ----------------
+       Audit proves the structural graph is acyclic, so it can be levelled: a model sits one
+       level above the deepest thing it depends on, L0 being the bedrock. Drawn as a board this
+       said very little — most models are shallow — so it is read as a report: how the depth is
+       distributed, what the whole system stands on, and the few chains that actually run deep. */
+
+    function structural(l) { return STRUCTURAL[l.kind]; }
+
+    function levels() {
+        var level = {}, visiting = {};
+        function walk(id) {
+            if (level[id] != null) return level[id];
+            if (visiting[id]) return 0;
+            visiting[id] = true;
+            var deep = -1;
+            outOf[id].forEach(function (l) {
+                if (!structural(l) || l.t.id === id) return;
+                deep = Math.max(deep, walk(l.t.id));
+            });
+            visiting[id] = false;
+            level[id] = deep + 1;
+            return level[id];
+        }
+        nodes.forEach(function (n) { if (touchedStructurally(n)) walk(n.id); });
+        return level;
+    }
+
+    function touchedStructurally(n) {
+        return outOf[n.id].some(structural) || inOf[n.id].some(structural);
+    }
+
+    /* ---- domain bar: scopes the three tables below ---- */
+
+    function renderDomainBar() {
+        var html = '<span class="cap">' + esc(t('Domain')) + '</span>'
+            + '<button class="chip' + (domainFocus ? '' : ' on') + '" data-d="">' + esc(t('All')) + '</button>';
+        domainsBySize.forEach(function (d) {
+            html += '<button class="chip' + (domainFocus === d ? ' on' : '') + '" data-d="' + esc(d) + '">'
+                + '<i style="background:' + colorOf[d] + '"></i>' + esc(d) + '<b>' + domainSize[d] + '</b></button>';
+        });
+        dbar.innerHTML = html + '<span class="note" id="dnote"></span>';
+        each(dbar.querySelectorAll('.chip'), function (b) {
+            b.onclick = function () { focusDomain(b.getAttribute('data-d') || null); };
+        });
+    }
+
+    // Clicking the domain already in focus releases it, so the chip doubles as a toggle
+    function focusDomain(d) {
+        domainFocus = domainFocus === d ? null : d;
+        renderDomainBar();
+        if (mode === 'power') drawPower();
+        else drawLayers();
+    }
+
+    function inFocus(n) { return !domainFocus || n.group === domainFocus; }
+
+    // The one path that makes a model deep: from a model nothing depends on, always step to the
+    // deepest thing it needs. Chains, not bands, are where the depth axis carries information.
+    function deepChains(level) {
+        var out = [], seen = {};
+        nodes.forEach(function (n) {
+            if ((level[n.id] || 0) < 2 || inOf[n.id].some(structural)) return;
+            var path = [n], cur = n, guard = {};
+            guard[n.id] = true;
+            for (; ;) {
+                var next = null;
+                outOf[cur.id].forEach(function (l) {
+                    if (!structural(l) || guard[l.t.id]) return;
+                    if (!next || (level[l.t.id] || 0) > (level[next.id] || 0)) next = l.t;
+                });
+                if (!next) break;
+                guard[next.id] = true;
+                path.push(next);
+                cur = next;
+            }
+            var key = path.map(function (p) { return p.id; }).join('>');
+            if (path.length >= 3 && !seen[key]) {
+                seen[key] = true;
+                out.push(path);
+            }
+        });
+        return out.sort(function (a, b) { return b.length - a.length; }).slice(0, 10);
+    }
+
+    function drawLayers() {
+        var level = levels();
+        var placed = nodes.filter(function (n) { return level[n.id] != null; });
+        var loose = nodes.length - placed.length;
+        var note = document.getElementById('dnote');
+        if (note) note.textContent = loose + ' ' + t('models carry no structural relation and are not levelled');
+        if (!placed.length) { stage.innerHTML = '<div class="hint">' + esc(t('No structural relation to level')) + '</div>'; return; }
+
+        var byLevel = {};
+        placed.forEach(function (n) { (byLevel[level[n.id]] = byLevel[level[n.id]] || []).push(n); });
+        var keys = Object.keys(byLevel).map(Number).sort(function (a, b) { return a - b; });
+        var top = keys[keys.length - 1];
+        var chains = deepChains(level).filter(function (p) { return p.some(inFocus); });
+        var base = (byLevel[0] || []).map(function (n) { return {node: n, on: impactOf(n.id).total, direct: dependents(n)}; })
+            .filter(function (r) { return inFocus(r.node); })
+            .sort(function (a, b) { return b.on - a.on || a.node.name.localeCompare(b.node.name); });
+        var maxOn = base.reduce(function (m, r) { return Math.max(m, r.on); }, 1);
+
+        var html = '<div class="lv"><div class="tiles">'
+            + tile(top + 1, t('Levels deep'), false)
+            + tile(placed.length, t('Models levelled'), false)
+            + tile((byLevel[0] || []).length, t('Foundation models'), false)
+            + tile(chains.length ? chains[0].length : 0, t('Longest chain'), false)
+            + '</div>';
+
+        // Distribution first: it is the fact the old board buried — almost everything is shallow
+        html += '<div class="lvbar">';
+        keys.slice().reverse().forEach(function (k) {
+            var n = byLevel[k].length;
+            var shade = Math.round(92 - (k / Math.max(top, 1)) * 52);
+            // the shallow levels are the palest bands, so their label has to flip to dark ink
+            html += '<div class="seg" style="flex:' + n + ';background:hsl(217,' + (18 + k * 6) + '%,' + shade + '%)'
+                + ';color:' + (shade > 62 ? '#334155' : '#fff') + '"'
+                + ' title="' + n + ' models sit ' + k + ' levels above the bedrock">L' + k + '<b>' + n + '</b></div>';
+        });
+        html += '</div>';
+
+        html += sect(t('Foundation'), base.length, false,
+            t('Level 0: models that depend on nothing. Everything else stands on these, so a column change here travels the furthest — the count is how many models break transitively.'),
+            base.length
+                ? '<table><tr><th>' + esc(t('Model')) + '</th><th>' + esc(t('Module')) + '</th>'
+                + '<th class="num">' + esc(t('Stands on it')) + '</th>'
+                + '<th class="num">' + esc(t('Direct')) + '</th><th class="bar"></th></tr>'
+                + base.map(function (r) {
+                    return '<tr><td class="nm" data-id="' + esc(r.node.id) + '" title="' + esc(r.node.name) + '">'
+                        + '<span class="dot" style="background:' + colorOf[r.node.group] + '"></span>'
+                        + esc(listName(r.node)) + '</td>'
+                        + '<td class="mod">' + esc(r.node.group) + '</td>'
+                        + '<td class="num">' + r.on + '</td><td class="num">' + r.direct + '</td>'
+                        + '<td class="bar"><span style="width:' + (r.on / maxOn * 260) + 'px;background:#2563eb"></span></td></tr>';
+                }).join('') + '</table>'
+                : ok(t('No foundation model in this domain.')));
+
+        html += sect(t('Deep chains'), chains.length, false,
+            t('Where the depth actually comes from: start at a model nothing depends on and follow the deepest dependency each step. Everything not on one of these lines is one or two levels from the bedrock.'),
+            chains.length
+                ? chains.map(function (path) {
+                    return '<div class="chain">' + path.map(function (n) { return pill(n.id); })
+                        .join('<span class="arrow">&rarr;</span>') + '</div>';
+                }).join('')
+                : ok(t('No chain runs deeper than two levels.')));
+
+        html += sect(t('By level'), placed.length, false,
+            t('Every levelled model, deepest level first. A model sits one level above the deepest thing it needs, so reading down a level is reading one step closer to the bedrock.'),
+            keys.slice().reverse().map(function (k) {
+                var list = byLevel[k].filter(inFocus).slice().sort(function (a, b) {
+                    return a.group === b.group ? a.name.localeCompare(b.name) : a.group.localeCompare(b.group);
+                });
+                if (!list.length) return '';
+                return '<div class="lvl"><span class="tag">L' + k + ' · ' + list.length + '</span>'
+                    + '<span class="cloud">' + list.map(function (n) { return pill(n.id); }).join('') + '</span></div>';
+            }).join(''));
+
+        stage.innerHTML = html + '</div>';
+        each(stage.querySelectorAll('.pill, .nm'), function (e2) {
+            e2.onclick = function () { select(e2.getAttribute('data-id')); };
+        });
+        detail.innerHTML = '<div class="dh">' + esc(t('Click a model to open its lineage')) + '</div>';
+    }
+
+    function dependents(n) {
+        var seen = {};
+        inOf[n.id].forEach(function (l) { if (structural(l)) seen[l.s.id] = 1; });
+        return Object.keys(seen).length;
+    }
+
+    var powerRows = null;
+
+    function lazy(path, hold, draw) {
+        if (hold()) { draw(); return; }
+        stage.innerHTML = '<div class="hint">' + esc(t('Loading…')) + '</div>';
+        fetch(BASE + '/erupt-api/erupt-atlas/' + path + '?' + AUTH)
+            .then(function (r) { return r.json(); })
+            .then(function (rows) {
+                hold(rows || []);
+                draw();
+            })
+            .catch(function (e) { stage.innerHTML = '<div class="hint">' + esc(t('Failed to load') + ': ' + e) + '</div>'; });
+    }
+
+    function powerHeld(set) {
+        if (set) powerRows = set;
+        return powerRows;
+    }
+
+    /* ---------------- power ----------------
+       What a model declares it can do, against the function buttons the menu tree carries. The
+       buttons are written once, when the menu is created, from the flags as they stood then — so
+       a flag flipped afterwards never grows a button, and nothing grants that permission. */
+
+    // power flag -> the menu code a button carries, for the six that upms gates
+    var GATED = {add: 'ADD', edit: 'EDIT', delete: 'DELETE', export: 'EXPORT', import: 'IMPORTABLE', detail: 'VIEW_DETAIL'};
+    var FLAGS = ['add', 'edit', 'delete', 'query', 'detail', 'export', 'import', 'print', 'copy', 'cellEdit', 'ai'];
+
+    function drawPower() {
+        if (!powerRows) { lazy('power', powerHeld, drawPower); return; }
+        var note = document.getElementById('dnote');
+        if (note) note.textContent = t('menu-less models carry no function buttons and are not checked');
+
+        var rows = powerRows.filter(function (r) {
+            if (domainFocus && r.module !== domainFocus) return false;
+            return !keyword || r.model.toLowerCase().indexOf(keyword) >= 0
+                || (r.label || '').toLowerCase().indexOf(keyword) >= 0;
+        });
+
+        // Only a model with a menu can be measured against buttons at all
+        var drift = [];
+        rows.forEach(function (r) {
+            if (!r.menuType) return;
+            var missing = [], dead = [];
+            Object.keys(GATED).forEach(function (flag) {
+                var on = r.power.indexOf(flag) >= 0;
+                var button = r.buttons.indexOf(GATED[flag]) >= 0;
+                if (on && !button) missing.push(flag);
+                if (!on && button) dead.push(flag);
+            });
+            if (missing.length || dead.length) drift.push({row: r, missing: missing, dead: dead});
+        });
+
+        var withMenu = rows.filter(function (r) { return r.menuType; }).length;
+        var html = '<div class="lv"><div class="tiles">'
+            + tile(rows.length, t('Models'), false)
+            + tile(withMenu, t('With a menu'), false)
+            + tile(rows.filter(function (r) { return r.power.indexOf('delete') >= 0; }).length, t('Delete on'), false)
+            + tile(drift.length, t('Drifted'), true)
+            + '</div>';
+
+        html += sect(t('Menu drift'), drift.length, true,
+            t('Function buttons are written once, when the menu is created, from the power flags as they stood then. A flag turned on afterwards never grows a button, and a permission nobody can be granted is a capability nobody has.'),
+            drift.length
+                ? drift.map(function (d) {
+                    return '<div class="row"><span class="cloud">' + pill(d.row.model) + '</span>'
+                        + d.missing.map(function (f) {
+                            return '<span class="flag warn" title="' + esc(t('power is on, the menu has no button')) + '">'
+                                + esc(f) + ' &rarr; ' + esc(t('no button')) + '</span>';
+                        }).join('')
+                        + d.dead.map(function (f) {
+                            return '<span class="flag">' + esc(t('button')) + ' &rarr; ' + esc(f) + ' '
+                                + esc(t('is off')) + '</span>';
+                        }).join('')
+                        + '</div>';
+                }).join('')
+                : ok(t('Every function button matches the power behind it.')));
+
+        html += sect(t('Declared power'), rows.length, false,
+            t('What each model allows, straight off @Power. The first six are the ones upms gates with a menu button — a dot on those columns means the button is missing.'),
+            rows.length
+                ? '<table class="pw"><tr><th>' + esc(t('Model')) + '</th><th>' + esc(t('Module')) + '</th>'
+                + FLAGS.map(function (f) {
+                    return '<th class="pw-h' + (GATED[f] ? ' gated' : '') + '"><span>' + esc(f) + '</span></th>';
+                }).join('')
+                + '<th>' + esc(t('Handler')) + '</th></tr>'
+                + rows.map(function (r) {
+                    return '<tr><td class="nm" data-id="' + esc(r.model) + '" title="' + esc(r.model) + '">'
+                        + '<span class="dot" style="background:' + (colorOf[r.module] || '#cbd5e1') + '"></span>'
+                        + esc(r.label || r.model) + (r.menuType ? '' : ' <i class="nomenu">' + esc(t('no menu')) + '</i>')
+                        + '</td><td class="mod">' + esc(r.module) + '</td>'
+                        + FLAGS.map(function (f) {
+                            var on = r.power.indexOf(f) >= 0;
+                            if (!on) return '<td class="pw-c">·</td>';
+                            var gap = GATED[f] && r.menuType && r.buttons.indexOf(GATED[f]) < 0;
+                            return '<td class="pw-c on' + (gap ? ' gap' : '') + '" title="'
+                                + esc(gap ? t('power is on, the menu has no button') : f) + '">'
+                                + (gap ? '!' : '&#10003;') + '</td>';
+                        }).join('')
+                        + '<td class="mod">' + esc(r.powerHandler || '') + '</td></tr>';
+                }).join('') + '</table>'
+                : ok(t('No model matches.')));
+
+        stage.innerHTML = html + '</div>';
+        each(stage.querySelectorAll('.nm, .pill'), function (e2) {
+            e2.onclick = function () { select(e2.getAttribute('data-id')); };
+        });
+        detail.innerHTML = '<div class="dh">' + esc(t('Click a model to open its lineage')) + '</div>';
+    }
+
+    /* ---------------- impact ----------------
+       Reverse reachability: who breaks if this model changes, counted per hop. */
+
+    function impactOf(id) {
+        var seen = {}, hops = [];
+        seen[id] = true;
+        var frontier = [id];
+        while (frontier.length && hops.length < 8) {
+            var next = [];
+            frontier.forEach(function (fid) {
+                inOf[fid].forEach(function (l) {
+                    if (!structural(l) || seen[l.s.id]) return;
+                    seen[l.s.id] = true;
+                    next.push(l.s.id);
+                });
+            });
+            if (!next.length) break;
+            hops.push(next.length);
+            frontier = next;
+        }
+        var total = 0;
+        hops.forEach(function (n) { total += n; });
+        return {total: total, hops: hops};
+    }
+
+    function drawImpact() {
+        var HOP_COLOR = ['#2563eb', '#60a5fa', '#bfdbfe'];
+        var list = nodes.filter(function (n) { return n.kind !== 'remote'; })
+            .map(function (n) { return {node: n, impact: impactOf(n.id)}; })
+            .filter(function (r) { return r.impact.total > 0; })
+            .sort(function (a, b) { return b.impact.total - a.impact.total; });
+        var max = list.length ? list[0].impact.total : 1;
+
+        var html = '<div class="impact"><div class="note">'
+            + esc(t('How many models break if this one changes, following data relations backwards. The bar splits the count by distance: solid is one hop away, lighter shades are two and three or more. A high number is not a defect — it marks the models that need care.')) + '</div>'
+            + '<table><tr><th>' + esc(t('Model')) + '</th><th>' + esc(t('Module')) + '</th>'
+            + '<th class="num">' + esc(t('Impact')) + '</th>'
+            + '<th class="bar">' + esc(t('By distance')) + '</th></tr>';
+        list.forEach(function (r) {
+            html += '<tr><td class="nm" data-id="' + esc(r.node.id) + '" title="' + esc(r.node.name) + '">'
+                + '<span class="dot" style="background:' + colorOf[r.node.group] + '"></span>'
+                + esc(listName(r.node)) + '</td>'
+                + '<td class="mod">' + esc(r.node.group) + '</td>'
+                + '<td class="num">' + r.impact.total + '</td><td class="bar">';
+            r.impact.hops.forEach(function (n, i) {
+                html += '<span style="width:' + (n / max * 320) + 'px;background:'
+                    + HOP_COLOR[Math.min(i, HOP_COLOR.length - 1)] + '" title="' + (i + 1) + ' hop: ' + n + '"></span>';
+            });
+            html += ' <span class="hop">' + r.impact.hops.join(' / ') + '</span></td></tr>';
+        });
+        html += '</table></div>';
+        stage.innerHTML = html;
+        each(stage.querySelectorAll('.nm'), function (td) {
+            td.onclick = function () { select(td.getAttribute('data-id')); };
+        });
+        detail.innerHTML = '<div class="dh">' + esc(t('Click a model to open its lineage')) + '</div>';
+    }
+
+    /* ---------------- module overview ----------------
+       The whole registry as module zones. Only cross-module edges are drawn: inside a module
+       every box is one hop away anyway, and drawing those turns the board into hatching. */
+
+    var CELL_W = 148, CELL_H = 26, CELL_GAP = 7, ZONE_PAD = 14, ZONE_GAP = 18, ZONE_HEAD = 26;
+
+    function drawOverview() {
+        hint.style.display = 'none';
+        var groups = {};
+        nodes.forEach(function (n) { (groups[n.group] = groups[n.group] || []).push(n); });
+        var names = Object.keys(groups).sort(function (a, b) { return groups[b].length - groups[a].length; });
+        var box = stage.getBoundingClientRect();
+        var width = Math.max(box.width - 2, 900);
+        var x = ZONE_GAP, y = ZONE_GAP, rowH = 0, placed = {}, zones = [];
+        names.forEach(function (name) {
+            var list = groups[name];
+            var cols = Math.min(3, Math.max(1, Math.round(Math.sqrt(list.length / 1.6))));
+            var rows = Math.ceil(list.length / cols);
+            var w = ZONE_PAD * 2 + cols * CELL_W + (cols - 1) * CELL_GAP;
+            var h = ZONE_HEAD + ZONE_PAD + rows * CELL_H + (rows - 1) * CELL_GAP + ZONE_PAD - 6;
+            if (x + w > width - ZONE_GAP && x > ZONE_GAP) { x = ZONE_GAP; y += rowH + ZONE_GAP; rowH = 0; }
+            zones.push({name: name, list: list, x: x, y: y, w: w, h: h});
+            list.forEach(function (n, i) {
+                placed[n.id] = {
+                    x: x + ZONE_PAD + (i % cols) * (CELL_W + CELL_GAP),
+                    y: y + ZONE_HEAD + ZONE_PAD - 6 + Math.floor(i / cols) * (CELL_H + CELL_GAP)
+                };
+            });
+            x += w + ZONE_GAP;
+            rowH = Math.max(rowH, h);
+        });
+        var height = Math.max(box.height - 2, y + rowH + ZONE_GAP);
+
+        var svg = el('svg', {width: width, height: height, viewBox: '0 0 ' + width + ' ' + height});
+        var gZone = el('g', {}), gLink = el('g', {}), gCard = el('g', {});
+        svg.appendChild(gZone);
+        svg.appendChild(gLink);
+        svg.appendChild(gCard);
+
+        zones.forEach(function (z) {
+            var g = el('g', {'class': 'zone'});
+            g.appendChild(el('rect', {x: z.x, y: z.y, width: z.w, height: z.h, rx: 10}));
+            g.appendChild(el('circle', {cx: z.x + ZONE_PAD + 3, cy: z.y + 17, r: 3.5, fill: colorOf[z.name]}));
+            g.appendChild(text(z.x + ZONE_PAD + 14, z.y + 20, z.name, 'zt'));
+            g.appendChild(text(z.x + z.w - ZONE_PAD, z.y + 20, z.list.length, 'zc', 'end'));
+            gZone.appendChild(g);
+        });
+
+        links.forEach(function (l) {
+            if (l.s.group === l.t.group) return;
+            var a = placed[l.s.id], b = placed[l.t.id];
+            if (!a || !b) return;
+            var rightward = a.x < b.x;
+            var from = [rightward ? a.x + CELL_W : a.x, a.y + CELL_H / 2];
+            var to = [rightward ? b.x : b.x + CELL_W, b.y + CELL_H / 2];
+            gLink.appendChild(el('path', {'class': 'link ' + l.kind, d: arc(from, to), 'stroke-opacity': .4}));
+        });
+
+        nodes.forEach(function (n) {
+            var p = placed[n.id];
+            var c = card(n, p.x, p.y, CELL_W, CELL_H, false, true);
+            var dim = keyword && n.name.toLowerCase().indexOf(keyword) < 0
+                && (n.label || '').toLowerCase().indexOf(keyword) < 0;
+            if (dim) c.setAttribute('class', c.getAttribute('class') + ' fade');
+            if (n.id === current) c.setAttribute('class', c.getAttribute('class') + ' root');
+            gCard.appendChild(c);
+        });
+
+        stage.innerHTML = '';
+        stage.appendChild(svg);
+    }
+
+    function arc(a, b) {
+        var mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+        var dx = b[0] - a[0], dy = b[1] - a[1];
+        var d = Math.sqrt(dx * dx + dy * dy) || 1;
+        var lift = Math.min(90, d * 0.18);
+        return 'M' + a[0] + ',' + a[1] + 'Q' + (mx - dy / d * lift) + ',' + (my + dx / d * lift) + ' ' + b[0] + ',' + b[1];
+    }
+
+    /* ---------------- module matrix ---------------- */
+
+    function drawMatrix() {
+        var counts = {}, max = 0, maxSelf = 0;
+        modules.forEach(function (a) { counts[a] = {}; modules.forEach(function (b) { counts[a][b] = 0; }); });
+        links.forEach(function (l) { counts[l.s.group][l.t.group]++; });
+        modules.forEach(function (a) {
+            modules.forEach(function (b) {
+                if (a === b) maxSelf = Math.max(maxSelf, counts[a][b]);
+                else max = Math.max(max, counts[a][b]);
+            });
+        });
+
+        var html = '<div class="matrix"><table><tr><th></th>';
+        modules.forEach(function (m) {
+            html += '<th class="ch"><span style="color:' + colorOf[m] + '">' + esc(m) + '</span></th>';
+        });
+        html += '<th class="ch"><span style="color:#9ca3af">out</span></th></tr>';
+        modules.forEach(function (a, ri) {
+            var rowTotal = 0;
+            modules.forEach(function (b) { if (a !== b) rowTotal += counts[a][b]; });
+            html += '<tr><td class="rh" data-r="' + ri + '"><span style="color:' + colorOf[a] + '">■</span> ' + esc(a) + '</td>';
+            modules.forEach(function (b, ci) {
+                var v = counts[a][b];
+                var self = a === b;
+                var bg = v === 0 ? '#f1f3f5'
+                    : self ? shade(v / (maxSelf || 1), 220, 10)
+                        : shade(v / (max || 1), 217, 72);
+                html += '<td class="cell' + (v ? ' has' : '') + (self ? ' self' : '') + '" data-r="' + ri + '" data-c="' + ci
+                    + '" style="background:' + bg + '" title="' + esc(a) + ' → ' + esc(b)
+                    + ' : ' + v + '">' + (v || '') + '</td>';
+            });
+            html += '<td class="tot">' + (rowTotal || '') + '</td></tr>';
+        });
+        html += '<tr><td class="rh" style="color:#9ca3af">in</td>';
+        modules.forEach(function (b) {
+            var total = 0;
+            modules.forEach(function (a) { if (a !== b) total += counts[a][b]; });
+            html += '<td class="tot">' + (total || '') + '</td>';
+        });
+        html += '<td></td></tr></table>'
+            + '<div class="cap">' + esc(t('Row → column: how many relations point from the row module into the column module. The rounded diagonal is inside-module coupling. Click any cell for the relations behind it.')) + '</div></div>';
+        stage.innerHTML = html;
+
+        each(stage.querySelectorAll('.cell'), function (cell) {
+            cell.onclick = function () {
+                var a = modules[+cell.getAttribute('data-r')], b = modules[+cell.getAttribute('data-c')];
+                cellTable(a, b);
+            };
+        });
+        detail.innerHTML = '<div class="dh">' + esc(t('Pick a cell to list its relations')) + '</div>';
+    }
+
+    // Cross-module traffic rides a blue ramp, inside-module coupling a neutral one: the eye
+    // separates "who depends on whom" from "how dense is this module" without reading numbers
+    function shade(t, hue, sat) {
+        var l = 88 - Math.round(Math.pow(t, 0.6) * 42);
+        return 'hsl(' + hue + ', ' + sat + '%, ' + l + '%)';
+    }
+
+    /* ---------------- audit ---------------- */
+
+    function drawAudit() {
+        var cycles = audit.cycles, shared = audit.sharedTables;
+        var orphans = audit.orphans, unpublished = audit.unpublished;
+
+        var html = '<div class="audit"><div class="tiles">'
+            + tile(cycles.length, t('Dependency cycles'), true)
+            + tile(shared.length, t('Shared tables'), false)
+            + tile(orphans.length, t('Isolated models'), false)
+            + tile(unpublished.length, t('Entity, no menu'), false)
+            + '</div><div class="grid">';
+
+        html += sect(t('Dependency cycles'), cycles.length, true,
+            t('Models that reference each other in a loop, following data relations only (reference / sub table / embedded). A self reference such as a parent field is a tree, not a cycle, and is not listed.'),
+            cycles.length
+                ? cycles.map(function (cycle) {
+                    return '<div class="row">' + cycle.map(pill).join('<span class="arrow">&rarr;</span>')
+                        + '<span class="arrow">&#8634;</span></div>';
+                }).join('')
+                : ok(t('No cycle. Every data relation runs one way.')));
+
+        html += sect(t('Models sharing one table'), shared.length, false,
+            t('Several @Erupt classes mapped onto the same physical table — the narrower-projection idiom. Worth knowing before changing a column: the edit reaches every model in the row.'),
+            shared.length
+                ? shared.map(function (g) {
+                    return '<div class="row"><span class="tname">' + esc(g.table) + '</span>'
+                        + '<span class="cloud">' + g.models.map(pill).join('') + '</span></div>';
+                }).join('')
+                : ok(t('Every model owns its own table.')));
+
+        html += sect(t('Isolated models'), orphans.length, false,
+            t('No relation points at them and they point at nothing: logs, registries and settings usually, but this is also where a forgotten model hides.'),
+            orphans.length
+                ? '<div class="cloud">' + orphans.map(pill).join('') + '</div>'
+                : ok(t('Every model is connected.')));
+
+        html += sect(t('Entity models with no menu'), unpublished.length, false,
+            t('Table-backed models nothing in the menu tree points to. A sub table or a popup form is legitimately menu-less, so read this as candidates, not as defects.'),
+            unpublished.length
+                ? '<div class="cloud">' + unpublished.map(pill).join('') + '</div>'
+                : ok(t('Every entity model is reachable from a menu.')));
+
+        stage.innerHTML = html + '</div></div>';
+        each(stage.querySelectorAll('.pill'), function (el2) {
+            el2.onclick = function () { select(el2.getAttribute('data-id')); };
+        });
+        detail.innerHTML = '<div class="dh">' + esc(t('Click any model to open its lineage')) + '</div>';
+    }
+
+    // Only a cycle is a defect; the other three are things worth knowing, so only it turns red
+    function tile(count, title, warn) {
+        var cls = count ? (warn ? ' warn' : '') : ' zero';
+        return '<div class="tile' + cls + '"><div class="n">' + count + '</div>'
+            + '<div class="t">' + esc(title) + '</div></div>';
+    }
+
+    function sect(title, count, warn, note, body) {
+        return '<div class="sect' + (warn && count ? ' warn' : '') + '"><h3>' + esc(title)
+            + '<span class="cnt' + (warn && count ? ' warn' : '') + '">' + count + '</span></h3>'
+            + '<div class="note">' + note + '</div>' + body + '</div>';
+    }
+
+    function ok(msg) {
+        return '<div class="ok"><span class="tick">&#10003;</span>' + esc(msg) + '</div>';
+    }
+
+    function pill(name) {
+        var node = byId[name];
+        var color = node ? colorOf[node.group] : '#cbd5e1';
+        return '<span class="pill" data-id="' + esc(name) + '" title="' + esc(name) + '">'
+            + '<span class="dot" style="background:' + color + '"></span>'
+            + esc(node ? listName(node) : name) + '</span>';
+    }
+
+    /* ---------------- detail tables ---------------- */
+
+    // The bottom panel is the model's own file: its relations, its fields, its @Erupt config
+    function relationTable(node) {
+        if (!node) return;
+        paintDetail(node);
+        if (detailTab !== 'relations' && !detailCache[node.id]) loadDetail(node);
+    }
+
+    function loadDetail(node) {
+        fetch(BASE + '/erupt-api/erupt-atlas/detail/' + encodeURIComponent(node.id) + '?' + AUTH)
+            .then(function (r) { return r.json(); })
+            .then(function (d) {
+                detailCache[node.id] = d || {};
+                if (current === node.id) paintDetail(node);
+            })
+            .catch(function () { detailCache[node.id] = {}; });
+    }
+
+    function paintDetail(node) {
+        var d = detailCache[node.id];
+        var rel = outOf[node.id].length + inOf[node.id].length;
+        var head = '<div class="dh"><span>' + esc(node.name) + '</span>'
+            + tab('relations', t('Relations'), rel)
+            + tab('fields', node.kind === 'cube' ? t('Dimensions') : t('Fields'),
+                node.kind === 'cube' ? node.dimensions + node.measures : node.fields)
+            + tab('config', t('Config'), null) + '</div>';
+        var body;
+        if (detailTab === 'relations') {
+            body = relationRows(node);
+        } else if (!d) {
+            body = '<div class="none">' + esc(t('Loading…')) + '</div>';
+        } else {
+            body = detailTab === 'fields' ? fieldRows(node, d) : configRows(node, d);
+        }
+        detail.innerHTML = head + body;
+        each(detail.querySelectorAll('.dtab'), function (t) {
+            t.onclick = function () {
+                detailTab = t.getAttribute('data-t');
+                if (detailTab !== 'relations' && !detailCache[node.id]) loadDetail(node);
+                paintDetail(node);
+            };
+        });
+        each(detail.querySelectorAll('.mdl, .ref'), function (td) {
+            td.onclick = function () { select(td.getAttribute('data-id')); };
+        });
+    }
+
+    function tab(key, label, count) {
+        return '<span class="dtab' + (detailTab === key ? ' on' : '') + '" data-t="' + key + '">'
+            + label + (count == null ? '' : ' ' + count) + '</span>';
+    }
+
+    function relationRows(node) {
+        var rows = [];
+        outOf[node.id].forEach(function (l) { rows.push([t('references'), l.t, l]); });
+        inOf[node.id].forEach(function (l) { rows.push([t('referenced by'), l.s, l]); });
+        if (!rows.length) return '<div class="none">' + esc(t('No relation to any other model.')) + '</div>';
+        var html = '<table>';
+        rows.forEach(function (r) {
+            html += '<tr><td class="dir">' + esc(r[0]) + '</td>'
+                + '<td class="mdl" data-id="' + esc(r[1].id) + '" title="' + esc(r[1].name) + '">'
+                + esc(listName(r[1])) + '</td>'
+                + '<td class="mod">' + esc(r[1].group) + '</td>'
+                + '<td class="kind"><i style="border-color:' + (KIND_COLOR[r[2].kind] || '#cbd5e1') + '"></i>'
+                + esc(r[2].kind) + '</td>'
+                + '<td class="fld">' + esc(r[2].label || '') + '</td></tr>';
+        });
+        return html + '</table>';
+    }
+
+    function fieldRows(node, d) {
+        if (node.kind === 'cube') {
+            if (!d.cubeItems || !d.cubeItems.length) {
+                return '<div class="none">' + esc(t('No dimension or measure.')) + '</div>';
+            }
+            var h = '<table>';
+            d.cubeItems.forEach(function (it) {
+                h += '<tr><td class="dir">' + esc(it.role) + '</td><td class="mdl">' + esc(it.name) + '</td>'
+                    + '<td class="mod">' + esc(it.title) + '</td><td class="kind">' + esc(it.type) + '</td>'
+                    + '<td class="fld">' + esc(it.sql) + '</td></tr>';
+            });
+            return h + '</table>';
+        }
+        if (!d.fields || !d.fields.length) return '<div class="none">' + esc(t('No field.')) + '</div>';
+        var html = '<table>';
+        d.fields.forEach(function (f) {
+            html += '<tr><td class="fld" style="width:150px">' + esc(f.name) + '</td>'
+                + '<td style="width:180px">' + esc(f.title) + '</td>'
+                + '<td class="mod" style="width:130px">' + esc(f.type) + '</td>'
+                + '<td style="width:70px" class="' + (f.required ? 'yes' : 'no') + '">'
+                + (f.required ? esc(t('required')) : '—') + '</td>'
+                + '<td style="width:70px" class="' + (f.searchable ? 'yes' : 'no') + '">'
+                + (f.searchable ? esc(t('search')) : '—') + '</td>'
+                + '<td>' + (f.reference
+                    ? '<span class="ref" data-id="' + esc(f.reference) + '">→ ' + esc(f.reference) + '</span>' : '')
+                + '</td></tr>';
+        });
+        return html + '</table>';
+    }
+
+    function configRows(node, d) {
+        function row(k, v) { return v ? '<dt>' + k + '</dt><dd>' + v + '</dd>' : ''; }
+        var chips = function (list) {
+            return (list || []).map(function (x) { return '<span class="chip2">' + esc(x) + '</span>'; }).join('');
+        };
+        return '<dl class="cfg">'
+            + row(esc(t('display name')), esc(d.label || node.label || ''))
+            + row(esc(t('description')), esc(d.desc || ''))
+            + row(esc(t('module')), esc(d.source || node.group))
+            + row(esc(t('kind')), node.kind + (d.runtime ? ' · ' + esc(t('runtime registered')) : ''))
+            + row(esc(t('table')), d.table ? '<span class="fld">' + esc(d.table) + '</span>' : '')
+            + row(esc(t('primary key')), esc(d.primaryKey || ''))
+            + row(esc(t('permissions')), chips(d.power))
+            + row(esc(t('data proxy')), chips(d.dataProxy))
+            + '</dl>';
+    }
+
+    function cellTable(a, b) {
+        var rows = links.filter(function (l) { return l.s.group === a && l.t.group === b; })
+            .map(function (l) { return [listName(l.s) + ' →', l.t, l]; });
+        render(a + ' → ' + b + ' · ' + rows.length + ' ' + t('relations'), rows);
+    }
+
+    function render(title, rows) {
+        var html = '<div class="dh">' + esc(title) + '</div>';
+        if (!rows.length) {
+            detail.innerHTML = html + '<div class="none">' + esc(t('Nothing here.')) + '</div>';
+            return;
+        }
+        html += '<table>';
+        rows.forEach(function (r) {
+            var kind = r[2].kind;
+            html += '<tr><td class="dir">' + esc(r[0]) + '</td>'
+                + '<td class="mdl" data-id="' + esc(r[1].id) + '" title="' + esc(r[1].name) + '">'
+                + esc(listName(r[1])) + '</td>'
+                + '<td class="mod">' + esc(r[1].group) + '</td>'
+                + '<td class="kind"><i style="border-color:' + (KIND_COLOR[kind] || '#cbd5e1') + '"></i>' + esc(kind) + '</td>'
+                + '<td class="fld">' + esc(r[2].label || '') + '</td></tr>';
+        });
+        detail.innerHTML = html + '</table>';
+        each(detail.querySelectorAll('.mdl'), function (td) {
+            td.onclick = function () { select(td.getAttribute('data-id')); };
+        });
+    }
+
+    /* ---------------- helpers ---------------- */
+
+    function el(tag, attrs, txt) {
+        var n = document.createElementNS(NS, tag);
+        for (var k in attrs) n.setAttribute(k, attrs[k]);
+        if (txt != null) n.textContent = txt;
+        return n;
+    }
+
+    function text(x, y, txt, cls, anchor) {
+        return el('text', {x: x, y: y, 'class': cls, 'text-anchor': anchor || 'start'}, txt);
+    }
+
+    function clip(s, max) {
+        s = String(s == null ? '' : s);
+        return s.length > max ? s.slice(0, max - 1) + '…' : s;
+    }
+
+    function esc(s) {
+        var d = document.createElement('div');
+        d.textContent = s == null ? '' : s;
+        return d.innerHTML;
+    }
+
+    function each(list, fn) { Array.prototype.forEach.call(list, fn); }
+
+    window.addEventListener('resize', function () {
+        if (!nodes.length) return;
+        if (mode === 'tree') drawTree(byId[current]);
+        else if (mode === 'overview') drawOverview();
+        else if (mode === 'layers') drawLayers();
+    });
+})();
+</script>
+</body>
+</html>

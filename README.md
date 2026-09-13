@@ -28,6 +28,7 @@ English &nbsp;|&nbsp; [中文](README-zh.md)
   <a href="https://www.erupt.xyz"><code><b>[ WEBSITE ]</b></code></a>&nbsp;&nbsp;
   <a href="https://demo.erupt.xyz"><code><b>[ LIVE DEMO ]</b></code></a>&nbsp;&nbsp;
   <a href="https://start.erupt.xyz"><code><b>[ START PROJECT ]</b></code></a>&nbsp;&nbsp;
+  <a href="https://skill.erupt.xyz"><code><b>[ AI SKILL ]</b></code></a>&nbsp;&nbsp;
   <a href="https://docs.erupt.xyz"><code><b>[ DOCS ]</b></code></a>
 </p>
 
@@ -113,8 +114,21 @@ mvn spring-boot:run
 
 Paged. Searchable. Exportable. Role-gated. Add a field, refresh, it shows up.
 
+### D — STARTER
+
+[start.erupt.xyz](https://start.erupt.xyz) — pick modules in your browser, download a ready-to-run project. No local setup.
+
+### E — AI SKILL
+
+[skill.erupt.xyz](https://skill.erupt.xyz) — build a full admin panel with **zero development background**. Made for non-engineering roles (ops, HR, product, finance): describe your system in one sentence inside Claude Code or a similar AI agent, and the skill handles the rest — JDK, database (H2), login, CRUD, search, Excel, permissions all included. Only entities get written; UI and APIs render from annotations at runtime, so it costs ~1/20 the tokens of writing from scratch.
+
+```bash
+git clone https://github.com/plinian/erupt-skill.git ~/.claude/skills/erupt-admin
+```
+
+Then tell Claude Code: `"Build me a CRM admin panel"` → running system.
+
 > `NO INSTALL` — [demo.erupt.xyz](https://demo.erupt.xyz) (`guest / guest`)
-> `STARTER` — [start.erupt.xyz](https://start.erupt.xyz) generates a project in your browser
 > `FULL GUIDE` — [docs.erupt.xyz/guide/quick-start](https://docs.erupt.xyz/guide/quick-start)
 
 <details>
@@ -184,6 +198,8 @@ More scenarios — [erupt.xyz/#!/contrast](https://www.erupt.xyz/#!/contrast)
 
 ## 02 · OUT OF THE BOX
 
+<p align="center"><img src="readme/workbench.jpg" alt="Erupt · Workbench" width="100%"/></p>
+
 | | |
 |---|---|
 | `UI GENERATION` | Tables, forms, search, pagination, tree views, Gantt, card views, 20+ field components — driven by `@View` / `@Edit` / `@Search`. |
@@ -198,6 +214,25 @@ More scenarios — [erupt.xyz/#!/contrast](https://www.erupt.xyz/#!/contrast)
 > `WHICH AI MODULE?` — Pick `erupt-ai` for raw LLM / MCP access to build your own agent. Pick `erupt-ai-claw` for a turn-key admin agent (it depends on `erupt-ai`; add only this one).
 
 Module catalog — [erupt.xyz/#!/module](https://www.erupt.xyz/#!/module) · API reference — [javadoc.erupt.xyz](https://javadoc.erupt.xyz)
+
+### MODEL ATLAS
+
+> Every `@Erupt` entity, every relation between them, drawn from the same annotations that build the UI. No extra configuration — the map exists because the model does.
+
+| | |
+|---|---|
+| `OVERVIEW` | Every model grouped by module. Read the shape of the whole system at a glance. |
+| `LAYERS` | How deep the graph runs: what everything stands on, and the few chains the depth comes from. |
+| `LINEAGE` · `MATRIX` · `IMPACT` | One model's neighbourhood, module-to-module coupling, and what breaks if a model changes. |
+| `FIELDS` · `POWER` · `AUDIT` | Every field of every model, declared `@Power` against the menu buttons behind it, and a health report: cycles, shared tables, isolated models. |
+
+<table>
+  <tr>
+    <td width="50%"><img src="readme/model-atlas-overview.jpg" alt="Model Atlas · Overview" width="100%"/></td>
+    <td width="50%"><img src="readme/model-atlas-layers.jpg" alt="Model Atlas · Layers" width="100%"/></td>
+  </tr>
+</table>
+
 
 ---
 
@@ -235,6 +270,20 @@ public class MyTools {
 ```
 
 LLM providers, MCP servers, agents — all managed through the built-in admin UI. No restarts.
+
+### FIELD ASSISTANT
+
+> Any text field in any generated form gets an inline writing assistant. Nothing to wire up — it appears wherever the schema says the field holds text.
+
+`GENERATE` · `POLISH` · `CONTINUE` · `EXPAND` · `SHORTEN` — or just tell it what to write. Streams into the field, and one click undoes it.
+
+<table>
+  <tr>
+    <td width="50%"><img src="readme/ai-field-assistant-dark.jpg" alt="AI field assistant · dark" width="100%"/></td>
+    <td width="50%"><img src="readme/ai-field-assistant-chat.jpg" alt="AI field assistant · chat panel" width="100%"/></td>
+  </tr>
+</table>
+
 
 ---
 
@@ -301,7 +350,15 @@ Source-code delivery · one-time purchase · perpetual use.
 
 ---
 
-## 07 · CONTRIBUTING
+## 07 · TELEMETRY
+
+Erupt reports anonymous usage statistics — erupt version, installed modules, JDK, OS and database type, Spring Boot version, timezone — to guide compatibility and roadmap decisions. It never sends business data, credentials, hostnames, or anything IP-derived, and requests fail silently without ever blocking startup.
+
+Opt out with `erupt.telemetry.enabled: false` or the `ERUPT_TELEMETRY_DISABLED=1` environment variable; CI is skipped automatically.
+
+---
+
+## 08 · CONTRIBUTING
 
 Free and open source. Code, bug reports, ideas, use cases, blog posts — all welcome.
 
@@ -321,7 +378,7 @@ Read the [contribution guidelines](./.github/CONTRIBUTING.md), then open an [iss
 
 ---
 
-## 08 · LICENSE
+## 09 · LICENSE
 
 ![license.svg](readme/license.svg)
 

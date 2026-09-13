@@ -1,5 +1,10 @@
 package xyz.erupt.cloud.server;
 
+import java.time.Duration;
+import xyz.erupt.cloud.server.config.EruptCloudServerProp;
+import xyz.erupt.cloud.common.http.CloudHttp;
+import org.springframework.web.client.RestClient;
+import org.springframework.context.annotation.Bean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
@@ -40,7 +45,7 @@ public class EruptCloudServerAutoConfiguration implements EruptModule {
 
     @Override
     public List<MetaMenu> initMenus() {
-        MetaMenu nodeManager = MetaMenu.createRootMenu("$NodeManager", "Micronode Management", "fa fa-cloud", 70);
+        MetaMenu nodeManager = MetaMenu.createRootMenu("$NodeManager", "Micronode Management", "fa fa-circle-nodes", 70);
         MetaMenu nodeMenu = MetaMenu.createEruptClassMenu(CloudNode.class, nodeManager, 20);
         return Arrays.asList(nodeManager,
                 MetaMenu.createEruptClassMenu(CloudNodeGroup.class, nodeManager, 10, MenuTypeEnum.TREE, MenuStatus.HIDE),
@@ -49,6 +54,12 @@ public class EruptCloudServerAutoConfiguration implements EruptModule {
                 MetaMenu.createSimpleMenu(CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, "Node Manager", CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, nodeMenu, 120, MenuTypeEnum.BUTTON.getCode()),
                 MetaMenu.createSimpleMenu(CloudServerConst.ERUPT_CLOUD_NODE_LOG, "Node Log", CloudServerConst.ERUPT_CLOUD_NODE_LOG, nodeMenu, 120, MenuTypeEnum.BUTTON.getCode())
         );
+    }
+
+    // Shared client for server -> node calls; the read timeout is the configured per-request node timeout
+    @Bean
+    public RestClient nodeRestClient(EruptCloudServerProp eruptCloudServerProp) {
+        return CloudHttp.client(Duration.ofMillis(eruptCloudServerProp.getNodeRequestTimeout()));
     }
 
 }

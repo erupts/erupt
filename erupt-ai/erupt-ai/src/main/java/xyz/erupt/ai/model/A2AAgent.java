@@ -62,7 +62,8 @@ public class A2AAgent extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            edit = @Edit(title = "Agent URL", notNull = true, desc = "A2A agent base URL")
+            // where agent traffic is sent; a reviewed change, not a grid nudge
+            edit = @Edit(title = "Agent URL", notNull = true, cellEdit = false, desc = "A2A agent base URL")
     )
     private String agentUrl;
 

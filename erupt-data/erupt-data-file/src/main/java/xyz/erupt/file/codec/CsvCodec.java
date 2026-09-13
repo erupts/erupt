@@ -115,7 +115,7 @@ public class CsvCodec implements FileCodec {
                 cell.append(c);
             }
         }
-        if (cell.length() > 0 || !record.isEmpty()) {
+        if (!cell.isEmpty() || !record.isEmpty()) {
             record.add(cell.toString());
             records.add(record);
         }

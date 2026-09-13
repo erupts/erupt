@@ -46,6 +46,7 @@ public abstract class OpenAI extends LlmCore {
                         .customParameters(buildCustomParams(llmRequest.getModel()))
                         .build()
                 )
+                .timeout(requestTimeout())
                 .build();
     }
 
@@ -64,6 +65,7 @@ public abstract class OpenAI extends LlmCore {
                         .customParameters(buildCustomParams(llmRequest.getModel()))
                         .build()
                 )
+                .timeout(requestTimeout())
                 .build();
     }
 

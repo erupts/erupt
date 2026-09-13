@@ -11,3 +11,6 @@ spring:
     properties:
       hibernate:
         globally_quoted_identifiers: true
+erupt:
+  designer:
+    db-path: target/designer-test.db

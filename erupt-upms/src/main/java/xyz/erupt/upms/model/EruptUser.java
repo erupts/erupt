@@ -19,8 +19,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.constant.RegexConst;
 import xyz.erupt.core.module.MetaUserinfo;
+import xyz.erupt.upms.helper.HyperModelCreatorVo;
 import xyz.erupt.upms.helper.UpmsSecurityHelper;
-import xyz.erupt.upms.looker.LookerSelf;
 import xyz.erupt.upms.model.data_proxy.EruptOrgFetchHandler;
 import xyz.erupt.upms.model.data_proxy.EruptUserDataProxy;
 import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 @EruptI18n
 @Getter
 @Setter
-public class EruptUser extends LookerSelf implements UpmsSecurityHelper.PasswordHolder {
+public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper.PasswordHolder {
 
     @Column(length = 1023)
     private String avatar;
@@ -67,7 +67,9 @@ public class EruptUser extends LookerSelf implements UpmsSecurityHelper.Password
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "Account", sortable = true),
-            edit = @Edit(title = "Account", desc = "Login account", notNull = true, search = @Search(operator = QueryExpression.LIKE))
+            // security state: granted, revoked and identified through a reviewed form, never a grid cell
+            edit = @Edit(title = "Account", desc = "Login account", notNull = true, cellEdit = false,
+                    search = @Search(operator = QueryExpression.LIKE))
     )
     private String account;
 
@@ -105,7 +107,7 @@ public class EruptUser extends LookerSelf implements UpmsSecurityHelper.Password
     @EruptField(
             views = @View(title = "Admin User", sortable = true),
             edit = @Edit(
-                    title = "Admin User", notNull = true, search = @Search
+                    title = "Admin User", notNull = true, search = @Search, cellEdit = false
             )
     )
     private Boolean isAdmin = false;
@@ -212,7 +214,7 @@ public class EruptUser extends LookerSelf implements UpmsSecurityHelper.Password
 
     @EruptField(
             views = @View(title = "Account Expiry", sortable = true),
-            edit = @Edit(title = "Account Expiry")
+            edit = @Edit(title = "Account Expiry", cellEdit = false)
     )
     private Date expireDate;
 

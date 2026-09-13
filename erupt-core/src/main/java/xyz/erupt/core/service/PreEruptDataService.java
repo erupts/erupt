@@ -1,5 +1,6 @@
 package xyz.erupt.core.service;
 
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.AnnotationConst;
@@ -9,6 +10,7 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.invoke.ExprInvoke;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.DataHandlerUtil;
@@ -20,6 +22,9 @@ import java.util.*;
 
 @Service
 public class PreEruptDataService {
+
+    @Resource
+    private I18nTranslate i18nTranslate;
 
     // get by pk
     public Map<String, Object> getEruptData(EruptModel eruptModel, String id, boolean valueMapping) {
@@ -57,10 +62,26 @@ public class PreEruptDataService {
         result.forEach(it -> treeModels.add(new TreeModel(
                 it.get(AnnotationConst.ID), it.get(AnnotationConst.LABEL), it.get(AnnotationConst.PID), root
         )));
+        this.translateLabels(eruptModel, treeModels);
         if (StringUtils.isBlank(pid)) {
             return treeModels;
         } else {
             return DataHandlerUtil.quoteTree(treeModels);
+        }
+    }
+
+    /**
+     * Tree labels follow the same rule as choice labels: only entities annotated with
+     * {@code @EruptI18n} are translated. The language is resolved once per request, so each
+     * node costs a single map lookup and labels without a translation fall back to themselves.
+     */
+    private void translateLabels(EruptModel eruptModel, List<TreeModel> treeModels) {
+        if (!eruptModel.isI18n()) return;
+        String lang = i18nTranslate.currentLang();
+        for (TreeModel treeModel : treeModels) {
+            if (null != treeModel.getLabel()) {
+                treeModel.setLabel(i18nTranslate.translate(lang, treeModel.getLabel()));
+            }
         }
     }
 

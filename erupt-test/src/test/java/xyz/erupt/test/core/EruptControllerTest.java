@@ -14,8 +14,11 @@ import xyz.erupt.core.util.SecretUtil;
 import xyz.erupt.test.EruptApplicationTests;
 import xyz.erupt.test.model.edit.AutoCompleteModel;
 import xyz.erupt.test.model.edit.ChoiceModel;
+import xyz.erupt.test.model.edit.MultiFormModel;
 import xyz.erupt.test.model.edit.TabTableAddModel;
 import xyz.erupt.test.model.erupt.AuthVerifyModel;
+import xyz.erupt.test.model.erupt.CellEditOffModel;
+import xyz.erupt.test.model.erupt.CellEditRowModel;
 import xyz.erupt.test.model.erupt.RowOperationModel;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.prop.EruptUpmsProp;
@@ -240,6 +243,162 @@ public class EruptControllerTest extends EruptApplicationTests {
     }
 
     /**
+     * In-table cell editing: one field of one row is updated without submitting the whole form,
+     * every other field is left untouched, and the same validation rules still apply.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    void testHttpUpdateCell() {
+        String erupt = AuthVerifyModel.class.getSimpleName();
+        String uniqueName = "cell-test-" + System.nanoTime();
+        post("/erupt-api/data/modify/" + erupt,
+                """
+                        {"key":"%s","value":"v","description":"desc"}
+                        """.formatted(uniqueName));
+        Long id = findIdByName(erupt, uniqueName, "key");
+        assertNotNull(id, "must find persisted record after add");
+
+        // ① patch one field
+        ResponseEntity<Map> resp = post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"value","value":"v2"}
+                        """.formatted(id));
+        assertEquals(HttpStatus.OK, resp.getStatusCode(), "update-cell must return 200");
+        assertTrue((Boolean) getBody(resp).get("success"), "update-cell must succeed");
+
+        // ② only that field changed
+        Map<String, Object> row = getBody(get("/erupt-api/data/" + erupt + "/" + id));
+        assertEquals("v2", row.get("value"), "patched field must be updated");
+        assertEquals(uniqueName, row.get("key"), "untouched field must keep its value");
+        assertEquals("desc", row.get("description"), "untouched field must keep its value");
+
+        // ③ a required field still cannot be emptied through a cell edit
+        ResponseEntity<Map> blank = post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"value","value":""}
+                        """.formatted(id));
+        assertFalse((Boolean) getBody(blank).get("success"), "notNull must still be enforced");
+        assertEquals("v2", getBody(get("/erupt-api/data/" + erupt + "/" + id)).get("value"),
+                "rejected cell edit must not persist");
+
+        // ④ unknown field is rejected
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"notAField","value":"x"}
+                        """.formatted(id)), "unknown field must be rejected");
+
+        // ⑤ a row the caller cannot see (here: does not exist) is rejected
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"99999999","field":"value","value":"x"}
+                        """), "missing row must be rejected");
+
+        // ⑥ a field that opted out stays form-only, even though the model allows cell editing
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"locked","value":"x"}
+                        """.formatted(id)), "a field with cellEdit = false must be rejected");
+
+        // ⑦ a field the form renders read-only is refused, even though allowChange leaves the
+        // form endpoint able to set it
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"frozen","value":"x"}
+                        """.formatted(id)), "a readonly field must be rejected");
+
+        // ⑧ a model that opted out rejects the request outright
+        assertCellRejected(post("/erupt-api/data/modify/" + CellEditOffModel.class.getSimpleName() + "/update-cell",
+                """
+                        {"id":"1","field":"name","value":"x"}
+                        """), "a model with cellEdit = false must be rejected");
+
+        post("/erupt-api/data/modify/" + erupt + "/delete", "[" + id + "]");
+    }
+
+    /**
+     * A single cell is validated as a whole row: the rules of every other field and
+     * DataProxy#validate run against the stored row patched with the new value, so a cell edit
+     * cannot slip past a cross-field rule that no single field violates on its own.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    void testHttpUpdateCellValidatesWholeRow() {
+        String erupt = CellEditRowModel.class.getSimpleName();
+        String uniqueTitle = "cell-row-" + System.nanoTime();
+        // the row starts out consistent: DRAFT needs no content
+        post("/erupt-api/data/modify/" + erupt,
+                """
+                        {"title":"%s","content":"","status":"DRAFT"}
+                        """.formatted(uniqueTitle));
+        Long id = findIdByName(erupt, uniqueTitle, "title");
+        assertNotNull(id, "must find persisted record after add");
+
+        // ① publishing while content is blank breaks a rule that neither field breaks alone
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"status","value":"PUBLISHED"}
+                        """.formatted(id)), "DataProxy#validate must run on a cell edit");
+        assertEquals("DRAFT", getBody(get("/erupt-api/data/" + erupt + "/" + id)).get("status"),
+                "rejected cell edit must not persist");
+
+        // ② the same patch is accepted once the row as a whole satisfies the rule
+        ResponseEntity<Map> filled = post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"content","value":"body"}
+                        """.formatted(id));
+        assertTrue((Boolean) getBody(filled).get("success"), "unrelated cell edit must succeed");
+        ResponseEntity<Map> published = post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"status","value":"PUBLISHED"}
+                        """.formatted(id));
+        assertTrue((Boolean) getBody(published).get("success"), "consistent cell edit must succeed");
+        assertEquals("PUBLISHED", getBody(get("/erupt-api/data/" + erupt + "/" + id)).get("status"),
+                "accepted cell edit must persist");
+
+        // ③ the patched field keeps its own rules on top of the whole-row ones
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cell",
+                """
+                        {"id":"%d","field":"title","value":" "}
+                        """.formatted(id)), "notNull of the patched field must still be enforced");
+
+        post("/erupt-api/data/modify/" + erupt + "/delete", "[" + id + "]");
+    }
+
+    // rejected means: not an HTTP 200 carrying success = true
+    @SuppressWarnings("unchecked")
+    private void assertCellRejected(ResponseEntity<Map> resp, String message) {
+        assertTrue(resp.getStatusCode() != HttpStatus.OK
+                || !Boolean.TRUE.equals(getBody(resp).get("success")), message);
+    }
+
+    /**
+     * A required MULTI_FORM field rejects an empty block list (the frontend submits [] when
+     * no block was added), and each block is validated against the child model.
+     */
+    @Test
+    void testRequiredMultiFormValidation() {
+        String erupt = MultiFormModel.class.getSimpleName();
+        String title = "mf-" + System.nanoTime();
+
+        ResponseEntity<Map> empty = post("/erupt-api/data/modify/" + erupt, "{\"title\":\"" + title + "\",\"items\":[]}");
+        assertEquals(HttpStatus.OK, empty.getStatusCode());
+        assertFalse((Boolean) getBody(empty).get("success"), "an empty required MULTI_FORM must be rejected");
+        assertTrue(String.valueOf(getBody(empty).get("message")).startsWith("Items"), "message must name the field");
+
+        ResponseEntity<Map> missing = post("/erupt-api/data/modify/" + erupt, "{\"title\":\"" + title + "\"}");
+        assertFalse((Boolean) getBody(missing).get("success"), "an absent required MULTI_FORM must be rejected");
+
+        ResponseEntity<Map> badChild = post("/erupt-api/data/modify/" + erupt, "{\"title\":\"" + title + "\",\"items\":[{}]}");
+        assertFalse((Boolean) getBody(badChild).get("success"), "a block missing a required child field must be rejected");
+        assertTrue(String.valueOf(getBody(badChild).get("message")).contains("#1"), "message must point at the block");
+
+        ResponseEntity<Map> ok = post("/erupt-api/data/modify/" + erupt,
+                "{\"title\":\"" + title + "\",\"items\":[{\"name\":\"child\"}]}");
+        assertEquals(HttpStatus.OK, ok.getStatusCode());
+        assertTrue((Boolean) getBody(ok).get("success"), "a filled block must pass: " + getBody(ok).get("message"));
+    }
+
+    /**
      * Tests RowOperation execution in BUTTON mode for RowOperationModel via HTTP.
      */
     @Test
@@ -290,6 +449,26 @@ public class EruptControllerTest extends EruptApplicationTests {
                 List.class);
         assertEquals(HttpStatus.OK, resp.getStatusCode(), "auto-complete must return 200");
         assertNotNull(resp.getBody());
+    }
+
+    /**
+     * Static candidates declared via @AutoCompleteType(values) are filtered case-insensitively
+     * by the input and served without any handler.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    void testAutoCompleteStaticValues() {
+        String erupt = AutoCompleteModel.class.getSimpleName();
+        ResponseEntity<List> resp = rest.exchange(
+                "/erupt-api/comp/auto-complete/" + erupt + "/country?val=ch",
+                HttpMethod.POST,
+                new HttpEntity<>(Map.of(), authHeaders),
+                List.class);
+        assertEquals(HttpStatus.OK, resp.getStatusCode());
+        List<Object> items = resp.getBody();
+        assertNotNull(items);
+        assertTrue(items.contains("China") && items.contains("Chile"), "matching candidates must be returned");
+        assertFalse(items.contains("Canada"), "non-matching candidates must be filtered out");
     }
 
     // ─── EruptTabController ───────────────────────────────────────────────────

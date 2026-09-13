@@ -5,7 +5,6 @@ import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.expr.ExprBool;
-import xyz.erupt.annotation.fun.AutoCompleteHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
@@ -28,6 +27,13 @@ public @interface Edit {
     @Language("markdown")
     String prompt() default "";
 
+    @Comment("Whether the inline AI writing assistant is offered on this field. Only text-bearing " +
+            "components carry it, and it shows up only when the erupt-ai module is installed")
+    @Match("#item.type().toString()=='AUTO' || #item.type().toString()=='INPUT' " +
+            "|| #item.type().toString()=='TEXTAREA' || #item.type().toString()=='HTML_EDITOR' " +
+            "|| #item.type().toString()=='CODE_EDITOR' || #item.type().toString()=='MARKDOWN'")
+    boolean ai() default true;
+
     @Comment("Whether the field is required")
     boolean notNull() default false;
 
@@ -47,6 +53,12 @@ public @interface Edit {
     @Comment("Whether the field is read-only")
     @EruptProperty(alias = "readOnly")
     Readonly readonly() default @Readonly(add = false, edit = false);
+
+    @Comment("Whether this field may be edited directly in the table, when the model allows it. " +
+            "A single cell is validated as a whole row, so a cross-field rule needs no help here; " +
+            "turn it off for a field the form should still edit but a grid cell should not, " +
+            "such as a secret that has no place in an in-table popover")
+    boolean cellEdit() default true;
 
     @Comment("Form placeholder hint")
     String placeHolder() default "";
@@ -72,6 +84,9 @@ public @interface Edit {
 
     @Match("#item.type().toString()=='INPUT'")
     InputType inputType() default @InputType;
+
+    @Match("#item.type().toString()=='TEXTAREA'")
+    TextareaType textareaType() default @TextareaType;
 
     @Match("#item.type().toString()=='NUMBER'")
     NumberType numberType() default @NumberType;
@@ -107,7 +122,7 @@ public @interface Edit {
     HtmlEditorType htmlEditorType() default @HtmlEditorType(HtmlEditorType.Type.CKEDITOR);
 
     @Match("#item.type().toString()=='AUTO_COMPLETE'")
-    AutoCompleteType autoCompleteType() default @AutoCompleteType(handler = AutoCompleteHandler.class);
+    AutoCompleteType autoCompleteType() default @AutoCompleteType;
 
     @Match("#item.type().toString()=='REFERENCE_TREE'")
     ReferenceTreeType referenceTreeType() default @ReferenceTreeType;

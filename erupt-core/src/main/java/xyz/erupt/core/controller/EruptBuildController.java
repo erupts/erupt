@@ -12,7 +12,9 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptBuildModel;
+import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
 import java.util.*;
@@ -72,7 +74,12 @@ public class EruptBuildController {
     @GetMapping("/{erupt}/{field}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptBuildModel getEruptBuildByField(@PathVariable("erupt") String eruptName, @PathVariable("field") String field) {
-        return this.getEruptBuild(EruptCoreService.getEruptView(eruptName).getEruptFieldMap().get(field).getFieldReturnName());
+        EruptModel eruptModel = EruptCoreService.getEruptView(eruptName);
+        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
+        // The field may lack @EruptField (e.g. LinkTree.field), fall back to reflection like getDependTree does
+        String treeErupt = null != fieldModel ? fieldModel.getFieldReturnName()
+                : ReflectUtil.findClassField(eruptModel.getClazz(), field).getType().getSimpleName();
+        return this.getEruptBuild(treeErupt);
     }
 
 }
