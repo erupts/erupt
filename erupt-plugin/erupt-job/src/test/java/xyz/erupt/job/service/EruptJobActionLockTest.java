@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
  *
  * @author YuePeng
  */
-public class pushEruptJobActionLockTest {
+public class EruptJobActionLockTest {
 
     private static final String HANDLER_PATH = "com.example.DemoHandler";
 
