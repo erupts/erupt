@@ -5,6 +5,7 @@ import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.core.SimpleLock;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
+import org.springframework.context.ApplicationContext;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.job.config.EruptJobProp;
@@ -18,12 +19,13 @@ import static org.mockito.Mockito.*;
 
 /**
  * Verifies the multi-instance dedup lock in {@link EruptJobAction}: the job handler runs exactly when
- * it should. {@code EruptSpringUtil} static lookups are mocked, and the ShedLock {@link LockProvider}
- * is stubbed to simulate lock-acquired / lock-held-elsewhere, so no Redis or scheduler is needed.
+ * it should. {@code EruptSpringUtil} static lookups are mocked (the {@link LockProvider} is resolved through a
+ * mocked {@link ApplicationContext}, mirroring the production lookup), and the ShedLock provider is stubbed to
+ * simulate lock-acquired / lock-held-elsewhere, so no Redis or scheduler is needed.
  *
  * @author YuePeng
  */
-public class EruptJobActionLockTest {
+public class pushEruptJobActionLockTest {
 
     private static final String HANDLER_PATH = "com.example.DemoHandler";
 
@@ -41,7 +43,10 @@ public class EruptJobActionLockTest {
     private void stubLockBeans(MockedStatic<EruptSpringUtil> spring, EruptProp prop, LockProvider lockProvider) {
         spring.when(() -> EruptSpringUtil.getBean(EruptProp.class)).thenReturn(prop);
         spring.when(() -> EruptSpringUtil.getBean(EruptJobProp.class)).thenReturn(new EruptJobProp());
-        spring.when(() -> EruptSpringUtil.getBean(LockProvider.class)).thenReturn(lockProvider);
+        // Production code reads the LockProvider off the container, not via EruptSpringUtil.getBean(Class)
+        ApplicationContext context = mock(ApplicationContext.class);
+        when(context.getBean(LockProvider.class)).thenReturn(lockProvider);
+        spring.when(EruptSpringUtil::getApplicationContext).thenReturn(context);
     }
 
     @Test
@@ -58,7 +63,7 @@ public class EruptJobActionLockTest {
 
             verify(handler).exec("demoJob", "p");
             // Lock machinery must not be touched when redis session is off
-            spring.verify(() -> EruptSpringUtil.getBean(LockProvider.class), never());
+            spring.verify(EruptSpringUtil::getApplicationContext, never());
         }
     }
 
