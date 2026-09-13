@@ -198,6 +198,8 @@ List<EruptUser> list = eruptDao.lambdaQuery(EruptUser.class)
 
 ## 02 · 开箱即用
 
+<p align="center"><img src="readme/workbench.jpg" alt="Erupt · 工作台" width="100%"/></p>
+
 | | |
 |---|---|
 | `UI 自动生成` | 表格、表单、搜索、分页、树视图、甘特图、卡片视图、20+ 表单组件 —— 全部由 `@View` / `@Edit` / `@Search` 驱动。 |

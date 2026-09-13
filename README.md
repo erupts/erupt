@@ -198,6 +198,8 @@ More scenarios — [erupt.xyz/#!/contrast](https://www.erupt.xyz/#!/contrast)
 
 ## 02 · OUT OF THE BOX
 
+<p align="center"><img src="readme/workbench.jpg" alt="Erupt · Workbench" width="100%"/></p>
+
 | | |
 |---|---|
 | `UI GENERATION` | Tables, forms, search, pagination, tree views, Gantt, card views, 20+ field components — driven by `@View` / `@Edit` / `@Search`. |
