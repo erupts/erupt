@@ -13,9 +13,16 @@ window.eruptSiteConfig = {
     registerPage: null,
     amapKey: 'da01c124bff9d9be1ad44e04f23aa32e',
     amapSecurityJsCode: "5bf6c7828a97fe987c8292f00629a6d9",
-    // theme: {
-    //     primaryColor: 'rgb(22, 119, 255)'
-    // },
+    // Appearance defaults. Each one only applies until the user picks something in the
+    // settings drawer; that choice is remembered in the browser and wins from then on.
+    theme: {
+        // primaryColor: 'rgb(22, 119, 255)',
+        // headerColor: 'primary',   // "primary" (follow the primary color) or any CSS color
+        dark: false,        // false | true | "auto" (follow the OS color scheme)
+        compact: false,     // denser spacing across the UI
+        skin: "default",    // "default" | "brutalist" | "liquid-glass"
+        menuMode: "normal"  // "normal" (sidebar) | "split" (categories in the header) | "dual" (two-column sidebar) | "top" (whole menu in the header, no sidebar)
+    },
     r_tools: [{
         mobileHidden: true,
         render: () => {
