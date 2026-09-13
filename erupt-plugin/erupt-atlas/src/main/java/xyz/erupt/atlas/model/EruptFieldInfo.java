@@ -1,4 +1,4 @@
-package xyz.erupt.monitor.model;
+package xyz.erupt.atlas.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,14 +6,18 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
+import xyz.erupt.annotation.sub_erupt.OpenWay;
 import xyz.erupt.annotation.sub_erupt.Power;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
+import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.atlas.constant.AtlasConstant;
 import xyz.erupt.core.annotation.EruptDataProcessor;
-import xyz.erupt.monitor.service.EruptFieldInfoDataService;
+import xyz.erupt.atlas.service.EruptFieldInfoDataService;
 
 /**
  * Drill target of the erupt class registry: one row per @EruptField declaration,
@@ -23,7 +27,15 @@ import xyz.erupt.monitor.service.EruptFieldInfoDataService;
  */
 @Erupt(
         name = "Erupt Field Info",
-        power = @Power(add = false, edit = false, delete = false, viewDetails = false)
+        power = @Power(add = false, edit = false, delete = false, viewDetails = false),
+        // Field rows belong to one class: jump to that class in the graph
+        rowOperation = @RowOperation(
+                title = "Open in Atlas",
+                icon = "fa fa-diagram-project",
+                mode = RowOperation.Mode.SINGLE,
+                type = RowOperation.Type.TPL,
+                tpl = @Tpl(path = AtlasConstant.ROUTE_ATLAS + "{eruptName}", openWay = OpenWay.ROUTER)
+        )
 )
 @EruptDataProcessor(EruptFieldInfoDataService.DATA_PROCESSOR)
 @EruptI18n

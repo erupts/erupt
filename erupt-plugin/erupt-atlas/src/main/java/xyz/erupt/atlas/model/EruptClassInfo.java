@@ -1,4 +1,4 @@
-package xyz.erupt.monitor.model;
+package xyz.erupt.atlas.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,8 +8,10 @@ import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
+import xyz.erupt.annotation.sub_erupt.OpenWay;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
+import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -18,11 +20,12 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.atlas.constant.AtlasConstant;
+import xyz.erupt.atlas.handler.EruptClassDataProcessorFetchHandler;
+import xyz.erupt.atlas.handler.EruptClassPublishMenu;
+import xyz.erupt.atlas.handler.EruptClassSourceFetchHandler;
+import xyz.erupt.atlas.service.EruptClassInfoDataService;
 import xyz.erupt.core.annotation.EruptDataProcessor;
-import xyz.erupt.monitor.handler.EruptClassDataProcessorFetchHandler;
-import xyz.erupt.monitor.handler.EruptClassPublishMenu;
-import xyz.erupt.monitor.handler.EruptClassSourceFetchHandler;
-import xyz.erupt.monitor.service.EruptClassInfoDataService;
 import xyz.erupt.upms.model.input.MenuPublishModal;
 
 /**
@@ -41,16 +44,26 @@ import xyz.erupt.upms.model.input.MenuPublishModal;
                 title = "Fields",
                 link = @Link(column = "name", linkErupt = EruptFieldInfo.class, joinColumn = "eruptName")
         ),
-        rowOperation = @RowOperation(
-                title = "Publish to Menu",
-                icon = "fa fa-paper-plane",
-                mode = RowOperation.Mode.SINGLE,
-                // table rows carry the boolType display text, not a boolean; the symbols below are
-                // locale-stable (absent from i18n CSVs) so this comparison works in every language
-                ifExpr = "item.published !== true",
-                eruptClass = MenuPublishModal.class,
-                operationHandler = EruptClassPublishMenu.class
-        )
+        rowOperation = {
+                @RowOperation(
+                        title = "Publish to Menu",
+                        icon = "fa fa-paper-plane",
+                        mode = RowOperation.Mode.SINGLE,
+                        // table rows carry the boolType display text, not a boolean; the symbols below are
+                        // locale-stable (absent from i18n CSVs) so this comparison works in every language
+                        ifExpr = "item.published !== true",
+                        eruptClass = MenuPublishModal.class,
+                        operationHandler = EruptClassPublishMenu.class
+                ),
+                // Jump to the graph page with this model preselected; the frontend fills {name} from the row
+                @RowOperation(
+                        title = "Open in Atlas",
+                        icon = "fa fa-diagram-project",
+                        mode = RowOperation.Mode.SINGLE,
+                        type = RowOperation.Type.TPL,
+                        tpl = @Tpl(path = AtlasConstant.ROUTE_ATLAS + "{name}", openWay = OpenWay.ROUTER)
+                )
+        }
 )
 @EruptDataProcessor(EruptClassInfoDataService.DATA_PROCESSOR)
 @EruptI18n

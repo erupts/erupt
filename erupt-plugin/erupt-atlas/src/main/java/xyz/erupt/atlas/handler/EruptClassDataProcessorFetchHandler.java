@@ -1,11 +1,11 @@
-package xyz.erupt.monitor.handler;
+package xyz.erupt.atlas.handler;
 
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptModel;
-import xyz.erupt.monitor.service.EruptClassInfoDataService;
+import xyz.erupt.atlas.service.EruptClassInfoDataService;
 
 import java.util.*;
 

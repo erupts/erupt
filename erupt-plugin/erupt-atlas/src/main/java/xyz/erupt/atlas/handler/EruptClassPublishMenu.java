@@ -1,4 +1,4 @@
-package xyz.erupt.monitor.handler;
+package xyz.erupt.atlas.handler;
 
 import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
@@ -9,7 +9,7 @@ import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.monitor.model.EruptClassInfo;
+import xyz.erupt.atlas.model.EruptClassInfo;
 import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.input.MenuPublishModal;
@@ -39,7 +39,7 @@ public class EruptClassPublishMenu implements OperationHandler<EruptClassInfo, M
         EruptClassInfo info = data.get(0);
         Erupts.requireNull(
                 eruptDao.lambdaQuery(EruptMenu.class).eq(EruptMenu::getCode, info.getName()).one(),
-                I18nTranslate.$translate("monitor.menu_already_exists")
+                I18nTranslate.$translate("atlas.menu_already_exists")
         );
         Integer max = (Integer) eruptDao.lambdaQuery(EruptMenu.class).max(EruptMenu::getSort);
         EruptMenu menu = new EruptMenu(

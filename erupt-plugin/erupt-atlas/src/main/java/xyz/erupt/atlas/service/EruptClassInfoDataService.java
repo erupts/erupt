@@ -1,4 +1,4 @@
-package xyz.erupt.monitor.service;
+package xyz.erupt.atlas.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,7 +15,7 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptRemoteRouter;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.monitor.model.EruptClassInfo;
+import xyz.erupt.atlas.model.EruptClassInfo;
 import xyz.erupt.upms.model.EruptMenu;
 
 import java.security.CodeSource;

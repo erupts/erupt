@@ -412,7 +412,10 @@
 
         renderList();
         renderDomainBar();
-        select(nodes.slice().sort(function (a, b) { return deg(b) - deg(a); })[0].id);
+        // Opened from the class registry: land on that model; otherwise start from the busiest one
+        var wanted = QS.get('erupt');
+        select(wanted && byId[wanted] ? wanted
+            : nodes.slice().sort(function (a, b) { return deg(b) - deg(a); })[0].id);
     }
 
     function deg(n) { return outOf[n.id].length + inOf[n.id].length; }
