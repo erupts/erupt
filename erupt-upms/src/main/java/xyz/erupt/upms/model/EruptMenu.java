@@ -101,8 +101,9 @@ public class EruptMenu extends MetaModel {
     private Integer sort = 0;
 
     @EruptField(
+            views = @View(title = "Icon", width = "70px"),
             edit = @Edit(
-                    title = "Icon",
+                    title = "Icon", type = EditType.ICON,
                     desc = "Refer to Font Awesome icon library"
             )
     )

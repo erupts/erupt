@@ -17,6 +17,7 @@ public enum GeneratorType {
     CODE_EDITOR(EditType.CODE_EDITOR, "Code Editor", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), "codeEditType = @CodeEditorType(language = \"sql\")"),
     MARKDOWN(EditType.MARKDOWN, "Markdown Editor", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), null),
     COLOR(EditType.COLOR, "Color Picker", String.class.getSimpleName(), null),
+    ICON(EditType.ICON, "Icon Picker", String.class.getSimpleName(), null),
     NUMBER(EditType.NUMBER, "Number Input", Integer.class.getSimpleName(), "numberType = @NumberType"),
     SLIDER(EditType.SLIDER, "Slider", Integer.class.getSimpleName(), "sliderType = @SliderType(max = 999)"),
     RATE(EditType.RATE, "Rating", Short.class.getSimpleName(), "rateType = @RateType(count = 10)"),

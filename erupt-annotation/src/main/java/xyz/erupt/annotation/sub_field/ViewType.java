@@ -13,6 +13,8 @@ public enum ViewType {
     TEXT,
     @Comment("Color")
     COLOR,
+    @Comment("Icon rendered from its Font Awesome class")
+    ICON,
     @Comment("Safe text rendering")
     SAFE_TEXT,
     @Comment("Image")

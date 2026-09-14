@@ -26,6 +26,9 @@ public enum EditType {
     @EditTypeMapping(mapping = ColorType.class, desc = "Color picker", allowType = {JavaTypeEnum.String})
     COLOR,
     @EditTypeSearch
+    @EditTypeMapping(desc = "Icon picker; stores a Font Awesome class such as \"fa fa-house\", optionally with a color class such as \"icon-red\" or \"icon-primary\" (theme color)", allowType = {JavaTypeEnum.String})
+    ICON,
+    @EditTypeSearch
     @EditTypeMapping(mapping = RateType.class, desc = "Rating", allowType = {JavaTypeEnum.number})
     RATE,
     @EditTypeSearch

@@ -108,6 +108,7 @@ public class DesignerForm {
                 case PASSWORD -> ViewType.PASSWORD;
                 case MAP -> ViewType.MAP;
                 case COLOR -> ViewType.COLOR;
+                case ICON -> ViewType.ICON;
                 case BOOLEAN -> ViewType.BOOLEAN;
                 case NUMBER, SLIDER, RATE -> ViewType.NUMBER;
                 case MULTI_CHOICE, CHECKBOX, MULTI_FORM, TAB_TREE, TAB_TABLE_ADD, TAB_TABLE_REFER -> ViewType.TAB_VIEW;
