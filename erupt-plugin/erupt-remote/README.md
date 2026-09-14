@@ -32,6 +32,19 @@ Set the protocol to **SSH**, fill in the login user and either a password or a P
 the key passphrase). The shell is rendered with xterm.js using the same message protocol as erupt-terminal. Host keys
 follow trust-on-first-use: they are recorded in `.erupt/remote_known_hosts` and a changed key is refused.
 
+## File transfer (SFTP)
+
+SSH hosts get a **Files** button on the terminal page that opens an SFTP panel next to the shell: browse, upload
+(button or drag-and-drop), download, create a folder, delete a file or an empty directory, and type an entry's path
+into the terminal. It uses the same credentials, host-key policy and authorized-user check as the shell, so the
+remote permissions are those of the SSH login user. Switch it off per host with **File Transfer** when users should
+type but not carry files in or out.
+
+Each operation opens its own short-lived SSH session (`/erupt-api/remote/sftp/{id}/…`), so a transfer is never tied
+to the terminal WebSocket. Uploads stream the raw request body into SFTP — no temp file, no multipart size limit;
+size a reverse proxy's `client_max_body_size` accordingly. Deletion is never recursive: clearing a tree is a shell job.
+VNC hosts have no file channel (the RFB protocol has none); configure the same machine as an SSH host for files.
+
 ## Configuration
 
 ```yaml

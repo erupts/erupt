@@ -38,6 +38,7 @@ import java.util.Set;
         orderBy = "id desc",
         rowOperation = @RowOperation(
                 title = "Connect", icon = "fa fa-display",
+                ifExpr = "item.enabled",
                 mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL,
                 tpl = @Tpl(path = "/remote/{id}", openWay = OpenWay.ROUTER)
         )
@@ -109,6 +110,18 @@ public class RemoteHost extends MetaModelUpdateVo {
                     dynamic = @Dynamic(dependField = "protocol", condition = "value === 'SSH'"))
     )
     private String privateKey;
+
+    /**
+     * Whether the terminal page offers the SFTP file panel. Off for hosts whose users should type but not carry
+     * files in or out; the panel and its APIs are refused, the shell is untouched.
+     */
+    @EruptField(
+            views = @View(title = "File Transfer", width = "100px"),
+            edit = @Edit(title = "File Transfer", type = EditType.BOOLEAN, boolType = @BoolType,
+                    desc = "Show an SFTP file panel (browse, upload, download) next to the SSH terminal",
+                    dynamic = @Dynamic(dependField = "protocol", condition = "value === 'SSH'"))
+    )
+    private Boolean fileTransfer = true;
 
     @EruptField(
             views = @View(title = "Enabled", width = "80px"),
