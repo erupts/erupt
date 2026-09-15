@@ -28,6 +28,8 @@ public enum EditType {
     @EditTypeSearch
     @EditTypeMapping(desc = "Icon picker; stores a Font Awesome class such as \"fa fa-house\", optionally with a color class such as \"icon-red\" or \"icon-primary\" (theme color)", allowType = {JavaTypeEnum.String})
     ICON,
+    @EditTypeMapping(mapping = KeyValueType.class, desc = "Key-value pairs: a String holds the JSON object text, a Map<String, String> (e.g. @JdbcTypeCode(SqlTypes.JSON)) holds the object", allowType = {JavaTypeEnum.String, JavaTypeEnum.object}, excelOperator = false)
+    KEY_VALUE,
     @EditTypeSearch
     @EditTypeMapping(mapping = RateType.class, desc = "Rating", allowType = {JavaTypeEnum.number})
     RATE,

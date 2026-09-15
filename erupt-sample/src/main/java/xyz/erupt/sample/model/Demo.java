@@ -4,14 +4,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.*;
+import xyz.erupt.annotation.sub_field.sub_edit.KeyValueType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
 import java.util.Date;
+import java.util.Map;
 
 @Erupt(name = "DEMO", dataProxy = DemoDataProxy.class, power = @Power(export = true, importable = true))
 @Table(name = "t_demo")
@@ -67,5 +71,13 @@ public class Demo extends BaseModel {
     @EruptField(views = @View(title = "Progress", type = ViewType.PROGRESS),
             edit = @Edit(title = "Progress", type = EditType.SLIDER))
     private Integer progressVal;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @EruptField(views = @View(title = "Params"),
+            edit = @Edit(title = "Params", type = EditType.KEY_VALUE,
+                    keyValueType = @KeyValueType(keys = {"timeout", "retry", "region"})))
+    private Map<String, String> paramsVal;
+
+
 
 }

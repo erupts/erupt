@@ -15,6 +15,8 @@ public enum ViewType {
     COLOR,
     @Comment("Icon rendered from its Font Awesome class")
     ICON,
+    @Comment("Key-value pairs from a JSON object, one tag per pair")
+    KEY_VALUE,
     @Comment("Safe text rendering")
     SAFE_TEXT,
     @Comment("Image")

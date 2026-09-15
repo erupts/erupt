@@ -52,6 +52,8 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
                             return ViewType.COLOR;
                         case ICON:
                             return ViewType.ICON;
+                        case KEY_VALUE:
+                            return ViewType.KEY_VALUE;
                         case TAB_TABLE_ADD:
                         case MULTI_FORM:
                         case TAB_TREE:
