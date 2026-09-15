@@ -359,7 +359,7 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
 
                 // Detail by primary key. Resolves to the row keyed by Java field names — NOT the flat
                 // table shape: REFERENCE fields are objects ({id, <label column>, ...}: row.dept.id, row.dept.name),
-                // CHECKBOX / MULTI_CHOICE fields are arrays of raw values, DATE fields are strings.
+                // CHECKBOX / TRANSFER / MULTI_CHOICE fields are arrays of raw values, DATE fields are strings.
                 const row = await Erupt.row('Product', 42);
 
                 // Tree data (tree models only). Resolves to [{id, label, pid, children: [...]}]
@@ -422,7 +422,7 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
                 const depts = await Erupt.referenceTable('Product', 'dept', {pageSize: 50, condition: [{key: 'name', value: 'Sales', expression: 'LIKE'}]});
                 // REFERENCE_TREE: resolves to [{id, label, pid, children: [...]}]
                 const deptTree = await Erupt.referenceTree('Product', 'dept');
-                // CHECKBOX: resolves to [{id, label, remark}]
+                // CHECKBOX / TRANSFER: resolves to [{id, label, remark}]
                 const roles = await Erupt.checkbox('Product', 'roles');
                 // CHOICE / MULTI_CHOICE: resolves to [{value, label}]
                 const statuses = await Erupt.choice('Product', 'status');
@@ -433,7 +433,7 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
                 ## Form Rules
 
                 - Build forms from the model JSON: include every field whose `edit.title` is non-empty and `edit.show` is true; a field with an empty edit title is not editable. Never show the primary key in a create form.
-                - Label = `edit.title`; hints from `edit.desc` / `edit.placeHolder`; control by `edit.type` (see the table). Options for CHOICE / MULTI_CHOICE / REFERENCE_* / CHECKBOX fields come from the SDK lookups above — never hard-code them.
+                - Label = `edit.title`; hints from `edit.desc` / `edit.placeHolder`; control by `edit.type` (see the table). Options for CHOICE / MULTI_CHOICE / REFERENCE_* / CHECKBOX / TRANSFER fields come from the SDK lookups above — never hard-code them.
                 - `edit.notNull` → required (validate client-side before submitting; the server rejects violations too). `edit.readonly.add` → omit from the create form; `edit.readonly.edit` → render disabled in the edit form.
                 - Do NOT put fields of type TAB_TABLE_ADD, TAB_TABLE_REFER, TAB_TREE, MULTI_FORM, COMBINE, ATTACHMENT, SIGNATURE, MAP, HTML_EDITOR, CODE_EDITOR, MARKDOWN, TPL, BUTTON, DIVIDE, GROUP, CALLOUT, EMPTY into forms. On update keep whatever `Erupt.row` returned for them untouched so they survive the round-trip; on create leave them out.
 
@@ -449,7 +449,7 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
                 | TAGS | tags joined with `edit.tagsType.joinSeparator`; when the separator is `[]` a JSON array string, e.g. `'["a","b"]'` |
                 | DATE | string by `edit.dateType.type`: DATE `yyyy-MM-dd`, DATE_TIME `yyyy-MM-ddTHH:mm:ss`, TIME `HH:mm:ss`, MONTH `yyyy-MM`, YEAR `yyyy` |
                 | REFERENCE_TABLE, REFERENCE_TREE | object holding the target's primary key under the key named by `referenceTableType.id` / `referenceTreeType.id` (normally `id`): `{id: 2}` |
-                | CHECKBOX | array of `{id}` objects: `[{id: 1}, {id: 3}]` — `Erupt.row` returns plain ids for this type, convert before `Erupt.update` |
+                | CHECKBOX, TRANSFER | array of `{id}` objects: `[{id: 1}, {id: 3}]` — `Erupt.row` returns plain ids for this type, convert before `Erupt.update` |
                 | HIDDEN | keep the value from `Erupt.initValue` / `Erupt.row` as-is |
 
                 ## Write UX Rules (critical)

@@ -112,7 +112,7 @@ public class DesignerForm {
                 case KEY_VALUE -> ViewType.KEY_VALUE;
                 case BOOLEAN -> ViewType.BOOLEAN;
                 case NUMBER, SLIDER, RATE -> ViewType.NUMBER;
-                case MULTI_CHOICE, CHECKBOX, MULTI_FORM, TAB_TREE, TAB_TABLE_ADD, TAB_TABLE_REFER -> ViewType.TAB_VIEW;
+                case MULTI_CHOICE, CHECKBOX, TRANSFER, MULTI_FORM, TAB_TREE, TAB_TABLE_ADD, TAB_TABLE_REFER -> ViewType.TAB_VIEW;
                 default -> ViewType.TEXT;
             };
         }

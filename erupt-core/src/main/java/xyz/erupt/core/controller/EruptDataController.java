@@ -18,7 +18,9 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.CheckboxType;
+import xyz.erupt.annotation.sub_field.sub_edit.TransferType;
 import xyz.erupt.annotation.sub_field.sub_edit.OnChange;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
@@ -201,12 +203,25 @@ public class EruptDataController {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
         EruptModel tabEruptModel = EruptCoreService.getErupt(eruptFieldModel.getFieldReturnName());
-        CheckboxType checkboxType = eruptFieldModel.getEruptField().edit().checkboxType();
+        Edit edit = eruptFieldModel.getEruptField().edit();
+        // CHECKBOX and TRANSFER share the option shape, only the widget differs
+        String id, label, remark;
+        if (edit.type() == EditType.TRANSFER) {
+            TransferType transferType = edit.transferType();
+            id = transferType.id();
+            label = transferType.label();
+            remark = transferType.remark();
+        } else {
+            CheckboxType checkboxType = edit.checkboxType();
+            id = checkboxType.id();
+            label = checkboxType.label();
+            remark = checkboxType.remark();
+        }
         List<Column> columns = new ArrayList<>();
-        columns.add(new Column(checkboxType.id(), AnnotationConst.ID));
-        columns.add(new Column(checkboxType.label(), AnnotationConst.LABEL));
-        if (!AnnotationConst.EMPTY_STR.equals(checkboxType.remark())) {
-            columns.add(new Column(checkboxType.remark(), AnnotationConst.REMARK));
+        columns.add(new Column(id, AnnotationConst.ID));
+        columns.add(new Column(label, AnnotationConst.LABEL));
+        if (!AnnotationConst.EMPTY_STR.equals(remark)) {
+            columns.add(new Column(remark, AnnotationConst.REMARK));
         }
         EruptQuery eruptQuery = EruptQuery.builder().conditionStrings(
                 Arrays.stream(eruptFieldModel.getEruptField().edit().filter()).map(Filter::value).collect(Collectors.toList())

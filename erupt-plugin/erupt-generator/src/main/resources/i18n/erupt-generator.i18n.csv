@@ -52,6 +52,7 @@ Table Reference,表格引用,表格引用,Table Reference,Référence de tableau
 One-to-Many Reference,一对多引用,一對多引用,One-to-Many Reference,Référence un-à-plusieurs,1对多参照,일대다 참조,Ссылка один-ко-многим,Referencia uno a muchos,Eins-zu-viele-Referenz,Referência um para muitos,Referensi Satu-ke-Banyak,مرجع واحد لكثير
 One-to-Many Add,一对多添加,一對多添加,One-to-Many Add,Ajout un-à-plusieurs,1对多追加,일대다 추가,Добавление один-ко-многим,Agregar uno a muchos,Eins-zu-viele hinzufügen,Adicionar um para muitos,Tambah Satu-ke-Banyak,إضافة واحد لكثير
 Multi-select,多选,多選,Multi-select,Sélection multiple,複数選択,다중 선택,Множественный выбор,Selección múltiple,Mehrfachauswahl,Seleção múltipla,Pilihan Ganda,اختيار متعدد
+Transfer,穿梭框,穿梭框,Transfer,Transfert,転送リスト,트랜스퍼,Перенос,Transferencia,Transfer,Transferência,Transfer,نقل
 Multi-select Tree,多选树,多選樹,Multi-select Tree,Arbre de sélection multiple,複数選択ツリー,다중 선택 트리,Древовидный множественный выбор,Árbol de selección múltiple,Mehrfachauswahl-Baum,Árvore de seleção múltipla,Pohon Pilihan Ganda,شجرة اختيار متعدد
 Hidden,隐藏,隱藏,Hidden,Caché,非表示,숨김,Скрытый,Oculto,Versteckt,Oculto,Tersembunyi,مخفي
 Empty,占位,占位,Empty,Vide,空,비어 있음,Пусто,Vacío,Leer,Vazio,Kosong,فارغ
