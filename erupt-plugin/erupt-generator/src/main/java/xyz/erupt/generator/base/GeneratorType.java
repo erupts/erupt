@@ -3,9 +3,12 @@ package xyz.erupt.generator.base;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Transient;
 import lombok.Getter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import xyz.erupt.annotation.sub_field.EditType;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 @Getter
@@ -18,7 +21,6 @@ public enum GeneratorType {
     MARKDOWN(EditType.MARKDOWN, "Markdown Editor", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), null),
     COLOR(EditType.COLOR, "Color Picker", String.class.getSimpleName(), null),
     ICON(EditType.ICON, "Icon Picker", String.class.getSimpleName(), null),
-    KEY_VALUE(EditType.KEY_VALUE, "Key-Value Pairs", String.class.getSimpleName(), null),
     NUMBER(EditType.NUMBER, "Number Input", Integer.class.getSimpleName(), "numberType = @NumberType"),
     SLIDER(EditType.SLIDER, "Slider", Integer.class.getSimpleName(), "sliderType = @SliderType(max = 999)"),
     RATE(EditType.RATE, "Rating", Short.class.getSimpleName(), "rateType = @RateType(count = 10)"),
@@ -47,6 +49,25 @@ public enum GeneratorType {
         @Override
         public String annotation(String thisErupt, String linkErupt) {
             return "@" + Transient.class.getSimpleName();
+        }
+    },
+    KEY_VALUE(EditType.KEY_VALUE, "Key-Value Pairs", null, null) {
+        // a JSON column holding the map itself; a String + JSON column would be double-encoded by Hibernate
+        @Override
+        public String annotation(String thisErupt, String linkErupt) {
+            return "@" + JdbcTypeCode.class.getSimpleName() + "(" + SqlTypes.class.getSimpleName() + ".JSON)";
+        }
+
+        @Override
+        public String fieldType(String thisErupt, String linkErupt) {
+            return "Map<String, String>";
+        }
+
+        @Override
+        public String importPackages() {
+            return "import " + Map.class.getName() + ";\n" +
+                    "import " + JdbcTypeCode.class.getName() + ";\n" +
+                    "import " + SqlTypes.class.getName() + ";";
         }
     },
     @Ref COMBINE(EditType.COMBINE, "One-to-One Add", null, null) {

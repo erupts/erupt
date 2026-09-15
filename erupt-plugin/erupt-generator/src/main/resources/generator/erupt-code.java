@@ -11,7 +11,10 @@ import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.jpa.model.BaseModel;
 import java.util.Set;
+import java.util.Map;
 import java.util.Date;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 <#assign erupt=rows[0]/>
 @Erupt(name = "${erupt.name}")
