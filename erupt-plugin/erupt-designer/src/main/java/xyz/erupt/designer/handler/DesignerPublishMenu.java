@@ -57,7 +57,7 @@ public class DesignerPublishMenu implements OperationHandler<DesignerEntity, Men
                 entity.getClassName(), modal.getName(),
                 MenuTypeEnum.TABLE.getCode(), entity.getClassName(),
                 MenuStatus.OPEN.getValue(), (max == null ? 0 : max) + 10,
-                null, modal.getEruptMenu()
+                modal.getIcon(), modal.getEruptMenu()
         );
         eruptDao.persist(menu);
         int i = 0;

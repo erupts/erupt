@@ -46,7 +46,7 @@ public class EruptClassPublishMenu implements OperationHandler<EruptClassInfo, M
                 info.getName(), modal.getName(),
                 MenuTypeEnum.TABLE.getCode(), info.getName(),
                 MenuStatus.OPEN.getValue(), (max == null ? 0 : max) + 10,
-                null, modal.getEruptMenu()
+                modal.getIcon(), modal.getEruptMenu()
         );
         eruptDao.persist(menu);
         int i = 0;

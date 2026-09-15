@@ -32,6 +32,11 @@ public class MenuPublishModal extends BaseModel {
     private String name;
 
     @EruptField(
+            edit = @Edit(title = "Icon", type = EditType.ICON, desc = "Shown before the menu name; leave empty for no icon")
+    )
+    private String icon;
+
+    @EruptField(
             edit = @Edit(
                     title = "Menu Location",
                     desc = "Skip if publishing to root directory",
