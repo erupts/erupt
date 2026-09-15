@@ -136,6 +136,9 @@ public @interface Edit {
     @Transient
     CheckboxType checkboxType() default @CheckboxType;
 
+    @Transient
+    TransferType transferType() default @TransferType;
+
     @Match("#item.type().toString()=='GROUP'")
     GroupType groupType() default @GroupType(fields = {});
 

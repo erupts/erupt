@@ -35,5 +35,7 @@ public @interface MultiChoiceType {
         SELECT,
         @Comment("Checkbox group")
         CHECKBOX,
+        @Comment("Transfer list with search; suits large option sets")
+        TRANSFER,
     }
 }

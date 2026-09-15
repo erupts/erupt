@@ -51,7 +51,8 @@ public class LLMRole extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Tools"),
-            edit = @Edit(title = "Tools", type = EditType.MULTI_CHOICE, multiChoiceType = @MultiChoiceType(fetchHandler = AiToolboxManager.class))
+            edit = @Edit(title = "Tools", type = EditType.MULTI_CHOICE, multiChoiceType = @MultiChoiceType(
+                    fetchHandler = AiToolboxManager.class, type = MultiChoiceType.Type.TRANSFER))
     )
     private Set<String> tools;
 

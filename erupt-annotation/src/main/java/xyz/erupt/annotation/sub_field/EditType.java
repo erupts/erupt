@@ -94,6 +94,8 @@ public enum EditType {
     REFERENCE_TABLE,
     @EditTypeMapping(mapping = CheckboxType.class, desc = "Multi-select (many-to-many)", allowType = {JavaTypeEnum.object}, excelOperator = false)
     CHECKBOX,
+    @EditTypeMapping(mapping = TransferType.class, desc = "Transfer list (many-to-many)", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    TRANSFER,
     @EditTypeMapping(desc = "Multi-select tree (many-to-many)", allowType = {JavaTypeEnum.object}, excelOperator = false)
     TAB_TREE,
     @EditTypeMapping(desc = "Multi-select table (many-to-many)", allowType = {JavaTypeEnum.object}, excelOperator = false)

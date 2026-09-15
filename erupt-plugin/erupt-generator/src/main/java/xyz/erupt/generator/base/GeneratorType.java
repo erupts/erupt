@@ -160,6 +160,22 @@ public enum GeneratorType {
             return "import " + Set.class.getName() + ";";
         }
     },
+    @Ref TRANSFER(EditType.TRANSFER, "Transfer", null, "transferType = @TransferType(id = \"id\", label = \"name\")") {
+        @Override
+        public String annotation(String thisErupt, String linkErupt) {
+            return CHECKBOX.annotation(thisErupt, linkErupt);
+        }
+
+        @Override
+        public String fieldType(String thisErupt, String linkErupt) {
+            return CHECKBOX.fieldType(thisErupt, linkErupt);
+        }
+
+        @Override
+        public String importPackages() {
+            return CHECKBOX.importPackages();
+        }
+    },
     @Ref TAB_TREE(EditType.TAB_TREE, "Multi-select Tree", null, null) {
         @Override
         public String annotation(String thisErupt, String linkErupt) {
