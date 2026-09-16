@@ -33,6 +33,12 @@ public @interface EruptRouter {
     @Comment("Define route verification rules")
     Class<? extends VerifyHandler> verifyHandler() default VerifyHandler.class;
 
+    @Comment("Whether erupt-cloud-server may forward this API to the node that owns the erupt. " +
+            "Turn it off for a server-owned API that only keys on the erupt name (record comments, " +
+            "for example): the node neither carries the module nor knows the server's users, so the " +
+            "server must answer the call itself, under the 'nodeName.eruptName' it addressed")
+    boolean cloudProxy() default true;
+
 
     @Comment("Custom parameters")
     String[] params() default {};
