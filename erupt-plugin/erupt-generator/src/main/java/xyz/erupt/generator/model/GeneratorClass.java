@@ -11,6 +11,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.OpenWay;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -30,6 +31,7 @@ import java.util.Set;
                 mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL,
                 tpl = @Tpl(path = "generator/erupt-code-skeleton.ftl",
                         engine = Tpl.Engine.FreeMarker,
+                        openWay = OpenWay.DRAWER,
                         tplHandler = GeneratorClass.class)
         )
 )

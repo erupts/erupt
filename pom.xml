@@ -115,6 +115,7 @@
         <module>erupt-plugin/erupt-monitor</module>
         <module>erupt-plugin/erupt-magic-api</module>
         <module>erupt-plugin/erupt-notice</module>
+        <module>erupt-plugin/erupt-comment</module>
         <module>erupt-plugin/erupt-print</module>
         <module>erupt-plugin/erupt-terminal</module>
         <module>erupt-plugin/erupt-remote</module>
