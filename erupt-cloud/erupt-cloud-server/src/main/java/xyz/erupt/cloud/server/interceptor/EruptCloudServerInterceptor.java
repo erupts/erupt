@@ -323,6 +323,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
 
     private void eruptBuildProcess(EruptBuildModel eruptBuildModel, String nodeName) {
         String prefix = nodeName + EruptConst.DOT;
+        disableComment(eruptBuildModel);
         eruptBuildModel.getEruptModel().setEruptName(prefix + eruptBuildModel.getEruptModel().getEruptName());
         //Modify the Drill value
         JsonArray drills = eruptBuildModel.getEruptModel().getEruptJson().getAsJsonArray("drills");
@@ -347,6 +348,26 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 value.setEruptName(prefix + value.getEruptName());
             }
         });
+    }
+
+    private static final String POWER = "power";
+
+    private static final String COMMENT = "comment";
+
+    /**
+     * A node erupt never carries a comment stream. Comments are stored in the server's own database
+     * keyed by erupt name, while the comment API belongs to erupt-comment, a module the node does not
+     * have: the browser would address the record by its dotted name and the call would be forwarded
+     * to a node that answers 404. The UI reads eruptJson.power.comment, the rest of the pipeline reads
+     * the PowerObject, so both are turned off, tab erupts included.
+     */
+    static void disableComment(EruptBuildModel eruptBuildModel) {
+        Optional.ofNullable(eruptBuildModel.getPower()).ifPresent(it -> it.setComment(false));
+        Optional.ofNullable(eruptBuildModel.getEruptModel()).map(EruptModel::getEruptJson)
+                .map(it -> it.get(POWER)).filter(JsonElement::isJsonObject)
+                .ifPresent(it -> it.getAsJsonObject().addProperty(COMMENT, false));
+        Optional.ofNullable(eruptBuildModel.getTabErupts())
+                .ifPresent(it -> it.values().forEach(EruptCloudServerInterceptor::disableComment));
     }
 
 }

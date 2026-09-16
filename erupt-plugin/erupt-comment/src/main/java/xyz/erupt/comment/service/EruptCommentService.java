@@ -11,6 +11,7 @@ import xyz.erupt.comment.pojo.CommentInput;
 import xyz.erupt.comment.pojo.CommentVo;
 import xyz.erupt.comment.pojo.MentionVo;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
@@ -159,7 +160,12 @@ public class EruptCommentService {
     }
 
     // @Power(comment = false) hides the entry in the UI; the API refuses writes as well.
+    // A cloud node erupt is never commentable: the record lives on the node while a comment would
+    // land in this database, and the node itself does not carry the comment API.
     private void checkEnabled(String erupt) {
+        if (EruptRemoteRouterManager.isRemote(erupt)) {
+            throw new EruptWebApiRuntimeException("Comments are disabled for " + erupt);
+        }
         EruptModel model = EruptCoreService.getErupt(erupt);
         if (null != model && !model.getErupt().power().comment()) {
             throw new EruptWebApiRuntimeException("Comments are disabled for " + erupt);
