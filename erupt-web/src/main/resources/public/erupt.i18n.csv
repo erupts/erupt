@@ -52,6 +52,8 @@ global.copy,复制,複製,Copy,Copier,コピー,복사,Копировать,Copi
 global.download,下载,下載,Download,Télécharger,ダウンロード,다운로드,Скачать,Descargar,Herunterladen,Baixar,Unduh,تحميل
 global.refresh,刷新,刷新,Refresh,Actualiser,更新,새로고침,Обновить,Actualizar,Aktualisieren,Atualizar,Segarkan,تحديث
 global.select_all,全选,全選,Select All,Tout sélectionner,すべて選択,전체 선택,Выбрать все,Seleccionar todo,Alle auswählen,Selecionar tudo,Pilih semua,تحديد الكل
+global.transfer.source,可选,可選,Available,Disponibles,選択可能,선택 가능,Доступные,Disponibles,Verfügbar,Disponíveis,Tersedia,المتاح
+global.transfer.target,已选,已選,Selected,Sélectionnés,選択済み,선택됨,Выбранные,Seleccionados,Ausgewählt,Selecionados,Terpilih,المحدد
 board.unset,未设置,未設置,Unset,Non défini,未設定,미설정,Не задано,Sin definir,Nicht gesetzt,Não definido,Belum diatur,غير محدد
 
 
@@ -475,7 +477,6 @@ ai.chat.yesterday,昨天,昨天,Yesterday,Hier,昨日,어제,Вчера,Ayer,Ges
 ai.chat.just_now,刚刚,剛剛,Just now,À l'instant,たった今,방금,Только что,Ahora mismo,Gerade eben,Agora mesmo,Baru saja,الآن
 global.expand,展开,展開,Expand,Développer,展開,펼치기,Развернуть,Expandir,Erweitern,Expandir,Perluas,توسيع
 global.collapse,收起,收起,Collapse,Réduire,折りたたむ,접기,Свернуть,Contraer,Einklappen,Recolher,Ciutkan,طي
-setting.detail-drawer,抽屉查看详情,抽屜查看詳情,Drawer for Details,Tiroir pour détails,ドロワーで詳細表示,서랍으로 상세보기,Боковая панель,Cajón para detalles,Seitenleiste für Details,Gaveta para detalhes,Drawer untuk detail,درج للتفاصيل
 setting.search-collapsed,默认收起搜索,預設收起搜索,Collapse Search by Default,Recherche réduite par défaut,検索をデフォルトで折りたたむ,기본 검색 접기,Свернуть поиск по умолчанию,Contraer búsqueda por defecto,Suche standardmäßig einklappen,Recolher pesquisa por padrão,Ciutkan pencarian default,طي البحث افتراضيًا
 query.op.like,包含,包含,Contains,Contient,含む,포함,Содержит,Contiene,Enthält,Contém,Mengandung,يحتوي
 query.op.not_like,不包含,不包含,Not contains,Ne contient pas,含まない,미포함,Не содержит,No contiene,Enthält nicht,Não contém,Tidak mengandung,لا يحتوي
@@ -569,6 +570,8 @@ designer.type.date,日期,日期,Date,Date,日付,Date,Date,Date,Date,Date,Date,
 designer.type.slider,滑块,滑塊,Slider,Slider,スライダー,Slider,Slider,Slider,Slider,Slider,Slider,Slider
 designer.type.rate,评分,評分,Rate,Rate,評価,Rate,Rate,Rate,Rate,Rate,Rate,Rate
 designer.type.color,颜色,顏色,Color,Color,色,Color,Color,Color,Color,Color,Color,Color
+designer.type.icon,图标,圖示,Icon,Icône,アイコン,아이콘,Иконка,Icono,Symbol,Ícone,Ikon,أيقونة
+designer.type.key_value,键值对,鍵值對,Key-Value,Clé-valeur,キーと値,키-값,Ключ-значение,Clave-valor,Schlüssel-Wert,Chave-valor,Kunci-Nilai,مفتاح-قيمة
 designer.type.choice,单选,單選,Choice,Choice,単一選択,Choice,Choice,Choice,Choice,Choice,Choice,Choice
 designer.type.multi_choice,多选,多選,Multi Choice,Multi Choice,複数選択,Multi Choice,Multi Choice,Multi Choice,Multi Choice,Multi Choice,Multi Choice,Multi Choice
 designer.type.tags,标签,標籤,Tags,Tags,タグ,Tags,Tags,Tags,Tags,Tags,Tags,Tags
@@ -576,6 +579,7 @@ designer.type.auto_complete,自动完成,自動完成,Auto Complete,Auto Complet
 designer.type.reference_table,表格引用,表格引用,Ref Table,Ref Table,テーブル参照,Ref Table,Ref Table,Ref Table,Ref Table,Ref Table,Ref Table,Ref Table
 designer.type.reference_tree,树形引用,樹形引用,Ref Tree,Ref Tree,ツリー参照,Ref Tree,Ref Tree,Ref Tree,Ref Tree,Ref Tree,Ref Tree,Ref Tree
 designer.type.checkbox,复选框,複選框,Checkbox,Checkbox,チェックボックス,Checkbox,Checkbox,Checkbox,Checkbox,Checkbox,Checkbox,Checkbox
+designer.type.transfer,穿梭框,穿梭框,Transfer,Transfert,転送リスト,트랜스퍼,Перенос,Transferencia,Transfer,Transferência,Transfer,نقل
 designer.type.tab_table_add,子表,子表,Sub Table,Sub Table,サブテーブル,Sub Table,Sub Table,Sub Table,Sub Table,Sub Table,Sub Table,Sub Table
 designer.type.attachment,附件,附件,Attachment,Attachment,添付,Attachment,Attachment,Attachment,Attachment,Attachment,Attachment,Attachment
 designer.type.html_editor,富文本,富文本,Rich Text,Rich Text,リッチテキスト,Rich Text,Rich Text,Rich Text,Rich Text,Rich Text,Rich Text,Rich Text
@@ -631,6 +635,7 @@ designer.vis.end_date_field,结束日期字段,結束日期字段,End Date Field
 designer.vis.progress_field,进度字段,進度字段,Progress Field,Champ de progression,進捗フィールド,진행률 필드,Поле прогресса,Campo de progreso,Fortschrittsfeld,Campo de progresso,Bidang progres,حقل التقدم
 designer.vis.date_field,日期字段,日期字段,Date Field,Champ de date,日付フィールド,날짜 필드,Поле даты,Campo de fecha,Datumsfeld,Campo de data,Bidang tanggal,حقل التاريخ
 designer.vis.color_field,颜色字段,顏色字段,Color Field,Champ de couleur,色フィールド,색상 필드,Поле цвета,Campo de color,Farbfeld,Campo de cor,Bidang warna,حقل اللون
+designer.column_group,表头分组,表頭分組,Header Group,Groupe d'en-tête,ヘッダーグループ,헤더 그룹,Группа заголовков,Grupo de encabezado,Kopfzeilengruppe,Grupo de cabeçalho,Grup header,مجموعة الرأس
 designer.ref_config,关联配置,關聯配置,Ref Config,Config de référence,関連設定,관련 설정,Настройка связи,Config de referencia,Verknüpfungseinstellungen,Config de referência,Konfigurasi referensi,إعداد الارتباط
 designer.ref_id,主键字段,主鍵字段,ID Field,Champ ID,主キーフィールド,기본키 필드,Поле первичного ключа,Campo ID,ID-Feld,Campo de chave,Field kunci utama,حقل المفتاح الأساسي
 designer.ref_label,显示字段,顯示字段,Label Field,Champ d'affichage,表示フィールド,표시 필드,Поле отображения,Campo de etiqueta,Anzeigefeld,Campo de exibição,Field label,حقل العرض
@@ -1263,3 +1268,52 @@ micro_app.err_no_render,子应用已加载但没有渲染内容，可能不兼�
 micro_app.err_unknown,子应用加载失败,子應用載入失敗,Failed to load the sub-app,Échec du chargement de la sous-application,サブアプリの読み込みに失敗しました,하위 앱 로드 실패,Не удалось загрузить подприложение,Error al cargar la subaplicación,Laden der Sub-App fehlgeschlagen,Falha ao carregar a subaplicação,Gagal memuat sub-aplikasi,فشل تحميل التطبيق الفرعي
 ai_assist.done,内容已生成,內容已生成,Draft ready,Brouillon prêt,生成が完了しました,초안 생성 완료,Черновик готов,Borrador listo,Entwurf fertig,Rascunho pronto,Draf siap,المسودة جاهزة
 menu.top_mode,顶部菜单,頂部選單,Top menu,Menu supérieur,トップメニュー,상단 메뉴,Верхнее меню,Menú superior,Obere Menüleiste,Menu superior,Menu atas,القائمة العلوية
+menu.group_mode,分组菜单,分組選單,Grouped menu,Menu groupé,グループメニュー,그룹 메뉴,Сгруппированное меню,Menú agrupado,Gruppiertes Menü,Menu agrupado,Menu berkelompok,قائمة مجمعة
+menu.top_split_mode,顶栏双行,頂欄雙行,Two-row top menu,Menu supérieur à deux rangées,2段トップメニュー,2행 상단 메뉴,Двухрядное верхнее меню,Menú superior de dos filas,Zweizeiliges Top-Menü,Menu superior de duas linhas,Menu atas dua baris,قائمة علوية بصفين
+icon_picker.search,搜索图标名称或关键词,搜尋圖示名稱或關鍵字,Search icons by name or keyword,Rechercher une icône par nom ou mot-clé,アイコン名やキーワードで検索,아이콘 이름 또는 키워드 검색,Поиск иконок по имени или ключевому слову,Buscar iconos por nombre o palabra clave,Symbole nach Name oder Stichwort suchen,Pesquisar ícones por nome ou palavra-chave,Cari ikon berdasarkan nama atau kata kunci,البحث عن الأيقونات بالاسم أو الكلمة المفتاحية
+icon_picker.all,全部,全部,All,Tous,すべて,전체,Все,Todos,Alle,Todos,Semua,الكل
+icon_picker.solid,实心,實心,Solid,Plein,ソリッド,솔리드,Сплошные,Sólido,Gefüllt,Sólido,Solid,مصمت
+icon_picker.regular,线性,線性,Regular,Contour,レギュラー,레귤러,Контурные,Regular,Umriss,Regular,Regular,عادي
+icon_picker.brands,品牌,品牌,Brands,Marques,ブランド,브랜드,Бренды,Marcas,Marken,Marcas,Merek,علامات تجارية
+icon_picker.empty,没有匹配的图标,沒有符合的圖示,No matching icons,Aucune icône correspondante,一致するアイコンがありません,일치하는 아이콘이 없습니다,Нет подходящих иконок,No hay iconos coincidentes,Keine passenden Symbole,Sem ícones correspondentes,Tidak ada ikon yang cocok,لا توجد أيقونات مطابقة
+icon_picker.missing,图标清单未生成，请执行 npm run fa-icons,圖示清單未產生，請執行 npm run fa-icons,"Icon catalogue not generated, run npm run fa-icons","Catalogue d'icônes non généré, exécutez npm run fa-icons",アイコン一覧が生成されていません。npm run fa-icons を実行してください,아이콘 목록이 생성되지 않았습니다. npm run fa-icons 를 실행하세요,"Каталог иконок не создан, выполните npm run fa-icons","Catálogo de iconos no generado, ejecute npm run fa-icons","Symbolkatalog nicht erzeugt, npm run fa-icons ausführen","Catálogo de ícones não gerado, execute npm run fa-icons","Katalog ikon belum dibuat, jalankan npm run fa-icons",لم يتم إنشاء فهرس الأيقونات، نفّذ npm run fa-icons
+icon_picker.color_default,跟随文字颜色,跟隨文字顏色,Inherit text colour,Couleur du texte,文字色に従う,텍스트 색상 따름,Цвет текста,Color del texto,Textfarbe,Cor do texto,Ikuti warna teks,لون النص
+icon_picker.color_primary,主题色（随主题变化）,主題色（隨主題變化）,Theme primary colour (follows the theme),Couleur principale du thème (suit le thème),テーマのプライマリカラー（テーマに追従）,테마 기본 색상(테마에 따라 변경),Основной цвет темы (меняется с темой),Color primario del tema (sigue al tema),Primärfarbe des Themes (folgt dem Theme),Cor primária do tema (segue o tema),Warna utama tema (mengikuti tema),اللون الأساسي للسمة (يتبع السمة)
+icon_picker.placeholder,选择图标,選擇圖示,Choose an icon,Choisir une icône,アイコンを選択,아이콘 선택,Выберите иконку,Elegir un icono,Symbol wählen,Escolher um ícone,Pilih ikon,اختر أيقونة
+key_value.key,键,鍵,Key,Clé,キー,키,Ключ,Clave,Schlüssel,Chave,Kunci,المفتاح
+key_value.value,值,值,Value,Valeur,値,값,Значение,Valor,Wert,Valor,Nilai,القيمة
+key_value.add,添加一行,新增一列,Add row,Ajouter une ligne,行を追加,행 추가,Добавить строку,Añadir fila,Zeile hinzufügen,Adicionar linha,Tambah baris,إضافة صف
+key_value.duplicate,键重复，保存时后者覆盖前者,鍵重複，儲存時後者覆蓋前者,"Duplicate key, the last one wins on save","Clé en double, la dernière l'emporte à l'enregistrement",キーが重複しています。保存時は後のものが優先されます,"중복된 키입니다. 저장 시 마지막 값이 적용됩니다","Дубликат ключа, при сохранении останется последний","Clave duplicada, al guardar prevalece la última","Doppelter Schlüssel, beim Speichern gilt der letzte","Chave duplicada, ao guardar prevalece a última","Kunci duplikat, yang terakhir dipakai saat menyimpan",مفتاح مكرر، الأخير هو المعتمد عند الحفظ
+setting.form-panel-mode,详情弹窗形态,詳情彈窗形態,Detail panel style,Style du panneau de détail,詳細パネルの形式,상세 패널 형태,Стиль панели деталей,Estilo del panel de detalle,Detailpanel-Stil,Estilo do painel de detalhe,Gaya panel detail,نمط لوحة التفاصيل
+form.panel.center,中间弹窗,中間彈窗,Centered dialog,Fenêtre centrée,中央ダイアログ,중앙 대화상자,Окно по центру,Diálogo centrado,Zentrierter Dialog,Diálogo centrado,Dialog tengah,نافذة في المنتصف
+form.panel.side,侧边面板,側邊面板,Side panel,Panneau latéral,サイドパネル,사이드 패널,Боковая панель,Panel lateral,Seitenpanel,Painel lateral,Panel samping,لوحة جانبية
+setting.row-click-view,点击行查看详情,點擊行查看詳情,Click row to view details,Cliquer sur la ligne pour voir les détails,行クリックで詳細表示,행 클릭으로 상세 보기,Клик по строке открывает детали,Clic en la fila para ver detalles,Zeile anklicken für Details,Clique na linha para ver detalhes,Klik baris untuk melihat detail,انقر على الصف لعرض التفاصيل
+form.unsaved.confirm,有未保存的修改，确定放弃吗？,有未儲存的修改，確定放棄嗎？,"Discard unsaved changes?",Abandonner les modifications non enregistrées ?,未保存の変更を破棄しますか？,저장되지 않은 변경 사항을 버리시겠습니까?,Отменить несохранённые изменения?,¿Descartar los cambios no guardados?,Ungespeicherte Änderungen verwerfen?,Descartar alterações não guardadas?,Buang perubahan yang belum disimpan?,هل تريد تجاهل التغييرات غير المحفوظة؟
+form.unsaved.discard,放弃修改,放棄修改,Discard,Abandonner,破棄,버리기,Отменить,Descartar,Verwerfen,Descartar,Buang,تجاهل
+form.prev_record,上一条,上一筆,Previous record,Enregistrement précédent,前のレコード,이전 항목,Предыдущая запись,Registro anterior,Vorheriger Datensatz,Registo anterior,Data sebelumnya,السجل السابق
+form.next_record,下一条,下一筆,Next record,Enregistrement suivant,次のレコード,다음 항목,Следующая запись,Registro siguiente,Nächster Datensatz,Registo seguinte,Data berikutnya,السجل التالي
+global.copy_link,复制链接,複製連結,Copy link,Copier le lien,リンクをコピー,링크 복사,Копировать ссылку,Copiar enlace,Link kopieren,Copiar ligação,Salin tautan,نسخ الرابط
+form.ai_assistant,AI 助手,AI 助手,AI assistant,Assistant IA,AI アシスタント,AI 어시스턴트,ИИ-помощник,Asistente de IA,KI-Assistent,Assistente de IA,Asisten AI,مساعد الذكاء الاصطناعي
+form.comments,评论,評論,Comments,Commentaires,コメント,댓글,Комментарии,Comentarios,Kommentare,Comentários,Komentar,التعليقات
+comment.placeholder,写下评论…,寫下評論…,Write a comment…,Écrire un commentaire…,コメントを書く…,댓글을 입력하세요…,Напишите комментарий…,Escribe un comentario…,Kommentar schreiben…,Escreva um comentário…,Tulis komentar…,اكتب تعليقًا…
+comment.send,发送,傳送,Send,Envoyer,送信,보내기,Отправить,Enviar,Senden,Enviar,Kirim,إرسال
+comment.reply,回复,回覆,Reply,Répondre,返信,답글,Ответить,Responder,Antworten,Responder,Balas,رد
+comment.reply_to,回复,回覆,Replying to,En réponse à,返信先,답글 대상,Ответ,Respondiendo a,Antwort an,A responder a,Membalas,رد على
+comment.empty,还没有评论,還沒有評論,No comments yet,Aucun commentaire,コメントはまだありません,아직 댓글이 없습니다,Комментариев пока нет,Aún no hay comentarios,Noch keine Kommentare,Ainda sem comentários,Belum ada komentar,لا توجد تعليقات بعد
+comment.me,我,我,Me,Moi,自分,나,Я,Yo,Ich,Eu,Saya,أنا
+comment.empty_hint,在下方写下第一条评论,在下方寫下第一條評論,Be the first to leave a comment below,Soyez le premier à commenter ci-dessous,下に最初のコメントを書きましょう,아래에 첫 댓글을 남겨보세요,Оставьте первый комментарий ниже,Sé el primero en comentar abajo,Hinterlassen Sie unten den ersten Kommentar,Seja o primeiro a comentar abaixo,Jadilah yang pertama berkomentar di bawah,كن أول من يعلق أدناه
+comment.cancel_reply,取消回复,取消回覆,Cancel reply,Annuler la réponse,返信をキャンセル,답글 취소,Отменить ответ,Cancelar respuesta,Antwort abbrechen,Cancelar resposta,Batalkan balasan,إلغاء الرد
+comment.resolve,标记已解决,標記已解決,Mark as resolved,Marquer comme résolu,解決済みにする,해결됨으로 표시,Отметить решённым,Marcar como resuelto,Als gelöst markieren,Marcar como resolvido,Tandai terselesaikan,وضع علامة كمحلول
+comment.reopen,重新打开,重新打開,Reopen,Rouvrir,再開する,다시 열기,Открыть снова,Reabrir,Wieder öffnen,Reabrir,Buka kembali,إعادة الفتح
+comment.resolved,已解决,已解決,Resolved,Résolu,解決済み,해결됨,Решено,Resuelto,Gelöst,Resolvido,Terselesaikan,تم الحل
+comment.pin,置顶,置頂,Pin,Épingler,ピン留め,고정,Закрепить,Fijar,Anheften,Fixar,Sematkan,تثبيت
+comment.unpin,取消置顶,取消置頂,Unpin,Désépingler,ピン留め解除,고정 해제,Открепить,Desfijar,Lösen,Desafixar,Lepas sematan,إلغاء التثبيت
+comment.pinned,置顶,置頂,Pinned,Épinglé,ピン留め,고정됨,Закреплено,Fijado,Angeheftet,Fixado,Disematkan,مثبت
+comment.replies,条回复,條回覆,replies,réponses,件の返信,개의 답글,ответов,respuestas,Antworten,respostas,balasan,ردود
+comment.mention_hint,提及同事,提及同事,Mention a teammate,Mentionner un collègue,同僚にメンション,동료 멘션,Упомянуть коллегу,Mencionar a un compañero,Kollegen erwähnen,Mencionar um colega,Sebut rekan kerja,اذكر زميلاً
+comment.send_tip,Enter 发送 · Shift+Enter 换行,Enter 傳送 · Shift+Enter 換行,Enter to send · Shift+Enter for a new line,Entrée pour envoyer · Maj+Entrée pour un saut de ligne,Enter で送信 · Shift+Enter で改行,Enter 전송 · Shift+Enter 줄바꿈,Enter — отправить · Shift+Enter — новая строка,Enter para enviar · Shift+Enter para salto de línea,Enter zum Senden · Shift+Enter für neue Zeile,Enter para enviar · Shift+Enter para nova linha,Enter untuk kirim · Shift+Enter untuk baris baru,Enter للإرسال · Shift+Enter لسطر جديد
+comment.mention_empty,没有匹配的用户,沒有匹配的用戶,No matching user,Aucun utilisateur trouvé,一致するユーザーがいません,일치하는 사용자가 없습니다,Пользователь не найден,Sin usuarios coincidentes,Kein passender Benutzer,Nenhum usuário correspondente,Tidak ada pengguna yang cocok,لا يوجد مستخدم مطابق
+notice.openLink,打开链接,打開連結,Open link,Ouvrir le lien,リンクを開く,링크 열기,Открыть ссылку,Abrir enlace,Link öffnen,Abrir link,Buka tautan,فتح الرابط
+ai.chat.title,AI 助手,AI 助手,AI Assistant,Assistant IA,AIアシスタント,AI 어시스턴트,AI-ассистент,Asistente de IA,KI-Assistent,Assistente de IA,Asisten AI,مساعد الذكاء الاصطناعي
+flow.empty.data_deleted,表单数据已删除,表單資料已刪除,Form data has been deleted,Les données du formulaire ont été supprimées,フォームデータは削除されました,양식 데이터가 삭제되었습니다,Данные формы удалены,Los datos del formulario se han eliminado,Formulardaten wurden gelöscht,Os dados do formulário foram excluídos,Data formulir telah dihapus,تم حذف بيانات النموذج
+notice.view_detail,查看详情,查看詳情,View detail,Voir le détail,詳細を見る,상세 보기,Подробнее,Ver detalle,Details ansehen,Ver detalhe,Lihat detail,عرض التفاصيل
