@@ -36,6 +36,18 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
         EruptModuleInvoke.addEruptModule(EruptUpmsAutoConfiguration.class);
     }
 
+    public static final String MANAGER_MENU = "$manager";
+
+    /**
+     * The System Management root. A module whose menu is an administrative view rather than a
+     * feature of its own hangs its table here instead of adding another root: menus are persisted
+     * by code, so declaring this same menu again resolves to the one row whichever module happens
+     * to load first — build it through this method so the two declarations cannot drift apart.
+     */
+    public static MetaMenu managerMenu() {
+        return MetaMenu.createRootMenu(MANAGER_MENU, "System Management", "fa fa-cogs", 1);
+    }
+
     @Override
     public ModuleInfo info() {
         return ModuleInfo.builder().name("erupt-upms").description("User privilege management").build();
@@ -44,7 +56,7 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$manager", "System Management", "fa fa-cogs", 1));
+        menus.add(managerMenu());
         menus.add(MetaMenu.createSimpleMenu("$home", "Home", "/", null, 0, "fa fa-home", MenuTypeEnum.ROUTER.getCode(), MenuStatus.OPEN));
         menus.add(MetaMenu.createEruptClassMenu(EruptMenu.class, menus.get(0), 0, MenuTypeEnum.TREE));
         menus.add(MetaMenu.createEruptClassMenu(EruptRole.class, menus.get(0), 10));

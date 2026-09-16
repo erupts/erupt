@@ -14,7 +14,9 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.comment.handler.CommentEruptChoice;
 
 /**
  * One comment on one record of any erupt model. The record is addressed by model name plus
@@ -33,10 +35,13 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 @Setter
 public class EruptRecordComment extends xyz.erupt.upms.helper.HyperModelCreatorOnlyVo {
 
+    // stored as the erupt name ("nodeName.eruptName" for a cloud node model); shown and filtered by
+    // the data model's own translated name, which is what the choice list labels it with
     @Column(length = 100)
     @EruptField(
             views = @View(title = "Model", width = "160px"),
-            edit = @Edit(title = "Model", notNull = true, search = @Search)
+            edit = @Edit(title = "Model", notNull = true, type = EditType.CHOICE,
+                    choiceType = @ChoiceType(fetchHandler = CommentEruptChoice.class), search = @Search)
     )
     private String erupt;
 

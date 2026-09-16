@@ -11,6 +11,7 @@ import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
+import xyz.erupt.upms.EruptUpmsAutoConfiguration;
 import xyz.erupt.upms.prop.EruptAppProp;
 
 import java.util.ArrayList;
@@ -52,9 +53,12 @@ public class EruptCommentAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        MetaMenu root = MetaMenu.createRootMenu("$comment", "Comment Manager", "fa fa-comments-o", 95);
-        menus.add(root);
-        menus.add(MetaMenu.createEruptClassMenu(EruptRecordComment.class, root, 10));
+        // Comments are written inside the records themselves; this table is the administrative view
+        // of them, so it belongs next to the other logs under System Management rather than behind a
+        // root menu of its own.
+        MetaMenu manager = EruptUpmsAutoConfiguration.managerMenu();
+        menus.add(manager);
+        menus.add(MetaMenu.createEruptClassMenu(EruptRecordComment.class, manager, 85));
         return menus;
     }
 }
