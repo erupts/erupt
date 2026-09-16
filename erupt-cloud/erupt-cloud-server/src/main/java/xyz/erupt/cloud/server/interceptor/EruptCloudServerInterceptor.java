@@ -111,6 +111,9 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             eruptRouter = ((HandlerMethod) handler).getMethodAnnotation(EruptRouter.class);
         }
         if (null == eruptRouter) return true;
+        // Server-owned API (record comments and the like): the erupt name may point at a node, but the
+        // answer lives here — the node carries neither the module nor the users the data refers to.
+        if (!eruptRouter.cloudProxy()) return true;
         // tpl page carried by a node: routed by an explicit "_node" param, path stays node-local.
         String tplNode = request.getParameter(URL_NODE_PARAM);
         if (StringUtils.isNotBlank(tplNode) && request.getRequestURI().contains(TPL_PATH)) {

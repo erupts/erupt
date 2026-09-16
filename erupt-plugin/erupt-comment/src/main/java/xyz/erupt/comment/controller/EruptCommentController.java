@@ -17,6 +17,11 @@ import java.util.Map;
  * Comments of one record. Every route carries the model name at path index 1, so the
  * erupt permission check applies: whoever may open the model may read and write its comments.
  * The literal segments (counts, mention-users) take precedence over the record id variable.
+ * <p>
+ * cloudProxy = false keeps these routes on the server even when the model belongs to an
+ * erupt-cloud node: comments, their authors and their @mentions all live in the server's own
+ * database, and the node has neither this module nor a user system. The model name then arrives
+ * as "nodeName.eruptName", which is exactly how the comment rows are keyed.
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_API + "/comment")
@@ -26,47 +31,47 @@ public class EruptCommentController {
     private EruptCommentService eruptCommentService;
 
     @GetMapping("/{erupt}/{id}")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, cloudProxy = false)
     public R<List<CommentVo>> list(@PathVariable("erupt") String erupt, @PathVariable("id") String id) {
         return R.ok(eruptCommentService.list(erupt, id));
     }
 
     // comment count per record for the rows of one table page: body is the list of record ids
     @PostMapping("/{erupt}/counts")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, cloudProxy = false)
     public R<Map<String, Long>> counts(@PathVariable("erupt") String erupt, @RequestBody List<String> ids) {
         return R.ok(eruptCommentService.counts(erupt, ids));
     }
 
     @GetMapping("/{erupt}/mention-users")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, cloudProxy = false)
     public R<List<MentionVo>> mentionUsers(@PathVariable("erupt") String erupt,
                                            @RequestParam(value = "keyword", required = false) String keyword) {
         return R.ok(eruptCommentService.mentionCandidates(keyword));
     }
 
     @PostMapping("/{erupt}/{id}")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, cloudProxy = false)
     public R<CommentVo> add(@PathVariable("erupt") String erupt, @PathVariable("id") String id, @RequestBody CommentInput input) {
         return R.ok(eruptCommentService.add(erupt, id, input));
     }
 
     @PutMapping("/{erupt}/{id}/{commentId}/resolved")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, cloudProxy = false)
     public R<CommentVo> resolved(@PathVariable("erupt") String erupt, @PathVariable("id") String id,
                                  @PathVariable("commentId") Long commentId, @RequestParam("value") boolean value) {
         return R.ok(eruptCommentService.setResolved(erupt, id, commentId, value));
     }
 
     @PutMapping("/{erupt}/{id}/{commentId}/pinned")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, cloudProxy = false)
     public R<CommentVo> pinned(@PathVariable("erupt") String erupt, @PathVariable("id") String id,
                                @PathVariable("commentId") Long commentId, @RequestParam("value") boolean value) {
         return R.ok(eruptCommentService.setPinned(erupt, id, commentId, value));
     }
 
     @DeleteMapping("/{erupt}/{id}/{commentId}")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, cloudProxy = false)
     public R<Void> delete(@PathVariable("erupt") String erupt, @PathVariable("id") String id, @PathVariable("commentId") Long commentId) {
         eruptCommentService.delete(erupt, id, commentId);
         return R.ok();

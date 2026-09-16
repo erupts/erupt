@@ -159,8 +159,11 @@ public class EruptCommentService {
     }
 
     // @Power(comment = false) hides the entry in the UI; the API refuses writes as well.
+    // A cloud node erupt resolves to a remote placeholder carrying annotation defaults: the node's own
+    // opt-out already hid the entry client-side (the build model the browser gates on comes from the
+    // node), and re-reading it here would cost one HTTP round trip to the node per comment written.
     private void checkEnabled(String erupt) {
-        EruptModel model = EruptCoreService.getErupt(erupt);
+        EruptModel model = EruptCoreService.getEruptWithRemote(erupt);
         if (null != model && !model.getErupt().power().comment()) {
             throw new EruptWebApiRuntimeException("Comments are disabled for " + erupt);
         }
