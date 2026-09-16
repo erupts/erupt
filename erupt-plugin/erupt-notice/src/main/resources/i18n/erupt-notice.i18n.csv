@@ -15,3 +15,4 @@ notice.scene,通知场景,通知場景,Notification Scene,Scène de notification
 SENT,已发送,已發送,Sent,Envoyé,送信済み,발송 완료,Отправлено,Enviado,Gesendet,Enviado,Dikirim,تم الإرسال
 UNREAD,未读,未讀,Unread,Non lu,未読,미확인,Не прочитано,No leído,No gelesen,No leído,Belum Dibaca,غير مقروء
 READ,已读,已讀,Read,Lu,読み,읽음,Прочитано,Leído,Gelesen,Leído,Dibaca,تم القراءة
+notice.not_found,通知不存在或已删除,通知不存在或已刪除,The notice no longer exists,Cette notification n'existe plus,通知は存在しません,알림이 존재하지 않습니다,Уведомление не найдено,La notificación ya no existe,Die Benachrichtigung existiert nicht mehr,A notificação já não existe,Notifikasi tidak ditemukan,الإشعار غير موجود

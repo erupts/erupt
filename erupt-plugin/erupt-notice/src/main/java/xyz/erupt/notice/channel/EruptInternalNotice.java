@@ -33,7 +33,8 @@ public class EruptInternalNotice extends AbstractNoticeChannel {
         for (EruptWsSessionModel model : webSocketService.getSessionsByUser(eruptUser.getId())) {
             // title and content are user-written text: JSON-encode them so they arrive as string
             // literals instead of being spliced into the script
-            webSocketService.send(model, SocketCommand.JS, "window.eruptNotice(" + noticeMessage.getId() + ","
+            // the detail row id, not the log id: the detail endpoint is keyed by the recipient's own copy
+            webSocketService.send(model, SocketCommand.JS, "window.eruptNotice(" + noticeMessage.getLogDetailId() + ","
                     + GSON.toJson(noticeMessage.getTitle()) + "," + GSON.toJson(noticeMessage.getContent()) + ")");
         }
     }
