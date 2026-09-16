@@ -2,6 +2,7 @@ package xyz.erupt.jdbc.support;
 
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
+import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -98,8 +99,10 @@ public class JdbcModelTable {
         String pk = model.getErupt().primaryKeyCol();
         Map<String, Object> values = this.beanToValues(model, bean);
         values.values().removeIf(Objects::isNull);
-        if (values.isEmpty()) return;
-        String sql = "insert into " + this.table(model) + " (" + String.join(", ", values.keySet()) + ") values ("
+        // an all-null bean is still a row (e.g. a flow start form with nothing filled in): insert
+        // with column defaults so the caller still gets a generated key back
+        String sql = values.isEmpty() ? "insert into " + this.table(model) + this.defaultValues(model)
+                : "insert into " + this.table(model) + " (" + String.join(", ", values.keySet()) + ") values ("
                 + values.keySet().stream().map(it -> ":" + it).collect(Collectors.joining(", ")) + ")";
         if (values.containsKey(pk)) {
             this.template(model).update(sql, values);
@@ -108,6 +111,14 @@ public class JdbcModelTable {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         this.template(model).update(sql, new MapSqlParameterSource(values), keyHolder);
         this.writeGeneratedKey(model, bean, pk, keyHolder);
+    }
+
+    // MySQL / MariaDB have no DEFAULT VALUES clause; everything else (SQLite, PostgreSQL, H2, SQL Server) does
+    private String defaultValues(EruptModel model) {
+        String product = this.template(model).getJdbcTemplate().execute((ConnectionCallback<String>)
+                connection -> connection.getMetaData().getDatabaseProductName());
+        String name = null == product ? "" : product.toLowerCase();
+        return name.contains("mysql") || name.contains("maria") ? " () values ()" : " default values";
     }
 
     public void update(EruptModel model, Object bean) {
