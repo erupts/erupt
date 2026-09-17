@@ -29,7 +29,7 @@ import java.util.Set;
 
 @EruptI18n
 @Erupt(name = "Generate Erupt Code",
-        power = @Power(add = false),
+        power = @Power(add = false, print = false),
         rowOperation = {
                 @RowOperation(
                         code = "dbImport", title = "Import from Database", icon = "fa fa-database",
