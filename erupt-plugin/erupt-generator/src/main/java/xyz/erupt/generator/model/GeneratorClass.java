@@ -10,6 +10,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -28,6 +29,7 @@ import java.util.Set;
 
 @EruptI18n
 @Erupt(name = "Generate Erupt Code",
+        power = @Power(add = false),
         rowOperation = {
                 @RowOperation(
                         code = "dbImport", title = "Import from Database", icon = "fa fa-database",
