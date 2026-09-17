@@ -19,14 +19,5 @@
             <artifactId>erupt-data-jpa</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-tpl</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-        </dependency>
     </dependencies>
 </project>

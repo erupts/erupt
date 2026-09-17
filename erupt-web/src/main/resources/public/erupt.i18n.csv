@@ -1293,6 +1293,7 @@ form.unsaved.discard,放弃修改,放棄修改,Discard,Abandonner,破棄,버리�
 form.prev_record,上一条,上一筆,Previous record,Enregistrement précédent,前のレコード,이전 항목,Предыдущая запись,Registro anterior,Vorheriger Datensatz,Registo anterior,Data sebelumnya,السجل السابق
 form.next_record,下一条,下一筆,Next record,Enregistrement suivant,次のレコード,다음 항목,Следующая запись,Registro siguiente,Nächster Datensatz,Registo seguinte,Data berikutnya,السجل التالي
 global.copy_link,复制链接,複製連結,Copy link,Copier le lien,リンクをコピー,링크 복사,Копировать ссылку,Copiar enlace,Link kopieren,Copiar ligação,Salin tautan,نسخ الرابط
+global.code,代码,程式碼,Code,Code,コード,코드,Код,Código,Code,Código,Kode,الكود
 form.ai_assistant,AI 助手,AI 助手,AI assistant,Assistant IA,AI アシスタント,AI 어시스턴트,ИИ-помощник,Asistente de IA,KI-Assistent,Assistente de IA,Asisten AI,مساعد الذكاء الاصطناعي
 form.comments,评论,評論,Comments,Commentaires,コメント,댓글,Комментарии,Comentarios,Kommentare,Comentários,Komentar,التعليقات
 comment.placeholder,写下评论…,寫下評論…,Write a comment…,Écrire un commentaire…,コメントを書く…,댓글을 입력하세요…,Напишите комментарий…,Escribe un comentario…,Kommentar schreiben…,Escreva um comentário…,Tulis komentar…,اكتب تعليقًا…

@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -40,6 +42,12 @@ public class GeneratorField extends BaseModel implements ChoiceFetchHandler<Void
     private String fieldName;
 
     @EruptField(
+            views = @View(title = "Column Name", show = false),
+            edit = @Edit(title = "Column Name", desc = "Leave empty when it matches the field name")
+    )
+    private String columnName;
+
+    @EruptField(
             views = @View(title = "Display Name"),
             edit = @Edit(title = "Display Name", notNull = true)
     )
@@ -61,12 +69,49 @@ public class GeneratorField extends BaseModel implements ChoiceFetchHandler<Void
     private GeneratorType type = GeneratorType.INPUT;
 
     @EruptField(
+            views = @View(title = "Java Type", show = false),
+            edit = @Edit(title = "Java Type", desc = "Overrides the type inferred from the edit type, e.g. Long / BigDecimal")
+    )
+    private String javaType;
+
+    @EruptField(
+            views = @View(title = "Length", show = false),
+            edit = @Edit(title = "Length", desc = "Column length, only rendered for text columns")
+    )
+    private Integer length;
+
+    @EruptField(
+            views = @View(title = "Unique", show = false),
+            edit = @Edit(title = "Unique", notNull = true)
+    )
+    private Boolean unique = false;
+
+    @EruptField(
+            views = @View(title = "Component Config", show = false),
+            edit = @Edit(title = "Component Config", type = EditType.TEXTAREA,
+                    desc = "Replaces the component configuration the edit type would generate, e.g. choiceType = @ChoiceType(...)")
+    )
+    private String typeCode;
+
+    @EruptField(
             views = @View(title = "Related Entity"),
             edit = @Edit(title = "Related Entity", dynamic = @Dynamic(dependField = "type",
                     match = Dynamic.Ctrl.NOTNULL,
                     condition = "value.indexOf('REFERENCE') !== -1 || value.indexOf('TAB') !== -1 || value === 'CHECKBOX' || value === 'COMBINE'"))
     )
     private String linkClass;
+
+    @EruptField(
+            views = @View(title = "Primary Key", show = false),
+            edit = @Edit(title = "Primary Key", notNull = true, desc = "Only used when the entity has no parent class")
+    )
+    private Boolean primaryKey = false;
+
+    @EruptField(
+            views = @View(title = "Auto Increment", show = false),
+            edit = @Edit(title = "Auto Increment", notNull = true)
+    )
+    private Boolean autoIncrement = false;
 
     @EruptField(
             views = @View(title = "Query Item"),
@@ -91,7 +136,6 @@ public class GeneratorField extends BaseModel implements ChoiceFetchHandler<Void
             edit = @Edit(title = "Visible", notNull = true)
     )
     private Boolean isShow = true;
-
 
     @Override
     public List<VLModel> fetch(String[] params) {

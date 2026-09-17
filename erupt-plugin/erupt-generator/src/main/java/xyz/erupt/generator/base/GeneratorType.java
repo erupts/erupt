@@ -6,13 +6,26 @@ import lombok.Getter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.generator.model.GeneratorClass;
+import xyz.erupt.generator.model.GeneratorField;
 
+import java.math.BigDecimal;
+import java.sql.Types;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Bridges an erupt {@link EditType} with the java type, the jpa annotation and the
+ * jdbc column it is generated from.
+ *
+ * @author YuePeng
+ * date 2021/3/28 18:51
+ */
 @Getter
 public enum GeneratorType {
+
     INPUT(EditType.INPUT, "Text Input", String.class.getSimpleName(), "inputType = @InputType"),
     PASSWORD(EditType.PASSWORD, "Password Input", String.class.getSimpleName(), null),
     TEXTAREA(EditType.TEXTAREA, "Textarea", String.class.getSimpleName(), null),
@@ -39,171 +52,219 @@ public enum GeneratorType {
     AUTO_COMPLETE(EditType.AUTO_COMPLETE, "Auto Complete", String.class.getSimpleName(), "autoCompleteType = @AutoCompleteType(handler = AutoCompleteHandler.class)"),
     MAP(EditType.MAP, "Map", String.class.getSimpleName(), null),
     SIGNATURE(EditType.SIGNATURE, "Signature Pad", String.class.getSimpleName(), null),
+
     DIVIDE(EditType.DIVIDE, "Divider", String.class.getSimpleName(), null) {
         @Override
-        public String annotation(String thisErupt, String linkErupt) {
+        public String annotation(GeneratorClass clazz, GeneratorField field) {
             return "@" + Transient.class.getSimpleName();
         }
     },
+
     GROUP(EditType.GROUP, "Field Group", String.class.getSimpleName(), "groupType = @GroupType(fields = {\"field1\", \"field2\"})") {
         @Override
-        public String annotation(String thisErupt, String linkErupt) {
+        public String annotation(GeneratorClass clazz, GeneratorField field) {
             return "@" + Transient.class.getSimpleName();
         }
     },
+
     KEY_VALUE(EditType.KEY_VALUE, "Key-Value Pairs", null, null) {
         // a JSON column holding the map itself; a String + JSON column would be double-encoded by Hibernate
         @Override
-        public String annotation(String thisErupt, String linkErupt) {
+        public String annotation(GeneratorClass clazz, GeneratorField field) {
             return "@" + JdbcTypeCode.class.getSimpleName() + "(" + SqlTypes.class.getSimpleName() + ".JSON)";
         }
 
         @Override
-        public String fieldType(String thisErupt, String linkErupt) {
+        public String fieldType(GeneratorField field) {
             return "Map<String, String>";
         }
 
         @Override
-        public String importPackages() {
-            return "import " + Map.class.getName() + ";\n" +
-                    "import " + JdbcTypeCode.class.getName() + ";\n" +
-                    "import " + SqlTypes.class.getName() + ";";
+        public String[] imports() {
+            return new String[]{Map.class.getName(), JdbcTypeCode.class.getName(), SqlTypes.class.getName()};
         }
     },
-    @Ref COMBINE(EditType.COMBINE, "One-to-One Add", null, null) {
+
+    COMBINE(EditType.COMBINE, "One-to-One Add", null, null) {
         @Override
-        public String annotation(String thisErupt, String linkErupt) {
-            return "@OneToOne(cascade = CascadeType.ALL)\n" +
-                    "        @JoinColumn";
+        public String annotation(GeneratorClass clazz, GeneratorField field) {
+            return "@OneToOne(cascade = CascadeType.ALL)\n@JoinColumn" + joinColumn(field);
         }
 
         @Override
-        public String fieldType(String thisErupt, String linkErupt) {
-            return linkErupt;
+        public String fieldType(GeneratorField field) {
+            return field.getLinkClass();
+        }
+
+        @Override
+        public boolean ref() {
+            return true;
         }
     },
-    @Ref REFERENCE_TREE(EditType.REFERENCE_TREE, "Tree Reference", null, "referenceTreeType = @ReferenceTreeType(id = \"id\", label = \"name\")") {
+
+    REFERENCE_TREE(EditType.REFERENCE_TREE, "Tree Reference", null, "referenceTreeType = @ReferenceTreeType(id = \"id\", label = \"name\")") {
         @Override
-        public String annotation(String thisErupt, String linkErupt) {
-            return "@ManyToOne\n" +
-                    "        @JoinColumn";
+        public String annotation(GeneratorClass clazz, GeneratorField field) {
+            return "@ManyToOne\n@JoinColumn" + joinColumn(field);
         }
 
         @Override
-        public String fieldType(String thisErupt, String linkErupt) {
-            return linkErupt;
+        public String fieldType(GeneratorField field) {
+            return field.getLinkClass();
+        }
+
+        @Override
+        public boolean ref() {
+            return true;
         }
     },
-    @Ref REFERENCE_TABLE(EditType.REFERENCE_TABLE, "Table Reference", null, "referenceTableType = @ReferenceTableType(id = \"id\", label = \"name\")") {
+
+    REFERENCE_TABLE(EditType.REFERENCE_TABLE, "Table Reference", null, "referenceTableType = @ReferenceTableType(id = \"id\", label = \"name\")") {
         @Override
-        public String annotation(String thisErupt, String linkErupt) {
-            return REFERENCE_TREE.annotation(thisErupt, linkErupt);
+        public String annotation(GeneratorClass clazz, GeneratorField field) {
+            return REFERENCE_TREE.annotation(clazz, field);
         }
 
         @Override
-        public String fieldType(String thisErupt, String linkErupt) {
-            return REFERENCE_TREE.fieldType(thisErupt, linkErupt);
+        public String fieldType(GeneratorField field) {
+            return REFERENCE_TREE.fieldType(field);
+        }
+
+        @Override
+        public boolean ref() {
+            return true;
         }
     },
-    @Ref TAB_TABLE_REFER(EditType.TAB_TABLE_REFER, "One-to-Many Reference", null, null) {
+
+    TAB_TABLE_REFER(EditType.TAB_TABLE_REFER, "One-to-Many Reference", null, null) {
         @Override
-        public String annotation(String thisErupt, String linkErupt) {
-            return CHECKBOX.annotation(thisErupt, linkErupt);
+        public String annotation(GeneratorClass clazz, GeneratorField field) {
+            return CHECKBOX.annotation(clazz, field);
         }
 
         @Override
-        public String fieldType(String thisErupt, String linkErupt) {
-            return CHECKBOX.fieldType(thisErupt, linkErupt);
+        public String fieldType(GeneratorField field) {
+            return CHECKBOX.fieldType(field);
         }
 
         @Override
-        public String importPackages() {
-            return CHECKBOX.importPackages();
+        public String[] imports() {
+            return CHECKBOX.imports();
+        }
+
+        @Override
+        public boolean ref() {
+            return true;
         }
     },
-    @Ref TAB_TABLE_ADD(EditType.TAB_TABLE_ADD, "One-to-Many Add", null, null) {
+
+    TAB_TABLE_ADD(EditType.TAB_TABLE_ADD, "One-to-Many Add", null, null) {
         @Override
-        public String annotation(String thisErupt, String linkErupt) {
-            return "@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)\n" +
-                    "        @OrderBy\n" +
-                    "        @JoinColumn(name = \"" + humpToLine(thisErupt) + "_id\") ";
+        public String annotation(GeneratorClass clazz, GeneratorField field) {
+            return "@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)\n@OrderBy\n@JoinColumn(name = \""
+                    + Naming.humpToLine(clazz.getClassName()) + "_id\")";
         }
 
         @Override
-        public String fieldType(String thisErupt, String linkErupt) {
-            return CHECKBOX.fieldType(thisErupt, linkErupt);
+        public String fieldType(GeneratorField field) {
+            return CHECKBOX.fieldType(field);
         }
 
         @Override
-        public String importPackages() {
-            return CHECKBOX.importPackages();
+        public String[] imports() {
+            return CHECKBOX.imports();
+        }
+
+        @Override
+        public boolean ref() {
+            return true;
         }
     },
-    @Ref CHECKBOX(EditType.CHECKBOX, "Multi-select", null, "checkboxType = @CheckboxType(id = \"id\", label = \"name\")") {
+
+    CHECKBOX(EditType.CHECKBOX, "Multi-select", null, "checkboxType = @CheckboxType(id = \"id\", label = \"name\")") {
         @Override
-        public String annotation(String thisErupt, String linkErupt) {
-            return "@ManyToMany \n" +
-                    "        @JoinTable(name = \"" + humpToLine(thisErupt) + "_" + humpToLine(linkErupt) + "\",\n" +
-                    "            joinColumns = @JoinColumn(name = \"" + humpToLine(thisErupt) + "_id\", referencedColumnName = \"id\"),\n" +
-                    "            inverseJoinColumns = @JoinColumn(name = \"" + humpToLine(linkErupt) + "_id\", referencedColumnName = \"id\")) ";
+        public String annotation(GeneratorClass clazz, GeneratorField field) {
+            String self = Naming.humpToLine(clazz.getClassName());
+            String link = Naming.humpToLine(field.getLinkClass());
+            return "@ManyToMany\n@JoinTable(name = \"" + self + "_" + link + "\",\n"
+                    + "        joinColumns = @JoinColumn(name = \"" + self + "_id\", referencedColumnName = \"id\"),\n"
+                    + "        inverseJoinColumns = @JoinColumn(name = \"" + link + "_id\", referencedColumnName = \"id\"))";
         }
 
         @Override
-        public String fieldType(String thisErupt, String linkErupt) {
-            return ("Set<" + linkErupt + ">")
-                    .replace("<", "&lt;")
-                    .replace(">", "&gt;");
+        public String fieldType(GeneratorField field) {
+            return "Set<" + field.getLinkClass() + ">";
         }
 
         @Override
-        public String importPackages() {
-            return "import " + Set.class.getName() + ";";
+        public String[] imports() {
+            return new String[]{Set.class.getName()};
+        }
+
+        @Override
+        public boolean ref() {
+            return true;
         }
     },
-    @Ref TRANSFER(EditType.TRANSFER, "Transfer", null, "transferType = @TransferType(id = \"id\", label = \"name\")") {
+
+    TRANSFER(EditType.TRANSFER, "Transfer", null, "transferType = @TransferType(id = \"id\", label = \"name\")") {
         @Override
-        public String annotation(String thisErupt, String linkErupt) {
-            return CHECKBOX.annotation(thisErupt, linkErupt);
+        public String annotation(GeneratorClass clazz, GeneratorField field) {
+            return CHECKBOX.annotation(clazz, field);
         }
 
         @Override
-        public String fieldType(String thisErupt, String linkErupt) {
-            return CHECKBOX.fieldType(thisErupt, linkErupt);
+        public String fieldType(GeneratorField field) {
+            return CHECKBOX.fieldType(field);
         }
 
         @Override
-        public String importPackages() {
-            return CHECKBOX.importPackages();
+        public String[] imports() {
+            return CHECKBOX.imports();
+        }
+
+        @Override
+        public boolean ref() {
+            return true;
         }
     },
-    @Ref TAB_TREE(EditType.TAB_TREE, "Multi-select Tree", null, null) {
+
+    TAB_TREE(EditType.TAB_TREE, "Multi-select Tree", null, null) {
         @Override
-        public String annotation(String thisErupt, String linkErupt) {
-            return CHECKBOX.annotation(thisErupt, linkErupt);
+        public String annotation(GeneratorClass clazz, GeneratorField field) {
+            return CHECKBOX.annotation(clazz, field);
         }
 
         @Override
-        public String fieldType(String thisErupt, String linkErupt) {
-            return CHECKBOX.fieldType(thisErupt, linkErupt);
+        public String fieldType(GeneratorField field) {
+            return CHECKBOX.fieldType(field);
         }
 
         @Override
-        public String importPackages() {
-            return CHECKBOX.importPackages();
+        public String[] imports() {
+            return CHECKBOX.imports();
+        }
+
+        @Override
+        public boolean ref() {
+            return true;
         }
     },
-    //    TPL(EditType.TPL, "Custom Template", String.class.getSimpleName(), "tplType = @Tpl(path = \"/xxx.ftl\")") {
-//        @Override
-//        public String annotation(String thisErupt, String linkErupt) {
-//            return "@" + Transient.class.getSimpleName();
-//        }
-//    },
+
     HIDDEN(EditType.HIDDEN, "Hidden", String.class.getSimpleName(), null),
     EMPTY(EditType.EMPTY, "Empty", String.class.getSimpleName(), null);
 
+    private static final String[] NO_IMPORTS = new String[0];
+
+    //a varchar wider than this reads better in a textarea
+    private static final int TEXTAREA_SIZE = 500;
+
     private final EditType mapping;
+
     private final String name;
+
     private final String type;
+
     private final String code;
 
     GeneratorType(EditType mapping, String name, String type, String code) {
@@ -213,25 +274,125 @@ public enum GeneratorType {
         this.code = code;
     }
 
-    public String annotation(String thisErupt, String linkErupt) {
+    @SuppressWarnings("unused")
+    public String annotation(GeneratorClass clazz, GeneratorField field) {
         return null;
     }
 
-    public String fieldType(String thisErupt, String linkErupt) {
-        return this.getType();
+    public String fieldType(GeneratorField field) {
+        return this.type;
     }
 
-    public String importPackages() {
-        return null;
+    public String[] imports() {
+        return NO_IMPORTS;
     }
 
-    //Convert camelCase to underscore_case
-    public static String humpToLine(String str) {
-        String hump = str.replaceAll("[A-Z]", "_$0").toLowerCase();
-        if (hump.startsWith("_")) {
-            hump = hump.substring(1);
+    //whether the field points at another entity instead of holding a value
+    public boolean ref() {
+        return false;
+    }
+
+    //fields the user is likely to search on; text blobs and media are not among them
+    public boolean searchable() {
+        switch (this) {
+            case TEXTAREA:
+            case HTML_EDITOR:
+            case CODE_EDITOR:
+            case MARKDOWN:
+            case PASSWORD:
+            case KEY_VALUE:
+            case ATTACHMENT:
+            case IMAGE:
+            case SIGNATURE:
+            case MAP:
+            case HIDDEN:
+            case EMPTY:
+                return false;
+            default:
+                return !this.ref();
         }
-        return hump;
+    }
+
+    protected static String joinColumn(GeneratorField field) {
+        return null == field.getColumnName() || field.getColumnName().isEmpty()
+                ? "" : "(name = \"" + field.getColumnName() + "\")";
+    }
+
+    /**
+     * Guess the edit type of a jdbc column, name hints win over the raw type
+     * because a varchar tells nothing about what it holds.
+     */
+    public static GeneratorType of(int jdbcType, String typeName, int size, String column) {
+        switch (jdbcType) {
+            case Types.BIT:
+            case Types.BOOLEAN:
+                return BOOLEAN;
+            case Types.TINYINT:
+                return size <= 1 ? BOOLEAN : NUMBER;
+            case Types.SMALLINT:
+            case Types.INTEGER:
+            case Types.BIGINT:
+            case Types.DECIMAL:
+            case Types.NUMERIC:
+            case Types.REAL:
+            case Types.FLOAT:
+            case Types.DOUBLE:
+                return NUMBER;
+            case Types.DATE:
+                return DATE;
+            case Types.TIME:
+            case Types.TIME_WITH_TIMEZONE:
+                return TIME;
+            case Types.TIMESTAMP:
+            case Types.TIMESTAMP_WITH_TIMEZONE:
+                return DATE_TIME;
+            case Types.CLOB:
+            case Types.NCLOB:
+            case Types.LONGVARCHAR:
+            case Types.LONGNVARCHAR:
+                return TEXTAREA;
+            default:
+                return ofString(typeName, size, column);
+        }
+    }
+
+    private static GeneratorType ofString(String typeName, int size, String column) {
+        String type = null == typeName ? "" : typeName.toLowerCase(Locale.ROOT);
+        if (type.contains("json")) return KEY_VALUE;
+        String col = Naming.humpToLine(column);
+        if (contains(col, "password", "passwd", "pwd", "secret")) return PASSWORD;
+        if (contains(col, "avatar", "image", "img", "photo", "picture", "logo", "cover", "thumb")) return IMAGE;
+        if (contains(col, "attachment", "annex", "file_url", "file_path")) return ATTACHMENT;
+        if (contains(col, "icon")) return ICON;
+        if (contains(col, "color", "colour")) return COLOR;
+        return size >= TEXTAREA_SIZE || size <= 0 ? TEXTAREA : INPUT;
+    }
+
+    /**
+     * Java type of a numeric column, null means the edit type default applies.
+     */
+    public static String javaType(int jdbcType, int scale) {
+        switch (jdbcType) {
+            case Types.BIGINT:
+                return Long.class.getSimpleName();
+            case Types.DECIMAL:
+            case Types.NUMERIC:
+                return scale > 0 ? BigDecimal.class.getSimpleName() : Long.class.getSimpleName();
+            case Types.REAL:
+            case Types.FLOAT:
+                return Float.class.getSimpleName();
+            case Types.DOUBLE:
+                return Double.class.getSimpleName();
+            default:
+                return null;
+        }
+    }
+
+    private static boolean contains(String column, String... keywords) {
+        for (String keyword : keywords) {
+            if (column.contains(keyword)) return true;
+        }
+        return false;
     }
 
 }
