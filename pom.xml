@@ -232,8 +232,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <!-- release, not source/target: only release holds the api to the java version too -->
+                    <release>${java.version}</release>
                     <encoding>utf-8</encoding>
                     <compilerArgs>
                         <compilerArg>-parameters</compilerArg>
