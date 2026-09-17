@@ -40,7 +40,6 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.service.EruptSessionService;
 
 import java.io.InputStream;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -144,7 +143,7 @@ public class LLMService {
         AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
         if (null != attachmentProxy && !attachmentProxy.isLocalSave()) {
             // remote-only storage: the file never lands on local disk, fetch it from the attachment domain
-            try (InputStream in = URI.create(attachmentProxy.fileDomain() + path).toURL().openStream()) {
+            try (InputStream in = EruptUtil.attachmentUrl(attachmentProxy, path).openStream()) {
                 bytes = in.readAllBytes();
             }
         } else {

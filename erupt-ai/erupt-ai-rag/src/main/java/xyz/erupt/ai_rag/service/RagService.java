@@ -34,7 +34,6 @@ import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import java.io.InputStream;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -247,7 +246,7 @@ public class RagService {
             AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
             if (null != attachmentProxy && !attachmentProxy.isLocalSave()) {
                 // remote-only storage: the file never lands on local disk, fetch it from the attachment domain
-                try (InputStream in = URI.create(attachmentProxy.fileDomain() + doc.getAttachment()).toURL().openStream()) {
+                try (InputStream in = EruptUtil.attachmentUrl(attachmentProxy, doc.getAttachment()).openStream()) {
                     return new String(in.readAllBytes(), StandardCharsets.UTF_8);
                 }
             }

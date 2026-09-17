@@ -25,6 +25,7 @@ import xyz.erupt.core.annotation.EruptAttachmentUpload;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.proxy.AnnotationProcess;
@@ -37,6 +38,8 @@ import xyz.erupt.core.view.R;
 import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.lang.reflect.Field;
+import java.net.URI;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -578,6 +581,25 @@ public class EruptUtil {
     public static AttachmentProxy findAttachmentProxy() {
         EruptAttachmentUpload eruptAttachmentUpload = EruptApplication.getPrimarySource().getAnnotation(EruptAttachmentUpload.class);
         return null == eruptAttachmentUpload ? null : EruptSpringUtil.getBean(eruptAttachmentUpload.value());
+    }
+
+    /**
+     * Remote attachment url for a stored path. The path is data that reached the database
+     * through an upload, so appending it to the configured domain is not enough on its own:
+     * a path opening with {@code @} or {@code .} reads as userinfo or as more of the host name
+     * and sends the request elsewhere. The assembled url keeps the domain's scheme, host and
+     * port or it is refused.
+     */
+    @SneakyThrows
+    public static URL attachmentUrl(AttachmentProxy attachmentProxy, String path) {
+        URI domain = URI.create(attachmentProxy.fileDomain());
+        URI target = URI.create(attachmentProxy.fileDomain() + path).normalize();
+        if (!Objects.equals(domain.getScheme(), target.getScheme())
+                || !Objects.equals(domain.getHost(), target.getHost())
+                || domain.getPort() != target.getPort()) {
+            throw new EruptWebApiRuntimeException("Illegal attachment path → " + path);
+        }
+        return target.toURL();
     }
 
     // Is it a time field?
