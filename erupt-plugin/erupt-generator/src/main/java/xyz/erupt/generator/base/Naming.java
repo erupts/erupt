@@ -70,10 +70,10 @@ public class Naming {
         StringBuilder sb = new StringBuilder();
         for (String word : humpToLine(column).split("_")) {
             if (word.isEmpty()) continue;
-            if (sb.length() > 0) sb.append(" ");
+            if (!sb.isEmpty()) sb.append(" ");
             sb.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1));
         }
-        return sb.length() == 0 ? column : sb.toString();
+        return sb.isEmpty() ? column : sb.toString();
     }
 
 }

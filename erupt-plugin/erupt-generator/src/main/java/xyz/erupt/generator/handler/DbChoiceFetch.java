@@ -40,14 +40,11 @@ public class DbChoiceFetch implements ChoiceFetchHandler<DbImportModal> {
 
     private List<VLModel> fetch(DbImportModal modal, String[] params) {
         String scope = params.length > 0 ? params[0] : TABLE;
-        switch (scope) {
-            case DATA_SOURCE:
-                return dbIntrospectService.dataSources();
-            case NAMESPACE:
-                return dbIntrospectService.namespaces(modal.getDataSource());
-            default:
-                return dbIntrospectService.tables(modal.getDataSource(), modal.getNamespace());
-        }
+        return switch (scope) {
+            case DATA_SOURCE -> dbIntrospectService.dataSources();
+            case NAMESPACE -> dbIntrospectService.namespaces(modal.getDataSource());
+            default -> dbIntrospectService.tables(modal.getDataSource(), modal.getNamespace());
+        };
     }
 
 }

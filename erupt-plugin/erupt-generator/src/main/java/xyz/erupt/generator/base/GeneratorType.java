@@ -294,23 +294,11 @@ public enum GeneratorType {
 
     //fields the user is likely to search on; text blobs and media are not among them
     public boolean searchable() {
-        switch (this) {
-            case TEXTAREA:
-            case HTML_EDITOR:
-            case CODE_EDITOR:
-            case MARKDOWN:
-            case PASSWORD:
-            case KEY_VALUE:
-            case ATTACHMENT:
-            case IMAGE:
-            case SIGNATURE:
-            case MAP:
-            case HIDDEN:
-            case EMPTY:
-                return false;
-            default:
-                return !this.ref();
-        }
+        return switch (this) {
+            case TEXTAREA, HTML_EDITOR, CODE_EDITOR, MARKDOWN, PASSWORD, KEY_VALUE, ATTACHMENT, IMAGE, SIGNATURE, MAP,
+                 HIDDEN, EMPTY -> false;
+            default -> !this.ref();
+        };
     }
 
     protected static String joinColumn(GeneratorField field) {
@@ -323,37 +311,17 @@ public enum GeneratorType {
      * because a varchar tells nothing about what it holds.
      */
     public static GeneratorType of(int jdbcType, String typeName, int size, String column) {
-        switch (jdbcType) {
-            case Types.BIT:
-            case Types.BOOLEAN:
-                return BOOLEAN;
-            case Types.TINYINT:
-                return size <= 1 ? BOOLEAN : NUMBER;
-            case Types.SMALLINT:
-            case Types.INTEGER:
-            case Types.BIGINT:
-            case Types.DECIMAL:
-            case Types.NUMERIC:
-            case Types.REAL:
-            case Types.FLOAT:
-            case Types.DOUBLE:
-                return NUMBER;
-            case Types.DATE:
-                return DATE;
-            case Types.TIME:
-            case Types.TIME_WITH_TIMEZONE:
-                return TIME;
-            case Types.TIMESTAMP:
-            case Types.TIMESTAMP_WITH_TIMEZONE:
-                return DATE_TIME;
-            case Types.CLOB:
-            case Types.NCLOB:
-            case Types.LONGVARCHAR:
-            case Types.LONGNVARCHAR:
-                return TEXTAREA;
-            default:
-                return ofString(typeName, size, column);
-        }
+        return switch (jdbcType) {
+            case Types.BIT, Types.BOOLEAN -> BOOLEAN;
+            case Types.TINYINT -> size <= 1 ? BOOLEAN : NUMBER;
+            case Types.SMALLINT, Types.INTEGER, Types.BIGINT, Types.DECIMAL, Types.NUMERIC, Types.REAL, Types.FLOAT,
+                 Types.DOUBLE -> NUMBER;
+            case Types.DATE -> DATE;
+            case Types.TIME, Types.TIME_WITH_TIMEZONE -> TIME;
+            case Types.TIMESTAMP, Types.TIMESTAMP_WITH_TIMEZONE -> DATE_TIME;
+            case Types.CLOB, Types.NCLOB, Types.LONGVARCHAR, Types.LONGNVARCHAR -> TEXTAREA;
+            default -> ofString(typeName, size, column);
+        };
     }
 
     private static GeneratorType ofString(String typeName, int size, String column) {
@@ -372,20 +340,14 @@ public enum GeneratorType {
      * Java type of a numeric column, null means the edit type default applies.
      */
     public static String javaType(int jdbcType, int scale) {
-        switch (jdbcType) {
-            case Types.BIGINT:
-                return Long.class.getSimpleName();
-            case Types.DECIMAL:
-            case Types.NUMERIC:
-                return scale > 0 ? BigDecimal.class.getSimpleName() : Long.class.getSimpleName();
-            case Types.REAL:
-            case Types.FLOAT:
-                return Float.class.getSimpleName();
-            case Types.DOUBLE:
-                return Double.class.getSimpleName();
-            default:
-                return null;
-        }
+        return switch (jdbcType) {
+            case Types.BIGINT -> Long.class.getSimpleName();
+            case Types.DECIMAL, Types.NUMERIC ->
+                    scale > 0 ? BigDecimal.class.getSimpleName() : Long.class.getSimpleName();
+            case Types.REAL, Types.FLOAT -> Float.class.getSimpleName();
+            case Types.DOUBLE -> Double.class.getSimpleName();
+            default -> null;
+        };
     }
 
     private static boolean contains(String column, String... keywords) {
