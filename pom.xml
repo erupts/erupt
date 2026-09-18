@@ -120,6 +120,7 @@
         <module>erupt-plugin/erupt-terminal</module>
         <module>erupt-plugin/erupt-remote</module>
         <module>erupt-plugin/erupt-atlas</module>
+        <module>erupt-plugin/erupt-sso</module>
 
         <!-- Cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>

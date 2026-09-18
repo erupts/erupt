@@ -90,6 +90,11 @@
             <artifactId>erupt-atlas</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-sso</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <!-- AI -->
         <dependency>
