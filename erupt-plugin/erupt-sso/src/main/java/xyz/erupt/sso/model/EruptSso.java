@@ -71,8 +71,8 @@ public class EruptSso extends MetaModelUpdateVo {
     private String name;
 
     @EruptField(
-            views = @View(title = "Icon"),
-            edit = @Edit(title = "Icon", desc = "Font Awesome class, e.g. fa fa-github", inputType = @InputType)
+            views = @View(title = "Icon", width = "70px"),
+            edit = @Edit(title = "Icon", type = EditType.ICON, desc = "Refer to Font Awesome icon library")
     )
     private String icon;
 
