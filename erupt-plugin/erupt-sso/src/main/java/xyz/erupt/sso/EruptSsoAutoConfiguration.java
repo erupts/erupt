@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.annotation.EruptScan;
+import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
@@ -61,7 +62,9 @@ public class EruptSsoAutoConfiguration implements EruptModule {
         MetaMenu manager = EruptUpmsAutoConfiguration.managerMenu();
         menus.add(manager);
         menus.add(MetaMenu.createEruptClassMenu(EruptSso.class, manager, 45));
-        menus.add(MetaMenu.createEruptClassMenu(EruptSsoBind.class, manager, 46));
+        // Hidden: a binding is made by signing in and only ever read to investigate one.
+        // Show it from Menu Management when someone has to be unbound.
+        menus.add(MetaMenu.createEruptClassMenu(EruptSsoBind.class, manager, 46, MenuStatus.HIDE));
         return menus;
     }
 
