@@ -298,6 +298,11 @@
         .detail .yes { color: #059669; }
         .detail .no { color: var(--border); }
         .detail .ref { cursor: pointer; color: var(--accent); }
+        .detail .use { width: 150px; color: var(--fg); }
+        .detail .use i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; }
+        .detail .own { font-weight: 500; }
+        .detail .own.link { cursor: pointer; }
+        .detail .own.link:hover { color: var(--accent); }
         .cfg { display: grid; grid-template-columns: 132px 1fr; gap: 6px 14px; padding: 12px 14px; font-size: 12px; }
         .cfg dt { color: var(--faint); }
         .cfg dd { color: var(--fg); word-break: break-all; }
@@ -368,6 +373,9 @@
     var mode = 'tree', current = null, keyword = '', depth = 2, audit = null;
     var domainsBySize = [], domainSize = {}, domainFocus = null;
     var detailCache = {}, detailTab = 'relations';
+    // What every module reports it has bound a model to. One request answers the whole page, so
+    // the callers that need it queue behind the first one instead of each firing a sweep
+    var usageRows = null, usageBy = {}, usageWait = [];
     // Filled from the module's own i18n csv, keyed by the English text: a string the csv never
     // heard of simply stays English
     var TEXT = {};
@@ -877,6 +885,44 @@
             .catch(function (e) { stage.innerHTML = '<div class="hint">' + esc(t('Failed to load') + ': ' + e) + '</div>'; });
     }
 
+    /* ---------------- used by ----------------
+       A relation is written on the model; a usage is not. A flow bound to its form, a flow node
+       bound to its config model, a menu opening a table, a dashboard reading a cube: each module
+       reports its own bindings, and a model that looks isolated in the graph is often just one
+       whose users live somewhere the graph cannot see. */
+
+    function loadUsage(then) {
+        if (usageRows) { then(); return; }
+        usageWait.push(then);
+        if (usageWait.length > 1) return;
+        fetch(BASE + '/erupt-api/erupt-atlas/usage?' + AUTH)
+            .then(function (r) { return r.json(); })
+            .then(function (rows) { holdUsage(rows || []); })
+            .catch(function () { holdUsage([]); })
+            .then(function () {
+                var waiting = usageWait;
+                usageWait = [];
+                waiting.forEach(function (fn) { fn(); });
+            });
+    }
+
+    function holdUsage(rows) {
+        usageRows = rows;
+        usageBy = {};
+        rows.forEach(function (u) { (usageBy[u.target] = usageBy[u.target] || []).push(u); });
+    }
+
+    function usesOf(id) { return usageBy[id] || []; }
+
+    // The page runs in the console frame: opening a configuration means moving the console, not us
+    function openRoute(route) {
+        try {
+            window.parent.location.hash = '#' + route;
+        } catch (e) {
+            window.open(BASE + '/#' + route, '_blank');
+        }
+    }
+
     function powerHeld(set) {
         if (set) powerRows = set;
         return powerRows;
@@ -1267,15 +1313,20 @@
 
     function paintDetail(node) {
         var d = detailCache[node.id];
+        // the count belongs in the tab itself, so an isolated-looking model shows its users at once
+        if (!usageRows) loadUsage(function () { if (current === node.id) paintDetail(node); });
         var rel = outOf[node.id].length + inOf[node.id].length;
         var head = '<div class="dh"><span>' + esc(node.name) + '</span>'
             + tab('relations', t('Relations'), rel)
             + tab('fields', node.kind === 'cube' ? t('Dimensions') : t('Fields'),
                 node.kind === 'cube' ? node.dimensions + node.measures : node.fields)
+            + tab('usage', t('Used by'), usageRows ? usesOf(node.id).length : null)
             + tab('config', t('Config'), null) + '</div>';
         var body;
         if (detailTab === 'relations') {
             body = relationRows(node);
+        } else if (detailTab === 'usage') {
+            body = usageRows ? usageTable(node) : '<div class="none">' + esc(t('Loading…')) + '</div>';
         } else if (!d) {
             body = '<div class="none">' + esc(t('Loading…')) + '</div>';
         } else {
@@ -1291,6 +1342,9 @@
         });
         each(detail.querySelectorAll('.mdl, .ref'), function (td) {
             td.onclick = function () { select(td.getAttribute('data-id')); };
+        });
+        each(detail.querySelectorAll('.own.link'), function (td) {
+            td.onclick = function () { openRoute(td.getAttribute("data-route")); };
         });
     }
 
@@ -1343,6 +1397,23 @@
                 + '<td>' + (f.reference
                     ? '<span class="ref" data-id="' + esc(f.reference) + '">→ ' + esc(f.reference) + '</span>' : '')
                 + '</td></tr>';
+        });
+        return html + '</table>';
+    }
+
+    function usageTable(node) {
+        var rows = usesOf(node.id);
+        if (!rows.length) return '<div class="none">' + esc(t('No module reports using this model.')) + '</div>';
+        rows = rows.slice().sort(function (a, b) {
+            return a.usage.localeCompare(b.usage) || a.owner.localeCompare(b.owner);
+        });
+        var html = '<table>';
+        rows.forEach(function (u) {
+            html += '<tr><td class="use"><i style="background:' + (colorOf[u.module] || '#cbd5e1') + '"></i>'
+                + esc(u.usage) + '</td>'
+                + '<td class="own' + (u.route ? ' link" data-route="' + esc(u.route) : '') + '">'
+                + esc(u.owner || '') + '</td>'
+                + '<td class="mod">' + esc(u.module || '') + '</td></tr>';
         });
         return html + '</table>';
     }

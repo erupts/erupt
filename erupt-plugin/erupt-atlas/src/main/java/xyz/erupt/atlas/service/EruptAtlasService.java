@@ -106,6 +106,15 @@ public class EruptAtlasService {
                 new TypeFilter[]{new AnnotationTypeFilter(EruptCube.class)}, cubeClasses::add);
     }
 
+    // Cubes are plain classes, not registry entries: the usage collector needs them to name a node
+    List<Class<?>> cubes() {
+        return cubeClasses;
+    }
+
+    static String cubeId(String simpleName) {
+        return CUBE_PREFIX + simpleName;
+    }
+
     public AtlasView build() {
         List<AtlasView.Node> nodes = new ArrayList<>();
         // from|to|kind → label, so ten fields pointing at the same model stay one readable edge
@@ -501,7 +510,7 @@ public class EruptAtlasService {
     }
 
     // Module the model was declared in, read off the package: xyz.erupt.upms.model.X → upms
-    private static String source(Class<?> clazz) {
+    static String source(Class<?> clazz) {
         if (null == clazz || null == clazz.getPackage()) return null;
         String pack = clazz.getPackage().getName();
         if (!pack.startsWith(PACKAGE_PREFIX)) return pack;
