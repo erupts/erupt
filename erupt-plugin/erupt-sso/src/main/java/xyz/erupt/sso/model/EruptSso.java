@@ -20,6 +20,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.sso.model.data_proxy.EruptSsoDataProxy;
@@ -147,7 +148,12 @@ public class EruptSso extends MetaModelUpdateVo {
 
     @Column(length = 255)
     @EruptField(
-            edit = @Edit(title = "Scopes", desc = "Space separated", notNull = true, inputType = @InputType(fullSpan = true))
+            // A space is what the authorization request wants, so it is what gets stored:
+            // the tags join and split on it and no conversion sits in between. The presets
+            // are the OIDC standard scopes; anything a provider invents is typed in.
+            edit = @Edit(title = "Scopes", notNull = true, type = EditType.TAGS,
+                    tagsType = @TagsType(joinSeparator = " ", allowExtension = true,
+                            tags = {"openid", "profile", "email", "phone", "address", "groups"}))
     )
     private String scopes = "openid profile email";
 
