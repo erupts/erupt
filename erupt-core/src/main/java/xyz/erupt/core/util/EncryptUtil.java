@@ -91,6 +91,19 @@ public class EncryptUtil {
     }
 
     /**
+     * SHA-256 hash. Half the stored width of SHA-512, which matters for a value that has
+     * to share a column; use it for high-entropy random tokens, not for user-chosen secrets.
+     *
+     * @param strObj input string
+     * @return hex-encoded SHA-256 digest
+     */
+    @SneakyThrows
+    public static String digestSHA256(String strObj) {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        return byteToString(md.digest(strObj.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    /**
      * Generates a cryptographically secure random salt.
      *
      * @return hex-encoded 256-bit random salt
