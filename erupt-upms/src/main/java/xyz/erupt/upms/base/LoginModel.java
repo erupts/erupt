@@ -24,6 +24,8 @@ public class LoginModel {
 
     private String token;
 
+    private String account; //Who the session belongs to; a delegated login is the client's only way to know
+
     private LocalDateTime expire;
 
     private transient EruptUser eruptUser;

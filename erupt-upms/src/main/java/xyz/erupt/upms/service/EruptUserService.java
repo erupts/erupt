@@ -15,6 +15,7 @@ import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EncryptUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
@@ -30,6 +31,7 @@ import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.util.IpUtil;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -63,6 +65,9 @@ public class EruptUserService {
     @Resource
     private EruptContextService eruptContextService;
 
+    @Resource
+    private EruptTokenService eruptTokenService;
+
     private final Gson gson = GsonFactory.getGson();
 
     public static LoginProxy findEruptLogin() {
@@ -91,23 +96,50 @@ public class EruptUserService {
         String requestIp = IpUtil.getIpAddr(request);
         EruptUser eruptUser = this.findEruptUserByAccount(account);
         if (null != eruptUser) {
-            if (!eruptUser.getStatus()) return new LoginModel(false, "Account has been locked.!");
-            if (null != eruptUser.getExpireDate()) {
-                if (eruptUser.getExpireDate().getTime() < System.currentTimeMillis()) {
-                    return new LoginModel(false, String.format("The account has become invalid at %s.", DateUtil.getSimpleFormatDate(eruptUser.getExpireDate())));
-                }
-            }
-            if (StringUtils.isNotBlank(eruptUser.getWhiteIp())) {
-                if (Arrays.stream(eruptUser.getWhiteIp().split("\n")).noneMatch(ip -> ip.equals(requestIp))) {
-                    return new LoginModel(false, "Your IP address does not have the authority to access.");
-                }
-            }
+            String reason = this.checkAccountUsable(eruptUser);
+            if (null != reason) return new LoginModel(false, reason);
             if (this.checkPwd(eruptUser, pwd)) {
                 sessionService.remove(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
                 return new LoginModel(true, eruptUser);
             }
         }
         return new LoginModel(false, I18nTranslate.$translate("upms.account_pwd_error"), loginErrorCountPlus(account, requestIp));
+    }
+
+    /**
+     * Whether this account may hold a session at all, whatever it used to prove itself.
+     * Returns what stands in the way, or null when nothing does. Every login path owes the
+     * account these three checks, so a delegated sign-on does not become a way around them.
+     */
+    public String checkAccountUsable(EruptUser eruptUser) {
+        if (!eruptUser.getStatus()) return "Account has been locked.!";
+        if (null != eruptUser.getExpireDate() && eruptUser.getExpireDate().getTime() < System.currentTimeMillis()) {
+            return String.format("The account has become invalid at %s.", DateUtil.getSimpleFormatDate(eruptUser.getExpireDate()));
+        }
+        if (StringUtils.isNotBlank(eruptUser.getWhiteIp())) {
+            String requestIp = IpUtil.getIpAddr(request);
+            if (Arrays.stream(eruptUser.getWhiteIp().split("\n")).noneMatch(ip -> ip.equals(requestIp))) {
+                return "Your IP address does not have the authority to access.";
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Mint the session token and record the login. Called once every factor has passed,
+     * by whichever flow got the user this far. Transactional because the login log is
+     * written from here, and a self call would never reach the proxy that opens one.
+     */
+    @Transactional
+    public void completeLogin(LoginModel loginModel, LoginProxy loginProxy) {
+        EruptUser eruptUser = loginModel.getEruptUser();
+        loginModel.setToken(Erupts.generateCode(22)); // 22 alphanumerics ~ 131 bits, meets the 128-bit session id guideline
+        loginModel.setExpire(LocalDateTime.now().plusMinutes(eruptUpmsProp.getExpireTimeByLogin()));
+        loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
+        loginModel.setAccount(eruptUser.getAccount());
+        if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
+        eruptTokenService.loginToken(eruptUser, loginModel.getToken());
+        this.saveLoginLog(eruptUser, loginModel.getToken()); //Record login log
     }
 
     public boolean checkPwd(EruptUser eruptUser, String inputPwd) {
