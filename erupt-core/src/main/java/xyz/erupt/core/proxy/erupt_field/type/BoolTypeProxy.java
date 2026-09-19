@@ -18,6 +18,14 @@ public class BoolTypeProxy extends AnnotationProxy<BoolType, Edit> {
             return I18nTranslate.$translate(this.rawAnnotation.trueText());
         } else if (super.matchMethod(invocation, BoolType::falseText)) {
             return I18nTranslate.$translate(this.rawAnnotation.falseText());
+        } else if (super.matchMethod(invocation, BoolType::type)) {
+            if (BoolType.Type.AUTO == this.rawAnnotation.type()) {
+                // A required bool has no unset state left to express, so it renders as a two-state
+                // switch; an optional one keeps radios so "not answered" stays distinguishable.
+                // The client only ever sees RADIO or SWITCH.
+                return this.parent.rawAnnotation.notNull() ? BoolType.Type.SWITCH : BoolType.Type.RADIO;
+            }
+            return this.rawAnnotation.type();
         }
         return this.invoke(invocation);
     }
