@@ -8,6 +8,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
+import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.linq.lambda.LambdaSee;
 
@@ -51,6 +52,10 @@ public class DesignerForm {
 
         private static final String ATTACHMENT_TYPE = LambdaSee.method(Edit::attachmentType);
 
+        private static final String BOOL_TYPE = LambdaSee.method(Edit::boolType);
+
+        private static final String NOT_NULL = LambdaSee.method(Edit::notNull);
+
         // immutable field identity, assigned on first publish. It survives renames, so the
         // storage layer can move an existing column instead of leaving its data orphaned
         // under the old name. Absent on designs published before ids existed.
@@ -92,6 +97,25 @@ public class DesignerForm {
                 view.addProperty(TYPE, viewType.name());
             }
             return viewType;
+        }
+
+        /**
+         * Settle a concrete bool widget on the design, because AUTO never resolves for a designed
+         * field: BoolTypeProxy derives it from the notNull of the template class's edit rather
+         * than of the design. Mirrors BoolTypeProxy: notNull → SWITCH, otherwise RADIO. No-op for
+         * a field that is not a BOOLEAN.
+         */
+        public void boolType() {
+            if (null == edit || EditType.BOOLEAN != this.editType()) return;
+            if (!edit.has(BOOL_TYPE) || !edit.get(BOOL_TYPE).isJsonObject()) {
+                edit.add(BOOL_TYPE, new JsonObject());
+            }
+            JsonObject boolType = edit.getAsJsonObject(BOOL_TYPE);
+            BoolType.Type type = boolType.has(TYPE) ? BoolType.Type.valueOf(boolType.get(TYPE).getAsString()) : BoolType.Type.AUTO;
+            if (BoolType.Type.AUTO == type) {
+                boolean notNull = edit.has(NOT_NULL) && edit.get(NOT_NULL).getAsBoolean();
+                boolType.addProperty(TYPE, (notNull ? BoolType.Type.SWITCH : BoolType.Type.RADIO).name());
+            }
         }
 
         // mirrors ViewProxy's AUTO inference
