@@ -139,7 +139,7 @@ public class EruptSso extends MetaModelUpdateVo {
     @Column(nullable = false)
     @EruptField(
             views = @View(title = "Client ID"),
-            edit = @Edit(title = "Client ID", notNull = true, cellEdit = false, inputType = @InputType(fullSpan = true))
+            edit = @Edit(title = "Client ID", notNull = true, cellEdit = false)
     )
     private String clientId;
 
@@ -147,7 +147,7 @@ public class EruptSso extends MetaModelUpdateVo {
     // and restores the stored one when the mask comes back unchanged
     @Column(length = 512)
     @EruptField(
-            edit = @Edit(title = "Client Secret", notNull = true, type = EditType.PASSWORD, inputType = @InputType(fullSpan = true))
+            edit = @Edit(title = "Client Secret", notNull = true, type = EditType.PASSWORD)
     )
     private String clientSecret;
 
