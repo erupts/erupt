@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
         dataProxy = EruptUserDataProxy.class,
         linkTree = @LinkTree(field = "eruptOrg"),
         orderBy = "EruptUser.id",
-        layout = @Layout(tableLeftFixed = 1, formSteps = true),
+        layout = @Layout(tableLeftFixed = 1),
         rowOperation = {
                 @RowOperation(title = "Reset Password",
                         icon = "fa fa-refresh",
@@ -69,12 +69,6 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
 
     @Column(length = 1023)
     private String avatar;
-
-    @Transient
-    @EruptField(
-            edit = @Edit(title = "Account Info", type = EditType.DIVIDE)
-    )
-    private String accountStep;
 
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
@@ -136,11 +130,31 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
     )
     private EruptMenu eruptMenu;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "e_upms_user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            foreignKey = @ForeignKey(name = "fk_user_role_user"),
+            inverseForeignKey = @ForeignKey(name = "fk_user_role_role")
+    )
+    @OrderBy
+    @EruptField(
+            views = @View(title = "Role"),
+            edit = @Edit(
+                    title = "Role",
+                    type = EditType.CHECKBOX
+            )
+    )
+    private Set<EruptRole> roles;
+
     @Transient
     @EruptField(
-            edit = @Edit(title = "Organization", type = EditType.DIVIDE)
+            edit = @Edit(title = "Organization", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"eruptOrg", "eruptPost", "headOrg", "divisionOrg"})
+            )
     )
-    private String orgStep;
+    private String orgGroup;
 
     @ManyToOne
     @EruptField(
@@ -176,9 +190,11 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "Password", type = EditType.DIVIDE)
+            edit = @Edit(title = "Password", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"passwordA", "passwordB", "encrypt"})
+            )
     )
-    private String pwdStep;
+    private String pwdGroup;
 
     private String password;
 
@@ -220,9 +236,11 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "Security", type = EditType.DIVIDE)
+            edit = @Edit(title = "Security", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"expireDate", "mfaEnabled", "whiteIp"}, collapsed = true)
+            )
     )
-    private String securityStep;
+    private String securityGroup;
 
     @EruptField(
             views = @View(title = "Account Expiry", sortable = true),
@@ -251,24 +269,6 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
     @Convert(converter = StringSetJsonConverter.class)
     @Column(length = AnnotationConst.REMARK_LENGTH)
     private Set<String> mfaRecoveryCodes;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "e_upms_user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            foreignKey = @ForeignKey(name = "fk_user_role_user"),
-            inverseForeignKey = @ForeignKey(name = "fk_user_role_role")
-    )
-    @OrderBy
-    @EruptField(
-            views = @View(title = "Role"),
-            edit = @Edit(
-                    title = "Role",
-                    type = EditType.CHECKBOX
-            )
-    )
-    private Set<EruptRole> roles;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
