@@ -252,7 +252,7 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
             views = @View(title = "MFA", sortable = true),
             // allowChange = false keeps the flag out of every inbound payload: MFA is granted by
             // enrolling an authenticator and revoked through Reset MFA, never by editing this form
-            edit = @Edit(title = "MFA", type = EditType.BOOLEAN, search = @Search, cellEdit = false,
+            edit = @Edit(title = "MFA", type = EditType.BOOLEAN, search = @Search, cellEdit = false, show = false,
                     readonly = @Readonly(allowChange = false),
                     boolType = @BoolType(trueText = "Enabled", falseText = "Disabled"))
     )
