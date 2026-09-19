@@ -102,9 +102,6 @@ public class DbIntrospectTest extends EruptApplicationTests {
         assertEquals(GeneratorType.DATE_TIME, fields.get("hiredOn").getType());
         assertEquals(GeneratorType.BOOLEAN, fields.get("active").getType());
         assertEquals(GeneratorType.TEXTAREA, fields.get("remark").getType());
-        //a single column unique index belongs to the column
-        assertTrue(fields.get("empNo").getUnique());
-        assertFalse(fields.get("empName").getUnique());
         //a foreign key becomes the entity it points at, labelled by a column that exists
         GeneratorField dept = fields.get("dept");
         assertEquals(GeneratorType.REFERENCE_TABLE, dept.getType());
@@ -143,7 +140,6 @@ public class DbIntrospectTest extends EruptApplicationTests {
         assertTrue(code.contains("import java.math.BigDecimal;"), code);
         assertTrue(code.contains("@ManyToOne"), code);
         assertTrue(code.contains("private GenDept dept;"), code);
-        assertTrue(code.contains("unique = true"), code);
         assertTrue(code.contains("type = EditType.CHOICE"), code);
         //an inherited id is never declared twice
         assertFalse(code.contains("@Id"), code);

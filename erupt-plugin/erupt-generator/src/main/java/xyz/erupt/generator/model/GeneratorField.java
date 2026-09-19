@@ -81,12 +81,6 @@ public class GeneratorField extends BaseModel implements ChoiceFetchHandler<Void
     private Integer length;
 
     @EruptField(
-            views = @View(title = "Unique", show = false),
-            edit = @Edit(title = "Unique", notNull = true)
-    )
-    private Boolean unique = false;
-
-    @EruptField(
             views = @View(title = "Component Config", show = false),
             edit = @Edit(title = "Component Config", type = EditType.TEXTAREA,
                     desc = "Replaces the component configuration the edit type would generate, e.g. choiceType = @ChoiceType(...)")
