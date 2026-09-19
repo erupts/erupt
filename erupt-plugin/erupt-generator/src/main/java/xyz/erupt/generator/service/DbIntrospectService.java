@@ -24,13 +24,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Reads the schema of any datasource registered in the context and turns every
@@ -204,23 +202,6 @@ public class DbIntrospectService {
                 Naming.fieldName(null == label ? "id" : label));
     }
 
-    //a single column unique index is a unique column, a composite one belongs to the table
-    private Set<String> uniqueColumns(Connection conn, Target target, String table, String primaryKey) {
-        Map<String, List<String>> indexes = new LinkedHashMap<>();
-        try (ResultSet rs = conn.getMetaData().getIndexInfo(target.catalog(), target.schema(), table, true, true)) {
-            while (rs.next()) {
-                String name = rs.getString("INDEX_NAME");
-                String column = rs.getString("COLUMN_NAME");
-                if (null == name || null == column || rs.getBoolean("NON_UNIQUE")) continue;
-                indexes.computeIfAbsent(name, it -> new ArrayList<>()).add(column);
-            }
-        } catch (SQLException e) {
-            return Collections.emptySet();
-        }
-        return indexes.values().stream().filter(it -> 1 == it.size()).map(it -> it.get(0))
-                .filter(it -> !it.equals(primaryKey)).collect(Collectors.toSet());
-    }
-
     private String primaryKey(Connection conn, Target target, String table) throws SQLException {
         List<String> primaryKeys = new ArrayList<>();
         try (ResultSet rs = conn.getMetaData().getPrimaryKeys(target.catalog(), target.schema(), table)) {
@@ -241,7 +222,6 @@ public class DbIntrospectService {
                         it -> link(conn, target, it)));
             }
         }
-        Set<String> uniques = uniqueColumns(conn, target, table, primaryKey);
         GeneratorClass clazz = new GeneratorClass();
         clazz.setTableName(table);
         clazz.setPackageName(modal.getPackageName());
@@ -259,7 +239,6 @@ public class DbIntrospectService {
                 if (clazz.getSuperClass().inherit(column) || ignore(column, ignoreColumns)) continue;
                 String columnComment = comment(columnComments.get(table + "." + column), rs.getString("REMARKS"));
                 GeneratorField field = readColumn(rs, column, columnComment, primaryKey, foreignKeys, modal, sort += 10);
-                field.setUnique(uniques.contains(column));
                 fields.add(field);
             }
         }

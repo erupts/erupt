@@ -126,7 +126,6 @@ public class CodeRender {
                 && fieldType.endsWith(String.class.getSimpleName()) && !fieldType.startsWith("@Lob")) {
             attrs.add("length = " + field.getLength());
         }
-        if (Boolean.TRUE.equals(field.getUnique())) attrs.add("unique = true");
         return attrs.isEmpty() ? null : "@Column(" + String.join(", ", attrs) + ")";
     }
 
