@@ -240,7 +240,7 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
     @EruptField(
             edit = @Edit(
                     title = "IP Whitelist",
-                    desc = "Separate IPs with newline; leave empty for no auth check",
+                    desc = "Separate IPs with newline; CIDR masks allowed (e.g. 192.168.0.0/24, 2001:db8::/32); leave empty for no auth check",
                     type = EditType.TEXTAREA
             )
     )
