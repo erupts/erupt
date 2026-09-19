@@ -21,9 +21,11 @@ import xyz.erupt.core.constant.RegexConst;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.upms.helper.HyperModelCreatorVo;
 import xyz.erupt.upms.helper.UpmsSecurityHelper;
+import xyz.erupt.upms.model.converter.StringSetJsonConverter;
 import xyz.erupt.upms.model.data_proxy.EruptOrgFetchHandler;
 import xyz.erupt.upms.model.data_proxy.EruptUserDataProxy;
 import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
+import xyz.erupt.upms.model.input.ResetMfaExec;
 import xyz.erupt.upms.model.input.ResetPassword;
 import xyz.erupt.upms.model.input.ResetPasswordExec;
 
@@ -44,11 +46,21 @@ import java.util.stream.Collectors;
         linkTree = @LinkTree(field = "eruptOrg"),
         orderBy = "EruptUser.id",
         layout = @Layout(tableLeftFixed = 1, formSteps = true),
-        rowOperation = @RowOperation(title = "Reset Password",
-                icon = "fa fa-refresh",
-                mode = RowOperation.Mode.SINGLE,
-                eruptClass = ResetPassword.class,
-                operationHandler = ResetPasswordExec.class)
+        rowOperation = {
+                @RowOperation(title = "Reset Password",
+                        icon = "fa fa-refresh",
+                        mode = RowOperation.Mode.SINGLE,
+                        eruptClass = ResetPassword.class,
+                        operationHandler = ResetPasswordExec.class),
+                // Recovery path for a user who lost both the authenticator and every recovery code
+                @RowOperation(title = "Reset MFA",
+                        icon = "fa fa-mobile",
+                        mode = RowOperation.Mode.SINGLE,
+                        callHint = "upms.mfa.reset_hint",
+                        ifExpr = "item.mfaEnabled",
+                        ifExprBehavior = RowOperation.IfExprBehavior.DISABLE,
+                        operationHandler = ResetMfaExec.class)
+        }
 )
 @EruptI18n
 @Getter
@@ -217,6 +229,28 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
             edit = @Edit(title = "Account Expiry", cellEdit = false)
     )
     private Date expireDate;
+
+    @EruptField(
+            views = @View(title = "MFA", sortable = true),
+            // allowChange = false keeps the flag out of every inbound payload: MFA is granted by
+            // enrolling an authenticator and revoked through Reset MFA, never by editing this form
+            edit = @Edit(title = "MFA", type = EditType.BOOLEAN, search = @Search, cellEdit = false,
+                    readonly = @Readonly(allowChange = false),
+                    boolType = @BoolType(trueText = "Enabled", falseText = "Disabled"))
+    )
+    private Boolean mfaEnabled = false;
+
+    // Credentials: never annotated with @EruptField, so they are excluded from every view,
+    // form and export the framework generates
+    @Column(length = 64)
+    private String mfaSecret;
+
+    // A JSON array in one column rather than a side table: the set is tiny, always read
+    // whole and never queried by SQL. REMARK_LENGTH leaves room to raise the code count,
+    // which matters because ddl-auto=update can never widen a column later.
+    @Convert(converter = StringSetJsonConverter.class)
+    @Column(length = AnnotationConst.REMARK_LENGTH)
+    private Set<String> mfaRecoveryCodes;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

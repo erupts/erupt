@@ -11,23 +11,21 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaUserinfo;
-import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecretUtil;
 import xyz.erupt.core.view.R;
 import xyz.erupt.upms.base.ChangePwdBody;
 import xyz.erupt.upms.base.LoginBody;
 import xyz.erupt.upms.base.LoginModel;
+import xyz.erupt.upms.base.MfaBody;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptAppProp;
-import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.service.*;
 import xyz.erupt.upms.vo.EruptMenuVo;
 import xyz.erupt.upms.vo.EruptUserinfoVo;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +59,7 @@ public class EruptUserController {
     private EruptMenuService eruptMenuService;
 
     @Resource
-    private EruptUpmsProp eruptUpmsProp;
+    private EruptMfaService eruptMfaService;
 
     /**
      * Login
@@ -100,14 +98,41 @@ public class EruptUserController {
             }
         }
         if (loginModel.isPass()) {
-            EruptUser eruptUser = loginModel.getEruptUser();
-            loginModel.setToken(Erupts.generateCode(22)); // 22 alphanumerics ~ 131 bits, meets the 128-bit session id guideline
-            loginModel.setExpire(LocalDateTime.now().plusMinutes(eruptUpmsProp.getExpireTimeByLogin()));
-            loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
-            if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
-            eruptTokenService.loginToken(eruptUser, loginModel.getToken());
-            eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //Record login log
+            // The password is only the first factor: when an authenticator is bound no session
+            // is created here, the caller has to come back through /login-mfa with a code
+            if (eruptMfaService.isBound(loginModel.getEruptUser())) {
+                loginModel.setPass(false);
+                loginModel.setMfaRequired(true);
+                loginModel.setMfaTicket(eruptMfaService.issueTicket(loginModel.getEruptUser()));
+                return loginModel;
+            }
+            eruptUserService.completeLogin(loginModel, loginProxy);
         }
+        return loginModel;
+    }
+
+    /**
+     * Second step of a two factor login: exchange the ticket plus a one-time code for a session.
+     */
+    @PostMapping(value = "/login-mfa")
+    public LoginModel loginMfa(@RequestBody MfaBody body) {
+        EruptUser eruptUser = eruptMfaService.findUserByTicket(body.getMfaTicket());
+        if (null == eruptUser) {
+            return new LoginModel(false, I18nTranslate.$translate("upms.mfa.ticket_expired"));
+        }
+        try {
+            eruptMfaService.verifyForLogin(eruptUser, body.getMfaTicket(), body.getCode());
+        } catch (Exception e) {
+            LoginModel fail = new LoginModel(false, e.getMessage());
+            // the ticket survives an ordinary wrong code, so the client stays on the code screen
+            if (null != eruptMfaService.findUserByTicket(body.getMfaTicket())) {
+                fail.setMfaRequired(true);
+                fail.setMfaTicket(body.getMfaTicket());
+            }
+            return fail;
+        }
+        LoginModel loginModel = new LoginModel(true, eruptUser);
+        eruptUserService.completeLogin(loginModel, EruptUserService.findEruptLogin());
         return loginModel;
     }
 
