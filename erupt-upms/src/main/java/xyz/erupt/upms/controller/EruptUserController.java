@@ -70,8 +70,10 @@ public class EruptUserController {
     public LoginModel login(@RequestBody LoginBody loginBody) {
         String account = loginBody.getAccount();
         String pwd = loginBody.getPwd();
+        // A locked pair is told so at once, whatever else the request carries
+        if (eruptUserService.isLoginLocked(account)) return eruptUserService.lockedLoginModel();
         if (!eruptUserService.checkVerifyCode(account, loginBody.getVerifyCode(), loginBody.getVerifyCodeMark())) {
-            return new LoginModel(false, I18nTranslate.$translate("upms.verify_code_error"), true);
+            return eruptUserService.loginFailure(account, "upms.verify_code_error");
         }
         if (eruptAppProp.getPwdTransferEncrypt()) {
             pwd = SecretUtil.decodeSecret(pwd, 3);

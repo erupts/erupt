@@ -10,6 +10,7 @@ import xyz.erupt.core.prop.EruptProp;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,6 +57,17 @@ public class EruptSessionService {
                 eruptLocalSession.put(key, ++num, timeUnit.toMillis(timeout));
                 return num;
             }
+        }
+    }
+
+    // Every key starting with prefix. A full scan on either store, so keep it for rare
+    // administrative moments (listing online users, revoking a user's sessions)
+    public Set<String> keys(String prefix) {
+        if (eruptProp.isRedisSession()) {
+            Set<String> keys = stringRedisTemplate.keys(prefix + "*");
+            return null == keys ? Collections.emptySet() : keys;
+        } else {
+            return eruptLocalSession.keySet().stream().filter(it -> it.startsWith(prefix)).collect(Collectors.toSet());
         }
     }
 

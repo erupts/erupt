@@ -84,4 +84,24 @@ public class EruptTokenService {
         log.info("logout erupt-token: {} → {}", name, token);
     }
 
+    /**
+     * End every live session of an account except keepToken (null to end them all).
+     * Used when a credential changes: the session that changed it stays, the rest go.
+     * Sessions are found by scanning the token keys, whose value is the account, which is
+     * the same scan the online user list performs.
+     */
+    public int logoutOtherTokens(String account, String keepToken) {
+        int count = 0;
+        for (String key : eruptSessionService.keys(SessionKey.TOKEN_OLINE)) {
+            String token = key.substring(SessionKey.TOKEN_OLINE.length());
+            if (token.equals(keepToken)) continue;
+            Object owner = eruptSessionService.get(key);
+            if (null != owner && account.equals(owner.toString())) {
+                this.logoutToken(account, token);
+                count++;
+            }
+        }
+        return count;
+    }
+
 }

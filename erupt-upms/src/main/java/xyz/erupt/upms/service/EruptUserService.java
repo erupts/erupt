@@ -89,21 +89,53 @@ public class EruptUserService {
             loginErrorCount = Integer.parseInt(loginError.toString());
         }
         sessionService.put(key, ++loginErrorCount + "", eruptUpmsProp.getExpireTimeByLogin(), TimeUnit.MINUTES);
+        EruptUpmsProp.LoginLock lock = eruptUpmsProp.getLoginLock();
+        if (lock.isEnable() && loginErrorCount >= lock.getMaxFailures()) {
+            // the counter is dropped with the lock so the next window starts clean when it lifts
+            sessionService.put(SessionKey.LOGIN_LOCK + account + ":" + ip, "1", lock.getLockMinutes(), TimeUnit.MINUTES);
+            sessionService.remove(key);
+            log.warn("login locked for {} minutes after {} failures: {} @ {}", lock.getLockMinutes(), loginErrorCount, account, ip);
+        }
         return loginErrorCount >= eruptAppProp.getVerifyCodeCount();
     }
 
+    // Whether this account is still serving a lock from earlier failures made from the requesting IP
+    public boolean isLoginLocked(String account) {
+        return eruptUpmsProp.getLoginLock().isEnable()
+                && sessionService.exist(SessionKey.LOGIN_LOCK + account + ":" + IpUtil.getIpAddr(request));
+    }
+
+    public LoginModel lockedLoginModel() {
+        String reason = I18nTranslate.$translate("upms.login_locked")
+                .replace("{0}", String.valueOf(eruptUpmsProp.getLoginLock().getLockMinutes()));
+        return new LoginModel(false, reason, true);
+    }
+
+    /**
+     * Record one failed login submission for the account from the requesting IP and build the
+     * refusal. A wrong captcha counts the same as a wrong password: the lock limits how often a
+     * pair may fail at the login endpoint at all, otherwise the captcha step would be a place to
+     * retry forever. The failure that tips the counter over already answers with the lock.
+     */
+    public LoginModel loginFailure(String account, String reasonKey) {
+        boolean useVerifyCode = this.loginErrorCountPlus(account, IpUtil.getIpAddr(request));
+        if (this.isLoginLocked(account)) return this.lockedLoginModel();
+        return new LoginModel(false, I18nTranslate.$translate(reasonKey), useVerifyCode);
+    }
+
     public LoginModel login(String account, String pwd) {
-        String requestIp = IpUtil.getIpAddr(request);
+        // Checked before the password so a locked pair cannot keep probing, right or wrong
+        if (this.isLoginLocked(account)) return this.lockedLoginModel();
         EruptUser eruptUser = this.findEruptUserByAccount(account);
         if (null != eruptUser) {
             String reason = this.checkAccountUsable(eruptUser);
             if (null != reason) return new LoginModel(false, reason);
             if (this.checkPwd(eruptUser, pwd)) {
-                sessionService.remove(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
+                sessionService.remove(SessionKey.LOGIN_ERROR + account + ":" + IpUtil.getIpAddr(request));
                 return new LoginModel(true, eruptUser);
             }
         }
-        return new LoginModel(false, I18nTranslate.$translate("upms.account_pwd_error"), loginErrorCountPlus(account, requestIp));
+        return this.loginFailure(account, "upms.account_pwd_error");
     }
 
     /**
@@ -208,6 +240,8 @@ public class EruptUserService {
 
             eruptUser.setResetPwdTime(new Date());
             eruptDao.getEntityManager().merge(eruptUser);
+            // A new password ends every other session: whoever held the old one is out
+            eruptTokenService.logoutOtherTokens(account, eruptContextService.getCurrentToken());
             if (null != loginProxy) {
                 loginProxy.afterChangePwd(eruptUser, pwd, newPwd);
             }

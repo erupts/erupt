@@ -26,6 +26,8 @@ public class SessionKey {
     };
     public static final String LOGIN_ERROR = AUTH_SPACE + "login-error:"; //Number of login failures
 
+    public static final String LOGIN_LOCK = AUTH_SPACE + "login-lock:"; //Account + IP pair refused after too many failures
+
     public static final String MFA_TICKET = AUTH_SPACE + "mfa-ticket:"; //Half-authenticated login awaiting a one-time code
 
     public static final String MFA_ENROLL = AUTH_SPACE + "mfa-enroll:"; //Secret being enrolled, held until the first code verifies
