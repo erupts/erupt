@@ -2,7 +2,11 @@ package xyz.erupt.sso.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Getter;
@@ -12,6 +16,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.DragSort;
 import xyz.erupt.annotation.sub_erupt.Layout;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -24,6 +29,8 @@ import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.sso.model.data_proxy.EruptSsoDataProxy;
+
+import java.util.Set;
 
 /**
  * An external identity provider erupt delegates login to, over OAuth2 authorization code.
@@ -42,7 +49,8 @@ import xyz.erupt.sso.model.data_proxy.EruptSsoDataProxy;
         name = "SSO Provider",
         orderBy = "EruptSso.sort asc",
         dataProxy = EruptSsoDataProxy.class,
-        layout = @Layout(formSteps = true)
+        layout = @Layout(formSteps = true),
+        dragSort = @DragSort(field = "sort")
 )
 @EruptI18n
 @Getter
@@ -84,11 +92,7 @@ public class EruptSso extends MetaModelUpdateVo {
     )
     private Boolean status = true;
 
-    @EruptField(
-            views = @View(title = "Sort", sortable = true),
-            edit = @Edit(title = "Sort", notNull = true)
-    )
-    private Integer sort = 0;
+    private Integer sort;
 
     @Transient
     @EruptField(edit = @Edit(title = "Endpoint", type = EditType.DIVIDE))
@@ -122,7 +126,8 @@ public class EruptSso extends MetaModelUpdateVo {
     @Column(length = 512)
     @EruptField(
             edit = @Edit(title = "Redirect URI",
-                    desc = "Register this at the provider; derived from the request when left empty",
+                    desc = "Where the provider sends the browser back, must be registered there verbatim; "
+                            + "empty means http(s)://<this host>/erupt-api/sso/callback/<code>, fill it only behind a proxy or a different public domain",
                     inputType = @InputType(fullSpan = true))
     )
     private String redirectUri;
@@ -131,7 +136,7 @@ public class EruptSso extends MetaModelUpdateVo {
     @EruptField(edit = @Edit(title = "Client", type = EditType.DIVIDE))
     private String clientStep;
 
-    @Column(length = 255, nullable = false)
+    @Column(nullable = false)
     @EruptField(
             views = @View(title = "Client ID"),
             edit = @Edit(title = "Client ID", notNull = true, cellEdit = false, inputType = @InputType(fullSpan = true))
@@ -142,7 +147,7 @@ public class EruptSso extends MetaModelUpdateVo {
     // and restores the stored one when the mask comes back unchanged
     @Column(length = 512)
     @EruptField(
-            edit = @Edit(title = "Client Secret", notNull = true, type = EditType.PASSWORD)
+            edit = @Edit(title = "Client Secret", notNull = true, type = EditType.PASSWORD, inputType = @InputType(fullSpan = true))
     )
     private String clientSecret;
 
@@ -180,21 +185,56 @@ public class EruptSso extends MetaModelUpdateVo {
     )
     private String emailClaim = "email";
 
+    @Column(length = 64)
+    @EruptField(
+            edit = @Edit(title = "Phone Claim", desc = "OIDC: phone_number, Feishu: mobile")
+    )
+    private String phoneClaim;
+
+    @Column(length = 64)
+    @EruptField(
+            edit = @Edit(title = "Avatar Claim", desc = "URL of the picture; OIDC: picture, Feishu: avatar_url")
+    )
+    private String avatarClaim;
+
+    @ManyToMany
+    @JoinTable(
+            name = "e_upms_sso_role",
+            joinColumns = @JoinColumn(name = "sso_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            foreignKey = @ForeignKey(name = "fk_sso_role_sso"),
+            inverseForeignKey = @ForeignKey(name = "fk_sso_role_role")
+    )
+    @OrderBy
+    @EruptField(
+            views = @View(title = "Default Roles"),
+            edit = @Edit(title = "Default Roles", type = EditType.CHECKBOX,
+                    desc = "Given to a user the first time this provider creates it")
+    )
+    private Set<EruptRole> defaultRoles;
+
+    @EruptField(
+            views = @View(title = "Sync Profile", sortable = true),
+            edit = @Edit(title = "Sync Profile", type = EditType.BOOLEAN, notNull = true, cellEdit = false,
+                    desc = "Refresh name, email, phone and avatar from the provider on every login; off only fills empty fields",
+                    boolType = @BoolType(trueText = "Every login", falseText = "Fill empty only"))
+    )
+    private Boolean syncProfile = true;
+
     @EruptField(
             views = @View(title = "Auto Create", sortable = true),
             edit = @Edit(title = "Auto Create", type = EditType.BOOLEAN, notNull = true, cellEdit = false,
                     desc = "Create an erupt user the first time an unknown identity signs in",
                     boolType = @BoolType(trueText = "Create", falseText = "Reject"))
     )
-    private Boolean autoCreate = false;
+    private Boolean autoCreate = true;
 
-    @ManyToOne
     @EruptField(
-            views = @View(title = "Default Role", column = "name"),
-            edit = @Edit(title = "Default Role", type = EditType.REFERENCE_TABLE,
-                    desc = "Granted to auto created users only")
+            views = @View(title = "Grant Roles On Login", sortable = true),
+            edit = @Edit(title = "Grant Roles On Login", type = EditType.BOOLEAN, notNull = true, cellEdit = false,
+                    desc = "Also add any default role a bound user is missing on each login; roles are only ever added, never taken away")
     )
-    private EruptRole defaultRole;
+    private Boolean grantRolesOnLogin = false;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(

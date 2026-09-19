@@ -37,6 +37,7 @@ import java.security.MessageDigest;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +70,7 @@ public class EruptSsoService {
     private static final Duration HTTP_TIMEOUT = Duration.ofSeconds(10);
 
     // Providers disagree on what the stable identifier is called; OIDC says sub, the rest improvise
-    private static final String[] SUBJECT_CLAIMS = {"sub", "id", "openid", "unionid", "userId", "user_id"};
+    private static final String[] SUBJECT_CLAIMS = {"sub", "id", "openid", "open_id", "unionid", "union_id", "userId", "user_id"};
 
     @Resource
     private EruptDao eruptDao;
@@ -182,17 +183,19 @@ public class EruptSsoService {
      */
     private EruptUser resolveUser(EruptSso sso, JsonObject claims) {
         String subject = this.subject(claims);
-        Erupts.requireTrue(StringUtils.isNotBlank(subject), I18nTranslate.$translate("sso.no_subject"));
+        Erupts.requireTrue(StringUtils.isNotBlank(subject), I18nTranslate.$translate("sso.no_subject") + claimNames(claims));
         EruptSsoBind bind = eruptDao.lambdaQuery(EruptSsoBind.class)
                 .eq(EruptSsoBind::getSso, sso).eq(EruptSsoBind::getSubject, subject).one();
-        if (null != bind) return bind.getEruptUser();
+        if (null != bind) return this.applyProfile(sso, claims, bind.getEruptUser());
 
         String account = claim(claims, sso.getAccountClaim());
         if (StringUtils.isBlank(account)) account = claim(claims, sso.getEmailClaim());
-        Erupts.requireTrue(StringUtils.isNotBlank(account), I18nTranslate.$translate("sso.no_account_claim"));
+        Erupts.requireTrue(StringUtils.isNotBlank(account), I18nTranslate.$translate("sso.no_account_claim") + claimNames(claims));
         EruptUser eruptUser = eruptDao.lambdaQuery(EruptUser.class).eq(EruptUser::getAccount, account).one();
         if (null == eruptUser) {
-            Erupts.requireTrue(Boolean.TRUE.equals(sso.getAutoCreate()), I18nTranslate.$translate("sso.account_not_found"));
+            // the value is the caller's own identifier at the provider; naming it tells the admin what to create
+            Erupts.requireTrue(Boolean.TRUE.equals(sso.getAutoCreate()),
+                    I18nTranslate.$translate("sso.account_not_found") + " (" + sso.getAccountClaim() + ": " + account + ")");
             eruptUser = this.createUser(sso, claims, account);
         }
         EruptSsoBind newBind = new EruptSsoBind();
@@ -200,7 +203,40 @@ public class EruptSsoService {
         newBind.setEruptUser(eruptUser);
         newBind.setSubject(subject);
         eruptDao.persist(newBind);
+        return this.applyProfile(sso, claims, eruptUser);
+    }
+
+    /**
+     * Carry the provider's profile over to the erupt user. By default only a blank field is
+     * filled, so a name or avatar somebody set by hand survives; with sync on, the provider
+     * is the source of truth and every mapped claim is written on every login.
+     */
+    private EruptUser applyProfile(EruptSso sso, JsonObject claims, EruptUser eruptUser) {
+        boolean sync = Boolean.TRUE.equals(sso.getSyncProfile());
+        boolean changed = this.grantRoles(sso, eruptUser);
+        changed |= assign(sync, claim(claims, sso.getNameClaim()), eruptUser.getName(), eruptUser::setName);
+        changed |= assign(sync, claim(claims, sso.getEmailClaim()), eruptUser.getEmail(), eruptUser::setEmail);
+        changed |= assign(sync, claim(claims, sso.getPhoneClaim()), eruptUser.getPhone(), eruptUser::setPhone);
+        changed |= assign(sync, claim(claims, sso.getAvatarClaim()), eruptUser.getAvatar(), eruptUser::setAvatar);
+        if (changed) eruptDao.merge(eruptUser);
         return eruptUser;
+    }
+
+    /**
+     * Top the user up to the provider's default roles when the row asks for it. Additive
+     * only: what an administrator granted by hand, or another provider, is never revoked here.
+     */
+    private boolean grantRoles(EruptSso sso, EruptUser eruptUser) {
+        if (!Boolean.TRUE.equals(sso.getGrantRolesOnLogin()) || null == sso.getDefaultRoles() || sso.getDefaultRoles().isEmpty()) return false;
+        if (null == eruptUser.getRoles()) eruptUser.setRoles(new HashSet<>());
+        return eruptUser.getRoles().addAll(sso.getDefaultRoles());
+    }
+
+    private static boolean assign(boolean overwrite, String value, String current, java.util.function.Consumer<String> setter) {
+        if (StringUtils.isBlank(value) || value.equals(current)) return false;
+        if (!overwrite && StringUtils.isNotBlank(current)) return false;
+        setter.accept(value);
+        return true;
     }
 
     /**
@@ -210,8 +246,8 @@ public class EruptSsoService {
     private EruptUser createUser(EruptSso sso, JsonObject claims, String account) {
         EruptUser eruptUser = new EruptUser();
         eruptUser.setAccount(account);
+        // the rest of the profile (name, email, phone, avatar) is mapped in applyProfile
         eruptUser.setName(StringUtils.defaultIfBlank(claim(claims, sso.getNameClaim()), account));
-        eruptUser.setEmail(claim(claims, sso.getEmailClaim()));
         eruptUser.setStatus(true);
         eruptUser.setIsAdmin(false);
         eruptUser.setEncrypt(true);
@@ -222,7 +258,9 @@ public class EruptSsoService {
         eruptUser.setPassword(EncryptUtil.digestSHA512Salt(Erupts.generateCode(64), salt));
         // the account never had a default password, so do not nag its owner to change one
         eruptUser.setResetPwdTime(new Date());
-        if (null != sso.getDefaultRole()) eruptUser.setRoles(Set.of(sso.getDefaultRole()));
+        // never null: the login path streams the roles, and a user with no role is a valid outcome
+        eruptUser.setRoles(new HashSet<>());
+        if (null != sso.getDefaultRoles()) eruptUser.getRoles().addAll(sso.getDefaultRoles());
         eruptDao.persistAndFlush(eruptUser);
         return eruptUser;
     }
@@ -233,6 +271,17 @@ public class EruptSsoService {
             if (StringUtils.isNotBlank(value)) return value;
         }
         return null;
+    }
+
+    /**
+     * The claim names the provider did send, for the error shown when the configured one is
+     * not among them. Names only: the values are somebody's personal data.
+     */
+    private static String claimNames(JsonObject claims) {
+        String names = claims.entrySet().stream()
+                .filter(it -> it.getValue().isJsonPrimitive() && StringUtils.isNotBlank(it.getValue().getAsString()))
+                .map(Map.Entry::getKey).collect(Collectors.joining(", "));
+        return names.isEmpty() ? "" : " (" + names + ")";
     }
 
     private static String claim(JsonObject claims, String key) {
@@ -275,7 +324,22 @@ public class EruptSsoService {
                 .header("Authorization", "Bearer " + accessToken)
                 .header("Accept", "application/json")
                 .GET().build();
-        return this.send(request, "userinfo");
+        return unwrap(this.send(request, "userinfo"));
+    }
+
+    /**
+     * Some providers (Feishu, WeCom, DingTalk) do not answer with the claims themselves but
+     * with an envelope: a numeric {@code code}, a message and the claims under {@code data}.
+     * Open the envelope so the claim names configured on the row are looked up where they are.
+     */
+    static JsonObject unwrap(JsonObject json) {
+        JsonElement code = json.get("code");
+        JsonElement data = json.get("data");
+        if (null == code || !code.isJsonPrimitive() || null == data || !data.isJsonObject()) return json;
+        // a non zero code is the provider saying no, even though the HTTP status said yes
+        Erupts.requireTrue(code.getAsJsonPrimitive().isNumber() && code.getAsInt() == 0,
+                I18nTranslate.$translate("sso.provider_error") + " (" + code.getAsString() + ": " + claim(json, "msg") + ")");
+        return data.getAsJsonObject();
     }
 
     private JsonObject send(HttpRequest request, String stage) {
@@ -283,20 +347,45 @@ public class EruptSsoService {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
             if (response.statusCode() >= 400) {
                 // the body may carry the client secret back in an error echo, keep it out of the log
+                // and out of the page; the provider's own error code and wording are what helps
                 log.warn("sso {} endpoint returned {}", stage, response.statusCode());
-                throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.provider_error"));
+                throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.provider_error")
+                        + " (" + stage + " HTTP " + response.statusCode() + providerError(response.body()) + ")");
             }
             JsonElement element = JsonParser.parseString(response.body());
-            Erupts.requireTrue(element.isJsonObject(), I18nTranslate.$translate("sso.provider_error"));
+            Erupts.requireTrue(element.isJsonObject(),
+                    I18nTranslate.$translate("sso.provider_error") + " (" + stage + ": not a JSON object)");
             return element.getAsJsonObject();
         } catch (EruptWebApiRuntimeException e) {
             throw e;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.provider_error"));
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.provider_error") + " (" + stage + ": interrupted)");
         } catch (Exception e) {
+            // a connect, TLS or timeout failure: the exception type is the whole diagnosis
             log.warn("sso {} endpoint call failed", stage, e);
-            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.provider_error"));
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.provider_error")
+                    + " (" + stage + ": " + e.getClass().getSimpleName() + (null == e.getMessage() ? "" : " " + e.getMessage()) + ")");
+        }
+    }
+
+    /**
+     * The error fields providers put in a failed response, RFC 6749 style or Feishu style.
+     * Only those named fields are read, never the body as a whole.
+     */
+    private static String providerError(String body) {
+        try {
+            JsonElement element = JsonParser.parseString(body);
+            if (!element.isJsonObject()) return "";
+            JsonObject json = element.getAsJsonObject();
+            StringBuilder sb = new StringBuilder();
+            for (String key : new String[]{"code", "error", "error_description", "msg"}) {
+                String value = claim(json, key);
+                if (StringUtils.isNotBlank(value)) sb.append(sb.length() == 0 ? ", " : " ").append(value);
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            return "";
         }
     }
 
@@ -319,10 +408,25 @@ public class EruptSsoService {
                 discovered.basicAuth());
     }
 
+    /**
+     * Resolve the issuer's discovery document now rather than at the first login, so a
+     * provider without one (Feishu, GitHub, Gitee) is caught while the admin is still
+     * looking at the form. Cached like any other lookup.
+     */
+    public void verifyDiscovery(String issuer) {
+        discoveryCache.computeIfAbsent(issuer, this::discover);
+    }
+
     private Endpoints discover(String issuer) {
         String url = StringUtils.removeEnd(issuer, "/") + "/.well-known/openid-configuration";
-        JsonObject json = this.send(HttpRequest.newBuilder(URI.create(url)).timeout(HTTP_TIMEOUT)
-                .header("Accept", "application/json").GET().build(), "discovery");
+        JsonObject json;
+        try {
+            json = this.send(HttpRequest.newBuilder(URI.create(url)).timeout(HTTP_TIMEOUT)
+                    .header("Accept", "application/json").GET().build(), "discovery");
+        } catch (EruptWebApiRuntimeException e) {
+            // whatever came back, it was not a discovery document: the fix is the same either way
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.discovery_failed") + " (" + url + ")");
+        }
         Endpoints endpoints = new Endpoints(
                 claim(json, "authorization_endpoint"),
                 claim(json, "token_endpoint"),

@@ -18,9 +18,12 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.client.RestTemplate;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.test.EruptApplicationTests;
+import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.sso.model.EruptSso;
 import xyz.erupt.sso.model.EruptSsoBind;
+import xyz.erupt.sso.model.data_proxy.EruptSsoDataProxy;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 
 import java.io.IOException;
@@ -30,12 +33,15 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -46,6 +52,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SsoLoginTest extends EruptApplicationTests {
 
     private static final String PROVIDER = "unit-test";
+
+    private static final String NEW_ACCOUNT = "sso-new-user";
 
     @Autowired
     private TestRestTemplate rest;
@@ -64,6 +72,9 @@ public class SsoLoginTest extends EruptApplicationTests {
 
     @Resource
     private EruptDao dao;
+
+    @Resource
+    private EruptSsoDataProxy ssoDataProxy;
 
     @Resource
     private EruptUpmsProp eruptUpmsProp;
@@ -113,6 +124,8 @@ public class SsoLoginTest extends EruptApplicationTests {
             dao.lambdaQuery(EruptSsoBind.class).eq(EruptSsoBind::getSso, sso).list()
                     .forEach(it -> dao.delete(dao.find(EruptSsoBind.class, it.getId())));
             dao.delete(dao.find(EruptSso.class, sso.getId()));
+            EruptUser created = dao.lambdaQuery(EruptUser.class).eq(EruptUser::getAccount, NEW_ACCOUNT).one();
+            if (null != created) dao.delete(created);
         });
     }
 
@@ -168,6 +181,163 @@ public class SsoLoginTest extends EruptApplicationTests {
         assertNotNull(param(back, "ssoError"), "an unknown identity must not be let in");
         assertNull(param(back, "ssoTicket"));
         assertNull(dao.lambdaQuery(EruptUser.class).eq(EruptUser::getAccount, "nobody-here").one());
+    }
+
+    @Test
+    void envelopedUserInfoIsOpenedBeforeMatching() {
+        // Feishu answers {code, msg, data:{open_id, ...}} rather than the claims themselves
+        this.userInfo = "{\"code\":0,\"msg\":\"success\",\"data\":"
+                + json("open_id", "ou_feishu_1", "preferred_username", eruptUpmsProp.getDefaultAccount()) + "}";
+        String back = this.callback(param(this.authorize(), "state"));
+        String ticket = param(back, "ssoTicket");
+        assertNotNull(ticket, "the enveloped claims have to be read: " + back);
+        assertTrue((Boolean) this.exchange(ticket).get("pass"));
+        EruptSso sso = dao.lambdaQuery(EruptSso.class).eq(EruptSso::getCode, PROVIDER).one();
+        assertNotNull(dao.lambdaQuery(EruptSsoBind.class).eq(EruptSsoBind::getSso, sso)
+                .eq(EruptSsoBind::getSubject, "ou_feishu_1").one(), "open_id is the subject the binding is made on");
+    }
+
+    @Test
+    void envelopeWithNonZeroCodeIsRefused() {
+        this.userInfo = "{\"code\":99991668,\"msg\":\"Invalid access token\",\"data\":{}}";
+        String back = this.callback(param(this.authorize(), "state"));
+        assertNotNull(param(back, "ssoError"), "a provider error inside a 200 body must not pass");
+        assertNull(param(back, "ssoTicket"));
+    }
+
+    @Test
+    void autoCreatedUserCarriesTheProviderProfile() {
+        this.configure(sso -> sso.setAutoCreate(true));
+        this.userInfo = json("sub", "idp-subject-3", "preferred_username", NEW_ACCOUNT, "name", "New Person",
+                "email", "new@example.com", "phone_number", "13800000000", "picture", "https://idp.example.com/a.png");
+        String ticket = param(this.callback(param(this.authorize(), "state")), "ssoTicket");
+        assertNotNull(ticket);
+        EruptUser created = dao.lambdaQuery(EruptUser.class).eq(EruptUser::getAccount, NEW_ACCOUNT).one();
+        assertNotNull(created, "auto create has to produce the user");
+        assertEquals("New Person", created.getName());
+        assertEquals("new@example.com", created.getEmail());
+        assertEquals("13800000000", created.getPhone());
+        assertEquals("https://idp.example.com/a.png", created.getAvatar());
+    }
+
+    @Test
+    void profileFillsBlanksUnlessSyncIsOn() {
+        EruptUser admin = this.defaultUser();
+        String[] original = {admin.getPhone(), admin.getAvatar()};
+        try {
+            transactionTemplate.executeWithoutResult(status -> {
+                EruptUser u = this.defaultUser();
+                u.setPhone("13900000000");
+                u.setAvatar(null);
+                dao.merge(u);
+            });
+            this.userInfo = json("sub", "idp-subject-1", "preferred_username", eruptUpmsProp.getDefaultAccount(),
+                    "phone_number", "13800000000", "picture", "https://idp.example.com/b.png");
+            // sync is on by default; this half of the test is about the conservative mode
+            this.configure(sso -> sso.setSyncProfile(false));
+            assertNotNull(param(this.callback(param(this.authorize(), "state")), "ssoTicket"));
+            EruptUser after = this.defaultUser();
+            assertEquals("https://idp.example.com/b.png", after.getAvatar(), "an empty avatar is filled from the provider");
+            assertEquals("13900000000", after.getPhone(), "a phone somebody set by hand is kept while sync is off");
+
+            this.configure(sso -> sso.setSyncProfile(true));
+            assertNotNull(param(this.callback(param(this.authorize(), "state")), "ssoTicket"));
+            assertEquals("13800000000", this.defaultUser().getPhone(), "with sync on the provider wins");
+        } finally {
+            transactionTemplate.executeWithoutResult(status -> {
+                EruptUser u = this.defaultUser();
+                u.setPhone(original[0]);
+                u.setAvatar(original[1]);
+                dao.merge(u);
+            });
+        }
+    }
+
+    @Test
+    void issuerWithoutDiscoveryDocumentIsRefused() {
+        // the stand-in provider answers /.well-known with a plain 404 page, as Feishu or GitHub would
+        String base = "http://localhost:" + idp.getAddress().getPort();
+        EruptSso draft = new EruptSso();
+        draft.setIssuer(base);
+        EruptWebApiRuntimeException atSave = assertThrows(EruptWebApiRuntimeException.class, () -> ssoDataProxy.beforeUpdate(draft),
+                "saving an issuer that publishes no discovery document has to fail on the form");
+        assertTrue(atSave.getMessage().contains("openid-configuration"), atSave.getMessage());
+
+        this.configure(sso -> {
+            sso.setIssuer(base);
+            sso.setAuthorizeUrl(null);
+            sso.setTokenUrl(null);
+            sso.setUserInfoUrl(null);
+        });
+        ResponseEntity<Void> resp = noRedirect.getForEntity(this.url("/erupt-api/sso/authorize/" + PROVIDER), Void.class);
+        assertEquals(HttpStatus.FOUND, resp.getStatusCode());
+        assertNotNull(param(resp.getHeaders().getLocation().toString(), "ssoError"), "a row saved by other means still fails clearly at login");
+    }
+
+    @Test
+    void defaultRolesAreGrantedOnCreationAndToppedUpOnLoginWhenAsked() {
+        EruptRole first = this.role("sso-role-a");
+        EruptRole second = this.role("sso-role-b");
+        try {
+            this.configure(sso -> {
+                sso.setAutoCreate(true);
+                sso.setDefaultRoles(new HashSet<>(Set.of(first)));
+            });
+            this.userInfo = json("sub", "idp-subject-4", "preferred_username", NEW_ACCOUNT);
+            assertNotNull(param(this.callback(param(this.authorize(), "state")), "ssoTicket"));
+            assertEquals(Set.of("sso-role-a"), this.roleCodes(NEW_ACCOUNT), "a created user starts with the default roles");
+
+            // the provider gains a role later; nothing happens until the row asks for top-ups
+            this.configure(sso -> sso.setDefaultRoles(new HashSet<>(Set.of(first, second))));
+            assertNotNull(param(this.callback(param(this.authorize(), "state")), "ssoTicket"));
+            assertEquals(Set.of("sso-role-a"), this.roleCodes(NEW_ACCOUNT));
+
+            this.configure(sso -> sso.setGrantRolesOnLogin(true));
+            assertNotNull(param(this.callback(param(this.authorize(), "state")), "ssoTicket"));
+            assertEquals(Set.of("sso-role-a", "sso-role-b"), this.roleCodes(NEW_ACCOUNT), "with top-ups on, the missing role is added");
+        } finally {
+            transactionTemplate.executeWithoutResult(status -> {
+                EruptSso sso = dao.lambdaQuery(EruptSso.class).eq(EruptSso::getCode, PROVIDER).one();
+                sso.setDefaultRoles(new HashSet<>());
+                dao.merge(sso);
+                EruptUser created = dao.lambdaQuery(EruptUser.class).eq(EruptUser::getAccount, NEW_ACCOUNT).one();
+                if (null != created) {
+                    created.setRoles(new HashSet<>());
+                    dao.merge(created);
+                }
+                dao.lambdaQuery(EruptRole.class).in(EruptRole::getCode, java.util.List.of("sso-role-a", "sso-role-b")).list()
+                        .forEach(it -> dao.delete(dao.find(EruptRole.class, it.getId())));
+            });
+        }
+    }
+
+    private EruptRole role(String code) {
+        return transactionTemplate.execute(status -> {
+            EruptRole role = new EruptRole();
+            role.setCode(code);
+            role.setName(code);
+            role.setSort(0);
+            role.setStatus(true);
+            dao.persist(role);
+            return role;
+        });
+    }
+
+    private Set<String> roleCodes(String account) {
+        return transactionTemplate.execute(status -> dao.lambdaQuery(EruptUser.class).eq(EruptUser::getAccount, account).one()
+                .getRoles().stream().map(EruptRole::getCode).collect(java.util.stream.Collectors.toSet()));
+    }
+
+    private EruptUser defaultUser() {
+        return dao.lambdaQuery(EruptUser.class).eq(EruptUser::getAccount, eruptUpmsProp.getDefaultAccount()).one();
+    }
+
+    private void configure(java.util.function.Consumer<EruptSso> change) {
+        transactionTemplate.executeWithoutResult(status -> {
+            EruptSso sso = dao.lambdaQuery(EruptSso.class).eq(EruptSso::getCode, PROVIDER).one();
+            change.accept(sso);
+            dao.merge(sso);
+        });
     }
 
     // ------------------------------------------------------------------ steps

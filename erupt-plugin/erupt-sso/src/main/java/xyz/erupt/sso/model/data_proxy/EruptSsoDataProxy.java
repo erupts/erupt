@@ -40,13 +40,14 @@ public class EruptSsoDataProxy implements DataProxy<EruptSso> {
     }
 
     /**
-     * Either the issuer answers for the endpoints or all three are spelled out; half of each
-     * is a row that only fails at the moment someone tries to sign in.
+     * Either all three endpoints are spelled out, or the issuer has to answer for the missing
+     * ones through its discovery document, which is fetched right here: a row that only fails
+     * at the moment someone tries to sign in is a row nobody can debug.
      */
     private void requireEndpoints(EruptSso eruptSso) {
-        Erupts.requireTrue(StringUtils.isNotBlank(eruptSso.getIssuer())
-                        || StringUtils.isNoneBlank(eruptSso.getAuthorizeUrl(), eruptSso.getTokenUrl(), eruptSso.getUserInfoUrl()),
-                I18nTranslate.$translate("sso.endpoint_missing"));
+        if (StringUtils.isNoneBlank(eruptSso.getAuthorizeUrl(), eruptSso.getTokenUrl(), eruptSso.getUserInfoUrl())) return;
+        Erupts.requireTrue(StringUtils.isNotBlank(eruptSso.getIssuer()), I18nTranslate.$translate("sso.endpoint_missing"));
+        eruptSsoService.verifyDiscovery(eruptSso.getIssuer());
     }
 
 }
