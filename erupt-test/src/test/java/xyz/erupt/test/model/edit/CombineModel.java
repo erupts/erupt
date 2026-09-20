@@ -1,5 +1,6 @@
 package xyz.erupt.test.model.edit;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
@@ -14,12 +15,15 @@ import xyz.erupt.jpa.model.BaseModel;
 @Getter
 @Setter
 @Entity
-@Erupt(name = "CombineEdit")
+@Erupt(name = "CombineEdit", authVerify = false)
 public class CombineModel extends BaseModel {
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @EruptField(
-            views = @View(title = "Detail", column = "name"),
+            views = {
+                    @View(title = "Detail", column = "name"),
+                    @View(title = "Detail Description", column = "description")
+            },
             edit = @Edit(title = "Detail", type = EditType.COMBINE)
     )
     private RefTargetModel detail;
