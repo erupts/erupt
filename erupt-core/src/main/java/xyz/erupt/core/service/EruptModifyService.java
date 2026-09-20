@@ -55,6 +55,8 @@ public class EruptModifyService {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
+    private final EruptTreeLevelService eruptTreeLevelService;
+
     @SneakyThrows
     public Object eruptInsertDataProcess(EruptModel eruptModel, JsonObject data) {
         Map<String, Object> extraData = new HashMap<>();
@@ -116,6 +118,7 @@ public class EruptModifyService {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
         }
         Object obj = this.eruptInsertDataProcess(eruptModel, data);
+        eruptTreeLevelService.verify(eruptModel, obj, true);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeAdd(obj)));
         DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).addData(eruptModel, obj);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterAdd(obj)));
@@ -192,6 +195,7 @@ public class EruptModifyService {
                 : GsonFactory.getGson().fromJson(value, field.getGenericType()));
         EruptUtil.dataTargetField(fieldModel, data, old, SceneEnum.EDIT);
         Object obj = old;
+        eruptTreeLevelService.verify(eruptModel, obj, false);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
         DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).editData(eruptModel, obj);
         JsonObject maskedCell = new JsonObject();
@@ -227,6 +231,7 @@ public class EruptModifyService {
         }
         OldEntityTL.set(oldData);
         Object obj = EruptUtil.dataTarget(eruptModel, o, old, SceneEnum.EDIT);
+        eruptTreeLevelService.verify(eruptModel, obj, false);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
         DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).editData(eruptModel, obj);
         // Mask PASSWORD fields on both sides so plaintext credentials never reach the log

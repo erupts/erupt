@@ -28,6 +28,9 @@ public @interface Tree {
     @Comment("Number of expanded levels")
     int expandLevel() default 999;
 
+    @Comment("Deepest level a node may sit at, roots being level 1; 0 means unlimited. The UI stops offering \"add child\" on nodes at this level and the server refuses any save that would place a node deeper")
+    int maxLevel() default 0;
+
     @Transient
     @Comment("Identifies what characteristic of pid marks a root node; defaults to null as the root if not configured; must be used together with filter")
     Expr rootPid() default @Expr;
