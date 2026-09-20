@@ -57,7 +57,21 @@ public class EruptJobAction implements Job {
         EruptJobProp prop = EruptSpringUtil.getBean(EruptJobProp.class);
         // Look the bean up in the container directly: EruptSpringUtil.getBean(Class) would reflection-instantiate
         // the LockProvider interface (it carries no stereotype annotation), which is impossible.
-        LockingTaskExecutor executor = new DefaultLockingTaskExecutor(EruptSpringUtil.getApplicationContext().getBean(LockProvider.class));
+        LockProvider lockProvider = EruptSpringUtil.getApplicationContext().getBeanProvider(LockProvider.class).getIfAvailable();
+        if (null == lockProvider) {
+            // Never fall back to running unlocked: in a cluster that means every node runs the job. Refuse,
+            // and say so where an operator looks, the job log and the failure notification, not only in stdout
+            String message = "Cluster lock provider missing: erupt.redis-session is enabled but no ShedLock " +
+                    "LockProvider bean exists, job skipped. Check how the host application component scans xyz.erupt.";
+            log.error("Job [{}] {}", eruptJob.getName(), message);
+            EruptJobLog eruptJobLog = newLog(eruptJob);
+            eruptJobLog.setStatus(false);
+            eruptJobLog.setErrorInfo(message);
+            notifyError(eruptJob, javaMailSender, message);
+            saveLog(eruptJob, eruptJobLog);
+            return;
+        }
+        LockingTaskExecutor executor = new DefaultLockingTaskExecutor(lockProvider);
         LockConfiguration lockConfig = new LockConfiguration(
                 Instant.now(),
                 JOB_KEY + eruptJob.getCode(),
@@ -79,9 +93,7 @@ public class EruptJobAction implements Job {
 
     @SuppressWarnings("StringConcatenationArgumentToLogCall")
     void trigger(EruptJob eruptJob, JavaMailSenderImpl javaMailSender) {
-        EruptJobLog eruptJobLog = new EruptJobLog();
-        eruptJobLog.setJobId(eruptJob.getId());
-        eruptJobLog.setStartTime(new Date());
+        EruptJobLog eruptJobLog = newLog(eruptJob);
         EruptJobHandler jobHandler = null;
         try {
             jobHandler = EruptSpringUtil.getBeanByPath(eruptJob.getHandler(), EruptJobHandler.class);
@@ -95,24 +107,39 @@ public class EruptJobAction implements Job {
             String exceptionTraceStr = ExceptionUtils.getStackTrace(e);
             eruptJobLog.setErrorInfo(exceptionTraceStr);
             if (null != jobHandler) jobHandler.error(e, eruptJob.getHandlerParam());
-            // Error Notification
-            if (StringUtils.isNotBlank(eruptJob.getNotifyEmails())) {
-                if (null == javaMailSender) {
-                    log.warn("Sending mailbox not configured");
-                } else {
-                    SimpleMailMessage message = new SimpleMailMessage();
-                    message.setSubject(eruptJob.getName() + " job error ！！！");
-                    message.setText(exceptionTraceStr);
-                    message.setTo(eruptJob.getNotifyEmails().split("\\|"));
-                    message.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
-                    javaMailSender.send(message);
-                }
-            }
+            notifyError(eruptJob, javaMailSender, exceptionTraceStr);
         }
+        saveLog(eruptJob, eruptJobLog);
+    }
+
+    private static EruptJobLog newLog(EruptJob eruptJob) {
+        EruptJobLog eruptJobLog = new EruptJobLog();
+        eruptJobLog.setJobId(eruptJob.getId());
+        eruptJobLog.setStartTime(new Date());
+        return eruptJobLog;
+    }
+
+    // Persist the outcome unless the job opted out of logging
+    private static void saveLog(EruptJob eruptJob, EruptJobLog eruptJobLog) {
         eruptJobLog.setHandlerParam(eruptJob.getHandlerParam());
         eruptJobLog.setEndTime(new Date());
         if (null == eruptJob.getRecordLog() || eruptJob.getRecordLog()) {
             EruptSpringUtil.getBean(EruptJobService.class).saveJobLog(eruptJobLog);
         }
+    }
+
+    // Mail the configured recipients about a failure, when a sender is available
+    private static void notifyError(EruptJob eruptJob, JavaMailSenderImpl javaMailSender, String errorText) {
+        if (StringUtils.isBlank(eruptJob.getNotifyEmails())) return;
+        if (null == javaMailSender) {
+            log.warn("Sending mailbox not configured");
+            return;
+        }
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setSubject(eruptJob.getName() + " job error ！！！");
+        message.setText(errorText);
+        message.setTo(eruptJob.getNotifyEmails().split("\\|"));
+        message.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
+        javaMailSender.send(message);
     }
 }
