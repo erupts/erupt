@@ -2,7 +2,7 @@ window.eruptSiteConfig = {
     domain: "",
     fileDomain: "",
     title: "Erupt Engine",
-    desc: "Common Data Framework",
+    desc: "Low-Code & AI Harness",
     dialogLogin: false,
     copyright: true, // whether to show the copyright footer
     tabReuse: false, // enable multi-tab route reuse by default (the user's choice in the settings drawer takes precedence)
@@ -28,9 +28,15 @@ window.eruptSiteConfig = {
         dark: false,        // false | true | "auto" (follow the OS color scheme)
         compact: false,     // denser spacing across the UI
         skin: "default",    // "default" | "brutalist" | "liquid-glass" | "workspace" (chat-app frame: dark brand-tinted sidebar + header, content as a rounded card) | "classic" (Ant Design Pro: navy sidebar, white header)
-        // workspaceFrame: "aubergine", // workspace skin only — frame gradient preset: "aubergine" | "ocean" | "lagoon" | "dusk" | "ember" | "rose" | "forest" | "graphite" | "midnight" (unset = derived from primaryColor)
+        // workspaceFrame: "sky", // workspace skin only — navigation frame preset (unset = derived from primaryColor):
+        //   light: "mist" | "sky" | "azure" | "salt" | "gray" | "mint" | "mint-chip" | "lime" | "citrus" | "banana" | "brass" | "almond" | "peach"
+        //          | "dawn" | "blush" | "raspberry" | "mauve" | "lilac" | "lavender-mint"
+        //   dark:  "deep-sea" | "lagoon" | "indigo" | "slate" | "starry" | "teal" | "jade" | "pine" | "clementine" | "wine" | "aubergine" | "plum" | "graphite"
         menuMode: "normal", // "normal" (sidebar) | "split" (categories in the header) | "dual" (two-column sidebar) | "top" (whole menu in the header, no sidebar) | "group" (categories as flat group titles) | "top-split" (categories in the header, their children in a second row, no sidebar)
         // formPanelMode: "center"  // "center" (floating dialog) | "side" (right panel) | "full" (fullscreen) — how record forms open
+        // loginLayout: "center",   // login page layout: "center" (card on the artwork) | "cover" (form docked right) | "wide" (one wide card, brand left)
+        //                          //   | "wallpaper" (full-screen picture, frosted card) | "poster" (headline brand, small card)
+        // loginBackground: "https://oos.erupt.xyz/test/2026-09-20/login-bg-2.jpg", // login page picture, replaces the stock artwork in every layout ("wallpaper" adds the frosted card)
     },
     r_tools: [{
         mobileHidden: true,

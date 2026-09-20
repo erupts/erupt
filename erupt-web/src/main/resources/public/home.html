@@ -501,19 +501,19 @@
     // ── strings ─────────────────────────────────────────────────────────────
     var L = {
         "zh-CN": {morning: "早上好", noon: "中午好", afternoon: "下午好", evening: "晚上好", night: "夜深了",
-            menus: "可访问菜单", models: "数据模型", unread: "未读通知", pinned: "常用菜单", quick: "常用",
+            menus: "可访问菜单", models: "数据模型", unread: "未读通知", pinned: "常用菜单", quick: "常用", frequent: "常去",
             recent: "快捷入口", home: "首页", none: "在左侧菜单点击图钉，把常用功能钉在这里",
             opened: "最近打开", openedNone: "打开过的菜单会出现在这里",
             today: "今天", yesterday: "昨天", earlier: "更早",
             dark: "深色模式", light: "浅色模式", skin: "主题风格", skinDefault: "默认"},
         "zh-TW": {morning: "早上好", noon: "中午好", afternoon: "下午好", evening: "晚上好", night: "夜深了",
-            menus: "可存取選單", models: "資料模型", unread: "未讀通知", pinned: "常用選單", quick: "常用",
+            menus: "可存取選單", models: "資料模型", unread: "未讀通知", pinned: "常用選單", quick: "常用", frequent: "常去",
             recent: "快捷入口", home: "首頁", none: "在左側選單點擊圖釘，把常用功能釘在這裡",
             opened: "最近開啟", openedNone: "開啟過的選單會出現在這裡",
             today: "今天", yesterday: "昨天", earlier: "更早",
             dark: "深色模式", light: "淺色模式", skin: "主題風格", skinDefault: "預設"},
         "en-US": {morning: "Good morning", noon: "Good noon", afternoon: "Good afternoon", evening: "Good evening", night: "Still up",
-            menus: "Menus", models: "Data models", unread: "Unread notices", pinned: "Pinned menus", quick: "Pinned",
+            menus: "Menus", models: "Data models", unread: "Unread notices", pinned: "Pinned menus", quick: "Pinned", frequent: "Frequent",
             recent: "Quick access", home: "Home", none: "Pin a menu from the sidebar to keep it here",
             opened: "Recently opened", openedNone: "Menus you open will show up here",
             today: "Today", yesterday: "Yesterday", earlier: "Earlier",
@@ -762,39 +762,55 @@
         return s;
     }
 
-    var chipsDone = false;
+    // Quick access: the menus the user pinned in the sidebar; without pins, the
+    // menus they open most (visit counts from the "recently opened" list); with
+    // neither, a hint. Re-run whenever either list changes in the shell.
+    function mostVisited() {
+        var byPath = {};
+        leaves.forEach(function (m) { byPath[menuPath(m.type, m.value)] = m; });
+        return recentList()
+            .filter(function (r) { return byPath[r.link] && (r.count || 1) > 1; })
+            .sort(function (a, b) { return (b.count || 1) - (a.count || 1) || b.at - a.at; })
+            .slice(0, 8)
+            .map(function (r) { return byPath[r.link]; });
+    }
     function placeChips() {
-        if (!menusReady || !userReady || chipsDone) return;
-        chipsDone = true;
-        var keys = pinnedKeys();
+        if (!menusReady || !userReady) return;
         var pinned = [];
-        keys.forEach(function (k) {
+        pinnedKeys().forEach(function (k) {
             var hit = leaves.filter(function (m) { return menuPath(m.type, m.value) === k || m.name === k; })[0];
             if (hit) pinned.push(hit);
         });
-        var list = pinned.length ? pinned : leaves.slice(0, 8);
-        $("qh").textContent = pinned.length ? T.quick : T.recent;
+        var list = pinned.length ? pinned : mostVisited();
+        $("qh").textContent = pinned.length ? T.quick : list.length ? T.frequent : T.recent;
         var box = $("chips");
+        box.textContent = "";
         if (indexNode) box.appendChild(chip(indexNode, true));
         list.forEach(function (m) { box.appendChild(chip(m, false)); });
-        if (!list.length && !indexNode) box.appendChild(el("div", "empty", T.none));
+        if (!list.length) box.appendChild(el("div", "empty", T.none));
     }
     // ── recently opened (the layout appends to erupt_menu_recent on every navigation) ──
     var RECENT_KEY = "erupt_menu_recent";
     function recentList() {
         try { return JSON.parse(parentWin.localStorage.getItem(RECENT_KEY) || "[]"); } catch (e) { return []; }
     }
+    // Pins and visits are written by the shell in the parent window; those writes
+    // arrive here as storage events (never for this window's own writes), so the
+    // two blocks follow the sidebar without a reload.
+    window.addEventListener("storage", function (e) {
+        if (!e.key || e.key === "erupt_menu_favorites") placeChips();
+        if (!e.key || e.key === RECENT_KEY) { placeChips(); placeRecent(); }
+    });
     function recentRemove(link) {
         try {
             parentWin.localStorage.setItem(RECENT_KEY, JSON.stringify(recentList().filter(function (r) { return r.link !== link; })));
         } catch (e) { /* storage unavailable */ }
     }
-    var recentDone = false;
     function placeRecent() {
-        if (!menusReady || recentDone) return;
-        recentDone = true;
+        if (!menusReady) return;
         $("rh").textContent = T.opened;
         var box = $("rchips");
+        box.textContent = "";
         // only menus the account can still reach, matched by their route
         var byPath = {};
         leaves.forEach(function (m) { byPath[menuPath(m.type, m.value)] = m; });

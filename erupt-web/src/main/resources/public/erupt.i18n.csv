@@ -1261,6 +1261,14 @@ ai_assist.stop,停止,停止,Stop,Arrêter,停止,중지,Остановить,De
 setting.skin,主题风格,主題風格,Theme style,Style de thème,テーマスタイル,테마 스타일,Стиль темы,Estilo de tema,Themenstil,Estilo do tema,Gaya tema,نمط السمة
 setting.skin-default,默认,預設,Default,Défaut,デフォルト,기본,По умолчанию,Predeterminado,Standard,Padrão,Default,افتراضي
 setting.workspace-frame,导航配色,導航配色,Navigation color,Couleur de navigation,ナビゲーションカラー,내비게이션 색상,Цвет навигации,Color de navegación,Navigationsfarbe,Cor de navegação,Warna navigasi,لون التنقل
+setting.frame-light,浅色,淺色,Light,Clair,ライト,밝은,Светлые,Claro,Hell,Claro,Terang,فاتح
+setting.frame-dark,深色,深色,Dark,Sombre,ダーク,어두운,Тёмные,Oscuro,Dunkel,Escuro,Gelap,داكن
+login.layout,登录页布局,登入頁佈局,Login layout,Disposition de connexion,ログインレイアウト,로그인 레이아웃,Макет входа,Diseño de inicio de sesión,Anmeldelayout,Layout de login,Tata letak login,تخطيط تسجيل الدخول
+login.layout-center,居中卡片,居中卡片,Centered card,Carte centrée,中央カード,중앙 카드,Карточка по центру,Tarjeta centrada,Zentrierte Karte,Cartão centralizado,Kartu tengah,بطاقة في المنتصف
+login.layout-cover,侧边面板,側邊面板,Side panel,Panneau latéral,サイドパネル,사이드 패널,Боковая панель,Panel lateral,Seitenpanel,Painel lateral,Panel samping,لوحة جانبية
+login.layout-wide,宽卡分栏,寬卡分欄,Wide card,Carte large,ワイドカード,와이드 카드,Широкая карточка,Tarjeta ancha,Breite Karte,Cartão largo,Kartu lebar,بطاقة عريضة
+login.layout-wallpaper,壁纸玻璃,壁紙玻璃,Wallpaper,Fond d'écran,壁紙,배경 화면,Обои,Fondo de pantalla,Hintergrundbild,Papel de parede,Wallpaper,خلفية
+login.layout-poster,品牌满屏,品牌滿屏,Poster,Affiche,ポスター,포스터,Постер,Póster,Poster,Pôster,Poster,ملصق
 ai_assist.title,AI 助手,AI 助手,AI assistant,Assistant IA,AI アシスタント,AI 어시스턴트,AI-помощник,Asistente de IA,KI-Assistent,Assistente de IA,Asisten AI,مساعد الذكاء الاصطناعي
 ai_assist.pill,AI,AI,AI,AI,AI,AI,AI,AI,AI,AI,AI,AI
 micro_app.err_cors,无法读取子应用，请检查目标是否为后台域名放行了 CORS,無法讀取子應用，請檢查目標是否為後台域名放行了 CORS,Cannot read the sub-app; check that the target allows CORS for the admin domain,Impossible de lire la sous-application ; vérifiez que la cible autorise le CORS pour le domaine d'administration,サブアプリを読み取れません。対象が管理ドメインへの CORS を許可しているか確認してください,하위 앱을 읽을 수 없습니다. 대상이 관리 도메인에 대해 CORS를 허용하는지 확인하세요,"Не удалось прочитать подприложение; проверьте, разрешает ли цель CORS для домена администратора",No se puede leer la subaplicación; compruebe que el destino permite CORS para el dominio de administración,"Sub-App kann nicht gelesen werden; prüfen Sie, ob das Ziel CORS für die Admin-Domain erlaubt",Não é possível ler a subaplicação; verifique se o destino permite CORS para o domínio de administração,Tidak dapat membaca sub-aplikasi; periksa apakah target mengizinkan CORS untuk domain admin,تعذر قراءة التطبيق الفرعي؛ تحقق من أن الهدف يسمح بـ CORS لنطاق الإدارة
