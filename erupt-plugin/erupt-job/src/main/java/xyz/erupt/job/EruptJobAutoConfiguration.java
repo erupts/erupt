@@ -5,7 +5,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.provider.redis.spring.RedisLockProvider;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -56,12 +55,16 @@ public class EruptJobAutoConfiguration implements EruptModule {
     private EruptJobProp eruptJobProp;
 
     /**
-     * ShedLock lock provider for multi-instance job dedup. Created only when redis session is enabled
-     * (erupt.redis-session=true) and a RedisConnectionFactory exists, so single-instance deployments
-     * pay nothing. {@link xyz.erupt.job.service.EruptJobAction} looks this bean up at fire time.
+     * ShedLock lock provider for multi-instance job dedup, created whenever redis session is enabled
+     * (erupt.redis-session=true); deployments without it pay nothing. The property is the only
+     * condition on purpose: a redis session already requires a RedisConnectionFactory, so if one is
+     * missing the application should fail at startup with a clear message rather than at fire time.
+     * A @ConditionalOnBean here would be evaluated too early whenever the host application component
+     * scans xyz.erupt (a plain @ComponentScan has no AutoConfigurationExcludeFilter), and this class
+     * would then be processed ahead of the Redis auto configuration and silently lose the bean.
+     * {@link xyz.erupt.job.service.EruptJobAction} looks this bean up at fire time.
      */
     @Bean
-    @ConditionalOnBean(RedisConnectionFactory.class)
     @ConditionalOnProperty(prefix = "erupt", name = "redis-session", havingValue = "true")
     public LockProvider eruptJobLockProvider(RedisConnectionFactory redisConnectionFactory) {
         return new RedisLockProvider(redisConnectionFactory);
