@@ -352,6 +352,26 @@
             border-radius: 3px;
             background: linear-gradient(135deg, rgba(120, 170, 255, 0.85), rgba(255, 140, 190, 0.7) 55%, rgba(110, 230, 210, 0.8));
         }
+        /* workspace: a deep brand frame with the light content card inset */
+        .sw.workspace i {
+            border-color: transparent;
+            border-radius: 3px;
+            background: linear-gradient(#f0f2f5, #f0f2f5) 6px 3px / 5px 8px no-repeat,
+                        color-mix(in srgb, var(--accent) 42%, #151a26);
+        }
+        /* classic: navy column beside a white bar */
+        .sw.classic i {
+            border-color: #001529;
+            background: linear-gradient(90deg, #001529 45%, #fff 45%);
+        }
+        html.dark .sw.classic i {
+            border-color: #434343;
+            background: linear-gradient(90deg, #000 45%, #141414 45%);
+        }
+        html.dark .sw.workspace i {
+            background: linear-gradient(#000, #000) 6px 3px / 5px 8px no-repeat,
+                        color-mix(in srgb, var(--accent) 18%, #0d0f14);
+        }
         html.dark .sw i { background: #2a2c33; }
         html.dark .sw.brutalist i { border-color: #f5f5f0; box-shadow: 2px 2px 0 #f5f5f0; background: #141414; }
         .sw.on i { box-shadow: 0 0 0 2px var(--panel), 0 0 0 3.5px var(--accent); }
@@ -411,8 +431,10 @@
                 </div>
                 <div class="seg" id="skinSeg">
                     <button class="sw default" data-skin="default" type="button"><i></i></button>
-                    <button class="sw brutalist" data-skin="brutalist" type="button"><i></i></button>
+                    <button class="sw classic" data-skin="classic" type="button"><i></i></button>
+                    <button class="sw workspace" data-skin="workspace" type="button"><i></i></button>
                     <button class="sw glass" data-skin="liquid-glass" type="button"><i></i></button>
+                    <button class="sw brutalist" data-skin="brutalist" type="button"><i></i></button>
                 </div>
             </div>
             <div class="who">
@@ -592,10 +614,17 @@
     // ── appearance toolbar: same globals / classes / storage as the settings drawer ──
     (function tools() {
         if (!parentRoot) { $("tools").hidden = true; return; }
+        // site config may lock the appearance (eruptSiteConfig.theme.customizable = false):
+        // light/dark stays a per-user choice, the skin swatches go
+        var siteTheme = (parentWin.eruptSiteConfig && parentWin.eruptSiteConfig.theme) || {};
+        var skinLocked = siteTheme.customizable === false;
+        $("skinSeg").hidden = skinLocked;
         var SKINS = [
             {value: "default", cls: null, key: null, label: T.skinDefault},
-            {value: "brutalist", cls: "brutalist-theme", key: "brutalist-theme", label: "Brutalist"},
-            {value: "liquid-glass", cls: "liquid-glass", key: "liquid-glass", label: "Liquid Glass"}
+            {value: "classic", cls: "classic", key: "classic", label: "Classic"},
+            {value: "workspace", cls: "workspace", key: "workspace", label: "Workspace"},
+            {value: "liquid-glass", cls: "liquid-glass", key: "liquid-glass", label: "Liquid Glass"},
+            {value: "brutalist", cls: "brutalist-theme", key: "brutalist-theme", label: "Brutalist"}
         ];
         function currentSkin() {
             for (var i = 1; i < SKINS.length; i++) if (parentRoot.classList.contains(SKINS[i].cls)) return SKINS[i];
@@ -624,11 +653,16 @@
         swatches.forEach(function (b) {
             b.addEventListener("click", function () {
                 var next = SKINS.filter(function (sk) { return sk.value === b.getAttribute("data-skin"); })[0];
-                SKINS.forEach(function (sk) {
-                    if (!sk.cls) return;
-                    parentRoot.classList.toggle(sk.cls, sk === next);
-                    try { parentWin.localStorage.setItem(sk.key, String(sk === next)); } catch (e) {}
-                });
+                if (typeof parentWin.eruptApplySkin === "function") {
+                    // the app's own switch: also swaps the theme color slot and the header bar
+                    parentWin.eruptApplySkin(next.value);
+                } else {
+                    SKINS.forEach(function (sk) {
+                        if (!sk.cls) return;
+                        parentRoot.classList.toggle(sk.cls, sk === next);
+                        try { parentWin.localStorage.setItem(sk.key, String(sk === next)); } catch (e) {}
+                    });
+                }
                 paint();
             });
         });
