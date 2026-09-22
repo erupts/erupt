@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.decision.Decision;
 import xyz.erupt.decision.core.DecisionCore;
 import xyz.erupt.decision.model.DecisionDef;
@@ -28,14 +29,17 @@ public class DecisionService {
     @Resource
     private EruptDao eruptDao;
 
-    /** The model everything falls back to; any enabled one will do when none is marked default */
+    /**
+     * The model everything falls back to: the enabled row that carries the flag, and nothing else.
+     * Standing in for it with whichever row came back first would let a judgement be answered by a
+     * model nobody chose, with nothing on screen to say so.
+     */
     public DecisionModel defaultModel() {
         DecisionModel model = eruptDao.lambdaQuery(DecisionModel.class)
                 .eq(DecisionModel::getDefaultModel, true).eq(DecisionModel::getEnable, true).limit(1).one();
         if (null == model) {
-            model = eruptDao.lambdaQuery(DecisionModel.class).eq(DecisionModel::getEnable, true).limit(1).one();
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("decision.no_default_model"));
         }
-        if (null == model) throw new EruptWebApiRuntimeException("No decision model is configured");
         return model;
     }
 
@@ -67,12 +71,26 @@ public class DecisionService {
         return this.run(code, state, null);
     }
 
-    /** Asks a decision declared in the admin; an explicit model wins, then its own, then the default */
+    /** Asks a decision declared in the admin */
     public Decision run(String code, Object state, DecisionModel override) {
         DecisionDef def = this.def(code);
-        DecisionModel config = null != override ? override
-                : null == def.getDecisionModel() ? this.defaultModel() : def.getDecisionModel();
-        return this.evaluate(config, state, questions(def));
+        return this.evaluate(this.config(def, override), state, questions(def));
+    }
+
+    /**
+     * Which model answers a stored decision: an explicit one wins, then the decision's own, then
+     * the default. A locked model stops answering however it was picked — the alternative is to
+     * quietly promote a different one, which is the thing a decision must never do.
+     */
+    public DecisionModel config(DecisionDef def, DecisionModel override) {
+        if (null != override) return override;
+        DecisionModel own = def.getDecisionModel();
+        if (null == own) return this.defaultModel();
+        if (!Boolean.TRUE.equals(own.getEnable())) {
+            throw new EruptWebApiRuntimeException(
+                    I18nTranslate.$translate("decision.model_locked") + " " + own.getName());
+        }
+        return own;
     }
 
     public JsonObject raw(DecisionModel config, JsonObject request) {
@@ -85,14 +103,12 @@ public class DecisionService {
      */
     public JsonObject rawRun(String code, JsonElement state, DecisionModel override) {
         DecisionDef def = this.def(code);
-        DecisionModel config = null != override ? override
-                : null == def.getDecisionModel() ? this.defaultModel() : def.getDecisionModel();
         JsonObject asked = new JsonObject();
         questions(def).forEach((id, question) -> asked.add(id, question.toJson()));
         JsonObject request = new JsonObject();
         request.add("state", state);
         request.add("questions", asked);
-        return this.raw(config, request);
+        return this.raw(this.config(def, override), request);
     }
 
     private static Map<String, Question<?>> questions(DecisionDef def) {
