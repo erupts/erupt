@@ -7,13 +7,20 @@ window.eruptSiteConfig = {
     copyright: true, // whether to show the copyright footer
     tabReuse: false, // enable multi-tab route reuse by default (the user's choice in the settings drawer takes precedence)
     // Logos: leave a key out to use the default, set it to null to show nothing there.
-    logoPath: "assets/logo.svg",  // expanded header logo (default: the bundled erupt mark)
+    // logoPath: null,  // expanded header logo (default: the bundled erupt mark)
     // logoFoldPath: null,           // collapsed header logo (default: follows logoPath)
     // loginLogoPath: null,          // login page logo (default: follows logoPath)
     logoText: "Erupt",
     registerPage: null,
+    // faviconPath: "https://docs.erupt.xyz/icon.svg",
     amapKey: 'da01c124bff9d9be1ad44e04f23aa32e',
     amapSecurityJsCode: "5bf6c7828a97fe987c8292f00629a6d9",
+    // Installed app (PWA). Name, description and color come from logoText / title / desc and the
+    // top bar; this block only adds the icon and the icon's right-click menu.
+    pwa: {
+        // icon: "assets/pwa-icon.svg",             // svg, or a png / jpg / webp (512px or larger)
+        // shortcuts: [{name: "Home", url: "./#/"}], // hash routes work; optional icon / description
+    },
     // Appearance defaults. Each one only applies until the user picks something in the
     // settings drawer; that choice is remembered in the browser and wins from then on.
     theme: {
