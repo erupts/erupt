@@ -1,0 +1,41 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+AI Decision,AI 决策,AI 決策,AI Decision,Décision IA,AI 判断,AI 의사결정,Решения ИИ,Decisión de IA,KI-Entscheidung,Decisão de IA,Keputusan AI,قرار الذكاء الاصطناعي
+Decision,决策,決策,Decision,Décision,判断,의사결정,Решение,Decisión,Entscheidung,Decisão,Keputusan,قرار
+Decision Model,决策模型,決策模型,Decision Model,Modèle de décision,判断モデル,의사결정 모델,Модель решений,Modelo de decisión,Entscheidungsmodell,Modelo de decisão,Model Keputusan,نموذج القرار
+Decision Question,决策问题,決策問題,Decision Question,Question de décision,判断の質問,의사결정 질문,Вопрос решения,Pregunta de decisión,Entscheidungsfrage,Pergunta de decisão,Pertanyaan Keputusan,سؤال القرار
+Decision Code,决策编码,決策編碼,Decision Code,Code de décision,判断コード,의사결정 코드,Код решения,Código de decisión,Entscheidungscode,Código de decisão,Kode Keputusan,رمز القرار
+Question Code,问题编码,問題編碼,Question Code,Code de question,質問コード,질문 코드,Код вопроса,Código de pregunta,Fragecode,Código da pergunta,Kode Pertanyaan,رمز السؤال
+Provider,服务商,服務商,Provider,Fournisseur,プロバイダー,제공자,Провайдер,Proveedor,Anbieter,Fornecedor,Penyedia,المزود
+Type,类型,類型,Type,Type,タイプ,유형,Тип,Tipo,Typ,Tipo,Tipe,النوع
+Instructions,判断说明,判斷說明,Instructions,Instructions,判断の指示,판단 지침,Инструкции,Instrucciones,Anweisungen,Instruções,Instruksi,التعليمات
+Criteria,判断标准,判斷標準,Criteria,Critères,判断基準,판단 기준,Критерии,Criterios,Kriterien,Critérios,Kriteria,المعايير
+Questions,问题列表,問題列表,Questions,Questions,質問一覧,질문 목록,Вопросы,Preguntas,Fragen,Perguntas,Daftar Pertanyaan,الأسئلة
+Options,选项,選項,Options,Options,選択肢,선택지,Варианты,Opciones,Optionen,Opções,Opsi,الخيارات
+Levels,等级,等級,Levels,Niveaux,レベル,등급,Уровни,Niveles,Stufen,Níveis,Tingkatan,المستويات
+Means Yes,是的含义,是的含義,Means Yes,Signifie oui,はいの意味,예의 의미,Значение «да»,Significa sí,Bedeutet Ja,Significa sim,Arti Ya,معنى نعم
+Means No,否的含义,否的含義,Means No,Signifie non,いいえの意味,아니오의 의미,Значение «нет»,Significa no,Bedeutet Nein,Significa não,Arti Tidak,معنى لا
+Connection Test,连接测试,連接測試,Connection Test,Test de connexion,接続テスト,연결 테스트,Проверка подключения,Prueba de conexión,Verbindungstest,Teste de conexão,Uji Koneksi,اختبار الاتصال
+Decision Test,决策测试,決策測試,Decision Test,Test de décision,判断テスト,의사결정 테스트,Тест решения,Prueba de decisión,Entscheidungstest,Teste de decisão,Uji Keputusan,اختبار القرار
+Answers,判断结果,判斷結果,Answers,Réponses,判断結果,판단 결과,Ответы,Respuestas,Antworten,Respostas,Hasil,النتائج
+Yes,是,是,Yes,Oui,はい,예,Да,Sí,Ja,Sim,Ya,نعم
+No,否,否,No,Non,いいえ,아니요,Нет,No,Nein,Não,Tidak,لا
+Probability,概率,機率,Probability,Probabilité,確率,확률,Вероятность,Probabilidad,Wahrscheinlichkeit,Probabilidade,Probabilitas,الاحتمال
+Distribution,概率分布,機率分布,Distribution,Distribution,確率分布,확률 분포,Распределение,Distribución,Verteilung,Distribuição,Distribusi,التوزيع
+Test State,测试内容,測試內容,Test State,Contenu de test,テスト内容,테스트 내용,Тестовые данные,Contenido de prueba,Testinhalt,Conteúdo de teste,Konten Uji,محتوى الاختبار
+Test Run,运行测试,執行測試,Test Run,Exécuter le test,テスト実行,테스트 실행,Запустить тест,Ejecutar prueba,Test ausführen,Executar teste,Jalankan Uji,تشغيل الاختبار
+Confidence,置信度,置信度,Confidence,Confiance,確信度,신뢰도,Уверенность,Confianza,Konfidenz,Confiança,Keyakinan,الثقة
+Timeout (s),超时时间（秒）,逾時時間（秒）,Timeout (s),Délai (s),タイムアウト（秒）,타임아웃(초),Тайм-аут (с),Tiempo de espera (s),Zeitlimit (s),Tempo limite (s),Batas Waktu (d),المهلة (ثانية)
+Max Retries,最大重试次数,最大重試次數,Max Retries,Tentatives max,最大リトライ回数,최대 재시도,Макс. повторов,Reintentos máx.,Max. Wiederholungen,Máx. tentativas,Maks. Percobaan Ulang,أقصى عدد للمحاولات
+Default Decision Model,默认决策模型,預設決策模型,Default Decision Model,Modèle de décision par défaut,デフォルト判断モデル,기본 의사결정 모델,Модель решений по умолчанию,Modelo de decisión predeterminado,Standard-Entscheidungsmodell,Modelo de decisão padrão,Model Keputusan Default,نموذج القرار الافتراضي
+Name,名称,名稱,Name,Nom,名前,이름,Название,Nombre,Name,Nome,Nama,الاسم
+Model,模型,模型,Model,Modèle,モデル,모델,Модель,Modelo,Modell,Modelo,Model,النموذج
+API Domain,API 域名,API 域名,API Domain,Domaine API,APIドメイン,API 도메인,Домен API,Dominio API,API-Domain,Domínio da API,Domain API,نطاق API
+API Key,API Key,API Key,API Key,Clé API,APIキー,API 키,API-ключ,Clave API,API-Schlüssel,Chave de API,Kunci API,مفتاح API
+Status,状态,狀態,Status,Statut,ステータス,상태,Статус,Estado,Status,Estado,Status,الحالة
+Active,激活,激活,Active,Actif,アクティブ,활성,Активный,Activo,Aktiv,Ativo,Aktif,نشط
+Locked,锁定,鎖定,Locked,Verrouillé,ロック中,잠금,Заблокирован,Bloqueado,Gesperrt,Bloqueado,Terkunci,مقفل
+Remark,备注,備註,Remark,Remarque,備考,비고,Примечание,Observación,Bemerkung,Observação,Keterangan,ملاحظة
+Sort,排序,排序,Sort,Tri,並び順,정렬,Сортировка,Orden,Sortierung,Ordenação,Urutan,الترتيب
+decision.no_default_model,没有启用的默认决策模型，请先设置一个,沒有啟用的預設決策模型，請先設定一個,No enabled decision model is marked as default,Aucun modèle de décision activé n'est défini par défaut,有効な既定の判断モデルが設定されていません,기본으로 지정된 활성 의사결정 모델이 없습니다,Нет включённой модели решений по умолчанию,Ningún modelo de decisión activo está marcado como predeterminado,Kein aktives Entscheidungsmodell ist als Standard markiert,Nenhum modelo de decisão ativo está marcado como padrão,Tidak ada model keputusan aktif yang ditandai sebagai default,لا يوجد نموذج قرار مُفعَّل محدد كافتراضي
+decision.model_locked,该决策指定的模型已锁定:,該決策指定的模型已鎖定:,The model this decision is pinned to is locked:,Le modèle associé à cette décision est verrouillé :,この判断に指定されたモデルはロックされています:,이 의사결정에 지정된 모델이 잠겨 있습니다:,"Модель, закреплённая за этим решением, заблокирована:",El modelo asignado a esta decisión está bloqueado:,Das für diese Entscheidung festgelegte Modell ist gesperrt:,O modelo atribuído a esta decisão está bloqueado:,Model yang ditetapkan untuk keputusan ini terkunci:,النموذج المرتبط بهذا القرار مقفل:
+decision.default_model_locked,锁定的模型不能设为默认,鎖定的模型不能設為預設,A locked model cannot be made the default,Un modèle verrouillé ne peut pas devenir le modèle par défaut,ロック中のモデルを既定にはできません,잠긴 모델은 기본으로 설정할 수 없습니다,Заблокированную модель нельзя сделать моделью по умолчанию,Un modelo bloqueado no puede establecerse como predeterminado,Ein gesperrtes Modell kann nicht zum Standard werden,Um modelo bloqueado não pode ser definido como padrão,Model terkunci tidak dapat dijadikan default,لا يمكن تعيين نموذج مقفل كافتراضي
