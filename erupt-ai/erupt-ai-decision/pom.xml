@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>xyz.erupt</groupId>
+        <artifactId>erupt</artifactId>
+        <version>2.2.0</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>erupt-ai-decision</artifactId>
+    <name>Erupt : AI Decision</name>
+    <description>System One decision layer — typed, calibrated judgements (choice / score / yes-no) a program can branch on. Ships a Java API, a stored decision definition callable by code, and an HTTP endpoint that keeps the provider key on the server.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-data-jpa</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+    </dependencies>
+</project>

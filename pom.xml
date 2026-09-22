@@ -101,6 +101,7 @@
         <module>erupt-ai/erupt-ai-staff</module>
         <module>erupt-ai/erupt-ai-canvas</module>
         <module>erupt-ai/erupt-ai-rag</module>
+        <module>erupt-ai/erupt-ai-decision</module>
 
         <!-- Support (shared capabilities) -->
         <module>erupt-support/erupt-toolkit</module>
