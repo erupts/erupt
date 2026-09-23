@@ -63,7 +63,7 @@ public class DecisionModel extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "Model"),
-            edit = @Edit(title = "Model", notNull = true, desc = "An alias such as jev-latest, or a pinned version",
+            edit = @Edit(title = "Model", notNull = true, desc = "Jev: an alias such as jev-latest, or a pinned version. Laya: auto, english, multilingual or typed-decisions",
                     search = @Search(operator = QueryExpression.LIKE))
     )
     private String model;
