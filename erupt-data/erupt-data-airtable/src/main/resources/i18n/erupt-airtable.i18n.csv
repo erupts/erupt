@@ -1,0 +1,3 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+airtable.request_failed,Airtable 请求失败,Airtable 請求失敗,Airtable request failed,Échec de la requête Airtable,Airtableのリクエストが失敗しました,Airtable 요청이 실패했습니다,Ошибка запроса Airtable,La solicitud de Airtable ha fallado,Airtable-Anfrage fehlgeschlagen,Falha na solicitação do Airtable,Permintaan Airtable gagal,فشل طلب Airtable
+airtable.config_missing,未配置 Airtable token,未設定 Airtable token,Airtable token is not configured,Jeton Airtable non configuré,Airtableのtokenが設定されていません,Airtable token이 구성되지 않았습니다,Токен Airtable не настроен,El token de Airtable no está configurado,Airtable-Token ist nicht konfiguriert,Token do Airtable não configurado,Token Airtable belum dikonfigurasi,لم يتم تكوين رمز Airtable

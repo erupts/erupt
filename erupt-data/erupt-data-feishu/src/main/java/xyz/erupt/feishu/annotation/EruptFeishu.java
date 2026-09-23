@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Binds an erupt model to a Feishu Bitable (多维表格) table. Place alongside
+ * Binds an erupt model to a Feishu Bitable table. Place alongside
  * {@code @EruptDataProcessor(EruptFeishuDataService.DATA_PROCESSOR)}.
  * <p>
  * Credentials (app id / secret) are never carried here — they live in Spring

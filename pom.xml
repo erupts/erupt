@@ -78,6 +78,8 @@
         <module>erupt-data/erupt-data-file</module>
         <module>erupt-data/erupt-data-feishu</module>
         <module>erupt-data/erupt-data-notion</module>
+        <module>erupt-data/erupt-data-dingtalk</module>
+        <module>erupt-data/erupt-data-airtable</module>
 
         <!-- UPMS / Security / Web / Misc -->
         <module>erupt-upms</module>

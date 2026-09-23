@@ -43,7 +43,7 @@ public class ContentEntry {
 
     @EruptField(
         views = @View(title = "Title"),
-        edit = @Edit(title = "Title", notNull = true, search = @Search(vague = true))
+        edit = @Edit(title = "Title", notNull = true, search = @Search(operator = QueryExpression.LIKE))
     )
     private String title;
 

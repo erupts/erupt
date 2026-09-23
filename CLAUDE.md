@@ -69,7 +69,7 @@ The project is a multi-module Maven project (~50 modules):
 | Group | Modules |
 |-------|---------|
 | Core | `erupt-annotation` (annotation declarations), `erupt-core` (runtime engine) |
-| Data | `erupt-data/erupt-data-{jpa,mongodb,memory,http,jdbc,es,ldap,k8s,s3,redis,file,feishu,notion}` — JPA is the default; the rest are pluggable connectors |
+| Data | `erupt-data/erupt-data-{jpa,mongodb,memory,http,jdbc,es,ldap,k8s,s3,redis,file,feishu,notion,dingtalk,airtable}` — JPA is the default; the rest are pluggable connectors |
 | Platform | `erupt-upms` (user/permissions), `erupt-security`, `erupt-admin`, `erupt-web` (frontend assets) |
 | Starter | `erupt-starter/{erupt-spring-boot-starter,erupt-spring-boot-starter-all}` |
 | Templates | `erupt-tpl/erupt-tpl` (engine) + `erupt-tpl/{ant-design,element-ui,element-plus,amis}` (skins) |
