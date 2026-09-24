@@ -1,5 +1,7 @@
 window.eruptSiteConfig = {
     domain: "",
+    // Attachment host. Leave empty: it is taken from the backend AttachmentProxy at startup.
+    // Setting it here still works and overrides the backend value (kept for compatibility).
     fileDomain: "",
     title: "Erupt Engine",
     desc: "Low-Code & AI Harness",
