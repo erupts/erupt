@@ -110,6 +110,8 @@ public class SsoLoginTest extends EruptApplicationTests {
             sso.setAccountClaim("preferred_username");
             sso.setNameClaim("name");
             sso.setEmailClaim("email");
+            sso.setPhoneClaim("phone_number");
+            sso.setAvatarClaim("picture");
             sso.setAutoCreate(false);
             dao.persist(sso);
         });

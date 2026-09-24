@@ -2,6 +2,8 @@ package xyz.erupt.sso.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -17,17 +19,22 @@ import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.DragSort;
+import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Layout;
+import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.Dynamic;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.model.EruptRole;
+import xyz.erupt.sso.constant.SsoProviderType;
 import xyz.erupt.sso.model.data_proxy.EruptSsoDataProxy;
 
 import java.util.Set;
@@ -35,10 +42,12 @@ import java.util.Set;
 /**
  * An external identity provider erupt delegates login to, over OAuth2 authorization code.
  *
- * <p>Both OIDC providers (Keycloak, Authing, Okta, Feishu, WeCom) and plain OAuth2 ones
- * (GitHub, Gitee) fit the same row: erupt never reads the id_token, it asks the user info
- * endpoint who the caller is. That keeps one flow for every provider and keeps a JWT
- * library out of the dependency tree.
+ * <p>Both OIDC providers (Keycloak, Authing, Okta, Feishu) and plain OAuth2 ones (GitHub,
+ * Gitee) fit the same row: erupt never reads the id_token, it asks the user info endpoint
+ * who the caller is. That keeps one flow for every provider and keeps a JWT library out of
+ * the dependency tree. The few providers that improvise their own exchange (DingTalk,
+ * WeCom, WeChat) are told apart by {@link #type}, which selects the matching
+ * {@link SsoProviderType.Flow} at login.
  *
  * @author YuePeng
  * date 2026-09-18
@@ -50,7 +59,9 @@ import java.util.Set;
         orderBy = "EruptSso.sort asc",
         dataProxy = EruptSsoDataProxy.class,
         layout = @Layout(formSteps = true),
-        dragSort = @DragSort(field = "sort")
+        dragSort = @DragSort(field = "sort"),
+        drills = @Drill(title = "SSO Binding", icon = "fa fa-link",
+                link = @Link(linkErupt = EruptSsoBind.class, joinColumn = "sso.id"))
 )
 @EruptI18n
 @Getter
@@ -60,6 +71,20 @@ public class EruptSso extends MetaModelUpdateVo {
     @Transient
     @EruptField(edit = @Edit(title = "Basic", type = EditType.DIVIDE))
     private String basicStep;
+
+    // Picking a preset pre-fills the endpoint, scope and claim fields through the onchange
+    // hook, and at login the type's flow decides how the code is exchanged; null on rows
+    // created before the column existed means plain OAuth2
+    @Enumerated(EnumType.STRING)
+    @Column(length = 32)
+    @EruptField(
+            views = @View(title = "Provider Type", sortable = true),
+            edit = @Edit(title = "Provider Type", type = EditType.CHOICE, notNull = true, search = @Search,
+                    desc = "Choose a well known provider to fill in its endpoints and claims, then replace any <placeholder> in the issuer",
+                    onchange = EruptSsoDataProxy.class,
+                    choiceType = @ChoiceType(fetchHandler = SsoProviderType.H.class))
+    )
+    private SsoProviderType type = SsoProviderType.CUSTOM;
 
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true, nullable = false)
     @EruptField(
@@ -151,15 +176,24 @@ public class EruptSso extends MetaModelUpdateVo {
     )
     private String clientSecret;
 
+    // What a notification channel needs beyond the client credentials, and what that is
+    // depends on the provider; login never reads it, so an empty value costs nothing
+    @Column(length = 255)
+    @EruptField(
+            edit = @Edit(title = "Messaging Key", type = EditType.PASSWORD,
+                    desc = "Needed to send notifications; WeCom and DingTalk: the AgentId of the app, Slack: the Bot User OAuth Token (xoxb-...)",
+                    dynamic = @Dynamic(dependField = "type", condition = "value === 'WECOM' || value === 'DINGTALK' || value === 'SLACK'"))
+    )
+    private String messagingKey;
+
     @Column(length = 255)
     @EruptField(
             // A space is what the authorization request wants, so it is what gets stored:
             // the tags join and split on it and no conversion sits in between. The presets
             // are the OIDC standard scopes; anything a provider invents is typed in.
             edit = @Edit(title = "Scopes", notNull = true, type = EditType.TAGS,
-                    tagsType = @TagsType(joinSeparator = " ", allowExtension = true,
-                            tags = {"openid", "profile", "email", "phone", "address", "groups"}))
-    )
+                    tagsType = @TagsType(joinSeparator = " ")
+    ))
     private String scopes = "openid profile email";
 
     @Transient
@@ -196,6 +230,15 @@ public class EruptSso extends MetaModelUpdateVo {
             edit = @Edit(title = "Avatar Claim", desc = "URL of the picture; OIDC: picture, Feishu: avatar_url")
     )
     private String avatarClaim;
+
+    // The identifier other modules need to reach the user at the provider later, e.g. to push
+    // a notification: stored on the binding and refreshed on every login
+    @Column(length = 64)
+    @EruptField(
+            edit = @Edit(title = "Open ID Claim",
+                    desc = "Identifier for messaging the user through this provider; Feishu: open_id, DingTalk: unionId, WeCom: userid, Slack: https://slack.com/user_id")
+    )
+    private String openIdClaim;
 
     @ManyToMany
     @JoinTable(

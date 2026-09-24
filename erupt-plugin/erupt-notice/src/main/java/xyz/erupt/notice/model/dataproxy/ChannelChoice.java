@@ -5,6 +5,7 @@ import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.notice.channel.AbstractNoticeChannel;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -12,8 +13,10 @@ public class ChannelChoice implements ChoiceFetchHandler<Void> {
 
     @Override
     public List<VLModel> fetch(String[] params) {
-        return AbstractNoticeChannel.getHandlers().values().stream().map(noticeHandler
-                -> new VLModel(noticeHandler.code(), noticeHandler.name())).toList();
+        return AbstractNoticeChannel.getHandlers().values().stream()
+                .filter(AbstractNoticeChannel::available)
+                .sorted(Comparator.comparing(AbstractNoticeChannel::order))
+                .map(noticeHandler -> new VLModel(noticeHandler.code(), noticeHandler.name())).toList();
     }
 
 }

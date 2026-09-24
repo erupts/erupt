@@ -26,6 +26,14 @@ public abstract class AbstractNoticeChannel {
 
     public abstract String name();
 
+    /**
+     * Whether the channel can be picked right now. A channel that depends on configuration
+     * made at runtime, such as a provider row, hides itself until that configuration exists.
+     */
+    public boolean available() {
+        return true;
+    }
+
     public abstract void send(EruptUser receiveUser, NoticeMessage noticeMessage);
 
 }
