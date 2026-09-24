@@ -8,7 +8,10 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.service.EruptFileService;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.service.EruptApplication;
@@ -19,6 +22,7 @@ import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
+import xyz.erupt.upms.base.ProfileBody;
 import xyz.erupt.upms.constant.EncryptType;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.EruptLogin;
@@ -36,6 +40,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -55,6 +60,9 @@ public class EruptUserService {
 
     @Resource
     private EruptDao eruptDao;
+
+    @Resource
+    private EruptFileService eruptFileService;
 
     @Resource
     private EruptAppProp eruptAppProp;
@@ -275,6 +283,42 @@ public class EruptUserService {
         } else {
             return R.error(I18nTranslate.$translate("upms.pwd_error"));
         }
+    }
+
+    // Extensions a self-service avatar may carry: raster formats a browser renders without a script surface
+    private static final List<String> AVATAR_EXTENSIONS = List.of("jpg", "jpeg", "png", "gif", "webp");
+
+    private static final int AVATAR_MAX_KB = 2048;
+
+    public String uploadAvatar(MultipartFile file) {
+        String filename = StringUtils.defaultString(file.getOriginalFilename());
+        String extension = filename.substring(filename.lastIndexOf('.') + 1);
+        if (!AVATAR_EXTENSIONS.contains(extension.toLowerCase())) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("upms.profile.avatar_format") + ": " + String.join(", ", AVATAR_EXTENSIONS));
+        }
+        if (file.getSize() / 1024 > AVATAR_MAX_KB) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("upms.profile.avatar_size") + ": " + AVATAR_MAX_KB + "KB");
+        }
+        return eruptFileService.upload(file, "/avatar" + eruptFileService.createPath(file));
+    }
+
+    @Transactional
+    public void updateProfile(ProfileBody profile) {
+        EruptUser eruptUser = this.getCurrentEruptUser();
+        String name = StringUtils.trimToNull(profile.getName());
+        if (null == name) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("upms.profile.name_required"));
+        }
+        // Only an uploaded path or an absolute web URL; anything else (javascript:, data:) is not an avatar
+        String avatar = StringUtils.trimToNull(profile.getAvatar());
+        if (null != avatar && !(avatar.startsWith("/") || avatar.startsWith("http://") || avatar.startsWith("https://"))) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("upms.profile.avatar_invalid"));
+        }
+        Optional.ofNullable(findEruptLogin()).ifPresent(it -> it.beforeUpdateProfile(eruptUser, profile));
+        eruptUser.setName(name);
+        eruptUser.setAvatar(avatar);
+        eruptDao.getEntityManager().merge(eruptUser);
+        eruptTokenService.renameUser(eruptContextService.getCurrentToken(), name);
     }
 
     private EruptUser findEruptUserByAccount(String account) {

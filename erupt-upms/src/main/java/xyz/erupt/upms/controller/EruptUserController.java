@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.i18n.I18nTranslate;
@@ -18,6 +19,7 @@ import xyz.erupt.upms.base.VerifyPwdBody;
 import xyz.erupt.upms.base.LoginBody;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.base.MfaBody;
+import xyz.erupt.upms.base.ProfileBody;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptRole;
@@ -159,11 +161,25 @@ public class EruptUserController {
         return eruptUserService.verifyPwd(pwd);
     }
 
+    @PostMapping("/profile")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public R<Void> updateProfile(@RequestBody ProfileBody body) {
+        eruptUserService.updateProfile(body);
+        return R.ok();
+    }
+
+    @PostMapping("/profile/avatar")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public R<String> uploadAvatar(@RequestParam("file") MultipartFile file) {
+        return R.ok(eruptUserService.uploadAvatar(file));
+    }
+
     @GetMapping("/userinfo")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptUserinfoVo userinfo() {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
         EruptUserinfoVo userinfoVo = new EruptUserinfoVo();
+        userinfoVo.setAccount(eruptUser.getAccount());
         userinfoVo.setNickname(eruptUser.getName());
         userinfoVo.setAvatar(eruptUser.getAvatar());
         userinfoVo.setResetPwd(null == eruptUser.getResetPwdTime());

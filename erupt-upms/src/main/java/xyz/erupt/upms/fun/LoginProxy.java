@@ -3,6 +3,7 @@ package xyz.erupt.upms.fun;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.upms.base.LoginModel;
+import xyz.erupt.upms.base.ProfileBody;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -39,6 +40,10 @@ public interface LoginProxy {
 
     @Comment("Password change completed")
     default void afterChangePwd(EruptUser eruptUser, String originPwd, String newPwd) {
+    }
+
+    @Comment("Self-service profile update, throw to reject")
+    default void beforeUpdateProfile(EruptUser eruptUser, ProfileBody profile) {
     }
 
 }

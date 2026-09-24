@@ -16,6 +16,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.constant.RegexConst;
 import xyz.erupt.core.module.MetaUserinfo;
@@ -67,7 +68,12 @@ import java.util.stream.Collectors;
 @Setter
 public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper.PasswordHolder {
 
+    // Set by the user themselves (profile dialog) or an SSO provider, so the admin form only shows it
     @Column(length = 1023)
+    @EruptField(
+            views = @View(title = "Avatar", type = ViewType.AVATAR, width = "60px"),
+            edit = @Edit(title = "Avatar", show = false)
+    )
     private String avatar;
 
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)

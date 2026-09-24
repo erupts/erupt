@@ -64,6 +64,14 @@ public class EruptTokenService {
         return menus;
     }
 
+    // The session keeps a copy of the user's display name: keep it in step with a profile change
+    public void renameUser(String token, String username) {
+        MetaUserinfo metaUserinfo = eruptSessionService.get(SessionKey.USER_INFO + token, MetaUserinfo.class);
+        if (null == metaUserinfo) return;
+        metaUserinfo.setUsername(username);
+        eruptSessionService.put(SessionKey.USER_INFO + token, GsonFactory.getGson().toJson(metaUserinfo), eruptUpmsProp.getExpireTimeByLogin() - 1, TimeUnit.MINUTES);
+    }
+
     public boolean tokenExist(String token) {
         return eruptSessionService.exist(SessionKey.TOKEN_OLINE + token);
     }

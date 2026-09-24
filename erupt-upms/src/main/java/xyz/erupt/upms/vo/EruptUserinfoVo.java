@@ -13,6 +13,8 @@ import java.util.List;
 @Setter
 public class EruptUserinfoVo {
 
+    private String account;
+
     private String avatar;
 
     private String nickname;

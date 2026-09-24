@@ -21,6 +21,8 @@ public enum ViewType {
     SAFE_TEXT,
     @Comment("Image")
     IMAGE,
+    @Comment("Avatar: a round thumbnail, a person silhouette when empty")
+    AVATAR,
     @Comment("Image in BASE64 format")
     IMAGE_BASE64,
     @Comment("Flash file")
