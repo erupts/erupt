@@ -47,6 +47,12 @@
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-notice</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
             <artifactId>erupt-job</artifactId>
             <version>${project.parent.version}</version>
             <scope>test</scope>

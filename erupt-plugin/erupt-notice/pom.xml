@@ -27,6 +27,13 @@
             <artifactId>erupt-websocket</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <!-- Feishu, DingTalk, WeCom and Slack channels send through the SSO provider rows; without erupt-sso they simply do not exist -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-sso</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>

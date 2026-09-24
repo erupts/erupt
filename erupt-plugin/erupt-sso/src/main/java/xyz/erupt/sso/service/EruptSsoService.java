@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -18,6 +17,7 @@ import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.constant.EncryptType;
+import xyz.erupt.sso.constant.SsoProviderType;
 import xyz.erupt.sso.constant.SsoSessionKey;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.sso.model.EruptSso;
@@ -29,12 +29,11 @@ import xyz.erupt.sso.vo.EruptSsoProviderVo;
 
 import java.net.URI;
 import java.net.URLEncoder;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashSet;
@@ -42,6 +41,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -59,18 +59,18 @@ import java.util.stream.Collectors;
  * date 2026-09-18
  */
 @Service
-@Slf4j
 public class EruptSsoService {
 
     private static final int STATE_EXPIRE_MINUTES = 10;
 
+    private static final Duration TIMEOUT = Duration.ofSeconds(10);
+
     // the ticket only has to survive one browser redirect
     private static final int TICKET_EXPIRE_SECONDS = 60;
 
-    private static final Duration HTTP_TIMEOUT = Duration.ofSeconds(10);
 
     // Providers disagree on what the stable identifier is called; OIDC says sub, the rest improvise
-    private static final String[] SUBJECT_CLAIMS = {"sub", "id", "openid", "open_id", "unionid", "union_id", "userId", "user_id"};
+    private static final String[] SUBJECT_CLAIMS = {"sub", "id", "openid", "open_id", "openId", "unionid", "union_id", "unionId", "userid", "userId", "user_id"};
 
     @Resource
     private EruptDao eruptDao;
@@ -87,8 +87,8 @@ public class EruptSsoService {
     @Resource
     private TransactionTemplate transactionTemplate;
 
-    private final HttpClient httpClient = HttpClient.newBuilder()
-            .version(HttpClient.Version.HTTP_1_1).connectTimeout(HTTP_TIMEOUT).build();
+    @Resource
+    private SsoProviderApi api;
 
     // A discovery document is a deployment constant; cache it per issuer and drop it when the row changes
     private final Map<String, Endpoints> discoveryCache = new ConcurrentHashMap<>();
@@ -107,6 +107,19 @@ public class EruptSsoService {
         if (StringUtils.isNotBlank(issuer)) discoveryCache.remove(issuer);
     }
 
+    public void evictAppToken(Long ssoId) {
+        api.evictAppToken(ssoId);
+    }
+
+    /**
+     * The enabled provider row of a type, the first by sort when there are several; what a
+     * notification channel for that provider sends through.
+     */
+    public Optional<EruptSso> findEnabled(SsoProviderType type) {
+        return eruptDao.lambdaQuery(EruptSso.class).eq(EruptSso::getType, type).eq(EruptSso::getStatus, true)
+                .orderBy(EruptSso::getSort).list().stream().findFirst();
+    }
+
     // ------------------------------------------------------------- authorize
 
     /**
@@ -122,14 +135,38 @@ public class EruptSsoService {
         payload.setVerifier(verifier);
         sessionService.put(SsoSessionKey.SSO_STATE + state, GsonFactory.getGson().toJson(payload), STATE_EXPIRE_MINUTES, TimeUnit.MINUTES);
         Map<String, String> params = new LinkedHashMap<>();
-        params.put("response_type", "code");
-        params.put("client_id", sso.getClientId());
-        params.put("redirect_uri", this.redirectUri(sso, request));
-        params.put("scope", sso.getScopes());
-        params.put("state", state);
-        params.put("code_challenge", challenge(verifier));
-        params.put("code_challenge_method", "S256");
-        return appendQuery(endpoints.authorizeUrl(), params);
+        switch (flow(sso)) {
+            case WECOM, WECHAT -> {
+                // Tencent calls the client id appid; WeCom's agent id is part of the configured URL
+                params.put("appid", sso.getClientId());
+                params.put("redirect_uri", this.redirectUri(sso, request));
+                params.put("response_type", "code");
+                params.put("scope", sso.getScopes());
+                params.put("state", state);
+            }
+            case DINGTALK -> {
+                params.put("response_type", "code");
+                params.put("client_id", sso.getClientId());
+                params.put("redirect_uri", this.redirectUri(sso, request));
+                params.put("scope", sso.getScopes());
+                params.put("state", state);
+                params.put("prompt", "consent");
+            }
+            default -> {
+                params.put("response_type", "code");
+                params.put("client_id", sso.getClientId());
+                params.put("redirect_uri", this.redirectUri(sso, request));
+                params.put("scope", sso.getScopes());
+                params.put("state", state);
+                params.put("code_challenge", challenge(verifier));
+                params.put("code_challenge_method", "S256");
+            }
+        }
+        return authorizeQuery(endpoints.authorizeUrl(), params);
+    }
+
+    private static SsoProviderType.Flow flow(EruptSso sso) {
+        return null == sso.getType() ? SsoProviderType.Flow.OAUTH2 : sso.getType().flow();
     }
 
     // -------------------------------------------------------------- callback
@@ -150,8 +187,12 @@ public class EruptSsoService {
         Erupts.requireTrue(sso.getId().equals(payload.getSsoId()), I18nTranslate.$translate("sso.state_invalid"));
 
         Endpoints endpoints = this.endpoints(sso);
-        String accessToken = this.exchangeCode(sso, endpoints, authCode, payload.getVerifier(), request);
-        JsonObject claims = this.userInfo(endpoints, accessToken);
+        JsonObject claims = switch (flow(sso)) {
+            case DINGTALK -> this.dingTalkIdentity(sso, endpoints, authCode);
+            case WECOM -> this.weComIdentity(sso, endpoints, authCode);
+            case WECHAT -> this.weChatIdentity(sso, endpoints, authCode);
+            default -> this.userInfo(endpoints, this.exchangeCode(sso, endpoints, authCode, payload.getVerifier(), request));
+        };
         // only now is there anything to write, and the provider is no longer on the line
         EruptUser eruptUser = transactionTemplate.execute(status -> this.resolveUser(sso, claims));
 
@@ -186,7 +227,11 @@ public class EruptSsoService {
         Erupts.requireTrue(StringUtils.isNotBlank(subject), I18nTranslate.$translate("sso.no_subject") + claimNames(claims));
         EruptSsoBind bind = eruptDao.lambdaQuery(EruptSsoBind.class)
                 .eq(EruptSsoBind::getSso, sso).eq(EruptSsoBind::getSubject, subject).one();
-        if (null != bind) return this.applyProfile(sso, claims, bind.getEruptUser());
+        if (null != bind) {
+            this.recordLogin(sso, bind, claims);
+            eruptDao.merge(bind);
+            return this.applyProfile(sso, claims, bind.getEruptUser());
+        }
 
         String account = claim(claims, sso.getAccountClaim());
         if (StringUtils.isBlank(account)) account = claim(claims, sso.getEmailClaim());
@@ -202,8 +247,19 @@ public class EruptSsoService {
         newBind.setSso(sso);
         newBind.setEruptUser(eruptUser);
         newBind.setSubject(subject);
+        this.recordLogin(sso, newBind, claims);
         eruptDao.persist(newBind);
         return this.applyProfile(sso, claims, eruptUser);
+    }
+
+    /**
+     * What the binding remembers about the provider side, rewritten on every login so the
+     * identifiers and the snapshot other modules read are the ones the provider last vouched for.
+     */
+    private void recordLogin(EruptSso sso, EruptSsoBind bind, JsonObject claims) {
+        bind.setOpenId(claim(claims, sso.getOpenIdClaim()));
+        bind.setClaims(claims.toString());
+        bind.setLastLoginTime(LocalDateTime.now());
     }
 
     /**
@@ -300,7 +356,7 @@ public class EruptSsoService {
         form.put("redirect_uri", this.redirectUri(sso, request));
         form.put("code_verifier", verifier);
         HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(endpoints.tokenUrl()))
-                .timeout(HTTP_TIMEOUT)
+                .timeout(TIMEOUT)
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Accept", "application/json");
         if (endpoints.basicAuth()) {
@@ -320,11 +376,84 @@ public class EruptSsoService {
 
     private JsonObject userInfo(Endpoints endpoints, String accessToken) {
         HttpRequest request = HttpRequest.newBuilder(URI.create(endpoints.userInfoUrl()))
-                .timeout(HTTP_TIMEOUT)
+                .timeout(TIMEOUT)
                 .header("Authorization", "Bearer " + accessToken)
                 .header("Accept", "application/json")
                 .GET().build();
         return unwrap(this.send(request, "userinfo"));
+    }
+
+    // ------------------------------------------------------- provider flows
+
+    /**
+     * DingTalk unified login: the token endpoint wants a JSON body with camel cased names,
+     * and the user endpoint wants the token in its own header rather than a bearer.
+     */
+    private JsonObject dingTalkIdentity(EruptSso sso, Endpoints endpoints, String authCode) {
+        JsonObject body = new JsonObject();
+        body.addProperty("clientId", sso.getClientId());
+        body.addProperty("clientSecret", sso.getClientSecret());
+        body.addProperty("code", authCode);
+        body.addProperty("grantType", "authorization_code");
+        JsonObject token = this.send(HttpRequest.newBuilder(URI.create(endpoints.tokenUrl())).timeout(TIMEOUT)
+                .header("Content-Type", "application/json").header("Accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(body.toString())).build(), "token");
+        String accessToken = claim(token, "accessToken");
+        Erupts.requireTrue(StringUtils.isNotBlank(accessToken), I18nTranslate.$translate("sso.token_failed"));
+        return this.send(HttpRequest.newBuilder(URI.create(endpoints.userInfoUrl())).timeout(TIMEOUT)
+                .header("x-acs-dingtalk-access-token", accessToken).header("Accept", "application/json")
+                .GET().build(), "userinfo");
+    }
+
+    /**
+     * WeCom never issues a user token. The corp's own token (from the configured token URL)
+     * resolves the code to a member id, and the profile is then read from the contact book,
+     * which is the configured user info URL. When the code also yields a user ticket, the
+     * sensitive fields WeCom withholds from the contact book are fetched with it and merged in.
+     * Both extra endpoints sit next to the user info one under the same {@code /cgi-bin/}.
+     */
+    private JsonObject weComIdentity(EruptSso sso, Endpoints endpoints, String authCode) {
+        String cgi = SsoProviderApi.cgiBase(endpoints.userInfoUrl());
+        String accessToken = api.appAccessToken(sso);
+        JsonObject identity = this.weComGet(cgi + "auth/getuserinfo", Map.of("access_token", accessToken, "code", authCode), "userinfo");
+        String userId = claim(identity, "userid");
+        // a visitor from outside the corp only has an openid, and cannot be looked up in the contact book
+        Erupts.requireTrue(StringUtils.isNotBlank(userId), I18nTranslate.$translate("sso.not_member"));
+        JsonObject profile = this.weComGet(cgi + "user/get", Map.of("access_token", accessToken, "userid", userId), "userinfo");
+        String ticket = claim(identity, "user_ticket");
+        if (StringUtils.isNotBlank(ticket)) {
+            JsonObject body = new JsonObject();
+            body.addProperty("user_ticket", ticket);
+            JsonObject detail = SsoProviderApi.requireOk(this.send(HttpRequest.newBuilder(URI.create(cgi + "auth/getuserdetail?access_token=" + urlEncode(accessToken)))
+                    .timeout(TIMEOUT).header("Content-Type", "application/json").header("Accept", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(body.toString())).build(), "userdetail"), "userdetail");
+            for (Map.Entry<String, JsonElement> entry : detail.entrySet()) profile.add(entry.getKey(), entry.getValue());
+        }
+        return profile;
+    }
+
+    private JsonObject weComGet(String url, Map<String, String> params, String stage) {
+        return api.get(url, params, stage);
+    }
+
+    /**
+     * WeChat open platform: the token call is a GET with the credentials in the query and it
+     * already returns the openid, which the user info GET then needs alongside the token.
+     */
+    private JsonObject weChatIdentity(EruptSso sso, Endpoints endpoints, String authCode) {
+        Map<String, String> tokenParams = new LinkedHashMap<>();
+        tokenParams.put("appid", sso.getClientId());
+        tokenParams.put("secret", sso.getClientSecret());
+        tokenParams.put("code", authCode);
+        tokenParams.put("grant_type", "authorization_code");
+        JsonObject token = this.weComGet(endpoints.tokenUrl(), tokenParams, "token");
+        String accessToken = claim(token, "access_token");
+        Erupts.requireTrue(StringUtils.isNotBlank(accessToken), I18nTranslate.$translate("sso.token_failed"));
+        Map<String, String> userParams = new LinkedHashMap<>();
+        userParams.put("access_token", accessToken);
+        userParams.put("openid", StringUtils.defaultString(claim(token, "openid")));
+        userParams.put("lang", "zh_CN");
+        return this.weComGet(endpoints.userInfoUrl(), userParams, "userinfo");
     }
 
     /**
@@ -343,50 +472,7 @@ public class EruptSsoService {
     }
 
     private JsonObject send(HttpRequest request, String stage) {
-        try {
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
-            if (response.statusCode() >= 400) {
-                // the body may carry the client secret back in an error echo, keep it out of the log
-                // and out of the page; the provider's own error code and wording are what helps
-                log.warn("sso {} endpoint returned {}", stage, response.statusCode());
-                throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.provider_error")
-                        + " (" + stage + " HTTP " + response.statusCode() + providerError(response.body()) + ")");
-            }
-            JsonElement element = JsonParser.parseString(response.body());
-            Erupts.requireTrue(element.isJsonObject(),
-                    I18nTranslate.$translate("sso.provider_error") + " (" + stage + ": not a JSON object)");
-            return element.getAsJsonObject();
-        } catch (EruptWebApiRuntimeException e) {
-            throw e;
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.provider_error") + " (" + stage + ": interrupted)");
-        } catch (Exception e) {
-            // a connect, TLS or timeout failure: the exception type is the whole diagnosis
-            log.warn("sso {} endpoint call failed", stage, e);
-            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.provider_error")
-                    + " (" + stage + ": " + e.getClass().getSimpleName() + (null == e.getMessage() ? "" : " " + e.getMessage()) + ")");
-        }
-    }
-
-    /**
-     * The error fields providers put in a failed response, RFC 6749 style or Feishu style.
-     * Only those named fields are read, never the body as a whole.
-     */
-    private static String providerError(String body) {
-        try {
-            JsonElement element = JsonParser.parseString(body);
-            if (!element.isJsonObject()) return "";
-            JsonObject json = element.getAsJsonObject();
-            StringBuilder sb = new StringBuilder();
-            for (String key : new String[]{"code", "error", "error_description", "msg"}) {
-                String value = claim(json, key);
-                if (StringUtils.isNotBlank(value)) sb.append(sb.length() == 0 ? ", " : " ").append(value);
-            }
-            return sb.toString();
-        } catch (Exception e) {
-            return "";
-        }
+        return api.send(request, stage);
     }
 
     // ------------------------------------------------------------- endpoints
@@ -397,7 +483,9 @@ public class EruptSsoService {
      */
     private Endpoints endpoints(EruptSso sso) {
         if (StringUtils.isNoneBlank(sso.getAuthorizeUrl(), sso.getTokenUrl(), sso.getUserInfoUrl())) {
-            return new Endpoints(sso.getAuthorizeUrl(), sso.getTokenUrl(), sso.getUserInfoUrl(), false);
+            // without a discovery document the preset is the only thing that knows how the token endpoint authenticates
+            boolean basicAuth = null != sso.getType() && null != sso.getType().preset() && sso.getType().preset().isBasicAuth();
+            return new Endpoints(sso.getAuthorizeUrl(), sso.getTokenUrl(), sso.getUserInfoUrl(), basicAuth);
         }
         Erupts.requireTrue(StringUtils.isNotBlank(sso.getIssuer()), I18nTranslate.$translate("sso.endpoint_missing"));
         Endpoints discovered = discoveryCache.computeIfAbsent(sso.getIssuer(), this::discover);
@@ -421,7 +509,7 @@ public class EruptSsoService {
         String url = StringUtils.removeEnd(issuer, "/") + "/.well-known/openid-configuration";
         JsonObject json;
         try {
-            json = this.send(HttpRequest.newBuilder(URI.create(url)).timeout(HTTP_TIMEOUT)
+            json = this.send(HttpRequest.newBuilder(URI.create(url)).timeout(TIMEOUT)
                     .header("Accept", "application/json").GET().build(), "discovery");
         } catch (EruptWebApiRuntimeException e) {
             // whatever came back, it was not a discovery document: the fix is the same either way
@@ -481,6 +569,17 @@ public class EruptSsoService {
         int hash = url.lastIndexOf('#');
         String tail = hash < 0 ? url : url.substring(hash);
         return url + (tail.contains("?") ? "&" : "?") + formBody(params);
+    }
+
+    /**
+     * The authorize URL is fetched by a browser, so its query has to sit before any fragment:
+     * WeChat's in-app flow ends its URL in {@code #wechat_redirect}, and a fragment is never
+     * sent to the server anyway.
+     */
+    private static String authorizeQuery(String url, Map<String, String> params) {
+        int hash = url.indexOf('#');
+        if (hash < 0) return appendQuery(url, params);
+        return appendQuery(url.substring(0, hash), params) + url.substring(hash);
     }
 
     private static String formBody(Map<String, String> params) {
