@@ -68,6 +68,10 @@ public class EruptAppProp {
 
     private String version;
 
+    // Domain that hosts uploaded attachments, taken from the registered AttachmentProxy so the
+    // frontend does not need its own copy (eruptSiteConfig.fileDomain). Null when attachments are served by erupt itself
+    private String fileDomain;
+
     public void setLocales(String[] locales) {
         if (null == locales || locales.length == 0) {
             this.locales = new String[]{"en-US"};

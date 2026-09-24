@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.core.util.EruptInformation;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -33,6 +35,8 @@ public class EruptUPMSController {
     public EruptAppProp eruptApp() {
         eruptAppProp.setHash(this.hashCode());
         eruptAppProp.setVersion(EruptInformation.getEruptVersion());
+        AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
+        eruptAppProp.setFileDomain(null == attachmentProxy ? null : attachmentProxy.fileDomain());
         return eruptAppProp;
     }
 
