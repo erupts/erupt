@@ -3,15 +3,9 @@ package xyz.erupt.s3.service;
 import com.google.gson.Gson;
 import jakarta.annotation.PreDestroy;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.core.exception.SdkClientException;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.S3ClientBuilder;
-import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.model.*;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -20,9 +14,9 @@ import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.EruptBeanDataService;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.s3.S3ClientFactory;
 import xyz.erupt.s3.annotation.EruptS3;
 
-import java.net.URI;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -137,18 +131,7 @@ public class EruptS3DataService extends EruptBeanDataService<Map<String, Object>
     }
 
     private S3Client buildClient(EruptS3 eruptS3) {
-        S3ClientBuilder builder = S3Client.builder().region(Region.of(eruptS3.region()));
-        if (!eruptS3.endpoint().isEmpty()) builder.endpointOverride(URI.create(eruptS3.endpoint()));
-        if (eruptS3.pathStyle()) {
-            builder.serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build());
-        }
-        if (!eruptS3.accessKey().isEmpty()) {
-            builder.credentialsProvider(StaticCredentialsProvider.create(
-                    AwsBasicCredentials.create(eruptS3.accessKey(), eruptS3.secretKey())));
-        } else {
-            builder.credentialsProvider(DefaultCredentialsProvider.create());
-        }
-        return builder.build();
+        return S3ClientFactory.build(eruptS3.region(), eruptS3.endpoint(), eruptS3.bucket(), eruptS3.accessKey(), eruptS3.secretKey(), eruptS3.pathStyle());
     }
 
     private Map<String, Object> toRow(S3Object object) {
