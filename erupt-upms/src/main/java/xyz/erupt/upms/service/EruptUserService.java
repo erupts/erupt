@@ -209,6 +209,32 @@ public class EruptUserService {
         eruptDao.getEntityManager().persist(loginLog);
     }
 
+    /**
+     * Confirm the current user's password. Without a LoginProxy this is the sign-in check itself,
+     * lock and failure counter included; with one, the proxy decides exactly as it does at sign-in.
+     */
+    public R<Void> verifyPwd(String pwd) {
+        String account = this.getCurrentAccount();
+        LoginProxy loginProxy = findEruptLogin();
+        if (null == loginProxy) {
+            LoginModel loginModel = this.login(account, pwd);
+            return loginModel.isPass() ? R.ok() : this.silentError(loginModel.getReason());
+        }
+        try {
+            if (null == loginProxy.login(account, pwd)) return this.silentError(I18nTranslate.$translate("upms.account_pwd_error"));
+            return R.ok();
+        } catch (Exception e) {
+            return this.silentError(e.getMessage());
+        }
+    }
+
+    // The caller renders the reason itself, so the client must not also toast it
+    private R<Void> silentError(String message) {
+        R<Void> r = R.error(message);
+        r.setPromptWay(R.PromptWay.NONE);
+        return r;
+    }
+
     @Transactional
     public R<Void> changePwd(String account, String pwd, String newPwd, String newPwd2) {
         if (!newPwd.equals(newPwd2)) {

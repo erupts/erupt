@@ -14,6 +14,7 @@ import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.util.SecretUtil;
 import xyz.erupt.core.view.R;
 import xyz.erupt.upms.base.ChangePwdBody;
+import xyz.erupt.upms.base.VerifyPwdBody;
 import xyz.erupt.upms.base.LoginBody;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.base.MfaBody;
@@ -145,6 +146,17 @@ public class EruptUserController {
         String newPwd = eruptAppProp.getPwdTransferEncrypt() ? SecretUtil.decodeSecret(body.getNewPwd(), 3) : body.getNewPwd();
         String newPwd2 = eruptAppProp.getPwdTransferEncrypt() ? SecretUtil.decodeSecret(body.getNewPwd2(), 3) : body.getNewPwd2();
         return eruptUserService.changePwd(eruptUserService.getCurrentAccount(), pwd, newPwd, newPwd2);
+    }
+
+    /**
+     * Re-check the signed-in user's password without issuing a new session, used to unlock the
+     * screen. It goes through the same path as a sign-in, so the failure counter and lock apply.
+     */
+    @PostMapping(value = "/verify-pwd")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public R<Void> verifyPwd(@RequestBody VerifyPwdBody body) {
+        String pwd = eruptAppProp.getPwdTransferEncrypt() ? SecretUtil.decodeSecret(body.getPwd(), 3) : body.getPwd();
+        return eruptUserService.verifyPwd(pwd);
     }
 
     @GetMapping("/userinfo")
