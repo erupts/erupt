@@ -107,8 +107,8 @@ public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
         llmAgent.setConfig(LLMDataProxy.gson.toJson(new LlmConfig()));
     }
 
-    public void mergeToLLmRequest(LLM llm) {
-        LlmRequest llmRequest = llm.toLlmRequest();
+    // Overlay this expert's sampling config onto the request about to be sent
+    public void mergeToLLmRequest(LlmRequest llmRequest) {
         LlmConfig llmConfig = GsonFactory.getGson().fromJson(config, LlmConfig.class);
         BeanUtils.copyProperties(llmConfig, llmRequest);
     }

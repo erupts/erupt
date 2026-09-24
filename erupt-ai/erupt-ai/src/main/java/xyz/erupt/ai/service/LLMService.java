@@ -180,7 +180,7 @@ public class LLMService {
             MetaContext.registerVar(AiConst.VAR_CHAT_ID, chatMessage.getChatId());
             LlmRequest llmRequest = llmModel.toLlmRequest();
             if (null != llmAgent) {
-                llmAgent.mergeToLLmRequest(llmModel);
+                llmAgent.mergeToLLmRequest(llmRequest);
                 llmRequest.setAgentPrompt(resolveAgentPrompt(llmAgent));
             }
             llmRequest.setAutoCallTool(autoToolCall);
