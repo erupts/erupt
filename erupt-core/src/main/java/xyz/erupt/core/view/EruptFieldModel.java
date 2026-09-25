@@ -63,6 +63,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
             case MULTI_FORM:
             case TAB_TABLE_REFER:
             case CHECKBOX:
+            case TRANSFER:
                 try {
                     this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
                 } catch (Exception e) {

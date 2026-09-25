@@ -16,14 +16,17 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.constant.RegexConst;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.upms.helper.HyperModelCreatorVo;
 import xyz.erupt.upms.helper.UpmsSecurityHelper;
+import xyz.erupt.upms.model.converter.StringSetJsonConverter;
 import xyz.erupt.upms.model.data_proxy.EruptOrgFetchHandler;
 import xyz.erupt.upms.model.data_proxy.EruptUserDataProxy;
 import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
+import xyz.erupt.upms.model.input.ResetMfaExec;
 import xyz.erupt.upms.model.input.ResetPassword;
 import xyz.erupt.upms.model.input.ResetPasswordExec;
 
@@ -43,26 +46,35 @@ import java.util.stream.Collectors;
         dataProxy = EruptUserDataProxy.class,
         linkTree = @LinkTree(field = "eruptOrg"),
         orderBy = "EruptUser.id",
-        layout = @Layout(tableLeftFixed = 1, formSteps = true),
-        rowOperation = @RowOperation(title = "Reset Password",
-                icon = "fa fa-refresh",
-                mode = RowOperation.Mode.SINGLE,
-                eruptClass = ResetPassword.class,
-                operationHandler = ResetPasswordExec.class)
+        layout = @Layout(tableLeftFixed = 1),
+        rowOperation = {
+                @RowOperation(title = "Reset Password",
+                        icon = "fa fa-refresh",
+                        mode = RowOperation.Mode.SINGLE,
+                        eruptClass = ResetPassword.class,
+                        operationHandler = ResetPasswordExec.class),
+                // Recovery path for a user who lost both the authenticator and every recovery code
+                @RowOperation(title = "Reset MFA",
+                        icon = "fa fa-mobile",
+                        mode = RowOperation.Mode.SINGLE,
+                        callHint = "upms.mfa.reset_hint",
+                        ifExpr = "item.mfaEnabled",
+                        ifExprBehavior = RowOperation.IfExprBehavior.DISABLE,
+                        operationHandler = ResetMfaExec.class)
+        }
 )
 @EruptI18n
 @Getter
 @Setter
 public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper.PasswordHolder {
 
+    // Set by the user themselves (profile dialog) or an SSO provider, so the admin form only shows it
     @Column(length = 1023)
-    private String avatar;
-
-    @Transient
     @EruptField(
-            edit = @Edit(title = "Account Info", type = EditType.DIVIDE)
+            views = @View(title = "Avatar", type = ViewType.AVATAR, width = "60px"),
+            edit = @Edit(title = "Avatar", show = false)
     )
-    private String accountStep;
+    private String avatar;
 
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
@@ -124,11 +136,31 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
     )
     private EruptMenu eruptMenu;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "e_upms_user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            foreignKey = @ForeignKey(name = "fk_user_role_user"),
+            inverseForeignKey = @ForeignKey(name = "fk_user_role_role")
+    )
+    @OrderBy
+    @EruptField(
+            views = @View(title = "Role"),
+            edit = @Edit(
+                    title = "Role",
+                    type = EditType.CHECKBOX
+            )
+    )
+    private Set<EruptRole> roles;
+
     @Transient
     @EruptField(
-            edit = @Edit(title = "Organization", type = EditType.DIVIDE)
+            edit = @Edit(title = "Organization", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"eruptOrg", "eruptPost", "headOrg", "divisionOrg"})
+            )
     )
-    private String orgStep;
+    private String orgGroup;
 
     @ManyToOne
     @EruptField(
@@ -164,9 +196,11 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "Password", type = EditType.DIVIDE)
+            edit = @Edit(title = "Password", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"passwordA", "passwordB", "encrypt"})
+            )
     )
-    private String pwdStep;
+    private String pwdGroup;
 
     private String password;
 
@@ -208,9 +242,11 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "Security", type = EditType.DIVIDE)
+            edit = @Edit(title = "Security", type = EditType.GROUP,
+                    groupType = @GroupType(fields = {"expireDate", "mfaEnabled", "whiteIp"}, collapsed = true)
+            )
     )
-    private String securityStep;
+    private String securityGroup;
 
     @EruptField(
             views = @View(title = "Account Expiry", sortable = true),
@@ -218,29 +254,33 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
     )
     private Date expireDate;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "e_upms_user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            foreignKey = @ForeignKey(name = "fk_user_role_user"),
-            inverseForeignKey = @ForeignKey(name = "fk_user_role_role")
-    )
-    @OrderBy
     @EruptField(
-            views = @View(title = "Role"),
-            edit = @Edit(
-                    title = "Role",
-                    type = EditType.CHECKBOX
-            )
+            views = @View(title = "MFA", sortable = true),
+            // allowChange = false keeps the flag out of every inbound payload: MFA is granted by
+            // enrolling an authenticator and revoked through Reset MFA, never by editing this form
+            edit = @Edit(title = "MFA", type = EditType.BOOLEAN, search = @Search, cellEdit = false, show = false,
+                    readonly = @Readonly(allowChange = false),
+                    boolType = @BoolType(trueText = "Enabled", falseText = "Disabled"))
     )
-    private Set<EruptRole> roles;
+    private Boolean mfaEnabled = false;
+
+    // Credentials: never annotated with @EruptField, so they are excluded from every view,
+    // form and export the framework generates
+    @Column(length = 64)
+    private String mfaSecret;
+
+    // A JSON array in one column rather than a side table: the set is tiny, always read
+    // whole and never queried by SQL. REMARK_LENGTH leaves room to raise the code count,
+    // which matters because ddl-auto=update can never widen a column later.
+    @Convert(converter = StringSetJsonConverter.class)
+    @Column(length = AnnotationConst.REMARK_LENGTH)
+    private Set<String> mfaRecoveryCodes;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(
                     title = "IP Whitelist",
-                    desc = "Separate IPs with newline; leave empty for no auth check",
+                    desc = "Separate IPs with newline; CIDR masks allowed (e.g. 192.168.0.0/24, 2001:db8::/32); leave empty for no auth check",
                     type = EditType.TEXTAREA
             )
     )

@@ -103,6 +103,9 @@ public @interface Edit {
     @Match("#item.type().toString()=='COLOR'")
     ColorType colorType() default @ColorType;
 
+    @Match("#item.type().toString()=='KEY_VALUE'")
+    KeyValueType keyValueType() default @KeyValueType;
+
     @Match("#item.type().toString()=='BOOLEAN'")
     BoolType boolType() default @BoolType;
 
@@ -132,6 +135,9 @@ public @interface Edit {
 
     @Transient
     CheckboxType checkboxType() default @CheckboxType;
+
+    @Transient
+    TransferType transferType() default @TransferType;
 
     @Match("#item.type().toString()=='GROUP'")
     GroupType groupType() default @GroupType(fields = {});

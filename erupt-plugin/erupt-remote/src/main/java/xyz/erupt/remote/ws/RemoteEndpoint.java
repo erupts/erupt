@@ -74,7 +74,7 @@ public class RemoteEndpoint {
         session.setMaxIdleTimeout(0);
         session.setMaxBinaryMessageBufferSize(1024 * 1024);
         RemoteBridge bridge = RemoteHost.PROTOCOL_SSH.equals(host.getProtocol())
-                ? new SshSession(session, host, host.getUsername(), password, crypto.decrypt(host.getPrivateKey()), account, timeoutMs)
+                ? new SshSession(session, host, password, crypto.decrypt(host.getPrivateKey()), account, timeoutMs)
                 : new VncSession(session, host, password, account, timeoutMs);
         registry.register(bridge);
         bridge.start();

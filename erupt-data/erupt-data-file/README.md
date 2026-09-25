@@ -45,7 +45,7 @@ public class Country {
 
     @EruptField(
         views = @View(title = "Name"),
-        edit = @Edit(title = "Name", search = @Search(vague = true))
+        edit = @Edit(title = "Name", search = @Search)
     )
     private String name;
 

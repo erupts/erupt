@@ -55,6 +55,9 @@ public class EruptAppProp {
     //Custom configuration
     private Map<String, Object> properties = new HashMap<>();
 
+    //Multi-factor authentication (TOTP)
+    private Mfa mfa = new Mfa();
+
     //Toggle for the reset password feature
     private Boolean resetPwd = true;
 
@@ -64,6 +67,10 @@ public class EruptAppProp {
     private Integer hash;
 
     private String version;
+
+    // Domain that hosts uploaded attachments, taken from the registered AttachmentProxy so the
+    // frontend does not need its own copy (eruptSiteConfig.fileDomain). Null when attachments are served by erupt itself
+    private String fileDomain;
 
     public void setLocales(String[] locales) {
         if (null == locales || locales.length == 0) {
@@ -76,6 +83,23 @@ public class EruptAppProp {
     //Register custom properties
     public void registerProp(String key, Object value) {
         this.properties.put(key, value);
+    }
+
+    @Getter
+    @Setter
+    public static class Mfa {
+
+        //Whether users may protect their account with a TOTP authenticator.
+        //On by default: it only opens the feature, it does not force anyone to enrol,
+        //so an upgrade never locks an existing user out
+        private boolean enable = true;
+
+        //Name shown by the authenticator app; falls back to the application name when blank
+        private String issuer = "";
+
+        //How many 30 second steps either side of now are accepted, to absorb clock drift
+        private int window = 1;
+
     }
 
 }

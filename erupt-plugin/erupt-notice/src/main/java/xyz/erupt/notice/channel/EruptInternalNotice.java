@@ -1,5 +1,6 @@
 package xyz.erupt.notice.channel;
 
+import com.google.gson.Gson;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.i18n.I18nTranslate;
@@ -11,6 +12,8 @@ import xyz.erupt.webscoket.service.EruptWebSocketService;
 
 @Component
 public class EruptInternalNotice extends AbstractNoticeChannel {
+
+    private static final Gson GSON = new Gson();
 
     @Resource
     private EruptWebSocketService webSocketService;
@@ -28,8 +31,11 @@ public class EruptInternalNotice extends AbstractNoticeChannel {
     @Override
     public void send(EruptUser eruptUser, NoticeMessage noticeMessage) {
         for (EruptWsSessionModel model : webSocketService.getSessionsByUser(eruptUser.getId())) {
-            webSocketService.send(model, SocketCommand.JS,
-                    "window.eruptNotice(" + noticeMessage.getId() + ",`" + noticeMessage.getTitle() + "`, `" + noticeMessage.getContent() + "`)");
+            // title and content are user-written text: JSON-encode them so they arrive as string
+            // literals instead of being spliced into the script
+            // the detail row id, not the log id: the detail endpoint is keyed by the recipient's own copy
+            webSocketService.send(model, SocketCommand.JS, "window.eruptNotice(" + noticeMessage.getLogDetailId() + ","
+                    + GSON.toJson(noticeMessage.getTitle()) + "," + GSON.toJson(noticeMessage.getContent()) + ")");
         }
     }
 

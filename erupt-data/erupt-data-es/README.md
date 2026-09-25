@@ -40,7 +40,7 @@ public class Product {
     @Field(type = FieldType.Text, fielddata = true)
     @EruptField(
         views = @View(title = "Name"),
-        edit = @Edit(title = "Name", search = @Search(vague = true))
+        edit = @Edit(title = "Name", search = @Search)
     )
     private String name;
 

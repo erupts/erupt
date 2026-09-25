@@ -8,8 +8,8 @@
         :root {
             --bg: #f6f7f9;
             --surface: #ffffff;
-            --border: #e5e7eb;
-            --border-soft: #eef0f3;
+            --border: #c9c9c9;
+            --border-soft: #e5e7eb;
             --fg: #111827;
             --muted: #6b7280;
             --faint: #9ca3af;
@@ -134,7 +134,7 @@
         .matrix .hl { background: var(--accent-soft) !important; }
 
         /* layers */
-        .lv { padding: 18px 20px 30px; max-width: 1200px; }
+        .lv { padding: 18px 20px 30px; }
         .lv .sect { margin-bottom: 14px; }
         .lvbar { display: flex; gap: 3px; margin-bottom: 16px; }
         .lvbar .seg {
@@ -177,6 +177,11 @@
             background: var(--bg); border: 1px solid var(--border-soft); color: var(--muted); white-space: nowrap;
         }
         .lv .flag.warn { color: #b91c1c; border-color: #fecaca; background: #fef2f2; }
+        /* A matrix is scanned down, not across: it keeps its own readable width while the tiles
+           and the drift rows above it use the whole board */
+        .lv table.pw { max-width: 1100px; }
+        .lv table.pw th:first-child { width: 300px; }
+        .lv table.pw th:nth-child(2) { width: 120px; }
         .lv table.pw th.pw-h { width: 30px; height: 72px; padding: 0 0 6px; vertical-align: bottom; }
         .lv table.pw th.pw-h span {
             display: inline-block; transform: rotate(-90deg); transform-origin: left bottom;
@@ -189,8 +194,8 @@
         .lv .nomenu { color: var(--faint); font-size: 10px; font-style: normal; }
 
         /* impact */
-        .impact { padding: 18px 20px 30px; max-width: 980px; }
-        .impact .note { font-size: 11.5px; color: var(--faint); margin-bottom: 14px; max-width: 660px; }
+        .impact { padding: 18px 20px 30px; }
+        .impact .note { font-size: 11.5px; color: var(--faint); margin-bottom: 14px; max-width: 74ch; }
         .impact table, .lv table { width: 100%; border-collapse: collapse; font-size: 12px; }
         .impact th, .lv th {
             text-align: left; font-size: 9.5px; font-weight: 600; letter-spacing: .07em;
@@ -208,7 +213,7 @@
         .impact .hop { color: var(--faint); font-size: 10.5px; }
 
         /* audit */
-        .audit { padding: 18px 20px 30px; max-width: 1460px; }
+        .audit { padding: 18px 20px 30px; }
         .tiles {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
             gap: 10px; margin-bottom: 16px;
@@ -241,7 +246,7 @@
             background: var(--border-soft); color: var(--muted);
         }
         .sect h3 .cnt.warn { background: #fef2f2; color: #b91c1c; }
-        .sect .note { font-size: 11.5px; line-height: 1.55; color: var(--faint); margin-bottom: 11px; }
+        .sect .note { font-size: 11.5px; line-height: 1.55; color: var(--faint); margin-bottom: 11px; max-width: 74ch; }
         .row {
             display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
             padding: 7px 10px; background: var(--bg); border: 1px solid var(--border-soft);
@@ -293,6 +298,11 @@
         .detail .yes { color: #059669; }
         .detail .no { color: var(--border); }
         .detail .ref { cursor: pointer; color: var(--accent); }
+        .detail .use { width: 150px; color: var(--fg); }
+        .detail .use i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; }
+        .detail .own { font-weight: 500; }
+        .detail .own.link { cursor: pointer; }
+        .detail .own.link:hover { color: var(--accent); }
         .cfg { display: grid; grid-template-columns: 132px 1fr; gap: 6px 14px; padding: 12px 14px; font-size: 12px; }
         .cfg dt { color: var(--faint); }
         .cfg dd { color: var(--fg); word-break: break-all; }
@@ -363,6 +373,9 @@
     var mode = 'tree', current = null, keyword = '', depth = 2, audit = null;
     var domainsBySize = [], domainSize = {}, domainFocus = null;
     var detailCache = {}, detailTab = 'relations';
+    // What every module reports it has bound a model to. One request answers the whole page, so
+    // the callers that need it queue behind the first one instead of each firing a sweep
+    var usageRows = null, usageBy = {}, usageWait = [];
     // Filled from the module's own i18n csv, keyed by the English text: a string the csv never
     // heard of simply stays English
     var TEXT = {};
@@ -821,7 +834,7 @@
                         + esc(listName(r.node)) + '</td>'
                         + '<td class="mod">' + esc(r.node.group) + '</td>'
                         + '<td class="num">' + r.on + '</td><td class="num">' + r.direct + '</td>'
-                        + '<td class="bar"><span style="width:' + (r.on / maxOn * 260) + 'px;background:#2563eb"></span></td></tr>';
+                        + '<td class="bar"><span style="width:' + (r.on / maxOn * 96) + '%;background:#2563eb"></span></td></tr>';
                 }).join('') + '</table>'
                 : ok(t('No foundation model in this domain.')));
 
@@ -870,6 +883,44 @@
                 draw();
             })
             .catch(function (e) { stage.innerHTML = '<div class="hint">' + esc(t('Failed to load') + ': ' + e) + '</div>'; });
+    }
+
+    /* ---------------- used by ----------------
+       A relation is written on the model; a usage is not. A flow bound to its form, a flow node
+       bound to its config model, a menu opening a table, a dashboard reading a cube: each module
+       reports its own bindings, and a model that looks isolated in the graph is often just one
+       whose users live somewhere the graph cannot see. */
+
+    function loadUsage(then) {
+        if (usageRows) { then(); return; }
+        usageWait.push(then);
+        if (usageWait.length > 1) return;
+        fetch(BASE + '/erupt-api/erupt-atlas/usage?' + AUTH)
+            .then(function (r) { return r.json(); })
+            .then(function (rows) { holdUsage(rows || []); })
+            .catch(function () { holdUsage([]); })
+            .then(function () {
+                var waiting = usageWait;
+                usageWait = [];
+                waiting.forEach(function (fn) { fn(); });
+            });
+    }
+
+    function holdUsage(rows) {
+        usageRows = rows;
+        usageBy = {};
+        rows.forEach(function (u) { (usageBy[u.target] = usageBy[u.target] || []).push(u); });
+    }
+
+    function usesOf(id) { return usageBy[id] || []; }
+
+    // The page runs in the console frame: opening a configuration means moving the console, not us
+    function openRoute(route) {
+        try {
+            window.parent.location.hash = '#' + route;
+        } catch (e) {
+            window.open(BASE + '/#' + route, '_blank');
+        }
     }
 
     function powerHeld(set) {
@@ -1013,7 +1064,7 @@
                 + '<td class="mod">' + esc(r.node.group) + '</td>'
                 + '<td class="num">' + r.impact.total + '</td><td class="bar">';
             r.impact.hops.forEach(function (n, i) {
-                html += '<span style="width:' + (n / max * 320) + 'px;background:'
+                html += '<span style="width:' + (n / max * 80) + '%;background:'
                     + HOP_COLOR[Math.min(i, HOP_COLOR.length - 1)] + '" title="' + (i + 1) + ' hop: ' + n + '"></span>';
             });
             html += ' <span class="hop">' + r.impact.hops.join(' / ') + '</span></td></tr>';
@@ -1262,15 +1313,20 @@
 
     function paintDetail(node) {
         var d = detailCache[node.id];
+        // the count belongs in the tab itself, so an isolated-looking model shows its users at once
+        if (!usageRows) loadUsage(function () { if (current === node.id) paintDetail(node); });
         var rel = outOf[node.id].length + inOf[node.id].length;
         var head = '<div class="dh"><span>' + esc(node.name) + '</span>'
             + tab('relations', t('Relations'), rel)
             + tab('fields', node.kind === 'cube' ? t('Dimensions') : t('Fields'),
                 node.kind === 'cube' ? node.dimensions + node.measures : node.fields)
+            + tab('usage', t('Used by'), usageRows ? usesOf(node.id).length : null)
             + tab('config', t('Config'), null) + '</div>';
         var body;
         if (detailTab === 'relations') {
             body = relationRows(node);
+        } else if (detailTab === 'usage') {
+            body = usageRows ? usageTable(node) : '<div class="none">' + esc(t('Loading…')) + '</div>';
         } else if (!d) {
             body = '<div class="none">' + esc(t('Loading…')) + '</div>';
         } else {
@@ -1286,6 +1342,9 @@
         });
         each(detail.querySelectorAll('.mdl, .ref'), function (td) {
             td.onclick = function () { select(td.getAttribute('data-id')); };
+        });
+        each(detail.querySelectorAll('.own.link'), function (td) {
+            td.onclick = function () { openRoute(td.getAttribute("data-route")); };
         });
     }
 
@@ -1338,6 +1397,23 @@
                 + '<td>' + (f.reference
                     ? '<span class="ref" data-id="' + esc(f.reference) + '">→ ' + esc(f.reference) + '</span>' : '')
                 + '</td></tr>';
+        });
+        return html + '</table>';
+    }
+
+    function usageTable(node) {
+        var rows = usesOf(node.id);
+        if (!rows.length) return '<div class="none">' + esc(t('No module reports using this model.')) + '</div>';
+        rows = rows.slice().sort(function (a, b) {
+            return a.usage.localeCompare(b.usage) || a.owner.localeCompare(b.owner);
+        });
+        var html = '<table>';
+        rows.forEach(function (u) {
+            html += '<tr><td class="use"><i style="background:' + (colorOf[u.module] || '#cbd5e1') + '"></i>'
+                + esc(u.usage) + '</td>'
+                + '<td class="own' + (u.route ? ' link" data-route="' + esc(u.route) : '') + '">'
+                + esc(u.owner || '') + '</td>'
+                + '<td class="mod">' + esc(u.module || '') + '</td></tr>';
         });
         return html + '</table>';
     }

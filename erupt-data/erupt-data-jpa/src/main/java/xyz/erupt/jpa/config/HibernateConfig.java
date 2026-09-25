@@ -5,8 +5,9 @@ import org.hibernate.jpa.boot.spi.IntegratorProvider;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.stereotype.Component;
 import xyz.erupt.jpa.support.CommentIntegrator;
+import xyz.erupt.jpa.support.EnumColumnIntegrator;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -19,11 +20,17 @@ public class HibernateConfig implements HibernatePropertiesCustomizer {
     @Resource
     private CommentIntegrator commentIntegrator;
 
+    @Resource
+    private EnumColumnIntegrator enumColumnIntegrator;
+
     @Override
     public void customize(Map<String, Object> hibernateProperties) {
         hibernateProperties.put("hibernate.use_sql_comments", true);
+        //globally quoted identifiers otherwise quote a columnDefinition as well, and a quoted
+        //type name reads as a domain the database has never heard of
+        hibernateProperties.put("hibernate.globally_quoted_identifiers_skip_column_definitions", true);
         hibernateProperties.put("hibernate.integrator_provider",
-                (IntegratorProvider) () -> Collections.singletonList(commentIntegrator));
+                (IntegratorProvider) () -> Arrays.asList(commentIntegrator, enumColumnIntegrator));
     }
 
 }

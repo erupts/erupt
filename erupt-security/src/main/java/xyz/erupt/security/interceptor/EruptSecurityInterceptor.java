@@ -75,7 +75,10 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         }
         if (eruptRouter.verifyType().equals(EruptRouter.VerifyType.ERUPT)) {
             MetaContext.register(new MetaErupt(eruptName, eruptName));
-            EruptModel erupt = EruptCoreService.getErupt(eruptName);
+            // WithRemote: an erupt-cloud node erupt ("nodeName.eruptName") has no local class, and a
+            // server-owned API (@EruptRouter(cloudProxy = false)) answers for it here instead of being
+            // forwarded to the node, so the placeholder model is what the checks below run against.
+            EruptModel erupt = EruptCoreService.getEruptWithRemote(eruptName);
             if (null == erupt) {
                 log.warn("Erupt not found: {}", eruptName);
                 response.setStatus(HttpStatus.NOT_FOUND.value());
@@ -109,7 +112,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                 MetaContext.register(new MetaErupt(null, authStr));
             }
             case ERUPT -> {
-                EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+                EruptModel eruptModel = EruptCoreService.getEruptWithRemote(eruptName);
                 if (StringUtils.isNotBlank(parentEruptName)) {
                     // The client claims this request serves a sub-form of parentEruptName; verify the
                     // nesting relation against annotation metadata, then authorize by the parent's menu.

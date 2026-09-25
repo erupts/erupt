@@ -20,9 +20,15 @@ public class LoginModel {
 
     private boolean useVerifyCode = false; //Whether a verification code is required
 
+    private boolean mfaRequired = false; //Password accepted, a one-time code is still owed
+
+    private String mfaTicket; //Short lived handle for the second step, never a session token
+
     private String reason; //Reason for validation failure
 
     private String token;
+
+    private String account; //Who the session belongs to; a delegated login is the client's only way to know
 
     private LocalDateTime expire;
 

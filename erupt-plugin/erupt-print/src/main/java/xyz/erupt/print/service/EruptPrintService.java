@@ -4,6 +4,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.StringResourceLoader;
+import org.apache.velocity.util.introspection.SecureUberspector;
 import org.springframework.stereotype.Service;
 import xyz.erupt.print.var.PrintVar;
 
@@ -18,6 +19,9 @@ public class EruptPrintService {
     static {
         velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADERS, String.class.getSimpleName());
         velocityEngine.setProperty("resource.loader.string.class", StringResourceLoader.class.getName());
+        // A print template is data, not code: the secure uberspect denies the reflection entry points
+        // (getClass, ClassLoader, Method.invoke) that would turn a stored template into arbitrary execution
+        velocityEngine.setProperty(RuntimeConstants.UBERSPECT_CLASSNAME, SecureUberspector.class.getName());
         velocityEngine.init();
     }
 

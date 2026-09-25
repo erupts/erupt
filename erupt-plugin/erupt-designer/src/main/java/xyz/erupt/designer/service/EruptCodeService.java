@@ -109,7 +109,8 @@ public class EruptCodeService {
             case DATE -> ClassName.get(Date.class);
             case REFERENCE_TREE, REFERENCE_TABLE, COMBINE -> linkErupt(field);
             case MULTI_CHOICE -> ParameterizedTypeName.get(ClassName.get(Set.class), ClassName.get(String.class));
-            case CHECKBOX, TAB_TREE, TAB_TABLE_REFER, TAB_TABLE_ADD ->
+            case KEY_VALUE -> ParameterizedTypeName.get(ClassName.get(Map.class), ClassName.get(String.class), ClassName.get(String.class));
+            case CHECKBOX, TRANSFER, TAB_TREE, TAB_TABLE_REFER, TAB_TABLE_ADD ->
                     ParameterizedTypeName.get(ClassName.get(Set.class), linkErupt(field));
             default -> ClassName.get(String.class);
         };
@@ -127,7 +128,10 @@ public class EruptCodeService {
                             .addMember(LambdaSee.method(JdbcTypeCode::value), "$T.$L", SqlTypes.class, "JSON").build(),
                     AnnotationSpec.builder(Column.class)
                             .addMember(LambdaSee.method(Column::length), "$L", 2000).build());
-            case CHECKBOX, TAB_TREE, TAB_TABLE_REFER -> List.of(annotation(ManyToMany.class));
+            // the map itself on a JSON column
+            case KEY_VALUE -> List.of(AnnotationSpec.builder(JdbcTypeCode.class)
+                    .addMember(LambdaSee.method(JdbcTypeCode::value), "$T.$L", SqlTypes.class, "JSON").build());
+            case CHECKBOX, TRANSFER, TAB_TREE, TAB_TABLE_REFER -> List.of(annotation(ManyToMany.class));
             case TAB_TABLE_ADD -> Arrays.asList(AnnotationSpec.builder(OneToMany.class)
                             .addMember(LambdaSee.method(OneToMany::cascade), TL, CascadeType.class, CascadeType.ALL.name())
                             .addMember(LambdaSee.method(OneToMany::orphanRemoval), L, true).build(),

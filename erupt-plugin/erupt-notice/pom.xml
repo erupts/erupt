@@ -11,7 +11,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>2.2.0</version>
+        <version>2.3.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -26,6 +26,13 @@
             <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-websocket</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <!-- Feishu, DingTalk, WeCom and Slack channels send through the SSO provider rows; without erupt-sso they simply do not exist -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-sso</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

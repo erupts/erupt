@@ -50,11 +50,16 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
                             return ViewType.MAP;
                         case COLOR:
                             return ViewType.COLOR;
+                        case ICON:
+                            return ViewType.ICON;
+                        case KEY_VALUE:
+                            return ViewType.KEY_VALUE;
                         case TAB_TABLE_ADD:
                         case MULTI_FORM:
                         case TAB_TREE:
                         case TAB_TABLE_REFER:
                         case CHECKBOX:
+                        case TRANSFER:
                         case MULTI_CHOICE:
                             return ViewType.TAB_VIEW;
                         case MARKDOWN:
@@ -77,6 +82,8 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
             return ProxyContext.translate(this.rawAnnotation.title());
         } else if (super.matchMethod(invocation, View::desc)) {
             return ProxyContext.translate(this.rawAnnotation.desc());
+        } else if (super.matchMethod(invocation, View::group)) {
+            return ProxyContext.translate(this.rawAnnotation.group());
         }
         return this.invoke(invocation);
     }

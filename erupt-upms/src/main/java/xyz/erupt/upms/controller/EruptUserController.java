@@ -7,27 +7,28 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaUserinfo;
-import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecretUtil;
 import xyz.erupt.core.view.R;
 import xyz.erupt.upms.base.ChangePwdBody;
+import xyz.erupt.upms.base.VerifyPwdBody;
 import xyz.erupt.upms.base.LoginBody;
 import xyz.erupt.upms.base.LoginModel;
+import xyz.erupt.upms.base.MfaBody;
+import xyz.erupt.upms.base.ProfileBody;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptAppProp;
-import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.service.*;
 import xyz.erupt.upms.vo.EruptMenuVo;
 import xyz.erupt.upms.vo.EruptUserinfoVo;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +62,7 @@ public class EruptUserController {
     private EruptMenuService eruptMenuService;
 
     @Resource
-    private EruptUpmsProp eruptUpmsProp;
+    private EruptMfaService eruptMfaService;
 
     /**
      * Login
@@ -72,8 +73,10 @@ public class EruptUserController {
     public LoginModel login(@RequestBody LoginBody loginBody) {
         String account = loginBody.getAccount();
         String pwd = loginBody.getPwd();
+        // A locked pair is told so at once, whatever else the request carries
+        if (eruptUserService.isLoginLocked(account)) return eruptUserService.lockedLoginModel();
         if (!eruptUserService.checkVerifyCode(account, loginBody.getVerifyCode(), loginBody.getVerifyCodeMark())) {
-            return new LoginModel(false, I18nTranslate.$translate("upms.verify_code_error"), true);
+            return eruptUserService.loginFailure(account, "upms.verify_code_error");
         }
         if (eruptAppProp.getPwdTransferEncrypt()) {
             pwd = SecretUtil.decodeSecret(pwd, 3);
@@ -100,14 +103,41 @@ public class EruptUserController {
             }
         }
         if (loginModel.isPass()) {
-            EruptUser eruptUser = loginModel.getEruptUser();
-            loginModel.setToken(Erupts.generateCode(22)); // 22 alphanumerics ~ 131 bits, meets the 128-bit session id guideline
-            loginModel.setExpire(LocalDateTime.now().plusMinutes(eruptUpmsProp.getExpireTimeByLogin()));
-            loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
-            if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
-            eruptTokenService.loginToken(eruptUser, loginModel.getToken());
-            eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //Record login log
+            // The password is only the first factor: when an authenticator is bound no session
+            // is created here, the caller has to come back through /login-mfa with a code
+            if (eruptMfaService.isBound(loginModel.getEruptUser())) {
+                loginModel.setPass(false);
+                loginModel.setMfaRequired(true);
+                loginModel.setMfaTicket(eruptMfaService.issueTicket(loginModel.getEruptUser()));
+                return loginModel;
+            }
+            eruptUserService.completeLogin(loginModel, loginProxy);
         }
+        return loginModel;
+    }
+
+    /**
+     * Second step of a two factor login: exchange the ticket plus a one-time code for a session.
+     */
+    @PostMapping(value = "/login-mfa")
+    public LoginModel loginMfa(@RequestBody MfaBody body) {
+        EruptUser eruptUser = eruptMfaService.findUserByTicket(body.getMfaTicket());
+        if (null == eruptUser) {
+            return new LoginModel(false, I18nTranslate.$translate("upms.mfa.ticket_expired"));
+        }
+        try {
+            eruptMfaService.verifyForLogin(eruptUser, body.getMfaTicket(), body.getCode());
+        } catch (Exception e) {
+            LoginModel fail = new LoginModel(false, e.getMessage());
+            // the ticket survives an ordinary wrong code, so the client stays on the code screen
+            if (null != eruptMfaService.findUserByTicket(body.getMfaTicket())) {
+                fail.setMfaRequired(true);
+                fail.setMfaTicket(body.getMfaTicket());
+            }
+            return fail;
+        }
+        LoginModel loginModel = new LoginModel(true, eruptUser);
+        eruptUserService.completeLogin(loginModel, EruptUserService.findEruptLogin());
         return loginModel;
     }
 
@@ -120,11 +150,36 @@ public class EruptUserController {
         return eruptUserService.changePwd(eruptUserService.getCurrentAccount(), pwd, newPwd, newPwd2);
     }
 
+    /**
+     * Re-check the signed-in user's password without issuing a new session, used to unlock the
+     * screen. It goes through the same path as a sign-in, so the failure counter and lock apply.
+     */
+    @PostMapping(value = "/verify-pwd")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public R<Void> verifyPwd(@RequestBody VerifyPwdBody body) {
+        String pwd = eruptAppProp.getPwdTransferEncrypt() ? SecretUtil.decodeSecret(body.getPwd(), 3) : body.getPwd();
+        return eruptUserService.verifyPwd(pwd);
+    }
+
+    @PostMapping("/profile")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public R<Void> updateProfile(@RequestBody ProfileBody body) {
+        eruptUserService.updateProfile(body);
+        return R.ok();
+    }
+
+    @PostMapping("/profile/avatar")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public R<String> uploadAvatar(@RequestParam("file") MultipartFile file) {
+        return R.ok(eruptUserService.uploadAvatar(file));
+    }
+
     @GetMapping("/userinfo")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptUserinfoVo userinfo() {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
         EruptUserinfoVo userinfoVo = new EruptUserinfoVo();
+        userinfoVo.setAccount(eruptUser.getAccount());
         userinfoVo.setNickname(eruptUser.getName());
         userinfoVo.setAvatar(eruptUser.getAvatar());
         userinfoVo.setResetPwd(null == eruptUser.getResetPwdTime());

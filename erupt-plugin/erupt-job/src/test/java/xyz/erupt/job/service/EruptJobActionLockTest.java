@@ -5,6 +5,7 @@ import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.core.SimpleLock;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationContext;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -45,7 +46,10 @@ public class EruptJobActionLockTest {
         spring.when(() -> EruptSpringUtil.getBean(EruptJobProp.class)).thenReturn(new EruptJobProp());
         // Production code reads the LockProvider off the container, not via EruptSpringUtil.getBean(Class)
         ApplicationContext context = mock(ApplicationContext.class);
-        when(context.getBean(LockProvider.class)).thenReturn(lockProvider);
+        @SuppressWarnings("unchecked")
+        ObjectProvider<LockProvider> lockProviderBeans = mock(ObjectProvider.class);
+        when(lockProviderBeans.getIfAvailable()).thenReturn(lockProvider);
+        when(context.getBeanProvider(LockProvider.class)).thenReturn(lockProviderBeans);
         spring.when(EruptSpringUtil::getApplicationContext).thenReturn(context);
     }
 

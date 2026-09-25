@@ -1,9 +1,3 @@
 .icon-rocket:before {
     content: "🚀";
 }
-
-.lp-side-brand-name {
-    font-family: "Courier New", Arial, Helvetica, sans-serif !important;
-    font-size: 18px;
-    letter-spacing: -0.3px;
-}

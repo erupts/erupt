@@ -64,6 +64,14 @@ public class EruptTokenService {
         return menus;
     }
 
+    // The session keeps a copy of the user's display name: keep it in step with a profile change
+    public void renameUser(String token, String username) {
+        MetaUserinfo metaUserinfo = eruptSessionService.get(SessionKey.USER_INFO + token, MetaUserinfo.class);
+        if (null == metaUserinfo) return;
+        metaUserinfo.setUsername(username);
+        eruptSessionService.put(SessionKey.USER_INFO + token, GsonFactory.getGson().toJson(metaUserinfo), eruptUpmsProp.getExpireTimeByLogin() - 1, TimeUnit.MINUTES);
+    }
+
     public boolean tokenExist(String token) {
         return eruptSessionService.exist(SessionKey.TOKEN_OLINE + token);
     }
@@ -82,6 +90,26 @@ public class EruptTokenService {
     public void logoutToken(String name, String token) {
         for (String uk : SessionKey.USER_KEY_GROUP) eruptSessionService.remove(uk + token);
         log.info("logout erupt-token: {} → {}", name, token);
+    }
+
+    /**
+     * End every live session of an account except keepToken (null to end them all).
+     * Used when a credential changes: the session that changed it stays, the rest go.
+     * Sessions are found by scanning the token keys, whose value is the account, which is
+     * the same scan the online user list performs.
+     */
+    public int logoutOtherTokens(String account, String keepToken) {
+        int count = 0;
+        for (String key : eruptSessionService.keys(SessionKey.TOKEN_OLINE)) {
+            String token = key.substring(SessionKey.TOKEN_OLINE.length());
+            if (token.equals(keepToken)) continue;
+            Object owner = eruptSessionService.get(key);
+            if (null != owner && account.equals(owner.toString())) {
+                this.logoutToken(account, token);
+                count++;
+            }
+        }
+        return count;
     }
 
 }

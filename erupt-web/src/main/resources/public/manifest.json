@@ -7,11 +7,20 @@
     "author": "YuePeng",
     "lang": "en",
     "dir": "ltr",
-    "categories": ["business", "productivity", "developer"],
+    "categories": [
+        "business",
+        "productivity",
+        "developer"
+    ],
     "theme_color": "#05192c",
     "background_color": "#fafafa",
     "display": "standalone",
-    "display_override": ["standalone", "minimal-ui", "browser"],
+    "display_override": [
+        "window-controls-overlay",
+        "standalone",
+        "minimal-ui",
+        "browser"
+    ],
     "orientation": "any",
     "scope": "./",
     "start_url": "./",
@@ -28,5 +37,21 @@
             "type": "image/svg+xml",
             "purpose": "maskable"
         }
-    ]
+    ],
+    "shortcuts": [
+        {
+            "name": "Home",
+            "url": "./#/",
+            "icons": [
+                {
+                    "src": "assets/pwa-icon.svg",
+                    "sizes": "any",
+                    "type": "image/svg+xml"
+                }
+            ]
+        }
+    ],
+    "launch_handler": {
+        "client_mode": "navigate-existing"
+    }
 }

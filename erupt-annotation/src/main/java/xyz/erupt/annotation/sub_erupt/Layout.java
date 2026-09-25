@@ -31,6 +31,10 @@ public @interface Layout {
 
     String tableOperatorWidth() default "";
 
+    //Cut a cell that overflows its column width off with an ellipsis; false lets it wrap onto
+    //further lines instead, which also keeps every action of a crowded operation column reachable
+    boolean tableTruncate() default true;
+
     //Collapse delete/edit/view buttons into a dropdown menu in the toolbar
     boolean collapseActionButton() default false;
 

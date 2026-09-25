@@ -50,7 +50,7 @@ public class ReportPublishMenu implements OperationHandler<Bi, MenuPublishModal>
         Erupts.requireNull(eruptDao.lambdaQuery(EruptMenu.class).eq(EruptMenu::getCode, bi.getCode()).one(), I18nTranslate.$translate("bi.menu_already_exists"));
         Integer max = (Integer) eruptDao.lambdaQuery(EruptMenu.class).max(EruptMenu::getSort);
         EruptMenu eruptMenu = new EruptMenu(bi.getCode(), biReleaseModal.getName(), ReportConst.MENU_TYPE,
-                bi.getCode(), MenuStatus.OPEN.getValue(), max + 10, null, biReleaseModal.getEruptMenu());
+                bi.getCode(), MenuStatus.OPEN.getValue(), (max == null ? 0 : max) + 10, biReleaseModal.getIcon(), biReleaseModal.getEruptMenu());
         eruptDao.persist(eruptMenu);
         eruptMenuService.flushMenuCache();
         return null;

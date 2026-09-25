@@ -1,15 +1,14 @@
 package xyz.erupt.cloud.server;
 
-import java.time.Duration;
-import xyz.erupt.cloud.server.config.EruptCloudServerProp;
-import xyz.erupt.cloud.common.http.CloudHttp;
-import org.springframework.web.client.RestClient;
-import org.springframework.context.annotation.Bean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestClient;
+import xyz.erupt.cloud.common.http.CloudHttp;
 import xyz.erupt.cloud.server.base.CloudServerConst;
+import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.model.CloudNode;
 import xyz.erupt.cloud.server.model.CloudNodeGroup;
 import xyz.erupt.core.annotation.EruptScan;
@@ -20,6 +19,7 @@ import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class EruptCloudServerAutoConfiguration implements EruptModule {
 
     @Override
     public List<MetaMenu> initMenus() {
-        MetaMenu nodeManager = MetaMenu.createRootMenu("$NodeManager", "Micronode Management", "fa fa-circle-nodes", 70);
+        MetaMenu nodeManager = MetaMenu.createRootMenu("$NodeManager", "Micronode Management", "fa fa-cloud", 70);
         MetaMenu nodeMenu = MetaMenu.createEruptClassMenu(CloudNode.class, nodeManager, 20);
         return Arrays.asList(nodeManager,
                 MetaMenu.createEruptClassMenu(CloudNodeGroup.class, nodeManager, 10, MenuTypeEnum.TREE, MenuStatus.HIDE),

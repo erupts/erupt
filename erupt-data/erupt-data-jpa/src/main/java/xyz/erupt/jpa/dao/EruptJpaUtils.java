@@ -9,6 +9,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.constant.EruptConst;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +39,22 @@ public class EruptJpaUtils {
     public static final String AS = " as ";
 
     public static final String LEFT_JOIN = " left outer join ";
+
+    // A field path names a column and nothing else: dotted java identifiers, no whitespace,
+    // quotes, commas or parentheses that would let a client continue the statement.
+    private static final Pattern LEGAL_PATH = Pattern.compile("[A-Za-z_$][A-Za-z0-9_$]*(\\.[A-Za-z_$][A-Za-z0-9_$]*)*");
+
+    /**
+     * Guard a field path that reaches the hql as an identifier rather than a bound parameter.
+     * Sort fields and condition keys arrive from the client, so anything that is not a plain
+     * dotted identifier is rejected before it can extend the query.
+     */
+    public static String legalPath(String path) {
+        if (StringUtils.isBlank(path) || !LEGAL_PATH.matcher(path).matches()) {
+            throw new EruptWebApiRuntimeException("Illegal query field → " + path);
+        }
+        return path;
+    }
 
     public static Set<String> getEruptColJpaKeys(EruptModel eruptModel) {
         Set<String> cols = new HashSet<>();
@@ -182,7 +200,7 @@ public class EruptJpaUtils {
                             break;
                     }
                 } else {
-                    hql.append(EruptJpaUtils.AND).append(condition.getKey()).append("=:").append(condition.getKey().replace(EruptConst.DOT, "_"));
+                    hql.append(EruptJpaUtils.AND).append(legalPath(condition.getKey())).append("=:").append(condition.getKey().replace(EruptConst.DOT, "_"));
                 }
             }
         }
@@ -198,7 +216,7 @@ public class EruptJpaUtils {
     public static String geneEruptHqlOrderBy(EruptModel eruptModel, List<Sort> sorts) {
         if (sorts != null && !sorts.isEmpty()) {
             String hql = sorts.stream()
-                    .map(sort -> EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), sort.getField()) + " " + sort.getDirection().name())
+                    .map(sort -> EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), legalPath(sort.getField())) + " " + sort.getDirection().name())
                     .collect(Collectors.joining(","));
             return SqlLang.ORDER_BY + hql;
         } else if (StringUtils.isNotBlank(eruptModel.getErupt().orderBy())) {

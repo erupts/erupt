@@ -48,7 +48,7 @@ public class AiCanvasMenuHandler implements OperationHandler<AiCanvas, MenuPubli
                 menuCode, modal.getName(), EruptAiCanvasAutoConfiguration.MENU_TYPE,
                 canvas.getCode(),
                 MenuStatus.OPEN.getValue(), (max == null ? 0 : max) + 10,
-                null, modal.getEruptMenu()
+                modal.getIcon(), modal.getEruptMenu()
         ));
         eruptMenuService.flushMenuCache();
         return null;

@@ -86,7 +86,7 @@ public class DesignerClassFactory {
                 // reference data is stored as {id, label...}; no ORM entity involved
                     Map.class;
             case MULTI_CHOICE -> java.util.Set.class;
-            case CHECKBOX, TAB_TREE, TAB_TABLE_ADD, TAB_TABLE_REFER -> java.util.List.class;
+            case CHECKBOX, TRANSFER, TAB_TREE, TAB_TABLE_ADD, TAB_TABLE_REFER -> java.util.List.class;
             default -> String.class;
         };
     }

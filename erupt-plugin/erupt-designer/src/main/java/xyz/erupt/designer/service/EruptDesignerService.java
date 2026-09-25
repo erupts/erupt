@@ -84,8 +84,9 @@ public class EruptDesignerService {
             EditType editType = Optional.ofNullable(designerField.getEdit())
                     .filter(it -> it.has(editTypeMember))
                     .map(it -> EditType.valueOf(it.get(editTypeMember).getAsString())).orElse(EditType.INPUT);
-            // settle a concrete view type on the design json before it is proxied
+            // settle a concrete view type and bool widget on the design json before it is proxied
             designerField.viewType();
+            designerField.boolType();
             EruptFieldModel fieldModel = new EruptFieldModel(this.templateField(editType), false);
             fieldModel.setField(dynamicClass.getDeclaredField(designerField.getFieldName()));
             fieldModel.setFieldName(designerField.getFieldName());
@@ -221,7 +222,7 @@ public class EruptDesignerService {
             case BOOLEAN -> LambdaSee.field(EruptDesignerTemplate::getBoolValue);
             case DATE -> LambdaSee.field(EruptDesignerTemplate::getDateValue);
             case REFERENCE_TREE, REFERENCE_TABLE, COMBINE -> LambdaSee.field(EruptDesignerTemplate::getRefValue);
-            case CHECKBOX, TAB_TREE, TAB_TABLE_ADD, TAB_TABLE_REFER -> LambdaSee.field(EruptDesignerTemplate::getSetValue);
+            case CHECKBOX, TRANSFER, TAB_TREE, TAB_TABLE_ADD, TAB_TABLE_REFER -> LambdaSee.field(EruptDesignerTemplate::getSetValue);
             default -> LambdaSee.field(EruptDesignerTemplate::getStringValue);
         };
         return EruptDesignerTemplate.class.getDeclaredField(fieldName);
@@ -232,7 +233,7 @@ public class EruptDesignerService {
             case NUMBER, SLIDER, RATE -> EruptFieldModel.NUMBER;
             case BOOLEAN -> Boolean.class.getSimpleName();
             case DATE -> Date.class.getSimpleName();
-            case REFERENCE_TREE, REFERENCE_TABLE, COMBINE, CHECKBOX, TAB_TREE, TAB_TABLE_ADD, TAB_TABLE_REFER ->
+            case REFERENCE_TREE, REFERENCE_TABLE, COMBINE, CHECKBOX, TRANSFER, TAB_TREE, TAB_TABLE_ADD, TAB_TABLE_REFER ->
                     Optional.ofNullable(field.getLinkErupt()).filter(it -> !it.isEmpty())
                             .filter(it -> null != EruptCoreService.getErupt(it))
                             .orElseThrow(() -> new EruptWebApiRuntimeException(

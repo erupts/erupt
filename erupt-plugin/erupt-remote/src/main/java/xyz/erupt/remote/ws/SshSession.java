@@ -1,15 +1,15 @@
 package xyz.erupt.remote.ws;
 
 import com.google.gson.JsonObject;
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.ChannelShell;
+import com.jcraft.jsch.JSchException;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.Session;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import xyz.erupt.core.config.GsonFactory;
-import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.remote.model.RemoteHost;
-import xyz.erupt.remote.util.TofuHostKeyRepository;
+import xyz.erupt.remote.util.SshConnector;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,10 +17,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -34,15 +30,12 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class SshSession implements RemoteBridge {
 
-    private static final String KNOWN_HOSTS_FILE = "remote_known_hosts";
-
     @Getter
     private final Session ws;
     @Getter
     private final RemoteHost host;
     @Getter
     private final String account;
-    private final String username;
     private final String password;
     private final String privateKey;
     private final int connectTimeoutMs;
@@ -61,11 +54,10 @@ public class SshSession implements RemoteBridge {
     private ChannelShell channel;
     private volatile OutputStream stdin;
 
-    public SshSession(Session ws, RemoteHost host, String username, String password, String privateKey,
+    public SshSession(Session ws, RemoteHost host, String password, String privateKey,
                       String account, int connectTimeoutMs) {
         this.ws = ws;
         this.host = host;
-        this.username = username;
         this.password = password;
         this.privateKey = privateKey;
         this.account = account;
@@ -119,22 +111,7 @@ public class SshSession implements RemoteBridge {
 
     private void run() {
         try {
-            JSch jsch = new JSch();
-            jsch.setKnownHosts(knownHostsFile().toString());
-            jsch.setHostKeyRepository(new TofuHostKeyRepository(jsch.getHostKeyRepository()));
-            if (privateKey != null) {
-                jsch.addIdentity(host.getName(), privateKey.getBytes(StandardCharsets.UTF_8), null,
-                        password == null ? null : password.getBytes(StandardCharsets.UTF_8));
-            }
-            ssh = jsch.getSession(username, host.getHost(), host.getPort());
-            ssh.setConfig("StrictHostKeyChecking", "yes");
-            ssh.setConfig("PreferredAuthentications", privateKey != null ? "publickey" : "password,keyboard-interactive");
-            ssh.setServerAliveInterval(30_000);
-            if (privateKey == null && password != null) {
-                ssh.setPassword(password);
-                ssh.setUserInfo(new PasswordOnly(password));
-            }
-            ssh.connect(connectTimeoutMs);
+            ssh = SshConnector.connect(host, password, privateKey, connectTimeoutMs);
 
             // Wait briefly for the browser to report its terminal size so the first prompt is laid out correctly
             sized.await(3, TimeUnit.SECONDS);
@@ -151,10 +128,8 @@ public class SshSession implements RemoteBridge {
             }
         } catch (JSchException e) {
             String m = e.getMessage() == null ? e.toString() : e.getMessage();
-            if (m.contains("Auth fail") || m.contains("Auth cancel") || m.contains("USERAUTH")) {
-                close(CODE_AUTH_FAILED, "SSH authentication failed");
-            } else if (m.contains("HostKey") || m.contains("reject")) {
-                close(CODE_AUTH_FAILED, "Host key rejected: " + m);
+            if (SshConnector.isAuthFailure(e)) {
+                close(CODE_AUTH_FAILED, m.contains("Auth") ? "SSH authentication failed" : "Host key rejected: " + m);
             } else {
                 close(CODE_CONNECT_FAILED, "Connection failed: " + m);
             }
@@ -168,14 +143,6 @@ public class SshSession implements RemoteBridge {
         }
     }
 
-    private static Path knownHostsFile() throws IOException {
-        Path file = Paths.get(EruptConst.ERUPT_DIR_PATH, KNOWN_HOSTS_FILE);
-        if (!Files.exists(file)) {
-            Files.createDirectories(file.getParent());
-            Files.createFile(file);
-        }
-        return file;
-    }
 
     private void sendText(String text) throws IOException {
         synchronized (ws) {
@@ -212,42 +179,4 @@ public class SshSession implements RemoteBridge {
         }
     }
 
-    /** Answers password and keyboard-interactive prompts non-interactively; never shows anything. */
-    private record PasswordOnly(String pwd) implements UserInfo, UIKeyboardInteractive {
-        @Override
-        public String getPassphrase() {
-            return pwd;
-        }
-
-        @Override
-        public String getPassword() {
-            return pwd;
-        }
-
-        @Override
-        public boolean promptPassword(String message) {
-            return true;
-        }
-
-        @Override
-        public boolean promptPassphrase(String message) {
-            return true;
-        }
-
-        @Override
-        public boolean promptYesNo(String message) {
-            return false;
-        }
-
-        @Override
-        public void showMessage(String message) {
-        }
-
-        @Override
-        public String[] promptKeyboardInteractive(String destination, String name, String instruction, String[] prompt, boolean[] echo) {
-            String[] answers = new String[prompt.length];
-            Arrays.fill(answers, pwd);
-            return answers;
-        }
-    }
 }

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0</version>
 
     <packaging>pom</packaging>
     <name>Erupt : </name>
@@ -78,6 +78,8 @@
         <module>erupt-data/erupt-data-file</module>
         <module>erupt-data/erupt-data-feishu</module>
         <module>erupt-data/erupt-data-notion</module>
+        <module>erupt-data/erupt-data-dingtalk</module>
+        <module>erupt-data/erupt-data-airtable</module>
 
         <!-- UPMS / Security / Web / Misc -->
         <module>erupt-upms</module>
@@ -101,6 +103,7 @@
         <module>erupt-ai/erupt-ai-staff</module>
         <module>erupt-ai/erupt-ai-canvas</module>
         <module>erupt-ai/erupt-ai-rag</module>
+        <module>erupt-ai/erupt-ai-decision</module>
 
         <!-- Support (shared capabilities) -->
         <module>erupt-support/erupt-toolkit</module>
@@ -115,10 +118,12 @@
         <module>erupt-plugin/erupt-monitor</module>
         <module>erupt-plugin/erupt-magic-api</module>
         <module>erupt-plugin/erupt-notice</module>
+        <module>erupt-plugin/erupt-comment</module>
         <module>erupt-plugin/erupt-print</module>
         <module>erupt-plugin/erupt-terminal</module>
         <module>erupt-plugin/erupt-remote</module>
         <module>erupt-plugin/erupt-atlas</module>
+        <module>erupt-plugin/erupt-sso</module>
 
         <!-- Cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>
@@ -231,8 +236,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <!-- release, not source/target: only release holds the api to the java version too -->
+                    <release>${java.version}</release>
                     <encoding>utf-8</encoding>
                     <compilerArgs>
                         <compilerArg>-parameters</compilerArg>

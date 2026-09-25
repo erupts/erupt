@@ -72,15 +72,19 @@ public class EruptNoticeService {
                 } else {
                     noticeLogDetail.setStatus(NoticeStatus.SENT);
                 }
+                // Persisted before the send so the row already has an id: a channel that links back
+                // to the message needs to address this recipient's copy, not the shared log entry.
+                eruptDao.persist(noticeLogDetail);
+                noticeMessage.setLogDetailId(noticeLogDetail.getId());
                 AbstractNoticeChannel noticeChannel = AbstractNoticeChannel.getHandlers().get(channel);
                 try {
                     noticeChannel.send(eruptDao.find(EruptUser.class, userId), noticeMessage);
                 } catch (Exception e) {
                     noticeLogDetail.setSuccess(false);
                     noticeLogDetail.setError(e.toString());
+                    eruptDao.merge(noticeLogDetail);
                     log.error("{} send error: {}", noticeChannel.name(), e.getMessage());
                 }
-                eruptDao.persist(noticeLogDetail);
             }
         }
         if (!noticeMessage.getParams().isEmpty()) {

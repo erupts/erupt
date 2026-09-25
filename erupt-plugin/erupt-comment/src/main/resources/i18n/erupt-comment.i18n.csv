@@ -1,0 +1,10 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+Record Comment,评论记录,評論記錄,Record Comment,Commentaire d'enregistrement,レコードコメント,레코드 댓글,Комментарий к записи,Comentario de registro,Datensatzkommentar,Comentário do registo,Komentar Data,تعليق السجل
+Model,模型,模型,Model,Modèle,モデル,모델,Модель,Modelo,Modell,Modelo,Model,النموذج
+Record ID,记录 ID,記錄 ID,Record ID,ID d'enregistrement,レコード ID,레코드 ID,ID записи,ID de registro,Datensatz-ID,ID do registo,ID Data,معرف السجل
+Content,内容,內容,Content,Contenu,内容,내용,Содержание,Contenido,Inhalt,Conteúdo,Konten,المحتوى
+Reply To,回复,回覆,Reply To,Réponse à,返信先,답글 대상,Ответ на,Respuesta a,Antwort auf,Resposta a,Balasan untuk,رد على
+Mentions,提及,提及,Mentions,Mentions,メンション,멘션,Упоминания,Menciones,Erwähnungen,Menções,Sebutan,الإشارات
+Resolved,已解决,已解決,Resolved,Résolu,解決済み,해결됨,Решено,Resuelto,Gelöst,Resolvido,Terselesaikan,تم الحل
+Pinned,置顶,置頂,Pinned,Épinglé,ピン留め,고정,Закреплено,Fijado,Angeheftet,Fixado,Disematkan,مثبت
+comment.mention.title,{0} 在「{1}」的评论中提到了你,{0} 在「{1}」的評論中提到了你,{0} mentioned you in a comment on {1},{0} vous a mentionné dans un commentaire sur {1},{0} が {1} のコメントであなたをメンションしました,{0}님이 {1} 댓글에서 회원님을 언급했습니다,{0} упомянул вас в комментарии к {1},{0} te mencionó en un comentario de {1},{0} hat Sie in einem Kommentar zu {1} erwähnt,{0} mencionou você em um comentário em {1},{0} menyebut Anda dalam komentar di {1},ذكرك {0} في تعليق على {1}

@@ -46,7 +46,7 @@ public class DirectoryUser {
 
     @EruptField(
         views = @View(title = "Full Name"),
-        edit = @Edit(title = "Full Name", notNull = true, search = @Search(vague = true))
+        edit = @Edit(title = "Full Name", notNull = true, search = @Search)
     )
     private String cn;
 

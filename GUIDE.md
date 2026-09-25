@@ -1,7 +1,7 @@
-| Name                     | Link                                                                                 |
-|--------------------------|--------------------------------------------------------------------------------------|
-| Official website         | [https://www.erupt.xyz](https://www.erupt.xyz)                                       |
-| Deployment documentation | [https://docs.erupt.xyz/guide/quick-start](https://docs.erupt.xyz/guide/quick-start) |
-| Online demo              | [https://demo.erupt.xyz](https://demo.erupt.xyz)                                     |
-| Github demo code         | [https://github.com/erupts/erupt-example](https://github.com/erupts/erupt-example)   |
-| Gitee demo code          | [https://gitee.com/erupt/erupt-example](https://gitee.com/erupt/erupt-example)       |
+| Name                     | Link                                               |
+|--------------------------|----------------------------------------------------|
+| Official website         | [https://www.erupt.xyz](https://www.erupt.xyz)     |
+| Deployment documentation | [https://docs.erupt.xyz](https://docs.erupt.xyz)   |
+| Online demo              | [https://demo.erupt.xyz](https://demo.erupt.xyz)   |
+| Bootstrap erupt project  | [https://start.erupt.xyz](https://start.erupt.xyz) |
+| AI Skill                 | [https://skill.erupt.xyz](https://skill.erupt.xyz) |

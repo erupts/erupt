@@ -39,6 +39,25 @@ cd erupt-sample && mvn spring-boot:run
 
 Java 17 required. Spring Boot 3.5.x (pinned via `spring.boot.version` in the parent pom). No Maven wrapper — use system `mvn`.
 
+## Compatibility
+
+Erupt runs on **Java 17 or newer** and on **every mainstream database**. Both are promises to users,
+not defaults of the machine a feature happens to be written on — check a new feature against them.
+
+- **Java 17 is the floor.** The parent pom compiles with `<release>17</release>`, so a newer API fails
+  the build rather than the user's runtime. Developing on a newer JDK is fine; `List.getFirst()`,
+  `SequencedCollection` and friends are not.
+- **The dialect owns the SQL.** Never write a type name, a function or a DDL fragment that only one
+  database understands. Ask Hibernate for it (`DdlTypeRegistry`, `Dialect`) or keep it in JPQL /
+  criteria. A `columnDefinition` is raw DDL and travels to every database as written.
+- **Watch what schema generation freezes.** `ddl-auto=update` adds columns and nothing else — it never
+  changes a type, a check constraint or an enum value list. Anything the create statement pins down
+  becomes permanent for databases already in the field (see `EnumColumnIntegrator`).
+- **Mind reserved words and identifier case.** Column names such as `value` or `order` need quoting;
+  erupt enables `globally_quoted_identifiers` for that reason, so identifiers are case sensitive.
+- **Test against more than H2.** `erupt-test` runs on H2 in MySQL mode; a feature that touches SQL,
+  metadata or DDL deserves a look at how Oracle, PostgreSQL and SQL Server would read it.
+
 ## Architecture Overview
 
 Erupt is a **low-code platform framework** that auto-generates admin UIs from Java annotations, with zero frontend code required.
@@ -50,7 +69,7 @@ The project is a multi-module Maven project (~50 modules):
 | Group | Modules |
 |-------|---------|
 | Core | `erupt-annotation` (annotation declarations), `erupt-core` (runtime engine) |
-| Data | `erupt-data/erupt-data-{jpa,mongodb,memory,http,jdbc,es,ldap,k8s,s3,redis,file,feishu,notion}` — JPA is the default; the rest are pluggable connectors |
+| Data | `erupt-data/erupt-data-{jpa,mongodb,memory,http,jdbc,es,ldap,k8s,s3,redis,file,feishu,notion,dingtalk,airtable}` — JPA is the default; the rest are pluggable connectors |
 | Platform | `erupt-upms` (user/permissions), `erupt-security`, `erupt-admin`, `erupt-web` (frontend assets) |
 | Starter | `erupt-starter/{erupt-spring-boot-starter,erupt-spring-boot-starter-all}` |
 | Templates | `erupt-tpl/erupt-tpl` (engine) + `erupt-tpl/{ant-design,element-ui,element-plus,amis}` (skins) |

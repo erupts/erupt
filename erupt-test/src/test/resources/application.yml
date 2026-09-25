@@ -12,5 +12,7 @@ spring:
       hibernate:
         globally_quoted_identifiers: true
 erupt:
+  # absolute path: a relative one is resolved against the servlet temp dir by MultipartFile.transferTo
+  upload-path: ${java.io.tmpdir}/erupt-test-upload
   designer:
     db-path: target/designer-test.db

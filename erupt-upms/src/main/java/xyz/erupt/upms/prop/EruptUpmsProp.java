@@ -34,9 +34,29 @@ public class EruptUpmsProp {
     //IP -> region lookup (login / operation logs)
     private Ip2Region ip2region = new Ip2Region();
 
+    //Temporary lock after repeated password failures
+    private LoginLock loginLock = new LoginLock();
+
     @PostConstruct
     public void init() {
         IpUtil.init(ip2region);
+    }
+
+    @Getter
+    @Setter
+    public static class LoginLock {
+
+        //Disable to keep the captcha as the only brute force defence
+        private boolean enable = true;
+
+        //Consecutive wrong passwords for one account from one IP before the pair is locked.
+        //Keyed by account + IP rather than account alone, so an attacker cannot lock a user
+        //out of their own machine by hammering the account from elsewhere
+        private int maxFailures = 10;
+
+        //How long the lock lasts; the failure counter starts again once it lifts
+        private int lockMinutes = 10;
+
     }
 
     @Getter

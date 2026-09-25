@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="force-rendering" content="webkit">
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link id="site-favicon" rel="icon" href="favicon.ico">
     <meta name="renderer" content="webkit">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black">
@@ -42,6 +42,22 @@
                 transparent 65%);
             animation: plHalo 3.2s ease-in-out infinite;
             pointer-events: none;
+        }
+
+        /* Installed app: the corners Chrome paints around the window controls are
+         * one flat color (--erupt-titlebar-color, from eruptSyncThemeColor), so the
+         * preloader wears the same strip on top as the login page and the header
+         * do, and its artwork starts below it. */
+        @media (display-mode: window-controls-overlay) {
+            .preloader::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 39px;
+                background: var(--erupt-titlebar-color, transparent);
+            }
         }
 
         @keyframes plHalo {
@@ -246,6 +262,32 @@
             background: #f5f5f0;
         }
 
+        /* ---- workspace skin (html.workspace) ---- */
+        /* The app's brand-tinted frame, built off --pl-accent so the splash
+           already carries the chrome color before Angular boots; the rings
+           and the wordmark go white on it. */
+        html.workspace .preloader {
+            background-color: color-mix(in srgb, var(--pl-accent) 42%, #151a26);
+            background-image: none;
+        }
+
+        html.workspace.dark .preloader {
+            background-color: color-mix(in srgb, var(--pl-accent) 18%, #0d0f14);
+        }
+
+        /* a declaration on the child beats the inline accent on .preloader */
+        html.workspace .pl-content {
+            --pl-accent: #fff;
+        }
+
+        html.workspace .pl-brand {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        html.workspace #preloader-tip {
+            color: rgba(255, 255, 255, 0.45);
+        }
+
         /* ---- liquid glass skin (html.liquid-glass) ---- */
         /* Same field as the app shell, built off --pl-accent so the splash
            already carries the user's brand color before Angular boots. */
@@ -273,7 +315,7 @@
             .pl-ring, .pl-core, .pl-brand, .pl-content, .preloader::before { animation: none; }
         }
     </style>
-<style>:root{--fa-family-brands:"Font Awesome 7 Brands";--fa-font-brands:normal 400 1em/1 var(--fa-family-brands)}:root{--fa-font-regular:normal 400 1em/1 var(--fa-family-classic)}:root{--fa-family-classic:"Font Awesome 7 Free";--fa-font-solid:normal 900 1em/1 var(--fa-family-classic);--fa-style-family-classic:var(--fa-family-classic)}html{--ant-primary-color:#1890ff;--ant-primary-color-hover:#40a9ff;--ant-primary-color-active:#096dd9;--ant-primary-color-outline:rgba(24, 144, 255, .2);--ant-primary-1:#e6f7ff;--ant-primary-2:#bae7ff;--ant-primary-3:#91d5ff;--ant-primary-4:#69c0ff;--ant-primary-5:#40a9ff;--ant-primary-6:#1890ff;--ant-primary-7:#096dd9;--ant-primary-color-deprecated-pure: ;--ant-primary-color-deprecated-l-35:#cbe6ff;--ant-primary-color-deprecated-l-20:#7ec1ff;--ant-primary-color-deprecated-t-20:#46a6ff;--ant-primary-color-deprecated-t-50:#8cc8ff;--ant-primary-color-deprecated-f-12:rgba(24, 144, 255, .12);--ant-primary-color-active-deprecated-f-30:rgba(230, 247, 255, .3);--ant-primary-color-active-deprecated-d-02:#dcf4ff;--ant-success-color:#52c41a;--ant-success-color-hover:#73d13d;--ant-success-color-active:#389e0d;--ant-success-color-outline:rgba(82, 196, 26, .2);--ant-success-color-deprecated-bg:#f6ffed;--ant-success-color-deprecated-border:#b7eb8f;--ant-error-color:#ff4d4f;--ant-error-color-hover:#ff7875;--ant-error-color-active:#d9363e;--ant-error-color-outline:rgba(255, 77, 79, .2);--ant-error-color-deprecated-bg:#fff2f0;--ant-error-color-deprecated-border:#ffccc7;--ant-warning-color:#faad14;--ant-warning-color-hover:#ffc53d;--ant-warning-color-active:#d48806;--ant-warning-color-outline:rgba(250, 173, 20, .2);--ant-warning-color-deprecated-bg:#fffbe6;--ant-warning-color-deprecated-border:#ffe58f;--ant-info-color:#1890ff;--ant-info-color-deprecated-bg:#e6f7ff;--ant-info-color-deprecated-border:#91d5ff}body,html{width:100%;height:100%}*,:after,:before{box-sizing:border-box}html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-ms-overflow-style:scrollbar;-webkit-tap-highlight-color:transparent}html{--antd-wave-shadow-color:var(--ant-primary-color);--scroll-bar:0}body{counter-reset:katexEqnNo mmlEqnNo}html,body{width:100%;height:100%}*,*:before,*:after{box-sizing:border-box}html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-ms-overflow-style:scrollbar;-webkit-tap-highlight-color:rgba(0,0,0,0)}body{margin:0;color:#000000d9;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";font-variant:tabular-nums;line-height:1.5715;background-color:#fff;font-feature-settings:"tnum"}b{font-weight:bolder}html{--antd-wave-shadow-color:var(--ant-primary-color);--scroll-bar:0}body{scrollbar-color:rgba(0,0,0,.3) transparent;scrollbar-width:thin}body::-webkit-scrollbar{width:6px;height:6px}body::-webkit-scrollbar-track{box-shadow:inset 0 0 6px #0000004d}body::-webkit-scrollbar-thumb{background-color:transparent;outline:1px solid #333}html{touch-action:manipulation;direction:ltr;height:100%}html,body,app-root{height:100%}body{color:#000000d9;background-color:var(--alain-default-content-bg, #f5f7fa)}html{--erupt-bg-layout:#f0f2f5;--erupt-bg-container:#fff;--erupt-bg-elevated:#fff;--erupt-bg-spotlight:#fafafa;--erupt-text:rgba(0, 0, 0, .88);--erupt-text-secondary:rgba(0, 0, 0, .65);--erupt-text-tertiary:rgba(0, 0, 0, .45);--erupt-text-quaternary:rgba(0, 0, 0, .25);--erupt-border:#d9d9d9;--ant-border-color-split:#c9c9c9;--erupt-fill:rgba(0, 0, 0, .11);--erupt-fill-secondary:rgba(0, 0, 0, .06);--erupt-fill-tertiary:rgba(0, 0, 0, .04);--erupt-scrollbar-track:#f1f1f1;--erupt-scrollbar-thumb:#888;--erupt-scrollbar-thumb-hover:#767676;--erupt-header-bg:#fff;--erupt-header-text:rgba(0, 0, 0, .88);--erupt-header-text-secondary:rgba(0, 0, 0, .65);--erupt-header-fill:rgba(0, 0, 0, .06);--erupt-header-fill-strong:rgba(0, 0, 0, .11);--erupt-header-active-bg:var(--ant-primary-1);--erupt-header-active-text:var(--ant-primary-color);--erupt-header-border:var(--ant-border-color-split)}html{--ant-primary-color:#1890ff;--ant-primary-color-hover:#40a9ff;--ant-primary-color-active:#096dd9;--ant-primary-color-outline:rgba(24, 144, 255, .2);--ant-primary-1:#e6f7ff;--ant-primary-2:#bae7ff;--ant-primary-3:#91d5ff;--ant-primary-4:#69c0ff;--ant-primary-5:#40a9ff;--ant-primary-6:#1890ff;--ant-primary-7:#096dd9;--ant-primary-color-deprecated-pure: ;--ant-primary-color-deprecated-l-35:#cbe6ff;--ant-primary-color-deprecated-l-20:#7ec1ff;--ant-primary-color-deprecated-t-20:#46a6ff;--ant-primary-color-deprecated-t-50:#8cc8ff;--ant-primary-color-deprecated-f-12:rgba(24, 144, 255, .12);--ant-primary-color-active-deprecated-f-30:rgba(230, 247, 255, .3);--ant-primary-color-active-deprecated-d-02:#dcf4ff;--ant-success-color:#52c41a;--ant-success-color-hover:#73d13d;--ant-success-color-active:#389e0d;--ant-success-color-outline:rgba(82, 196, 26, .2);--ant-success-color-deprecated-bg:#f6ffed;--ant-success-color-deprecated-border:#b7eb8f;--ant-error-color:#ff4d4f;--ant-error-color-hover:#ff7875;--ant-error-color-active:#d9363e;--ant-error-color-outline:rgba(255, 77, 79, .2);--ant-error-color-deprecated-bg:#fff2f0;--ant-error-color-deprecated-border:#ffccc7;--ant-warning-color:#faad14;--ant-warning-color-hover:#ffc53d;--ant-warning-color-active:#d48806;--ant-warning-color-outline:rgba(250, 173, 20, .2);--ant-warning-color-deprecated-bg:#fffbe6;--ant-warning-color-deprecated-border:#ffe58f;--ant-info-color:#1890ff;--ant-info-color-deprecated-bg:#e6f7ff;--ant-info-color-deprecated-border:#91d5ff}html{--grey-1:#fff;--grey-2:#fafafa;--grey-3:#f5f5f5;--grey-4:#f0f0f0;--grey-5:#d9d9d9;--grey-6:#bfbfbf;--grey-7:#8c8c8c;--grey-8:#595959;--grey-9:#434343;--grey-10:#262626;--grey-11:#1f1f1f;--grey-12:#141414;--grey-13:#000}*{scrollbar-width:thin;scrollbar-color:var(--erupt-scrollbar-thumb, #888888) var(--erupt-scrollbar-track, #f1f1f1)}@media print{*{font-family:Heiti SC,-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\5fae\8f6f\96c5\9ed1,Helvetica Neue,Helvetica,Arial,sans-serif!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}@page{size:A4 landscape;margin:10mm}}</style><link rel="stylesheet" href="styles-PMQWSYMA.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles-PMQWSYMA.css"></noscript></head>
+<style>:root{--fa-family-brands:"Font Awesome 7 Brands";--fa-font-brands:normal 400 1em/1 var(--fa-family-brands)}:root{--fa-font-regular:normal 400 1em/1 var(--fa-family-classic)}:root{--fa-family-classic:"Font Awesome 7 Free";--fa-font-solid:normal 900 1em/1 var(--fa-family-classic);--fa-style-family-classic:var(--fa-family-classic)}html{--ant-primary-color:#1890ff;--ant-primary-color-hover:#40a9ff;--ant-primary-color-active:#096dd9;--ant-primary-color-outline:rgba(24, 144, 255, .2);--ant-primary-1:#e6f7ff;--ant-primary-2:#bae7ff;--ant-primary-3:#91d5ff;--ant-primary-4:#69c0ff;--ant-primary-5:#40a9ff;--ant-primary-6:#1890ff;--ant-primary-7:#096dd9;--ant-primary-color-deprecated-pure: ;--ant-primary-color-deprecated-l-35:#cbe6ff;--ant-primary-color-deprecated-l-20:#7ec1ff;--ant-primary-color-deprecated-t-20:#46a6ff;--ant-primary-color-deprecated-t-50:#8cc8ff;--ant-primary-color-deprecated-f-12:rgba(24, 144, 255, .12);--ant-primary-color-active-deprecated-f-30:rgba(230, 247, 255, .3);--ant-primary-color-active-deprecated-d-02:#dcf4ff;--ant-success-color:#52c41a;--ant-success-color-hover:#73d13d;--ant-success-color-active:#389e0d;--ant-success-color-outline:rgba(82, 196, 26, .2);--ant-success-color-deprecated-bg:#f6ffed;--ant-success-color-deprecated-border:#b7eb8f;--ant-error-color:#ff4d4f;--ant-error-color-hover:#ff7875;--ant-error-color-active:#d9363e;--ant-error-color-outline:rgba(255, 77, 79, .2);--ant-error-color-deprecated-bg:#fff2f0;--ant-error-color-deprecated-border:#ffccc7;--ant-warning-color:#faad14;--ant-warning-color-hover:#ffc53d;--ant-warning-color-active:#d48806;--ant-warning-color-outline:rgba(250, 173, 20, .2);--ant-warning-color-deprecated-bg:#fffbe6;--ant-warning-color-deprecated-border:#ffe58f;--ant-info-color:#1890ff;--ant-info-color-deprecated-bg:#e6f7ff;--ant-info-color-deprecated-border:#91d5ff}body,html{width:100%;height:100%}*,:after,:before{box-sizing:border-box}html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-ms-overflow-style:scrollbar;-webkit-tap-highlight-color:transparent}html{--antd-wave-shadow-color:var(--ant-primary-color);--scroll-bar:0}body{counter-reset:katexEqnNo mmlEqnNo}html,body{width:100%;height:100%}*,*:before,*:after{box-sizing:border-box}html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-ms-overflow-style:scrollbar;-webkit-tap-highlight-color:rgba(0,0,0,0)}body{margin:0;color:#000000d9;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";font-variant:tabular-nums;line-height:1.5715;background-color:#fff;font-feature-settings:"tnum"}b{font-weight:bolder}html{--antd-wave-shadow-color:var(--ant-primary-color);--scroll-bar:0}body{scrollbar-color:rgba(0,0,0,.3) transparent;scrollbar-width:thin}body::-webkit-scrollbar{width:6px;height:6px}body::-webkit-scrollbar-track{box-shadow:inset 0 0 6px #0000004d}body::-webkit-scrollbar-thumb{background-color:transparent;outline:1px solid #333}html{touch-action:manipulation;direction:ltr;height:100%}html,body,app-root{height:100%}body{color:#000000d9;background-color:var(--alain-default-content-bg, #f5f7fa)}html{--erupt-bg-layout:#f0f2f5;--erupt-bg-container:#fff;--erupt-bg-elevated:#fff;--erupt-bg-spotlight:#fafafa;--erupt-text:rgba(0, 0, 0, .88);--erupt-text-secondary:rgba(0, 0, 0, .65);--erupt-text-tertiary:rgba(0, 0, 0, .45);--erupt-text-quaternary:rgba(0, 0, 0, .25);--erupt-border:#d9d9d9;--ant-border-color-split:#c9c9c9;--erupt-fill:rgba(0, 0, 0, .11);--erupt-fill-secondary:rgba(0, 0, 0, .06);--erupt-fill-tertiary:rgba(0, 0, 0, .04);--erupt-scrollbar-track:#f1f1f1;--erupt-scrollbar-thumb:#888;--erupt-scrollbar-thumb-hover:#767676;--erupt-header-bg:#fff;--erupt-header-text:rgba(0, 0, 0, .88);--erupt-header-text-secondary:rgba(0, 0, 0, .65);--erupt-header-fill:rgba(0, 0, 0, .06);--erupt-header-fill-strong:rgba(0, 0, 0, .11);--erupt-header-active-bg:var(--ant-primary-1);--erupt-header-active-text:var(--ant-primary-color);--erupt-header-border:var(--ant-border-color-split);--erupt-font:-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", "WenQuanYi Micro Hei", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"}html{--ant-primary-color:#1890ff;--ant-primary-color-hover:#40a9ff;--ant-primary-color-active:#096dd9;--ant-primary-color-outline:rgba(24, 144, 255, .2);--ant-primary-1:#e6f7ff;--ant-primary-2:#bae7ff;--ant-primary-3:#91d5ff;--ant-primary-4:#69c0ff;--ant-primary-5:#40a9ff;--ant-primary-6:#1890ff;--ant-primary-7:#096dd9;--ant-primary-color-deprecated-pure: ;--ant-primary-color-deprecated-l-35:#cbe6ff;--ant-primary-color-deprecated-l-20:#7ec1ff;--ant-primary-color-deprecated-t-20:#46a6ff;--ant-primary-color-deprecated-t-50:#8cc8ff;--ant-primary-color-deprecated-f-12:rgba(24, 144, 255, .12);--ant-primary-color-active-deprecated-f-30:rgba(230, 247, 255, .3);--ant-primary-color-active-deprecated-d-02:#dcf4ff;--ant-success-color:#52c41a;--ant-success-color-hover:#73d13d;--ant-success-color-active:#389e0d;--ant-success-color-outline:rgba(82, 196, 26, .2);--ant-success-color-deprecated-bg:#f6ffed;--ant-success-color-deprecated-border:#b7eb8f;--ant-error-color:#ff4d4f;--ant-error-color-hover:#ff7875;--ant-error-color-active:#d9363e;--ant-error-color-outline:rgba(255, 77, 79, .2);--ant-error-color-deprecated-bg:#fff2f0;--ant-error-color-deprecated-border:#ffccc7;--ant-warning-color:#faad14;--ant-warning-color-hover:#ffc53d;--ant-warning-color-active:#d48806;--ant-warning-color-outline:rgba(250, 173, 20, .2);--ant-warning-color-deprecated-bg:#fffbe6;--ant-warning-color-deprecated-border:#ffe58f;--ant-info-color:#1890ff;--ant-info-color-deprecated-bg:#e6f7ff;--ant-info-color-deprecated-border:#91d5ff}html{--grey-1:#fff;--grey-2:#fafafa;--grey-3:#f5f5f5;--grey-4:#f0f0f0;--grey-5:#d9d9d9;--grey-6:#bfbfbf;--grey-7:#8c8c8c;--grey-8:#595959;--grey-9:#434343;--grey-10:#262626;--grey-11:#1f1f1f;--grey-12:#141414;--grey-13:#000}*{scrollbar-width:thin;scrollbar-color:var(--erupt-scrollbar-thumb, #888888) var(--erupt-scrollbar-track, #f1f1f1)}html body{font-family:var(--erupt-font)}@media print{*{font-family:Heiti SC,-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\5fae\8f6f\96c5\9ed1,Helvetica Neue,Helvetica,Arial,sans-serif!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}@page{size:A4 landscape;margin:10mm}}</style><link rel="stylesheet" href="styles-LHOSOJUH.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles-LHOSOJUH.css"></noscript></head>
 <body>
 <div class="preloader">
     <div class="pl-content">
@@ -314,6 +356,42 @@
         if (_lgPref === "true" && _nbPref !== "true") {
             document.documentElement.classList.add("liquid-glass");
         }
+        // Optional Workspace skin (chat-app frame) — same treatment; any other
+        // saved skin flag wins.
+        var _wsPref = localStorage.getItem("workspace");
+        if (_wsPref === "true" && _nbPref !== "true" && _lgPref !== "true") {
+            document.documentElement.classList.add("workspace");
+        }
+        // Optional Classic skin (Ant Design Pro navy column) — same treatment.
+        var _cpPref = localStorage.getItem("classic");
+        if (_cpPref === "true" && _nbPref !== "true" && _lgPref !== "true" && _wsPref !== "true") {
+            document.documentElement.classList.add("classic");
+        }
+        // A saved workspace frame gradient (settings drawer stores the whole
+        // preset) tints the preloader the same way the app shell will be.
+        var _paintWorkspacePreloader = function () {
+            if (!document.documentElement.classList.contains("workspace")) {
+                return;
+            }
+            var frame = null;
+            try {
+                frame = JSON.parse(localStorage.getItem("workspace-frame") || "null");
+            } catch (e) {
+            }
+            if (frame && frame.frame) {
+                _preloaderEl.style.backgroundImage = frame.frame;
+                _preloaderEl.style.backgroundColor = frame.solid || "";
+                if (frame.light) {
+                    // ink on a light frame; the rings take the preset's accent instead of white
+                    var content = _preloaderEl.querySelector(".pl-content");
+                    if (content) content.style.setProperty("--pl-accent", frame.accent || "#3370ff");
+                    if (_brandEl) _brandEl.style.color = "rgba(0, 0, 0, 0.72)";
+                    var tip = document.getElementById("preloader-tip");
+                    if (tip) tip.style.color = "rgba(0, 0, 0, 0.40)";
+                }
+            }
+        };
+        _paintWorkspacePreloader();
         // Theme bundles: dark and compact are compiled as separate lazy
         // stylesheets; using both loads the merged compact-dark bundle.
         // One <link> is swapped between the three — shared with the settings
@@ -348,10 +426,262 @@
         window.eruptApplyDarkTheme = function (dark) {
             document.documentElement.classList.toggle("dark", dark);
             window.eruptSyncThemeBundles();
+            window.eruptSyncThemeColor();
         };
         window.eruptApplyCompactTheme = function (compact) {
             document.documentElement.classList.toggle("compact", compact);
             window.eruptSyncThemeBundles();
+        };
+        // The browser tab icon. One <link> is swapped, so the built-in
+        // favicon.ico, an eruptSiteConfig.faviconPath and anything set later
+        // (tenant js, a custom theme) all go through the same node. No type
+        // attribute: an .ico, a .png and an .svg all work as written.
+        window.eruptApplyFavicon = function (path) {
+            var link = document.getElementById("site-favicon");
+            if (link && path) {
+                link.setAttribute("href", path);
+            }
+        };
+        // The browser UI color (<meta name="theme-color">: the tab strip on Android,
+        // the title bar of an installed app). The two built-in metas hold the light
+        // and dark defaults matching the plain top bar; a color replaces both, null
+        // puts the defaults back. Only eruptSyncThemeColor() writes it, from what
+        // the page shows, so the browser chrome always continues the bar.
+        var _setThemeColorMeta = function (color) {
+            document.querySelectorAll("meta[name='theme-color']").forEach(function (m) {
+                if (!m.dataset.defaultContent) {
+                    m.dataset.defaultContent = m.getAttribute("content");
+                }
+                m.setAttribute("content", color || m.dataset.defaultContent);
+            });
+        };
+        // Read the bar once it has painted: a skin may recolor it and ng-zorro
+        // writes the palette asynchronously. Called pre-bootstrap (the preloader
+        // stands in for the bar), after a theme bundle swap, by the header once it
+        // exists and on every header color change, and whenever a modal / drawer
+        // mask comes or goes (see the overlay observer below).
+        var _readThemeColor;
+        window.eruptSyncThemeColor = function () {
+            // [r, g, b, a?] on a 0..255 scale from a computed color: rgb()/rgba(),
+            // or color(srgb r g b / a) with 0..1 channels, which is how Chrome
+            // serializes a color-mix() result (the skins derive their surfaces
+            // from the brand color that way).
+            var channels = function (color) {
+                var m = color && color.match(/^(rgba?|color)\(([^)]+)\)/);
+                if (!m) {
+                    return null;
+                }
+                var parts = m[2].split(/[\s,\/]+/).filter(Boolean);
+                if (m[1] === "color") {
+                    if (parts.shift() !== "srgb") {
+                        return null;
+                    }
+                    return parts.map(function (v, i) { return i < 3 ? parseFloat(v) * 255 : parseFloat(v); });
+                }
+                return parts.map(parseFloat);
+            };
+            // The masks lying over the top strip, as [r, g, b, a] layers at the
+            // strength painted (color alpha × element opacity). Masks do not fade
+            // in the overlay mode (pwa.less), so one read per change is exact.
+            // The lock screen is one more tint over the whole window (its blur is
+            // not sampled; the tint alone is what the corners can show).
+            var maskLayers = function () {
+                var layers = [];
+                document.querySelectorAll(".ant-modal-mask, .ant-drawer-mask, .cdk-overlay-backdrop, .lock-screen").forEach(function (m) {
+                    var cs = getComputedStyle(m);
+                    var r = m.getBoundingClientRect();
+                    if (cs.display === "none" || cs.visibility === "hidden" || r.width === 0 || r.top > 0 || r.bottom <= 0) {
+                        return;
+                    }
+                    var c = channels(cs.backgroundColor);
+                    var opacity = parseFloat(cs.opacity);
+                    var alpha = (c ? (c.length > 3 ? c[3] : 1) : 0) * (isNaN(opacity) ? 1 : opacity);
+                    if (c && alpha > 0) {
+                        layers.push([c[0], c[1], c[2], alpha]);
+                    }
+                });
+                return layers;
+            };
+            // Source-over compositing of the mask layers onto the bar color, the
+            // same blend the page itself shows where a mask covers the bar
+            var composite = function (color, layers) {
+                var c = channels(color);
+                if (!c || !layers.length) {
+                    return color;
+                }
+                var out = c.slice(0, 3);
+                layers.forEach(function (l) {
+                    out = out.map(function (v, i) { return v * (1 - l[3]) + l[i] * l[3]; });
+                });
+                return "rgb(" + out.map(Math.round).join(", ") + ")";
+            };
+            // The color an element shows on screen: a skin may leave the bar
+            // transparent (workspace, painted by the frame on <body>) or translucent
+            // (liquid glass, a tint over the canvas), so composite its background
+            // over its ancestors' down to the first opaque one, white failing that.
+            // Gradient images are not sampled; their background-color stands in.
+            var painted = function (el) {
+                var base = null;
+                var stack = [];
+                for (var n = el; n && !base; n = n.parentElement) {
+                    var c = channels(getComputedStyle(n).backgroundColor);
+                    var alpha = c ? (c.length > 3 ? c[3] : 1) : 0;
+                    if (alpha >= 1) {
+                        base = "rgb(" + c.slice(0, 3).map(Math.round).join(", ") + ")";
+                    } else if (alpha > 0) {
+                        stack.unshift([c[0], c[1], c[2], alpha]);
+                    }
+                }
+                return (base || stack.length) ? composite(base || "rgb(255, 255, 255)", stack) : null;
+            };
+            var read = function () {
+                // No bar: the login page's top nav, or the preloader before bootstrap,
+                // stands in; nothing at all leaves the light / dark defaults.
+                var surface = document.querySelector(".erupt-header, .alain-default__header, .lp-side-nav")
+                    || (_preloaderEl && _preloaderEl.parentNode && getComputedStyle(_preloaderEl).display !== "none" ? _preloaderEl : null);
+                var base = surface ? painted(surface) : null;
+                // The same color, before any mask, for the page: in the overlay
+                // mode the bar paints itself flat in it (pwa.less), so the bar and
+                // the corners around the window controls read as one strip even
+                // over a gradient frame or a picture the corners cannot show.
+                if (base) {
+                    document.documentElement.style.setProperty("--erupt-titlebar-color", base);
+                } else {
+                    document.documentElement.style.removeProperty("--erupt-titlebar-color");
+                }
+                _setThemeColorMeta(base ? composite(base, maskLayers()) : null);
+            };
+            _readThemeColor = read;
+            // Now, then again once the layers have settled: ng-zorro writes the
+            // palette and a swapped theme bundle applies a little later. Timers
+            // rather than requestAnimationFrame, so a background window gets them.
+            read();
+            setTimeout(read, 100);
+            setTimeout(read, 500);
+        };
+        // Modals and drawers (their masks included) live in the CDK overlay
+        // container, created lazily under <body>. Watch for the container, then
+        // watch its subtree so every mask entering, fading or leaving re-syncs.
+        (function () {
+            // Written in the same task as the mutation, before the frame paints
+            var onOverlayChange = function () {
+                (_readThemeColor || window.eruptSyncThemeColor)();
+            };
+            var watchOverlays = function (container) {
+                new MutationObserver(onOverlayChange).observe(container, {
+                    childList: true, subtree: true, attributes: true, attributeFilter: ["class", "style"]
+                });
+            };
+            var existing = document.querySelector(".cdk-overlay-container");
+            if (existing) {
+                watchOverlays(existing);
+            }
+            new MutationObserver(function (list) {
+                list.forEach(function (m) {
+                    m.addedNodes.forEach(function (n) {
+                        if (n.nodeType === 1 && n.classList.contains("cdk-overlay-container")) {
+                            watchOverlays(n);
+                        }
+                    });
+                });
+            }).observe(document.body, {childList: true});
+        })();
+        // The web app manifest. manifest.json stays the static default; a branded
+        // site re-issues it as a blob: URL with its own name / theme_color so the
+        // installed app carries them. A blob manifest has no base URL, so every
+        // relative reference is made absolute against the page first. Chrome reads
+        // the manifest lazily and follows href changes, so async is fine here.
+        // The installed app's manifest: manifest.json re-issued as a blob: URL with
+        // the site's name / description / color and eruptSiteConfig.pwa's icon and
+        // shortcuts. A blob manifest has no base URL, so every relative reference
+        // is made absolute against the page.
+        // The corners take the preloader's color at once, from the saved skin and
+        // theme; app.js re-syncs below once the site's own defaults are applied.
+        window.eruptSyncThemeColor();
+        window.eruptApplyManifest = function (cfg) {
+            var link = document.querySelector("link[rel='manifest']");
+            if (!link) {
+                return;
+            }
+            var base = location.href.replace(/[#?].*$/, "").replace(/[^\/]*$/, "");
+            var abs = function (url) {
+                return new URL(url, base).href;
+            };
+            var th = cfg.theme || {};
+            var pwa = cfg.pwa || {};
+            // Icon entries for one image (svg / png / jpg / webp / ico). An SVG scales
+            // to any size; a raster is loaded once and measured, since installation
+            // needs its real pixel size in `sizes`.
+            var iconEntries = function (path, purposes) {
+                var ext = (path.match(/\.([a-z0-9]+)(?:[?#]|$)/i) || ["", ""])[1].toLowerCase();
+                var type = {svg: "image/svg+xml", png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp", ico: "image/x-icon"}[ext];
+                return new Promise(function (resolve) {
+                    var done = function (sizes) {
+                        resolve((purposes || ["any"]).map(function (purpose) {
+                            return {src: abs(path), sizes: sizes, type: type, purpose: purpose};
+                        }));
+                    };
+                    if (ext === "svg") {
+                        return done("any");
+                    }
+                    var img = new Image();
+                    img.onload = function () {
+                        done(img.naturalWidth + "x" + img.naturalHeight);
+                    };
+                    img.onerror = function () {
+                        done("any");
+                    };
+                    img.src = path;
+                });
+            };
+            Promise.all([
+                fetch(link.href).then(function (r) {
+                    return r.json();
+                }),
+                pwa.icon ? iconEntries(pwa.icon, ["any", "maskable"]) : null,
+                // Shortcuts in manifest shape, `icon: "path"` as shorthand for one image
+                Promise.all((pwa.shortcuts || []).map(function (sc) {
+                    return (sc.icon ? iconEntries(sc.icon) : Promise.resolve(sc.icons)).then(function (icons) {
+                        return {name: sc.name, short_name: sc.shortName, description: sc.description, url: sc.url, icons: icons};
+                    });
+                }))
+            ]).then(function (r) {
+                var m = r[0];
+                var name = cfg.logoText || cfg.title;
+                var brand = (th.headerColor && th.headerColor !== "primary") ? th.headerColor : th.primaryColor;
+                if (name) {
+                    m.name = m.short_name = name;
+                }
+                if (cfg.desc) {
+                    m.description = cfg.desc;
+                }
+                if (brand) {
+                    m.theme_color = brand;
+                }
+                if (r[1]) {
+                    m.icons = r[1];
+                }
+                if (r[2].length) {
+                    m.shortcuts = r[2];
+                }
+                ["id", "start_url", "scope"].forEach(function (k) {
+                    if (m[k]) {
+                        m[k] = abs(m[k]);
+                    }
+                });
+                (m.icons || []).forEach(function (i) {
+                    i.src = abs(i.src);
+                });
+                (m.shortcuts || []).forEach(function (sc) {
+                    sc.url = abs(sc.url);
+                    (sc.icons || []).forEach(function (i) {
+                        i.src = abs(i.src);
+                    });
+                });
+                link.href = URL.createObjectURL(new Blob([JSON.stringify(m)], {type: "application/manifest+json"}));
+            }).catch(function () {
+                // Offline or unreachable: the static manifest.json stays in place
+            });
         };
         // dark-theme: "true" | "false" | "auto" (follow the OS color scheme). With no saved
         // choice the site config decides (eruptSiteConfig.darkTheme, same three values).
@@ -368,7 +698,9 @@
             return {
                 dark: th.dark !== undefined ? th.dark : cfg.darkTheme,
                 compact: th.compact !== undefined ? th.compact : cfg.compactTheme,
-                skin: th.skin || cfg.skin || (cfg.brutalistTheme ? "brutalist" : cfg.liquidGlass ? "liquid-glass" : null)
+                skin: th.skin || cfg.skin || (cfg.brutalistTheme ? "brutalist" : cfg.liquidGlass ? "liquid-glass" : null),
+                // theme.customizable === false locks the appearance to the site config
+                customizable: th.customizable !== false
             };
         };
         var _darkIsAuto = function () {
@@ -395,12 +727,32 @@
                 clearInterval(_colorCheckTimer);
                 var cfg = window.eruptSiteConfig;
                 var look = _appearance();
-                // No saved skin choice — theme.skin ("default" | "brutalist" | "liquid-glass")
-                if (_nbPref === null && _lgPref === null) {
+                // Locked appearance: drop the branding choices the user saved earlier
+                // (skin, colors, navigation gradient — and the classes / accent applied
+                // from them above), so the site defaults below apply as if nothing had
+                // been chosen. Light/dark and compact stay per-user comfort settings.
+                // startup.service reads the same keys afterwards and finds them gone too.
+                if (!look.customizable) {
+                    ["brutalist-theme", "liquid-glass", "workspace", "classic",
+                        "theme-color", "theme-color-brutalist", "header-color", "workspace-frame", "login-layout"]
+                        .forEach(function (k) { localStorage.removeItem(k); });
+                    document.documentElement.classList.remove("brutalist-theme", "liquid-glass", "workspace", "classic");
+                    _preloaderEl.style.removeProperty("--pl-accent");
+                    _preloaderEl.style.removeProperty("background-image");
+                    _preloaderEl.style.removeProperty("background-color");
+                    _nbPref = _lgPref = _wsPref = _cpPref = _tcPref = null;
+                }
+                // No saved skin choice — theme.skin ("default" | "brutalist" | "liquid-glass" | "workspace" | "classic")
+                if (_nbPref === null && _lgPref === null && _wsPref === null && _cpPref === null) {
                     if (look.skin === "brutalist") {
                         document.documentElement.classList.add("brutalist-theme");
                     } else if (look.skin === "liquid-glass") {
                         document.documentElement.classList.add("liquid-glass");
+                    } else if (look.skin === "workspace") {
+                        document.documentElement.classList.add("workspace");
+                        _paintWorkspacePreloader();
+                    } else if (look.skin === "classic") {
+                        document.documentElement.classList.add("classic");
                     }
                 }
                 // theme.dark: true | false | "auto"
@@ -420,6 +772,12 @@
                 if (_brandEl) {
                     _brandEl.textContent = window.eruptSiteConfig.logoText || window.eruptSiteConfig.title || "Loading";
                 }
+                if (cfg.faviconPath) {
+                    window.eruptApplyFavicon(cfg.faviconPath);
+                }
+                // Browser chrome continues the preloader now, the bar once it exists
+                window.eruptSyncThemeColor();
+                window.eruptApplyManifest(cfg);
             }
         }, 10);
     })(new Date())
@@ -438,5 +796,5 @@
 </div>
 <![endif]-->
 <app-root></app-root>
-<link rel="modulepreload" href="chunk-SJTN3CTI.js"><link rel="modulepreload" href="chunk-4WIINTKG.js"><link rel="modulepreload" href="chunk-QDBNL5QF.js"><link rel="modulepreload" href="chunk-J7TXVGHL.js"><link rel="modulepreload" href="chunk-YIEK67ML.js"><link rel="modulepreload" href="chunk-C26JPOMN.js"><link rel="modulepreload" href="chunk-Z642W74E.js"><link rel="modulepreload" href="chunk-47KWAHZG.js"><link rel="modulepreload" href="chunk-OZTEH5Z3.js"><link rel="modulepreload" href="chunk-YWJAWARJ.js"><script src="polyfills-B7LGQ2G6.js" type="module"></script><script src="main-AESICRQ2.js" type="module"></script></body>
+<link rel="modulepreload" href="chunk-626DKL3N.js"><link rel="modulepreload" href="chunk-3Z565VF4.js"><link rel="modulepreload" href="chunk-OQ2UFULY.js"><link rel="modulepreload" href="chunk-3KYXHDUQ.js"><link rel="modulepreload" href="chunk-PHGBRUKT.js"><link rel="modulepreload" href="chunk-6ZOXJ5QE.js"><link rel="modulepreload" href="chunk-3DOTEWEI.js"><link rel="modulepreload" href="chunk-XRI3JTKN.js"><link rel="modulepreload" href="chunk-6LO4QN6V.js"><link rel="modulepreload" href="chunk-YWJAWARJ.js"><script src="polyfills-B7LGQ2G6.js" type="module"></script><script src="main-CAAJNESN.js" type="module"></script></body>
 </html>

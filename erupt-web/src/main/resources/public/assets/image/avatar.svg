@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Placeholder for a user with no avatar: a person silhouette on a light disc, in the disabled-text greys -->
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="22" cy="22" r="22" fill="#F0F0F0"/>
+    <circle cx="22" cy="17" r="7" fill="#BFBFBF"/>
+    <path d="M8.5 38.5c1.6-7.4 7-11.5 13.5-11.5s11.9 4.1 13.5 11.5A22 22 0 0 1 22 44a22 22 0 0 1-13.5-5.5z" fill="#BFBFBF"/>
+</svg>

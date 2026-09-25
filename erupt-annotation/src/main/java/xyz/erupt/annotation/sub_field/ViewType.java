@@ -13,10 +13,16 @@ public enum ViewType {
     TEXT,
     @Comment("Color")
     COLOR,
+    @Comment("Icon rendered from its Font Awesome class")
+    ICON,
+    @Comment("Key-value pairs from a JSON object, one tag per pair")
+    KEY_VALUE,
     @Comment("Safe text rendering")
     SAFE_TEXT,
     @Comment("Image")
     IMAGE,
+    @Comment("Avatar: a round thumbnail, a person silhouette when empty")
+    AVATAR,
     @Comment("Image in BASE64 format")
     IMAGE_BASE64,
     @Comment("Flash file")

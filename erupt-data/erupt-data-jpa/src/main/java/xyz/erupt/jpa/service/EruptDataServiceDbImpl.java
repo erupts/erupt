@@ -3,19 +3,21 @@ package xyz.erupt.jpa.service;
 import jakarta.annotation.Resource;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Query;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import xyz.erupt.annotation.query.Sort;
+import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.IEruptDataService;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
-import xyz.erupt.core.util.TypeUtil;
+import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.jpa.dao.EruptJpaDao;
@@ -24,6 +26,7 @@ import xyz.erupt.jpa.support.JpaSupport;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -123,21 +126,30 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
             }
         });
         hql.append(" where 1 = 1 ");
-        Optional.ofNullable(query.getConditions()).ifPresent(c -> c.forEach(it -> {
-            hql.append(EruptJpaUtils.AND).append(it.getKey()).append('=');
-            if (TypeUtil.isNumber(it.getValue())) {
-                hql.append(it.getValue());
-            } else {
-                hql.append("'").append(it.getValue()).append("'");
-            }
-        }));
+        // client conditions reach the query as bound parameters; only the field path is written
+        // into the hql, and it is checked to be an identifier first
+        Map<String, Object> params = new LinkedHashMap<>();
+        List<Condition> conditions = Optional.ofNullable(query.getConditions()).orElseGet(Collections::emptyList);
+        for (Condition condition : conditions) {
+            String param = "p" + params.size();
+            EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(condition.getKey());
+            hql.append(EruptJpaUtils.AND).append(EruptJpaUtils.legalPath(condition.getKey())).append(" = :").append(param);
+            params.put(param, null == fieldModel ? condition.getValue()
+                    : EruptUtil.convertObjectType(fieldModel, condition.getValue()));
+        }
         Optional.ofNullable(query.getConditionStrings()).ifPresent(c -> c.forEach(it -> hql.append(EruptJpaUtils.AND).append(it)));
         Arrays.stream(eruptModel.getErupt().filter()).map(Filter::value)
                 .filter(StringUtils::isNotBlank).forEach(it -> hql.append(EruptJpaUtils.AND).append(it));
         if (null != query.getSort() && !query.getSort().isEmpty()) {
-            hql.append(" order by ").append(Sort.toSortString(query.getSort()));
+            hql.append(" order by ").append(query.getSort().stream()
+                    .map(it -> EruptJpaUtils.legalPath(it.getField()) + " " + it.getDirection().name().toLowerCase())
+                    .collect(Collectors.joining(", ")));
         }
-        return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> em.createQuery(hql.toString()).getResultList());
+        return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> {
+            Query jpaQuery = em.createQuery(hql.toString());
+            params.forEach(jpaQuery::setParameter);
+            return jpaQuery.getResultList();
+        });
     }
 
 }

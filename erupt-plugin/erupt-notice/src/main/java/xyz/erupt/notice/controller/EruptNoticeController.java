@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.view.R;
 import xyz.erupt.core.view.SimplePage;
 import xyz.erupt.jpa.dao.EruptDao;
@@ -78,6 +79,10 @@ public class EruptNoticeController {
     public R<NoticeLogDetail> message(@RequestParam("id") Long id) {
         NoticeLogDetail noticeLogDetail = eruptDao.lambdaQuery(NoticeLogDetail.class).eq(NoticeLogDetail::getId, id)
                 .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with().one();
+        // the row may be gone, or belong to another user: either way this user has nothing to read
+        if (null == noticeLogDetail) {
+            return R.error(I18nTranslate.$translate("notice.not_found"));
+        }
         if (noticeLogDetail.getStatus() == NoticeStatus.UNREAD) {
             noticeLogDetail.setStatus(NoticeStatus.READ);
             eruptDao.merge(noticeLogDetail);

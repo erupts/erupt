@@ -4,6 +4,8 @@ S3-compatible object storage data source for Erupt, built on AWS SDK v2. Bind a 
 
 Read + delete only. Uploading raw object content through an admin form is not a good fit; use the S3 SDK / your app's upload flow directly.
 
+The module also ships `S3AttachmentProxy`, a ready-made `AttachmentProxy` that sends every erupt attachment upload (`@Edit(type = ATTACHMENT)`, rich-text images, ...) to a bucket instead of the local disk — see [Attachment upload](#attachment-upload).
+
 ## Annotation
 
 `@EruptS3`
@@ -81,12 +83,53 @@ public class S3ProductionUpload {
 | Cloudflare R2         | `https://<account>.r2.cloudflarestorage.com`       | `true`      |
 | Backblaze B2 (S3 API) | `https://s3.<region>.backblazeb2.com`              | `true`      |
 
+`endpoint` is the **service** host, not the bucket host. A bucket URL copied from a console
+(`https://mybucket.s3.cn-south-1.qiniucs.com`) is recognised and its leading `mybucket.` label is dropped.
+
 ## Operations
 
 - **List**: `ListObjectsV2` with continuation-token paging, bounded by `maxObjects`.
 - **Find by id**: `HeadObject` — populates the extra `contentType` and `metadata` fields.
 - **Delete**: `DeleteObject` on the key.
 - **Add / edit**: not supported.
+
+## Attachment upload
+
+Point erupt's attachment storage at a bucket in two steps.
+
+```java
+@SpringBootApplication
+@EruptScan
+@EruptAttachmentUpload(S3AttachmentProxy.class)
+public class DemoApplication { ... }
+```
+
+```yaml
+erupt:
+  s3:
+    bucket: erupt-uploads
+    region: ap-southeast-1
+    endpoint: http://minio.internal:9000   # omit for AWS
+    path-style: true                       # MinIO / self-hosted
+    prefix: erupt/                         # optional key prefix
+    access-key: ${S3_ACCESS_KEY}
+    secret-key: ${S3_SECRET_KEY}
+    domain: https://cdn.example.com        # optional public base URL (CDN); derived from endpoint + bucket when empty
+    local-save: false                      # true keeps a copy under erupt.upload-path as well
+```
+
+| Property           | Default        | Description                                                                              |
+|--------------------|----------------|------------------------------------------------------------------------------------------|
+| `erupt.s3.bucket`  | —              | Bucket that receives uploads; required                                                   |
+| `erupt.s3.prefix`  | `""`           | Key prefix inside the bucket                                                             |
+| `erupt.s3.region`  | `"us-east-1"`  | Region name                                                                              |
+| `erupt.s3.endpoint`| `""`           | Endpoint URL; empty = AWS                                                                |
+| `erupt.s3.access-key` / `secret-key` | `""` | Static credentials; empty = default provider chain                            |
+| `erupt.s3.path-style` | `false`     | Path-style addressing                                                                    |
+| `erupt.s3.domain`  | `""`           | Public base URL the browser loads files from; empty derives `https://<bucket>.s3.<region>.amazonaws.com`, `<endpoint>/<bucket>` (path-style) or `<scheme>://<bucket>.<endpoint-host>` |
+| `erupt.s3.local-save` | `false`     | Also keep the file on the local server                                                   |
+
+The generated path (`/yyyy-MM-dd/xxxx.ext`) becomes the object key under `prefix`, and the stored value in the database stays that path — swapping storage later does not rewrite your data. Objects are written with a `Content-Type` guessed from the extension so images render inline. The bucket (or the CDN in front of it) must allow public reads, or `domain` must point at something that does.
 
 ## Gotchas
 

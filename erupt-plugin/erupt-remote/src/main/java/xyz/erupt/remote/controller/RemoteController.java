@@ -57,6 +57,7 @@ public class RemoteController {
         result.put("ticket", ticketService.issue(host.getId(), eruptContextService.getCurrentToken()));
         result.put("name", host.getName());
         result.put("protocol", host.getProtocol());
+        result.put("fileTransfer", RemoteHost.PROTOCOL_SSH.equals(host.getProtocol()) && Boolean.TRUE.equals(host.getFileTransfer()));
         // Tells the page whether the server will answer authentication on its behalf
         result.put("passwordManaged", remoteCrypto.decrypt(host.getPassword()) != null);
         return R.ok(result);
