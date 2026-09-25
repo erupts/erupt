@@ -1,8 +1,8 @@
 window.eruptSiteConfig = {
-    domain: "",
+    domain: null,
     // Attachment host. Leave empty: it is taken from the backend AttachmentProxy at startup.
     // Setting it here still works and overrides the backend value (kept for compatibility).
-    fileDomain: "",
+    fileDomain: null,
     title: "Erupt Engine",
     desc: "Low-Code & AI Harness",
     dialogLogin: false,
@@ -12,7 +12,7 @@ window.eruptSiteConfig = {
     // logoPath: null,  // expanded header logo (default: the bundled erupt mark)
     // logoFoldPath: null,           // collapsed header logo (default: follows logoPath)
     // loginLogoPath: null,          // login page logo (default: follows logoPath)
-    logoText: "Erupt",
+    logoText: null,
     registerPage: null,
     // faviconPath: "https://docs.erupt.xyz/icon.svg",
     amapKey: 'da01c124bff9d9be1ad44e04f23aa32e',
