@@ -17,6 +17,10 @@ import java.lang.annotation.Target;
  * <p>
  * Add and in-place edit are not supported; use {@code putObject} in your
  * client for uploads. Delete works by key.
+ * <p>
+ * Connection attributes left empty fall back to {@code erupt.s3.*}
+ * (see {@link xyz.erupt.s3.S3Connection}), so a model can be bound with
+ * nothing but the annotation itself.
  *
  * @author YuePeng
  */
@@ -25,9 +29,9 @@ import java.lang.annotation.Target;
 public @interface EruptS3 {
 
     /**
-     * Bucket to list.
+     * Bucket to list. Empty uses {@code erupt.s3.bucket}.
      */
-    String bucket();
+    String bucket() default "";
 
     /**
      * Optional key prefix — objects under this prefix are listed. Empty lists
@@ -38,18 +42,23 @@ public @interface EruptS3 {
     /**
      * Region name, e.g. {@code us-east-1}, {@code ap-southeast-1}. Required for
      * AWS; for MinIO / OSS / COS any non-empty value paired with {@link #endpoint()}.
+     * Empty uses {@code erupt.s3.region}.
      */
-    String region() default "us-east-1";
+    String region() default "";
 
     /**
-     * Endpoint URL. Empty uses the AWS default endpoint for {@link #region()}.
-     * Set this for MinIO / OSS / COS / R2, e.g. {@code https://oss-cn-hangzhou.aliyuncs.com}.
+     * Endpoint URL. Set this for MinIO / OSS / COS / R2, e.g. {@code https://oss-cn-hangzhou.aliyuncs.com}.
+     * Empty uses {@code erupt.s3.endpoint} together with {@code erupt.s3.path-style};
+     * both empty means the AWS default endpoint for {@link #region()}.
      */
     String endpoint() default "";
 
     /**
-     * Access key. Empty falls back to the default provider chain
-     * (env vars, {@code ~/.aws/credentials}, instance profile).
+     * Access key. Prefer leaving it empty: the credentials then come from
+     * {@code erupt.s3.access-key} / {@code erupt.s3.secret-key}, and when those are
+     * empty too from the default provider chain (env vars, {@code ~/.aws/credentials},
+     * instance profile). Annotation values are compile-time constants, so a key written
+     * here ends up in the class file.
      */
     String accessKey() default "";
 
