@@ -12,66 +12,73 @@ The module also ships `S3AttachmentProxy`, a ready-made `AttachmentProxy` that s
 
 | Attribute    | Default        | Description                                                                                    |
 |--------------|----------------|------------------------------------------------------------------------------------------------|
-| `bucket`     | —              | Bucket to list                                                                                 |
+| `bucket`     | `""`           | Bucket to list; empty = `erupt.s3.bucket`                                                      |
 | `prefix`     | `""`           | Key prefix filter                                                                              |
-| `region`     | `"us-east-1"`  | Region name — required by AWS; for non-AWS providers, any non-empty value paired with `endpoint` |
-| `endpoint`   | `""`           | Endpoint URL; empty = AWS default endpoint for `region`                                        |
-| `accessKey`  | `""`           | Access key; empty = default provider chain (env / `~/.aws/credentials` / instance profile)     |
+| `region`     | `""`           | Region name — required by AWS; for non-AWS providers, any non-empty value paired with `endpoint`; empty = `erupt.s3.region` |
+| `endpoint`   | `""`           | Endpoint URL; empty = `erupt.s3.endpoint` (+ `erupt.s3.path-style`), both empty = AWS default for `region` |
+| `accessKey`  | `""`           | Access key; empty = `erupt.s3.access-key`, then the default provider chain (env / `~/.aws/credentials` / instance profile) |
 | `secretKey`  | `""`           | Secret key; only read when `accessKey` is set                                                  |
-| `pathStyle`  | `false`        | Force path-style addressing — required by MinIO and older OSS gateways                          |
+| `pathStyle`  | `false`        | Force path-style addressing — required by MinIO and older OSS gateways; only read with an explicit `endpoint` |
 | `pageSize`   | `1000`         | Max objects returned per list call                                                             |
 | `maxObjects` | `5000`         | Hard cap on total objects across all pages                                                     |
 
-## Available model fields
+Every connection attribute left empty falls back to the `erupt.s3.*` properties described under
+[Attachment upload](#attachment-upload). Keep credentials there (or in the provider chain): annotation
+values are compile-time constants and end up in the class file.
 
-| Field           | Type              | Populated in                    |
-|-----------------|-------------------|---------------------------------|
-| `key`           | `String`          | list + find                     |
-| `size`          | `Long`            | list + find                     |
-| `lastModified`  | `Date`            | list + find                     |
-| `etag`          | `String`          | list + find                     |
-| `storageClass`  | `String`          | list + find                     |
-| `contentType`   | `String`          | find only                       |
-| `metadata`      | `Map<String,String>` | find only (x-amz-meta-* headers) |
+## Model
+
+An S3 listing has a fixed schema, so the columns are declared once in `S3ObjectModel` and a
+model just extends it — no fields to copy, no names to keep in sync. The object key is the `id`
+field, erupt's default primary key, so `primaryKeyCol` needs no setting:
+
+| Field           | Type                 | Populated in                    |
+|-----------------|----------------------|---------------------------------|
+| `id`            | `String`             | the object key; list + find (primary key, searchable) |
+| `size`          | `Long`               | list + find                     |
+| `lastModified`  | `Date`               | list + find                     |
+| `etag`          | `String`             | list + find                     |
+| `storageClass`  | `String`             | list + find                     |
+| `contentType`   | `String`             | find only                       |
+| `metadata`      | `Map<String,String>` | find only; not rendered, for `DataProxy` / handlers |
+
+Override a field in the subclass to retitle or hide it.
 
 ## Example — AWS S3
 
 ```java
 @Getter
 @Setter
-@Erupt(name = "S3 Objects", primaryKeyCol = "key")
+@Erupt(name = "S3 Objects")
 @EruptS3(bucket = "prod-uploads", prefix = "reports/", region = "us-east-1")
 @EruptDataProcessor(EruptS3DataService.DATA_PROCESSOR)
-public class S3ProductionUpload {
-
-    @EruptField(views = @View(title = "Key"))
-    private String key;
-
-    @EruptField(views = @View(title = "Size (bytes)"))
-    private Long size;
-
-    @EruptField(views = @View(title = "Last Modified"))
-    private Date lastModified;
-
-    @EruptField(views = @View(title = "ETag"))
-    private String etag;
-
-    @EruptField(views = @View(title = "Storage Class"))
-    private String storageClass;
+public class S3ProductionUpload extends S3ObjectModel {
 }
 ```
 
 ## Example — MinIO / self-hosted
 
+Connection and credentials live in the application configuration; the model only says which
+bucket (or, with `bucket` left empty, browses the attachment bucket itself):
+
+```yaml
+erupt:
+  s3:
+    bucket: erupt-uploads
+    endpoint: http://minio.internal:9000
+    path-style: true
+    access-key: ${S3_ACCESS_KEY}
+    secret-key: ${S3_SECRET_KEY}
+```
+
 ```java
-@EruptS3(
-    bucket = "erupt-uploads",
-    endpoint = "http://minio.internal:9000",
-    region = "us-east-1",
-    accessKey = "AKIAxxx",
-    secretKey = "xxx",
-    pathStyle = true
-)
+@EruptS3(prefix = "reports/")
+```
+
+A model that needs a different bucket or gateway overrides just those attributes:
+
+```java
+@EruptS3(bucket = "archive", endpoint = "https://oss-cn-hangzhou.aliyuncs.com", region = "cn-hangzhou")
 ```
 
 ## Example — other providers
