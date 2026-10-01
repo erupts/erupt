@@ -3,6 +3,7 @@ package xyz.erupt.annotation;
 import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.Match;
+import xyz.erupt.annotation.cube.CubeView;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Sort;
@@ -11,6 +12,8 @@ import xyz.erupt.annotation.vis.BoardView;
 import xyz.erupt.annotation.vis.CalendarView;
 import xyz.erupt.annotation.vis.CardView;
 import xyz.erupt.annotation.vis.GanttView;
+import xyz.erupt.annotation.vis.MapView;
+import xyz.erupt.annotation.vis.TimelineView;
 
 import java.beans.Transient;
 
@@ -58,12 +61,27 @@ public @interface Vis {
     @Match("#item.type().toString() == 'TPL'")
     Tpl tplView() default @Tpl(enable = false, path = "");
 
+    @Match("#item.type().toString() == 'TIMELINE'")
+    TimelineView timelineView() default @TimelineView(dateField = "");
+
+    @Match("#item.type().toString() == 'MAP'")
+    MapView mapView() default @MapView;
+
+    @Match("#item.type().toString() == 'CUBE'")
+    CubeView cubeView() default @CubeView(charts = {});
+
     enum Type {
         TABLE,
         GANTT,
         CARD,
         BOARD,
         CALENDAR,
+        // vertical feed ordered by a date field
+        TIMELINE,
+        // markers on a map from a MAP field or a lng/lat pair
+        MAP,
+        // charts over an @EruptCube explore, filtered by the current search (rendered by erupt-cube)
+        CUBE,
         TPL
     }
 
