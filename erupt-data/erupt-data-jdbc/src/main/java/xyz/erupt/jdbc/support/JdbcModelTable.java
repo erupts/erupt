@@ -10,9 +10,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.query.Direction;
 import xyz.erupt.annotation.query.Sort;
+import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.query.Aggregate;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.DateUtil;
@@ -93,6 +95,51 @@ public class JdbcModelTable {
                     for (Column column : columns) map.put(column.getAlias(), normalized.get(column.getName()));
                     return map;
                 }).collect(Collectors.toList());
+    }
+
+    /**
+     * Column totals over every row the query matches, one {@code select sum(..), count(distinct ..)}
+     * under the same where clause as the list. Only plain columns of this table take part; a
+     * dotted path or an unknown field is left out so the caller can compute it another way.
+     */
+    public Map<String, Object> aggregate(EruptModel model, EruptQuery eruptQuery, List<Aggregate> aggregates) {
+        List<String> cols = new ArrayList<>();
+        List<Aggregate> mapped = new ArrayList<>();
+        for (Aggregate aggregate : aggregates) {
+            EruptFieldModel field = aggregate.getPath().contains(".") ? null : model.getEruptFieldMap().get(aggregate.getPath());
+            if (null == field) continue;
+            cols.add(this.aggregateSql(aggregate.getStatistic(), this.column(model, field)) + " as a" + mapped.size());
+            mapped.add(aggregate);
+        }
+        Map<String, Object> result = new LinkedHashMap<>();
+        if (mapped.isEmpty()) return result;
+        Map<String, Object> params = new HashMap<>();
+        String where = this.where(model, eruptQuery, params);
+        // queryForMap keys are case-insensitive, so drivers that upper-case aliases still resolve
+        Map<String, Object> row = this.template(model).queryForMap("select " + String.join(", ", cols) + " from " + this.from(model) + where, params);
+        for (int i = 0; i < mapped.size(); i++) {
+            result.put(mapped.get(i).getKey(), row.get("a" + i));
+        }
+        return result;
+    }
+
+    protected String aggregateSql(View.Statistic statistic, String column) {
+        switch (statistic) {
+            case COUNT:
+                return "count(" + column + ")";
+            case DISTINCT_COUNT:
+                return "count(distinct " + column + ")";
+            case SUM:
+                return "sum(" + column + ")";
+            case AVG:
+                return "avg(" + column + ")";
+            case MAX:
+                return "max(" + column + ")";
+            case MIN:
+                return "min(" + column + ")";
+            default:
+                throw new IllegalArgumentException("no aggregate for " + statistic);
+        }
     }
 
     public void insert(EruptModel model, Object bean) {
