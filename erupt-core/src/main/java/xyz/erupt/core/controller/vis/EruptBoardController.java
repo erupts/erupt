@@ -43,17 +43,11 @@ public class EruptBoardController {
         for (Vis vis : eruptModel.getErupt().vis()) {
             if (vis.code().equals(command.getVisCode())) {
                 Object obj = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, command.getPk());
-                Field groupField = ReflectUtil.findClassField(obj.getClass(), vis.boardView().groupField());
-                Object groupValue = command.getGroupValue();
-                EruptFieldModel groupFieldModel = eruptModel.getEruptFieldMap().get(vis.boardView().groupField());
-                if (groupFieldModel != null) {
-                    EditType editType = groupFieldModel.getEruptField().edit().type();
-                    if (editType == EditType.REFERENCE_TREE || editType == EditType.REFERENCE_TABLE) {
-                        EruptModel refModel = EruptCoreService.getErupt(groupFieldModel.getFieldReturnName());
-                        groupValue = DataProcessorManager.getEruptDataProcessor(refModel.getClazz()).findDataById(refModel, groupValue);
-                    }
+                this.assign(eruptModel, obj, vis.boardView().groupField(), command.getGroupValue());
+                // a card dropped into another swimlane changes the second grouping as well
+                if (command.isSwimlaneChanged() && !vis.boardView().swimlaneField().isEmpty()) {
+                    this.assign(eruptModel, obj, vis.boardView().swimlaneField(), command.getSwimlaneValue());
                 }
-                groupField.set(obj, groupValue);
                 DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
                 DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).editData(eruptModel, obj);
                 DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterUpdate(obj)));
@@ -61,6 +55,24 @@ public class EruptBoardController {
             }
         }
         return R.ok();
+    }
+
+    /**
+     * Write a raw board value onto the entity; reference fields get the referenced entity
+     * looked up by id so JPA can persist the association.
+     */
+    @SneakyThrows
+    private void assign(EruptModel eruptModel, Object obj, String fieldName, Object value) {
+        Field field = ReflectUtil.findClassField(obj.getClass(), fieldName);
+        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(fieldName);
+        if (null != fieldModel && null != value) {
+            EditType editType = fieldModel.getEruptField().edit().type();
+            if (editType == EditType.REFERENCE_TREE || editType == EditType.REFERENCE_TABLE) {
+                EruptModel refModel = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
+                value = DataProcessorManager.getEruptDataProcessor(refModel.getClazz()).findDataById(refModel, value);
+            }
+        }
+        field.set(obj, value);
     }
 
     @Getter
@@ -72,6 +84,11 @@ public class EruptBoardController {
         private Object pk;
 
         private Object groupValue;
+
+        // only meaningful when swimlaneChanged is set: null clears the lane
+        private Object swimlaneValue;
+
+        private boolean swimlaneChanged;
 
     }
 

@@ -56,4 +56,11 @@ public @interface View {
     @Language("javascript")
     String template() default "";
 
+        @Comment("Aggregate of this column shown in the table footer and in group headers")
+    Statistic statistic() default Statistic.NONE;
+
+    enum Statistic {
+        NONE, COUNT, DISTINCT_COUNT, SUM, AVG, MAX, MIN
+    }
+
 }

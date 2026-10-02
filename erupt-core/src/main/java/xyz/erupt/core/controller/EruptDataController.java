@@ -78,6 +78,13 @@ public class EruptDataController {
         return eruptService.getEruptData(EruptCoreService.getErupt(eruptName), tableQuery, null);
     }
 
+    // totals of the @View(statistic) columns over everything the same query matches, not just the page
+    @PostMapping("/aggregate/{erupt}")
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    public Map<String, Object> getEruptAggregate(@PathVariable("erupt") String eruptName, @RequestBody TableQuery tableQuery) {
+        return eruptService.getEruptAggregate(EruptCoreService.getErupt(eruptName), tableQuery);
+    }
+
     @GetMapping("/tree/{erupt}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public Collection<TreeModel> getEruptTreeData(@PathVariable("erupt") String eruptName) {
