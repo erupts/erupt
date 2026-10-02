@@ -6,6 +6,7 @@ import com.google.gson.stream.MalformedJsonException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.math.NumberUtils;
+import xyz.erupt.annotation.model.Location;
 import xyz.erupt.core.util.DateUtil;
 
 import java.io.IOException;
@@ -39,6 +40,7 @@ public class GsonFactory implements ToNumberStrategy {
             .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
             .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> serializeDoubleValue(src))
             .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
+            .registerTypeAdapter(Location.class, (JsonDeserializer<Location>) (json, type, context) -> parseLocation(json))
             .setObjectToNumberStrategy(new GsonFactory())
 //            .registerTypeAdapter(Date.class, (JsonSerializer<Date>) (src, type, ctx) -> {
 //                Instant instant = src.toInstant();
@@ -46,6 +48,34 @@ public class GsonFactory implements ToNumberStrategy {
 //                        DateTimeFormatter.ISO_INSTANT.format(instant)); // 2023-12-13T06:30:45.123Z
 //            })
             .setExclusionStrategies(new EruptGsonExclusionStrategies());
+
+    /**
+     * A MAP field arrives from the editor as the JSON text it stores, and from an API caller
+     * as an object; both become a Location. Older rows carry AMap's raw tip shape, whose
+     * coordinates sit under {@code location}.
+     */
+    private static Location parseLocation(JsonElement json) {
+        if (null == json || json.isJsonNull()) return null;
+        if (json.isJsonPrimitive()) {
+            String text = json.getAsString();
+            if (text.isBlank()) return null;
+            json = JsonParser.parseString(text);
+        }
+        if (!json.isJsonObject()) return null;
+        JsonObject o = json.getAsJsonObject();
+        JsonObject coords = o.has("location") && o.get("location").isJsonObject() ? o.getAsJsonObject("location") : o;
+        Location location = new Location(number(coords, "lng"), number(coords, "lat"), string(o, "name"), string(o, "address"));
+        if (o.has("crs") && !o.get("crs").isJsonNull()) location.setCrs(Location.Crs.valueOf(o.get("crs").getAsString()));
+        return location;
+    }
+
+    private static Double number(JsonObject o, String key) {
+        return o.has(key) && o.get(key).isJsonPrimitive() ? o.get(key).getAsDouble() : null;
+    }
+
+    private static String string(JsonObject o, String key) {
+        return o.has(key) && o.get(key).isJsonPrimitive() ? o.get(key).getAsString() : null;
+    }
 
     private static JsonPrimitive serializeSafeNumber(Number src) {
         if (src.doubleValue() > JS_MAX_NUMBER || src.doubleValue() < JS_MIN_NUMBER) {

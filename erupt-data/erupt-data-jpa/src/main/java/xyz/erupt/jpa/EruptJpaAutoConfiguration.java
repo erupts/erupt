@@ -1,5 +1,6 @@
 package xyz.erupt.jpa;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.module.EruptModule;
@@ -12,6 +13,8 @@ import xyz.erupt.core.module.ModuleInfo;
  */
 @Configuration
 @ComponentScan
+// registers the auto-apply converters of this package with Hibernate
+@EntityScan
 public class EruptJpaAutoConfiguration implements EruptModule {
 
     static {
