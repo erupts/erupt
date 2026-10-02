@@ -7,6 +7,9 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.query.Direction;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.invoke.DataProcessorManager;
+import xyz.erupt.core.query.Aggregate;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.IEruptDataService;
@@ -75,6 +79,70 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
             page.setList(new ArrayList<>());
         }
         return page;
+    }
+
+    /**
+     * Column totals over every document the query matches: sum / avg / max / min share one
+     * {@code $group} stage behind the list's {@code $match}; counts use the driver's count and
+     * distinct helpers so a null or missing field is not counted.
+     */
+    @Override
+    public Map<String, Object> aggregate(EruptModel eruptModel, EruptQuery eruptQuery, List<Aggregate> aggregates) {
+        Query query = new Query();
+        this.addQueryCondition(eruptModel, eruptQuery, query);
+        Map<String, Object> result = new LinkedHashMap<>();
+        GroupOperation group = Aggregation.group();
+        List<Aggregate> grouped = new ArrayList<>();
+        for (Aggregate aggregate : aggregates) {
+            String field = this.populateMapping(eruptModel, aggregate.getPath());
+            switch (aggregate.getStatistic()) {
+                case COUNT:
+                    result.put(aggregate.getKey(), mongoTemplate.count(Query.of(query).addCriteria(Criteria.where(field).ne(null)), eruptModel.getClazz()));
+                    break;
+                case DISTINCT_COUNT:
+                    result.put(aggregate.getKey(), (long) mongoTemplate.findDistinct(query, field, eruptModel.getClazz(), Object.class)
+                            .stream().filter(Objects::nonNull).count());
+                    break;
+                case SUM:
+                    group = group.sum(field).as("a" + grouped.size());
+                    grouped.add(aggregate);
+                    break;
+                case AVG:
+                    group = group.avg(field).as("a" + grouped.size());
+                    grouped.add(aggregate);
+                    break;
+                case MAX:
+                    group = group.max(field).as("a" + grouped.size());
+                    grouped.add(aggregate);
+                    break;
+                case MIN:
+                    group = group.min(field).as("a" + grouped.size());
+                    grouped.add(aggregate);
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (!grouped.isEmpty()) {
+            // the list's criteria, reused as the $match stage
+            CriteriaDefinition match = new CriteriaDefinition() {
+                @Override
+                public org.bson.Document getCriteriaObject() {
+                    return query.getQueryObject();
+                }
+
+                @Override
+                public String getKey() {
+                    return null;
+                }
+            };
+            @SuppressWarnings("rawtypes")
+            Map row = mongoTemplate.aggregate(Aggregation.newAggregation(Aggregation.match(match), group), eruptModel.getClazz(), Map.class).getUniqueMappedResult();
+            for (int i = 0; i < grouped.size(); i++) {
+                result.put(grouped.get(i).getKey(), null == row ? null : row.get("a" + i));
+            }
+        }
+        return result;
     }
 
     private void orderByTokenToQuery(EruptModel eruptModel, Query query, String orderByStr) {

@@ -2,6 +2,7 @@ package xyz.erupt.jpa.dao;
 
 import jakarta.annotation.Resource;
 import jakarta.persistence.Query;
+import jakarta.persistence.metamodel.Attribute;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.query.Condition;
@@ -19,6 +20,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -76,22 +79,29 @@ public class EruptJpaDao {
      * same joins and where clause as the list query.
      */
     public Map<String, Object> queryEruptAggregate(EruptModel eruptModel, EruptQuery eruptQuery, List<Aggregate> aggregates) {
-        List<String> cols = new ArrayList<>();
-        for (int i = 0; i < aggregates.size(); i++) {
-            Aggregate aggregate = aggregates.get(i);
-            String path = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), EruptJpaUtils.legalPath(aggregate.getPath()));
-            cols.add(aggregateHql(aggregate.getStatistic(), path) + EruptJpaUtils.AS + "a" + i);
-        }
-        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "new map(" + String.join(", ", cols) + ")", eruptQuery, true);
         return entityManagerService.getEntityManager(eruptModel.getClazz(), entityManager -> {
+            // a @Transient field (filled by a DataProxy) has no column: leave it out and the
+            // service computes it over the fetched rows instead
+            Set<String> persistent = entityManager.getMetamodel().entity(eruptModel.getClazz()).getAttributes()
+                    .stream().map(Attribute::getName).collect(Collectors.toSet());
+            List<Aggregate> mapped = aggregates.stream()
+                    .filter(a -> persistent.contains(a.getPath().split("\\" + EruptConst.DOT)[0])).collect(Collectors.toList());
+            Map<String, Object> result = new LinkedHashMap<>();
+            if (mapped.isEmpty()) return result;
+            List<String> cols = new ArrayList<>();
+            for (int i = 0; i < mapped.size(); i++) {
+                Aggregate aggregate = mapped.get(i);
+                String path = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), EruptJpaUtils.legalPath(aggregate.getPath()));
+                cols.add(aggregateHql(aggregate.getStatistic(), path) + EruptJpaUtils.AS + "a" + i);
+            }
+            String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "new map(" + String.join(", ", cols) + ")", eruptQuery, true);
             @SuppressWarnings("SqlSourceToSinkFlow")
             Query query = entityManager.createQuery(hql);
             bindConditions(eruptModel, eruptQuery, query);
             @SuppressWarnings("unchecked")
             Map<String, Object> row = (Map<String, Object>) query.getSingleResult();
-            Map<String, Object> result = new LinkedHashMap<>();
-            for (int i = 0; i < aggregates.size(); i++) {
-                result.put(aggregates.get(i).getKey(), row.get("a" + i));
+            for (int i = 0; i < mapped.size(); i++) {
+                result.put(mapped.get(i).getKey(), row.get("a" + i));
             }
             return result;
         });

@@ -85,7 +85,7 @@ public class CloudNode extends MetaModelUpdateVo {
 
     @Transient
     @EruptField(
-            views = @View(title = "Model Count", className = "text-center", width = "90px"
+            views = @View(title = "Model Count", className = "text-center", statistic = View.Statistic.SUM, width = "90px"
                     , tpl = @Tpl(path = "/tpl/node-resource.ftl", width = "600px", height = "70vh", tplHandler = CloudNodeProcess.class, params = "Erupt")
             )
     )
@@ -93,7 +93,7 @@ public class CloudNode extends MetaModelUpdateVo {
 
     @Transient
     @EruptField(
-            views = @View(title = "Module Count", className = "text-center", width = "70px"
+            views = @View(title = "Module Count", className = "text-center", statistic = View.Statistic.SUM, width = "70px"
                     , tpl = @Tpl(path = "/tpl/node-resource.ftl", width = "600px", height = "70vh", tplHandler = CloudNodeProcess.class, params = "Module")
             )
     )
@@ -101,7 +101,7 @@ public class CloudNode extends MetaModelUpdateVo {
 
     @Transient
     @EruptField(
-            views = @View(title = "Instance Count", className = "text-center", width = "70px"
+            views = @View(title = "Instance Count", className = "text-center", statistic = View.Statistic.SUM, width = "70px"
                     , tpl = @Tpl(path = "/tpl/node-instance.ftl", width = "400px", tplHandler = CloudNodeProcess.class)
             )
     )

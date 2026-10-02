@@ -31,10 +31,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -95,9 +97,33 @@ public class EruptService {
         if (aggregates.isEmpty()) return Collections.emptyMap();
         EruptQuery eruptQuery = this.assembleQuery(eruptModel, tableQuery, null);
         if (null == eruptQuery) return Collections.emptyMap();
-        Map<String, Object> result = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).aggregate(eruptModel, eruptQuery, aggregates);
-        return null == result ? Collections.emptyMap() : result;
+        Map<String, Object> result = new LinkedHashMap<>();
+        Optional.ofNullable(DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).aggregate(eruptModel, eruptQuery, aggregates))
+                .ifPresent(result::putAll);
+        // columns the source could not aggregate (transient fields a DataProxy fills in afterFetch)
+        // are computed over the result as the list endpoint would deliver it. That is a full
+        // fetch, so it is bounded: beyond the cap the total is reported as unknown (null)
+        // rather than computed over a partial set, and persistent columns are unaffected.
+        List<Aggregate> missing = aggregates.stream().filter(a -> !result.containsKey(a.getKey())).collect(Collectors.toList());
+        if (!missing.isEmpty()) {
+            TableQuery all = new TableQuery();
+            all.setCondition(tableQuery.getCondition());
+            all.setLinkTreeVal(tableQuery.getLinkTreeVal());
+            all.setVis(tableQuery.getVis());
+            all.setPageIndex(1);
+            all.setPageSize(AGGREGATE_FALLBACK_ROWS);
+            Page page = this.getEruptData(eruptModel, all, null);
+            boolean complete = null != page.getTotal() && page.getTotal() <= AGGREGATE_FALLBACK_ROWS;
+            List<Map<String, Object>> list = new ArrayList<>(Optional.ofNullable(page.getList()).orElse(Collections.emptyList()));
+            for (Aggregate aggregate : missing) {
+                result.put(aggregate.getKey(), complete ? AggregateUtil.compute(list, aggregate) : null);
+            }
+        }
+        return result;
     }
+
+    // rows an in-memory statistic may scan; a computed column on a bigger result shows no total
+    private static final int AGGREGATE_FALLBACK_ROWS = 2000;
 
     /**
      * The conditions, filters and sort a list request resolves to, shared by the list and
