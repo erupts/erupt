@@ -7,6 +7,7 @@ import xyz.erupt.annotation.query.Direction;
 import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.query.Aggregate;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.TypeUtil;
@@ -15,6 +16,8 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -110,6 +113,46 @@ public abstract class EruptBeanDataService<T> implements IEruptDataService {
         int from = Math.min((page.getPageIndex() - 1) * page.getPageSize(), rows.size());
         page.setList(rows.subList(from, Math.min(from + page.getPageSize(), rows.size())));
         return page;
+    }
+
+    @Override
+    public Map<String, Object> aggregate(EruptModel eruptModel, EruptQuery eruptQuery, List<Aggregate> aggregates) {
+        List<Map<String, Object>> rows = this.rows(eruptModel, eruptQuery);
+        Map<String, Object> result = new LinkedHashMap<>();
+        for (Aggregate aggregate : aggregates) {
+            result.put(aggregate.getKey(), this.aggregate(rows, aggregate));
+        }
+        return result;
+    }
+
+    // the same semantics the JPA source gets from SQL, over the matched rows in memory
+    private Object aggregate(List<Map<String, Object>> rows, Aggregate aggregate) {
+        List<Object> values = rows.stream().map(r -> r.containsKey(aggregate.getKey()) ? r.get(aggregate.getKey()) : r.get(aggregate.getPath()))
+                .filter(Objects::nonNull).collect(Collectors.toList());
+        List<BigDecimal> numbers = values.stream().map(v -> {
+            try {
+                return new BigDecimal(String.valueOf(v));
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+        switch (aggregate.getStatistic()) {
+            case COUNT:
+                return (long) values.size();
+            case DISTINCT_COUNT:
+                return values.stream().map(String::valueOf).distinct().count();
+            case SUM:
+                return numbers.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+            case AVG:
+                return numbers.isEmpty() ? null : numbers.stream().reduce(BigDecimal.ZERO, BigDecimal::add)
+                        .divide(BigDecimal.valueOf(numbers.size()), 6, RoundingMode.HALF_UP);
+            case MAX:
+                return numbers.stream().max(Comparator.naturalOrder()).orElse(null);
+            case MIN:
+                return numbers.stream().min(Comparator.naturalOrder()).orElse(null);
+            default:
+                return null;
+        }
     }
 
     @Override

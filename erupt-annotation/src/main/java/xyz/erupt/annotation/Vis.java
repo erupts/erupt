@@ -13,6 +13,7 @@ import xyz.erupt.annotation.vis.CalendarView;
 import xyz.erupt.annotation.vis.CardView;
 import xyz.erupt.annotation.vis.GanttView;
 import xyz.erupt.annotation.vis.MapView;
+import xyz.erupt.annotation.vis.TableView;
 import xyz.erupt.annotation.vis.TimelineView;
 
 import java.beans.Transient;
@@ -60,6 +61,9 @@ public @interface Vis {
 
     @Match("#item.type().toString() == 'TPL'")
     Tpl tplView() default @Tpl(enable = false, path = "");
+
+    @Match("#item.type().toString() == 'TABLE'")
+    TableView tableView() default @TableView;
 
     @Match("#item.type().toString() == 'TIMELINE'")
     TimelineView timelineView() default @TimelineView(dateField = "");

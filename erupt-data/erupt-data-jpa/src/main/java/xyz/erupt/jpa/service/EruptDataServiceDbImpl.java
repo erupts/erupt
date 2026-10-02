@@ -12,6 +12,7 @@ import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.invoke.DataProcessorManager;
+import xyz.erupt.core.query.Aggregate;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.IEruptDataService;
@@ -58,6 +59,11 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     @Override
     public Page queryList(EruptModel eruptModel, Page page, EruptQuery query) {
         return eruptJpaDao.queryEruptList(eruptModel, page, query);
+    }
+
+    @Override
+    public Map<String, Object> aggregate(EruptModel eruptModel, EruptQuery eruptQuery, List<Aggregate> aggregates) {
+        return eruptJpaDao.queryEruptAggregate(eruptModel, eruptQuery, aggregates);
     }
 
     @Override
