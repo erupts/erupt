@@ -40,6 +40,9 @@ public @interface Power {
     @Comment("Whether records of this model carry a comment stream (needs the erupt-comment module)")
     boolean comment() default true;
 
+    @Comment("Whether changes to records of this model are kept as a field-level history with rollback (needs the erupt-revision module)")
+    boolean revision() default true;
+
     @Transient
     @Comment("Dynamic handling of Power permissions")
     Class<? extends PowerHandler> powerHandler() default PowerHandler.class;
