@@ -36,6 +36,8 @@ public class PowerObject {
 
     private boolean comment = true;
 
+    private boolean revision = true;
+
     public PowerObject(Power power) {
         this.add = power.add();
         this.delete = power.delete();
@@ -49,6 +51,7 @@ public class PowerObject {
         this.cellEdit = power.cellEdit();
         this.ai = power.ai();
         this.comment = power.comment();
+        this.revision = power.revision();
     }
 
     public PowerObject() {
