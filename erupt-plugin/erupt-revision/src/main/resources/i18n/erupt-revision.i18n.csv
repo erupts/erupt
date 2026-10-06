@@ -1,0 +1,15 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+Record Revision,记录版本,記錄版本,Record Revision,Révision d'enregistrement,レコード履歴,레코드 수정 이력,Версия записи,Revisión de registro,Datensatzversion,Revisão do registo,Revisi Data,مراجعة السجل
+Model,模型,模型,Model,Modèle,モデル,모델,Модель,Modelo,Modell,Modelo,Model,النموذج
+Record ID,记录 ID,記錄 ID,Record ID,ID d'enregistrement,レコード ID,레코드 ID,ID записи,ID de registro,Datensatz-ID,ID do registo,ID Data,معرف السجل
+Version,版本,版本,Version,Version,バージョン,버전,Версия,Versión,Version,Versão,Versi,الإصدار
+Operation,操作,操作,Operation,Opération,操作,작업,Операция,Operación,Vorgang,Operação,Operasi,العملية
+Operator,操作人,操作人,Operator,Opérateur,操作者,작업자,Оператор,Operador,Bearbeiter,Operador,Operator,المشغل
+Changes,变更内容,變更內容,Changes,Modifications,変更内容,변경 내용,Изменения,Cambios,Änderungen,Alterações,Perubahan,التغييرات
+ADD,新增,新增,Add,Ajout,追加,추가,Добавление,Alta,Hinzufügen,Adição,Tambah,إضافة
+UPDATE,修改,修改,Update,Modification,更新,수정,Изменение,Modificación,Änderung,Alteração,Ubah,تعديل
+DELETE,删除,刪除,Delete,Suppression,削除,삭제,Удаление,Baja,Löschen,Eliminação,Hapus,حذف
+revision.model_not_found,数据模型不存在,資料模型不存在,Model not found,Modèle introuvable,モデルが見つかりません,모델을 찾을 수 없습니다,Модель не найдена,Modelo no encontrado,Modell nicht gefunden,Modelo não encontrado,Model tidak ditemukan,النموذج غير موجود
+revision.not_found,版本记录不存在,版本記錄不存在,Revision not found,Révision introuvable,履歴が見つかりません,수정 이력을 찾을 수 없습니다,Версия не найдена,Revisión no encontrada,Version nicht gefunden,Revisão não encontrada,Revisi tidak ditemukan,المراجعة غير موجودة
+revision.record_not_found,记录不存在，无法回滚,記錄不存在，無法回滾,Record no longer exists and cannot be rolled back,L'enregistrement n'existe plus et ne peut pas être restauré,レコードが存在しないためロールバックできません,레코드가 존재하지 않아 롤백할 수 없습니다,Запись больше не существует и не может быть восстановлена,El registro ya no existe y no se puede revertir,Der Datensatz existiert nicht mehr und kann nicht zurückgesetzt werden,O registo já não existe e não pode ser revertido,Data sudah tidak ada dan tidak dapat dikembalikan,السجل لم يعد موجودًا ولا يمكن التراجع عنه
+revision.rollback_update_only,只有修改类型的版本可以回滚,只有修改類型的版本可以回滾,Only an update revision can be rolled back,Seule une révision de modification peut être restaurée,更新履歴のみロールバックできます,수정 이력만 롤백할 수 있습니다,Откатить можно только версию изменения,Solo se puede revertir una revisión de modificación,Nur eine Änderungsversion kann zurückgesetzt werden,Só uma revisão de alteração pode ser revertida,Hanya revisi perubahan yang dapat dikembalikan,يمكن التراجع عن مراجعة التعديل فقط
