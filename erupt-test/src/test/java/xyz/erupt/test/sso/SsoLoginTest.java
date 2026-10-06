@@ -7,42 +7,35 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.client.RestTemplate;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.test.EruptApplicationTests;
-import xyz.erupt.upms.model.EruptRole;
-import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.sso.model.EruptSso;
 import xyz.erupt.sso.model.EruptSsoBind;
 import xyz.erupt.sso.model.data_proxy.EruptSsoDataProxy;
-import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.test.EruptApplicationTests;
+import xyz.erupt.upms.model.EruptRole;
+import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * End to end checks for delegated login against a stand-in identity provider: the browser
@@ -253,6 +246,24 @@ public class SsoLoginTest extends EruptApplicationTests {
                 dao.merge(u);
             });
         }
+    }
+
+    @Test
+    void unreachableIssuerIsNotMistakenForAMissingDocument() throws IOException {
+        // a port nobody listens on: the request never gets an answer, let alone a 404
+        int port;
+        try (ServerSocket socket = new ServerSocket(0)) {
+            port = socket.getLocalPort();
+        }
+        EruptSso draft = new EruptSso();
+        draft.setIssuer("http://localhost:" + port);
+        EruptWebApiRuntimeException atSave = assertThrows(EruptWebApiRuntimeException.class, () -> ssoDataProxy.beforeUpdate(draft));
+        assertTrue(atSave.getMessage().contains("ConnectException"),
+                "the admin has to see that the server could not reach the issuer: " + atSave.getMessage());
+        assertNotEquals(I18nTranslate.$translate("sso.discovery_failed"), I18nTranslate.$translate("sso.discovery_unreachable"));
+        assertFalse(atSave.getMessage().startsWith(I18nTranslate.$translate("sso.discovery_failed")),
+                "a network failure must not be reported as a missing discovery document: " + atSave.getMessage());
+        assertTrue(atSave.getMessage().startsWith(I18nTranslate.$translate("sso.discovery_unreachable")), atSave.getMessage());
     }
 
     @Test

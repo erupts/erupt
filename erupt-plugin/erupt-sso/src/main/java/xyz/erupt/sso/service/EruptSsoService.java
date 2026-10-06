@@ -2,7 +2,6 @@ package xyz.erupt.sso.service;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -15,18 +14,19 @@ import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.EncryptUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.base.LoginModel;
-import xyz.erupt.upms.constant.EncryptType;
 import xyz.erupt.sso.constant.SsoProviderType;
 import xyz.erupt.sso.constant.SsoSessionKey;
-import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.sso.model.EruptSso;
 import xyz.erupt.sso.model.EruptSsoBind;
+import xyz.erupt.sso.vo.EruptSsoProviderVo;
+import xyz.erupt.upms.base.LoginModel;
+import xyz.erupt.upms.constant.EncryptType;
+import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
-import xyz.erupt.sso.vo.EruptSsoProviderVo;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpRequest;
@@ -34,14 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -512,8 +505,14 @@ public class EruptSsoService {
             json = this.send(HttpRequest.newBuilder(URI.create(url)).timeout(TIMEOUT)
                     .header("Accept", "application/json").GET().build(), "discovery");
         } catch (EruptWebApiRuntimeException e) {
-            // whatever came back, it was not a discovery document: the fix is the same either way
-            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.discovery_failed") + " (" + url + ")");
+            if (e.getCause() instanceof IOException cause) {
+                // the issuer never answered (DNS, connect, proxy, TLS or timeout): the document may well exist,
+                // it is the server that cannot reach it, so telling the admin to type the URLs by hand would mislead
+                throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.discovery_unreachable") + " (" + url + ": "
+                        + cause.getClass().getSimpleName() + (null == cause.getMessage() ? "" : " " + cause.getMessage()) + ")", e);
+            }
+            // the issuer answered, but not with a discovery document (404, HTML page, non JSON): the endpoints have to be typed in
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.discovery_failed") + " (" + url + ")", e);
         }
         Endpoints endpoints = new Endpoints(
                 claim(json, "authorization_endpoint"),

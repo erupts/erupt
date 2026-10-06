@@ -190,7 +190,7 @@ public class SsoProviderApi {
             // a connect, TLS or timeout failure: the exception type is the whole diagnosis
             log.warn("sso {} endpoint call failed", stage, e);
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.provider_error")
-                    + " (" + stage + ": " + e.getClass().getSimpleName() + (null == e.getMessage() ? "" : " " + e.getMessage()) + ")");
+                    + " (" + stage + ": " + e.getClass().getSimpleName() + (null == e.getMessage() ? "" : " " + e.getMessage()) + ")", e);
         }
     }
 
