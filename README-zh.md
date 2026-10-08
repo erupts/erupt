@@ -17,11 +17,13 @@
 
 <p align="center">
   <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt?style=flat&color=007ec6&label=MAVEN" alt="maven-central"></a>
+  <a href="https://adoptium.net"><img src="https://img.shields.io/badge/JAVA-17%2B-ED8B00?style=flat" alt="java"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/LICENSE-APACHE_2.0-4c1?style=flat" alt="license"></a>
   <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/stars/erupts/erupt?style=flat&color=dfb317&label=STARS" alt="stars"></a>
   <a href="https://github.com/erupts/erupt/releases"><img src="https://img.shields.io/github/v/release/erupts/erupt?style=flat&color=6f42c1&label=RELEASE" alt="release"></a>
+  <a href="https://github.com/erupts/erupt/actions/workflows/maven.yml"><img src="https://img.shields.io/github/actions/workflow/status/erupts/erupt/maven.yml?branch=develop&style=flat&label=BUILD" alt="build"></a>
   <a href="https://app.codecov.io/github/erupts/erupt"><img src="https://img.shields.io/codecov/c/github/erupts/erupt/develop?style=flat&label=COVERAGE" alt="coverage"></a>
-  <a href="https://github.com/erupts/erupt/commits"><img src="https://img.shields.io/github/last-commit/erupts/erupt?style=flat&color=fe7d37&label=LAST_COMMIT" alt="last-commit"></a>
+  <a href="https://hub.docker.com/r/erupts/erupt"><img src="https://img.shields.io/docker/pulls/erupts/erupt?style=flat&color=2496ED&label=DOCKER_PULLS" alt="docker-pulls"></a>
   <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/star.svg?theme=dark" alt="gitee"></a>
 </p>
 
