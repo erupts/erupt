@@ -1,0 +1,46 @@
+# Path-based labels applied by actions/labeler. Labels feed release notes grouping.
+core:
+  - changed-files:
+      - any-glob-to-any-file:
+          - erupt-annotation/**
+          - erupt-core/**
+          - erupt-spi/**
+          - erupt-security/**
+          - erupt-support/**
+upms:
+  - changed-files:
+      - any-glob-to-any-file:
+          - erupt-upms/**
+          - erupt-admin/**
+web:
+  - changed-files:
+      - any-glob-to-any-file:
+          - erupt-web/**
+          - erupt-tpl/**
+ai:
+  - changed-files:
+      - any-glob-to-any-file:
+          - erupt-ai/**
+data:
+  - changed-files:
+      - any-glob-to-any-file:
+          - erupt-data/**
+cloud:
+  - changed-files:
+      - any-glob-to-any-file:
+          - erupt-cloud/**
+plugin:
+  - changed-files:
+      - any-glob-to-any-file:
+          - erupt-plugin/**
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - CITATION.cff
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/**
+          - scripts/**
+          - erupt-deploy/**
