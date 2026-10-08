@@ -1,0 +1,28 @@
+# Auto-generated release notes: groups PRs by label when a release is created from a tag.
+changelog:
+  exclude:
+    labels:
+      - duplicate
+      - invalid
+      - wontfix
+      - question
+  categories:
+    - title: Breaking Changes
+      labels:
+        - breaking
+    - title: New Features
+      labels:
+        - enhancement
+        - feature
+    - title: Bug Fixes
+      labels:
+        - bug
+    - title: Documentation
+      labels:
+        - documentation
+    - title: Dependencies
+      labels:
+        - dependencies
+    - title: Other Changes
+      labels:
+        - "*"
