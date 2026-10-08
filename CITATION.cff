@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: If you use Erupt in your research, please cite it as below.
+title: "Erupt: annotation-driven low-code framework for Java admin backends"
+type: software
+authors:
+  - family-names: Li
+    given-names: YuePeng
+    alias: erupts
+repository-code: https://github.com/erupts/erupt
+url: https://www.erupt.xyz
+license: Apache-2.0
+version: 2.3.0
+date-released: 2026-09-25
+keywords:
+  - low-code
+  - java
+  - spring-boot
+  - admin
+  - annotation
+  - code-as-configuration
+abstract: >-
+  Erupt generates a production-grade admin backend from annotated Java entities at
+  runtime: UI, RBAC, audit logs and REST APIs with no code generation and no frontend
+  code. It ships pluggable data connectors (JPA, MongoDB, Elasticsearch, LDAP, Redis,
+  S3, Feishu, Notion and more) and AI-native modules built on langchain4j and MCP.

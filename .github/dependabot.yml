@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: maven
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+    groups:
+      # One PR per family keeps the ~50-module build from being hit by a dozen single-bump PRs.
+      spring:
+        patterns:
+          - "org.springframework*"
+      langchain4j:
+        patterns:
+          - "dev.langchain4j*"
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Major bumps change the Java / Jakarta baseline; they are handled manually.
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies

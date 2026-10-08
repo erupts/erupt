@@ -1,4 +1,5 @@
-*.js linguist-language=java
-*.css linguist-language=java
-*.less linguist-language=java
-*.html linguist-language=java
+# Built Angular bundle from erupt-web: exclude from language stats and collapse in PR diffs.
+erupt-web/src/main/resources/public/** linguist-generated
+# Template skins ship vendored frontend assets.
+erupt-tpl/**/src/main/resources/**/*.js linguist-vendored
+erupt-tpl/**/src/main/resources/**/*.css linguist-vendored

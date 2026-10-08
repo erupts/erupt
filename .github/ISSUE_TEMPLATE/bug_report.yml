@@ -1,0 +1,112 @@
+name: Bug report
+description: Something is broken in Erupt
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Usage questions ("how do I ...") belong in [Discussions](https://github.com/erupts/erupt/discussions), not here.
+        Please confirm the problem still exists on the latest release before filing.
+
+  - type: input
+    id: erupt-version
+    attributes:
+      label: Erupt version
+      placeholder: "2.3.0"
+    validations:
+      required: true
+
+  - type: input
+    id: spring-boot-version
+    attributes:
+      label: Spring Boot version
+      placeholder: "3.5.x"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: jdk
+    attributes:
+      label: JDK version
+      options:
+        - "17"
+        - "21"
+        - "25"
+        - Other (state in description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: database
+    attributes:
+      label: Database
+      options:
+        - MySQL / MariaDB
+        - PostgreSQL
+        - Oracle
+        - SQL Server
+        - H2
+        - SQLite
+        - DM / KingBase / other domestic DB
+        - MongoDB
+        - Other / not database related
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Affected module
+      options:
+        - erupt-core (annotations, forms, tables, queries)
+        - erupt-upms (users, roles, menus, permissions)
+        - erupt-web (frontend)
+        - erupt-ai (LLM, MCP, agents)
+        - erupt-data-* (connectors)
+        - erupt-cloud
+        - erupt-tpl (ant-design / element-ui / amis)
+        - Plugin (report, job, generator, monitor, notice, ...)
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: What happened, and what did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: The entity plus annotations are usually enough. Paste the code and the steps.
+      value: |
+        ```java
+        @Erupt(name = "xxx")
+        @Entity
+        public class Test {
+
+        }
+        ```
+
+        Steps:
+        1.
+        2.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Stack trace / logs
+      description: Remove tokens, passwords and any other sensitive information.
+      render: text
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Screenshots of the generated UI, custom DataProxy, multi-tenant setup, reverse proxy, etc.
