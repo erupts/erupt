@@ -22,7 +22,7 @@
   <a href="https://github.com/erupts/erupt/releases"><img src="https://img.shields.io/github/v/release/erupts/erupt?style=for-the-badge&labelColor=000000&color=4FC8EC&label=RELEASE" alt="release"></a>
   <a href="https://app.codecov.io/github/erupts/erupt"><img src="https://img.shields.io/codecov/c/github/erupts/erupt/develop?style=for-the-badge&labelColor=000000&color=4FC8EC&label=COVERAGE" alt="coverage"></a>
   <a href="https://github.com/erupts/erupt/commits"><img src="https://img.shields.io/github/last-commit/erupts/erupt?style=for-the-badge&labelColor=000000&color=4FC8EC&label=LAST_COMMIT" alt="last-commit"></a>
-  <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/star.svg?theme=dark" alt="gitee"></a>
+  <a href="https://gitee.com/erupt/erupt"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgitee.com%2Fapi%2Fv5%2Frepos%2Ferupt%2Ferupt&query=%24.stargazers_count&label=GITEE&style=for-the-badge&labelColor=000000&color=4FC8EC" alt="gitee"></a>
 </p>
 
 <p align="center">
