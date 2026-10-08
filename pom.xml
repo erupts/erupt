@@ -50,13 +50,13 @@
         <spring.boot.version>3.5.16</spring.boot.version>
         <!-- Versions converged here because several third-party jars pull different releases:
              nashorn (asm 7) vs json-smart (asm 9), kotlin-stdlib (annotations 13) vs ours, oshi vs pty4j (jna) -->
-        <asm.version>9.9.1</asm.version>
-        <jna.version>5.18.1</jna.version>
-        <jetbrains.annotations.version>24.0.1</jetbrains.annotations.version>
+        <asm.version>9.10.1</asm.version>
+        <jna.version>5.19.1</jna.version>
+        <jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
         <!-- calcite 1.41 (erupt-cube-sql) needs guava 33.4.8-jre but shardingsphere pins 30.0-jre; qdrant pulls the
              android flavour. POI 5.5 needs commons-io 2.20 but calcite declares 2.15 on a shorter path -->
-        <guava.version>33.4.8-jre</guava.version>
-        <commons-io.version>2.20.0</commons-io.version>
+        <guava.version>33.7.2-jre</guava.version>
+        <commons-io.version>2.22.0</commons-io.version>
     </properties>
 
     <modules>
@@ -142,7 +142,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.19.0</version>
+                <version>3.21.0</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -234,7 +234,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.16.0</version>
                 <configuration>
                     <!-- release, not source/target: only release holds the api to the java version too -->
                     <release>${java.version}</release>
@@ -246,7 +246,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.44</version>
+                            <version>1.18.48</version>
                         </path>
                         <path>
                             <groupId>org.springframework.boot</groupId>
@@ -278,7 +278,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>flatten-maven-plugin</artifactId>
-                        <version>1.6.0</version>
+                        <version>1.8.0</version>
                         <configuration>
                             <updatePomFile>true</updatePomFile>
                             <flattenMode>oss</flattenMode>
@@ -303,7 +303,7 @@
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.8.0</version>
+                        <version>0.11.0</version>
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
@@ -317,7 +317,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>2.2.1</version>
+                        <version>2.4</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -332,7 +332,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.5.0</version>
+                        <version>3.12.0</version>
                         <configuration>
                             <doclint>none</doclint>
                             <detectOfflineLinks>false</detectOfflineLinks>
