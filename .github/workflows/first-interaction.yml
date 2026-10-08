@@ -1,0 +1,37 @@
+name: Welcome first-time contributors
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: |
+            Thanks for opening your first issue in Erupt!
+
+            A few things that speed up a reply:
+            - Usage questions are best asked in [Discussions](https://github.com/erupts/erupt/discussions); the [docs](https://docs.erupt.xyz) and [FAQ](https://docs.erupt.xyz/en/guide/faq) answer most "how do I" questions.
+            - For bugs, a minimal entity with its annotations plus the Erupt / Spring Boot / database versions is usually all we need.
+            - You can try the latest version on the [live demo](https://demo.erupt.xyz) to confirm the behaviour.
+          pr-message: |
+            Thanks for your first pull request to Erupt!
+
+            Please make sure the PR checklist is filled in, in particular:
+            - `mvn test -pl erupt-test` passes
+            - no APIs newer than Java 17
+            - SQL / DDL works beyond H2
+            - user-facing strings are English with a matching `i18n/<module>.i18n.csv` entry
+            - code comments are in English
+
+            See [CONTRIBUTING.md](https://github.com/erupts/erupt/blob/master/.github/CONTRIBUTING.md) for the full guide. A maintainer will review soon.

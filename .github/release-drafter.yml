@@ -1,0 +1,60 @@
+# Keeps a draft GitHub Release up to date as PRs merge into develop.
+# Tags have no "v" prefix (2.3.0), matching scripts/release.sh.
+name-template: '$RESOLVED_VERSION'
+tag-template: '$RESOLVED_VERSION'
+commitish: master
+
+categories:
+  - title: Breaking Changes
+    labels: [breaking]
+  - title: New Features
+    labels: [enhancement]
+  - title: Bug Fixes
+    labels: [bug]
+  - title: Documentation
+    labels: [documentation]
+  - title: Dependencies
+    labels: [dependencies]
+    collapse-after: 5
+  - title: Other Changes
+    labels: [ci]
+
+exclude-labels:
+  - duplicate
+  - invalid
+  - wontfix
+  - question
+
+change-template: '- $TITLE by @$AUTHOR in #$NUMBER'
+change-title-escapes: '\<*_&'
+
+version-resolver:
+  major:
+    labels: [breaking]
+  minor:
+    labels: [enhancement]
+  patch:
+    labels: [bug, dependencies, documentation, ci]
+  default: patch
+
+# Derive type labels from Conventional Commit PR titles so grouping works without manual labelling.
+autolabeler:
+  - label: breaking
+    title: ['/^\w+(\(.+\))?!:/']
+  - label: enhancement
+    title: ['/^feat(\(.+\))?:/']
+  - label: bug
+    title: ['/^fix(\(.+\))?:/']
+  - label: documentation
+    title: ['/^docs(\(.+\))?:/']
+  - label: dependencies
+    title: ['/^(chore|build)\(deps\):/', '/^Bump /']
+  - label: ci
+    title: ['/^(ci|chore)(\(.+\))?:/']
+
+template: |
+  ## What's Changed
+
+  $CHANGES
+
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...$RESOLVED_VERSION
