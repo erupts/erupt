@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <awssdk.version>2.28.29</awssdk.version>
+        <awssdk.version>2.55.11</awssdk.version>
     </properties>
 
     <dependencyManagement>
