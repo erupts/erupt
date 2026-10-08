@@ -1,0 +1,100 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+Fine-tuning,模型微调,模型微調,Fine-tuning,Fine-tuning,ファインチューニング,파인튜닝,Дообучение,Ajuste fino,Feinabstimmung,Ajuste fino,Fine-tuning,الضبط الدقيق
+Training Dataset,训练数据集,訓練資料集,Training Dataset,Jeu de données d'entraînement,学習データセット,학습 데이터셋,Обучающий набор,Conjunto de entrenamiento,Trainingsdatensatz,Conjunto de treino,Dataset Pelatihan,مجموعة بيانات التدريب
+Fine-tuning Job,微调任务,微調任務,Fine-tuning Job,Tâche de fine-tuning,ファインチューニングジョブ,파인튜닝 작업,Задача дообучения,Trabajo de ajuste fino,Feinabstimmungsauftrag,Tarefa de ajuste fino,Pekerjaan Fine-tuning,مهمة الضبط الدقيق
+Training Sample,训练样本,訓練樣本,Training Sample,Échantillon d'entraînement,学習サンプル,학습 샘플,Обучающий пример,Muestra de entrenamiento,Trainingsbeispiel,Amostra de treino,Sampel Pelatihan,عينة التدريب
+Training Event,训练事件,訓練事件,Training Event,Événement d'entraînement,学習イベント,학습 이벤트,Событие обучения,Evento de entrenamiento,Trainingsereignis,Evento de treino,Peristiwa Pelatihan,حدث التدريب
+Harvest Chat History,从对话记录采集,從對話記錄採集,Harvest Chat History,Collecter l'historique des conversations,チャット履歴から収集,채팅 기록 수집,Собрать из истории чатов,Recolectar historial de chat,Chatverlauf übernehmen,Recolher histórico de chat,Kumpulkan Riwayat Chat,جمع سجل المحادثات
+Format,格式,格式,Format,Format,形式,형식,Формат,Formato,Format,Formato,Format,التنسيق
+Chat (SFT),对话 (SFT),對話 (SFT),Chat (SFT),Conversation (SFT),チャット (SFT),채팅 (SFT),Диалог (SFT),Chat (SFT),Chat (SFT),Chat (SFT),Chat (SFT),محادثة (SFT)
+Preference (DPO),偏好 (DPO),偏好 (DPO),Preference (DPO),Préférence (DPO),選好 (DPO),선호 (DPO),Предпочтение (DPO),Preferencia (DPO),Präferenz (DPO),Preferência (DPO),Preferensi (DPO),تفضيل (DPO)
+JSONL File,JSONL 文件,JSONL 檔案,JSONL File,Fichier JSONL,JSONLファイル,JSONL 파일,Файл JSONL,Archivo JSONL,JSONL-Datei,Ficheiro JSONL,Berkas JSONL,ملف JSONL
+Samples,样本数,樣本數,Samples,Échantillons,サンプル数,샘플 수,Примеры,Muestras,Beispiele,Amostras,Sampel,العينات
+Valid,有效,有效,Valid,Valide,有効,유효,Корректно,Válido,Gültig,Válido,Valid,صالح
+Invalid,无效,無效,Invalid,Invalide,無効,무효,Некорректно,Inválido,Ungültig,Inválido,Tidak valid,غير صالح
+Validating,校验中,校驗中,Validating,Validation en cours,検証中,검증 중,Проверка,Validando,Wird geprüft,A validar,Memvalidasi,جارٍ التحقق
+Est. Tokens,预估 Token,預估 Token,Est. Tokens,Tokens estimés,推定トークン,예상 토큰,Оценка токенов,Tokens estimados,Geschätzte Tokens,Tokens estimados,Perkiraan Token,الرموز المقدرة
+Preview,预览,預覽,Preview,Aperçu,プレビュー,미리보기,Предпросмотр,Vista previa,Vorschau,Pré-visualizar,Pratinjau,معاينة
+Re-validate,重新校验,重新校驗,Re-validate,Revalider,再検証,재검증,Перепроверить,Revalidar,Erneut prüfen,Revalidar,Validasi Ulang,إعادة التحقق
+Monitor,训练监控,訓練監控,Monitor,Suivi,モニター,모니터,Мониторинг,Monitor,Überwachung,Monitor,Pantau,المراقبة
+Start Training,开始训练,開始訓練,Start Training,Lancer l'entraînement,学習開始,학습 시작,Начать обучение,Iniciar entrenamiento,Training starten,Iniciar treino,Mulai Pelatihan,بدء التدريب
+Cancel,取消,取消,Cancel,Annuler,キャンセル,취소,Отменить,Cancelar,Abbrechen,Cancelar,Batalkan,إلغاء
+Sync Now,立即同步,立即同步,Sync Now,Synchroniser,今すぐ同期,지금 동기화,Синхронизировать,Sincronizar ahora,Jetzt synchronisieren,Sincronizar agora,Sinkronkan Sekarang,مزامنة الآن
+Compare,效果对比,效果對比,Compare,Comparer,比較,비교,Сравнить,Comparar,Vergleichen,Comparar,Bandingkan,مقارنة
+Register as LLM,注册为模型,註冊為模型,Register as LLM,Enregistrer comme LLM,LLMとして登録,LLM으로 등록,Зарегистрировать как LLM,Registrar como LLM,Als LLM registrieren,Registar como LLM,Daftarkan sebagai LLM,تسجيل كنموذج LLM
+Events,事件,事件,Events,Événements,イベント,이벤트,События,Eventos,Ereignisse,Eventos,Peristiwa,الأحداث
+Dataset,数据集,資料集,Dataset,Jeu de données,データセット,데이터셋,Набор данных,Conjunto de datos,Datensatz,Conjunto de dados,Dataset,مجموعة البيانات
+Source,来源,來源,Source,Source,ソース,출처,Источник,Origen,Quelle,Origem,Sumber,المصدر
+Turns,轮次,輪次,Turns,Tours,ターン,턴,Реплики,Turnos,Runden,Turnos,Giliran,الأدوار
+Job,任务,任務,Job,Tâche,ジョブ,작업,Задача,Trabajo,Auftrag,Tarefa,Pekerjaan,المهمة
+Time,时间,時間,Time,Heure,時刻,시간,Время,Hora,Zeit,Hora,Waktu,الوقت
+Level,级别,級別,Level,Niveau,レベル,수준,Уровень,Nivel,Stufe,Nível,Tingkat,المستوى
+Info,信息,資訊,Info,Info,情報,정보,Инфо,Info,Info,Info,Info,معلومات
+Warn,警告,警告,Warn,Avertissement,警告,경고,Предупреждение,Aviso,Warnung,Aviso,Peringatan,تحذير
+Error,错误,錯誤,Error,Erreur,エラー,오류,Ошибка,Error,Fehler,Erro,Kesalahan,خطأ
+Message,消息,訊息,Message,Message,メッセージ,메시지,Сообщение,Mensaje,Meldung,Mensagem,Pesan,الرسالة
+Step,步数,步數,Step,Étape,ステップ,스텝,Шаг,Paso,Schritt,Passo,Langkah,الخطوة
+Train Loss,训练损失,訓練損失,Train Loss,Perte d'entraînement,学習損失,학습 손실,Потери обучения,Pérdida de entrenamiento,Trainingsverlust,Perda de treino,Loss Pelatihan,خسارة التدريب
+Valid Loss,验证损失,驗證損失,Valid Loss,Perte de validation,検証損失,검증 손실,Потери валидации,Pérdida de validación,Validierungsverlust,Perda de validação,Loss Validasi,خسارة التحقق
+Train Accuracy,训练准确率,訓練準確率,Train Accuracy,Précision d'entraînement,学習精度,학습 정확도,Точность обучения,Precisión de entrenamiento,Trainingsgenauigkeit,Precisão de treino,Akurasi Pelatihan,دقة التدريب
+Job Name,任务名称,任務名稱,Job Name,Nom de la tâche,ジョブ名,작업 이름,Название задачи,Nombre del trabajo,Auftragsname,Nome da tarefa,Nama Pekerjaan,اسم المهمة
+Base LLM,基础模型配置,基礎模型配置,Base LLM,LLM de base,ベースLLM,기본 LLM,Базовый LLM,LLM base,Basis-LLM,LLM base,LLM Dasar,النموذج الأساسي
+Provider,提供商,提供商,Provider,Fournisseur,プロバイダー,제공자,Провайдер,Proveedor,Anbieter,Fornecedor,Penyedia,المزوّد
+Base Model,基础模型,基礎模型,Base Model,Modèle de base,ベースモデル,기본 모델,Базовая модель,Modelo base,Basismodell,Modelo base,Model Dasar,النموذج الأساسي
+Method,训练方法,訓練方法,Method,Méthode,手法,방법,Метод,Método,Methode,Método,Metode,الطريقة
+Supervised (SFT),监督微调 (SFT),監督微調 (SFT),Supervised (SFT),Supervisé (SFT),教師あり (SFT),지도 학습 (SFT),С учителем (SFT),Supervisado (SFT),Überwacht (SFT),Supervisionado (SFT),Terawasi (SFT),خاضع للإشراف (SFT)
+Validation Dataset,验证数据集,驗證資料集,Validation Dataset,Jeu de validation,検証データセット,검증 데이터셋,Валидационный набор,Conjunto de validación,Validierungsdatensatz,Conjunto de validação,Dataset Validasi,مجموعة بيانات التحقق
+Suffix,模型后缀,模型後綴,Suffix,Suffixe,サフィックス,접미사,Суффикс,Sufijo,Suffix,Sufixo,Akhiran,اللاحقة
+Hyperparameters,超参数,超參數,Hyperparameters,Hyperparamètres,ハイパーパラメータ,하이퍼파라미터,Гиперпараметры,Hiperparámetros,Hyperparameter,Hiperparâmetros,Hiperparameter,المعاملات الفائقة
+Epochs,训练轮数,訓練輪數,Epochs,Époques,エポック数,에포크,Эпохи,Épocas,Epochen,Épocas,Epoch,الحقب
+Learning Rate Multiplier,学习率倍数,學習率倍數,Learning Rate Multiplier,Multiplicateur du taux d'apprentissage,学習率倍率,학습률 배수,Множитель скорости обучения,Multiplicador de tasa de aprendizaje,Lernratenfaktor,Multiplicador da taxa de aprendizagem,Pengali Laju Pembelajaran,مضاعف معدل التعلم
+Batch Size,批大小,批大小,Batch Size,Taille du lot,バッチサイズ,배치 크기,Размер пакета,Tamaño de lote,Batchgröße,Tamanho do lote,Ukuran Batch,حجم الدفعة
+DPO Beta,DPO Beta,DPO Beta,DPO Beta,Bêta DPO,DPOベータ,DPO 베타,DPO бета,Beta DPO,DPO-Beta,Beta DPO,Beta DPO,بيتا DPO
+Seed,随机种子,隨機種子,Seed,Graine,シード,시드,Сид,Semilla,Seed,Semente,Seed,البذرة
+Run State,运行状态,運行狀態,Run State,État d'exécution,実行状態,실행 상태,Состояние,Estado de ejecución,Laufzustand,Estado de execução,Status Eksekusi,حالة التشغيل
+Draft,草稿,草稿,Draft,Brouillon,下書き,초안,Черновик,Borrador,Entwurf,Rascunho,Draf,مسودة
+Uploading,上传中,上傳中,Uploading,Téléversement,アップロード中,업로드 중,Загрузка,Subiendo,Wird hochgeladen,A carregar,Mengunggah,جارٍ الرفع
+Validating Files,校验文件中,校驗檔案中,Validating Files,Validation des fichiers,ファイル検証中,파일 검증 중,Проверка файлов,Validando archivos,Dateien werden geprüft,A validar ficheiros,Memvalidasi Berkas,جارٍ التحقق من الملفات
+Queued,排队中,排隊中,Queued,En file d'attente,待機中,대기 중,В очереди,En cola,In Warteschlange,Em fila,Dalam Antrian,في قائمة الانتظار
+Running,训练中,訓練中,Running,En cours,実行中,실행 중,Выполняется,En ejecución,Läuft,Em execução,Berjalan,قيد التشغيل
+Succeeded,已完成,已完成,Succeeded,Réussi,成功,성공,Успешно,Completado,Erfolgreich,Concluído,Berhasil,نجح
+Cancelled,已取消,已取消,Cancelled,Annulé,キャンセル済み,취소됨,Отменено,Cancelado,Abgebrochen,Cancelado,Dibatalkan,ملغى
+Fine-tuned Model,微调后模型,微調後模型,Fine-tuned Model,Modèle ajusté,調整済みモデル,파인튜닝된 모델,Дообученная модель,Modelo ajustado,Feinabgestimmtes Modell,Modelo ajustado,Model Hasil Fine-tuning,النموذج المضبوط
+Remote Job ID,远程任务 ID,遠端任務 ID,Remote Job ID,ID de tâche distante,リモートジョブID,원격 작업 ID,ID удалённой задачи,ID de trabajo remoto,Remote-Auftrags-ID,ID da tarefa remota,ID Pekerjaan Remote,معرف المهمة البعيدة
+Training File ID,训练文件 ID,訓練檔案 ID,Training File ID,ID du fichier d'entraînement,学習ファイルID,학습 파일 ID,ID обучающего файла,ID de archivo de entrenamiento,Trainingsdatei-ID,ID do ficheiro de treino,ID Berkas Pelatihan,معرف ملف التدريب
+Validation File ID,验证文件 ID,驗證檔案 ID,Validation File ID,ID du fichier de validation,検証ファイルID,검증 파일 ID,ID валидационного файла,ID de archivo de validación,Validierungsdatei-ID,ID do ficheiro de validação,ID Berkas Validasi,معرف ملف التحقق
+Trained Tokens,已训练 Token,已訓練 Token,Trained Tokens,Tokens entraînés,学習済みトークン,학습된 토큰,Обучено токенов,Tokens entrenados,Trainierte Tokens,Tokens treinados,Token Terlatih,الرموز المدربة
+Started At,开始时间,開始時間,Started At,Début,開始時刻,시작 시간,Начало,Inicio,Gestartet am,Início,Dimulai Pada,وقت البدء
+Finished At,结束时间,結束時間,Finished At,Fin,終了時刻,종료 시간,Окончание,Fin,Beendet am,Fim,Selesai Pada,وقت الانتهاء
+Estimated Finish,预计完成,預計完成,Estimated Finish,Fin estimée,完了予定,예상 완료,Ожидаемое окончание,Fin estimada,Voraussichtliches Ende,Fim estimado,Perkiraan Selesai,الانتهاء المتوقع
+Checkpoints,检查点,檢查點,Checkpoints,Points de contrôle,チェックポイント,체크포인트,Контрольные точки,Puntos de control,Checkpoints,Pontos de controlo,Checkpoint,نقاط التحقق
+Registered LLM,已注册模型,已註冊模型,Registered LLM,LLM enregistré,登録済みLLM,등록된 LLM,Зарегистрированный LLM,LLM registrado,Registriertes LLM,LLM registado,LLM Terdaftar,النموذج المسجل
+From Date,开始日期,開始日期,From Date,Date de début,開始日,시작일,Дата начала,Fecha desde,Von Datum,Data de início,Dari Tanggal,من تاريخ
+To Date,结束日期,結束日期,To Date,Date de fin,終了日,종료일,Дата окончания,Fecha hasta,Bis Datum,Data de fim,Sampai Tanggal,إلى تاريخ
+Model Filter,模型过滤,模型過濾,Model Filter,Filtre de modèle,モデルフィルター,모델 필터,Фильтр модели,Filtro de modelo,Modellfilter,Filtro de modelo,Filter Model,تصفية النموذج
+Min Answer Length,最短回答长度,最短回答長度,Min Answer Length,Longueur min. de réponse,最小回答長,최소 답변 길이,Мин. длина ответа,Longitud mín. de respuesta,Min. Antwortlänge,Comprimento mín. da resposta,Panjang Jawaban Min.,الحد الأدنى لطول الإجابة
+Max Conversations,最多会话数,最多會話數,Max Conversations,Nb max. de conversations,最大会話数,최대 대화 수,Макс. диалогов,Máx. conversaciones,Max. Gespräche,Máx. conversas,Maks. Percakapan,الحد الأقصى للمحادثات
+System Prompt,系统提示词,系統提示詞,System Prompt,Invite système,システムプロンプト,시스템 프롬프트,Системный промпт,Prompt de sistema,System-Prompt,Prompt de sistema,Prompt Sistem,موجه النظام
+One Sample per Turn,按轮次拆分,按輪次拆分,One Sample per Turn,Un échantillon par tour,ターンごとに1サンプル,턴당 샘플 1개,Один пример на реплику,Una muestra por turno,Ein Beispiel pro Runde,Uma amostra por turno,Satu Sampel per Giliran,عينة لكل دور
+Per Turn,按轮次,按輪次,Per Turn,Par tour,ターン単位,턴 단위,По репликам,Por turno,Pro Runde,Por turno,Per Giliran,لكل دور
+Whole Conversation,整段会话,整段會話,Whole Conversation,Conversation entière,会話全体,전체 대화,Весь диалог,Conversación completa,Ganzes Gespräch,Conversa completa,Seluruh Percakapan,المحادثة كاملة
+tune.start_hint,确认提交训练？数据集将上传到模型提供商并开始计费,確認提交訓練？資料集將上傳到模型提供商並開始計費,Start training? The dataset is uploaded to the provider and billing begins,Lancer l'entraînement ? Le jeu de données sera envoyé au fournisseur et facturé,学習を開始しますか？データセットがプロバイダーにアップロードされ課金が始まります,학습을 시작할까요? 데이터셋이 제공자에 업로드되고 과금이 시작됩니다,Начать обучение? Набор данных будет загружен провайдеру и начнётся тарификация,¿Iniciar entrenamiento? El conjunto se sube al proveedor y empieza la facturación,Training starten? Der Datensatz wird zum Anbieter hochgeladen und abgerechnet,Iniciar treino? O conjunto é enviado ao fornecedor e a faturação começa,Mulai pelatihan? Dataset diunggah ke penyedia dan penagihan dimulai,بدء التدريب؟ سيتم رفع مجموعة البيانات إلى المزوّد وبدء الفوترة
+tune.cancel_hint,确认取消该训练任务？已消耗的训练费用不会退还,確認取消該訓練任務？已消耗的訓練費用不會退還,Cancel this training job? Compute already used is not refunded,Annuler cette tâche ? Le calcul déjà consommé n'est pas remboursé,この学習ジョブをキャンセルしますか？使用済みの計算は返金されません,이 학습 작업을 취소할까요? 이미 사용한 연산은 환불되지 않습니다,Отменить задачу? Использованные ресурсы не возвращаются,¿Cancelar este trabajo? El cómputo ya usado no se reembolsa,Auftrag abbrechen? Bereits genutzte Rechenzeit wird nicht erstattet,Cancelar esta tarefa? A computação já usada não é reembolsada,Batalkan pekerjaan ini? Komputasi yang sudah dipakai tidak dikembalikan,إلغاء مهمة التدريب؟ لن يتم رد تكلفة الحوسبة المستخدمة
+tune.register_hint,将微调后的模型注册为可用模型？,將微調後的模型註冊為可用模型？,Register the fine-tuned model as an LLM record?,Enregistrer le modèle ajusté comme LLM ?,調整済みモデルをLLMとして登録しますか？,파인튜닝된 모델을 LLM으로 등록할까요?,Зарегистрировать дообученную модель как LLM?,¿Registrar el modelo ajustado como LLM?,Feinabgestimmtes Modell als LLM registrieren?,Registar o modelo ajustado como LLM?,Daftarkan model hasil fine-tuning sebagai LLM?,تسجيل النموذج المضبوط كنموذج LLM؟
+tune.harvest_chat_only,只有对话 (SFT) 格式的数据集可以从对话记录采集,只有對話 (SFT) 格式的資料集可以從對話記錄採集,Only Chat (SFT) datasets can harvest chat history,Seuls les jeux Chat (SFT) peuvent collecter l'historique,チャット (SFT) 形式のデータセットのみチャット履歴を収集できます,채팅 (SFT) 데이터셋만 채팅 기록을 수집할 수 있습니다,Собирать историю чатов могут только наборы формата Chat (SFT),Solo los conjuntos Chat (SFT) pueden recolectar historial,Nur Chat-Datensätze (SFT) können den Chatverlauf übernehmen,Só conjuntos Chat (SFT) podem recolher histórico,Hanya dataset Chat (SFT) yang dapat mengumpulkan riwayat chat,يمكن فقط لمجموعات Chat (SFT) جمع سجل المحادثات
+tune.illegal_attachment_path,非法的附件路径,非法的附件路徑,Illegal attachment path,Chemin de pièce jointe illégal,不正な添付ファイルパス,잘못된 첨부 파일 경로,Недопустимый путь вложения,Ruta de adjunto ilegal,Unzulässiger Anhangspfad,Caminho de anexo ilegal,Jalur lampiran ilegal,مسار مرفق غير قانوني
+tune.not_startable,当前状态的任务无法启动,當前狀態的任務無法啟動,The job cannot be started in its current state,La tâche ne peut pas démarrer dans son état actuel,現在の状態ではジョブを開始できません,현재 상태에서는 작업을 시작할 수 없습니다,Задачу нельзя запустить в текущем состоянии,El trabajo no puede iniciarse en su estado actual,Der Auftrag kann im aktuellen Zustand nicht gestartet werden,A tarefa não pode iniciar no estado atual,Pekerjaan tidak dapat dimulai dalam status saat ini,لا يمكن بدء المهمة في حالتها الحالية
+tune.no_base_llm,请先选择基础模型配置,請先選擇基礎模型配置,Choose a base LLM first,Choisissez d'abord un LLM de base,先にベースLLMを選択してください,먼저 기본 LLM을 선택하세요,Сначала выберите базовый LLM,Elija primero un LLM base,Zuerst ein Basis-LLM wählen,Escolha primeiro um LLM base,Pilih LLM dasar terlebih dahulu,اختر النموذج الأساسي أولاً
+tune.provider_unsupported,该提供商暂不支持微调，可用：,該提供商暫不支援微調，可用：,Fine-tuning is not supported for provider; available:,Fine-tuning non pris en charge pour ce fournisseur ; disponibles :,このプロバイダーはファインチューニングに未対応です。対応：,이 제공자는 파인튜닝을 지원하지 않습니다. 지원:,Дообучение не поддерживается провайдером; доступны:,Ajuste fino no disponible para el proveedor; disponibles:,Feinabstimmung für Anbieter nicht unterstützt; verfügbar:,Ajuste fino não suportado pelo fornecedor; disponíveis:,Fine-tuning tidak didukung penyedia; tersedia:,الضبط الدقيق غير مدعوم لهذا المزوّد؛ المتاح:
+tune.provider_ok,支持微调的提供商：,支援微調的提供商：,Fine-tuning supported by provider:,Fine-tuning pris en charge par :,ファインチューニング対応プロバイダー：,파인튜닝 지원 제공자:,Дообучение поддерживается провайдером:,Ajuste fino soportado por:,Feinabstimmung unterstützt von:,Ajuste fino suportado por:,Fine-tuning didukung oleh:,الضبط الدقيق مدعوم من:
+tune.dataset_not_ready,数据集尚未就绪：,資料集尚未就緒：,Dataset is not ready:,Jeu de données non prêt :,データセットが準備できていません：,데이터셋이 준비되지 않았습니다:,Набор данных не готов:,El conjunto no está listo:,Datensatz nicht bereit:,Conjunto de dados não está pronto:,Dataset belum siap:,مجموعة البيانات غير جاهزة:
+tune.format_mismatch,数据集格式与训练方法不匹配：,資料集格式與訓練方法不匹配：,Dataset format does not match the training method:,Le format du jeu ne correspond pas à la méthode :,データセット形式が学習手法と一致しません：,데이터셋 형식이 학습 방법과 맞지 않습니다:,Формат набора не соответствует методу обучения:,El formato del conjunto no coincide con el método:,Datensatzformat passt nicht zur Methode:,O formato do conjunto não corresponde ao método:,Format dataset tidak cocok dengan metode pelatihan:,تنسيق مجموعة البيانات لا يطابق طريقة التدريب:
+tune.too_few_samples,有效样本不足：,有效樣本不足：,Too few valid samples:,Trop peu d'échantillons valides :,有効なサンプルが不足しています：,유효한 샘플이 부족합니다:,Слишком мало корректных примеров:,Muy pocas muestras válidas:,Zu wenige gültige Beispiele:,Poucas amostras válidas:,Sampel valid terlalu sedikit:,عينات صالحة قليلة جداً:
+tune.not_cancellable,当前状态的任务无法取消,當前狀態的任務無法取消,The job cannot be cancelled in its current state,La tâche ne peut pas être annulée dans son état actuel,現在の状態ではジョブをキャンセルできません,현재 상태에서는 작업을 취소할 수 없습니다,Задачу нельзя отменить в текущем состоянии,El trabajo no puede cancelarse en su estado actual,Der Auftrag kann im aktuellen Zustand nicht abgebrochen werden,A tarefa não pode ser cancelada no estado atual,Pekerjaan tidak dapat dibatalkan dalam status saat ini,لا يمكن إلغاء المهمة في حالتها الحالية
+tune.not_registrable,只有成功完成的任务才有可用的微调模型,只有成功完成的任務才有可用的微調模型,Only a succeeded job has a fine-tuned model to use,Seule une tâche réussie fournit un modèle ajusté,成功したジョブのみ調整済みモデルを利用できます,성공한 작업만 파인튜닝된 모델을 사용할 수 있습니다,Дообученная модель есть только у успешной задачи,Solo un trabajo completado tiene un modelo ajustado,Nur ein erfolgreicher Auftrag liefert ein Modell,Só uma tarefa concluída tem um modelo ajustado,Hanya pekerjaan yang berhasil memiliki model hasil fine-tuning,فقط المهمة الناجحة لديها نموذج مضبوط
+tune.dataset_in_use,该数据集正被运行中的任务使用,該資料集正被運行中的任務使用,The dataset is used by a running job,Le jeu de données est utilisé par une tâche en cours,このデータセットは実行中のジョブで使用中です,이 데이터셋은 실행 중인 작업에서 사용 중입니다,Набор данных используется выполняющейся задачей,El conjunto lo usa un trabajo en ejecución,Der Datensatz wird von einem laufenden Auftrag verwendet,O conjunto é usado por uma tarefa em execução,Dataset sedang digunakan pekerjaan yang berjalan,مجموعة البيانات مستخدمة من مهمة قيد التشغيل
+tune.sample_no_dataset,样本必须属于一个数据集,樣本必須屬於一個資料集,A sample must belong to a dataset,Un échantillon doit appartenir à un jeu de données,サンプルはデータセットに属している必要があります,샘플은 데이터셋에 속해야 합니다,Пример должен принадлежать набору данных,Una muestra debe pertenecer a un conjunto,Ein Beispiel muss zu einem Datensatz gehören,Uma amostra deve pertencer a um conjunto,Sampel harus milik sebuah dataset,يجب أن تنتمي العينة إلى مجموعة بيانات
+tune.job_active,任务运行中，不能修改或删除,任務運行中，不能修改或刪除,The job is running and cannot be changed or deleted,La tâche est en cours et ne peut être modifiée ni supprimée,ジョブは実行中のため変更・削除できません,작업이 실행 중이어서 변경하거나 삭제할 수 없습니다,Задача выполняется и не может быть изменена или удалена,El trabajo está en ejecución y no puede cambiarse ni borrarse,Der Auftrag läuft und kann nicht geändert oder gelöscht werden,A tarefa está em execução e não pode ser alterada nem apagada,Pekerjaan sedang berjalan dan tidak dapat diubah atau dihapus,المهمة قيد التشغيل ولا يمكن تغييرها أو حذفها
+tune.harvested_samples,条样本已采集,條樣本已採集,samples harvested,échantillons collectés,件のサンプルを収集しました,개 샘플 수집됨,примеров собрано,muestras recolectadas,Beispiele übernommen,amostras recolhidas,sampel dikumpulkan,عينة تم جمعها
+tune.started,训练任务已提交，正在上传数据集,訓練任務已提交，正在上傳資料集,Training submitted; the dataset is being uploaded,Entraînement soumis ; envoi du jeu de données,学習を送信しました。データセットをアップロード中です,학습이 제출되었습니다. 데이터셋 업로드 중,Обучение отправлено; набор данных загружается,Entrenamiento enviado; subiendo el conjunto,Training übermittelt; Datensatz wird hochgeladen,Treino submetido; a carregar o conjunto,Pelatihan dikirim; dataset sedang diunggah,تم إرسال التدريب؛ جارٍ رفع مجموعة البيانات
+tune.registered,已注册为模型：,已註冊為模型：,Registered as LLM:,Enregistré comme LLM :,LLMとして登録しました：,LLM으로 등록됨:,Зарегистрировано как LLM:,Registrado como LLM:,Als LLM registriert:,Registado como LLM:,Terdaftar sebagai LLM:,تم التسجيل كنموذج LLM:
