@@ -34,7 +34,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up JDK 17
         uses: actions/setup-java@v6
@@ -90,7 +90,7 @@ jobs:
       # Merge with previously-published versions so old /<version>/ dirs are preserved.
       # (GitHub Pages "deploy-pages" replaces the whole site, so we pull prior artifacts first.)
       - name: Restore prior published versions
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: gh-pages
           path: prior
