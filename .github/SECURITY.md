@@ -34,6 +34,6 @@ or production data from logs before sending.
 
 ## Scope
 
-In scope: everything published under `xyz.erupt` on Maven Central and the `erupt/erupt`
+In scope: everything published under `xyz.erupt` on Maven Central and the `erupts/erupt`
 Docker image. Out of scope: the demo site and third-party services Erupt integrates with
 (LLM providers, Feishu, Notion, etc.), which should be reported to their respective vendors.
