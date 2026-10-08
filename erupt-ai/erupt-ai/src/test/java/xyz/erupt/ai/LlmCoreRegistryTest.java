@@ -21,7 +21,7 @@ public class LlmCoreRegistryTest {
 
     // Instantiating self-registers into the LlmCore registry (constructor does llms.put(code(), this))
     private static final List<LlmCore> ADAPTERS = List.of(
-            new ChatGpt(), new Claude(), new DeepSeek(), new Doubao(), new Fireworks(),
+            new ApiRoute(), new ChatGpt(), new Claude(), new DeepSeek(), new Doubao(), new Fireworks(),
             new GLM(), new Gemini(), new Grok(), new Mimo(), new MiniMax(),
             new Mistral(), new Moonshot(), new Ollama(), new OpenAIAdapter(), new OpenRouter(),
             new OrcaRouter(), new Qwen(), new Requesty(), new Together()
