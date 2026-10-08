@@ -16,12 +16,12 @@
 <p align="center"><code>一个类 = 一套后台页面 · 零前端 · 2~5s 启动 · 50+ 大模型 · MCP 原生 · A2A</code></p>
 
 <p align="center">
-  <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt?style=flat-square&labelColor=000000&color=4FC8EC&label=MAVEN" alt="maven-central"></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/LICENSE-APACHE_2.0-000000?style=flat-square&labelColor=000000&color=4FC8EC" alt="license"></a>
-  <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/stars/erupts/erupt?style=flat-square&labelColor=000000&color=4FC8EC&label=STARS" alt="stars"></a>
-  <a href="https://github.com/erupts/erupt/releases"><img src="https://img.shields.io/github/v/release/erupts/erupt?style=flat-square&labelColor=000000&color=4FC8EC&label=RELEASE" alt="release"></a>
-  <a href="https://app.codecov.io/github/erupts/erupt"><img src="https://img.shields.io/codecov/c/github/erupts/erupt/develop?style=flat-square&labelColor=000000&color=4FC8EC&label=COVERAGE" alt="coverage"></a>
-  <a href="https://github.com/erupts/erupt/commits"><img src="https://img.shields.io/github/last-commit/erupts/erupt?style=flat-square&labelColor=000000&color=4FC8EC&label=LAST_COMMIT" alt="last-commit"></a>
+  <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt?style=for-the-badge&labelColor=000000&color=4FC8EC&label=MAVEN" alt="maven-central"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/LICENSE-APACHE_2.0-000000?style=for-the-badge&labelColor=000000&color=4FC8EC" alt="license"></a>
+  <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/stars/erupts/erupt?style=for-the-badge&labelColor=000000&color=4FC8EC&label=STARS" alt="stars"></a>
+  <a href="https://github.com/erupts/erupt/releases"><img src="https://img.shields.io/github/v/release/erupts/erupt?style=for-the-badge&labelColor=000000&color=4FC8EC&label=RELEASE" alt="release"></a>
+  <a href="https://app.codecov.io/github/erupts/erupt"><img src="https://img.shields.io/codecov/c/github/erupts/erupt/develop?style=for-the-badge&labelColor=000000&color=4FC8EC&label=COVERAGE" alt="coverage"></a>
+  <a href="https://github.com/erupts/erupt/commits"><img src="https://img.shields.io/github/last-commit/erupts/erupt?style=for-the-badge&labelColor=000000&color=4FC8EC&label=LAST_COMMIT" alt="last-commit"></a>
   <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/star.svg?theme=dark" alt="gitee"></a>
 </p>
 
