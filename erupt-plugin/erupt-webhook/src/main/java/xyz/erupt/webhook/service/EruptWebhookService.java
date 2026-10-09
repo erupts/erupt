@@ -128,9 +128,9 @@ public class EruptWebhookService {
         return null != clazz && EruptWebhook.class != clazz && EruptWebhookLog.class != clazz;
     }
 
-    // JS a handler returns so the frontend shows the text as a message
+    // JS a handler returns: the frontend's global window.msg shows the text as a toast
     public static String toast(String text) {
-        return "msg(" + GSON.toJson(text) + ")";
+        return "msg.success(" + GSON.toJson(text) + ")";
     }
 
     private void dispatch(Class<?> clazz, WebhookEvent event, Object before, Object after) {
