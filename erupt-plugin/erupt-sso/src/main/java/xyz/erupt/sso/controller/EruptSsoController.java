@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Sign-on endpoints. All four are anonymous by design: they are what a user without a
- * session has to reach, and each one carries its own proof — a state, a ticket or nothing
- * worth protecting.
+ * Sign-on endpoints. All of them are anonymous by design: they are what a user without a
+ * session has to reach, and each one carries its own proof — a state, a ticket, a signed
+ * assertion or nothing worth protecting.
  *
  * @author YuePeng
  * date 2026-09-18
@@ -63,17 +63,41 @@ public class EruptSsoController {
                          @RequestParam(value = "code", required = false) String authCode,
                          @RequestParam(value = "error", required = false) String error,
                          HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Map<String, String> params;
         if (null != error) {
             // the provider refused before erupt was ever involved, its own wording is the useful one
-            params = Map.of("ssoError", error);
-        } else {
-            try {
-                params = Map.of("ssoTicket", eruptSsoService.callback(provider, state, authCode, request));
-            } catch (Exception e) {
-                log.warn("sso callback failed: {}", provider, e);
-                params = Map.of("ssoError", message(e));
-            }
+            response.sendRedirect(eruptSsoService.loginPageUrl(request, Map.of("ssoError", error)));
+            return;
+        }
+        this.finish(provider, state, authCode, request, response);
+    }
+
+    /**
+     * The SAML assertion consumer service: the IdP has the browser POST the response here,
+     * with the state coming back as RelayState. Same ending as the GET callback.
+     */
+    @PostMapping("/callback/{provider}")
+    public void assertionConsumer(@PathVariable("provider") String provider,
+                                  @RequestParam(value = "RelayState", required = false) String relayState,
+                                  @RequestParam(value = "SAMLResponse", required = false) String samlResponse,
+                                  HttpServletRequest request, HttpServletResponse response) throws IOException {
+        this.finish(provider, relayState, samlResponse, request, response);
+    }
+
+    /**
+     * What an IdP imports to learn about this SP: entity id and consumer URL.
+     */
+    @GetMapping(value = "/saml/{provider}/metadata", produces = "application/samlmetadata+xml;charset=UTF-8")
+    public String samlMetadata(@PathVariable("provider") String provider, HttpServletRequest request) {
+        return eruptSsoService.samlMetadata(provider, request);
+    }
+
+    private void finish(String provider, String state, String proof, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Map<String, String> params;
+        try {
+            params = Map.of("ssoTicket", eruptSsoService.callback(provider, state, proof, request));
+        } catch (Exception e) {
+            log.warn("sso callback failed: {}", provider, e);
+            params = Map.of("ssoError", message(e));
         }
         response.sendRedirect(eruptSsoService.loginPageUrl(request, params));
     }

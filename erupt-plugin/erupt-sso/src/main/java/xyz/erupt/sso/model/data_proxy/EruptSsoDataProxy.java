@@ -12,6 +12,7 @@ import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.sso.constant.SsoProviderType;
 import xyz.erupt.sso.model.EruptSso;
 import xyz.erupt.sso.service.EruptSsoService;
+import xyz.erupt.sso.service.SsoSamlService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,9 @@ public class EruptSsoDataProxy implements DataProxy<EruptSso>, OnChange<EruptSso
 
     @Resource
     private EruptSsoService eruptSsoService;
+
+    @Resource
+    private SsoSamlService samlService;
 
     @Override
     public void beforeAdd(EruptSso eruptSso) {
@@ -102,16 +106,31 @@ public class EruptSsoDataProxy implements DataProxy<EruptSso>, OnChange<EruptSso
      * Either all three endpoints are spelled out, or the issuer has to answer for the missing
      * ones through its discovery document, which is fetched right here: a row that only fails
      * at the moment someone tries to sign in is a row nobody can debug. For the same reason a
-     * preset placeholder the admin forgot to replace is caught here rather than at login.
+     * preset placeholder the admin forgot to replace is caught here rather than at login, and
+     * a SAML certificate that does not parse is refused before it is stored.
+     *
+     * <p>The secret and the scopes are required here rather than by the annotation: the form
+     * hides both on a SAML row, and a hidden field cannot be filled in.
      */
     private void requireEndpoints(EruptSso eruptSso) {
         for (String url : new String[]{eruptSso.getIssuer(), eruptSso.getAuthorizeUrl(), eruptSso.getTokenUrl(), eruptSso.getUserInfoUrl()}) {
             Erupts.requireTrue(null == url || !PLACEHOLDER.matcher(url).find(),
                     I18nTranslate.$translate("sso.placeholder_left") + " (" + url + ")");
         }
-        if (StringUtils.isNoneBlank(eruptSso.getAuthorizeUrl(), eruptSso.getTokenUrl(), eruptSso.getUserInfoUrl())) return;
-        Erupts.requireTrue(StringUtils.isNotBlank(eruptSso.getIssuer()), I18nTranslate.$translate("sso.endpoint_missing"));
-        eruptSsoService.verifyDiscovery(eruptSso.getIssuer());
+        if (eruptSso.flow() == SsoProviderType.Flow.SAML) {
+            Erupts.requireTrue(StringUtils.isNoneBlank(eruptSso.getAuthorizeUrl(), eruptSso.getIdpCertificate()),
+                    I18nTranslate.$translate("sso.saml_endpoint_missing"));
+            samlService.parseCertificate(eruptSso.getIdpCertificate());
+            return;
+        }
+        if (!StringUtils.isNoneBlank(eruptSso.getAuthorizeUrl(), eruptSso.getTokenUrl(), eruptSso.getUserInfoUrl())) {
+            Erupts.requireTrue(StringUtils.isNotBlank(eruptSso.getIssuer()), I18nTranslate.$translate("sso.endpoint_missing"));
+            eruptSsoService.verifyDiscovery(eruptSso.getIssuer());
+        }
+        Erupts.requireTrue(StringUtils.isNotBlank(eruptSso.getClientSecret()),
+                I18nTranslate.$translate("Client Secret") + " " + I18nTranslate.$translate("erupt.notnull"));
+        Erupts.requireTrue(StringUtils.isNotBlank(eruptSso.getScopes()),
+                I18nTranslate.$translate("Scopes") + " " + I18nTranslate.$translate("erupt.notnull"));
     }
 
 }

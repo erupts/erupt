@@ -17,7 +17,9 @@ import java.util.List;
  * {@code <placeholder>} parts of the URLs. The type is also consulted at login time: most
  * providers speak plain OAuth2 (a form encoded token POST answered in JSON, a bearer GET on
  * the user info endpoint), while DingTalk, WeCom and WeChat each improvise their own
- * exchange, which {@code EruptSsoService} implements per {@link Flow}.
+ * exchange, which {@code EruptSsoService} implements per {@link Flow}. SAML providers are
+ * a different protocol altogether: a signed XML assertion posted back by the browser, no
+ * token, no user info call ({@code SsoSamlService}).
  *
  * @author YuePeng
  * date 2026-09-24
@@ -25,6 +27,28 @@ import java.util.List;
 public enum SsoProviderType {
 
     CUSTOM(null),
+
+    // ------------------------------------------------------------------ SAML
+
+    SAML(Preset.saml("SAML 2.0", "fa-solid fa-id-card", "https://<idp-host>/sso/saml", null)
+            .claims("nameId", "displayName", "email", null, null)
+            .credentials("SP Entity ID, as registered at the IdP", null)),
+
+    ADFS(Preset.saml("AD FS", "fa-brands fa-windows", "https://<adfs-host>/adfs/ls/", "http://<adfs-host>/adfs/services/trust")
+            .claims("nameId",
+                    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
+                    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress", null, null)
+            .credentials("Relying party identifier", null)),
+
+    MICROSOFT_ENTRA_SAML(Preset.saml("Microsoft Entra ID (SAML)", "fa-brands fa-microsoft",
+                    "https://login.microsoftonline.com/<tenant-id>/saml2", "https://sts.windows.net/<tenant-id>/")
+            .claims("nameId",
+                    "http://schemas.microsoft.com/identity/claims/displayname",
+                    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress", null, null)
+            .openId("http://schemas.microsoft.com/identity/claims/objectidentifier")
+            .credentials("Identifier (Entity ID)", null)),
+
+    // ---------------------------------------------------------- OAuth2 / OIDC
 
     KEYCLOAK(Preset.oidc("Keycloak", "fa-brands fa-openid", "https://<host>/realms/<realm>")
             .scopes("openid profile email")
@@ -132,6 +156,14 @@ public enum SsoProviderType {
             .openId("openid")
             .credentials("AppID", "AppSecret"));
 
+    /**
+     * The {@code @Dynamic} condition that is true for a SAML row; an annotation attribute has
+     * to be a constant, so the SAML types are spelled out here and checked by a test.
+     */
+    public static final String SAML_CONDITION = "value === 'SAML' || value === 'ADFS' || value === 'MICROSOFT_ENTRA_SAML'";
+
+    public static final String OAUTH_CONDITION = "!(" + SAML_CONDITION + ")";
+
     private final Preset preset;
 
     SsoProviderType(Preset preset) {
@@ -174,7 +206,13 @@ public enum SsoProviderType {
          * WeChat open platform: token and user info are both GETs with query parameters,
          * and the user info call needs the openid the token call returned.
          */
-        WECHAT
+        WECHAT,
+        /**
+         * SAML 2.0 web browser SSO: an AuthnRequest sent over HTTP-Redirect, a signed
+         * Response posted back to the assertion consumer service. The authorize URL is the
+         * IdP's single sign-on URL, the issuer its entity id, the client id the SP entity id.
+         */
+        SAML
     }
 
     /**
@@ -241,6 +279,17 @@ public enum SsoProviderType {
             preset.authorizeUrl = authorizeUrl;
             preset.tokenUrl = tokenUrl;
             preset.userInfoUrl = userInfoUrl;
+            return preset;
+        }
+
+        /**
+         * A SAML identity provider: its single sign-on URL and, when it is predictable, its
+         * entity id. No scopes and no token or user info endpoint exist in this protocol.
+         */
+        static Preset saml(String name, String icon, String ssoUrl, String entityId) {
+            Preset preset = new Preset(Flow.SAML, name, icon);
+            preset.authorizeUrl = ssoUrl;
+            preset.issuer = entityId;
             return preset;
         }
 

@@ -40,13 +40,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * Single sign-on over the OAuth2 authorization code flow, with PKCE.
+ * Single sign-on over the OAuth2 authorization code flow, with PKCE, or over SAML 2.0.
  *
  * <p>erupt is the relying party and never the token audience: the code is exchanged server
  * side and the resulting access token is spent on one call, the provider's user info
  * endpoint. Nothing the browser sends is trusted — the state carries no payload of its own,
  * it is a key into a short lived server side record holding the provider and the PKCE
  * verifier, and it is burnt on first use.
+ *
+ * <p>A SAML row takes the same two steps with different payloads: the state becomes the
+ * AuthnRequest id and RelayState, and what comes back is a signed assertion instead of a
+ * code, checked by {@link SsoSamlService}. From the claims on, the two protocols are one.
  *
  * @author YuePeng
  * date 2026-09-18
@@ -62,8 +66,8 @@ public class EruptSsoService {
     private static final int TICKET_EXPIRE_SECONDS = 60;
 
 
-    // Providers disagree on what the stable identifier is called; OIDC says sub, the rest improvise
-    private static final String[] SUBJECT_CLAIMS = {"sub", "id", "openid", "open_id", "openId", "unionid", "union_id", "unionId", "userid", "userId", "user_id"};
+    // Providers disagree on what the stable identifier is called; SAML has its NameID, OIDC says sub, the rest improvise
+    private static final String[] SUBJECT_CLAIMS = {SsoSamlService.NAME_ID, "sub", "id", "openid", "open_id", "openId", "unionid", "union_id", "unionId", "userid", "userId", "user_id"};
 
     @Resource
     private EruptDao eruptDao;
@@ -82,6 +86,9 @@ public class EruptSsoService {
 
     @Resource
     private SsoProviderApi api;
+
+    @Resource
+    private SsoSamlService saml;
 
     // A discovery document is a deployment constant; cache it per issuer and drop it when the row changes
     private final Map<String, Endpoints> discoveryCache = new ConcurrentHashMap<>();
@@ -128,7 +135,11 @@ public class EruptSsoService {
         payload.setVerifier(verifier);
         sessionService.put(SsoSessionKey.SSO_STATE + state, GsonFactory.getGson().toJson(payload), STATE_EXPIRE_MINUTES, TimeUnit.MINUTES);
         Map<String, String> params = new LinkedHashMap<>();
-        switch (flow(sso)) {
+        switch (sso.flow()) {
+            case SAML -> {
+                // no query of our own: the request is one deflated XML parameter, the state rides as RelayState
+                return saml.authnRequestUrl(sso, state, this.redirectUri(sso, request));
+            }
             case WECOM, WECHAT -> {
                 // Tencent calls the client id appid; WeCom's agent id is part of the configured URL
                 params.put("appid", sso.getClientId());
@@ -158,15 +169,21 @@ public class EruptSsoService {
         return authorizeQuery(endpoints.authorizeUrl(), params);
     }
 
-    private static SsoProviderType.Flow flow(EruptSso sso) {
-        return null == sso.getType() ? SsoProviderType.Flow.OAUTH2 : sso.getType().flow();
+    /**
+     * The SP metadata an IdP imports to learn about this provider row.
+     */
+    public String samlMetadata(String providerCode, HttpServletRequest request) {
+        EruptSso sso = this.findEnabled(providerCode);
+        Erupts.requireTrue(sso.flow() == SsoProviderType.Flow.SAML, I18nTranslate.$translate("sso.provider_not_found"));
+        return saml.metadata(sso, this.redirectUri(sso, request));
     }
 
     // -------------------------------------------------------------- callback
 
     /**
-     * Turn the provider's authorization code into an erupt session, handed back as a
-     * one-time ticket: a session token has no business travelling in a redirect URL.
+     * Turn the provider's authorization code (for SAML: the posted response) into an erupt
+     * session, handed back as a one-time ticket: a session token has no business travelling
+     * in a redirect URL.
      */
     public String callback(String providerCode, String state, String authCode, HttpServletRequest request) {
         Erupts.requireTrue(StringUtils.isNotBlank(state) && StringUtils.isNotBlank(authCode),
@@ -180,7 +197,8 @@ public class EruptSsoService {
         Erupts.requireTrue(sso.getId().equals(payload.getSsoId()), I18nTranslate.$translate("sso.state_invalid"));
 
         Endpoints endpoints = this.endpoints(sso);
-        JsonObject claims = switch (flow(sso)) {
+        JsonObject claims = switch (sso.flow()) {
+            case SAML -> saml.identity(sso, authCode, SsoSamlService.requestId(state), this.redirectUri(sso, request));
             case DINGTALK -> this.dingTalkIdentity(sso, endpoints, authCode);
             case WECOM -> this.weComIdentity(sso, endpoints, authCode);
             case WECHAT -> this.weChatIdentity(sso, endpoints, authCode);
@@ -475,6 +493,11 @@ public class EruptSsoService {
      * issuer's discovery document.
      */
     private Endpoints endpoints(EruptSso sso) {
+        if (sso.flow() == SsoProviderType.Flow.SAML) {
+            // the single sign-on URL is all SAML has; nothing to discover, no token, no user info
+            Erupts.requireTrue(StringUtils.isNotBlank(sso.getAuthorizeUrl()), I18nTranslate.$translate("sso.saml_endpoint_missing"));
+            return new Endpoints(sso.getAuthorizeUrl(), null, null, false);
+        }
         if (StringUtils.isNoneBlank(sso.getAuthorizeUrl(), sso.getTokenUrl(), sso.getUserInfoUrl())) {
             // without a discovery document the preset is the only thing that knows how the token endpoint authenticates
             boolean basicAuth = null != sso.getType() && null != sso.getType().preset() && sso.getType().preset().isBasicAuth();
@@ -550,7 +573,9 @@ public class EruptSsoService {
      * a client supplied return address is an open redirect waiting to happen.
      */
     public String loginPageUrl(HttpServletRequest request, Map<String, String> params) {
-        String page = StringUtils.defaultIfBlank(eruptAppProp.getLoginPagePath(), baseUrl(request) + "/#/passport/login");
+        // a relative address: the browser stays on whatever host it reached erupt through, and
+        // nothing from the request headers takes part in where it is sent
+        String page = StringUtils.defaultIfBlank(eruptAppProp.getLoginPagePath(), request.getContextPath() + "/#/passport/login");
         return appendQuery(page, params);
     }
 
@@ -567,7 +592,10 @@ public class EruptSsoService {
         if (params.isEmpty()) return url;
         int hash = url.lastIndexOf('#');
         String tail = hash < 0 ? url : url.substring(hash);
-        return url + (tail.contains("?") ? "&" : "?") + formBody(params);
+        // the parameters are written behind a '?' before they meet the url: wherever that url
+        // came from, nothing in them can read as part of its host
+        String query = "?" + formBody(params);
+        return url + (tail.contains("?") ? "&" + query.substring(1) : query);
     }
 
     /**
