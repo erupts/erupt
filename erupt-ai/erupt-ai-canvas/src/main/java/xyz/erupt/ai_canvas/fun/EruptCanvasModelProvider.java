@@ -217,7 +217,7 @@ public class EruptCanvasModelProvider implements CanvasModelProvider {
             if (null == eruptModel) return "Error: unknown model: " + model;
             EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
             if (null == fieldModel) return "Error: unknown field: " + field;
-            return GsonFactory.getGson().toJson(EruptUtil.getChoiceList(eruptModel, fieldModel.getEruptField().edit()));
+            return GsonFactory.getGson().toJson(EruptUtil.getChoiceList(eruptModel, fieldModel));
         }
 
         @Tool("""

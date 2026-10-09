@@ -116,7 +116,7 @@ public class EruptExcelService {
                                 }
                             } else if (edit.type() == EditType.CHOICE) {
                                 // likewise a choice arrives as its stored value; the sheet shows its label
-                                String label = EruptUtil.getChoiceMap(eruptModel, edit).get(str);
+                                String label = EruptUtil.getChoiceMap(eruptModel, fieldModel).get(str);
                                 cell.setCellValue(null == label ? str : label);
                             } else if (edit.type() == EditType.DATE) {
                                 boolean dateOnly = edit.dateType().type() == DateType.Type.DATE;
@@ -166,7 +166,7 @@ public class EruptExcelService {
             Edit edit = eruptFieldModel.getEruptField().edit();
             switch (edit.type()) {
                 case CHOICE:
-                    Map<String, String> map = EruptUtil.getChoiceMap(eruptModel, edit);
+                    Map<String, String> map = EruptUtil.getChoiceMap(eruptModel, eruptFieldModel);
                     Map<String, Object> choiceMap = new HashMap<>(map.size());
                     for (Map.Entry<String, String> entry : map.entrySet()) {
                         choiceMap.put(entry.getValue(), entry.getKey());

@@ -148,7 +148,7 @@ public class EruptUtil {
                         break;
                     case CHOICE:
                         if (valueMapping) {
-                            Map<String, String> kv = EruptUtil.getChoiceMap(eruptModel, eruptField.edit());
+                            Map<String, String> kv = EruptUtil.getChoiceMap(eruptModel, fieldModel);
                             if (kv.containsKey(value.toString())) {
                                 map.put(field.getName(), kv.get(value.toString()));
                             } else {
@@ -177,6 +177,32 @@ public class EruptUtil {
         Map<String, String> choiceMap = new LinkedHashMap<>();
         getChoiceList(eruptModel, edit).forEach(vl -> choiceMap.put(vl.getValue(), vl.getLabel()));
         return choiceMap;
+    }
+
+    public static Map<String, String> getChoiceMap(EruptModel eruptModel, EruptFieldModel fieldModel) {
+        Map<String, String> choiceMap = new LinkedHashMap<>();
+        getChoiceList(eruptModel, fieldModel).forEach(vl -> choiceMap.put(vl.getValue(), vl.getLabel()));
+        return choiceMap;
+    }
+
+    public static List<VLModel> getChoiceList(EruptModel eruptModel, EruptFieldModel fieldModel) {
+        return enumFallback(eruptModel, fieldModel, getChoiceList(eruptModel, fieldModel.getEruptField().edit()));
+    }
+
+    public static List<VLModel> getChoiceListFilter(EruptModel eruptModel, EruptFieldModel fieldModel, Object data) {
+        return enumFallback(eruptModel, fieldModel, getChoiceListFilter(eruptModel, fieldModel.getEruptField().edit(), data));
+    }
+
+    // A CHOICE field typed as a Java enum needs neither vl nor fetchHandler: its constants are the options,
+    // stored and submitted by name, labelled by name so a CSV row per constant translates them
+    private static List<VLModel> enumFallback(EruptModel eruptModel, EruptFieldModel fieldModel, List<VLModel> vls) {
+        Class<?> type = Optional.ofNullable(fieldModel.getField()).map(Field::getType).orElse(null);
+        if (!vls.isEmpty() || null == type || !type.isEnum()) return vls;
+        for (Object constant : type.getEnumConstants()) {
+            String name = ((Enum<?>) constant).name();
+            vls.add(new VLModel(name, eruptModel.isI18n() ? I18nTranslate.$translate(name) : name));
+        }
+        return vls;
     }
 
     public static List<VLModel> getChoiceList(EruptModel eruptModel, Edit edit) {

@@ -17,6 +17,8 @@ import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
+import org.springframework.util.LinkedCaseInsensitiveMap;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +118,11 @@ public class EruptModel implements Cloneable {
             Optional.ofNullable(this.getClazz().getAnnotation(ex)).ifPresent(it -> extra.add(ex.getSimpleName(), AnnotationProcess.annotationToJsonByReflect(it)));
         }
         eruptModel.eruptFieldModels = eruptFieldModels.stream().map(CloneSupport::clone).peek(EruptFieldModel::serializable).collect(Collectors.toList());
+        // The map must point at the cloned field models, not the originals, so per-view state such as componentValue is visible through it
+        if (null != eruptFieldMap) {
+            eruptModel.eruptFieldMap = new LinkedCaseInsensitiveMap<>();
+            eruptModel.eruptFieldModels.forEach(it -> eruptModel.eruptFieldMap.put(it.getFieldName(), it));
+        }
         return eruptModel;
     }
 

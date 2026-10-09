@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
@@ -22,6 +23,8 @@ import java.beans.Transient;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author YuePeng
@@ -41,6 +44,9 @@ public class AnnotationProcess {
 
     private static final ExpressionParser parser = new SpelExpressionParser();
 
+    // @Match expressions are annotation literals: a handful of distinct strings parsed on every serialization otherwise
+    private static final Map<String, Expression> MATCH_EXPRESSIONS = new ConcurrentHashMap<>();
+
     @SneakyThrows
     public static JsonObject annotationToJsonByReflect(Annotation annotation) {
         JsonObject jsonObject = new JsonObject();
@@ -59,7 +65,7 @@ public class AnnotationProcess {
                 EvaluationContext evaluationContext = new StandardEvaluationContext();
                 evaluationContext.setVariable(VALUE_VAR, result);
                 evaluationContext.setVariable(ITEM_VAR, annotation);
-                Object r = parser.parseExpression(match.value()).getValue(evaluationContext);
+                Object r = MATCH_EXPRESSIONS.computeIfAbsent(match.value(), parser::parseExpression).getValue(evaluationContext);
                 if (null == r || !(Boolean) r) continue;
             }
             if (returnType.endsWith(EMPTY_ARRAY)) {

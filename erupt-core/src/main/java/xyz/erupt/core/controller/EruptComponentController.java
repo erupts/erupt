@@ -79,7 +79,7 @@ public class EruptComponentController {
                                     @PathVariable("field") String field) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
-        return EruptUtil.getChoiceList(eruptModel, fieldModel.getEruptField().edit());
+        return EruptUtil.getChoiceList(eruptModel, fieldModel);
     }
 
     @PostMapping("/choice-item-filter/{erupt}/{field}")
@@ -90,7 +90,7 @@ public class EruptComponentController {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
         Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
-        return EruptUtil.getChoiceListFilter(eruptModel, fieldModel.getEruptField().edit(), o);
+        return EruptUtil.getChoiceListFilter(eruptModel, fieldModel, o);
     }
 
     //Gets the TAGS component data

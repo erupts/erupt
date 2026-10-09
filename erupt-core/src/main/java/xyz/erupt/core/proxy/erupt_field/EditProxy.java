@@ -30,8 +30,11 @@ public class EditProxy extends AnnotationProxy<Edit, EruptField> {
     protected Object invocation(MethodInvocation invocation) {
         if (super.matchMethod(invocation, Edit::type)) {
             if (EditType.AUTO == this.rawAnnotation.type()) {
-                String returnType = ProxyContext.get().getField().getType().getSimpleName();
-                if (boolean.class.getSimpleName().equalsIgnoreCase(returnType)) {
+                Class<?> fieldType = ProxyContext.get().getField().getType();
+                String returnType = fieldType.getSimpleName();
+                if (fieldType.isEnum()) {
+                    return EditType.CHOICE; // options come from the enum constants, see EruptUtil.getChoiceList
+                } else if (boolean.class.getSimpleName().equalsIgnoreCase(returnType)) {
                     return EditType.BOOLEAN;
                 } else if (TypeUtil.isNumberType(returnType)) {
                     return EditType.NUMBER;

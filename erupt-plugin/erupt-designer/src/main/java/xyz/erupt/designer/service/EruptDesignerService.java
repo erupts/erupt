@@ -206,7 +206,7 @@ public class EruptDesignerService {
         for (EruptFieldModel fieldModel : model.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
             if (edit.type() == EditType.CHOICE || edit.type() == EditType.MULTI_CHOICE) {
-                fieldModel.setComponentValue(EruptUtil.getChoiceList(model, edit));
+                fieldModel.setComponentValue(EruptUtil.getChoiceList(model, fieldModel));
             }
         }
         EruptBuildModel buildModel = new EruptBuildModel();
