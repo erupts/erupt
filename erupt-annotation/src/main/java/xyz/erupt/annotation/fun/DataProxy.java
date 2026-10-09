@@ -79,15 +79,15 @@ public interface DataProxy<@Comment("Erupt object") MODEL> extends MetaProxy<MOD
 
     }
 
-    @Comment("Excel export; the parameter must be cast to a WorkBook object")
+    @Comment("Excel export only (other formats skip it); the parameter must be cast to a POI Workbook")
     default void excelExport(@Comment("POI document object") Object workbook) {
     }
 
-    @Comment("Excel import; processes the POI object, the parameter must be cast to a WorkBook object")
+    @Comment("Excel import; processes the POI object, the parameter must be cast to a POI Workbook")
     default void excelImport(@Comment("POI document object") Object workbook) {
     }
 
-    @Comment("Excel import; processes the structured data extracted from the Excel file")
+    @Comment("Excel import; processes the records parsed from the file before they are saved")
     default void excelImportProcess(@Comment("data object") List<MODEL> list) {
     }
 
