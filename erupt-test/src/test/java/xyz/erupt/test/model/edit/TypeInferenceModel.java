@@ -76,4 +76,8 @@ public class TypeInferenceModel extends BaseModel {
     @EruptField(views = @View(title = "Attrs"), edit = @Edit(title = "Attrs"))
     private Map<String, String> attrs;
 
+    // a table column with no form field: exported, and skipped on the way back in
+    @EruptField(views = @View(title = "Score"))
+    private Integer score;
+
 }
