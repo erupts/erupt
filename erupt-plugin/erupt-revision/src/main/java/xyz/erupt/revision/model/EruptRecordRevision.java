@@ -71,7 +71,7 @@ public class EruptRecordRevision extends HyperModelCreatorOnlyVo {
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "Operation", width = "100px"),
-            edit = @Edit(title = "Operation", type = EditType.CHOICE, search = @Search)
+            edit = @Edit(title = "Operation", search = @Search)
     )
     private RevisionOperation operation;
 
