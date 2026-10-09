@@ -9,7 +9,7 @@ import xyz.erupt.annotation.config.Comment;
 public @interface DateType {
 
     @Comment("Date/time type")
-    Type type() default Type.DATE;
+    Type type() default Type.AUTO;
 
     @Comment("Picker mode")
     PickerMode pickerMode() default PickerMode.ALL;
@@ -21,6 +21,8 @@ public @interface DateType {
     String max() default "";
 
     enum Type {
+        @Comment("Inferred from the field: LocalDate → DATE, LocalDateTime → DATE_TIME, LocalTime → TIME, java.util.Date by @Temporal (DATE_TIME when absent), anything else DATE")
+        AUTO,
         DATE,
         TIME,
         DATE_TIME,

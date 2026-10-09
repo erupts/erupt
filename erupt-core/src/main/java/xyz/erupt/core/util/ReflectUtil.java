@@ -3,6 +3,9 @@ package xyz.erupt.core.util;
 import lombok.SneakyThrows;
 import xyz.erupt.core.constant.EruptConst;
 
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.Optional;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -95,6 +98,26 @@ public class ReflectUtil {
     }
 
     @SneakyThrows
+    // First type argument of a parameterised field (the element type of a List<X>), null when it is not a plain class
+    public static Class<?> fieldGenericClass(Field field) {
+        if (field.getGenericType() instanceof ParameterizedType p && p.getActualTypeArguments()[0] instanceof Class<?> c) return c;
+        return null;
+    }
+
+    // Annotation lookup by simple name, for annotations from libraries core does not depend on (JPA)
+    public static Optional<Annotation> annotationNamed(Field field, String simpleName) {
+        return Arrays.stream(field.getAnnotations()).filter(it -> it.annotationType().getSimpleName().equals(simpleName)).findFirst();
+    }
+
+    public static boolean hasAnnotationNamed(Field field, String simpleName) {
+        return annotationNamed(field, simpleName).isPresent();
+    }
+
+    @SneakyThrows
+    public static String annotationValue(Annotation annotation, String member) {
+        return String.valueOf(annotation.annotationType().getMethod(member).invoke(annotation));
+    }
+
     public static Type[] getClassGeneric(Class<?> clazz) {
         Type superType = clazz.getGenericSuperclass(); // BaseDao<User>
         if (superType instanceof ParameterizedType pt) {

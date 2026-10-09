@@ -48,15 +48,17 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
     public EruptFieldModel(Field field, boolean starting) {
         this.field = field;
         this.eruptField = field.getAnnotation(EruptField.class);
-        Edit edit = eruptField.edit();
         this.fieldName = field.getName();
+        this.starting = starting;
+        // proxy first: an AUTO edit type is only known once the proxy has inferred it from the field
+        this.eruptField = eruptFieldAnnotationProxy.newProxy(this.getEruptField());
         // Numeric type conversion
         if (TypeUtil.isNumberType(field.getType().getSimpleName())) {
             this.fieldReturnName = NUMBER;
         } else {
             this.fieldReturnName = field.getType().getSimpleName();
         }
-        switch (edit.type()) {
+        switch (this.getEruptField().edit().type()) {
             // For Tab-type views, data must be managed as a one-to-many relationship using a generic collection, so the generic type name is extracted and re-assigned to fieldReturnName
             case TAB_TREE:
             case TAB_TABLE_ADD:
@@ -71,8 +73,6 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
                 }
                 break;
         }
-        this.starting = starting;
-        this.eruptField = eruptFieldAnnotationProxy.newProxy(this.getEruptField());
         // Validate the correctness of the annotation
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
         this.starting = false;

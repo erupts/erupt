@@ -42,6 +42,7 @@ import java.net.URI;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -197,6 +198,7 @@ public class EruptUtil {
     // stored and submitted by name, labelled by name so a CSV row per constant translates them
     private static List<VLModel> enumFallback(EruptModel eruptModel, EruptFieldModel fieldModel, List<VLModel> vls) {
         Class<?> type = Optional.ofNullable(fieldModel.getField()).map(Field::getType).orElse(null);
+        if (null != type && Collection.class.isAssignableFrom(type)) type = ReflectUtil.fieldGenericClass(fieldModel.getField()); // MULTI_CHOICE over Set<Enum>
         if (!vls.isEmpty() || null == type || !type.isEnum()) return vls;
         for (Object constant : type.getEnumConstants()) {
             String name = ((Enum<?>) constant).name();
@@ -634,9 +636,28 @@ public class EruptUtil {
             return true;
         } else if (LocalDate.class.getSimpleName().equals(fieldType)) {
             return true;
+        } else if (LocalTime.class.getSimpleName().equals(fieldType)) {
+            return true;
         } else {
             return LocalDateTime.class.getSimpleName().equals(fieldType);
         }
+    }
+
+    // What a date field holds, read from its Java type; a java.util.Date is a timestamp unless JPA's
+    // @Temporal (matched by name: core has no JPA dependency) narrows it. A String keeps the old DATE default
+    @SneakyThrows
+    public static DateType.Type inferDateType(Field field) {
+        Class<?> type = field.getType();
+        if (LocalDateTime.class == type) return DateType.Type.DATE_TIME;
+        if (LocalTime.class == type) return DateType.Type.TIME;
+        if (Date.class == type) {
+            return switch (ReflectUtil.annotationNamed(field, "Temporal").map(it -> ReflectUtil.annotationValue(it, "value")).orElse("")) {
+                case "DATE" -> DateType.Type.DATE;
+                case "TIME" -> DateType.Type.TIME;
+                default -> DateType.Type.DATE_TIME;
+            };
+        }
+        return DateType.Type.DATE;
     }
 
 }

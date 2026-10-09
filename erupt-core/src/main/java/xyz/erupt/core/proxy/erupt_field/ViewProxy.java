@@ -13,6 +13,8 @@ import xyz.erupt.core.proxy.ProxyContext;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.TypeUtil;
 
+import java.lang.reflect.Field;
+
 /**
  * @author YuePeng
  * date 2022/2/6 10:13
@@ -68,11 +70,12 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
                             return ViewType.PASSWORD;
                     }
                 }
-                String returnType = ProxyContext.get().getField().getType().getSimpleName();
+                Field field = ProxyContext.get().getField();
+                String returnType = field.getType().getSimpleName();
                 if (boolean.class.getSimpleName().equalsIgnoreCase(returnType.toLowerCase())) {
                     return ViewType.BOOLEAN;
                 } else if (EruptUtil.isDateField(returnType)) {
-                    return ViewType.DATE;
+                    return EruptUtil.inferDateType(field) == DateType.Type.DATE_TIME ? ViewType.DATE_TIME : ViewType.DATE;
                 } else if (TypeUtil.isNumberType(returnType)) {
                     return ViewType.NUMBER;
                 }
