@@ -21,7 +21,8 @@ public @interface Power {
 
     boolean viewDetails() default true;
 
-    boolean export() default false;
+    @Comment("who may export is the role's EXPORT button, columns opt out with @View(export = false)")
+    boolean export() default true;
 
     boolean importable() default false;
 
