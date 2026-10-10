@@ -1,12 +1,13 @@
 package xyz.erupt.webhook.model;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -25,10 +26,8 @@ import xyz.erupt.annotation.sub_field.sub_edit.Dynamic;
 import xyz.erupt.annotation.sub_field.sub_edit.MultiChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.upms.helper.HyperModelUpdateVo;
-import xyz.erupt.upms.model.converter.StringSetJsonConverter;
 import xyz.erupt.webhook.handler.EruptWebhookDataProxy;
 import xyz.erupt.webhook.handler.WebhookEruptChoice;
-import xyz.erupt.webhook.model.converter.WebhookEventSetConverter;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -78,8 +77,8 @@ public class EruptWebhook extends HyperModelUpdateVo {
     private String secret;
 
     // a Set of an enum is a MULTI_CHOICE whose options are the constants, all of them to begin with;
-    // both sets live as JSON arrays in their own column rather than in side tables
-    @Convert(converter = WebhookEventSetConverter.class)
+    // both sets are JSON columns rather than side tables
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(length = 100)
     @EruptField(
             edit = @Edit(title = "Events", notNull = true, type = EditType.MULTI_CHOICE
@@ -118,7 +117,7 @@ public class EruptWebhook extends HyperModelUpdateVo {
     private Boolean allModels = false;
 
     // erupt names, as a JSON array; the required check lives in the data proxy, the frontend only hides the picker
-    @Convert(converter = StringSetJsonConverter.class)
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(title = "Models", type = EditType.MULTI_CHOICE,
