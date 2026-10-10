@@ -1,0 +1,41 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+Webhook,Webhook,Webhook,Webhook,Webhook,Webhook,Webhook,Webhook,Webhook,Webhook,Webhook,Webhook,Webhook
+Webhook Log,Webhook 日志,Webhook 日誌,Webhook Log,Journal Webhook,Webhook ログ,Webhook 로그,Журнал Webhook,Registro de Webhook,Webhook-Protokoll,Registo de Webhook,Log Webhook,سجل Webhook
+Name,名称,名稱,Name,Nom,名前,이름,Название,Nombre,Name,Nome,Nama,الاسم
+Enabled,启用,啟用,Enabled,Activé,有効,활성화,Включено,Activado,Aktiviert,Ativado,Aktif,مفعل
+Models,数据模型,資料模型,Models,Modèles,モデル,모델,Модели,Modelos,Modelle,Modelos,Model,النماذج
+Events,事件,事件,Events,Événements,イベント,이벤트,События,Eventos,Ereignisse,Eventos,Peristiwa,الأحداث
+Event,事件,事件,Event,Événement,イベント,이벤트,Событие,Evento,Ereignis,Evento,Peristiwa,الحدث
+Model,数据模型,資料模型,Model,Modèle,モデル,모델,Модель,Modelo,Modell,Modelo,Model,النموذج
+URL,URL,URL,URL,URL,URL,URL,URL,URL,URL,URL,URL,URL
+Secret,签名密钥,簽名密鑰,Secret,Secret,シークレット,시크릿,Секрет,Secreto,Secret,Segredo,Secret,المفتاح السري
+Headers,请求头,請求頭,Headers,En-têtes,ヘッダー,헤더,Заголовки,Cabeceras,Header,Cabeçalhos,Header,الترويسات
+Remark,备注,備註,Remark,Remarque,備考,비고,Примечание,Observación,Bemerkung,Observação,Catatan,ملاحظة
+Record ID,记录 ID,記錄 ID,Record ID,ID d'enregistrement,レコード ID,레코드 ID,ID записи,ID de registro,Datensatz-ID,ID do registo,ID Data,معرف السجل
+Success,成功,成功,Success,Succès,成功,성공,Успех,Éxito,Erfolg,Sucesso,Berhasil,نجاح
+Status,状态码,狀態碼,Status,Statut,ステータス,상태,Статус,Estado,Status,Estado,Status,الحالة
+Attempts,尝试次数,嘗試次數,Attempts,Tentatives,試行回数,시도 횟수,Попытки,Intentos,Versuche,Tentativas,Percobaan,المحاولات
+Duration (ms),耗时 (ms),耗時 (ms),Duration (ms),Durée (ms),所要時間 (ms),소요 시간 (ms),Длительность (мс),Duración (ms),Dauer (ms),Duração (ms),Durasi (ms),المدة (مللي ثانية)
+Response,响应,回應,Response,Réponse,レスポンス,응답,Ответ,Respuesta,Antwort,Resposta,Respons,الاستجابة
+Payload,载荷,載荷,Payload,Charge utile,ペイロード,페이로드,Данные,Carga útil,Nutzdaten,Carga útil,Payload,الحمولة
+Time,时间,時間,Time,Heure,時刻,시간,Время,Hora,Zeit,Hora,Waktu,الوقت
+Send Test,发送测试,發送測試,Send Test,Envoyer un test,テスト送信,테스트 전송,Отправить тест,Enviar prueba,Test senden,Enviar teste,Kirim Uji,إرسال اختبار
+ADD,新增,新增,Add,Ajout,追加,추가,Добавление,Alta,Hinzufügen,Adição,Tambah,إضافة
+UPDATE,修改,修改,Update,Modification,更新,수정,Изменение,Modificación,Änderung,Alteração,Ubah,تعديل
+DELETE,删除,刪除,Delete,Suppression,削除,삭제,Удаление,Baja,Löschen,Eliminação,Hapus,حذف
+webhook.invalid_url,URL 必须以 http:// 或 https:// 开头,URL 必須以 http:// 或 https:// 開頭,The URL must start with http:// or https://,L'URL doit commencer par http:// ou https://,URL は http:// または https:// で始まる必要があります,URL은 http:// 또는 https://로 시작해야 합니다,URL должен начинаться с http:// или https://,La URL debe empezar por http:// o https://,Die URL muss mit http:// oder https:// beginnen,O URL deve começar por http:// ou https://,URL harus diawali http:// atau https://,يجب أن يبدأ عنوان URL بـ http:// أو https://
+webhook.ping_failed,测试发送失败：HTTP %s %s,測試發送失敗：HTTP %s %s,Test delivery failed: HTTP %s %s,Échec de l'envoi de test : HTTP %s %s,テスト送信に失敗しました：HTTP %s %s,테스트 전송 실패: HTTP %s %s,Тестовая отправка не удалась: HTTP %s %s,Fallo en el envío de prueba: HTTP %s %s,Testsendung fehlgeschlagen: HTTP %s %s,Falha no envio de teste: HTTP %s %s,Pengiriman uji gagal: HTTP %s %s,فشل إرسال الاختبار: HTTP %s %s
+Deliveries,投递记录,投遞記錄,Deliveries,Livraisons,配信履歴,전송 기록,Доставки,Entregas,Zustellungen,Entregas,Pengiriman,عمليات التسليم
+Resend,重新发送,重新發送,Resend,Renvoyer,再送信,재전송,Отправить повторно,Reenviar,Erneut senden,Reenviar,Kirim ulang,إعادة الإرسال
+Result,结果,結果,Result,Résultat,結果,결과,Результат,Resultado,Ergebnis,Resultado,Hasil,النتيجة
+Delivered,已送达,已送達,Delivered,Livré,配信済み,전송됨,Доставлено,Entregado,Zugestellt,Entregue,Terkirim,تم التسليم
+Failed,失败,失敗,Failed,Échec,失敗,실패,Ошибка,Fallido,Fehlgeschlagen,Falhou,Gagal,فشل
+All Models,全部模型,全部模型,All Models,Tous les modèles,すべてのモデル,모든 모델,Все модели,Todos los modelos,Alle Modelle,Todos os modelos,Semua model,جميع النماذج
+Subscribe every registered model; switch off to pick models,订阅全部已注册的数据模型，关闭后手动选择模型,訂閱全部已註冊的資料模型，關閉後手動選擇模型,Subscribe every registered model; switch off to pick models,S'abonner à tous les modèles ; désactiver pour choisir,登録済みの全モデルを購読します。オフにするとモデルを選択できます,등록된 모든 모델을 구독합니다. 끄면 모델을 선택합니다,Подписка на все модели; отключите чтобы выбрать,Suscribirse a todos los modelos; desactivar para elegir,Alle Modelle abonnieren; ausschalten um auszuwählen,Subscrever todos os modelos; desligar para escolher,Berlangganan semua model; matikan untuk memilih,الاشتراك في جميع النماذج؛ أوقفه لاختيار النماذج
+webhook.models_required,请选择数据模型，或打开「全部模型」,請選擇資料模型，或開啟「全部模型」,Pick at least one model or switch on All Models,Choisissez au moins un modèle ou activez Tous les modèles,モデルを選択するか「すべてのモデル」をオンにしてください,모델을 선택하거나 모든 모델을 켜세요,Выберите модель или включите Все модели,Elija al menos un modelo o active Todos los modelos,Mindestens ein Modell wählen oder Alle Modelle einschalten,Escolha um modelo ou ligue Todos os modelos,Pilih minimal satu model atau nyalakan Semua model,اختر نموذجًا واحدًا على الأقل أو فعّل جميع النماذج
+Signs each payload as X-Erupt-Signature (HMAC-SHA256); empty sends unsigned,用于生成 X-Erupt-Signature 签名（HMAC-SHA256），留空则不签名,用於產生 X-Erupt-Signature 簽名（HMAC-SHA256），留空則不簽名,Signs each payload as X-Erupt-Signature (HMAC-SHA256); empty sends unsigned,Signe chaque charge utile dans X-Erupt-Signature (HMAC-SHA256) ; vide = non signé,各ペイロードを X-Erupt-Signature（HMAC-SHA256）で署名します。空の場合は署名しません,각 페이로드를 X-Erupt-Signature(HMAC-SHA256)로 서명합니다. 비우면 서명하지 않습니다,Подписывает каждую отправку в X-Erupt-Signature (HMAC-SHA256); пусто — без подписи,Firma cada carga útil en X-Erupt-Signature (HMAC-SHA256); vacío envía sin firmar,Signiert jede Nutzlast als X-Erupt-Signature (HMAC-SHA256); leer sendet unsigniert,Assina cada carga útil em X-Erupt-Signature (HMAC-SHA256); vazio envia sem assinatura,Menandatangani setiap payload sebagai X-Erupt-Signature (HMAC-SHA256); kosong berarti tanpa tanda tangan,يوقّع كل حمولة في X-Erupt-Signature (HMAC-SHA256)؛ فارغ يعني بدون توقيع
+Extra request headers; e.g. Authorization,附加请求头，如 Authorization,附加請求頭，如 Authorization,Extra request headers; e.g. Authorization,En-têtes supplémentaires ; ex. Authorization,追加リクエストヘッダー（例：Authorization）,추가 요청 헤더(예: Authorization),Дополнительные заголовки; например Authorization,Cabeceras adicionales; p. ej. Authorization,Zusätzliche Header; z. B. Authorization,Cabeçalhos adicionais; p. ex. Authorization,Header tambahan; mis. Authorization,ترويسات إضافية؛ مثل Authorization
+webhook.all_models,全部模型,全部模型,All models,Tous les modèles,すべてのモデル,모든 모델,Все модели,Todos los modelos,Alle Modelle,Todos os modelos,Semua model,جميع النماذج
+webhook.ping_ok,测试发送成功：HTTP %s，耗时 %s ms,測試發送成功：HTTP %s，耗時 %s ms,Test delivered: HTTP %s in %s ms,Test envoyé : HTTP %s en %s ms,テスト送信成功：HTTP %s（%s ms）,테스트 전송 성공: HTTP %s (%s ms),Тест доставлен: HTTP %s за %s мс,Prueba entregada: HTTP %s en %s ms,Test zugestellt: HTTP %s in %s ms,Teste entregue: HTTP %s em %s ms,Uji terkirim: HTTP %s dalam %s ms,تم إرسال الاختبار: HTTP %s خلال %s مللي ثانية
+webhook.resend_queued,已重新发送 %s 条，刷新日志查看结果,已重新發送 %s 條，重新整理日誌查看結果,%s resent; refresh the log for the outcome,%s renvoyé(s) ; actualisez le journal pour le résultat,%s 件を再送信しました。結果はログを更新して確認してください,%s건 재전송됨. 결과는 로그를 새로 고쳐 확인하세요,Повторно отправлено: %s; обновите журнал для результата,%s reenviado(s); actualice el registro para ver el resultado,%s erneut gesendet; Protokoll aktualisieren für das Ergebnis,%s reenviado(s); atualize o registo para ver o resultado,%s dikirim ulang; segarkan log untuk hasilnya,تمت إعادة إرسال %s؛ حدّث السجل لمعرفة النتيجة
+webhook.gone,该日志所属的 Webhook 已被删除,該日誌所屬的 Webhook 已被刪除,The webhook this log belongs to has been deleted,Le webhook de ce journal a été supprimé,このログの Webhook は削除されています,이 로그의 Webhook이 삭제되었습니다,Webhook этой записи был удалён,El webhook de este registro ha sido eliminado,Der Webhook dieses Eintrags wurde gelöscht,O webhook deste registo foi eliminado,Webhook untuk log ini telah dihapus,تم حذف الـ Webhook الخاص بهذا السجل
