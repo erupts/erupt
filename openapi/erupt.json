@@ -7023,5 +7023,50 @@
   "externalDocs": {
     "description": "Erupt documentation",
     "url": "https://docs.erupt.xyz"
-  }
+  },
+  "x-tagGroups": [
+    {
+      "name": "Account",
+      "tags": [
+        "Session and user",
+        "Multi-factor auth",
+        "Open API token",
+        "Permission and app settings"
+      ]
+    },
+    {
+      "name": "Data",
+      "tags": [
+        "Page build",
+        "Data query",
+        "Data modify",
+        "Tab rows",
+        "Form view"
+      ]
+    },
+    {
+      "name": "Widgets and files",
+      "tags": [
+        "Form components",
+        "Files",
+        "Import and export"
+      ]
+    },
+    {
+      "name": "Views",
+      "tags": [
+        "Board view",
+        "Calendar view",
+        "Gantt view"
+      ]
+    },
+    {
+      "name": "Platform",
+      "tags": [
+        "Template pages",
+        "Developer tools",
+        "Framework"
+      ]
+    }
+  ]
 }

@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,17 @@ public class OpenApiSpec {
     private static final String SCHEME_HEADER = "tokenHeader";
 
     private static final String SCHEME_PARAM = "tokenParam";
+
+    /** Sidebar sections (x-tagGroups, honoured by Redoc and Scalar); every tag must belong to one. */
+    private static final Map<String, List<String>> GROUPS = new LinkedHashMap<>();
+
+    static {
+        GROUPS.put("Account", List.of("Session and user", "Multi-factor auth", "Open API token", "Permission and app settings"));
+        GROUPS.put("Data", List.of("Page build", "Data query", "Data modify", "Tab rows", "Form view"));
+        GROUPS.put("Widgets and files", List.of("Form components", "Files", "Import and export"));
+        GROUPS.put("Views", List.of("Board view", "Calendar view", "Gantt view"));
+        GROUPS.put("Platform", List.of("Template pages", "Developer tools", "Framework"));
+    }
 
     private static final String DESCRIPTION = """
             REST API of the erupt framework: every endpoint the admin UI calls, usable by any client.
@@ -63,6 +75,7 @@ public class OpenApiSpec {
             }
         }
         orderTags(doc);
+        groupTags(doc);
         Files.createDirectories(target.getParent());
         Files.writeString(target, gson.toJson(doc) + "\n", StandardCharsets.UTF_8);
     }
@@ -166,6 +179,24 @@ public class OpenApiSpec {
         JsonArray sorted = new JsonArray();
         tags.forEach(sorted::add);
         doc.add("tags", sorted);
+    }
+
+    private static void groupTags(JsonObject doc) {
+        List<String> grouped = GROUPS.values().stream().flatMap(List::stream).toList();
+        for (JsonElement tag : doc.getAsJsonArray("tags")) {
+            String name = tag.getAsJsonObject().get("name").getAsString();
+            if (!grouped.contains(name)) throw new IllegalStateException("tag '" + name + "' is not assigned to a group in " + OpenApiSpec.class.getSimpleName());
+        }
+        JsonArray groups = new JsonArray();
+        GROUPS.forEach((name, tags) -> {
+            JsonObject group = new JsonObject();
+            group.addProperty("name", name);
+            JsonArray members = new JsonArray();
+            tags.forEach(members::add);
+            group.add("tags", members);
+            groups.add(group);
+        });
+        doc.add("x-tagGroups", groups);
     }
 
     private static JsonObject response(String description) {
