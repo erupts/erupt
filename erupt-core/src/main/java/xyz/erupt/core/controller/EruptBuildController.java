@@ -20,7 +20,9 @@ import xyz.erupt.core.view.EruptModel;
 import java.util.*;
 
 /**
- * Page structure of an @Erupt model: fields, edit/view types, operations and the caller's permissions.
+ * Page build
+ *
+ * @apiNote Page structure of an @Erupt model: fields, edit/view types, operations and the caller's permissions.
  *
  * @author YuePeng
  * date 2018-09-28.

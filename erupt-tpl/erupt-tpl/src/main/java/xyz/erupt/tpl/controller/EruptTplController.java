@@ -35,7 +35,9 @@ import java.util.stream.Stream;
 
 
 /**
- * Server rendered template pages. These answer HTML, not JSON, and take the token as the _token query parameter.
+ * Template pages
+ *
+ * @apiNote Server rendered template pages. These answer HTML, not JSON, and take the token as the _token query parameter.
  *
  * @author YuePeng
  * date 2018-09-28.

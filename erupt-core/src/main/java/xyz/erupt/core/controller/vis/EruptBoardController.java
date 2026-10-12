@@ -24,7 +24,9 @@ import xyz.erupt.core.view.R;
 import java.lang.reflect.Field;
 
 /**
- * Writes made from the board (kanban) view.
+ * Board view
+ *
+ * @apiNote Writes made from the board (kanban) view.
  *
  * @author YuePeng
  * date 2025/11/15 00:25

@@ -31,11 +31,10 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
- * Writes made from the gantt view.
+ * Gantt view
  *
- * Bar drags change the dates, link drags change the predecessors declared by
- * GanttView.dependencyField. Both run the DataProxy update hooks and publish EruptEditEvent
- * with the pre-change copy, so the operation log and other modules see them like any edit.
+ * @apiNote Writes made from the gantt view.
+ * Bar drags change the dates, link drags change the predecessors declared by GanttView.dependencyField. Both run the DataProxy update hooks and publish EruptEditEvent with the pre-change copy, so the operation log and other modules see them like any edit.
  *
  * @author YuePeng
  * date 2025/11/15 00:25

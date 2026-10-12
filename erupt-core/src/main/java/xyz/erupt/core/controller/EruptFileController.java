@@ -43,7 +43,9 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * Attachment upload and download.
+ * Files
+ *
+ * @apiNote Attachment upload and download.
  *
  * @author YuePeng
  * date 10/15/18.

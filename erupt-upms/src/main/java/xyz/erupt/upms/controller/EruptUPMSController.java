@@ -13,7 +13,9 @@ import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.service.EruptUserService;
 
 /**
- * Permission probe and application settings.
+ * Permission and app settings
+ *
+ * @apiNote Permission probe and application settings.
  *
  * @author YuePeng
  * date 2022/3/9 19:18

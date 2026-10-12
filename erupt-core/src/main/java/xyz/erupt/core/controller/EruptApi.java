@@ -8,7 +8,9 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.util.EruptInformation;
 
 /**
- * Framework level endpoints that need no session.
+ * Framework
+ *
+ * @apiNote Framework level endpoints that need no session.
  *
  * @author YuePeng
  * date 2020-04-22

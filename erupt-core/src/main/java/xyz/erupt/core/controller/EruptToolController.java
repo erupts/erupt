@@ -15,7 +15,9 @@ import xyz.erupt.core.log.LogMessage;
 import java.util.List;
 
 /**
- * Developer tools exposed to the admin UI.
+ * Developer tools
+ *
+ * @apiNote Developer tools exposed to the admin UI.
  */
 @Slf4j
 @RestController

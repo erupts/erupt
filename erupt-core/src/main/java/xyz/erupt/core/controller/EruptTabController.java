@@ -20,7 +20,9 @@ import xyz.erupt.core.view.R;
 import java.util.function.Consumer;
 
 /**
- * Row editing inside TAB_TABLE_ADD fields: validation and DataProxy hooks of the child erupt without touching the database.
+ * Tab rows
+ *
+ * @apiNote Row editing inside TAB_TABLE_ADD fields: validation and DataProxy hooks of the child erupt without touching the database.
  *
  * @author YuePeng
  * date 2022/5/2 21:50

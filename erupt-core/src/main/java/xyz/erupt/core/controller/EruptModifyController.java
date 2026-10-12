@@ -27,7 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Write side of erupt data: insert, update, delete and ordering.
+ * Data modify
+ *
+ * @apiNote Write side of erupt data: insert, update, delete and ordering.
  *
  * @author YuePeng
  * date 9/28/18.

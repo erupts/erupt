@@ -23,10 +23,10 @@ import xyz.erupt.upms.vo.EruptMfaStatusVo;
 import java.util.List;
 
 /**
- * Self service endpoints for binding and removing a TOTP authenticator.
+ * Multi-factor auth
  *
- * Every route here requires an authenticated session; the login side of MFA lives in
- * EruptUserController (login and login-mfa).
+ * @apiNote Self service endpoints for binding and removing a TOTP authenticator.
+ * Every route here requires an authenticated session; the login side of MFA lives in EruptUserController (login and login-mfa).
  *
  * @author YuePeng
  * date 2026-09-18

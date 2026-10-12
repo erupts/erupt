@@ -23,7 +23,9 @@ import xyz.erupt.core.view.R;
 import java.lang.reflect.Field;
 
 /**
- * Writes made from the calendar view.
+ * Calendar view
+ *
+ * @apiNote Writes made from the calendar view.
  *
  * @author YuePeng
  * date 2026/6/2

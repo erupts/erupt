@@ -28,7 +28,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Data sources for form widgets: auto-complete, choice, tags, mention, button and code hints.
+ * Form components
+ *
+ * @apiNote Data sources for form widgets: auto-complete, choice, tags, mention, button and code hints.
  *
  * @author YuePeng
  * date 2020-08-14

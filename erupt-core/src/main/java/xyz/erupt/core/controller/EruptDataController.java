@@ -52,7 +52,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Read side of erupt data: table, tree, detail, reference pickers and row operations.
+ * Data query
+ *
+ * @apiNote Read side of erupt data: table, tree, detail, reference pickers and row operations.
  *
  * @author YuePeng
  * date 9/28/18.

@@ -20,7 +20,9 @@ import xyz.erupt.upms.vo.OpenApiTokenVo;
 import java.time.LocalDateTime;
 
 /**
- * Token exchange for server-to-server callers registered as Open API apps.
+ * Open API token
+ *
+ * @apiNote Token exchange for server-to-server callers registered as Open API apps.
  *
  * @author YuePeng
  * date 2024/8/4 22:05

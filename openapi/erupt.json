@@ -11,76 +11,76 @@
   ],
   "tags": [
     {
-      "name": "EruptBuildController",
-      "description": "Page structure of an @Erupt model: fields, edit/view types, operations and the caller&apos;s permissions."
+      "name": "Session and user",
+      "description": "Session and user"
     },
     {
-      "name": "EruptTabController",
-      "description": "Row editing inside TAB_TABLE_ADD fields: validation and DataProxy hooks of the child erupt without touching the database."
+      "name": "Framework",
+      "description": "Framework"
     },
     {
-      "name": "EruptComponentController",
-      "description": "Data sources for form widgets: auto-complete, choice, tags, mention, button and code hints."
+      "name": "Data query",
+      "description": "Data query"
     },
     {
-      "name": "EruptExcelController",
-      "description": "Import and export in any registered TableCodec format.\n\nThe path keeps its historical &quot;excel&quot; segment and Excel stays the default, so a client that\nsends no format sees no change."
+      "name": "Open API token",
+      "description": "Open API token"
     },
     {
-      "name": "EruptFileController",
-      "description": "Attachment upload and download."
+      "name": "Import and export",
+      "description": "Import and export"
     },
     {
-      "name": "EruptApi",
-      "description": "Framework level endpoints that need no session."
+      "name": "Multi-factor auth",
+      "description": "Multi-factor auth"
     },
     {
-      "name": "EruptModifyController",
-      "description": "Write side of erupt data: insert, update, delete and ordering."
+      "name": "Board view",
+      "description": "Board view"
     },
     {
-      "name": "EruptGanttController",
-      "description": "Writes made from the gantt view.\n\nBar drags change the dates, link drags change the predecessors declared by\nGanttView.dependencyField. Both run the DataProxy update hooks and publish EruptEditEvent\nwith the pre-change copy, so the operation log and other modules see them like any edit."
+      "name": "Tab rows",
+      "description": "Tab rows"
     },
     {
-      "name": "EruptUserController",
-      "description": "Session lifecycle and the signed-in user: login, logout, profile, menu."
+      "name": "Data modify",
+      "description": "Data modify"
     },
     {
-      "name": "EruptToolController",
-      "description": "Developer tools exposed to the admin UI."
+      "name": "Form view",
+      "description": "Form view"
     },
     {
-      "name": "EruptBoardController",
-      "description": "Writes made from the board (kanban) view."
+      "name": "Permission and app settings",
+      "description": "Permission and app settings"
     },
     {
-      "name": "EruptCalendarController",
-      "description": "Writes made from the calendar view."
+      "name": "Form components",
+      "description": "Form components"
     },
     {
-      "name": "EruptUPMSController",
-      "description": "Permission probe and application settings."
+      "name": "Calendar view",
+      "description": "Calendar view"
     },
     {
-      "name": "EruptDataController",
-      "description": "Read side of erupt data: table, tree, detail, reference pickers and row operations."
+      "name": "Page build",
+      "description": "Page build"
     },
     {
-      "name": "EruptTplController",
-      "description": "Server rendered template pages. These answer HTML, not JSON, and take the token as the _token query parameter."
+      "name": "Files",
+      "description": "Files"
     },
     {
-      "name": "EruptFormViewController",
-      "description": "Form view: a standalone form whose loading and saving belong entirely to the user.\n\nThe framework only renders the form schema and routes the two lifecycle moments,\nDataProxy.formViewBehavior and DataProxy.formSave, to the DataProxy. Loading the data and\npersisting it are the user&apos;s responsibility: a database, a file, an external API, anything.\nField-level validation and the DataProxy.validate hook are reused because they are\ndata-source-agnostic by nature."
+      "name": "Template pages",
+      "description": "Template pages"
     },
     {
-      "name": "EruptOpenApiController",
-      "description": "Token exchange for server-to-server callers registered as Open API apps."
+      "name": "Gantt view",
+      "description": "Gantt view"
     },
     {
-      "name": "EruptMfaController",
-      "description": "Self service endpoints for binding and removing a TOTP authenticator.\n\nEvery route here requires an authenticated session; the login side of MFA lives in\nEruptUserController (login and login-mfa)."
+      "name": "Developer tools",
+      "description": "Developer tools"
     }
   ],
   "paths": {
@@ -90,7 +90,7 @@
         "deprecated": false,
         "description": "Needs the menu permission of the log page. Pass the last received offset to fetch only newer lines.",
         "tags": [
-          "EruptToolController"
+          "Developer tools"
         ],
         "responses": {
           "200": {
@@ -159,7 +159,7 @@
         "summary": "Erupt framework version.",
         "deprecated": false,
         "tags": [
-          "EruptApi"
+          "Framework"
         ],
         "responses": {
           "200": {
@@ -193,7 +193,7 @@
         "deprecated": false,
         "description": "Runs field-level validation (which also fires DataProxy.validate) and then delegates the entire persistence action to DataProxy.formSave. No database CRUD is invoked by the framework, so file-backed or API-backed form views are first-class. Throwing EruptException from formSave aborts the save with a user-visible message.",
         "tags": [
-          "EruptFormViewController"
+          "Form view"
         ],
         "requestBody": {
           "content": {
@@ -265,7 +265,7 @@
         "deprecated": false,
         "description": "Always constructs a fresh model instance and runs DataProxy.formViewBehavior on it; the framework performs no database load, the user populates the model from their own data source inside that hook.",
         "tags": [
-          "EruptFormViewController"
+          "Form view"
         ],
         "responses": {
           "200": {
@@ -330,7 +330,7 @@
         "deprecated": false,
         "description": "Sets @BoardView.groupField (and swimlaneField when swimlaneChanged) on the record and saves it through the DataProxy update hooks.",
         "tags": [
-          "EruptBoardController"
+          "Board view"
         ],
         "requestBody": {
           "content": {
@@ -404,7 +404,7 @@
         "deprecated": false,
         "description": "Values are validated against the field definitions, then DataProxy.beforeAdd/afterAdd run around the insert. Reference fields are sent as {\"id\": ...}.",
         "tags": [
-          "EruptModifyController"
+          "Data modify"
         ],
         "requestBody": {
           "content": {
@@ -478,7 +478,7 @@
         "deprecated": false,
         "description": "The primary key field selects the row. Fields absent from the body keep their value; DataProxy.beforeUpdate/afterUpdate run around the update.",
         "tags": [
-          "EruptModifyController"
+          "Data modify"
         ],
         "requestBody": {
           "content": {
@@ -552,7 +552,7 @@
         "deprecated": false,
         "description": "In-table cell editing; only allowed when the model opts in with cellEdit. Goes through the full edit pipeline, so validation and DataProxy hooks apply.",
         "tags": [
-          "EruptModifyController"
+          "Data modify"
         ],
         "requestBody": {
           "content": {
@@ -626,7 +626,7 @@
         "deprecated": false,
         "description": "DataProxy.beforeDelete/afterDelete run for every row.",
         "tags": [
-          "EruptModifyController"
+          "Data modify"
         ],
         "requestBody": {
           "content": {
@@ -703,7 +703,7 @@
         "deprecated": false,
         "description": "Body maps primary key to its new position in the @Erupt.dragSort field.",
         "tags": [
-          "EruptModifyController"
+          "Data modify"
         ],
         "requestBody": {
           "content": {
@@ -776,7 +776,7 @@
         "summary": "MFA state of the current user.",
         "deprecated": false,
         "tags": [
-          "EruptMfaController"
+          "Multi-factor auth"
         ],
         "responses": {
           "200": {
@@ -821,7 +821,7 @@
         "deprecated": false,
         "description": "Returns the TOTP secret and otpauth URI to show as a QR code. Nothing is bound until enroll-confirm succeeds.",
         "tags": [
-          "EruptMfaController"
+          "Multi-factor auth"
         ],
         "requestBody": {
           "content": {
@@ -874,7 +874,7 @@
         "summary": "Finish binding with a code from the authenticator.",
         "deprecated": false,
         "tags": [
-          "EruptMfaController"
+          "Multi-factor auth"
         ],
         "requestBody": {
           "content": {
@@ -928,7 +928,7 @@
         "deprecated": false,
         "description": "Needs a live authenticator code; the previous recovery codes stop working.",
         "tags": [
-          "EruptMfaController"
+          "Multi-factor auth"
         ],
         "requestBody": {
           "content": {
@@ -982,7 +982,7 @@
         "deprecated": false,
         "description": "Removing a factor is as sensitive as adding one, so it costs both the password and a live code.",
         "tags": [
-          "EruptMfaController"
+          "Multi-factor auth"
         ],
         "requestBody": {
           "content": {
@@ -1036,7 +1036,7 @@
         "deprecated": false,
         "description": "Static values from @AutoCompleteType.values are matched case-insensitively, then the configured handler adds its own. The input must be at least triggerLength characters.",
         "tags": [
-          "EruptComponentController"
+          "Form components"
         ],
         "requestBody": {
           "content": {
@@ -1133,7 +1133,7 @@
         "deprecated": false,
         "description": "Static @ChoiceType.vl entries plus whatever the ChoiceFetchHandler returns.",
         "tags": [
-          "EruptComponentController"
+          "Form components"
         ],
         "responses": {
           "200": {
@@ -1211,7 +1211,7 @@
         "deprecated": false,
         "description": "Same as choice-item but the ChoiceFetchHandler sees the form values, so options can depend on other fields.",
         "tags": [
-          "EruptComponentController"
+          "Form components"
         ],
         "requestBody": {
           "content": {
@@ -1297,7 +1297,7 @@
         "summary": "Tag suggestions for a TAGS field.",
         "deprecated": false,
         "tags": [
-          "EruptComponentController"
+          "Form components"
         ],
         "requestBody": {
           "content": {
@@ -1383,7 +1383,7 @@
         "summary": "Mention suggestions for a TEXTAREA field.",
         "deprecated": false,
         "tags": [
-          "EruptComponentController"
+          "Form components"
         ],
         "requestBody": {
           "content": {
@@ -1470,7 +1470,7 @@
         "deprecated": false,
         "description": "Hands the whole form to the EruptButtonHandler and returns what it wants the frontend to do: a script to evaluate, form values to populate and edit expressions to apply.",
         "tags": [
-          "EruptComponentController"
+          "Form components"
         ],
         "requestBody": {
           "content": {
@@ -1553,7 +1553,7 @@
         "summary": "Completion hints for a CODE_EDITOR field.",
         "deprecated": false,
         "tags": [
-          "EruptComponentController"
+          "Form components"
         ],
         "responses": {
           "200": {
@@ -1630,7 +1630,7 @@
         "summary": "Look up the app behind a token.",
         "deprecated": false,
         "tags": [
-          "EruptOpenApiController"
+          "Open API token"
         ],
         "responses": {
           "200": {
@@ -1675,7 +1675,7 @@
         "deprecated": false,
         "description": "The token carries the permissions of the user bound to the app and is sent like a login token. Only one token per appid is valid at a time: issuing a new one revokes the previous.",
         "tags": [
-          "EruptOpenApiController"
+          "Open API token"
         ],
         "responses": {
           "200": {
@@ -1729,7 +1729,7 @@
         "summary": "Whether the current user holds a menu permission.",
         "deprecated": false,
         "tags": [
-          "EruptUPMSController"
+          "Permission and app settings"
         ],
         "responses": {
           "200": {
@@ -1784,7 +1784,7 @@
         "deprecated": false,
         "description": "Read by the frontend before login: title, login options, password transfer encoding, version and the attachment file domain. No session needed.",
         "tags": [
-          "EruptUPMSController"
+          "Permission and app settings"
         ],
         "responses": {
           "200": {
@@ -1818,7 +1818,7 @@
         "deprecated": false,
         "description": "When erupt-app.pwd-transfer-encrypt is on the password is sent base64-encoded three times. After repeated failures useVerifyCode turns true and the captcha from code-img must be sent as verifyCode/verifyCodeMark. When the user has an authenticator bound, pass is false, mfaRequired is true and the returned mfaTicket must be exchanged through login-mfa.",
         "tags": [
-          "EruptUserController"
+          "Session and user"
         ],
         "requestBody": {
           "content": {
@@ -1861,7 +1861,7 @@
         "deprecated": false,
         "description": "Exchanges the mfaTicket from login plus a one-time code (or a recovery code) for a session. An ordinary wrong code keeps the ticket alive.",
         "tags": [
-          "EruptUserController"
+          "Session and user"
         ],
         "requestBody": {
           "content": {
@@ -1904,7 +1904,7 @@
         "deprecated": false,
         "description": "Passwords follow the same transfer encoding as login.",
         "tags": [
-          "EruptUserController"
+          "Session and user"
         ],
         "requestBody": {
           "content": {
@@ -1958,7 +1958,7 @@
         "deprecated": false,
         "description": "Used to unlock the screen; no new session is issued. It goes through the same path as a sign-in, so the failure counter and lock apply.",
         "tags": [
-          "EruptUserController"
+          "Session and user"
         ],
         "requestBody": {
           "content": {
@@ -2011,7 +2011,7 @@
         "summary": "Update the current user's profile.",
         "deprecated": false,
         "tags": [
-          "EruptUserController"
+          "Session and user"
         ],
         "requestBody": {
           "content": {
@@ -2064,7 +2064,7 @@
         "summary": "Upload the current user's avatar.",
         "deprecated": false,
         "tags": [
-          "EruptUserController"
+          "Session and user"
         ],
         "requestBody": {
           "content": {
@@ -2127,7 +2127,7 @@
         "summary": "Current user.",
         "deprecated": false,
         "tags": [
-          "EruptUserController"
+          "Session and user"
         ],
         "responses": {
           "200": {
@@ -2172,7 +2172,7 @@
         "deprecated": false,
         "description": "Platform sessions only; a tenant session gets 403 and uses the erupt-tenant menu API.",
         "tags": [
-          "EruptUserController"
+          "Session and user"
         ],
         "responses": {
           "200": {
@@ -2230,7 +2230,7 @@
         "summary": "Sign out and invalidate the token.",
         "deprecated": false,
         "tags": [
-          "EruptUserController"
+          "Session and user"
         ],
         "responses": {
           "200": {
@@ -2275,7 +2275,7 @@
         "deprecated": false,
         "description": "Returns a JPEG. The text lives 60 seconds under the given mark; send the same mark back as verifyCodeMark.",
         "tags": [
-          "EruptUserController"
+          "Session and user"
         ],
         "responses": {
           "200": {
@@ -2329,7 +2329,7 @@
         "summary": "Export formats a client may offer.",
         "deprecated": false,
         "tags": [
-          "EruptExcelController"
+          "Import and export"
         ],
         "responses": {
           "200": {
@@ -2387,7 +2387,7 @@
         "deprecated": false,
         "description": "Always Excel: it carries the validations and hints a text format cannot. Needs import permission.",
         "tags": [
-          "EruptExcelController"
+          "Import and export"
         ],
         "responses": {
           "200": {
@@ -2450,7 +2450,7 @@
         "deprecated": false,
         "description": "Exports everything the query matches, or only the given ids. The format query parameter selects a codec from /formats and defaults to Excel. Needs export permission.",
         "tags": [
-          "EruptExcelController"
+          "Import and export"
         ],
         "requestBody": {
           "content": {
@@ -2532,7 +2532,7 @@
         "deprecated": false,
         "description": "Multipart form field \"file\", in the layout of the template. Every row is validated and inserted through the normal add pipeline inside one transaction; the first failing row aborts the whole import. Needs import permission.",
         "tags": [
-          "EruptExcelController"
+          "Import and export"
         ],
         "requestBody": {
           "content": {
@@ -2615,7 +2615,7 @@
         "summary": "Move or resize a gantt bar.",
         "deprecated": false,
         "tags": [
-          "EruptGanttController"
+          "Gantt view"
         ],
         "requestBody": {
           "content": {
@@ -2689,7 +2689,7 @@
         "deprecated": false,
         "description": "Empty when @GanttView.dependencyField is not configured.",
         "tags": [
-          "EruptGanttController"
+          "Gantt view"
         ],
         "requestBody": {
           "content": {
@@ -2763,7 +2763,7 @@
         "deprecated": false,
         "description": "Rejects a self link and any link that would create a cycle.",
         "tags": [
-          "EruptGanttController"
+          "Gantt view"
         ],
         "requestBody": {
           "content": {
@@ -2837,7 +2837,7 @@
         "deprecated": false,
         "description": "The path after /tpl/ is the template path or a @TplAction route; the menu permission is checked against that path. The token and language travel as _token and _lang query parameters.",
         "tags": [
-          "EruptTplController"
+          "Template pages"
         ],
         "responses": {
           "200": {
@@ -2879,7 +2879,7 @@
         "summary": "Render the template of a TPL field.",
         "deprecated": false,
         "tags": [
-          "EruptTplController"
+          "Template pages"
         ],
         "responses": {
           "200": {
@@ -2952,7 +2952,7 @@
         "deprecated": false,
         "description": "The selected rows are injected into the template context.",
         "tags": [
-          "EruptTplController"
+          "Template pages"
         ],
         "responses": {
           "200": {
@@ -3033,7 +3033,7 @@
         "summary": "Render the template of a @Vis view.",
         "deprecated": false,
         "tags": [
-          "EruptTplController"
+          "Template pages"
         ],
         "responses": {
           "200": {
@@ -3106,7 +3106,7 @@
         "deprecated": false,
         "description": "The row is injected into the template context.",
         "tags": [
-          "EruptTplController"
+          "Template pages"
         ],
         "responses": {
           "200": {
@@ -3189,7 +3189,7 @@
         "deprecated": false,
         "description": "Sets @CalendarView.dateField (and endDateField when configured and sent) and saves through the DataProxy update hooks.",
         "tags": [
-          "EruptCalendarController"
+          "Calendar view"
         ],
         "requestBody": {
           "content": {
@@ -3263,7 +3263,7 @@
         "deprecated": false,
         "description": "Multipart form field \"file\". Extension, size and image dimensions are checked against @AttachmentType; the stored path is returned and is what the record field should hold.",
         "tags": [
-          "EruptFileController"
+          "Files"
         ],
         "requestBody": {
           "content": {
@@ -3357,7 +3357,7 @@
         "deprecated": false,
         "description": "Same rules as the single upload, applied to every part named \"file\".",
         "tags": [
-          "EruptFileController"
+          "Files"
         ],
         "requestBody": {
           "content": {
@@ -3451,7 +3451,7 @@
         "deprecated": false,
         "description": "Multipart form field \"upload\"; the token travels in the _token query parameter because editors cannot set headers. Response shape follows the CKEditor upload adapter.",
         "tags": [
-          "EruptFileController"
+          "Files"
         ],
         "requestBody": {
           "content": {
@@ -3515,7 +3515,7 @@
         "deprecated": false,
         "description": "Multipart form field \"upload\"; token in the _token query parameter. The url is prefixed with the AttachmentProxy file domain when one is registered.",
         "tags": [
-          "EruptFileController"
+          "Files"
         ],
         "requestBody": {
           "content": {
@@ -3609,7 +3609,7 @@
         "deprecated": false,
         "description": "Without a file it returns the UEditor config (optionally wrapped in the JSONP callback); with a multipart \"file\" part it behaves like upload-html-editor and answers in the UEditor response format. Token in the _token query parameter.",
         "tags": [
-          "EruptFileController"
+          "Files"
         ],
         "responses": {
           "200": {
@@ -3702,7 +3702,7 @@
         "deprecated": false,
         "description": "The part of the path after download-attachment is the stored path returned by upload, resolved under the configured upload directory. No session is needed.",
         "tags": [
-          "EruptFileController"
+          "Files"
         ],
         "responses": {
           "200": {
@@ -3734,7 +3734,7 @@
         "deprecated": false,
         "description": "Everything the frontend needs to render the table, search bar, form and buttons of one @Erupt class: field metadata, default search conditions, the current user's PowerObject, plus the build models of nested erupts (tab, multi-form, combine) and of row operations that open another erupt as a form.",
         "tags": [
-          "EruptBuildController"
+          "Page build"
         ],
         "responses": {
           "200": {
@@ -3799,7 +3799,7 @@
         "deprecated": false,
         "description": "Resolves the target class of a reference, tab or link-tree field and returns its build model, so a nested erupt can be rendered without knowing its class name up front.",
         "tags": [
-          "EruptBuildController"
+          "Page build"
         ],
         "responses": {
           "200": {
@@ -3874,7 +3874,7 @@
         "deprecated": false,
         "description": "Conditions, sort and paging come from the body; DataProxy.beforeFetch/afterFetch and @Filter run on the server. pageSize is capped at 50000.",
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "requestBody": {
           "content": {
@@ -3948,7 +3948,7 @@
         "deprecated": false,
         "description": "Aggregates over every row the same query matches, not only the current page.",
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "requestBody": {
           "content": {
@@ -4021,7 +4021,7 @@
         "summary": "Whole tree of a @Tree erupt.",
         "deprecated": false,
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "responses": {
           "200": {
@@ -4089,7 +4089,7 @@
         "deprecated": false,
         "description": "A fresh instance after DataProxy.addBehavior, so defaults set there reach the form.",
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "responses": {
           "200": {
@@ -4154,7 +4154,7 @@
         "deprecated": false,
         "description": "Requires edit or view-details permission. On an erupt-cloud server a remote erupt is forwarded to the node that owns it.",
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "responses": {
           "200": {
@@ -4229,7 +4229,7 @@
         "deprecated": false,
         "description": "For a @RowOperation that opens an erupt form: builds the form object, runs addBehavior and, when the OperationHandler overrides eruptFormValue, lets it prefill from the selected rows.",
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "requestBody": {
           "content": {
@@ -4313,7 +4313,7 @@
         "deprecated": false,
         "description": "Body is {\"ids\": [...], \"param\": {...}}: ids are the selected rows, param the operation form values (validated against the operation erupt). The handler may return a script for the frontend to evaluate; it comes back in data.",
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "requestBody": {
           "content": {
@@ -4396,7 +4396,7 @@
         "summary": "Tree options of a TAB_TREE field.",
         "deprecated": false,
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "responses": {
           "200": {
@@ -4473,7 +4473,7 @@
         "summary": "Options of a CHECKBOX or TRANSFER field.",
         "deprecated": false,
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "responses": {
           "200": {
@@ -4551,7 +4551,7 @@
         "deprecated": false,
         "description": "Pages through the referenced erupt with the same query shape as the table request. When @ReferenceTableType.dependField is set the current value of that field must be sent as dependValue.",
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "requestBody": {
           "content": {
@@ -4655,7 +4655,7 @@
         "deprecated": false,
         "description": "The left-hand tree shown next to a table; selecting a node filters the table.",
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "responses": {
           "200": {
@@ -4722,7 +4722,7 @@
         "summary": "Pick tree of a REFERENCE_TREE field.",
         "deprecated": false,
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "responses": {
           "200": {
@@ -4809,7 +4809,7 @@
         "deprecated": false,
         "description": "Rows produced by DataProxy.extraRow for the current search conditions, such as a summary line.",
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "requestBody": {
           "content": {
@@ -4886,7 +4886,7 @@
         "deprecated": false,
         "description": "Runs the @Edit.onchange handler with the whole form and returns the values and edit expressions it wants applied.",
         "tags": [
-          "EruptDataController"
+          "Data query"
         ],
         "requestBody": {
           "content": {
@@ -4970,7 +4970,7 @@
         "deprecated": false,
         "description": "Nothing is persisted here: the child rows are saved together with the parent record. This call validates the row against the child erupt and runs its DataProxy.beforeAdd/afterAdd, returning the possibly adjusted row.",
         "tags": [
-          "EruptTabController"
+          "Tab rows"
         ],
         "requestBody": {
           "content": {
@@ -5054,7 +5054,7 @@
         "deprecated": false,
         "description": "Same as tab-add with the beforeUpdate/afterUpdate hooks.",
         "tags": [
-          "EruptTabController"
+          "Tab rows"
         ],
         "requestBody": {
           "content": {
@@ -5138,7 +5138,7 @@
         "deprecated": false,
         "description": "Runs the child erupt's beforeDelete/afterDelete hooks; the row itself is removed when the parent is saved.",
         "tags": [
-          "EruptTabController"
+          "Tab rows"
         ],
         "requestBody": {
           "content": {
