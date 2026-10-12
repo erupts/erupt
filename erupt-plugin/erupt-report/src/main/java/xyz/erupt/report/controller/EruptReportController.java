@@ -131,10 +131,8 @@ public class EruptReportController {
         Bi bi = eruptDao.lambdaQuery(Bi.class).eq(Bi::getCode, code).one();
         this.validateQuery(bi, query);
         biService.verifyBiMenuPermissions(bi, code);
-        if (null != sortField) {
-            sortField += " " + (direction ? "asc" : "desc");
-        }
-        return biService.queryBiData(bi, pageIndex, pageSize, sortField, query, false);
+        String sort = null == sortField ? null : biService.sortColumn(bi, sortField) + (Boolean.FALSE.equals(direction) ? " desc" : " asc");
+        return biService.queryBiData(bi, pageIndex, pageSize, sort, query, false);
     }
 
     @PostMapping("/drill/data/{code}/{drillCode}")
