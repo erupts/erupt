@@ -31,6 +31,11 @@ public class EruptUpmsProp {
     //default password
     private String defaultPassword = EruptConst.ERUPT;
 
+    //Reverse proxies (IPs or CIDRs, comma separated) whose X-Forwarded-For is trusted for the client
+    //address used by the login lock, captcha counter, IP white list and logs. Any other peer is taken
+    //as the client itself, so a forged header cannot pick the address. Empty trusts no proxy
+    private String trustedProxies = IpUtil.DEFAULT_TRUSTED_PROXIES;
+
     //IP -> region lookup (login / operation logs)
     private Ip2Region ip2region = new Ip2Region();
 
@@ -39,7 +44,7 @@ public class EruptUpmsProp {
 
     @PostConstruct
     public void init() {
-        IpUtil.init(ip2region);
+        IpUtil.init(this);
     }
 
     @Getter

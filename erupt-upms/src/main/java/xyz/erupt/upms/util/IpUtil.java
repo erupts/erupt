@@ -10,7 +10,6 @@ import xyz.erupt.upms.prop.EruptUpmsProp;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.util.regex.Pattern;
 
 /**
@@ -20,43 +19,38 @@ import java.util.regex.Pattern;
 @Slf4j
 public class IpUtil {
 
+    // Proxies whose forwarded headers are believed; see EruptUpmsProp.trustedProxies
+    public static final String DEFAULT_TRUSTED_PROXIES = "127.0.0.0/8,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16";
+
+    private static volatile String trustedProxies = DEFAULT_TRUSTED_PROXIES;
+
+    private static final String[] FORWARDED_HEADERS = {"x-forwarded-for", "Proxy-Client-IP", "WL-Proxy-Client-IP"};
+
+    /**
+     * The client address a security decision (login lock, white list, audit) may rely on.
+     * Forwarded headers are written by whoever connects to us, so they count only when the
+     * peer is a trusted proxy; the list is then read from the right, past every trusted hop,
+     * to the first address a proxy did not vouch for. A direct peer is its own answer.
+     */
     public static String getIpAddr(HttpServletRequest request) {
-        try {
-            String ip = request.getHeader("x-forwarded-for");
-            if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getHeader("Proxy-Client-IP");
+        String remote = request.getRemoteAddr();
+        if (!trusted(remote)) return remote;
+        for (String header : FORWARDED_HEADERS) {
+            String value = request.getHeader(header);
+            if (null == value || value.isEmpty() || "unknown".equalsIgnoreCase(value)) continue;
+            String[] hops = value.split(",");
+            for (int i = hops.length - 1; i >= 0; i--) {
+                String hop = hops[i].trim();
+                if (!hop.isEmpty() && !"unknown".equalsIgnoreCase(hop) && !trusted(hop)) return hop;
             }
-            if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getHeader("WL-Proxy-Client-IP");
-            }
-            if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getRemoteAddr();
-                if ("127.0.0.1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip)) {
-                    // Obtain the IP address of this machine from the network card.
-                    InetAddress inet = InetAddress.getLocalHost();
-                    ip = inet.getHostAddress();
-                    // For the case where multiple proxies are used, the first IP represents the client's actual IP, and the multiple IPs are separated by ','.
-                    // "***.***.***.***".length()
-                    if (ip != null && ip.length() > 15) {
-                        // = 15
-                        if (ip.indexOf(',') > 0) {
-                            ip = ip.substring(0, ip.indexOf(','));
-                        }
-                    }
-                }
-            }
-            // "***.***.***.***".length()
-            if (ip != null && ip.length() > 15) {
-                // = 15
-                if (ip.indexOf(',') > 0) {
-                    ip = ip.substring(0, ip.indexOf(','));
-                }
-            }
-            return ip;
-        } catch (Exception e) {
-            log.warn("get ip error {}", e.getMessage());
-            return null;
         }
+        return remote;
+    }
+
+    private static boolean trusted(String ip) {
+        String list = trustedProxies;
+        if (null == list || list.isBlank()) return false;
+        return IpWhiteListMatcher.isAllowed(ip, list.replace(',', '\n'));
     }
 
     // ---- ip2region (xdb v2 format) ----
@@ -71,6 +65,11 @@ public class IpUtil {
     // Set when neither the configured file nor the bundled copy is usable;
     // avoids re-parsing a broken database on every lookup
     private static volatile boolean broken;
+
+    public static void init(EruptUpmsProp upmsProp) {
+        init(upmsProp.getIp2region());
+        trustedProxies = upmsProp.getTrustedProxies();
+    }
 
     public static void init(EruptUpmsProp.Ip2Region ip2Region) {
         prop = ip2Region;
