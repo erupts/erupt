@@ -71,7 +71,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         } else if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.PARAM) {
             token = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
             eruptName = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
-            parentEruptName = request.getHeader(EruptReqHeaderConst.URL_ERUPT_PARENT_PARAM_KEY);
+            parentEruptName = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARENT_PARAM_KEY);
         }
         if (eruptRouter.verifyType().equals(EruptRouter.VerifyType.ERUPT)) {
             MetaContext.register(new MetaErupt(eruptName, eruptName));

@@ -13,6 +13,11 @@ public class EruptMutualConst {
 
     public static final String TOKEN = "token";
 
+    // The erupt whose menu authorizes a request for one of its nested erupts (sub-form, tab, reference)
+    public static final String ERUPT_PARENT = "eruptParent";
+
+    public static final String URL_PARAM_ERUPT_PARENT = "_" + ERUPT_PARENT;
+
     public static final String LANG = "Lang";
 
     // URL form of the language, the way _token mirrors the token header: the admin hands it to

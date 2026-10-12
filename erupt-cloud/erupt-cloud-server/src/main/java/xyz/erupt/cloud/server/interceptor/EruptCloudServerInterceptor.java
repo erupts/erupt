@@ -175,6 +175,12 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             int point = erupt.lastIndexOf(EruptConst.DOT);
             String nodeName = erupt.substring(0, point);
             String eruptName = erupt.substring(point + 1);
+            // A parent erupt only vouches for a child on the same node; the node itself checks the
+            // nesting relation, since only it holds the annotation metadata
+            if (!erupt.equals(authErupt) && !authErupt.startsWith(nodeName + EruptConst.DOT)) {
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                return false;
+            }
             MetaNode metaNode = nodeManager.getNode(nodeName);
             NodeContext.set(metaNode);
             if (null == metaNode) {

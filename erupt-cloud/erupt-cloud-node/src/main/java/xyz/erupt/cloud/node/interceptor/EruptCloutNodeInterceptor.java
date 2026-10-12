@@ -2,6 +2,7 @@ package xyz.erupt.cloud.node.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptMutualConst;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.service.EruptCoreService;
@@ -33,6 +35,17 @@ public class EruptCloutNodeInterceptor implements WebMvcConfigurer, AsyncHandler
             if (null == EruptCoreService.getErupt(erupt)) {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
                 return false;
+            }
+            // The server authorized this call by the parent's menu and checked the parent sits on this
+            // node; the nesting relation itself is only known here. Parent arrives as "nodeName.Erupt".
+            String parent = StringUtils.defaultIfBlank(request.getHeader(EruptMutualConst.ERUPT_PARENT),
+                    request.getParameter(EruptMutualConst.URL_PARAM_ERUPT_PARENT));
+            if (StringUtils.isNotBlank(parent)) {
+                String parentName = parent.substring(parent.lastIndexOf(EruptConst.DOT) + 1);
+                if (!erupt.equals(parentName) && !EruptCoreService.isEruptNested(parentName, erupt)) {
+                    response.setStatus(HttpStatus.NOT_FOUND.value());
+                    return false;
+                }
             }
         }
         return true;

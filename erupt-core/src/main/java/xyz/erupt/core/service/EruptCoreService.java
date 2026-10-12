@@ -92,6 +92,12 @@ public class EruptCoreService implements ApplicationRunner {
      * and rowOperation forms. The security layer uses this to authorize sub-erupt requests
      * against the menu-bound ancestor erupt, so nesting depth is not limited to one level.
      */
+    // Name form for callers that only need the verdict; an unknown parent nests nothing
+    public static boolean isEruptNested(String parentName, String eruptName) {
+        EruptModel parentModel = getErupt(parentName);
+        return null != parentModel && isEruptNested(parentModel, eruptName);
+    }
+
     public static boolean isEruptNested(EruptModel parentModel, String eruptName) {
         Set<String> visited = new HashSet<>();
         Deque<EruptModel> queue = new ArrayDeque<>();
