@@ -52,6 +52,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Read side of erupt data: table, tree, detail, reference pickers and row operations.
+ *
  * @author YuePeng
  * date 9/28/18.
  */
@@ -69,6 +71,14 @@ public class EruptDataController {
 
     private final Gson gson = GsonFactory.getGson();
 
+    /**
+     * Query a page of table rows.
+     *
+     * @apiNote Conditions, sort and paging come from the body; DataProxy.beforeFetch/afterFetch and @Filter run on the server. pageSize is capped at 50000.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param tableQuery Paging, sort, search conditions and the optional @Vis code
+     * @return one page of rows as maps keyed by field name
+     */
     @PostMapping({"/table/{erupt}"})
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public Page getEruptData(@PathVariable("erupt") String eruptName, @RequestBody TableQuery tableQuery) {
@@ -78,13 +88,26 @@ public class EruptDataController {
         return eruptService.getEruptData(EruptCoreService.getErupt(eruptName), tableQuery, null);
     }
 
-    // totals of the @View(statistic) columns over everything the same query matches, not just the page
+    /**
+     * Totals of the @View(statistic) columns.
+     *
+     * @apiNote Aggregates over every row the same query matches, not only the current page.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param tableQuery Same query as the table request
+     * @return column name to aggregated value
+     */
     @PostMapping("/aggregate/{erupt}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public Map<String, Object> getEruptAggregate(@PathVariable("erupt") String eruptName, @RequestBody TableQuery tableQuery) {
         return eruptService.getEruptAggregate(EruptCoreService.getErupt(eruptName), tableQuery);
     }
 
+    /**
+     * Whole tree of a @Tree erupt.
+     *
+     * @param eruptName Simple class name of the @Erupt model
+     * @return nested tree nodes
+     */
     @GetMapping("/tree/{erupt}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public Collection<TreeModel> getEruptTreeData(@PathVariable("erupt") String eruptName) {
@@ -94,7 +117,13 @@ public class EruptDataController {
         return preEruptDataService.geneTree(eruptModel, tree.id(), tree.label(), tree.pid(), tree.rootPid(), EruptQuery.builder().build());
     }
 
-    // Get initial data
+    /**
+     * Initial values for a new record form.
+     *
+     * @apiNote A fresh instance after DataProxy.addBehavior, so defaults set there reach the form.
+     * @param eruptName Simple class name of the @Erupt model
+     * @return field name to initial value
+     */
     @GetMapping("/init-value/{erupt}")
     @SneakyThrows
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
@@ -105,6 +134,14 @@ public class EruptDataController {
         return EruptUtil.generateEruptDataMap(eruptModel, obj, false);
     }
 
+    /**
+     * One record by primary key.
+     *
+     * @apiNote Requires edit or view-details permission. On an erupt-cloud server a remote erupt is forwarded to the node that owns it.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param id Primary key
+     * @return record as a map keyed by field name
+     */
     @GetMapping("/{erupt}/{id}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public Map<String, Object> getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
@@ -122,12 +159,13 @@ public class EruptDataController {
     public static final String OPERATOR_PATH_STR = "/operator";
 
     /**
-     * Custom button form initialization values
+     * Initial form values of a row operation.
      *
-     * @param eruptName eruptName
-     * @param code      btn code
-     * @param ids       link ids
-     * @return form value
+     * @apiNote For a @RowOperation that opens an erupt form: builds the form object, runs addBehavior and, when the OperationHandler overrides eruptFormValue, lets it prefill from the selected rows.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param code @RowOperation.code
+     * @param ids Primary keys of the selected rows
+     * @return form object, or null when no handler is configured
      */
     @PostMapping("/{erupt}" + OPERATOR_PATH_STR + "/{code}/form-value")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
@@ -150,6 +188,15 @@ public class EruptDataController {
         return eruptForm;
     }
 
+    /**
+     * Execute a row operation.
+     *
+     * @apiNote Body is {"ids": [...], "param": {...}}: ids are the selected rows, param the operation form values (validated against the operation erupt). The handler may return a script for the frontend to evaluate; it comes back in data.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param code @RowOperation.code
+     * @param body ids and param
+     * @return result; data holds the handler script when there is one
+     */
     @PostMapping("/{erupt}" + OPERATOR_PATH_STR + "/{code}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @EruptRecordOperate(value = "", dynamicConfig = EruptRowOperationNaming.class)
@@ -190,6 +237,13 @@ public class EruptDataController {
         return R.success(I18nTranslate.$translate("erupt.exec_success"), null);
     }
 
+    /**
+     * Tree options of a TAB_TREE field.
+     *
+     * @param eruptName Simple class name of the @Erupt model
+     * @param tabFieldName Field name with edit type TAB_TREE
+     * @return nested tree nodes
+     */
     @GetMapping("/tab/tree/{erupt}/{tabFieldName}")
     @EruptRouter(authIndex = 3, verifyType = EruptRouter.VerifyType.ERUPT)
     public Collection<TreeModel> findTabTree(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
@@ -204,6 +258,13 @@ public class EruptDataController {
         return preEruptDataService.geneTree(tabEruptModel, tree.id(), tree.label(), tree.pid(), tree.rootPid(), eruptQuery);
     }
 
+    /**
+     * Options of a CHECKBOX or TRANSFER field.
+     *
+     * @param eruptName Simple class name of the @Erupt model
+     * @param fieldName Field name with edit type CHECKBOX or TRANSFER
+     * @return id, label and remark of every option
+     */
     @GetMapping("/{erupt}/checkbox/{fieldName}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public Collection<CheckboxModel<Object, Object, Object>> findCheckbox(@PathVariable("erupt") String eruptName, @PathVariable("fieldName") String fieldName) {
@@ -239,7 +300,17 @@ public class EruptDataController {
         return checkboxModels;
     }
 
-    // REFERENCE API
+    /**
+     * Pick list of a REFERENCE_TABLE field.
+     *
+     * @apiNote Pages through the referenced erupt with the same query shape as the table request. When @ReferenceTableType.dependField is set the current value of that field must be sent as dependValue.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param fieldName Field name with edit type REFERENCE_TABLE
+     * @param dependValue Value of the depend field, required when one is configured
+     * @param tabRef true when called from a TAB_TABLE_REFER field
+     * @param tableQuery Paging, sort and search conditions
+     * @return one page of referenced rows
+     */
     @PostMapping("/{erupt}/reference-table/{fieldName}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public Page getReferenceTable(@PathVariable("erupt") String eruptName,
@@ -274,6 +345,13 @@ public class EruptDataController {
                 serverConditions, conditions.toArray(new String[0]));
     }
 
+    /**
+     * Tree of the @LinkTree field.
+     *
+     * @apiNote The left-hand tree shown next to a table; selecting a node filters the table.
+     * @param erupt Simple class name of the @Erupt model
+     * @return nested tree nodes
+     */
     @SneakyThrows
     @GetMapping("/depend-tree/{erupt}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
@@ -287,6 +365,14 @@ public class EruptDataController {
         return this.getReferenceTree(eruptModel.getEruptName(), field, null);
     }
 
+    /**
+     * Pick tree of a REFERENCE_TREE field.
+     *
+     * @param erupt Simple class name of the @Erupt model
+     * @param fieldName Field name with edit type REFERENCE_TREE
+     * @param dependValue Value of the depend field, required when one is configured
+     * @return nested tree nodes
+     */
     @GetMapping("/{erupt}/reference-tree/{fieldName}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public Collection<TreeModel> getReferenceTree(@PathVariable("erupt") String erupt,
@@ -313,7 +399,14 @@ public class EruptDataController {
                 EruptQuery.builder().sort(Sort.toSortList(edit.orderBy())).conditionStrings(conditionStrings).conditions(conditions).build());
     }
 
-    // Custom rows
+    /**
+     * Extra rows appended to the table.
+     *
+     * @apiNote Rows produced by DataProxy.extraRow for the current search conditions, such as a summary line.
+     * @param erupt Simple class name of the @Erupt model
+     * @param tableQuery Current search conditions
+     * @return extra rows
+     */
     @PostMapping("/extra-row/{erupt}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<Row> extraRow(@PathVariable("erupt") String erupt, @RequestBody TableQuery tableQuery) {
@@ -323,6 +416,15 @@ public class EruptDataController {
         return rows;
     }
 
+    /**
+     * Server side onchange of a field.
+     *
+     * @apiNote Runs the @Edit.onchange handler with the whole form and returns the values and edit expressions it wants applied.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param field Field whose value changed
+     * @param data Current form values keyed by field name
+     * @return values to populate and edit expressions to apply
+     */
     @PostMapping("/onchange/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public R<OnChangeVo> onchange(@PathVariable("erupt") String eruptName, @PathVariable("field") String field, @RequestBody JsonObject data) {

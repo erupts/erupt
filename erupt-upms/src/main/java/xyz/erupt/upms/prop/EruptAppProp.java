@@ -18,25 +18,25 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "erupt-app")
 public class EruptAppProp {
 
-    //Whether to display a watermark
+    /** Whether to display a watermark */
     private boolean waterMark = true;
 
-    // Whether the watermark displays the date
+    /** Whether the watermark displays the date */
     private boolean waterMarkDate = false;
 
-    // Customize the watermark content
+    /** Custom watermark content */
     private String waterMarkContent = null;
 
-    //Number of login failures before showing a verification code; 0 means always require a verification code
+    /** Number of login failures before showing a captcha; 0 means always require one */
     private Integer verifyCodeCount = 2;
 
-    //Whether to encrypt the login password during transmission
+    /** Whether the login password is encoded during transmission */
     private Boolean pwdTransferEncrypt = true;
 
-    //Custom login page path, supports HTTP URL
+    /** Custom login page path, supports an HTTP URL */
     private String loginPagePath;
 
-    //Multi-language configuration
+    /** Languages offered by the UI, as locale tags */
     private String[] locales = {
             "en-US",      // 🇬🇧 English
             "fr-FR",      // 🇫🇷 En français
@@ -52,24 +52,25 @@ public class EruptAppProp {
             "ar-SA",      // 🇸🇦 العربية
     };
 
-    //Custom configuration
+    /** Custom configuration handed to the frontend */
     private Map<String, Object> properties = new HashMap<>();
 
-    //Multi-factor authentication (TOTP)
+    /** Multi-factor authentication (TOTP) */
     private Mfa mfa = new Mfa();
 
-    //Toggle for the reset password feature
+    /** Toggle for the reset password feature */
     private Boolean resetPwd = true;
 
-    //Whether to prompt users who haven't changed the default password after login
+    /** Whether to prompt users who still use the default password */
     private Boolean resetPwdPrompt = false;
 
+    /** Changes on every server restart */
     private Integer hash;
 
+    /** Erupt version */
     private String version;
 
-    // Domain that hosts uploaded attachments, taken from the registered AttachmentProxy so the
-    // frontend does not need its own copy (eruptSiteConfig.fileDomain). Null when attachments are served by erupt itself
+    /** Domain that hosts uploaded attachments, from the registered AttachmentProxy; null when erupt serves them itself */
     private String fileDomain;
 
     public void setLocales(String[] locales) {
@@ -89,15 +90,13 @@ public class EruptAppProp {
     @Setter
     public static class Mfa {
 
-        //Whether users may protect their account with a TOTP authenticator.
-        //On by default: it only opens the feature, it does not force anyone to enrol,
-        //so an upgrade never locks an existing user out
+        /** Whether users may protect their account with a TOTP authenticator. On by default: it only opens the feature, it does not force anyone to enrol, so an upgrade never locks an existing user out */
         private boolean enable = true;
 
-        //Name shown by the authenticator app; falls back to the application name when blank
+        /** Name shown by the authenticator app; falls back to the application name when blank */
         private String issuer = "";
 
-        //How many 30 second steps either side of now are accepted, to absorb clock drift
+        /** How many 30 second steps either side of now are accepted, to absorb clock drift */
         private int window = 1;
 
     }

@@ -10,18 +10,25 @@ import xyz.erupt.core.module.MetaMenu;
 @NoArgsConstructor
 public class EruptMenuVo {
 
+    /** Menu id */
     private Long id;
 
+    /** Menu code */
     private String code;
 
+    /** Menu text */
     private String name;
 
+    /** Menu type: erupt table, tpl page, link and so on */
     private String type;
 
+    /** Menu value, meaning depends on type, such as the erupt class name */
     private String value;
 
+    /** Icon name */
     private String icon;
 
+    /** Parent menu id */
     private Long pid;
 
     public EruptMenuVo(Long id, String code, String name, String type, String value, String icon, Long pid) {

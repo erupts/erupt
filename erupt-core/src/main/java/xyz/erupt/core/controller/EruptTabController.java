@@ -20,6 +20,8 @@ import xyz.erupt.core.view.R;
 import java.util.function.Consumer;
 
 /**
+ * Row editing inside TAB_TABLE_ADD fields: validation and DataProxy hooks of the child erupt without touching the database.
+ *
  * @author YuePeng
  * date 2022/5/2 21:50
  */
@@ -31,7 +33,15 @@ public class EruptTabController {
 
     private final Gson gson = GsonFactory.getGson();
 
-    // TAB component add behavior
+    /**
+     * Validate a new child row.
+     *
+     * @apiNote Nothing is persisted here: the child rows are saved together with the parent record. This call validates the row against the child erupt and runs its DataProxy.beforeAdd/afterAdd, returning the possibly adjusted row.
+     * @param erupt Simple class name of the parent @Erupt model
+     * @param tabName Field name with edit type TAB_TABLE_ADD
+     * @param data Child row values keyed by field name
+     * @return validation result; data holds the row after the hooks
+     */
     @PostMapping({"/tab-add/{erupt}/{tabName}"})
     @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public R<?> addTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
@@ -45,7 +55,15 @@ public class EruptTabController {
         return r;
     }
 
-    // TAB component update behavior
+    /**
+     * Validate an edited child row.
+     *
+     * @apiNote Same as tab-add with the beforeUpdate/afterUpdate hooks.
+     * @param erupt Simple class name of the parent @Erupt model
+     * @param tabName Field name with edit type TAB_TABLE_ADD
+     * @param data Child row values keyed by field name
+     * @return validation result; data holds the row after the hooks
+     */
     @PostMapping({"/tab-update/{erupt}/{tabName}"})
     @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public R<?> updateTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
@@ -59,7 +77,15 @@ public class EruptTabController {
         return r;
     }
 
-    // TAB component delete behavior
+    /**
+     * Notify the removal of a child row.
+     *
+     * @apiNote Runs the child erupt's beforeDelete/afterDelete hooks; the row itself is removed when the parent is saved.
+     * @param erupt Simple class name of the parent @Erupt model
+     * @param tabName Field name with edit type TAB_TABLE_ADD
+     * @param data Child row values keyed by field name
+     * @return ok
+     */
     @PostMapping({"/tab-delete/{erupt}/{tabName}"})
     @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public R<Void> deleteTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {

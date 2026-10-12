@@ -51,8 +51,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Import and export in any registered {@link TableCodec} format. The path keeps its historical
- * "excel" segment and Excel stays the default, so a client that sends no format sees no change.
+ * Import and export in any registered TableCodec format.
+ *
+ * The path keeps its historical "excel" segment and Excel stays the default, so a client that
+ * sends no format sees no change.
  *
  * @author YuePeng
  * date 10/15/18.
@@ -77,13 +79,24 @@ public class EruptExcelController {
 
     private final EruptModifyController eruptModifyController;
 
-    // the export formats a client may offer
+    /**
+     * Export formats a client may offer.
+     *
+     * @return format code and display name of every registered codec
+     */
     @GetMapping("/formats")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.LOGIN)
     public List<Map<String, Object>> formats() {
         return codecs.list().stream().map(it -> Map.<String, Object>of("format", it.format(), "name", it.name())).toList();
     }
 
+    /**
+     * Download the import template.
+     *
+     * @apiNote Always Excel: it carries the validations and hints a text format cannot. Needs import permission.
+     * @param eruptName Simple class name of the @Erupt model
+     * @download
+     */
     @GetMapping(value = "/template/{erupt}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     // The template is always Excel: it carries the validations and hints a text format cannot
@@ -97,6 +110,16 @@ public class EruptExcelController {
                 ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name() + "_template." + codec.format()));
     }
 
+    /**
+     * Export rows.
+     *
+     * @apiNote Exports everything the query matches, or only the given ids. The format query parameter selects a codec from /formats and defaults to Excel. Needs export permission.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param tableQuery Search conditions and sort
+     * @param ids Primary keys to export instead of the whole query
+     * @param format Codec format, default xlsx
+     * @download
+     */
     @PostMapping("/export/{erupt}")
     @EruptRecordOperate(value = "Export", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
@@ -122,6 +145,14 @@ public class EruptExcelController {
         codec.write(excelService.sheet(eruptModel, page, tableQuery.getCondition()), ExcelUtil.downLoadFile(request, response, fileName));
     }
 
+    /**
+     * Import rows from an Excel file.
+     *
+     * @apiNote Multipart form field "file", in the layout of the template. Every row is validated and inserted through the normal add pipeline inside one transaction; the first failing row aborts the whole import. Needs import permission.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param file Excel file
+     * @return ok when every row was inserted
+     */
     @PostMapping("/import/{erupt}")
     @EruptRecordOperate(value = "Import", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)

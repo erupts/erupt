@@ -10,11 +10,13 @@ import java.util.List;
 @Setter
 public class TableQuery extends Page {
 
+    /** Selected @LinkTree node ids that filter the table */
     private List<Object> linkTreeVal;
 
+    /** Search conditions */
     private List<Condition> condition;
 
-    // ref @Vis.code
+    /** Code of the @Vis view being queried, empty for the plain table */
     private String vis;
 
 }

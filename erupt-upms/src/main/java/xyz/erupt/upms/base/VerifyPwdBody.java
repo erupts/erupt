@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 public class VerifyPwdBody {
 
+    /** Password, encoded like the login password */
     private String pwd;
 
 }

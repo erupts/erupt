@@ -11,13 +11,13 @@ import lombok.Setter;
 @Setter
 public class EruptMfaStatusVo {
 
-    //whether the feature is switched on for this deployment
+    /** Whether the feature is switched on for this deployment */
     private boolean enable;
 
-    //whether the current user has an authenticator bound
+    /** Whether the current user has an authenticator bound */
     private boolean bound;
 
-    //how many single use recovery codes are still unspent
+    /** How many single use recovery codes are still unspent */
     private int recoveryCodeCount;
 
 }

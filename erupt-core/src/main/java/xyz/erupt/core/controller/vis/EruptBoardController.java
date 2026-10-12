@@ -24,6 +24,8 @@ import xyz.erupt.core.view.R;
 import java.lang.reflect.Field;
 
 /**
+ * Writes made from the board (kanban) view.
+ *
  * @author YuePeng
  * date 2025/11/15 00:25
  */
@@ -33,6 +35,14 @@ import java.lang.reflect.Field;
 @RequiredArgsConstructor
 public class EruptBoardController {
 
+    /**
+     * Move a card to another column or swimlane.
+     *
+     * @apiNote Sets @BoardView.groupField (and swimlaneField when swimlaneChanged) on the record and saves it through the DataProxy update hooks.
+     * @param erupt Simple class name of the @Erupt model
+     * @param command Card and target column/swimlane
+     * @return ok when saved
+     */
     @PostMapping("/{erupt}/update_group")
     @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional
@@ -79,15 +89,19 @@ public class EruptBoardController {
     @Setter
     public static class VisBoardGroupCommand {
 
+        /** Code of the @Vis board view */
         private String visCode;
 
+        /** Primary key of the card */
         private Object pk;
 
+        /** New value of @BoardView.groupField */
         private Object groupValue;
 
-        // only meaningful when swimlaneChanged is set: null clears the lane
+        /** New value of @BoardView.swimlaneField */
         private Object swimlaneValue;
 
+        /** Whether the swimlane changed too */
         private boolean swimlaneChanged;
 
     }

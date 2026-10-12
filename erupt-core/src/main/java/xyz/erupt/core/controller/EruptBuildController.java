@@ -20,7 +20,7 @@ import xyz.erupt.core.view.EruptModel;
 import java.util.*;
 
 /**
- * Erupt page structure build information
+ * Page structure of an @Erupt model: fields, edit/view types, operations and the caller's permissions.
  *
  * @author YuePeng
  * date 2018-09-28.
@@ -29,6 +29,13 @@ import java.util.*;
 @RequestMapping(EruptRestPath.ERUPT_BUILD)
 public class EruptBuildController {
 
+    /**
+     * Build model of an erupt.
+     *
+     * @apiNote Everything the frontend needs to render the table, search bar, form and buttons of one @Erupt class: field metadata, default search conditions, the current user's PowerObject, plus the build models of nested erupts (tab, multi-form, combine) and of row operations that open another erupt as a form.
+     * @param eruptName Simple class name of the @Erupt model
+     * @return build model
+     */
     @GetMapping("/{erupt}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @SneakyThrows
@@ -71,6 +78,14 @@ public class EruptBuildController {
         return eruptBuildModel;
     }
 
+    /**
+     * Build model of the erupt referenced by a field.
+     *
+     * @apiNote Resolves the target class of a reference, tab or link-tree field and returns its build model, so a nested erupt can be rendered without knowing its class name up front.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param field Field name on the erupt; its declared type is the erupt to build
+     * @return build model of the referenced erupt
+     */
     @GetMapping("/{erupt}/{field}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptBuildModel getEruptBuildByField(@PathVariable("erupt") String eruptName, @PathVariable("field") String field) {

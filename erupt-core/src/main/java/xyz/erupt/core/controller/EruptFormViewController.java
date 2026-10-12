@@ -22,17 +22,13 @@ import xyz.erupt.core.view.R;
 import java.util.Map;
 
 /**
- * Form-view dedicated endpoints.
- * <p>
- * The form view is intentionally <b>data-source-agnostic</b>: the framework
- * only renders the form schema and routes the two lifecycle moments
- * ({@code formViewBehavior} and {@code formSave}) to {@link xyz.erupt.annotation.fun.DataProxy}.
- * Loading the data and persisting it are 100% the user's responsibility — it
- * can be a database, a file, an external API, anything.
- * <p>
- * Field-level validation and the existing {@code validate(model)} DataProxy
- * hook are reused (both fire inside {@link EruptUtil#validateEruptValue}),
- * because they are data-source-agnostic by nature.
+ * Form view: a standalone form whose loading and saving belong entirely to the user.
+ *
+ * The framework only renders the form schema and routes the two lifecycle moments,
+ * DataProxy.formViewBehavior and DataProxy.formSave, to the DataProxy. Loading the data and
+ * persisting it are the user's responsibility: a database, a file, an external API, anything.
+ * Field-level validation and the DataProxy.validate hook are reused because they are
+ * data-source-agnostic by nature.
  *
  * @author YuePeng
  */
@@ -44,13 +40,10 @@ public class EruptFormViewController {
 
     /**
      * Open the form view.
-     * <p>
-     * Always constructs a fresh model instance. If {@code id} is supplied it is
-     * coerced into the primary-key field of the model so the user can branch
-     * inside {@code formViewBehavior} (e.g. {@code if (model.id == null) ... else ...})
-     * — but the framework itself performs no database load. The user is
-     * expected to populate the model from their own data source inside
-     * {@code formViewBehavior}.
+     *
+     * @apiNote Always constructs a fresh model instance and runs DataProxy.formViewBehavior on it; the framework performs no database load, the user populates the model from their own data source inside that hook.
+     * @param eruptName Simple class name of the @Erupt model
+     * @return field name to value
      */
     @GetMapping("/{erupt}")
     @SneakyThrows
@@ -65,13 +58,11 @@ public class EruptFormViewController {
 
     /**
      * Save the form view.
-     * <p>
-     * Runs field-level validation (which also fires {@code DataProxy.validate})
-     * and then delegates the entire persistence action to {@code formSave}.
-     * The framework intentionally does not invoke any database CRUD logic so
-     * that file-backed, API-backed, or otherwise non-DB form views are
-     * first-class. The user throws {@link EruptException} from
-     * {@code formSave} to abort the save with a user-visible message.
+     *
+     * @apiNote Runs field-level validation (which also fires DataProxy.validate) and then delegates the entire persistence action to DataProxy.formSave. No database CRUD is invoked by the framework, so file-backed or API-backed form views are first-class. Throwing EruptException from formSave aborts the save with a user-visible message.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param data Form values keyed by field name
+     * @return ok when saved
      */
     @PostMapping("/{erupt}")
     @EruptRecordOperate(value = "FORM-VIEW", dynamicConfig = EruptRecordNaming.class)

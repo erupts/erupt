@@ -8,6 +8,8 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.util.EruptInformation;
 
 /**
+ * Framework level endpoints that need no session.
+ *
  * @author YuePeng
  * date 2020-04-22
  */
@@ -16,6 +18,11 @@ import xyz.erupt.core.util.EruptInformation;
 @RequiredArgsConstructor
 public class EruptApi {
 
+    /**
+     * Erupt framework version.
+     *
+     * @return version string such as 2.3.0
+     */
     @GetMapping("/version")
     public String version() {
         return EruptInformation.getEruptVersion();

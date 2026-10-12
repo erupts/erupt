@@ -24,8 +24,9 @@ import java.util.List;
 
 /**
  * Self service endpoints for binding and removing a TOTP authenticator.
- * Every route here requires an authenticated session; the login side of MFA
- * lives in {@link EruptUserController}.
+ *
+ * Every route here requires an authenticated session; the login side of MFA lives in
+ * EruptUserController (login and login-mfa).
  *
  * @author YuePeng
  * date 2026-09-18
@@ -43,6 +44,11 @@ public class EruptMfaController {
     @Resource
     private EruptAppProp eruptAppProp;
 
+    /**
+     * MFA state of the current user.
+     *
+     * @return whether MFA is enabled on the server, whether the user has bound an authenticator and how many recovery codes remain
+     */
     @GetMapping("/status")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptMfaStatusVo status() {
@@ -56,6 +62,12 @@ public class EruptMfaController {
         return vo;
     }
 
+    /**
+     * Start binding an authenticator.
+     *
+     * @apiNote Returns the TOTP secret and otpauth URI to show as a QR code. Nothing is bound until enroll-confirm succeeds.
+     * @return secret and provisioning URI
+     */
     @PostMapping("/enroll")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public R<EruptMfaEnrollVo> enroll() {
@@ -67,6 +79,12 @@ public class EruptMfaController {
         return R.ok(eruptMfaService.startEnroll(eruptUser));
     }
 
+    /**
+     * Finish binding with a code from the authenticator.
+     *
+     * @param body code
+     * @return recovery codes, shown once
+     */
     @PostMapping("/enroll-confirm")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public R<List<String>> enrollConfirm(@RequestBody MfaBody body) {
@@ -74,6 +92,13 @@ public class EruptMfaController {
         return R.ok(eruptMfaService.confirmEnroll(this.currentUser(), body.getCode()));
     }
 
+    /**
+     * Regenerate recovery codes.
+     *
+     * @apiNote Needs a live authenticator code; the previous recovery codes stop working.
+     * @param body code
+     * @return new recovery codes
+     */
     @PostMapping("/recovery-codes")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public R<List<String>> recoveryCodes(@RequestBody MfaBody body) {
@@ -86,8 +111,11 @@ public class EruptMfaController {
     }
 
     /**
-     * Removing a factor is as sensitive as adding one, so it costs both the password
-     * and a live code.
+     * Remove the authenticator.
+     *
+     * @apiNote Removing a factor is as sensitive as adding one, so it costs both the password and a live code.
+     * @param body pwd and code
+     * @return ok when removed
      */
     @PostMapping("/unbind")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)

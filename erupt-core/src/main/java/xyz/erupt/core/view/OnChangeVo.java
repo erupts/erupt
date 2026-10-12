@@ -13,8 +13,10 @@ import java.util.Map;
 @Setter
 public class OnChangeVo {
 
+    /** Field values to write into the form */
     private Map<String, Object> formData;
 
+    /** Field name to edit expression to apply */
     private Map<String, String> editExpr;
 
 }

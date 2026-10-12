@@ -1,0 +1,90 @@
+{
+  "projectName": "Erupt",
+  "serverUrl": "http://localhost:8080",
+  "outPath": "target/smart-doc",
+  "allInOne": true,
+  "coverOld": true,
+  "randomMock": false,
+  "showAuthor": false,
+  "inlineEnum": true,
+  "packageFilters": "xyz.erupt.core.controller.*,xyz.erupt.upms.controller.*,xyz.erupt.tpl.controller.*,xyz.erupt.excel.controller.*",
+  "sourceCodePaths": [
+    {
+      "path": "erupt-annotation/src/main/java"
+    },
+    {
+      "path": "erupt-core/src/main/java"
+    },
+    {
+      "path": "erupt-upms/src/main/java"
+    },
+    {
+      "path": "erupt-tpl/erupt-tpl/src/main/java"
+    },
+    {
+      "path": "erupt-support/erupt-excel/src/main/java"
+    },
+    {
+      "path": "erupt-data/erupt-data-jpa/src/main/java"
+    }
+  ],
+  "requestHeaders": [
+    {
+      "name": "token",
+      "type": "string",
+      "desc": "Login token from POST /erupt-api/login, or from /erupt-api/open-api/create-token for server-to-server calls.",
+      "required": true,
+      "excludePathPatterns": "/erupt-api/login,/erupt-api/login-mfa,/erupt-api/code-img,/erupt-api/erupt-app,/erupt-api/version,/erupt-api/open-api/**,/erupt-api/file/download-attachment/**,/erupt-api/tpl/**,/erupt-api/file/upload-editor,/erupt-api/file/upload-html-editor/**,/erupt-api/file/upload-ueditor/**"
+    },
+    {
+      "name": "erupt",
+      "type": "string",
+      "desc": "Name of the @Erupt class the request is scoped to. Must match the {erupt} path segment, or name the parent erupt when the path addresses a nested erupt (tab, sub-form, reference).",
+      "required": true,
+      "pathPatterns": "/erupt-api/build/**,/erupt-api/data/**,/erupt-api/comp/**,/erupt-api/file/upload/**,/erupt-api/file/uploads/**,/erupt-api/file/upload-html-editor/**,/erupt-api/file/upload-ueditor/**,/erupt-api/excel/**,/erupt-api/tpl/html-field/**,/erupt-api/tpl/operation-tpl/**,/erupt-api/tpl/vis-tpl/**,/erupt-api/tpl/view-tpl/**"
+    }
+  ],
+  "componentType": "NORMAL",
+  "requestExample": false,
+  "responseExample": false,
+  "apiObjectReplacements": [
+    {
+      "className": "com.google.gson.JsonObject",
+      "replacementClassName": "java.lang.Object"
+    }
+  ],
+  "apiConstants": [
+    {
+      "constantsClassName": "xyz.erupt.core.constant.EruptRestPath"
+    },
+    {
+      "constantsClassName": "xyz.erupt.core.constant.EruptConst"
+    },
+    {
+      "constantsClassName": "xyz.erupt.tpl.controller.EruptTplController"
+    },
+    {
+      "constantsClassName": "xyz.erupt.core.controller.EruptFileController"
+    }
+  ],
+  "requestParams": [
+    {
+      "name": "_token",
+      "type": "string",
+      "desc": "Login token, passed as a query parameter because these endpoints are opened by the browser or an editor that cannot set headers.",
+      "paramIn": "query",
+      "required": true,
+      "pathPatterns": "/erupt-api/tpl/**,/erupt-api/file/upload-editor,/erupt-api/file/upload-html-editor/**,/erupt-api/file/upload-ueditor/**"
+    }
+  ],
+  "serializeResponseTransients": false,
+  "serializeRequestTransients": false,
+  "customResponseFields": [
+    {
+      "name": "eruptUser",
+      "desc": "",
+      "ownerClassName": "xyz.erupt.upms.base.LoginModel",
+      "ignore": true
+    }
+  ]
+}

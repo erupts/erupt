@@ -15,8 +15,10 @@ import java.util.List;
 @Builder
 public class Row {
 
+    /** Cells of the row */
     private List<Column> columns;
 
+    /** CSS class of the row */
     private String className;
 
 }

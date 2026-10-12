@@ -26,6 +26,9 @@ mvn test -pl erupt-test -Dtest=LambdaQueryTest#lambdaQueryTest
 # Run the sample application for local testing
 cd erupt-sample && mvn spring-boot:run
 
+# Regenerate the OpenAPI spec (openapi/erupt.json) from controller Javadoc via smart-doc; commit the result
+mvn -pl erupt-test -Popenapi process-classes
+
 # Publish to Maven Central (GPG signing, Javadoc; wraps `mvn clean deploy -P release`)
 ./scripts/deploy.sh
 

@@ -11,14 +11,16 @@ import lombok.Setter;
 @Setter
 public class LoginBody {
 
+    /** Login account */
     private String account;
 
+    /** Password; base64-encoded three times when erupt-app.pwd-transfer-encrypt is on */
     private String pwd;
 
-    // Verification code
+    /** Captcha text, required once a previous answer returned useVerifyCode */
     private String verifyCode;
 
-    // Verification code identifier
+    /** The mark the captcha image was requested with */
     private String verifyCodeMark;
 
 }

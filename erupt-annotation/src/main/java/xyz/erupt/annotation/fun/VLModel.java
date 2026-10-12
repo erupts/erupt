@@ -12,17 +12,22 @@ import xyz.erupt.annotation.sub_field.sub_edit.VL;
 @Setter
 public class VLModel {
 
+    /** Option value */
     private String value;
 
+    /** Option text */
     private String label;
 
+    /** Secondary text */
     private String desc;
 
+    /** Tag color */
     private String color;
 
+    /** Whether the option cannot be selected */
     private boolean disable;
 
-    // Custom extension value
+    /** Custom extension value */
     private Object extra;
 
     public VLModel(Long value, String label) {

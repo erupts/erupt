@@ -14,8 +14,10 @@ import lombok.Setter;
 @Setter
 public class ProfileBody {
 
+    /** Display name */
     private String name;
 
+    /** Avatar path as returned by profile/avatar */
     private String avatar;
 
 }
