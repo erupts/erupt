@@ -29,7 +29,7 @@ import java.util.Date;
 @Erupt(
         name = "Online Users",
         filter = @Filter(conditionHandler = EruptOnlineFilterHandler.class),
-        power = @Power(add = false, edit = false, viewDetails = false, delete = false, export = true),
+        power = @Power(add = false, edit = false, viewDetails = false, delete = false, export = true, print = false),
         orderBy = "loginTime desc",
         rowOperation = @RowOperation(code = "out", title = "Force Logout", icon = "fa fa-trash-o text-red",
                 operationHandler = LogOutOperationHandler.class)

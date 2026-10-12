@@ -114,7 +114,7 @@ public class EruptDataController {
         if (eruptModel.isRemote()) {
             return EruptRemoteRouterManager.get().findById(eruptName, id);
         }
-        Erupts.powerLegal(eruptModel, powerObject -> powerObject.isEdit() || powerObject.isViewDetails() || powerObject.isPrint());
+        Erupts.powerLegal(eruptModel, powerObject -> powerObject.isEdit() || powerObject.isViewDetails());
         eruptService.verifyIdPermissions(eruptModel, id);
         return preEruptDataService.getEruptData(eruptModel, id, false);
     }
