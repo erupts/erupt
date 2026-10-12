@@ -29,6 +29,7 @@ import java.util.Map;
 /**
  * Data modify
  *
+ * @order 7
  * @apiNote Write side of erupt data: insert, update, delete and ordering.
  *
  * @author YuePeng

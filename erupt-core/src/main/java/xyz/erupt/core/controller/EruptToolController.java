@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * Developer tools
  *
+ * @order 17
  * @apiNote Developer tools exposed to the admin UI.
  */
 @Slf4j

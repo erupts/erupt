@@ -133,8 +133,8 @@
     </build>
 
     <profiles>
-        <!-- OpenAPI spec generated from controller Javadoc by smart-doc, no annotations involved:
-             mvn -pl erupt-test -Popenapi process-classes  ->  openapi/erupt.json -->
+        <!-- OpenAPI spec generated from controller Javadoc by smart-doc, no annotations involved, then finished by
+             OpenApiSpec (security scheme, info, servers): mvn -pl erupt-test -Popenapi process-classes -> openapi/erupt.json -->
         <profile>
             <id>openapi</id>
             <build>
@@ -161,21 +161,23 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.6.3</version>
                         <executions>
-                            <!-- after compile: the smart-doc goal forks the lifecycle up to compile, so an earlier phase would copy before the spec exists -->
+                            <!-- after compile: the smart-doc goal forks the lifecycle up to compile, so an earlier phase would run before the spec exists -->
                             <execution>
                                 <phase>process-classes</phase>
                                 <goals>
-                                    <goal>run</goal>
+                                    <goal>java</goal>
                                 </goals>
                                 <configuration>
-                                    <target>
-                                        <copy file="${project.build.directory}/smart-doc/openapi.json"
-                                              tofile="${project.basedir}/../openapi/erupt.json" overwrite="true"/>
-                                    </target>
+                                    <mainClass>xyz.erupt.test.openapi.OpenApiSpec</mainClass>
+                                    <arguments>
+                                        <argument>${project.build.directory}/smart-doc/openapi.json</argument>
+                                        <argument>${project.basedir}/../openapi/erupt.json</argument>
+                                        <argument>${project.version}</argument>
+                                    </arguments>
                                 </configuration>
                             </execution>
                         </executions>

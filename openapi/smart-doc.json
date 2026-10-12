@@ -1,6 +1,6 @@
 {
   "projectName": "Erupt",
-  "serverUrl": "http://localhost:8080",
+  "serverUrl": "https://demo.erupt.xyz",
   "outPath": "target/smart-doc",
   "allInOne": true,
   "coverOld": true,

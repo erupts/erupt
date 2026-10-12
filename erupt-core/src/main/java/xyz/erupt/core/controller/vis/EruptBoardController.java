@@ -26,6 +26,7 @@ import java.lang.reflect.Field;
 /**
  * Board view
  *
+ * @order 13
  * @apiNote Writes made from the board (kanban) view.
  *
  * @author YuePeng

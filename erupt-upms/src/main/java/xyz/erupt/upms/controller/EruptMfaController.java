@@ -25,6 +25,7 @@ import java.util.List;
 /**
  * Multi-factor auth
  *
+ * @order 2
  * @apiNote Self service endpoints for binding and removing a TOTP authenticator.
  * Every route here requires an authenticated session; the login side of MFA lives in EruptUserController (login and login-mfa).
  *

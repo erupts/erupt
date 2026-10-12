@@ -15,6 +15,7 @@ import xyz.erupt.upms.service.EruptUserService;
 /**
  * Permission and app settings
  *
+ * @order 4
  * @apiNote Permission probe and application settings.
  *
  * @author YuePeng

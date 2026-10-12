@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 /**
  * Tab rows
  *
+ * @order 8
  * @apiNote Row editing inside TAB_TABLE_ADD fields: validation and DataProxy hooks of the child erupt without touching the database.
  *
  * @author YuePeng

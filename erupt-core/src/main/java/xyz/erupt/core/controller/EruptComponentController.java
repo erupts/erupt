@@ -30,6 +30,7 @@ import java.util.List;
 /**
  * Form components
  *
+ * @order 10
  * @apiNote Data sources for form widgets: auto-complete, choice, tags, mention, button and code hints.
  *
  * @author YuePeng

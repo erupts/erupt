@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 /**
  * Open API token
  *
+ * @order 3
  * @apiNote Token exchange for server-to-server callers registered as Open API apps.
  *
  * @author YuePeng

@@ -24,6 +24,7 @@ import java.util.Map;
 /**
  * Form view
  *
+ * @order 9
  * @apiNote Form view: a standalone form whose loading and saving belong entirely to the user.
  * The framework only renders the form schema and routes the two lifecycle moments, DataProxy.formViewBehavior and DataProxy.formSave, to the DataProxy. Loading the data and persisting it are the user's responsibility: a database, a file, an external API, anything. Field-level validation and the DataProxy.validate hook are reused because they are data-source-agnostic by nature.
  *

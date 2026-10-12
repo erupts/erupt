@@ -20,8 +20,18 @@ if [ "${SKIP_TESTS:-0}" = "1" ]; then
     FLAGS+=(-DskipTests)
 fi
 
-echo "Deploying to Maven Central... (mvn clean deploy ${FLAGS[*]})"
 cd "$ERUPT_DIR"
+
+# The committed OpenAPI spec must describe the artifacts being published:
+# regenerate it from the controller Javadoc and stop if it drifted from git.
+echo "Regenerating openapi/erupt.json..."
+mvn -q -pl erupt-test -Popenapi process-classes
+if ! git diff --quiet -- openapi/erupt.json; then
+    echo "openapi/erupt.json is out of date. Review the diff and commit it, then deploy again." >&2
+    exit 1
+fi
+
+echo "Deploying to Maven Central... (mvn clean deploy ${FLAGS[*]})"
 mvn clean deploy "${FLAGS[@]}"
 
 echo "Deployments: https://central.sonatype.com/publishing/deployments"

@@ -22,6 +22,7 @@ import java.util.*;
 /**
  * Page build
  *
+ * @order 5
  * @apiNote Page structure of an @Erupt model: fields, edit/view types, operations and the caller's permissions.
  *
  * @author YuePeng

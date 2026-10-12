@@ -54,6 +54,7 @@ import java.util.stream.Collectors;
 /**
  * Data query
  *
+ * @order 6
  * @apiNote Read side of erupt data: table, tree, detail, reference pickers and row operations.
  *
  * @author YuePeng

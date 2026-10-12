@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 /**
  * Session and user
  *
+ * @order 1
  * @apiNote Session lifecycle and the signed-in user: login, logout, profile, menu.
  *
  * @author YuePeng

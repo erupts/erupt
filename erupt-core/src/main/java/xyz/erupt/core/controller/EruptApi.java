@@ -10,6 +10,7 @@ import xyz.erupt.core.util.EruptInformation;
 /**
  * Framework
  *
+ * @order 18
  * @apiNote Framework level endpoints that need no session.
  *
  * @author YuePeng
