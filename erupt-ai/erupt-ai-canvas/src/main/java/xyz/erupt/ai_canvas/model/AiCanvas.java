@@ -40,10 +40,10 @@ import java.util.Set;
         name = "AI Canvas",
         dataProxy = AiCanvasDataProxy.class,
         rowOperation = {
-                @RowOperation(title = "Designer", icon = "fa fa-paint-brush",
+                @RowOperation(code = "designer", title = "Designer", icon = "fa fa-paint-brush",
                         mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL,
                         tpl = @Tpl(path = "/ai/canvas/design/{code}", openWay = OpenWay.ROUTER)),
-                @RowOperation(title = "Send to Menu", icon = "fa fa-send",
+                @RowOperation(code = "sendToMenu", title = "Send to Menu", icon = "fa fa-send",
                         mode = RowOperation.Mode.SINGLE,
                         eruptClass = MenuPublishModal.class,
                         operationHandler = AiCanvasMenuHandler.class)

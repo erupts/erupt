@@ -38,12 +38,12 @@ import xyz.erupt.upms.handler.ViaMenuValueCtrl;
         name = "Node Config", dataProxy = CloudNodeProcess.class,
         linkTree = @LinkTree(field = "cloudNodeGroup"),
         rowOperation = {
-                @RowOperation(
+                @RowOperation(code = "viewToken",
                         title = "View Token", icon = "fa fa-shield-halved", mode = RowOperation.Mode.SINGLE,
                         show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION),
                         type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/node-info.ftl", embedType = PageEmbedType.MICRO_FRONTEND)
                 ),
-                @RowOperation(
+                @RowOperation(code = "nodeLog",
                         title = "Node Log", mode = RowOperation.Mode.SINGLE,
                         ifExpr = "item.version && item.version !== '-'",
                         show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.ERUPT_CLOUD_NODE_LOG),

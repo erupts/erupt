@@ -30,7 +30,7 @@ import java.util.Set;
 @Table(name = "e_bi", uniqueConstraints = @UniqueConstraint(name = "uk_bi_code", columnNames = "code"))
 @Erupt(name = "Report Config",
         rowOperation = {
-                @RowOperation(
+                @RowOperation(code = "addToMenu",
                         title = "Add to Menu", mode = RowOperation.Mode.SINGLE, icon = "fa fa-send",
                         eruptClass = MenuPublishModal.class, operationHandler = ReportPublishMenu.class
                 )

@@ -48,13 +48,13 @@ import java.util.stream.Collectors;
         orderBy = "EruptUser.id",
         layout = @Layout(tableLeftFixed = 1),
         rowOperation = {
-                @RowOperation(title = "Reset Password",
+                @RowOperation(code = "resetPwd", title = "Reset Password",
                         icon = "fa fa-refresh",
                         mode = RowOperation.Mode.SINGLE,
                         eruptClass = ResetPassword.class,
                         operationHandler = ResetPasswordExec.class),
                 // Recovery path for a user who lost both the authenticator and every recovery code
-                @RowOperation(title = "Reset MFA",
+                @RowOperation(code = "resetMfa", title = "Reset MFA",
                         icon = "fa fa-mobile",
                         mode = RowOperation.Mode.SINGLE,
                         callHint = "upms.mfa.reset_hint",

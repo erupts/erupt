@@ -30,7 +30,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
         linkTree = @LinkTree(field = "kb", dependNode = true),
         drills = @Drill(title = "Knowledge Chunk", icon = "fa fa-puzzle-piece",
                 link = @Link(linkErupt = KnowledgeChunk.class, joinColumn = "document.id")),
-        rowOperation = @RowOperation(title = "Re-embed", icon = "fa fa-refresh",
+        rowOperation = @RowOperation(code = "reEmbed", title = "Re-embed", icon = "fa fa-refresh",
                 mode = RowOperation.Mode.MULTI, operationHandler = KnowledgeDocumentDataProxy.class)
 )
 @Getter

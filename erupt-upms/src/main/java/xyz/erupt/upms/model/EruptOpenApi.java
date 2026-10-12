@@ -30,7 +30,7 @@ import xyz.erupt.upms.model.data_proxy.EruptOpenApiDataProxy;
 @Erupt(
         name = "Open API",
         dataProxy = EruptOpenApiDataProxy.class,
-        rowOperation = @RowOperation(title = "Update Secret Key", icon = "fa fa-refresh", operationHandler = EruptOpenApiDataProxy.class, mode = RowOperation.Mode.SINGLE)
+        rowOperation = @RowOperation(code = "updateSecret", title = "Update Secret Key", icon = "fa fa-refresh", operationHandler = EruptOpenApiDataProxy.class, mode = RowOperation.Mode.SINGLE)
 )
 @EruptI18n
 @Getter

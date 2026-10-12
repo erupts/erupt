@@ -25,7 +25,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  */
 @Erupt(
         name = "Knowledge Base", dataProxy = KnowledgeBaseDataProxy.class,
-        rowOperation = @RowOperation(title = "Retrieval Test", icon = "fa fa-search",
+        rowOperation = @RowOperation(code = "retrievalTest", title = "Retrieval Test", icon = "fa fa-search",
                 tpl = @Tpl(path = "/tpl/rag-retrieval.ftl", height = "85vh"),
                 mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL)
 )

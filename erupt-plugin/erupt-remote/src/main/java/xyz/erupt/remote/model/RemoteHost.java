@@ -36,7 +36,7 @@ import java.util.Set;
         name = "Remote Host",
         dataProxy = RemoteHostDataProxy.class,
         orderBy = "id desc",
-        rowOperation = @RowOperation(
+        rowOperation = @RowOperation(code = "connect",
                 title = "Connect", icon = "fa fa-display",
                 ifExpr = "item.enabled",
                 mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL,

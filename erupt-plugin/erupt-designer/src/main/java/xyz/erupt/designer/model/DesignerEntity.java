@@ -42,14 +42,14 @@ import java.util.Date;
         dataProxy = DesignerEntityDataProxy.class,
         dragSort = @DragSort(field = "sort"),
         rowOperation = {
-                @RowOperation(
+                @RowOperation(code = "design",
                         title = "Design",
                         icon = "fa fa-paint-brush",
                         mode = RowOperation.Mode.SINGLE,
                         type = RowOperation.Type.TPL,
                         tpl = @Tpl(path = "/designer/{className}", openWay = OpenWay.ROUTER)
                 ),
-                @RowOperation(
+                @RowOperation(code = "addToMenu",
                         title = "Add to Menu",
                         icon = "fa fa-send",
                         mode = RowOperation.Mode.SINGLE,
