@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.context.MetaUser;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.notice.channel.AbstractNoticeChannel;
 import xyz.erupt.notice.channel.EruptInternalNotice;
@@ -56,7 +57,9 @@ public class EruptNoticeService {
         noticeLog.setTitle(noticeMessage.getTitle());
         noticeLog.setContent(noticeMessage.getContent());
         noticeLog.setCreateTime(new Date());
-        noticeLog.setCreateUser(new EruptUserVo(MetaContext.getUser().getUid()));
+        // a scheduler sends without a user: the log then has no sender rather than a dangling one
+        MetaUser sender = MetaContext.getUser();
+        if (null != sender && null != sender.getUid()) noticeLog.setCreateUser(new EruptUserVo(sender.getUid()));
         noticeLog.setUrl(noticeMessage.getUrl());
         eruptDao.persist(noticeLog);
         noticeMessage.setId(noticeLog.getId());
