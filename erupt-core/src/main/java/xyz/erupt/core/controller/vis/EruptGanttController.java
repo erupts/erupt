@@ -31,10 +31,11 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
- * Writes made from the gantt view: bar drags change the dates, link drags change the
- * predecessors declared by {@code GanttView#dependencyField}. Both run the DataProxy update
- * hooks and publish {@link EruptEditEvent} with the pre-change copy, so the operation log and
- * other modules see them like any edit.
+ * Writes made from the gantt view.
+ *
+ * Bar drags change the dates, link drags change the predecessors declared by
+ * GanttView.dependencyField. Both run the DataProxy update hooks and publish EruptEditEvent
+ * with the pre-change copy, so the operation log and other modules see them like any edit.
  *
  * @author YuePeng
  * date 2025/11/15 00:25
@@ -47,6 +48,13 @@ public class EruptGanttController {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
+    /**
+     * Move or resize a gantt bar.
+     *
+     * @param erupt Simple class name of the @Erupt model
+     * @param command Task and its new start and end dates
+     * @return ok when saved
+     */
     @PostMapping("/{erupt}/update_date")
     @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional
@@ -65,7 +73,14 @@ public class EruptGanttController {
         return R.ok();
     }
 
-    // predecessor ids of the given rows, keyed by row id; the chart draws them as finish-to-start links
+    /**
+     * Predecessor links of the given tasks.
+     *
+     * @apiNote Empty when @GanttView.dependencyField is not configured.
+     * @param erupt Simple class name of the @Erupt model
+     * @param command Tasks to resolve
+     * @return task primary key to the primary keys of its predecessors
+     */
     @PostMapping("/{erupt}/links")
     @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional
@@ -86,7 +101,14 @@ public class EruptGanttController {
         return R.ok(links);
     }
 
-    // add or remove one predecessor of a row; a self link or a cycle is rejected
+    /**
+     * Add or remove a predecessor link.
+     *
+     * @apiNote Rejects a self link and any link that would create a cycle.
+     * @param erupt Simple class name of the @Erupt model
+     * @param command Task, predecessor and whether to remove the link
+     * @return ok when saved
+     */
     @PostMapping("/{erupt}/link")
     @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional
@@ -220,11 +242,18 @@ public class EruptGanttController {
     @Setter
     public static class GanttDateCommand {
 
+        /** Code of the @Vis gantt view */
         private String visCode;
+
+        /** Primary key of the task */
 
         private Object pk;
 
+        /** New start date */
+
         private String startDate;
+
+        /** New end date */
 
         private String endDate;
 
@@ -234,7 +263,10 @@ public class EruptGanttController {
     @Setter
     public static class GanttLinksCommand {
 
+        /** Code of the @Vis gantt view */
         private String visCode;
+
+        /** Primary keys of the tasks to resolve */
 
         private List<Object> pks;
 
@@ -244,11 +276,18 @@ public class EruptGanttController {
     @Setter
     public static class GanttLinkCommand {
 
+        /** Code of the @Vis gantt view */
         private String visCode;
+
+        /** Primary key of the task */
 
         private Object pk;
 
+        /** Primary key of the predecessor task */
+
         private Object predecessorPk;
+
+        /** true removes the link, false adds it */
 
         private boolean remove;
 

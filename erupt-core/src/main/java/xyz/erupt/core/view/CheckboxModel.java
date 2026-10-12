@@ -11,10 +11,13 @@ import lombok.Setter;
 @Setter
 public class CheckboxModel<I, L, R> {
 
+    /** Option value */
     private I id;
 
+    /** Option text */
     private L label;
 
+    /** Secondary text */
     private R remark;
 
     public CheckboxModel(I id, L label, R remark) {

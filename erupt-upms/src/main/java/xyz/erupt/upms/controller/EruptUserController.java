@@ -36,6 +36,8 @@ import java.util.stream.Collectors;
 
 
 /**
+ * Session lifecycle and the signed-in user: login, logout, profile, menu.
+ *
  * @author YuePeng
  * date 2018-12-13.
  */
@@ -65,8 +67,11 @@ public class EruptUserController {
     private EruptMfaService eruptMfaService;
 
     /**
-     * Login
+     * Sign in with account and password.
      *
+     * @apiNote When erupt-app.pwd-transfer-encrypt is on the password is sent base64-encoded three times. After repeated failures useVerifyCode turns true and the captcha from code-img must be sent as verifyCode/verifyCodeMark. When the user has an authenticator bound, pass is false, mfaRequired is true and the returned mfaTicket must be exchanged through login-mfa.
+     * @param loginBody Account, password and optional captcha
+     * @return token and user info when pass is true, otherwise the reason
      */
     @SneakyThrows
     @PostMapping(value = "/login")
@@ -117,7 +122,11 @@ public class EruptUserController {
     }
 
     /**
-     * Second step of a two factor login: exchange the ticket plus a one-time code for a session.
+     * Second step of a two factor login.
+     *
+     * @apiNote Exchanges the mfaTicket from login plus a one-time code (or a recovery code) for a session. An ordinary wrong code keeps the ticket alive.
+     * @param body mfaTicket and code
+     * @return token and user info when pass is true, otherwise the reason
      */
     @PostMapping(value = "/login-mfa")
     public LoginModel loginMfa(@RequestBody MfaBody body) {
@@ -141,6 +150,13 @@ public class EruptUserController {
         return loginModel;
     }
 
+    /**
+     * Change the current user's password.
+     *
+     * @apiNote Passwords follow the same transfer encoding as login.
+     * @param body Current password and the new password twice
+     * @return ok when changed
+     */
     @PostMapping(value = "/change-pwd")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public R<Void> changePwd(@RequestBody ChangePwdBody body) {
@@ -151,8 +167,11 @@ public class EruptUserController {
     }
 
     /**
-     * Re-check the signed-in user's password without issuing a new session, used to unlock the
-     * screen. It goes through the same path as a sign-in, so the failure counter and lock apply.
+     * Re-check the current user's password.
+     *
+     * @apiNote Used to unlock the screen; no new session is issued. It goes through the same path as a sign-in, so the failure counter and lock apply.
+     * @param body Password
+     * @return ok when it matches
      */
     @PostMapping(value = "/verify-pwd")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
@@ -161,6 +180,12 @@ public class EruptUserController {
         return eruptUserService.verifyPwd(pwd);
     }
 
+    /**
+     * Update the current user's profile.
+     *
+     * @param body Editable profile fields
+     * @return ok when saved
+     */
     @PostMapping("/profile")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public R<Void> updateProfile(@RequestBody ProfileBody body) {
@@ -168,12 +193,23 @@ public class EruptUserController {
         return R.ok();
     }
 
+    /**
+     * Upload the current user's avatar.
+     *
+     * @param file Multipart form field "file"
+     * @return stored avatar path
+     */
     @PostMapping("/profile/avatar")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public R<String> uploadAvatar(@RequestParam("file") MultipartFile file) {
         return R.ok(eruptUserService.uploadAvatar(file));
     }
 
+    /**
+     * Current user.
+     *
+     * @return account, nickname, avatar, org, post, roles and the index menu
+     */
     @GetMapping("/userinfo")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptUserinfoVo userinfo() {
@@ -193,6 +229,13 @@ public class EruptUserController {
         return userinfoVo;
     }
 
+    /**
+     * Menu tree the current user may see.
+     *
+     * @apiNote Platform sessions only; a tenant session gets 403 and uses the erupt-tenant menu API.
+     * @param flush true rebuilds the menu cache from the database first
+     * @return menu entries
+     */
     @GetMapping("/menu")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @SneakyThrows
@@ -209,6 +252,11 @@ public class EruptUserController {
         return eruptTokenService.menuView(eruptContextService.getCurrentToken());
     }
 
+    /**
+     * Sign out and invalidate the token.
+     *
+     * @return ok
+     */
     @GetMapping(value = "/logout")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public R<Void> logout() {
@@ -221,10 +269,11 @@ public class EruptUserController {
     }
 
     /**
-     * Generate verification code
+     * Captcha image for login.
      *
-     * @param mark   Generate the verification code marking value
-     * @param height Height of the verification code
+     * @apiNote Returns a JPEG. The text lives 60 seconds under the given mark; send the same mark back as verifyCodeMark.
+     * @param mark Client generated random number identifying this captcha
+     * @param height Image height in pixels, clamped to 10..100
      */
     @GetMapping("/code-img")
     public void createCode(HttpServletResponse response, @RequestParam("mark") long mark,

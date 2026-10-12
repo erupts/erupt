@@ -11,8 +11,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public class OpenApiInfoVo {
 
+    /** Application id */
     private String appid;
 
+    /** Application name */
     private String name;
 
 }

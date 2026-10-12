@@ -132,4 +132,57 @@
         </plugins>
     </build>
 
+    <profiles>
+        <!-- OpenAPI spec generated from controller Javadoc by smart-doc, no annotations involved:
+             mvn -pl erupt-test -Popenapi process-classes  ->  openapi/erupt.json -->
+        <profile>
+            <id>openapi</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.ly.smart-doc</groupId>
+                        <artifactId>smart-doc-maven-plugin</artifactId>
+                        <version>3.1.2</version>
+                        <configuration>
+                            <configFile>${project.basedir}/../openapi/smart-doc.json</configFile>
+                            <projectName>Erupt</projectName>
+                            <!-- only erupt's own sources are loaded for type resolution; third-party types stay opaque objects -->
+                            <includes>
+                                <include>xyz.erupt:.*</include>
+                            </includes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>openapi</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <!-- after compile: the smart-doc goal forks the lifecycle up to compile, so an earlier phase would copy before the spec exists -->
+                            <execution>
+                                <phase>process-classes</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <copy file="${project.build.directory}/smart-doc/openapi.json"
+                                              tofile="${project.basedir}/../openapi/erupt.json" overwrite="true"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>

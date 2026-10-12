@@ -11,13 +11,13 @@ import lombok.Setter;
 @Setter
 public class MfaBody {
 
-    // Ticket issued by /login once the password matched, only used by the login flow
+    /** Ticket issued by login once the password matched, only used by the login flow */
     private String mfaTicket;
 
-    // One-time code from the authenticator, or a recovery code
+    /** One-time code from the authenticator, or a recovery code */
     private String code;
 
-    // Current password, required when removing a binding
+    /** Current password, required when removing a binding */
     private String pwd;
 
 }

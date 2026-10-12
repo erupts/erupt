@@ -13,28 +13,31 @@ import java.util.List;
 @Setter
 public class EruptUserinfoVo {
 
+    /** Login account */
     private String account;
 
+    /** Avatar path */
     private String avatar;
 
+    /** Display name */
     private String nickname;
 
-    // Type of menu on the user's home page
+    /** Type of the menu opened as home page */
     private String indexMenuType;
 
-    // User home page menu value
+    /** Value of the menu opened as home page */
     private String indexMenuValue;
 
-    // Do you need to reset your password?
+    /** Whether the user must change the password */
     private boolean resetPwd = false;
 
-    // Organizational code
+    /** Organization code */
     private String org;
 
-    // Position code
+    /** Post code */
     private String post;
 
-    // Character List
+    /** Role codes */
     private List<String> roles;
 
 }

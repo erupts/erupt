@@ -20,6 +20,8 @@ import xyz.erupt.upms.vo.OpenApiTokenVo;
 import java.time.LocalDateTime;
 
 /**
+ * Token exchange for server-to-server callers registered as Open API apps.
+ *
  * @author YuePeng
  * date 2024/8/4 22:05
  */
@@ -34,10 +36,10 @@ public class EruptOpenApiController {
     private final EruptTokenService eruptTokenService;
 
     /**
-     * Query appid info by token
+     * Look up the app behind a token.
      *
-     * @param token token
-     * @return appid info
+     * @param token Token issued by create-token
+     * @return appid and app name
      */
     @GetMapping("/get-appid")
     public R<OpenApiInfoVo> getAppid(@RequestParam("token") String token) {
@@ -48,12 +50,12 @@ public class EruptOpenApiController {
     }
 
     /**
-     * Create token
-     * Only one token for each appid is valid at the same time.
+     * Issue a token for an Open API app.
      *
-     * @param appid  appid
-     * @param secret secret
-     * @return token
+     * @apiNote The token carries the permissions of the user bound to the app and is sent like a login token. Only one token per appid is valid at a time: issuing a new one revokes the previous.
+     * @param appid Application id
+     * @param secret Application secret
+     * @return token and its expiry
      */
     @GetMapping("/create-token")
     @Transactional

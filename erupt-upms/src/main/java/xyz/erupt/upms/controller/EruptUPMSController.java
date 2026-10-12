@@ -13,6 +13,8 @@ import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.service.EruptUserService;
 
 /**
+ * Permission probe and application settings.
+ *
  * @author YuePeng
  * date 2022/3/9 19:18
  */
@@ -24,13 +26,24 @@ public class EruptUPMSController {
 
     private final EruptAppProp eruptAppProp;
 
-    //Verify menu type value permission
+    /**
+     * Whether the current user holds a menu permission.
+     *
+     * @param menuValue Menu value, for example an erupt class name or a custom code
+     * @return true when the menu is granted
+     */
     @GetMapping(EruptRestPath.ERUPT_CODE_PERMISSION + "/{value}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public boolean eruptPermission(@PathVariable("value") String menuValue) {
         return null != eruptUserService.getEruptMenuByValue(menuValue);
     }
 
+    /**
+     * Public application settings.
+     *
+     * @apiNote Read by the frontend before login: title, login options, password transfer encoding, version and the attachment file domain. No session needed.
+     * @return application properties
+     */
     @GetMapping(EruptRestPath.ERUPT_API + "/erupt-app")
     public EruptAppProp eruptApp() {
         eruptAppProp.setHash(this.hashCode());

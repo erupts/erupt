@@ -13,10 +13,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Alert {
 
+    /** Text to show */
     private String message;
 
+    /** Whether the user may dismiss it */
     private boolean closeable = false;
 
+    /** success, info, warning or error */
     private UiType uiType = UiType.info;
 
     public static Alert info(String message) {

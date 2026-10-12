@@ -11,6 +11,7 @@ import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.ExprInvoke;
@@ -32,32 +33,37 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static xyz.erupt.core.constant.EruptRestPath.ERUPT_API;
 
 /**
- * Erupt Tpl
+ * Server rendered template pages. These answer HTML, not JSON, and take the token as the _token query parameter.
  *
  * @author YuePeng
  * date 2018-09-28.
  */
 @RestController
-@RequestMapping(ERUPT_API + EruptTplController.TPL)
+@RequestMapping(EruptRestPath.ERUPT_API + EruptTplController.TPL)
 public class EruptTplController implements EruptRouter.VerifyHandler {
 
-    static final String TPL = "/tpl";
+    public static final String TPL = "/tpl";
 
     private static final String HTML_MIME_TYPE = "text/html;charset=utf-8";
 
     @Resource
     private EruptTplService eruptTplService;
 
+    /**
+     * Render a template page.
+     *
+     * @apiNote The path after /tpl/ is the template path or a @TplAction route; the menu permission is checked against that path. The token and language travel as _token and _lang query parameters.
+     * @page
+     */
     @SuppressWarnings("unchecked")
     @GetMapping(value = "/**", produces = HTML_MIME_TYPE)
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyHandler = EruptTplController.class,
             verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void eruptTplPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        String path = request.getRequestURI().split(ERUPT_API + EruptTplController.TPL + "/")[1];
+        String path = request.getRequestURI().split(EruptRestPath.ERUPT_API + EruptTplController.TPL + "/")[1];
         Method method = eruptTplService.getAction(path);
         if (null == method) {
             eruptTplService.tplRender(Tpl.Engine.Native, TPL + "/" + path, null, response.getWriter());
@@ -75,9 +81,16 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
 
     @Override
     public String convertAuthStr(EruptRouter eruptRouter, HttpServletRequest request, String authStr) {
-        return request.getRequestURI().split(ERUPT_API + EruptTplController.TPL + "/")[1];
+        return request.getRequestURI().split(EruptRestPath.ERUPT_API + EruptTplController.TPL + "/")[1];
     }
 
+    /**
+     * Render the template of a TPL field.
+     *
+     * @param eruptName Simple class name of the @Erupt model
+     * @param field Field name with edit type TPL
+     * @page
+     */
     @GetMapping(value = "/html-field/{erupt}/{field}", produces = HTML_MIME_TYPE)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void eruptFieldHtml(@PathVariable("erupt") String eruptName, @PathVariable("field") String field, HttpServletResponse response) {
@@ -88,11 +101,13 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
     }
 
     /**
-     * Custom button pop-up layer template
+     * Render the pop-up template of a row operation.
      *
-     * @param eruptName erupt
-     * @param code      Template Identifier
-     * @param ids       ID Identifier
+     * @apiNote The selected rows are injected into the template context.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param code @RowOperation.code
+     * @param ids Primary keys of the selected rows
+     * @page
      */
     @GetMapping(value = "/operation-tpl/{erupt}/{code}", produces = HTML_MIME_TYPE)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)
@@ -112,6 +127,13 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
         eruptTplService.tplRender(operation.tpl(), map, response);
     }
 
+    /**
+     * Render the template of a @Vis view.
+     *
+     * @param eruptName Simple class name of the @Erupt model
+     * @param code @Vis.code
+     * @page
+     */
     @GetMapping(value = "/vis-tpl/{erupt}/{code}", produces = HTML_MIME_TYPE)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void visTpl(@PathVariable("erupt") String eruptName, @PathVariable("code") String code, HttpServletResponse response) {
@@ -124,11 +146,13 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
     }
 
     /**
-     * The TPL triggered by the @View annotation in the table view
+     * Render the @View template of one field of one row.
      *
-     * @param eruptName erupt
-     * @param field     field
-     * @param id        pk
+     * @apiNote The row is injected into the template context.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param field Field name whose @View declares a tpl
+     * @param id Primary key
+     * @page
      */
     @GetMapping(value = "/view-tpl/{erupt}/{field}/{id}", produces = HTML_MIME_TYPE)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)

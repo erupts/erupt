@@ -17,8 +17,10 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class Sort {
 
+    /** Field name */
     private String field;
 
+    /** ASC or DESC */
     private Direction direction = Direction.ASC;
 
     public Sort(String field, Direction direction) {
