@@ -87,7 +87,9 @@ public class McpController {
         }
         String bearer = "Bearer ";
         String token = auth.startsWith(bearer) ? auth.substring(bearer.length()) : auth;
-        EruptOpenApi eruptOpenApi = eruptDao.lambdaQuery(EruptOpenApi.class).eq(EruptOpenApi::getSecret, token).one();
+        // A locked record keeps its secret but must not authenticate, same as the open-api login
+        EruptOpenApi eruptOpenApi = eruptDao.lambdaQuery(EruptOpenApi.class)
+                .eq(EruptOpenApi::getSecret, token).eq(EruptOpenApi::getStatus, true).one();
         if (null == eruptOpenApi) {
             log.error("MCP authorization token error: {}", token);
             return ResponseEntity.status(401).build();
