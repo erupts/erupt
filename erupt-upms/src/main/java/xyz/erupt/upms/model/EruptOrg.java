@@ -4,9 +4,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.TenantId;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -19,13 +22,14 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
+import xyz.erupt.upms.helper.UpmsTenant;
 
 /**
  * @author YuePeng
  * date 2020-04-08
  */
 @Entity
-@Table(name = "e_upms_org")
+@Table(name = "e_upms_org", uniqueConstraints = @UniqueConstraint(name = "uk_upms_org_code", columnNames = {"tenantId", "code"}))
 @Erupt(
         name = "Org Management",
         tree = @Tree(pid = "parentOrg.id", expandLevel = 5),
@@ -37,7 +41,14 @@ import xyz.erupt.jpa.model.BaseModel;
 @NoArgsConstructor
 public class EruptOrg extends BaseModel {
 
-    @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
+    // Owner tenant, UpmsTenant.PLATFORM for the platform, restricted and stamped by Hibernate
+    // (see UpmsTenantIdentifierResolver)
+    @TenantId
+    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
+    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
+    private String tenantId;
+
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "Org Code", sortable = true),
             edit = @Edit(title = "Org Code", notNull = true, search = @Search(operator = QueryExpression.LIKE))

@@ -3,6 +3,8 @@ package xyz.erupt.upms.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.TenantId;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -22,6 +24,7 @@ import xyz.erupt.core.constant.RegexConst;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.upms.helper.HyperModelCreatorVo;
 import xyz.erupt.upms.helper.UpmsSecurityHelper;
+import xyz.erupt.upms.helper.UpmsTenant;
 import xyz.erupt.upms.model.converter.StringSetJsonConverter;
 import xyz.erupt.upms.model.data_proxy.EruptOrgFetchHandler;
 import xyz.erupt.upms.model.data_proxy.EruptUserDataProxy;
@@ -40,7 +43,7 @@ import java.util.stream.Collectors;
  * date 2018-11-22.
  */
 @Entity
-@Table(name = "e_upms_user")
+@Table(name = "e_upms_user", uniqueConstraints = @UniqueConstraint(name = "uk_upms_user_account", columnNames = {"tenantId", "account"}))
 @Erupt(
         name = "User Management",
         dataProxy = EruptUserDataProxy.class,
@@ -68,6 +71,14 @@ import java.util.stream.Collectors;
 @Setter
 public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper.PasswordHolder {
 
+    // Owner tenant, UpmsTenant.PLATFORM for the platform. Hibernate restricts every query to the
+    // session's tenant and stamps it on insert, see UpmsTenantIdentifierResolver; the same column
+    // sits on every other entity mapped to this table
+    @TenantId
+    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
+    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
+    private String tenantId;
+
     // Set by the user themselves (profile dialog) or an SSO provider, so the admin form only shows it
     @Column(length = 1023)
     @EruptField(
@@ -76,7 +87,7 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
     )
     private String avatar;
 
-    @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "Account", sortable = true),
             // security state: granted, revoked and identified through a reviewed form, never a grid cell
@@ -305,6 +316,8 @@ public class EruptUser extends HyperModelCreatorVo implements UpmsSecurityHelper
     public MetaUserinfo toMetaUser() {
         MetaUserinfo metaUserinfo = new MetaUserinfo();
         metaUserinfo.setId(this.getId());
+        // sessions keep the null-means-platform convention of MetaUser and the modules built on it
+        metaUserinfo.setTenantId(UpmsTenant.isPlatform(this.tenantId) ? null : this.tenantId);
         metaUserinfo.setSuperAdmin(this.getIsAdmin());
         metaUserinfo.setAccount(this.getAccount());
         metaUserinfo.setUsername(this.getName());

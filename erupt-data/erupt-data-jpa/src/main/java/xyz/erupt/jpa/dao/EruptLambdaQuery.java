@@ -8,9 +8,11 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.SimplePage;
 import xyz.erupt.jpa.constant.SqlLang;
+import xyz.erupt.jpa.support.TenantFilter;
 import xyz.erupt.linq.lambda.LambdaInfo;
 import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.linq.lambda.SFunction;
@@ -18,6 +20,7 @@ import xyz.erupt.linq.lambda.SFunction;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -30,10 +33,17 @@ public class EruptLambdaQuery<T> {
 
     private final EntityManager entityManager;
 
+    // the entity manager queries run on; allTenants() may swap in one of its own for a call
+    private EntityManager activeEntityManager;
+
     private final Class<T> eruptClass;
+
+    // lifts the tenant restriction for this query only, see allTenants()
+    private boolean allTenants;
 
     public EruptLambdaQuery(EntityManager entityManager, Class<T> eruptClass) {
         this.entityManager = entityManager;
+        this.activeEntityManager = entityManager;
         this.eruptClass = eruptClass;
     }
 
@@ -332,23 +342,52 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
+    /**
+     * Queries every tenant's rows instead of the current session's only. Entities with a
+     * {@code @TenantId} attribute are otherwise restricted to the session's tenant by Hibernate;
+     * this is the explicit way out, for operators acting across tenants. It affects reads of this
+     * query alone and leaves the session as it was; {@link #delete()} is not covered.
+     */
+    public EruptLambdaQuery<T> allTenants() {
+        this.allTenants = true;
+        return this;
+    }
+
+    private <R> R run(Supplier<R> work) {
+        if (!allTenants) return work.get();
+        // With a request or transaction bound entity manager the shared proxy keeps one session, so
+        // the filter can be lifted on it. Elsewhere every call would get a session of its own, and
+        // the filter lifted on one would not reach the query run on the next: use one we hold.
+        if (TransactionSynchronizationManager.hasResource(entityManager.getEntityManagerFactory())) {
+            return TenantFilter.acrossTenants(entityManager, work);
+        }
+        EntityManager own = entityManager.getEntityManagerFactory().createEntityManager();
+        try {
+            this.activeEntityManager = own;
+            return TenantFilter.acrossTenants(own, work);
+        } finally {
+            this.activeEntityManager = entityManager;
+            own.close();
+        }
+    }
+
 
     public T one() {
         try {
-            return (T) this.geneQuery().getSingleResult();
+            return (T) this.run(() -> this.geneQuery().getSingleResult());
         } catch (NoResultException e) {
             return null;
         }
     }
 
     public List<T> list() {
-        return this.geneQuery().getResultList();
+        return this.run(() -> this.geneQuery().getResultList());
     }
 
     public final <S> S oneSelect(SFunction<T, S> field) {
         this.querySchema.columns.add(LambdaSee.field(field));
         try {
-            return (S) this.geneQuery().getSingleResult();
+            return (S) this.run(() -> this.geneQuery().getSingleResult());
         } catch (NoResultException e) {
             return null;
         }
@@ -356,13 +395,13 @@ public class EruptLambdaQuery<T> {
 
     public final <S> List<S> listSelect(SFunction<T, S> field) {
         this.querySchema.columns.add(LambdaSee.field(field));
-        return this.geneQuery().getResultList();
+        return this.run(() -> this.geneQuery().getResultList());
     }
 
     @SafeVarargs
     public final <R> List<R> listSelect(Class<R> requiredType, SFunction<T, ?>... fields) {
         for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
-        List<Object[]> objects = this.geneQuery().getResultList();
+        List<Object[]> objects = this.run(() -> this.geneQuery().getResultList());
         return objects.stream().map(it -> objectToClazz(requiredType, it, fields)).collect(Collectors.toList());
     }
 
@@ -370,7 +409,7 @@ public class EruptLambdaQuery<T> {
     public final <R> R oneSelect(Class<R> requiredType, SFunction<T, ?>... fields) {
         for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
         try {
-            return objectToClazz(requiredType, (Object[]) this.geneQuery().getSingleResult(), fields);
+            return objectToClazz(requiredType, (Object[]) this.run(() -> this.geneQuery().getSingleResult()), fields);
         } catch (NoResultException e) {
             return null;
         }
@@ -378,7 +417,7 @@ public class EruptLambdaQuery<T> {
 
     public final <R> List<R> selectByPath(Class<R> requiredType, String... fields) {
         this.querySchema.columns.addAll(Arrays.asList(fields));
-        return this.geneQuery().getResultList();
+        return this.run(() -> this.geneQuery().getResultList());
     }
 
     @SneakyThrows
@@ -395,7 +434,7 @@ public class EruptLambdaQuery<T> {
     public Long count() {
         try {
             this.querySchema.columns.add("count(*)");
-            return (Long) geneQuery(false).getSingleResult();
+            return (Long) this.run(() -> geneQuery(false).getSingleResult());
         } finally {
             this.querySchema.columns.clear();
         }
@@ -404,7 +443,7 @@ public class EruptLambdaQuery<T> {
     public <E> Long count(SFunction<E, ?> field) {
         try {
             this.querySchema.columns.add("count(" + geneField(field) + ")");
-            return (Long) geneQuery(false).getSingleResult();
+            return (Long) this.run(() -> geneQuery(false).getSingleResult());
         } finally {
             this.querySchema.columns.clear();
         }
@@ -413,7 +452,7 @@ public class EruptLambdaQuery<T> {
     public <E> Object sum(SFunction<E, ?> field) {
         try {
             this.querySchema.columns.add("sum(" + geneField(field) + ")");
-            return geneQuery(false).getSingleResult();
+            return this.run(() -> geneQuery(false).getSingleResult());
         } finally {
             this.querySchema.columns.clear();
         }
@@ -422,7 +461,7 @@ public class EruptLambdaQuery<T> {
     public <E> Double avg(SFunction<E, ?> field) {
         try {
             this.querySchema.columns.add("avg(" + geneField(field) + ")");
-            return (Double) geneQuery(false).getSingleResult();
+            return (Double) this.run(() -> geneQuery(false).getSingleResult());
         } finally {
             this.querySchema.columns.clear();
         }
@@ -431,7 +470,7 @@ public class EruptLambdaQuery<T> {
     public <E> Object min(SFunction<E, ?> field) {
         try {
             this.querySchema.columns.add("min(" + geneField(field) + ")");
-            return geneQuery(false).getSingleResult();
+            return this.run(() -> geneQuery(false).getSingleResult());
         } finally {
             this.querySchema.columns.clear();
         }
@@ -440,7 +479,7 @@ public class EruptLambdaQuery<T> {
     public <E> Object max(SFunction<E, ?> field) {
         try {
             this.querySchema.columns.add("max(" + geneField(field) + ")");
-            return geneQuery(false).getSingleResult();
+            return this.run(() -> geneQuery(false).getSingleResult());
         } finally {
             this.querySchema.columns.clear();
         }
@@ -483,7 +522,7 @@ public class EruptLambdaQuery<T> {
             expr.append(SqlLang.WHERE).append(String.join(SqlLang.AND, querySchema.getWheres()));
         if (useOrderBy && !querySchema.getOrders().isEmpty())
             expr.append(SqlLang.ORDER_BY).append(String.join(SqlLang.COMMA, querySchema.getOrders()));
-        Query query = entityManager.createQuery(expr.toString());
+        Query query = activeEntityManager.createQuery(expr.toString());
         querySchema.getParams().forEach(query::setParameter);
         Optional.ofNullable(querySchema.getLimit()).ifPresent(query::setMaxResults);
         Optional.ofNullable(querySchema.getOffset()).ifPresent(query::setFirstResult);

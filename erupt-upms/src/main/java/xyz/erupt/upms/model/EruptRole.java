@@ -3,6 +3,8 @@ package xyz.erupt.upms.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.TenantId;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -17,6 +19,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.upms.handler.RoleMenuFilter;
 import xyz.erupt.upms.helper.HyperModelUpdateVo;
+import xyz.erupt.upms.helper.UpmsTenant;
 import xyz.erupt.upms.model.data_proxy.EruptRoleDataProxy;
 
 import java.util.Set;
@@ -26,7 +29,7 @@ import java.util.Set;
  * date 2018-11-22.
  */
 @Entity
-@Table(name = "e_upms_role")
+@Table(name = "e_upms_role", uniqueConstraints = @UniqueConstraint(name = "uk_upms_role_code", columnNames = {"tenantId", "code"}))
 @Erupt(name = "Role Management", dataProxy = EruptRoleDataProxy.class,
         dragSort = @DragSort(field = "sort"),
         orderBy = "EruptRole.sort asc")
@@ -35,7 +38,14 @@ import java.util.Set;
 @Setter
 public class EruptRole extends HyperModelUpdateVo {
 
-    @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
+    // Owner tenant, UpmsTenant.PLATFORM for the platform, restricted and stamped by Hibernate
+    // (see UpmsTenantIdentifierResolver)
+    @TenantId
+    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
+    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
+    private String tenantId;
+
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "code"),
             // every permission binding and @Match expression keys off this code

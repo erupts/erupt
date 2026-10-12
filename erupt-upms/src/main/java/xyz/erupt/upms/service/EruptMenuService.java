@@ -2,6 +2,7 @@ package xyz.erupt.upms.service;
 
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.exception.EruptException;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -15,6 +16,7 @@ import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.spi.UpmsMenuScope;
 import xyz.erupt.upms.util.UPMSUtil;
 
 import java.util.HashSet;
@@ -42,14 +44,26 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     @Resource
     private EruptTokenService eruptTokenService;
 
+    @Resource
+    private ObjectProvider<UpmsMenuScope> menuScope;
+
+    /**
+     * Menus of a user: every menu for an administrator, the menus of the active roles otherwise,
+     * narrowed by each registered {@link UpmsMenuScope} (a tenant's subscription, for instance).
+     */
     public List<EruptMenu> getUserAllMenu(EruptUser eruptUser) {
+        List<EruptMenu> menus;
         if (null != eruptUser.getIsAdmin() && eruptUser.getIsAdmin()) {
-            return eruptDao.lambdaQuery(EruptMenu.class).orderBy(EruptMenu::getSort).list();
+            menus = eruptDao.lambdaQuery(EruptMenu.class).orderBy(EruptMenu::getSort).list();
         } else {
             Set<EruptMenu> menuSet = new HashSet<>();
             eruptUser.getRoles().stream().filter(EruptRole::getStatus).map(EruptRole::getMenus).forEach(menuSet::addAll);
-            return menuSet.stream().filter(it -> it.getStatus() != MenuStatus.DISABLE.getValue()).collect(Collectors.toList());
+            menus = menuSet.stream().filter(it -> it.getStatus() != MenuStatus.DISABLE.getValue()).collect(Collectors.toList());
         }
+        for (UpmsMenuScope scope : menuScope) {
+            menus = menus.stream().filter(menu -> scope.allows(eruptUser, menu)).collect(Collectors.toList());
+        }
+        return menus;
     }
 
     @Override
@@ -74,9 +88,8 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     }
 
 
-    // Rebuild the current platform session's menu cache. getCurrentEruptUser() is null for
-    // sessions not backed by an EruptUser row (tenant users); those must never be rebuilt here,
-    // since their uid collides with platform users.
+    // Rebuild the current session's menu cache. getCurrentEruptUser() is null for sessions that
+    // no longer have a user row, which keep their cached view until they expire.
     public void flushMenuCache() {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
         if (null != eruptUser) eruptTokenService.loginToken(eruptUser, eruptContextService.getCurrentToken());

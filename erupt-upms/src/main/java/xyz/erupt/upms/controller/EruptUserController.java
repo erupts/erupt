@@ -5,7 +5,6 @@ import com.wf.captcha.base.Captcha;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.core.annotation.EruptRouter;
@@ -243,12 +242,6 @@ public class EruptUserController {
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @SneakyThrows
     public List<EruptMenuVo> getMenu(@RequestParam(value = "flush", required = false, defaultValue = "false") boolean flush, HttpServletResponse response) {
-        // Platform sessions only: a tenant session has its own menu API (erupt-tenant) and must
-        // never be resolved against EruptUser, whose ids collide with tenant user ids
-        if (null != eruptUserService.getSimpleUserInfo().getTenantId()) {
-            response.sendError(HttpStatus.FORBIDDEN.value());
-            return null;
-        }
         // flush=true rebuilds the current user's menu cache from the database,
         // ensuring the latest menu changes are served instead of the stale cached copy
         if (flush) eruptMenuService.flushMenuCache();
