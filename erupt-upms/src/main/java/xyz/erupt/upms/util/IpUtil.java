@@ -24,25 +24,20 @@ public class IpUtil {
 
     private static volatile String trustedProxies = DEFAULT_TRUSTED_PROXIES;
 
-    private static final String[] FORWARDED_HEADERS = {"x-forwarded-for", "Proxy-Client-IP", "WL-Proxy-Client-IP"};
-
     /**
      * The client address a security decision (login lock, white list, audit) may rely on.
-     * Forwarded headers are written by whoever connects to us, so they count only when the
-     * peer is a trusted proxy; the list is then read from the right, past every trusted hop,
-     * to the first address a proxy did not vouch for. A direct peer is its own answer.
+     * X-Forwarded-For is written by whoever connects to us, so it counts only when the peer
+     * is a trusted proxy; the list is then read from the right, past every trusted hop, to
+     * the first address a proxy did not vouch for. A direct peer is its own answer.
      */
     public static String getIpAddr(HttpServletRequest request) {
         String remote = request.getRemoteAddr();
-        if (!trusted(remote)) return remote;
-        for (String header : FORWARDED_HEADERS) {
-            String value = request.getHeader(header);
-            if (null == value || value.isEmpty() || "unknown".equalsIgnoreCase(value)) continue;
-            String[] hops = value.split(",");
-            for (int i = hops.length - 1; i >= 0; i--) {
-                String hop = hops[i].trim();
-                if (!hop.isEmpty() && !"unknown".equalsIgnoreCase(hop) && !trusted(hop)) return hop;
-            }
+        String forwarded = request.getHeader("X-Forwarded-For");
+        if (!trusted(remote) || null == forwarded) return remote;
+        String[] hops = forwarded.split(",");
+        for (int i = hops.length - 1; i >= 0; i--) {
+            String hop = hops[i].trim();
+            if (!hop.isEmpty() && !"unknown".equalsIgnoreCase(hop) && !trusted(hop)) return hop;
         }
         return remote;
     }
