@@ -2,6 +2,7 @@ package xyz.erupt.k8s;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.ModuleInfo;
@@ -11,6 +12,8 @@ import xyz.erupt.core.module.ModuleInfo;
  */
 @Configuration
 @ComponentScan
+// Registers the row-operation forms (K8sScaleForm)
+@EruptScan
 public class EruptK8sAutoConfiguration implements EruptModule {
 
     static {

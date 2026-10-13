@@ -1,0 +1,37 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+Kubernetes,Kubernetes,Kubernetes,Kubernetes,Kubernetes,Kubernetes,Kubernetes,Kubernetes,Kubernetes,Kubernetes,Kubernetes,Kubernetes,Kubernetes
+Pods,容器组,容器組,Pods,Pods,Pod,파드,Поды,Pods,Pods,Pods,Pod,Pods
+Deployments,无状态负载,無狀態負載,Deployments,Déploiements,Deployment,디플로이먼트,Deployments,Deployments,Deployments,Deployments,Deployment,Deployments
+Stateful Sets,有状态负载,有狀態負載,Stateful Sets,StatefulSets,StatefulSet,스테이트풀셋,StatefulSets,StatefulSets,StatefulSets,StatefulSets,StatefulSet,StatefulSets
+Daemon Sets,守护进程集,守護進程集,Daemon Sets,DaemonSets,DaemonSet,데몬셋,DaemonSets,DaemonSets,DaemonSets,DaemonSets,DaemonSet,DaemonSets
+Services,服务,服務,Services,Services,サービス,서비스,Сервисы,Servicios,Services,Serviços,Service,الخدمات
+Config Maps,配置项,配置項,Config Maps,ConfigMaps,ConfigMap,컨피그맵,ConfigMaps,ConfigMaps,ConfigMaps,ConfigMaps,ConfigMap,ConfigMaps
+Namespaces,命名空间,命名空間,Namespaces,Espaces de noms,名前空間,네임스페이스,Пространства имён,Espacios de nombres,Namespaces,Namespaces,Namespace,مساحات الأسماء
+Nodes,节点,節點,Nodes,Nœuds,ノード,노드,Узлы,Nodos,Knoten,Nós,Node,العُقد
+Namespace,命名空间,命名空間,Namespace,Espace de noms,名前空間,네임스페이스,Пространство имён,Espacio de nombres,Namespace,Namespace,Namespace,مساحة الأسماء
+Pod IP,Pod IP,Pod IP,Pod IP,IP du pod,Pod IP,파드 IP,IP пода,IP del pod,Pod-IP,IP do pod,IP Pod,عنوان IP للـ Pod
+Node,节点,節點,Node,Nœud,ノード,노드,Узел,Nodo,Knoten,Nó,Node,العقدة
+Restarts,重启次数,重啟次數,Restarts,Redémarrages,再起動回数,재시작 횟수,Перезапуски,Reinicios,Neustarts,Reinícios,Restart,عمليات إعادة التشغيل
+Created,创建时间,建立時間,Created,Créé,作成日時,생성 시간,Создан,Creado,Erstellt,Criado,Dibuat,تاريخ الإنشاء
+Label selector,标签选择器,標籤選擇器,Label selector,Sélecteur de labels,ラベルセレクター,레이블 셀렉터,Селектор меток,Selector de etiquetas,Label-Selektor,Seletor de rótulos,Selektor label,محدد التسميات
+YAML,YAML,YAML,YAML,YAML,YAML,YAML,YAML,YAML,YAML,YAML,YAML,YAML
+Logs,日志,日誌,Logs,Journaux,ログ,로그,Логи,Registros,Logs,Registos,Log,السجلات
+Follow logs,实时日志,即時日誌,Follow logs,Suivre les journaux,ログを追跡,로그 실시간 보기,Следить за логами,Seguir registros,Logs verfolgen,Acompanhar registos,Ikuti log,متابعة السجلات
+Terminal,终端,終端,Terminal,Terminal,ターミナル,터미널,Терминал,Terminal,Terminal,Terminal,Terminal,الطرفية
+Available,可用,可用,Available,Disponibles,利用可能,사용 가능,Доступно,Disponibles,Verfügbar,Disponíveis,Tersedia,متاح
+Desired,期望,期望,Desired,Souhaités,期待値,목표,Желаемо,Deseados,Gewünscht,Desejados,Diinginkan,المطلوب
+Restart,重启,重啟,Restart,Redémarrer,再起動,재시작,Перезапустить,Reiniciar,Neu starten,Reiniciar,Mulai ulang,إعادة التشغيل
+Cluster IP,集群 IP,叢集 IP,Cluster IP,IP du cluster,クラスター IP,클러스터 IP,IP кластера,IP del clúster,Cluster-IP,IP do cluster,IP klaster,عنوان IP للعنقود
+Target port,目标端口,目標埠,Target port,Port cible,ターゲットポート,대상 포트,Целевой порт,Puerto de destino,Zielport,Porta de destino,Port tujuan,المنفذ الهدف
+Reason,原因,原因,Reason,Raison,理由,사유,Причина,Motivo,Grund,Motivo,Alasan,السبب
+Kind,资源类型,資源類型,Kind,Type de ressource,種類,종류,Тип ресурса,Tipo de recurso,Art,Tipo de recurso,Jenis,النوع
+Object,对象,物件,Object,Objet,オブジェクト,객체,Объект,Objeto,Objekt,Objeto,Objek,الكائن
+Message,消息,訊息,Message,Message,メッセージ,메시지,Сообщение,Mensaje,Nachricht,Mensagem,Pesan,الرسالة
+Count,次数,次數,Count,Nombre,回数,횟수,Количество,Cantidad,Anzahl,Contagem,Jumlah,العدد
+Last seen,最近发生,最近發生,Last seen,Vu pour la dernière fois,最終発生,마지막 발생,Последний раз,Visto por última vez,Zuletzt gesehen,Visto pela última vez,Terakhir terlihat,آخر ظهور
+Address,地址,位址,Address,Adresse,アドレス,주소,Адрес,Dirección,Adresse,Endereço,Alamat,العنوان
+OS image,操作系统,作業系統,OS image,Image du système,OS イメージ,OS 이미지,Образ ОС,Imagen del SO,Betriebssystem-Image,Imagem do SO,Image OS,صورة نظام التشغيل
+Architecture,架构,架構,Architecture,Architecture,アーキテクチャ,아키텍처,Архитектура,Arquitectura,Architektur,Arquitetura,Arsitektur,البنية
+CPU,CPU,CPU,CPU,CPU,CPU,CPU,ЦП,CPU,CPU,CPU,CPU,المعالج
+Memory,内存,記憶體,Memory,Mémoire,メモリ,메모리,Память,Memoria,Arbeitsspeicher,Memória,Memori,الذاكرة
+Unschedulable,禁止调度,禁止調度,Unschedulable,Non planifiable,スケジュール不可,스케줄 불가,Не планируется,No programable,Nicht planbar,Não agendável,Tidak dapat dijadwalkan,غير قابل للجدولة
