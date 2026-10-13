@@ -57,6 +57,8 @@
              android flavour. POI 5.5 needs commons-io 2.20 but calcite declares 2.15 on a shorter path -->
         <guava.version>33.4.8-jre</guava.version>
         <commons-io.version>2.20.0</commons-io.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <modules>
