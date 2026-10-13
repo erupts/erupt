@@ -208,6 +208,27 @@
                 </plugins>
             </build>
         </profile>
+        <!-- Contract files for non-Java node SDKs (github.com/erupt-io/erupt-sdk), rewritten instead of checked:
+             mvn -pl erupt-test -Pnode-schema test -> schema/erupt-annotations.schema.json, schema/erupt-node-defaults.json -->
+        <profile>
+            <id>node-schema</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <test>NodeSchemaTest,NodeDefaultsTest</test>
+                            <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+                            <systemPropertyVariables>
+                                <erupt.node-schema.write>true</erupt.node-schema.write>
+                                <erupt.node-defaults.write>true</erupt.node-defaults.write>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>
