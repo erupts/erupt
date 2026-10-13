@@ -15,9 +15,15 @@ import java.lang.annotation.Target;
  * for anything nested — e.g. {@code spec.replicas} — declare the mapping with
  * {@link EruptK8sField}.
  * <p>
- * The primary key column supplies the resource {@code name}. This module is
- * read-only (plus delete) by design: constructing arbitrary K8s specs from a
- * form is error-prone, so writes are best expressed as YAML in the client.
+ * The primary key column supplies the resource {@code name}, or {@code namespace/name}
+ * through a {@code qualifiedName} field for models that span namespaces. Writes go
+ * through a {@code yaml} field holding the manifest, the way {@code kubectl create}
+ * and {@code kubectl replace} take one; a model without that field is read-only
+ * plus delete.
+ * <p>
+ * {@link #masterUrl()}, {@link #kubeConfigPath()}, {@link #token()} and
+ * {@link #namespace()} accept {@code ${...}} placeholders, so cluster credentials
+ * stay in configuration.
  *
  * @author YuePeng
  */
@@ -36,14 +42,17 @@ public @interface EruptK8s {
     String kind();
 
     /**
-     * Target namespace. Empty means cluster-scoped (or all namespaces for
-     * namespaced resources when the server permits).
+     * Target namespace. {@code "*"} lists every namespace (pair it with a
+     * {@code qualifiedName} primary key); empty means cluster-scoped resources,
+     * or the client's default namespace for namespaced ones.
      */
     String namespace() default "";
 
     /**
-     * Master URL. Empty falls back to the standard client discovery chain
-     * ({@code KUBECONFIG}, {@code ~/.kube/config}, in-cluster service account).
+     * Master URL. When set without a kubeconfig path, the client connects with
+     * only this URL and {@link #token()}. When all three connection settings are
+     * empty, the standard discovery chain applies ({@code KUBECONFIG},
+     * {@code ~/.kube/config}, in-cluster service account).
      */
     String masterUrl() default "";
 
@@ -53,7 +62,8 @@ public @interface EruptK8s {
     String kubeConfigPath() default "";
 
     /**
-     * Bearer token for authentication. Empty relies on the kubeconfig.
+     * Bearer token for authentication. Empty relies on the kubeconfig. Write a
+     * placeholder such as {@code ${K8S_TOKEN:}}, never the token itself.
      */
     String token() default "";
 

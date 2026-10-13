@@ -5,7 +5,7 @@
 
     <artifactId>erupt-data-k8s</artifactId>
     <name>Erupt : Data Kubernetes</name>
-    <description>EruptProcess Kubernetes resources impl</description>
+    <description>Kubernetes resources as erupt models: browse, YAML create/edit, scale, restart, logs and a web terminal</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>
@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <fabric8.version>6.13.5</fabric8.version>
+        <fabric8.version>7.3.1</fabric8.version>
     </properties>
 
     <dependencies>
@@ -24,9 +24,22 @@
             <artifactId>erupt-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <!-- 7.x: 6.x fails to serialize generic resources under the Jackson that Spring Boot 3.5 ships -->
         <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>kubernetes-client</artifactId>
+            <version>${fabric8.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>kubernetes-httpclient-vertx</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- JDK HttpClient transport instead of the default Vert.x one: no extra runtime -->
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-httpclient-jdk</artifactId>
             <version>${fabric8.version}</version>
         </dependency>
     </dependencies>
