@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptApiErrorTip;
@@ -25,10 +26,12 @@ import java.util.*;
  *   <li>On an edit a value equal to the stored one passes: an option retired since (a disabled
  *       department) must not block editing the rest of an old record.</li>
  *   <li>A disabled option is refused as a new value, the way the page offers it.</li>
+ *   <li>A choice that declares no options (no vl, no handler, not an enum) is not checked.</li>
  *   <li>Options are fetched once per field and linkage value within a request, so an import of many
  *       rows asks the handler once. Nothing outlives the request.</li>
  * </ul>
- * Off unless {@code erupt.choice-validate} is on; a field opts out with {@code validate = false}.
+ * On by default; {@code erupt.choice-validate=false} turns it off, and a field opts out with
+ * {@code validate = false}.
  *
  * @author YuePeng
  */
@@ -50,6 +53,8 @@ public final class EruptChoiceValidator {
             boolean multiple = edit.type() == EditType.MULTI_CHOICE;
             if (edit.type() != EditType.CHOICE && !multiple) continue;
             if (multiple ? !edit.multiChoiceType().validate() : !edit.choiceType().validate()) continue;
+            // a choice that declares no options at all (no vl, no handler, not an enum) has nothing to check against
+            if (!declaresOptions(fieldModel, edit, multiple)) continue;
             JsonElement value = data.get(fieldModel.getFieldName());
             if (null == value || value.isJsonNull()) continue;
             List<String> submitted = new ArrayList<>();
@@ -66,6 +71,20 @@ public final class EruptChoiceValidator {
                 }
             }
         }
+    }
+
+    // A handler always counts, even one that offers this user nothing. vl counts only with a real value:
+    // designer-built models proxy their annotations from a template whose vl holds one blank placeholder.
+    private static boolean declaresOptions(EruptFieldModel fieldModel, Edit edit, boolean multiple) {
+        if ((multiple ? edit.multiChoiceType().fetchHandler() : edit.choiceType().fetchHandler()).length > 0) return true;
+        for (VL vl : multiple ? edit.multiChoiceType().vl() : edit.choiceType().vl()) {
+            if (!vl.value().isEmpty()) return true;
+        }
+        Field field = fieldModel.getField();
+        if (null == field) return false;
+        Class<?> type = field.getType();
+        if (Collection.class.isAssignableFrom(type)) type = ReflectUtil.fieldGenericClass(field);
+        return null != type && type.isEnum();
     }
 
     // The values the record already holds for the field, as strings
