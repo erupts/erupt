@@ -78,6 +78,9 @@
                 <includes>
                     <include>**/**</include>
                 </includes>
+                <excludes>
+                    <exclude>banner.txt</exclude>
+                </excludes>
             </resource>
         </resources>
     </build>

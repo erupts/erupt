@@ -84,6 +84,9 @@
                 <includes>
                     <include>**/**</include>
                 </includes>
+                <excludes>
+                    <exclude>erupt-core.properties</exclude>
+                </excludes>
             </resource>
         </resources>
     </build>
