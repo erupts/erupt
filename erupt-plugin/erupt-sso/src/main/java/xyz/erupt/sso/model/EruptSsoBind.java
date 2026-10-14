@@ -7,6 +7,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.TenantId;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -19,6 +21,7 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
+import xyz.erupt.upms.helper.UpmsTenant;
 import xyz.erupt.upms.model.EruptUser;
 
 import java.time.LocalDateTime;
@@ -51,6 +54,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class EruptSsoBind extends MetaModelUpdateVo {
+
+    // Owner tenant, the tenant of the provider and of the user it binds
+    @TenantId
+    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
+    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
+    private String tenantId;
 
     @ManyToOne
     @EruptField(
