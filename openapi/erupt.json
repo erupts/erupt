@@ -454,7 +454,7 @@
       "get": {
         "summary": "Menu tree the current user may see.",
         "deprecated": false,
-        "description": "Platform sessions only; a tenant session gets 403 and uses the erupt-tenant menu API.",
+        "description": "Platform and tenant sessions alike; a tenant session only sees the menus of its packages.",
         "tags": [
           "Session and user"
         ],

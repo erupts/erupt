@@ -234,7 +234,7 @@ public class EruptUserController {
     /**
      * Menu tree the current user may see.
      *
-     * @apiNote Platform sessions only; a tenant session gets 403 and uses the erupt-tenant menu API.
+     * @apiNote Platform and tenant sessions alike; a tenant session only sees the menus of its packages.
      * @param flush true rebuilds the menu cache from the database first
      * @return menu entries
      */

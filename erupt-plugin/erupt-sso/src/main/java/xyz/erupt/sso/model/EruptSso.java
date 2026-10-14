@@ -11,8 +11,11 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.TenantId;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -33,6 +36,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
+import xyz.erupt.upms.helper.UpmsTenant;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.sso.constant.SsoProviderType;
 import xyz.erupt.sso.model.data_proxy.EruptSsoDataProxy;
@@ -60,7 +64,7 @@ import java.util.Set;
  * date 2026-09-18
  */
 @Entity
-@Table(name = "e_upms_sso")
+@Table(name = "e_upms_sso", uniqueConstraints = @UniqueConstraint(name = "uk_upms_sso_code", columnNames = {"tenantId", "code"}))
 @Erupt(
         name = "SSO Provider",
         orderBy = "EruptSso.sort asc",
@@ -74,6 +78,13 @@ import java.util.Set;
 @Getter
 @Setter
 public class EruptSso extends MetaModelUpdateVo {
+
+    // Owner tenant, UpmsTenant.PLATFORM for the platform: each tenant signs in through providers of
+    // its own, restricted and stamped by Hibernate like the user directory, see UpmsTenantSessions
+    @TenantId
+    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
+    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
+    private String tenantId;
 
     @Transient
     @EruptField(edit = @Edit(title = "Basic", type = EditType.DIVIDE))
@@ -93,7 +104,8 @@ public class EruptSso extends MetaModelUpdateVo {
     )
     private SsoProviderType type = SsoProviderType.CUSTOM;
 
-    @Column(length = AnnotationConst.CODE_LENGTH, unique = true, nullable = false)
+    // unique per tenant: a tenant callback URL carries the tenant code as well
+    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
     @EruptField(
             views = @View(title = "Code", sortable = true),
             // the code is part of the callback URL registered at the provider, so it is
@@ -163,7 +175,8 @@ public class EruptSso extends MetaModelUpdateVo {
     @EruptField(
             edit = @Edit(title = "Redirect URI",
                     desc = "Where the provider sends the browser back (SAML: the assertion consumer service), must be registered there verbatim; "
-                            + "empty means http(s)://<this host>/erupt-api/sso/callback/<code>, fill it only behind a proxy or a different public domain",
+                            + "empty means http(s)://<this host>/erupt-api/sso/callback/<code>, for a tenant http(s)://<this host>/erupt-api/sso/tenant/<tenant code>/callback/<code>; "
+                            + "fill it only behind a proxy or a different public domain",
                     inputType = @InputType(fullSpan = true))
     )
     private String redirectUri;
