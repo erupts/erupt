@@ -8,6 +8,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.TenantId;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -29,6 +31,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.linq.lambda.LambdaSee;
+import xyz.erupt.upms.helper.UpmsTenant;
 
 import java.util.Collection;
 import java.util.Date;
@@ -51,12 +54,20 @@ import java.util.Map;
 )
 @EruptCube(
         name = "Erupt Operate Log",
-        sql = "e_upms_operate_log",
-        sqlType = SqlType.TABLE_NAME
+        // cubes read the table with plain SQL, past Hibernate's tenant filter: restrict it here
+        sql = "select * from e_upms_operate_log where tenant_id = '#if($user.tenantId)$user.tenantId#{else}" + UpmsTenant.PLATFORM + "#end'",
+        sqlType = SqlType.SUB_QUERY
 )
 @Getter
 @Setter
 public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperateLog> {
+
+    // Owner tenant, UpmsTenant.PLATFORM for the platform: stamped from the request's session, which
+    // the token resolves to the operator's tenant (see UpmsTenantIdentifierResolver)
+    @TenantId
+    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
+    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
+    private String tenantId;
 
     @Dimension(title = "Operate User", sql = "operate_user")
     @EruptField(

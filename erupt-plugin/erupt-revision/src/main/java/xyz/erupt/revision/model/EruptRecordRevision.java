@@ -8,6 +8,8 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.TenantId;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -22,6 +24,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.revision.handler.RevisionEruptChoice;
 import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
+import xyz.erupt.upms.helper.UpmsTenant;
 
 /**
  * One revision of one record of any erupt model. The record is addressed by model name plus
@@ -42,6 +45,13 @@ import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
 @Getter
 @Setter
 public class EruptRecordRevision extends HyperModelCreatorOnlyVo {
+
+    // Owner tenant, UpmsTenant.PLATFORM for the platform: stamped from the writer's session, so a
+    // revision on a tenant's record is read back by that tenant only, whatever record id is asked for
+    @TenantId
+    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
+    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
+    private String tenantId;
 
     // the erupt name ("nodeName.eruptName" for a cloud node model); shown and filtered by the
     // data model's own translated name, which is what the choice list labels it with
