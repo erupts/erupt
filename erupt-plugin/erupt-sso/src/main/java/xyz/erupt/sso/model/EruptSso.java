@@ -175,7 +175,7 @@ public class EruptSso extends MetaModelUpdateVo {
     @EruptField(
             edit = @Edit(title = "Redirect URI",
                     desc = "Where the provider sends the browser back (SAML: the assertion consumer service), must be registered there verbatim; "
-                            + "empty means http(s)://<this host>/erupt-api/sso/callback/<code>, for a tenant http(s)://<this host>/erupt-api/sso/tenant/<tenant code>/callback/<code>; "
+                            + "empty means http(s)://<this host>/erupt-api/sso/callback/<code>, for a tenant's SAML row http(s)://<this host>/erupt-api/sso/tenant/<tenant code>/callback/<code>; "
                             + "fill it only behind a proxy or a different public domain",
                     inputType = @InputType(fullSpan = true))
     )

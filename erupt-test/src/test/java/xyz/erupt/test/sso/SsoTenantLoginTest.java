@@ -15,6 +15,7 @@ import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.client.RestTemplate;
+import xyz.erupt.sso.constant.SsoProviderType;
 import xyz.erupt.sso.model.EruptSso;
 import xyz.erupt.sso.model.EruptSsoBind;
 import xyz.erupt.test.EruptApplicationTests;
@@ -41,9 +42,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * A tenant signs in through providers of its own: the provider row, the binding and the user all
- * live in the tenant, the callback has the tenant's own address, and the session is the one the
- * tenant module hands out. The platform's providers and users stay out of reach, and a provider
- * code may be used by the platform and a tenant alike.
+ * live in the tenant, and the session is the one the tenant module hands out. An OAuth2 provider of
+ * a tenant calls back on the platform's address, so a tenant reusing the platform's app needs no
+ * further address registered there; the tenant comes from the state. The platform's providers and
+ * users stay out of reach, and a provider code may be used by the platform and a tenant alike.
  */
 @Import(SsoTenantLoginTest.StandInTenantModule.class)
 public class SsoTenantLoginTest extends EruptApplicationTests {
@@ -56,6 +58,10 @@ public class SsoTenantLoginTest extends EruptApplicationTests {
     private static final String PROVIDER = "tenant-test";
 
     private static final String ACCOUNT = "sso-tenant-user";
+
+    private static final String PLATFORM_CALLBACK = "/erupt-api/sso/callback/" + PROVIDER;
+
+    private static final String TENANT_CALLBACK = "/erupt-api/sso/tenant/" + TENANT_CODE + "/callback/" + PROVIDER;
 
     /**
      * What erupt-tenant contributes, reduced to the answers this test needs.
@@ -174,12 +180,12 @@ public class SsoTenantLoginTest extends EruptApplicationTests {
     }
 
     @Test
-    void theTenantSignsInOnItsOwnCallbackAndGetsTheTenantSession() {
+    void theTenantSignsInOnThePlatformCallbackAndGetsTheTenantSession() {
         String authorize = this.authorize(TENANT_CODE);
         String redirectUri = URLDecoder.decode(param(authorize, "redirect_uri"), StandardCharsets.UTF_8);
-        assertTrue(redirectUri.endsWith("/erupt-api/sso/tenant/" + TENANT_CODE + "/callback/" + PROVIDER), redirectUri);
+        assertTrue(redirectUri.endsWith("/erupt-api/sso/callback/" + PROVIDER), "the platform's address: " + redirectUri);
 
-        String back = this.callback("/erupt-api/sso/tenant/" + TENANT_CODE + "/callback/" + PROVIDER, param(authorize, "state"));
+        String back = this.callback(PLATFORM_CALLBACK, param(authorize, "state"));
         assertTrue(back.contains("/#/passport/tenant?tenantCode=" + TENANT_CODE + "&"), "back to the tenant login page: " + back);
         String ticket = param(back, "ssoTicket");
         assertNotNull(ticket, back);
@@ -199,12 +205,26 @@ public class SsoTenantLoginTest extends EruptApplicationTests {
     }
 
     @Test
-    void aTenantStateDoesNotPassOnThePlatformCallback() {
-        String state = param(this.authorize(TENANT_CODE), "state");
-        String back = this.callback("/erupt-api/sso/callback/" + PROVIDER, state);
+    void theTenantsOwnPathIsAcceptedForTheTenantOnly() {
+        // a tenant row with its own redirect URI registered calls back on the tenant path
+        String back = this.callback(TENANT_CALLBACK, param(this.authorize(TENANT_CODE), "state"));
+        assertNotNull(param(back, "ssoTicket"), back);
+
+        // the state names the tenant: another tenant's path cannot cash it in
+        back = this.callback("/erupt-api/sso/tenant/other-tenant/callback/" + PROVIDER, param(this.authorize(TENANT_CODE), "state"));
         assertNotNull(param(back, "ssoError"), back);
         assertNull(param(back, "ssoTicket"));
-        assertTrue(StandInTenantModule.LOGINS.isEmpty());
+        assertEquals(1, StandInTenantModule.LOGINS.size());
+    }
+
+    @Test
+    void aProviderRefusalOnThePlatformCallbackReturnsToTheTenantLoginPage() {
+        String state = param(this.authorize(TENANT_CODE), "state");
+        ResponseEntity<Void> resp = noRedirect.getForEntity(
+                this.url(PLATFORM_CALLBACK + "?state=" + state + "&error=access_denied"), Void.class);
+        String back = resp.getHeaders().getLocation().toString();
+        assertTrue(back.contains("/#/passport/tenant?tenantCode=" + TENANT_CODE + "&"), back);
+        assertEquals("access_denied", param(back, "ssoError"));
     }
 
     @Test
@@ -212,7 +232,7 @@ public class SsoTenantLoginTest extends EruptApplicationTests {
         // the platform's admin account is unknown inside the tenant, and the row does not auto create
         this.userInfo = json("sub", "tenant-subject-2", "preferred_username", eruptUpmsProp.getDefaultAccount());
         String authorize = this.authorize(TENANT_CODE);
-        String back = this.callback("/erupt-api/sso/tenant/" + TENANT_CODE + "/callback/" + PROVIDER, param(authorize, "state"));
+        String back = this.callback(PLATFORM_CALLBACK, param(authorize, "state"));
         assertNotNull(param(back, "ssoError"), back);
         assertTrue(StandInTenantModule.LOGINS.isEmpty());
     }
@@ -222,7 +242,7 @@ public class SsoTenantLoginTest extends EruptApplicationTests {
         sessions.runAs(TENANT_ID, em -> eruptDao.lambdaQuery(em, EruptSso.class).list().forEach(it -> it.setAutoCreate(true)));
         this.userInfo = json("sub", "tenant-subject-3", "preferred_username", "sso-tenant-new");
         String authorize = this.authorize(TENANT_CODE);
-        String back = this.callback("/erupt-api/sso/tenant/" + TENANT_CODE + "/callback/" + PROVIDER, param(authorize, "state"));
+        String back = this.callback(PLATFORM_CALLBACK, param(authorize, "state"));
         assertNotNull(param(back, "ssoTicket"), back);
 
         EruptUser created = sessions.callAs(TENANT_ID, em -> eruptDao.lambdaQuery(em, EruptUser.class)
@@ -236,9 +256,26 @@ public class SsoTenantLoginTest extends EruptApplicationTests {
     void aTenantTheModuleRefusesGetsTheReasonInsteadOfATicket() {
         StandInTenantModule.refusal = "company expired";
         String authorize = this.authorize(TENANT_CODE);
-        String back = this.callback("/erupt-api/sso/tenant/" + TENANT_CODE + "/callback/" + PROVIDER, param(authorize, "state"));
+        String back = this.callback(PLATFORM_CALLBACK, param(authorize, "state"));
         assertNull(param(back, "ssoTicket"));
+        // a failure on the platform's address still ends on the tenant's login page
+        assertTrue(back.contains("/#/passport/tenant?tenantCode=" + TENANT_CODE + "&"), back);
         assertEquals("company expired", URLDecoder.decode(param(back, "ssoError"), StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void aTenantsSamlProviderKeepsTheTenantsOwnConsumerAddress() {
+        // an IdP tells service providers apart by the consumer URL, so a tenant's SAML row cannot
+        // share the platform's
+        sessions.runAs(TENANT_ID, em -> {
+            EruptSso saml = provider("https://idp.test", "Acme SAML");
+            saml.setCode("tenant-saml");
+            saml.setType(SsoProviderType.SAML);
+            saml.setAuthorizeUrl("https://idp.test/sso");
+            em.persist(saml);
+        });
+        String metadata = rest.getForObject("/erupt-api/sso/tenant/" + TENANT_CODE + "/saml/tenant-saml/metadata", String.class);
+        assertTrue(metadata.contains("/erupt-api/sso/tenant/" + TENANT_CODE + "/callback/tenant-saml\""), metadata);
     }
 
     @Test

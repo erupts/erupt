@@ -19,16 +19,16 @@ import xyz.erupt.sso.vo.EruptSsoProviderVo;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Sign-on endpoints. All of them are anonymous by design: they are what a user without a
  * session has to reach, and each one carries its own proof — a state, a ticket, a signed
  * assertion or nothing worth protecting.
  *
- * <p>The tenant login page passes its tenant code to {@code providers} and {@code authorize};
- * the provider then calls back on the tenant's own path, {@code /sso/tenant/{tenant}/...}, which is
- * also what a tenant registers at its provider. Without a tenant code everything is the platform's.
+ * <p>The tenant login page passes its tenant code to {@code providers} and {@code authorize}. An
+ * OAuth2 provider of a tenant calls back on the platform's address, the tenant being in the state;
+ * a SAML provider of a tenant uses the tenant's own path, {@code /sso/tenant/{tenant}/...}. Without a
+ * tenant code everything is the platform's.
  *
  * @author YuePeng
  * date 2026-09-18
@@ -65,7 +65,7 @@ public class EruptSsoController {
                          HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (null != error) {
             // the provider refused before erupt was ever involved, its own wording is the useful one
-            response.sendRedirect(eruptSsoService.loginPageUrl(tenant, request, Map.of("ssoError", error)));
+            response.sendRedirect(eruptSsoService.errorRedirect(tenant, state, error, request));
             return;
         }
         response.sendRedirect(eruptSsoService.callbackRedirect(provider, tenant, state, authCode, request));
