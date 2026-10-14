@@ -31,6 +31,8 @@ public class RecordRevisionTest extends EruptApplicationTests {
 
     private static final String ERUPT = AuthVerifyModel.class.getSimpleName();
 
+    private static final String TENANT = "t-revision";
+
     @Resource
     private EruptModifyService modifyService;
 
@@ -113,6 +115,38 @@ public class RecordRevisionTest extends EruptApplicationTests {
         assertEquals(4, history.size());
         assertEquals(RevisionOperation.DELETE, history.get(0).getOperation());
         assertNull(history.get(0).getChanges().stream().filter(c -> "value".equals(c.getField())).findFirst().orElseThrow().getAfter());
+    }
+
+    /**
+     * A revision belongs to the tenant whose session wrote it: asking for a record id is not enough
+     * to read another tenant's history, and the platform does not see the tenant's either.
+     */
+    @Test
+    void aRevisionIsReadBackByItsOwnTenantOnly() {
+        String recordId = String.valueOf(id);
+        MetaUser tenantUser = new MetaUser(2L, "tenant-admin", "tenant-admin", TENANT);
+        try {
+            MetaContext.register(tenantUser);
+            JsonObject update = new JsonObject();
+            update.addProperty("id", id);
+            update.addProperty("key", "rev-key");
+            update.addProperty("value", "by-tenant");
+            update.addProperty("description", "first");
+            modifyService.updateEruptData(this.model(), update);
+            List<RevisionVo> tenantHistory = revisionService.list(ERUPT, recordId);
+            assertEquals(1, tenantHistory.size(), "the tenant sees its own change, not the platform's add");
+            assertEquals("by-tenant", tenantHistory.get(0).getChanges().get(0).getAfter().getAsString());
+
+            MetaContext.register(new MetaUser(1L, "admin", "admin"));
+            List<RevisionVo> platformHistory = revisionService.list(ERUPT, recordId);
+            assertEquals(1, platformHistory.size(), "the platform sees its own add, not the tenant's change");
+            assertEquals(RevisionOperation.ADD, platformHistory.get(0).getOperation());
+        } finally {
+            MetaContext.register(tenantUser);
+            transactionTemplate.executeWithoutResult(status -> eruptDao.lambdaQuery(EruptRecordRevision.class)
+                    .eq(EruptRecordRevision::getErupt, ERUPT).delete());
+            MetaContext.register(new MetaUser(1L, "admin", "admin"));
+        }
     }
 
     private EruptModel model() {

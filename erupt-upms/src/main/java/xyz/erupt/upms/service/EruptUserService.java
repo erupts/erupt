@@ -33,6 +33,7 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.prop.EruptUpmsProp;
+import xyz.erupt.upms.tenant.UpmsTenantSessions;
 import xyz.erupt.upms.util.IpUtil;
 import xyz.erupt.upms.util.IpWhiteListMatcher;
 
@@ -75,6 +76,9 @@ public class EruptUserService {
 
     @Resource
     private EruptTokenService eruptTokenService;
+
+    @Resource
+    private UpmsTenantSessions upmsTenantSessions;
 
     private final Gson gson = GsonFactory.getGson();
 
@@ -202,6 +206,11 @@ public class EruptUserService {
         return true;
     }
 
+    /**
+     * Records a sign-in under the user's own tenant. A login runs before the request has a tenant,
+     * so for a tenant user the row is written in a session of that tenant; Hibernate would
+     * otherwise stamp it with the platform.
+     */
     @Transactional
     public void saveLoginLog(EruptUser user, String token) {
         UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
@@ -214,7 +223,7 @@ public class EruptUserService {
         loginLog.setRegion(IpUtil.getCityInfo(loginLog.getIp()));
         loginLog.setBrowser(userAgent.getBrowser().getName() + " " + (userAgent.getBrowserVersion() == null ? "" : userAgent.getBrowserVersion().getMajorVersion()));
         loginLog.setDeviceType(userAgent.getOperatingSystem().getDeviceType().getName());
-        eruptDao.getEntityManager().persist(loginLog);
+        upmsTenantSessions.runAs(user.getTenantId(), em -> em.persist(loginLog));
     }
 
     /**
