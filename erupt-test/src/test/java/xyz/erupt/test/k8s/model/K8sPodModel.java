@@ -31,7 +31,7 @@ public class K8sPodModel {
     @EruptField(views = @View(title = "Namespace"), edit = @Edit(title = "Namespace", search = @Search))
     private String namespace;
 
-    @EruptK8sField("status.phase")
+    @EruptK8sField(value = "status.phase", fieldSelector = true)
     @EruptField(views = @View(title = "Phase"))
     private String phase;
 

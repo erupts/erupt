@@ -2,6 +2,7 @@ package xyz.erupt.k8s_dashboard.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptScope;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -16,6 +17,7 @@ import xyz.erupt.k8s.operation.K8sNamespaceFetchHandler;
 import xyz.erupt.k8s.operation.K8sRestartHandler;
 import xyz.erupt.k8s.operation.K8sScaleForm;
 import xyz.erupt.k8s.operation.K8sScaleHandler;
+import xyz.erupt.k8s_dashboard.scope.KubeScope;
 import xyz.erupt.k8s.service.EruptK8sClientService;
 import xyz.erupt.k8s.service.EruptK8sDataService;
 
@@ -27,6 +29,7 @@ import xyz.erupt.k8s.service.EruptK8sDataService;
                 eruptClass = K8sScaleForm.class, operationHandler = K8sScaleHandler.class),
         @RowOperation(code = "restart", title = "Restart", icon = "fa fa-rotate-right", operationHandler = K8sRestartHandler.class)
 })
+@EruptScope(KubeScope.class)
 @EruptK8s(apiVersion = "apps/v1", kind = "Deployment", masterUrl = KubeCluster.MASTER_URL, kubeConfigPath = KubeCluster.KUBECONFIG, token = KubeCluster.TOKEN,
         namespace = EruptK8sClientService.ALL_NAMESPACES)
 @EruptDataProcessor(EruptK8sDataService.DATA_PROCESSOR)

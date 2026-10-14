@@ -22,4 +22,12 @@ public @interface EruptK8sField {
      */
     String value();
 
+    /**
+     * The API server can filter on this path ({@code kubectl get --field-selector}): an equals or
+     * not-equals search on the field is sent as a field selector, so the list stays paged on the
+     * server. Only a few paths per kind qualify, e.g. a Pod's {@code spec.nodeName} and
+     * {@code status.phase}; marking any other path makes the API server refuse the list.
+     */
+    boolean fieldSelector() default false;
+
 }

@@ -59,12 +59,13 @@ public class K8sTerminalTplHandler implements Tpl.TplHandler {
         }
         if (null == pod) throw new EruptWebApiRuntimeException("Pod not found: " + target.id());
         String token = MetaContext.getToken();
+        String context = clientService.context(clientService.eruptK8s(row.getClass()));
         String namespace = pod.getMetadata().getNamespace();
         List<Map<String, String>> containers = new ArrayList<>();
         for (Container container : pod.getSpec().getContainers()) {
             Map<String, String> item = new LinkedHashMap<>();
             item.put("name", container.getName());
-            item.put("ticket", ticketService.issue(token, row.getClass(), namespace, target.name(), container.getName(), mode));
+            item.put("ticket", ticketService.issue(token, row.getClass(), context, namespace, target.name(), container.getName(), mode));
             containers.add(item);
         }
         binding.put("title", target.id());

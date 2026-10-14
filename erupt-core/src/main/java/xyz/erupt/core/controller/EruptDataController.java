@@ -1,6 +1,8 @@
 package xyz.erupt.core.controller;
 
+import xyz.erupt.core.scope.EruptScopeService;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -70,6 +72,8 @@ public class EruptDataController {
 
     private final PreEruptDataService preEruptDataService;
 
+    private final EruptScopeService eruptScopeService;
+
     public static final int MAX_PAGE_SIZE = 50000;
 
     private final Gson gson = GsonFactory.getGson();
@@ -117,7 +121,8 @@ public class EruptDataController {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isQuery);
         Tree tree = eruptModel.getErupt().tree();
-        return preEruptDataService.geneTree(eruptModel, tree.id(), tree.label(), tree.pid(), tree.rootPid(), EruptQuery.builder().build());
+        return preEruptDataService.geneTree(eruptModel, tree.id(), tree.label(), tree.pid(), tree.rootPid(),
+                EruptQuery.builder().conditions(eruptScopeService.conditions(eruptModel)).build());
     }
 
     /**
@@ -132,8 +137,14 @@ public class EruptDataController {
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public Map<String, Object> initEruptValue(@PathVariable("erupt") String eruptName) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        Object obj = eruptModel.getClazz().getDeclaredConstructor().newInstance();
-        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.addBehavior(obj)));
+        Object behavior = eruptModel.getClazz().getDeclaredConstructor().newInstance();
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.addBehavior(behavior)));
+        Object obj = behavior;
+        if (!EruptScopeService.boundFields(eruptModel).isEmpty()) {
+            JsonObject json = gson.toJsonTree(behavior).getAsJsonObject();
+            eruptScopeService.prefill(eruptModel, json);
+            obj = gson.fromJson(json, eruptModel.getClazz());
+        }
         return EruptUtil.generateEruptDataMap(eruptModel, obj, false);
     }
 
@@ -179,6 +190,7 @@ public class EruptDataController {
         RowOperation rowOperation = Arrays.stream(eruptModel.getErupt().rowOperation()).filter(it -> code.equals(it.code())).findFirst().orElseThrow(EruptNoLegalPowerException::new);
         EruptModel operatorErupt = EruptCoreService.getErupt(rowOperation.eruptClass().getSimpleName());
         if (rowOperation.operationHandler().isInterface()) return null;
+        this.verifyScope(eruptModel, ids.stream().map(Object::toString).toList());
         OperationHandler<Object, Object> operationHandler = EruptSpringUtil.getBean(rowOperation.operationHandler());
         Object eruptForm = rowOperation.eruptClass().getDeclaredConstructor().newInstance();
         DataProxyInvoke.invoke(operatorErupt, (dataProxy -> dataProxy.addBehavior(eruptForm)));
@@ -229,6 +241,7 @@ public class EruptDataController {
             }
         }
         if (body.get("ids").isJsonArray() && !body.getAsJsonArray("ids").isEmpty()) {
+            this.verifyScope(eruptModel, body.getAsJsonArray("ids").asList().stream().map(JsonElement::getAsString).toList());
             List<Object> list = new ArrayList<>();
             body.getAsJsonArray("ids").forEach(id -> list.add(DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                     .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id.getAsString()))));
@@ -439,6 +452,13 @@ public class EruptDataController {
         onChangeVo.setFormData(onChange.populateForm(o, edit.onchangeParams()));
         onChangeVo.setEditExpr(onChange.buildEditExpr(o, edit.onchangeParams()));
         return R.ok(onChangeVo);
+    }
+
+
+    // A row operation on a scoped model only reaches rows inside the current scope
+    private void verifyScope(EruptModel eruptModel, List<String> ids) {
+        if (EruptScopeService.boundFields(eruptModel).isEmpty()) return;
+        ids.forEach(id -> eruptService.verifyIdPermissions(eruptModel, id));
     }
 
 }

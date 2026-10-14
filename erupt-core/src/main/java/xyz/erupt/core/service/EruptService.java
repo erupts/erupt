@@ -1,5 +1,6 @@
 package xyz.erupt.core.service;
 
+import xyz.erupt.core.scope.EruptScopeService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
@@ -49,6 +50,9 @@ public class EruptService {
 
     @Resource
     private HttpServletRequest request;
+
+    @Resource
+    private EruptScopeService eruptScopeService;
 
     /**
      * @param eruptModel      eruptModel
@@ -177,6 +181,7 @@ public class EruptService {
             tableQuery.getSort().add(new xyz.erupt.annotation.query.Sort(dragSort.field(), xyz.erupt.annotation.query.Direction.ASC));
         }
         Optional.ofNullable(serverCondition).ifPresent(legalConditions::addAll);
+        legalConditions.addAll(eruptScopeService.conditions(eruptModel));
         return EruptQuery.builder().sort(tableQuery.getSort()).conditionStrings(conditionStrings).conditions(legalConditions).build();
     }
 
@@ -215,6 +220,8 @@ public class EruptService {
     public void verifyIdPermissions(EruptModel eruptModel, String id) {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(new Condition(eruptModel.getErupt().primaryKeyCol(), id, QueryExpression.EQ));
+        // A record outside the current scope is treated as missing, whatever id the client sends
+        conditions.addAll(eruptScopeService.conditions(eruptModel));
         Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .queryList(eruptModel, new Page(1, 1),
                         EruptQuery.builder().conditions(conditions).build());
