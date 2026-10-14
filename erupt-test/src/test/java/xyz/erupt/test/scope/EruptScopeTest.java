@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.context.MetaUser;
 import xyz.erupt.core.controller.EruptBuildController;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -22,6 +23,7 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TableQuery;
 import xyz.erupt.test.EruptApplicationTests;
+import xyz.erupt.test.model.edit.RefTargetModel;
 import xyz.erupt.test.scope.model.ProjectScope;
 import xyz.erupt.test.scope.model.ScopedTask;
 import xyz.erupt.upms.controller.EruptScopeController;
@@ -80,6 +82,8 @@ class EruptScopeTest extends EruptApplicationTests {
     private void request(String scopeHeader, long uid) {
         MetaContext.remove();
         MetaContext.register(new MetaUser(uid, "u" + uid, "u" + uid));
+        // the request is for the scoped model, as the security interceptor records it
+        MetaContext.register(new MetaErupt(ScopedTask.class.getSimpleName()));
         MockHttpServletRequest request = new MockHttpServletRequest();
         if (null != scopeHeader) request.addHeader(EruptScopeService.HEADER, scopeHeader);
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
@@ -129,6 +133,13 @@ class EruptScopeTest extends EruptApplicationTests {
 
         this.request("not json", 1L);
         assertEquals("alpha", EruptScopes.get(ProjectScope.class).getProject(), "a malformed header falls back too");
+    }
+
+    @Test
+    void onlyTheScopeOfTheRequestedModelIsRead() {
+        this.request(pick("beta"), 1L);
+        MetaContext.register(new MetaErupt(RefTargetModel.class.getSimpleName()));
+        assertEquals("alpha", EruptScopes.get(ProjectScope.class).getProject(), "a model without the scope ignores it in the header");
     }
 
     @Test

@@ -19,6 +19,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.context.MetaUser;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.module.MetaMenu;
@@ -161,6 +162,7 @@ class KubeDashboardTest extends EruptApplicationTests {
             RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
             MetaContext.remove();
             this.admin();
+            MetaContext.register(new MetaErupt(KubePod.class.getSimpleName()));
             assertEquals(List.of("demo/web-1"), list(KubePod.class).stream().map(it -> it.get("qualifiedName")).toList());
 
             form.addProperty("namespace", "nowhere");

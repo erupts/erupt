@@ -35,8 +35,9 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Runtime of {@link EruptScope}. The picked values travel as plain JSON in the {@value #HEADER}
  * request header, {@code {"KubeScope":{"cluster":"orbstack"}}}, URL-encoded. The header is client
- * input, so every request checks it against the options the current user is offered; a check holds
- * for a minute per user and values, so a page of requests asks the option handlers once.
+ * input: only the scope the requested model declares is read, and its values are checked against the
+ * options the current user is offered on every request. A check holds for a minute per user and
+ * values, so a page of requests asks the option handlers once.
  *
  * @author YuePeng
  */
@@ -117,19 +118,21 @@ public class EruptScopeService {
         if (RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attrs) {
             header = attrs.getRequest().getHeader(HEADER);
         }
-        if (StringUtils.isNotBlank(header)) {
-            JsonObject picks;
+        // Only the scope the requested model declares is read; any other key in the header is ignored
+        String eruptName = MetaContext.getErupt().getName();
+        EruptScope declared = null == eruptName ? null : scopeOf(EruptCoreService.getErupt(eruptName));
+        if (null != declared && StringUtils.isNotBlank(header)) {
+            JsonElement pick;
             try {
-                picks = JsonParser.parseString(URLDecoder.decode(header, StandardCharsets.UTF_8)).getAsJsonObject();
+                pick = JsonParser.parseString(URLDecoder.decode(header, StandardCharsets.UTF_8)).getAsJsonObject()
+                        .get(declared.value().getSimpleName());
             } catch (RuntimeException e) {
-                picks = new JsonObject();
+                pick = null;
             }
-            for (Map.Entry<String, JsonElement> pick : picks.entrySet()) {
-                EruptModel model = EruptCoreService.getErupt(pick.getKey());
-                if (null == model || !pick.getValue().isJsonObject()) continue;
-                JsonObject values = this.only(model, pick.getValue().getAsJsonObject());
+            if (null != pick && pick.isJsonObject()) {
+                JsonObject values = this.only(scopeModel(declared.value()), pick.getAsJsonObject());
                 // values the user may not pick are dropped: the request runs on the defaults instead
-                if (this.allowed(model.getClazz(), values)) resolved.put(model.getEruptName(), values);
+                if (this.allowed(declared.value(), values)) resolved.put(declared.value().getSimpleName(), values);
             }
         }
         vars.put(VARS_KEY, resolved);
