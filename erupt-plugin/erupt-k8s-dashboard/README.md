@@ -35,7 +35,7 @@ The header shows a **Workspace** picker: a cluster and, optionally, one namespac
 - **Cluster** lists the contexts of the kubeconfig the dashboard reads, current context first. That context is the default, so `kubectl config use-context` is no longer needed to look at another cluster.
 - **Namespace** lists that cluster's namespaces. Leave it empty to see every namespace. A picked namespace filters the namespaced pages, hides their namespace search and column, and new resources land in it.
 
-The pick travels with every request as plain JSON (`erupt-scope` header), and the server checks it against the options the user is offered, so a cluster or namespace they were not offered is ignored. A passed check holds for a minute. The Workspace is erupt's `@EruptScope` feature; `KubeScope` is a plain erupt form.
+The pick travels with every request as plain JSON (`erupt-scope` header), and the server checks it against the options the user is offered, so a cluster or namespace they were not offered is ignored. The namespace options are kept per cluster for 30 seconds, so a new namespace shows up within that time. The Workspace is erupt's `@EruptScope` feature; `KubeScope` is a plain erupt form.
 
 The kubeconfig comes from the standard client chain: `KUBECONFIG`, then `~/.kube/config`, then the in-cluster service account when erupt runs inside Kubernetes. To read another file, or to pin one cluster:
 
