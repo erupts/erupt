@@ -260,12 +260,17 @@
         "type": {
           "$ref": "#/$defs/ChoiceTypeType",
           "default": "SELECT"
+        },
+        "validate": {
+          "type": "boolean",
+          "default": true
         }
       },
       "required": [
         "dependField",
         "fetchHandler",
-        "type"
+        "type",
+        "validate"
       ],
       "additionalProperties": false
     },
@@ -1240,11 +1245,16 @@
         "type": {
           "$ref": "#/$defs/MultiChoiceTypeType",
           "default": "CHECKBOX"
+        },
+        "validate": {
+          "type": "boolean",
+          "default": true
         }
       },
       "required": [
         "dependField",
-        "type"
+        "type",
+        "validate"
       ],
       "additionalProperties": false
     },

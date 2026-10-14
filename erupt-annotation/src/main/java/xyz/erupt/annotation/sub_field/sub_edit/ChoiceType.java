@@ -30,6 +30,9 @@ public @interface ChoiceType {
     @Language(value = "java", prefix = "Object get() { ", suffix = ";}")
     String dependField() default "";
 
+    @Comment("Refuse an add or edit whose value is not one of the options, when erupt.choice-validate is on; turn off for a field that legitimately stores values outside them")
+    boolean validate() default true;
+
     enum Type {
         @Comment("Dropdown selection")
         SELECT,

@@ -19,6 +19,9 @@ public class EruptProp {
     // Hot-build erupt: when enabled, erupt will be rebuilt on every request. Useful for modifying erupt annotations at startup. Do NOT enable in production.
     private boolean hotBuild = false;
 
+    // Check on add, edit, cell edit and import that CHOICE / MULTI_CHOICE values are among the options the user is offered
+    private boolean choiceValidate = false;
+
     // Root path for attachment storage
     private String uploadPath = "/opt/erupt-attachment";
 
