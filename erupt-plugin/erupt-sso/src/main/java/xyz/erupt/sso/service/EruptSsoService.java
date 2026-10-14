@@ -221,8 +221,9 @@ public class EruptSsoService {
         sessionService.remove(SsoSessionKey.SSO_STATE + state); // single use, whatever happens next
         Erupts.requireNonNull(raw, I18nTranslate.$translate("sso.state_invalid"));
         SsoState payload = GsonFactory.getGson().fromJson(raw.toString(), SsoState.class);
-        // the tenant is the one the state was issued for; the callback path only has to agree with it
-        Erupts.requireTrue(Objects.equals(payload.getTenantCode(), StringUtils.defaultIfBlank(tenantCode, null)),
+        // the tenant is the one the state was issued for. A tenant's provider may call back on the
+        // platform's address (it does by default, see redirectUri); a tenant path has to agree
+        Erupts.requireTrue(StringUtils.isBlank(tenantCode) || tenantCode.equals(payload.getTenantCode()),
                 I18nTranslate.$translate("sso.state_invalid"));
         Scope scope = null == payload.getTenantCode() ? Scope.PLATFORM : new Scope(payload.getTenantCode(), payload.getTenantId());
         EruptSso sso = this.findEnabled(scope, providerCode);
@@ -277,6 +278,8 @@ public class EruptSsoService {
      * @param proof the authorization code, or for SAML the posted response
      */
     public String callbackRedirect(String providerCode, String tenantCode, String state, String proof, HttpServletRequest request) {
+        // read before the callback spends the state: a failure has to end on the right login page too
+        String loginTenant = this.loginTenant(tenantCode, state);
         Map<String, String> params;
         try {
             params = Map.of("ssoTicket", this.callback(providerCode, tenantCode, state, proof, request));
@@ -284,7 +287,24 @@ public class EruptSsoService {
             log.warn("sso callback failed: {}", providerCode, e);
             params = Map.of("ssoError", message(e));
         }
-        return this.loginPageUrl(tenantCode, request, params);
+        return this.loginPageUrl(loginTenant, request, params);
+    }
+
+    /**
+     * Where the browser goes when the provider refused before calling back with a code.
+     */
+    public String errorRedirect(String tenantCode, String state, String error, HttpServletRequest request) {
+        return this.loginPageUrl(this.loginTenant(tenantCode, state), request, Map.of("ssoError", error));
+    }
+
+    /**
+     * The tenant whose login page a callback returns to: the one in the path, otherwise the one the
+     * state was issued for. The state is only read here, the callback itself spends it.
+     */
+    private String loginTenant(String tenantCode, String state) {
+        if (StringUtils.isNotBlank(tenantCode) || StringUtils.isBlank(state)) return tenantCode;
+        Object raw = sessionService.get(SsoSessionKey.SSO_STATE + state);
+        return null == raw ? null : GsonFactory.getGson().fromJson(raw.toString(), SsoState.class).getTenantCode();
     }
 
     private static String message(Exception e) {
@@ -643,9 +663,11 @@ public class EruptSsoService {
     private String redirectUri(EruptSso sso, Scope scope, HttpServletRequest request) {
         if (StringUtils.isNotBlank(sso.getRedirectUri())) return sso.getRedirectUri();
         String base = baseUrl(request) + EruptRestPath.ERUPT_API + "/sso";
-        // a tenant's own address: two tenants may name their providers alike, and a SAML IdP
-        // tells service providers apart by this URL
-        if (scope.isPlatform()) return base + "/callback/" + sso.getCode();
+        // An OAuth2 tenant provider calls back on the platform's address: the tenant is in the
+        // state, and a tenant reusing the platform's app (one Feishu app for every tenant) needs no
+        // further address registered there. A SAML IdP tells service providers apart by this URL,
+        // so a tenant's SAML row gets the tenant's own.
+        if (scope.isPlatform() || sso.flow() != SsoProviderType.Flow.SAML) return base + "/callback/" + sso.getCode();
         return base + "/tenant/" + urlEncode(scope.tenantCode()) + "/callback/" + sso.getCode();
     }
 
