@@ -30,14 +30,13 @@ import xyz.erupt.core.view.R;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Runtime of {@link EruptScope}. The picked values travel as plain JSON in the {@value #HEADER}
  * request header, {@code {"KubeScope":{"cluster":"orbstack"}}}, URL-encoded. The header is client
  * input: only the scope the requested model declares is read, and its values are checked against the
- * options the current user is offered on every request. A check holds for a minute per user and
- * values, so a page of requests asks the option handlers once.
+ * options the current user is offered on every request. Nothing is cached here: an option handler
+ * that is costly to ask caches its own options, since only it knows how long they stay valid.
  *
  * @author YuePeng
  */
@@ -52,15 +51,8 @@ public class EruptScopeService {
     // Fields whose values can be checked against the options the user is offered
     private static final Set<EditType> CHOICE_TYPES = EnumSet.of(EditType.CHOICE, EditType.MULTI_CHOICE);
 
-    // How long a passed check is trusted: also how long a revoked option keeps working
-    private static final long CHECK_TTL_MILLIS = 60_000;
-
-    private static final int MAX_CHECKS = 10_000;
 
     private final Gson gson = GsonFactory.getGson();
-
-    // user | scope | values -> when the check expires
-    private final Map<String, Long> checked = new ConcurrentHashMap<>();
 
     // ------------------------------------------------------------------ declaration
 
@@ -74,7 +66,7 @@ public class EruptScopeService {
         return model;
     }
 
-    // The scope's fields that take part: only choices can be checked against what the user may pick
+    // The scope's fields that take part: every field the form shows
     public static List<EruptFieldModel> scopeFields(EruptModel scopeModel) {
         return scopeModel.getEruptFieldModels().stream().filter(it -> StringUtils.isNotBlank(it.getEruptField().edit().title())).toList();
     }
@@ -226,18 +218,12 @@ public class EruptScopeService {
     // ------------------------------------------------------------------ checking the header
 
     private boolean allowed(Class<?> scope, JsonObject values) {
-        long now = System.currentTimeMillis();
-        String key = MetaContext.getUser().getUid() + "|" + scope.getSimpleName() + "|" + values;
-        Long expireAt = checked.get(key);
-        if (null != expireAt && expireAt > now) return true;
         try {
             this.accept(scope, values);
+            return true;
         } catch (EruptWebApiRuntimeException e) {
             return false;
         }
-        if (checked.size() > MAX_CHECKS) checked.values().removeIf(it -> it < now);
-        checked.put(key, now + CHECK_TTL_MILLIS);
-        return true;
     }
 
     // ------------------------------------------------------------------ binding
