@@ -35,7 +35,7 @@ The header shows a **Workspace** picker: a cluster and, optionally, one namespac
 - **Cluster** lists the contexts of the kubeconfig the dashboard reads, current context first. That context is the default, so `kubectl config use-context` is no longer needed to look at another cluster.
 - **Namespace** lists that cluster's namespaces. Leave it empty to see every namespace. A picked namespace filters the namespaced pages, hides their namespace search and column, and new resources land in it.
 
-The pick is checked against the options when it is made and then travels as a signed token (`erupt-scope` header), so a user cannot forge a cluster or namespace they were not offered. The Workspace is erupt's `@EruptScope` feature; `KubeScope` is a plain erupt form.
+The pick travels with every request as plain JSON (`erupt-scope` header), and the server checks it against the options the user is offered, so a cluster or namespace they were not offered is ignored. A passed check holds for a minute. The Workspace is erupt's `@EruptScope` feature; `KubeScope` is a plain erupt form.
 
 The kubeconfig comes from the standard client chain: `KUBECONFIG`, then `~/.kube/config`, then the in-cluster service account when erupt runs inside Kubernetes. To read another file, or to pin one cluster:
 
@@ -67,5 +67,4 @@ The terminal opens in a bottom drawer. **Terminal** runs `bash`, or `sh` when th
 
 - **Volume.** Each list call reads up to 1000 items and pages them in memory. Narrow large clusters by namespace.
 - **Events** across every namespace are capped like any list; pick a namespace in the Workspace on busy clusters.
-- **Several erupt nodes.** Workspace picks are signed with a key each node generates at startup. Behind a load balancer, set the same `erupt.scope.secret` on every node, or a pick made on one node is not honoured by another. A page signs its pick again on every load; `erupt.scope.ttl-minutes` (default 720) bounds how long one open page keeps it.
 - **Writes.** Editing from YAML is a replace with the manifest's `resourceVersion`. An edit based on a stale read fails instead of overwriting.

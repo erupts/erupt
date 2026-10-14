@@ -37,6 +37,8 @@ import xyz.erupt.k8s_dashboard.scope.KubeScope;
 import xyz.erupt.test.EruptApplicationTests;
 import xyz.erupt.upms.service.EruptTokenService;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -154,7 +156,7 @@ class KubeDashboardTest extends EruptApplicationTests {
             form.addProperty("cluster", KubeContextFetchHandler.CONFIGURED);
             form.addProperty("namespace", "demo");
             MockHttpServletRequest request = new MockHttpServletRequest();
-            request.addHeader(EruptScopeService.HEADER, scopeService.accept(KubeScope.class, form).token());
+            request.addHeader(EruptScopeService.HEADER, URLEncoder.encode("{\"KubeScope\":" + form + "}", StandardCharsets.UTF_8));
             request.addHeader("token", operatorToken);
             RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
             MetaContext.remove();

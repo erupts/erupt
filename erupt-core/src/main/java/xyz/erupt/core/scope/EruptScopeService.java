@@ -4,10 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -29,18 +27,16 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.SecureRandom;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Runtime of {@link EruptScope}. The picked values travel as signed tokens in the
- * {@value #HEADER} request header: the options are checked once, when the user submits the scope
- * form, and every later request only verifies the signature. A token names its scope, its user and
- * its expiry, so it can be neither edited nor borrowed.
+ * Runtime of {@link EruptScope}. The picked values travel as plain JSON in the {@value #HEADER}
+ * request header, {@code {"KubeScope":{"cluster":"orbstack"}}}, URL-encoded. The header is client
+ * input, so every request checks it against the options the current user is offered; a check holds
+ * for a minute per user and values, so a page of requests asks the option handlers once.
  *
  * @author YuePeng
  */
@@ -50,34 +46,19 @@ public class EruptScopeService {
 
     public static final String HEADER = "erupt-scope";
 
-    private static final String HMAC = "HmacSHA256";
-
     private static final String VARS_KEY = EruptScopeService.class.getName();
 
     private static final Set<EditType> SCOPE_TYPES = EnumSet.of(EditType.CHOICE, EditType.MULTI_CHOICE);
 
-    private static final Base64.Encoder B64 = Base64.getUrlEncoder().withoutPadding();
+    // How long a passed check is trusted: also how long a revoked option keeps working
+    private static final long CHECK_TTL_MILLIS = 60_000;
+
+    private static final int MAX_CHECKS = 10_000;
 
     private final Gson gson = GsonFactory.getGson();
 
-    @Value("${erupt.scope.secret:}")
-    private String secret;
-
-    // Pages sign their pick again on every load, so a token only has to outlive one open page
-    @Value("${erupt.scope.ttl-minutes:720}")
-    private long ttlMinutes;
-
-    private byte[] key;
-
-    @PostConstruct
-    void init() {
-        if (StringUtils.isBlank(secret)) {
-            key = new byte[32];
-            new SecureRandom().nextBytes(key);
-        } else {
-            key = secret.getBytes(StandardCharsets.UTF_8);
-        }
-    }
+    // user | scope | values -> when the check expires
+    private final Map<String, Long> checked = new ConcurrentHashMap<>();
 
     // ------------------------------------------------------------------ declaration
 
@@ -110,7 +91,7 @@ public class EruptScopeService {
     // ------------------------------------------------------------------ current values
 
     /**
-     * The current request's values of a scope: the verified header token, else the defaults.
+     * The current request's values of a scope: the checked header values, else the defaults.
      */
     public JsonObject current(Class<?> scope) {
         Map<String, JsonObject> resolved = this.resolved();
@@ -137,8 +118,18 @@ public class EruptScopeService {
             header = attrs.getRequest().getHeader(HEADER);
         }
         if (StringUtils.isNotBlank(header)) {
-            for (String token : header.split(",")) {
-                Optional.ofNullable(this.verify(token.trim())).ifPresent(it -> resolved.put(it.scope(), it.values()));
+            JsonObject picks;
+            try {
+                picks = JsonParser.parseString(URLDecoder.decode(header, StandardCharsets.UTF_8)).getAsJsonObject();
+            } catch (RuntimeException e) {
+                picks = new JsonObject();
+            }
+            for (Map.Entry<String, JsonElement> pick : picks.entrySet()) {
+                EruptModel model = EruptCoreService.getErupt(pick.getKey());
+                if (null == model || !pick.getValue().isJsonObject()) continue;
+                JsonObject values = this.only(model, pick.getValue().getAsJsonObject());
+                // values the user may not pick are dropped: the request runs on the defaults instead
+                if (this.allowed(model.getClazz(), values)) resolved.put(model.getEruptName(), values);
             }
         }
         vars.put(VARS_KEY, resolved);
@@ -172,12 +163,12 @@ public class EruptScopeService {
 
     // ------------------------------------------------------------------ accepting a pick
 
-    public record Accepted(String token, JsonObject values, Map<String, String> labels) {
+    public record Accepted(JsonObject values, Map<String, String> labels) {
     }
 
     /**
-     * Checks a submitted scope form the way an add is checked, plus every choice against the options
-     * the current user is offered, then signs it.
+     * Checks a scope pick the way an add is checked, plus every choice against the options the
+     * current user is offered; answers the values kept and their labels.
      */
     public Accepted accept(Class<?> scope, JsonObject form) {
         EruptModel model = scopeModel(scope);
@@ -201,8 +192,7 @@ public class EruptScopeService {
             }
             labels.put(field.getFieldName(), String.join(", ", picked.stream().map(options::get).toList()));
         }
-        long expireAt = System.currentTimeMillis() / 1000 + ttlMinutes * 60;
-        return new Accepted(this.sign(scope.getSimpleName(), values, expireAt), values, labels);
+        return new Accepted(values, labels);
     }
 
     public Accepted acceptDefaults(Class<?> scope) {
@@ -224,46 +214,21 @@ public class EruptScopeService {
                 || (value.isJsonPrimitive() && value.getAsString().isEmpty());
     }
 
-    // ------------------------------------------------------------------ token
+    // ------------------------------------------------------------------ checking the header
 
-    private record Signed(String scope, JsonObject values) {
-    }
-
-    private String sign(String scope, JsonObject values, long expireAt) {
-        JsonObject payload = new JsonObject();
-        payload.addProperty("s", scope);
-        payload.addProperty("u", String.valueOf(MetaContext.getUser().getUid()));
-        payload.addProperty("e", expireAt);
-        payload.add("v", values);
-        String body = B64.encodeToString(payload.toString().getBytes(StandardCharsets.UTF_8));
-        return body + "." + B64.encodeToString(this.mac(body));
-    }
-
-    private Signed verify(String token) {
-        int dot = token.indexOf('.');
-        if (dot <= 0) return null;
-        String body = token.substring(0, dot);
-        byte[] signature;
+    private boolean allowed(Class<?> scope, JsonObject values) {
+        long now = System.currentTimeMillis();
+        String key = MetaContext.getUser().getUid() + "|" + scope.getSimpleName() + "|" + values;
+        Long expireAt = checked.get(key);
+        if (null != expireAt && expireAt > now) return true;
         try {
-            signature = Base64.getUrlDecoder().decode(token.substring(dot + 1));
-        } catch (IllegalArgumentException e) {
-            return null;
+            this.accept(scope, values);
+        } catch (EruptWebApiRuntimeException e) {
+            return false;
         }
-        if (!MessageDigest.isEqual(this.mac(body), signature)) return null;
-        JsonObject payload = JsonParser.parseString(new String(Base64.getUrlDecoder().decode(body), StandardCharsets.UTF_8)).getAsJsonObject();
-        if (payload.get("e").getAsLong() < System.currentTimeMillis() / 1000) return null;
-        if (!payload.get("u").getAsString().equals(String.valueOf(MetaContext.getUser().getUid()))) return null;
-        return new Signed(payload.get("s").getAsString(), payload.getAsJsonObject("v"));
-    }
-
-    private byte[] mac(String body) {
-        try {
-            Mac mac = Mac.getInstance(HMAC);
-            mac.init(new SecretKeySpec(key, HMAC));
-            return mac.doFinal(body.getBytes(StandardCharsets.UTF_8));
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
+        if (checked.size() > MAX_CHECKS) checked.values().removeIf(it -> it < now);
+        checked.put(key, now + CHECK_TTL_MILLIS);
+        return true;
     }
 
     // ------------------------------------------------------------------ binding

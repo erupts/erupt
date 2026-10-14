@@ -26,6 +26,8 @@ import xyz.erupt.test.scope.model.ProjectScope;
 import xyz.erupt.test.scope.model.ScopedTask;
 import xyz.erupt.upms.controller.EruptScopeController;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -83,10 +85,9 @@ class EruptScopeTest extends EruptApplicationTests {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
     }
 
-    private String pick(String project) {
-        JsonObject form = new JsonObject();
-        form.addProperty("project", project);
-        return scopeService.accept(ProjectScope.class, form).token();
+    // The erupt-scope header a page sends for this pick: plain JSON, URL-encoded
+    private static String pick(String project) {
+        return URLEncoder.encode("{\"ProjectScope\":{\"project\":\"" + project + "\"}}", StandardCharsets.UTF_8);
     }
 
     private List<String> names() {
@@ -109,40 +110,37 @@ class EruptScopeTest extends EruptApplicationTests {
 
     @Test
     void signedPickFiltersTheList() {
-        String token = this.pick("beta");
-        this.request(token, 1L);
+        this.request(pick("beta"), 1L);
         assertEquals("beta", EruptScopes.get(ProjectScope.class).getProject());
         assertEquals(List.of("b1"), this.names());
     }
 
     @Test
     void optionsAreCheckedOnPick() {
-        assertThrows(EruptWebApiRuntimeException.class, () -> this.pick("gamma"));
+        assertThrows(EruptWebApiRuntimeException.class, () -> scopeService.accept(ProjectScope.class, this.form("gamma")));
         assertEquals("Beta", scopeService.accept(ProjectScope.class, this.form("beta")).labels().get("project"));
     }
 
     @Test
-    void tamperedOrBorrowedTokensAreIgnored() {
-        String token = this.pick("beta");
-        String[] parts = token.split("\\.");
-        String forged = parts[0].substring(0, parts[0].length() - 2) + "AA." + parts[1];
-        this.request(forged, 1L);
-        assertEquals("alpha", EruptScopes.get(ProjectScope.class).getProject(), "a broken signature falls back to the defaults");
+    void headerValuesOutsideTheOptionsAreIgnored() {
+        this.request(pick("gamma"), 1L);
+        assertEquals("alpha", EruptScopes.get(ProjectScope.class).getProject(), "a value the user may not pick falls back to the defaults");
+        assertEquals(List.of("a1", "a2"), this.names());
 
-        this.request(token, 2L);
-        assertEquals("alpha", EruptScopes.get(ProjectScope.class).getProject(), "another user's token is not honoured");
+        this.request("not json", 1L);
+        assertEquals("alpha", EruptScopes.get(ProjectScope.class).getProject(), "a malformed header falls back too");
     }
 
     @Test
     void idsOutsideTheScopeAreRefused() {
-        this.request(this.pick("beta"), 1L);
+        this.request(pick("beta"), 1L);
         eruptService.verifyIdPermissions(tasks(), String.valueOf(this.id("b1")));
         assertThrows(EruptWebApiRuntimeException.class, () -> eruptService.verifyIdPermissions(tasks(), String.valueOf(this.id("a1"))));
     }
 
     @Test
     void writesAreForcedIntoTheScope() {
-        this.request(this.pick("beta"), 1L);
+        this.request(pick("beta"), 1L);
         JsonObject add = new JsonObject();
         add.addProperty("name", "b2");
         add.addProperty("project", "alpha");
@@ -173,8 +171,6 @@ class EruptScopeTest extends EruptApplicationTests {
         assertEquals(List.of(ScopedTask.class.getSimpleName()), view.getModels(), "shown on the pages of these models only");
         assertEquals(List.of("project"), view.getFields());
         assertEquals(Map.of("project", "Alpha"), view.getDefaults().labels());
-        this.request(view.getDefaults().token(), 1L);
-        assertEquals("alpha", EruptScopes.get(ProjectScope.class).getProject());
     }
 
     private JsonObject form(String project) {
