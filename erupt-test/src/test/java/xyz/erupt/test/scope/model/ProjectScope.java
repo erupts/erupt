@@ -19,4 +19,8 @@ public class ProjectScope {
             choiceType = @ChoiceType(vl = {@VL(value = "alpha", label = "Alpha"), @VL(value = "beta", label = "Beta")})))
     private String project;
 
+    // free text: no options to check, taken as typed
+    @EruptField(edit = @Edit(title = "Tag"))
+    private String tag;
+
 }

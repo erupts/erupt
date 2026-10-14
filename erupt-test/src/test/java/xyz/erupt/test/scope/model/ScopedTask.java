@@ -24,4 +24,7 @@ public class ScopedTask extends BaseModel {
     @EruptField(views = @View(title = "Project"), edit = @Edit(title = "Project", notNull = true, search = @Search))
     private String project;
 
+    @EruptField(views = @View(title = "Tag"), edit = @Edit(title = "Tag"))
+    private String tag;
+
 }

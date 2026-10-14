@@ -7,9 +7,12 @@ import java.lang.annotation.*;
  * picks once in the page header and every scoped table then follows.
  * <p>
  * The scope itself is a plain {@link Erupt} form class; each of its fields is one condition, so
- * options, cascades, defaults and validation come from the ordinary form annotations. Only CHOICE
- * and MULTI_CHOICE fields take part, because only their options can be checked against what the
- * current user may pick.
+ * options, cascades, defaults and validation come from the ordinary form annotations.
+ * <p>
+ * The values come from the client. CHOICE and MULTI_CHOICE values are checked against the options
+ * the current user is offered; any other field is taken as typed. A scope only narrows what the
+ * model's menu already shows, so to keep users apart (a project they may not see) use a choice
+ * whose options are filtered per user, or {@code @Filter} / data permissions.
  * <pre>
  * &#64;Erupt(name = "Workspace")
  * public class KubeScope {

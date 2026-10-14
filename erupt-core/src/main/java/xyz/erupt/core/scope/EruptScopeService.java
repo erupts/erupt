@@ -49,7 +49,8 @@ public class EruptScopeService {
 
     private static final String VARS_KEY = EruptScopeService.class.getName();
 
-    private static final Set<EditType> SCOPE_TYPES = EnumSet.of(EditType.CHOICE, EditType.MULTI_CHOICE);
+    // Fields whose values can be checked against the options the user is offered
+    private static final Set<EditType> CHOICE_TYPES = EnumSet.of(EditType.CHOICE, EditType.MULTI_CHOICE);
 
     // How long a passed check is trusted: also how long a revoked option keeps working
     private static final long CHECK_TTL_MILLIS = 60_000;
@@ -75,7 +76,7 @@ public class EruptScopeService {
 
     // The scope's fields that take part: only choices can be checked against what the user may pick
     public static List<EruptFieldModel> scopeFields(EruptModel scopeModel) {
-        return scopeModel.getEruptFieldModels().stream().filter(it -> SCOPE_TYPES.contains(it.getEruptField().edit().type())).toList();
+        return scopeModel.getEruptFieldModels().stream().filter(it -> StringUtils.isNotBlank(it.getEruptField().edit().title())).toList();
     }
 
     // Model fields bound to the scope: same name as a scope field
@@ -155,7 +156,7 @@ public class EruptScopeService {
         JsonObject values = gson.toJsonTree(instance).getAsJsonObject();
         for (EruptFieldModel field : scopeFields(model)) {
             JsonElement value = values.get(field.getFieldName());
-            if (field.getEruptField().edit().notNull() && empty(value)) {
+            if (field.getEruptField().edit().notNull() && empty(value) && CHOICE_TYPES.contains(field.getEruptField().edit().type())) {
                 Object current = gson.fromJson(values, scope);
                 List<VLModel> options = EruptUtil.getChoiceListFilter(model, field, current);
                 if (!options.isEmpty()) values.addProperty(field.getFieldName(), options.get(0).getValue());
@@ -171,7 +172,8 @@ public class EruptScopeService {
 
     /**
      * Checks a scope pick the way an add is checked, plus every choice against the options the
-     * current user is offered; answers the values kept and their labels.
+     * current user is offered; other fields have no options to check and are taken as typed.
+     * Answers the values kept and their labels.
      */
     public Accepted accept(Class<?> scope, JsonObject form) {
         EruptModel model = scopeModel(scope);
@@ -183,6 +185,10 @@ public class EruptScopeService {
         for (EruptFieldModel field : scopeFields(model)) {
             JsonElement value = values.get(field.getFieldName());
             if (empty(value)) continue;
+            if (!CHOICE_TYPES.contains(field.getEruptField().edit().type())) {
+                labels.put(field.getFieldName(), value.isJsonPrimitive() ? value.getAsString() : value.toString());
+                continue;
+            }
             Map<String, String> options = new HashMap<>();
             for (VLModel vl : EruptUtil.getChoiceListFilter(model, field, current)) options.put(vl.getValue(), vl.getLabel());
             List<String> picked = new ArrayList<>();

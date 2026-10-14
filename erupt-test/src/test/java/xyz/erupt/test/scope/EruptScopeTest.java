@@ -64,10 +64,11 @@ class EruptScopeTest extends EruptApplicationTests {
     void seed() {
         this.request(null, 1L);
         eruptDao.lambdaQuery(ScopedTask.class).delete();
-        for (String[] row : new String[][]{{"a1", "alpha"}, {"a2", "alpha"}, {"b1", "beta"}}) {
+        for (String[] row : new String[][]{{"a1", "alpha", null}, {"a2", "alpha", null}, {"b1", "beta", "urgent"}, {"b2", "beta", null}}) {
             ScopedTask task = new ScopedTask();
             task.setName(row[0]);
             task.setProject(row[1]);
+            task.setTag(row[2]);
             eruptDao.persist(task);
         }
     }
@@ -116,7 +117,7 @@ class EruptScopeTest extends EruptApplicationTests {
     void signedPickFiltersTheList() {
         this.request(pick("beta"), 1L);
         assertEquals("beta", EruptScopes.get(ProjectScope.class).getProject());
-        assertEquals(List.of("b1"), this.names());
+        assertEquals(List.of("b1", "b2"), this.names());
     }
 
     @Test
@@ -133,6 +134,14 @@ class EruptScopeTest extends EruptApplicationTests {
 
         this.request("not json", 1L);
         assertEquals("alpha", EruptScopes.get(ProjectScope.class).getProject(), "a malformed header falls back too");
+    }
+
+    @Test
+    void freeTextFieldsAreTakenAsTyped() {
+        String header = URLEncoder.encode("{\"ProjectScope\":{\"project\":\"beta\",\"tag\":\"urgent\"}}", StandardCharsets.UTF_8);
+        this.request(header, 1L);
+        assertEquals("urgent", EruptScopes.get(ProjectScope.class).getTag());
+        assertEquals(List.of("b1"), this.names(), "a free-text field binds like a choice");
     }
 
     @Test
@@ -153,10 +162,10 @@ class EruptScopeTest extends EruptApplicationTests {
     void writesAreForcedIntoTheScope() {
         this.request(pick("beta"), 1L);
         JsonObject add = new JsonObject();
-        add.addProperty("name", "b2");
+        add.addProperty("name", "b3");
         add.addProperty("project", "alpha");
         eruptModifyService.insertEruptData(tasks(), add);
-        assertEquals("beta", eruptDao.lambdaQuery(ScopedTask.class).eq(ScopedTask::getName, "b2").one().getProject());
+        assertEquals("beta", eruptDao.lambdaQuery(ScopedTask.class).eq(ScopedTask::getName, "b3").one().getProject());
 
         JsonObject edit = new JsonObject();
         edit.addProperty("id", this.id("b1"));
@@ -170,7 +179,7 @@ class EruptScopeTest extends EruptApplicationTests {
     void buildAnnouncesTheBinding() throws Exception {
         var scope = buildController.getEruptBuild(ScopedTask.class.getSimpleName()).getScope();
         assertEquals(ProjectScope.class.getSimpleName(), scope.getName());
-        assertEquals(List.of("project"), scope.getBind());
+        assertEquals(List.of("project", "tag"), scope.getBind());
         assertTrue(EruptCoreService.isEruptNested(tasks(), ProjectScope.class.getSimpleName()), "the scope form loads under the model's menu");
     }
 
@@ -180,7 +189,7 @@ class EruptScopeTest extends EruptApplicationTests {
                 .filter(it -> it.getName().equals(ProjectScope.class.getSimpleName())).findFirst().orElseThrow();
         assertEquals(ScopedTask.class.getSimpleName(), view.getParent());
         assertEquals(List.of(ScopedTask.class.getSimpleName()), view.getModels(), "shown on the pages of these models only");
-        assertEquals(List.of("project"), view.getFields());
+        assertEquals(List.of("project", "tag"), view.getFields());
         assertEquals(Map.of("project", "Alpha"), view.getDefaults().labels());
     }
 
