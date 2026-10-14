@@ -35,3 +35,5 @@ Architecture,架构,架構,Architecture,Architecture,アーキテクチャ,아�
 CPU,CPU,CPU,CPU,CPU,CPU,CPU,ЦП,CPU,CPU,CPU,CPU,المعالج
 Memory,内存,記憶體,Memory,Mémoire,メモリ,메모리,Память,Memoria,Arbeitsspeicher,Memória,Memori,الذاكرة
 Unschedulable,禁止调度,禁止調度,Unschedulable,Non planifiable,スケジュール不可,스케줄 불가,Не планируется,No programable,Nicht planbar,Não agendável,Tidak dapat dijadwalkan,غير قابل للجدولة
+Workspace,工作区,工作區,Workspace,Espace de travail,ワークスペース,워크스페이스,Рабочая область,Espacio de trabajo,Arbeitsbereich,Área de trabalho,Ruang kerja,مساحة العمل
+Cluster,集群,叢集,Cluster,Cluster,クラスター,클러스터,Кластер,Clúster,Cluster,Cluster,Klaster,العنقود

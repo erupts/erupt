@@ -1,5 +1,6 @@
 package xyz.erupt.core.service;
 
+import xyz.erupt.core.scope.EruptScopeService;
 import com.google.gson.JsonObject;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -57,8 +58,11 @@ public class EruptModifyService {
 
     private final EruptTreeLevelService eruptTreeLevelService;
 
+    private final EruptScopeService eruptScopeService;
+
     @SneakyThrows
     public Object eruptInsertDataProcess(EruptModel eruptModel, JsonObject data) {
+        eruptScopeService.bind(eruptModel, data);
         Map<String, Object> extraData = new HashMap<>();
         if (EruptSpringUtil.isMvcContext()) {
             this.setLinkValue(eruptModel, extraData);
@@ -113,6 +117,8 @@ public class EruptModifyService {
         if (eruptModel.isRemote()) {
             return EruptRemoteRouterManager.get().insert(eruptModel.getEruptName(), data);
         }
+        // Before validation, so a required field the scope fills is not reported missing
+        eruptScopeService.bind(eruptModel, data);
         R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
         if (!validation.isSuccess()) {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
@@ -151,6 +157,10 @@ public class EruptModifyService {
         // renders read-only is refused whatever allowChange says: that flag exists so a row
         // operation or handler can still set the value, not so a hand-built cell patch can
         if (fieldModel.getEruptField().edit().readonly().edit()) {
+            throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.not_editable") + ": " + fieldName, R.PromptWay.MESSAGE);
+        }
+        // the scope owns a bound field: moving a row out of it is an edit no cell may make
+        if (EruptScopeService.boundFields(eruptModel).contains(fieldName)) {
             throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.not_editable") + ": " + fieldName, R.PromptWay.MESSAGE);
         }
         if (eruptModel.isRemote()) {
@@ -213,6 +223,7 @@ public class EruptModifyService {
             EruptRemoteRouterManager.get().update(eruptModel.getEruptName(), data);
             return;
         }
+        eruptScopeService.bind(eruptModel, data);
         R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
         if (!validation.isSuccess()) {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);

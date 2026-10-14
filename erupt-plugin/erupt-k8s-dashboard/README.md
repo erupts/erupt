@@ -22,21 +22,28 @@ Built on [erupt-data-k8s](../../erupt-data/erupt-data-k8s). To model a resource 
 | Daemon Sets | DaemonSet | Restart, create / edit from YAML, delete |
 | Services | Service | create / edit from YAML, delete |
 | Config Maps | ConfigMap | create / edit from YAML, delete |
-| Events | Event | read only; pick a namespace first |
+| Events | Event | read only |
 | Namespaces | Namespace | read only, YAML |
 | Nodes | Node | read only, YAML |
 
-Namespaced lists span every namespace. Narrow them with the Namespace dropdown or a label selector. The namespace and the label selector are both applied by the API server.
+Namespaced lists follow the Workspace namespace, or span every namespace when none is picked; a label selector narrows them further. Both are applied by the API server.
 
-## Which cluster
+## Which cluster: the Workspace
 
-With no configuration the dashboard uses the standard client chain: `KUBECONFIG`, then `~/.kube/config` (its current context), then the in-cluster service account when erupt runs inside Kubernetes. To pin a cluster:
+The header shows a **Workspace** picker: a cluster and, optionally, one namespace. Every Kubernetes page follows it. Each browser window keeps its own Workspace, so two windows can look at two clusters. Switching refreshes the window's open tabs, so none keeps acting on the cluster it was opened with; a new window starts from the last pick.
+
+- **Cluster** lists the contexts of the kubeconfig the dashboard reads, current context first. That context is the default, so `kubectl config use-context` is no longer needed to look at another cluster.
+- **Namespace** lists that cluster's namespaces. Leave it empty to see every namespace. A picked namespace filters the namespaced pages, hides their namespace search and column, and new resources land in it.
+
+The pick travels with every request as plain JSON (`erupt-scope` header), and the server checks it against the options the user is offered, so a cluster or namespace they were not offered is ignored. A passed check holds for a minute. The Workspace is erupt's `@EruptScope` feature; `KubeScope` is a plain erupt form.
+
+The kubeconfig comes from the standard client chain: `KUBECONFIG`, then `~/.kube/config`, then the in-cluster service account when erupt runs inside Kubernetes. To read another file, or to pin one cluster:
 
 ```yaml
 erupt:
   k8s-dashboard:
-    kubeconfig: /etc/erupt/kubeconfig   # a kubeconfig file, or:
-    master-url: https://10.0.0.1:6443
+    kubeconfig: /etc/erupt/kubeconfig   # its contexts become the Workspace clusters, or:
+    master-url: https://10.0.0.1:6443   # a single cluster, no switching
     token: ${K8S_TOKEN}                 # keep it in the environment, never in the file
 ```
 
@@ -59,5 +66,5 @@ The terminal opens in a bottom drawer. **Terminal** runs `bash`, or `sh` when th
 ## Notes
 
 - **Volume.** Each list call reads up to 1000 items and pages them in memory. Narrow large clusters by namespace.
-- **Events** are refused without a namespace, because busy clusters keep thousands of them.
+- **Events** across every namespace are capped like any list; pick a namespace in the Workspace on busy clusters.
 - **Writes.** Editing from YAML is a replace with the manifest's `resourceVersion`. An edit based on a stale read fails instead of overwriting.

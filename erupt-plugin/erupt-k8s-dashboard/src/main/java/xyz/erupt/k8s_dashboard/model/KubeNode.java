@@ -2,6 +2,7 @@ package xyz.erupt.k8s_dashboard.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptScope;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -11,6 +12,7 @@ import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.k8s.annotation.EruptK8s;
 import xyz.erupt.k8s.annotation.EruptK8sField;
 import xyz.erupt.k8s.operation.K8sYamlHandler;
+import xyz.erupt.k8s_dashboard.scope.KubeScope;
 import xyz.erupt.k8s.service.EruptK8sDataService;
 
 /**
@@ -19,6 +21,7 @@ import xyz.erupt.k8s.service.EruptK8sDataService;
 @Erupt(name = "Nodes", primaryKeyCol = "name", power = @Power(add = false, edit = false, delete = false, viewDetails = false),
         rowOperation = @RowOperation(code = "yaml", title = "YAML", icon = "fa fa-code", mode = RowOperation.Mode.SINGLE,
                 callHint = "", operationHandler = K8sYamlHandler.class))
+@EruptScope(KubeScope.class)
 @EruptK8s(apiVersion = "v1", kind = "Node", masterUrl = KubeCluster.MASTER_URL, kubeConfigPath = KubeCluster.KUBECONFIG, token = KubeCluster.TOKEN)
 @EruptDataProcessor(EruptK8sDataService.DATA_PROCESSOR)
 public class KubeNode {

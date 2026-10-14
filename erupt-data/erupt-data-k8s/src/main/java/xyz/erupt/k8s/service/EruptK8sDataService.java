@@ -1,5 +1,7 @@
 package xyz.erupt.k8s.service;
 
+import xyz.erupt.core.view.Page;
+import java.util.concurrent.ConcurrentHashMap;
 import com.google.gson.Gson;
 import io.fabric8.kubernetes.api.model.GenericKubernetesResource;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
@@ -71,16 +73,20 @@ public class EruptK8sDataService extends EruptBeanDataService<Map<String, Object
         EruptK8s eruptK8s = clientService.eruptK8s(eruptModel.getClazz());
         String namespace = null;
         String labelSelector = null;
+        List<EruptK8sClientService.FieldTerm> fields = new ArrayList<>();
         for (Condition condition : super.mergeConditions(eruptQuery)) {
             if (null == condition.getValue()) continue;
             if (LABEL_SELECTOR.equals(condition.getKey())) {
                 labelSelector = condition.getValue().toString();
             } else if (NAMESPACE.equals(condition.getKey()) && condition.getExpression() == QueryExpression.EQ) {
                 namespace = condition.getValue().toString();
+            } else {
+                // also checked in memory afterwards; the selector only shrinks what is read
+                Optional.ofNullable(this.fieldTerm(eruptModel, condition)).ifPresent(fields::add);
             }
         }
         List<Map<String, Object>> rows = new ArrayList<>();
-        for (GenericKubernetesResource item : clientService.list(eruptK8s, namespace, labelSelector)) {
+        for (GenericKubernetesResource item : clientService.list(eruptK8s, namespace, labelSelector, fields)) {
             rows.add(this.toRow(eruptModel, item, false));
         }
         return rows;
@@ -92,6 +98,135 @@ public class EruptK8sDataService extends EruptBeanDataService<Map<String, Object
         List<Condition> conditions = new ArrayList<>(super.mergeConditions(eruptQuery));
         conditions.removeIf(it -> LABEL_SELECTOR.equals(it.getKey()));
         return conditions;
+    }
+
+    // ------------------------------------------------------------------ paging
+
+    // A continue token stays valid until the server compacts (5 minutes by default); keep it a little less
+    private static final long CURSOR_TTL_MILLIS = 4 * 60 * 1000;
+
+    private static final int MAX_CURSORS = 2000;
+
+    private record Cursor(String token, long expireAt) {
+    }
+
+    // query + page size + page index -> the continue token that reads that page
+    private final Map<String, Cursor> cursors = new ConcurrentHashMap<>();
+
+    /**
+     * Three ways to answer a list, cheapest first:
+     * <ul>
+     *   <li>an id condition: one GET (scope checks and row operations ask this way);</li>
+     *   <li>only namespace and label selector, no sort: the API server pages with limit / continue,
+     *       so a page reads one page of resources however many the cluster holds;</li>
+     *   <li>anything else: up to {@code maxItems} resources, filtered, sorted and paged in memory.</li>
+     * </ul>
+     */
+    @Override
+    public Page queryList(EruptModel eruptModel, Page page, EruptQuery eruptQuery) {
+        EruptK8s eruptK8s = clientService.eruptK8s(eruptModel.getClazz());
+        String pk = eruptModel.getErupt().primaryKeyCol();
+        String namespace = null;
+        String labelSelector = null;
+        Object id = null;
+        List<Condition> rest = new ArrayList<>();
+        List<EruptK8sClientService.FieldTerm> fields = new ArrayList<>();
+        for (Condition condition : super.mergeConditions(eruptQuery)) {
+            if (null == condition.getValue()) continue;
+            EruptK8sClientService.FieldTerm term = this.fieldTerm(eruptModel, condition);
+            if (LABEL_SELECTOR.equals(condition.getKey())) labelSelector = condition.getValue().toString();
+            else if (NAMESPACE.equals(condition.getKey()) && condition.getExpression() == QueryExpression.EQ) namespace = condition.getValue().toString();
+            else if (pk.equals(condition.getKey()) && condition.getExpression() == QueryExpression.EQ) id = condition.getValue();
+            else if (null != term) fields.add(term);
+            else rest.add(condition);
+        }
+        if (null != id && rest.isEmpty() && fields.isEmpty() && null == labelSelector) return this.byId(eruptModel, page, id, namespace);
+        boolean sorted = (null != page.getSort() && !page.getSort().isEmpty()) || StringUtils.isNotBlank(eruptModel.getErupt().orderBy());
+        if (!rest.isEmpty() || sorted || null != id) return super.queryList(eruptModel, page, eruptQuery);
+        return this.serverPage(eruptModel, eruptK8s, page, namespace, labelSelector, fields);
+    }
+
+    // An equals / not-equals search on a field the API server can select on, as a field selector term
+    private EruptK8sClientService.FieldTerm fieldTerm(EruptModel eruptModel, Condition condition) {
+        if (condition.getExpression() != QueryExpression.EQ && condition.getExpression() != QueryExpression.NEQ) return null;
+        if (condition.getValue() instanceof Collection) return null;
+        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(condition.getKey());
+        Field field = null == fieldModel ? null : fieldModel.getField();
+        EruptK8sField mapping = null == field ? null : field.getAnnotation(EruptK8sField.class);
+        if (null == mapping || !mapping.fieldSelector()) return null;
+        return new EruptK8sClientService.FieldTerm(mapping.value(), condition.getValue().toString(), condition.getExpression() == QueryExpression.NEQ);
+    }
+
+    private Page byId(EruptModel eruptModel, Page page, Object id, String namespace) {
+        GenericKubernetesResource resource;
+        try {
+            resource = this.fetch(eruptModel, id);
+        } catch (EruptWebApiRuntimeException e) {
+            resource = null;
+        }
+        boolean visible = null != resource && (null == namespace || namespace.equals(resource.getMetadata().getNamespace()));
+        page.setList(visible ? new ArrayList<>(List.of(this.toRow(eruptModel, resource, false))) : new ArrayList<>());
+        page.setTotal((long) page.getList().size());
+        return page;
+    }
+
+    private Page serverPage(EruptModel eruptModel, EruptK8s eruptK8s, Page page, String namespace, String labelSelector,
+                            List<EruptK8sClientService.FieldTerm> fields) {
+        int size = page.getPageSize();
+        int index = Math.max(page.getPageIndex(), 1);
+        String query = eruptModel.getEruptName() + "|" + clientService.context(eruptK8s) + "|" + namespace + "|" + labelSelector
+                + "|" + fields + "|" + size + "|";
+        EruptK8sClientService.Slice slice;
+        try {
+            slice = this.walk(eruptK8s, query, namespace, labelSelector, fields, size, index);
+        } catch (KubernetesClientException e) {
+            if (e.getCode() != 410) throw EruptK8sClientService.wrap(e);
+            // the cursor expired between pages: read again from the first page
+            cursors.keySet().removeIf(key -> key.startsWith(query));
+            try {
+                slice = this.walk(eruptK8s, query, namespace, labelSelector, fields, size, index);
+            } catch (KubernetesClientException again) {
+                throw EruptK8sClientService.wrap(again);
+            }
+        }
+        List<Map<String, Object>> rows = new ArrayList<>();
+        for (GenericKubernetesResource item : slice.items()) rows.add(this.toRow(eruptModel, item, false));
+        long before = (long) (index - 1) * size;
+        long total;
+        if (null == slice.next()) total = before + rows.size();
+        else if (null != slice.remaining()) total = before + rows.size() + slice.remaining();
+        // the server does not count (it never does under a label selector): promise one more page
+        else total = before + rows.size() + size;
+        page.setList(rows);
+        page.setTotal(total);
+        return page;
+    }
+
+    // Reads page index, starting from the nearest page whose continue token is cached
+    private EruptK8sClientService.Slice walk(EruptK8s eruptK8s, String query, String namespace, String labelSelector,
+                                             List<EruptK8sClientService.FieldTerm> fields, int size, int index) {
+        long now = System.currentTimeMillis();
+        if (cursors.size() > MAX_CURSORS) cursors.values().removeIf(it -> it.expireAt() < now);
+        int from = 1;
+        String token = null;
+        for (int i = index; i > 1; i--) {
+            Cursor cursor = cursors.get(query + i);
+            if (null != cursor && cursor.expireAt() > now) {
+                from = i;
+                token = cursor.token();
+                break;
+            }
+        }
+        EruptK8sClientService.Slice slice = clientService.slice(eruptK8s, namespace, labelSelector, fields, size, token);
+        int at = from;
+        for (; at < index && null != slice.next(); at++) {
+            cursors.put(query + (at + 1), new Cursor(slice.next(), now + CURSOR_TTL_MILLIS));
+            slice = clientService.slice(eruptK8s, namespace, labelSelector, fields, size, slice.next());
+        }
+        // asked past the last page: there is nothing there
+        if (at < index) return new EruptK8sClientService.Slice(List.of(), null, null);
+        if (null != slice.next()) cursors.put(query + (index + 1), new Cursor(slice.next(), now + CURSOR_TTL_MILLIS));
+        return slice;
     }
 
     @Override

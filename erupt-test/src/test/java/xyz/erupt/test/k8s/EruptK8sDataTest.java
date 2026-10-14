@@ -304,7 +304,7 @@ class EruptK8sDataTest extends EruptApplicationTests {
         assertEquals("1008", this.openTerminal("not-a-ticket")[0]);
 
         // A real ticket whose session has ended is refused too
-        String stale = ticketService.issue("logged-out-token", K8sPodModel.class, "other", "p2", "main", K8sTerminalTicketService.Mode.LOGS);
+        String stale = ticketService.issue("logged-out-token", K8sPodModel.class, null, "other", "p2", "main", K8sTerminalTicketService.Mode.LOGS);
         assertEquals("1008", this.openTerminal(stale)[0]);
     }
 
@@ -316,7 +316,7 @@ class EruptK8sDataTest extends EruptApplicationTests {
         user.setUsername("k8s-terminal");
         String token = Erupts.generateCode(22);
         eruptTokenService.loginToken(user, List.of(), token, 5);
-        String ticket = ticketService.issue(token, K8sPodModel.class, "other", "p2", "main", K8sTerminalTicketService.Mode.EXEC);
+        String ticket = ticketService.issue(token, K8sPodModel.class, null, "other", "p2", "main", K8sTerminalTicketService.Mode.EXEC);
         // The CRUD mock server has no exec support, so the bridge opens, reports the failure and closes
         String[] outcome = this.openTerminal(ticket);
         assertEquals("1011", outcome[0], Arrays.toString(outcome));

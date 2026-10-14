@@ -2,6 +2,7 @@ package xyz.erupt.k8s_dashboard.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptScope;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -11,6 +12,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.k8s.annotation.EruptK8s;
 import xyz.erupt.k8s.operation.K8sNamespaceFetchHandler;
+import xyz.erupt.k8s_dashboard.scope.KubeScope;
 import xyz.erupt.k8s.service.EruptK8sClientService;
 import xyz.erupt.k8s.service.EruptK8sDataService;
 
@@ -18,6 +20,7 @@ import xyz.erupt.k8s.service.EruptK8sDataService;
  * @author YuePeng
  */
 @Erupt(name = "Config Maps", primaryKeyCol = EruptK8sDataService.QUALIFIED_NAME)
+@EruptScope(KubeScope.class)
 @EruptK8s(apiVersion = "v1", kind = "ConfigMap", masterUrl = KubeCluster.MASTER_URL, kubeConfigPath = KubeCluster.KUBECONFIG, token = KubeCluster.TOKEN,
         namespace = EruptK8sClientService.ALL_NAMESPACES)
 @EruptDataProcessor(EruptK8sDataService.DATA_PROCESSOR)
