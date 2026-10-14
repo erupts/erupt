@@ -55,7 +55,8 @@ public class EruptCodeServiceTest {
         DesignerForm form = new DesignerForm();
         form.setPkg("com.example.model");
         form.setClassName(Goods.class.getSimpleName());
-        form.setErupt(gson.fromJson("{name:'Product Management', power:{export:true}}", JsonObject.class));
+        // export defaults to true: a non-default value is what has to reach the code, a default is left out
+        form.setErupt(gson.fromJson("{name:'Product Management', power:{export:false}}", JsonObject.class));
 
         DesignerForm.DesignerField name = field(LambdaSee.field(Goods::getName),
                 "{title:'Product Name', sortable:true}",
@@ -80,7 +81,7 @@ public class EruptCodeServiceTest {
         // JavaPoet may break declaration annotations across lines; collapse whitespace so the
         // assertions below stay readable and check semantics, not the exact line layout.
         String flat = code.replaceAll("\\s+", " ").replace("( ", "(").replace(" )", ")");
-        assertTrue(flat.contains("@Erupt(name = \"Product Management\", power = @Power(export = true))"));
+        assertTrue(flat.contains("@Erupt(name = \"Product Management\", power = @Power(export = false))"), flat);
         assertTrue(flat.contains("@Table(name = \"" + EruptCodeService.camelToUnderline(Goods.class.getSimpleName()) + "\")"));
         assertTrue(flat.contains("public class " + Goods.class.getSimpleName() + " extends " + BaseModel.class.getSimpleName() + " {"));
         assertTrue(flat.contains("edit = @Edit(title = \"Price\", type = EditType.NUMBER, numberType = @NumberType(min = 0))"));
