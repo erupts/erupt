@@ -36,6 +36,9 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 @EruptI18n
 public class KnowledgeBase extends MetaModelUpdateVo {
 
+    /** Menu value of the knowledge base table menu; permission key for the retrieve API */
+    public static final String MENU_VALUE = "KnowledgeBase";
+
     @EruptField(
             views = @View(title = "Name", width = "150px"),
             edit = @Edit(title = "Name", notNull = true, search = @Search(operator = QueryExpression.LIKE))
