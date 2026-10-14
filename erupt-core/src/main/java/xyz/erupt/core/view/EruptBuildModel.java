@@ -1,6 +1,7 @@
 package xyz.erupt.core.view;
 
 import lombok.Getter;
+import java.util.List;
 import lombok.Setter;
 import xyz.erupt.annotation.fun.PowerObject;
 
@@ -28,6 +29,21 @@ public class EruptBuildModel {
 
     /** What the current user may do on this erupt */
     private PowerObject power;
+
+    /** The scope the model lives in, when it declares one */
+    private Scope scope;
+
+    @Getter
+    @Setter
+    public static class Scope {
+
+        /** Simple class name of the scope form */
+        private String name;
+
+        /** Model fields the scope filters and fills; the page hides them from search */
+        private List<String> bind;
+
+    }
 
     @Getter
     @Setter

@@ -27,17 +27,18 @@ public class K8sTerminalTicketService {
         EXEC, LOGS
     }
 
-    public record Ticket(String token, Class<?> eruptClass, String namespace, String pod, String container,
+    // context: the kubeconfig context picked when the page rendered; the socket has no request to ask again
+    public record Ticket(String token, Class<?> eruptClass, String context, String namespace, String pod, String container,
                          Mode mode, long expireAt) {
     }
 
-    public String issue(String token, Class<?> eruptClass, String namespace, String pod, String container, Mode mode) {
+    public String issue(String token, Class<?> eruptClass, String context, String namespace, String pod, String container, Mode mode) {
         long now = System.currentTimeMillis();
         tickets.values().removeIf(it -> it.expireAt() < now);
         byte[] bytes = new byte[24];
         random.nextBytes(bytes);
         String id = HexFormat.of().formatHex(bytes);
-        tickets.put(id, new Ticket(token, eruptClass, namespace, pod, container, mode, now + TTL_MILLIS));
+        tickets.put(id, new Ticket(token, eruptClass, context, namespace, pod, container, mode, now + TTL_MILLIS));
         return id;
     }
 

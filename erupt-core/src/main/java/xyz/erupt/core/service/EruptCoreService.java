@@ -1,5 +1,6 @@
 package xyz.erupt.core.service;
 
+import xyz.erupt.annotation.EruptScope;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.fusesource.jansi.Ansi;
@@ -108,6 +109,9 @@ public class EruptCoreService implements ApplicationRunner {
             for (EruptFieldModel fieldModel : node.getEruptFieldModels()) {
                 if (nestedMatchOrEnqueue(fieldModel.getFieldReturnName(), eruptName, visited, queue)) return true;
             }
+            // A scope form is part of every model that declares it, so its options load under that model's menu
+            EruptScope scope = null == node.getClazz() ? null : node.getClazz().getAnnotation(EruptScope.class);
+            if (null != scope && nestedMatchOrEnqueue(scope.value().getSimpleName(), eruptName, visited, queue)) return true;
             for (RowOperation operation : node.getErupt().rowOperation()) {
                 if (void.class != operation.eruptClass()
                         && nestedMatchOrEnqueue(operation.eruptClass().getSimpleName(), eruptName, visited, queue)) {

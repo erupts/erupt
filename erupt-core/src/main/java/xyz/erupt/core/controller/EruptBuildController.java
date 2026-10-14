@@ -1,6 +1,7 @@
 package xyz.erupt.core.controller;
 
 
+import xyz.erupt.core.scope.EruptScopeService;
 import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,12 @@ public class EruptBuildController {
         EruptBuildModel eruptBuildModel = new EruptBuildModel();
         eruptBuildModel.setPower(PowerInvoke.getPowerObject(eruptView));
         eruptBuildModel.setEruptModel(eruptView);
+        Optional.ofNullable(EruptScopeService.scopeOf(eruptView)).ifPresent(it -> {
+            EruptBuildModel.Scope scope = new EruptBuildModel.Scope();
+            scope.setName(it.value().getSimpleName());
+            scope.setBind(EruptScopeService.boundFields(eruptView));
+            eruptBuildModel.setScope(scope);
+        });
         eruptView.getEruptFieldModels().forEach(fieldModel -> {
             switch (fieldModel.getEruptField().edit().type()) {
                 case TAB_TREE:

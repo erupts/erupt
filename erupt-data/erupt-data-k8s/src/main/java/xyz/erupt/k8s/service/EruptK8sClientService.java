@@ -3,6 +3,7 @@ package xyz.erupt.k8s.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.api.model.GenericKubernetesResource;
 import io.fabric8.kubernetes.api.model.GenericKubernetesResourceList;
+import io.fabric8.kubernetes.api.model.ListMeta;
 import io.fabric8.kubernetes.api.model.ListOptionsBuilder;
 import io.fabric8.kubernetes.client.*;
 import io.fabric8.kubernetes.client.dsl.FilterWatchListDeletable;
@@ -12,6 +13,7 @@ import io.fabric8.kubernetes.client.utils.KubernetesSerialization;
 import io.fabric8.kubernetes.client.utils.YamlDumpSettingsBuilder;
 import jakarta.annotation.PreDestroy;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -52,8 +54,11 @@ public class EruptK8sClientService {
 
     private final Environment environment;
 
-    public EruptK8sClientService(Environment environment) {
+    private final ObjectProvider<K8sContextResolver> contextResolvers;
+
+    public EruptK8sClientService(Environment environment, ObjectProvider<K8sContextResolver> contextResolvers) {
         this.environment = environment;
+        this.contextResolvers = contextResolvers;
     }
 
     /**
@@ -76,11 +81,28 @@ public class EruptK8sClientService {
     }
 
     public KubernetesClient client(EruptK8s eruptK8s) {
+        return this.client(eruptK8s, this.context(eruptK8s));
+    }
+
+    /**
+     * A client for one kubeconfig context; null is the kubeconfig's current one. Ignored when the
+     * model names a master URL without a kubeconfig, which has no contexts.
+     */
+    public KubernetesClient client(EruptK8s eruptK8s, String context) {
         String masterUrl = this.resolve(eruptK8s.masterUrl());
         String kubeConfigPath = this.resolve(eruptK8s.kubeConfigPath());
         String token = this.resolve(eruptK8s.token());
-        String key = masterUrl + "|" + kubeConfigPath + "|" + Objects.hashCode(token);
-        return clients.computeIfAbsent(key, k -> this.buildClient(masterUrl, kubeConfigPath, token));
+        String key = masterUrl + "|" + kubeConfigPath + "|" + Objects.hashCode(token) + "|" + context;
+        return clients.computeIfAbsent(key, k -> this.buildClient(masterUrl, kubeConfigPath, token, context));
+    }
+
+    // The context the resolvers pick for this model now; null when none applies
+    public String context(EruptK8s eruptK8s) {
+        for (K8sContextResolver resolver : contextResolvers) {
+            String context = resolver.context(eruptK8s);
+            if (StringUtils.isNotBlank(context)) return context;
+        }
+        return null;
     }
 
     // Annotation strings accept ${...} placeholders, so credentials come from configuration, never source
@@ -90,16 +112,16 @@ public class EruptK8sClientService {
 
     // Loads the kubeconfig file explicitly rather than via System.setProperty — otherwise
     // two models pointing at different kubeconfigs race against each other on the JVM-wide property
-    private KubernetesClient buildClient(String masterUrl, String kubeConfigPath, String token) {
+    private KubernetesClient buildClient(String masterUrl, String kubeConfigPath, String token, String context) {
         Config base;
         if (kubeConfigPath.isEmpty() && !masterUrl.isEmpty()) {
             // An explicit server stands alone: credentials from ~/.kube/config belong to another cluster
             base = Config.empty();
         } else if (kubeConfigPath.isEmpty()) {
-            base = Config.autoConfigure(null);
+            base = Config.autoConfigure(context);
         } else {
             try {
-                base = Config.fromKubeconfig(Files.readString(Path.of(kubeConfigPath)));
+                base = Config.fromKubeconfig(context, Files.readString(Path.of(kubeConfigPath)), kubeConfigPath);
             } catch (IOException e) {
                 throw new EruptWebApiRuntimeException(I18nTranslate.$translate("k8s.operation_failed") + " → " + e.getMessage());
             }
@@ -129,7 +151,42 @@ public class EruptK8sClientService {
     /**
      * One list call. {@code namespace} narrows an all-namespaces model; a fixed namespace never widens.
      */
-    public List<GenericKubernetesResource> list(EruptK8s eruptK8s, String namespace, String labelSelector) {
+    /**
+     * Field selector terms: path = value, or path != value when {@code negated}.
+     */
+    public record FieldTerm(String path, String value, boolean negated) {
+    }
+
+    public List<GenericKubernetesResource> list(EruptK8s eruptK8s, String namespace, String labelSelector, List<FieldTerm> fields) {
+        try {
+            return this.listTarget(eruptK8s, namespace, labelSelector, fields)
+                    .list(new ListOptionsBuilder().withLimit((long) eruptK8s.maxItems()).build()).getItems();
+        } catch (KubernetesClientException e) {
+            throw wrap(e);
+        }
+    }
+
+    /**
+     * One page of a server-side paged list, the way {@code kubectl get --chunk-size} reads.
+     *
+     * @param next      the continue token for the page after this one; null on the last page
+     * @param remaining items after this page as the server counts them; null when it does not say
+     *                  (it never does under a label selector)
+     */
+    public record Slice(List<GenericKubernetesResource> items, String next, Long remaining) {
+    }
+
+    // KubernetesClientException 410 Gone: the continue token outlived the server's compaction window
+    public Slice slice(EruptK8s eruptK8s, String namespace, String labelSelector, List<FieldTerm> fields, int limit, String continueToken) {
+        GenericKubernetesResourceList list = this.listTarget(eruptK8s, namespace, labelSelector, fields)
+                .list(new ListOptionsBuilder().withLimit((long) limit).withContinue(continueToken).build());
+        ListMeta meta = list.getMetadata();
+        String next = null == meta || StringUtils.isBlank(meta.getContinue()) ? null : meta.getContinue();
+        return new Slice(list.getItems(), next, null == meta ? null : meta.getRemainingItemCount());
+    }
+
+    private FilterWatchListDeletable<GenericKubernetesResource, GenericKubernetesResourceList, Resource<GenericKubernetesResource>> listTarget(
+            EruptK8s eruptK8s, String namespace, String labelSelector, List<FieldTerm> fields) {
         MixedOperation<GenericKubernetesResource, GenericKubernetesResourceList, Resource<GenericKubernetesResource>> op = this.operation(eruptK8s);
         FilterWatchListDeletable<GenericKubernetesResource, GenericKubernetesResourceList, Resource<GenericKubernetesResource>> target;
         String fixed = this.fixedNamespace(eruptK8s);
@@ -141,11 +198,10 @@ public class EruptK8sClientService {
             target = op;
         }
         if (StringUtils.isNotBlank(labelSelector)) target = target.withLabelSelector(labelSelector);
-        try {
-            return target.list(new ListOptionsBuilder().withLimit((long) eruptK8s.maxItems()).build()).getItems();
-        } catch (KubernetesClientException e) {
-            throw wrap(e);
+        for (FieldTerm term : fields) {
+            target = term.negated() ? target.withoutField(term.path(), term.value()) : target.withField(term.path(), term.value());
         }
+        return target;
     }
 
     public Target target(EruptK8s eruptK8s, Object id) {

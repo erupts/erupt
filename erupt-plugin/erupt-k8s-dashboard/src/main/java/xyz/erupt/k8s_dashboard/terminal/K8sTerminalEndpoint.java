@@ -60,7 +60,7 @@ public class K8sTerminalEndpoint {
         }
         session.setMaxIdleTimeout(IDLE_TIMEOUT_MS);
         EruptK8sClientService clientService = EruptSpringUtil.getBean(EruptK8sClientService.class);
-        KubernetesClient client = clientService.client(clientService.eruptK8s(ticket.eruptClass()));
+        KubernetesClient client = clientService.client(clientService.eruptK8s(ticket.eruptClass()), ticket.context());
         PodResource pod = K8sPodLogHandler.pods(client, new EruptK8sClientService.Target(ticket.namespace(), ticket.pod()));
         OutputStream out = new SessionOutputStream(session);
         try {

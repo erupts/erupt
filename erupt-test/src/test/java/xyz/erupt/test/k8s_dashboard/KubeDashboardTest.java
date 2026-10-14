@@ -1,5 +1,6 @@
 package xyz.erupt.test.k8s_dashboard;
 
+import com.google.gson.JsonObject;
 import io.fabric8.kubernetes.api.model.NamespaceBuilder;
 import io.fabric8.kubernetes.api.model.PodBuilder;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
@@ -13,23 +14,26 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
-import xyz.erupt.annotation.config.QueryExpression;
-import xyz.erupt.annotation.query.Condition;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaUser;
-import xyz.erupt.core.exception.EruptApiErrorTip;
-import xyz.erupt.core.invoke.DataProcessorManager;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.MetaUserinfo;
-import xyz.erupt.core.query.EruptQuery;
+import xyz.erupt.core.scope.EruptScopeService;
+import xyz.erupt.core.scope.EruptScopes;
 import xyz.erupt.core.service.EruptCoreService;
-import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.service.EruptService;
+import xyz.erupt.core.view.TableQuery;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptModel;
-import xyz.erupt.core.view.Page;
 import xyz.erupt.k8s_dashboard.EruptK8sDashboardAutoConfiguration;
 import xyz.erupt.k8s_dashboard.model.*;
+import xyz.erupt.k8s_dashboard.scope.KubeContextFetchHandler;
+import xyz.erupt.k8s_dashboard.scope.KubeScope;
 import xyz.erupt.test.EruptApplicationTests;
 import xyz.erupt.upms.service.EruptTokenService;
 
@@ -51,6 +55,14 @@ class KubeDashboardTest extends EruptApplicationTests {
 
     @Resource
     private EruptTokenService eruptTokenService;
+
+    @Resource
+    private EruptScopeService scopeService;
+
+    @Resource
+    private EruptService eruptService;
+
+    private String operatorToken;
 
     @Autowired
     private TestRestTemplate rest;
@@ -82,7 +94,16 @@ class KubeDashboardTest extends EruptApplicationTests {
 
     @BeforeEach
     void admin() {
-        MetaContext.register(new MetaUser(1L, "admin", "admin"));
+        // A session holding every dashboard menu: the table path checks menus like the page does
+        if (null == operatorToken) {
+            List<MetaMenu> menus = new ArrayList<>();
+            for (Class<?> model : List.of(KubePod.class, KubeDeployment.class, KubeNamespace.class)) {
+                menus.add(MetaMenu.createEruptClassMenu(model, null, 1));
+            }
+            operatorToken = this.login(-30L, menus);
+        }
+        MetaContext.register(new MetaUser(-30L, "k8s-user-30", "k8s-user-30"));
+        MetaContext.registerToken(operatorToken);
     }
 
     @AfterEach
@@ -94,10 +115,12 @@ class KubeDashboardTest extends EruptApplicationTests {
         return EruptCoreService.getErupt(clazz.getSimpleName());
     }
 
-    private static Collection<Map<String, Object>> list(Class<?> clazz, Condition... conditions) {
-        Page page = DataProcessorManager.getEruptDataProcessor(clazz).queryList(model(clazz), new Page(1, 100),
-                EruptQuery.builder().conditions(new ArrayList<>(List.of(conditions))).build());
-        return page.getList();
+    // Through EruptService, the path the table page takes: scope conditions apply there
+    private Collection<Map<String, Object>> list(Class<?> clazz) {
+        TableQuery query = new TableQuery();
+        query.setPageIndex(1);
+        query.setPageSize(100);
+        return eruptService.getEruptData(model(clazz), query, null).getList();
     }
 
     @Test
@@ -117,9 +140,33 @@ class KubeDashboardTest extends EruptApplicationTests {
     }
 
     @Test
-    void eventsWaitForANamespace() {
-        assertThrows(EruptApiErrorTip.class, () -> EruptUtil.checkEruptSearchNotnull(model(KubeEvent.class), List.of()));
-        EruptUtil.checkEruptSearchNotnull(model(KubeEvent.class), List.of(new Condition("namespace", "demo", QueryExpression.EQ)));
+    void workspacePicksTheNamespace() {
+        cluster.pods().inNamespace("other").resource(new PodBuilder()
+                .withNewMetadata().withName("other-1").withNamespace("other").endMetadata()
+                .withNewSpec().addNewContainer().withName("c").withImage("busybox").endContainer().endSpec().build()).create();
+        try {
+            KubeScope defaults = EruptScopes.get(KubeScope.class);
+            assertEquals(KubeContextFetchHandler.CONFIGURED, defaults.getCluster(), "a dashboard pinned to a master URL has one cluster");
+            assertNull(defaults.getNamespace(), "no namespace picked: every namespace");
+            assertEquals(2, list(KubePod.class).size());
+
+            JsonObject form = new JsonObject();
+            form.addProperty("cluster", KubeContextFetchHandler.CONFIGURED);
+            form.addProperty("namespace", "demo");
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            request.addHeader(EruptScopeService.HEADER, scopeService.accept(KubeScope.class, form).token());
+            request.addHeader("token", operatorToken);
+            RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+            MetaContext.remove();
+            this.admin();
+            assertEquals(List.of("demo/web-1"), list(KubePod.class).stream().map(it -> it.get("qualifiedName")).toList());
+
+            form.addProperty("namespace", "nowhere");
+            assertThrows(EruptWebApiRuntimeException.class, () -> scopeService.accept(KubeScope.class, form), "only the cluster's namespaces");
+        } finally {
+            RequestContextHolder.resetRequestAttributes();
+            cluster.pods().inNamespace("other").withName("other-1").delete();
+        }
     }
 
     @Test
