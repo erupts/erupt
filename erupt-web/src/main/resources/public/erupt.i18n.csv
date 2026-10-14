@@ -815,17 +815,17 @@ edit_type.prev_step,上一步,上一步,Previous,Précédent,前へ,이전,На�
 edit_type.next_step,下一步,下一步,Next,Suivant,次へ,다음,Далее,Siguiente,Weiter,Próximo,Berikutnya,التالي
 edit_type.color_presets,预设颜色,預設顏色,Presets,Préréglages,プリセット,프리셋,Пресеты,Preajustes,Voreinstellungen,Predefinições,Prasetel,الإعدادات المسبقة
 edit_type.step_required,不能为空,不能為空,cannot be empty,ne peut pas être vide,を入力してください,을(를) 입력하세요,не может быть пустым,no puede estar vacío,darf nicht leer sein,não pode estar vazio,tidak boleh kosong,لا يمكن أن يكون فارغًا
-amap.close_point_select,关闭点选,關閉點選,Disable Point Select,Désactiver la sélection,点選を無効化,점 선택 비활성화,Отключить выбор точки,Desactivar selección,Punktauswahl deaktivieren,Desativar seleção,Nonaktifkan Pemilihan,تعطيل التحديد
-amap.point_select,点击地图选点,點擊地圖選點,Click Map to Select,Cliquer sur la carte,地図をクリックして選択,지도 클릭으로 선택,Клик на карте для выбора,Clic en mapa para seleccionar,Auf Karte klicken,Clique no mapa,Klik Peta untuk Memilih,انقر على الخريطة
-amap.select_valid_address,请选择有效的地址,請選擇有效的地址,Please select a valid address,Sélectionner une adresse valide,有効な住所を選択してください,유효한 주소를 선택하세요,Выберите действительный адрес,Seleccione una dirección válida,Bitte eine gültige Adresse wählen,Selecione um endereço válido,Pilih alamat yang valid,اختر عنوانًا صحيحًا
-amap.select_address_first,请先选择地址,請先選擇地址,Please select an address first,Veuillez sélectionner une adresse,先に住所を選択してください,먼저 주소를 선택하세요,Сначала выберите адрес,Primero seleccione una dirección,Bitte zuerst Adresse wählen,Por favor selecione um endereço,Pilih alamat terlebih dahulu,الرجاء اختيار عنوان أولاً
-amap.location_not_found,找不到该位置信息,找不到該位置資訊,Location not found,Lieu introuvable,位置が見つかりません,위치를 찾을 수 없습니다,Место не найдено,Ubicación no encontrada,Ort nicht gefunden,Localização não encontrada,Lokasi tidak ditemukan,تعذر العثور على الموقع
-amap.info.name,名称：,名稱：,Name:,Nom :,名前：,이름:,Название:,Nombre:,Name:,Nome:,Nama:,الاسم:
-amap.info.address,地址：,地址：,Address:,Adresse :,住所：,주소:,Адрес:,Dirección:,Adresse:,Endereço:,Alamat:,العنوان:
-amap.info.phone,电话：,電話：,Phone:,Téléphone :,電話：,전화:,Телефон:,Teléfono:,Telefon:,Telefone:,Telepon:,الهاتف:
-amap.info.type,类型：,類型：,Type:,Type :,種類：,유형:,Тип:,Tipo:,Typ:,Tipo:,Tipe:,النوع:
-amap.info.lng,经度：,經度：,Lng:,Long. :,経度：,경도:,Долгота:,Longitud:,Länge:,Longitude:,Bujur:,خط الطول:
-amap.info.lat,纬度：,緯度：,Lat:,Lat. :,緯度：,위도:,Широта:,Latitud:,Breite:,Latitude:,Lintang:,خط العرض:
+map.close_point_select,关闭点选,關閉點選,Disable Point Select,Désactiver la sélection,点選を無効化,점 선택 비활성화,Отключить выбор точки,Desactivar selección,Punktauswahl deaktivieren,Desativar seleção,Nonaktifkan Pemilihan,تعطيل التحديد
+map.point_select,点击地图选点,點擊地圖選點,Click Map to Select,Cliquer sur la carte,地図をクリックして選択,지도 클릭으로 선택,Клик на карте для выбора,Clic en mapa para seleccionar,Auf Karte klicken,Clique no mapa,Klik Peta untuk Memilih,انقر على الخريطة
+map.select_valid_address,请选择有效的地址,請選擇有效的地址,Please select a valid address,Sélectionner une adresse valide,有効な住所を選択してください,유효한 주소를 선택하세요,Выберите действительный адрес,Seleccione una dirección válida,Bitte eine gültige Adresse wählen,Selecione um endereço válido,Pilih alamat yang valid,اختر عنوانًا صحيحًا
+map.select_address_first,请先选择地址,請先選擇地址,Please select an address first,Veuillez sélectionner une adresse,先に住所を選択してください,먼저 주소를 선택하세요,Сначала выберите адрес,Primero seleccione una dirección,Bitte zuerst Adresse wählen,Por favor selecione um endereço,Pilih alamat terlebih dahulu,الرجاء اختيار عنوان أولاً
+map.location_not_found,找不到该位置信息,找不到該位置資訊,Location not found,Lieu introuvable,位置が見つかりません,위치를 찾을 수 없습니다,Место не найдено,Ubicación no encontrada,Ort nicht gefunden,Localização não encontrada,Lokasi tidak ditemukan,تعذر العثور على الموقع
+map.info.name,名称：,名稱：,Name:,Nom :,名前：,이름:,Название:,Nombre:,Name:,Nome:,Nama:,الاسم:
+map.info.address,地址：,地址：,Address:,Adresse :,住所：,주소:,Адрес:,Dirección:,Adresse:,Endereço:,Alamat:,العنوان:
+map.info.phone,电话：,電話：,Phone:,Téléphone :,電話：,전화:,Телефон:,Teléfono:,Telefon:,Telefone:,Telepon:,الهاتف:
+map.info.type,类型：,類型：,Type:,Type :,種類：,유형:,Тип:,Tipo:,Typ:,Tipo:,Tipe:,النوع:
+map.info.lng,经度：,經度：,Lng:,Long. :,経度：,경도:,Долгота:,Longitud:,Länge:,Longitude:,Bujur:,خط الطول:
+map.info.lat,纬度：,緯度：,Lat:,Lat. :,緯度：,위도:,Широта:,Latitud:,Breite:,Latitude:,Lintang:,خط العرض:
 excel.import_success,导入成功,匯入成功,Import successful,Importation réussie,インポート成功,가져오기 성공,Импорт выполнен,Importación exitosa,Import erfolgreich,Importação bem-sucedida,Impor berhasil,تم الاستيراد بنجاح
 gantt.scroll_to_today,定位到今天,定位到今天,Scroll to Today,"Aller à aujourd'hui",今日に移動,오늘로 이동,Перейти к сегодняшнему дню,Ir a hoy,Zum heutigen Tag,Ir para hoje,Gulir ke Hari Ini,الانتقال إلى اليوم
 bi.auto_refresh_resume,恢复自动刷新,恢復自動刷新,Resume Auto Refresh,Reprendre le rafraîchissement,自動更新を再開,자동 새로고침 재개,Возобновить автообновление,Reanudar actualización,Auto-Aktualisierung fortsetzen,Retomar atualização,Lanjutkan Refresh Otomatis,استئناف التحديث التلقائي
@@ -1385,3 +1385,35 @@ profile.avatar_image_only,请选择图片文件,請選擇圖片文件,Please cho
 global.lock_screen,锁屏,鎖屏,Lock screen,Verrouiller l'écran,画面ロック,화면 잠금,Заблокировать экран,Bloquear pantalla,Bildschirm sperren,Bloquear ecrã,Kunci layar,قفل الشاشة
 lock.tip,屏幕已锁定，输入密码继续,屏幕已鎖定，輸入密碼繼續,"Screen locked, enter your password to continue","Écran verrouillé, saisissez votre mot de passe pour continuer",画面はロックされています。続けるにはパスワードを入力してください,화면이 잠겨 있습니다. 계속하려면 비밀번호를 입력하세요,"Экран заблокирован, введите пароль для продолжения","Pantalla bloqueada, introduzca su contraseña para continuar","Bildschirm gesperrt, Passwort eingeben um fortzufahren","Ecrã bloqueado, introduza a sua palavra-passe para continuar","Layar terkunci, masukkan kata sandi untuk melanjutkan",الشاشة مقفلة، أدخل كلمة المرور للمتابعة
 lock.unlock,解锁,解鎖,Unlock,Déverrouiller,ロック解除,잠금 해제,Разблокировать,Desbloquear,Entsperren,Desbloquear,Buka kunci,إلغاء القفل
+cube.vis.unavailable,图表不可用：请确认已引入 erupt-cube 且模型已声明 @EruptCube,圖表不可用：請確認已引入 erupt-cube 且模型已宣告 @EruptCube,Charts unavailable: make sure erupt-cube is on the classpath and the model declares @EruptCube,Graphiques indisponibles : vérifiez que erupt-cube est présent et que le modèle déclare @EruptCube,グラフを利用できません：erupt-cube が導入され、モデルに @EruptCube が宣言されているか確認してください,차트를 사용할 수 없습니다: erupt-cube가 포함되어 있고 모델에 @EruptCube가 선언되어 있는지 확인하세요,"Диаграммы недоступны: убедитесь, что подключён erupt-cube и модель объявляет @EruptCube",Gráficos no disponibles: compruebe que erupt-cube está incluido y que el modelo declara @EruptCube,Diagramme nicht verfügbar: erupt-cube muss eingebunden sein und das Modell @EruptCube deklarieren,Gráficos indisponíveis: verifique se erupt-cube está incluído e se o modelo declara @EruptCube,Grafik tidak tersedia: pastikan erupt-cube tersedia dan model mendeklarasikan @EruptCube,الرسوم غير متاحة: تأكد من وجود erupt-cube وأن النموذج يعلن @EruptCube
+map.no_location,没有带位置信息的记录,沒有帶位置資訊的記錄,No rows carry a location,Aucune ligne ne contient de position,位置情報を持つレコードがありません,위치 정보가 있는 행이 없습니다,Нет строк с координатами,Ninguna fila tiene ubicación,Keine Zeilen mit Standort,Nenhuma linha possui localização,Tidak ada baris dengan lokasi,لا توجد صفوف تحتوي على موقع
+map.not_configured,未配置地图厂商（eruptSiteConfig.map）,未配置地圖廠商（eruptSiteConfig.map）,Map vendor not configured (eruptSiteConfig.map),Fournisseur de carte non configuré (eruptSiteConfig.map),地図ベンダーが未設定です（eruptSiteConfig.map）,지도 공급자가 설정되지 않았습니다 (eruptSiteConfig.map),Поставщик карт не настроен (eruptSiteConfig.map),Proveedor de mapas no configurado (eruptSiteConfig.map),Kartenanbieter nicht konfiguriert (eruptSiteConfig.map),Provedor de mapas não configurado (eruptSiteConfig.map),Vendor peta belum dikonfigurasi (eruptSiteConfig.map),لم يتم ضبط مزود الخرائط (eruptSiteConfig.map)
+map.fit,全览,全覽,Fit all,Tout afficher,全体表示,전체 보기,Показать все,Ver todo,Alles anzeigen,Ver tudo,Tampilkan semua,عرض الكل
+setting.skin-material,Material,Material,Material,Material,Material,Material,Material,Material,Material,Material,Material,Material
+setting.skin-terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal
+setting.skin-classic,Classic,Classic,Classic,Classic,Classic,Classic,Classic,Classic,Classic,Classic,Classic,Classic
+setting.skin-workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace
+setting.skin-liquid-glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass
+setting.skin-brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist
+calendar.month,月,月,Month,Mois,月,월,Месяц,Mes,Monat,Mês,Bulan,شهر
+calendar.week,周,週,Week,Semaine,週,주,Неделя,Semana,Woche,Semana,Minggu,أسبوع
+calendar.year,年,年,Year,Année,年,년,Год,Año,Jahr,Ano,Tahun,سنة
+calendar.today,今天,今天,Today,Aujourd'hui,今日,오늘,Сегодня,Hoy,Heute,Hoje,Hari ini,اليوم
+board.sum,合计,合計,Sum,Total,合計,합계,Сумма,Suma,Summe,Soma,Jumlah,المجموع
+board.wip_over,超出在制上限,超出在製上限,Over WIP limit,Limite WIP dépassée,WIP上限超過,WIP 한도 초과,Превышен лимит WIP,Límite WIP superado,WIP-Limit überschritten,Limite WIP excedido,Melebihi batas WIP,تجاوز حد العمل الجاري
+group.expand_all,全部展开,全部展開,Expand all,Tout développer,すべて展開,모두 펼치기,Развернуть все,Expandir todo,Alle aufklappen,Expandir tudo,Perluas semua,توسيع الكل
+group.collapse_all,全部折叠,全部折疊,Collapse all,Tout réduire,すべて折りたたむ,모두 접기,Свернуть все,Contraer todo,Alle zuklappen,Recolher tudo,Lipat semua,طي الكل
+group.unset,未分组,未分組,Ungrouped,Non groupé,未分類,미분류,Без группы,Sin grupo,Ohne Gruppe,Sem grupo,Tanpa grup,بدون مجموعة
+gantt.remove_link,移除前置依赖？,移除前置依賴？,Remove this dependency?,Supprimer cette dépendance ?,この依存関係を削除しますか？,이 종속성을 제거하시겠습니까?,Удалить эту зависимость?,¿Eliminar esta dependencia?,Diese Abhängigkeit entfernen?,Remover esta dependência?,Hapus dependensi ini?,إزالة هذه التبعية؟
+form.revisions,历史版本,歷史版本,History,Historique,履歴,변경 이력,История,Historial,Verlauf,Histórico,Riwayat,السجل
+revision.empty,还没有变更记录,還沒有變更記錄,No changes yet,Aucune modification,変更履歴はまだありません,아직 변경 이력이 없습니다,Изменений пока нет,Aún no hay cambios,Noch keine Änderungen,Ainda sem alterações,Belum ada perubahan,لا توجد تغييرات بعد
+revision.empty_hint,保存这条记录后，每次变更都会记录在这里,儲存這條記錄後，每次變更都會記錄在這裡,Every change saved on this record will show up here,Chaque modification de cet enregistrement apparaîtra ici,このレコードの変更はここに記録されます,이 레코드의 모든 변경 사항이 여기에 표시됩니다,Каждое изменение этой записи появится здесь,Cada cambio guardado en este registro aparecerá aquí,Jede gespeicherte Änderung dieses Datensatzes erscheint hier,Cada alteração guardada neste registo aparecerá aqui,Setiap perubahan pada data ini akan muncul di sini,ستظهر هنا كل التغييرات المحفوظة على هذا السجل
+revision.op.ADD,新增,新增,Added,Ajouté,追加,추가,Добавлено,Añadido,Hinzugefügt,Adicionado,Ditambahkan,أُضيف
+revision.op.UPDATE,修改,修改,Updated,Modifié,更新,수정,Изменено,Modificado,Geändert,Alterado,Diubah,عُدّل
+revision.op.DELETE,删除,刪除,Deleted,Supprimé,削除,삭제,Удалено,Eliminado,Gelöscht,Eliminado,Dihapus,حُذف
+revision.rollback,回滚,回滾,Roll back,Restaurer,ロールバック,롤백,Откатить,Revertir,Zurücksetzen,Reverter,Kembalikan,تراجع
+revision.rollback_hint,将这次变更的字段恢复为变更前的值？,將這次變更的欄位恢復為變更前的值？,Restore the fields of this change to their previous values?,Restaurer les champs de cette modification à leurs valeurs précédentes ?,この変更のフィールドを変更前の値に戻しますか？,이 변경의 필드를 이전 값으로 되돌릴까요?,Вернуть полям этого изменения прежние значения?,¿Restaurar los campos de este cambio a sus valores anteriores?,Die Felder dieser Änderung auf ihre vorherigen Werte zurücksetzen?,Repor os campos desta alteração para os valores anteriores?,Kembalikan kolom perubahan ini ke nilai sebelumnya?,هل تريد استعادة حقول هذا التغيير إلى قيمها السابقة؟
+scope.pick,请选择,請選擇,Select,Sélectionner,選択してください,선택하세요,Выберите,Seleccionar,Auswählen,Selecionar,Pilih,اختر
+scope.all,全部,全部,All,Tous,すべて,전체,Все,Todos,Alle,Todos,Semua,الكل
+scope.switch,切换,切換,Switch,Changer,切り替え,전환,Переключить,Cambiar,Wechseln,Mudar,Ganti,تبديل
+scope.switched,已切换到,已切換到,Switched to,Basculé vers,切り替えました：,전환됨:,Переключено на,Cambiado a,Gewechselt zu,Mudado para,Beralih ke,تم التبديل إلى

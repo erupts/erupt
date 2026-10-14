@@ -359,6 +359,27 @@
             background: linear-gradient(#f0f2f5, #f0f2f5) 6px 3px / 5px 8px no-repeat,
                         color-mix(in srgb, var(--accent) 42%, #151a26);
         }
+        /* terminal: black canvas, a dashed phosphor rule, an inverse-video row */
+        .sw.terminal i {
+            border-color: #39ff14;
+            border-style: dashed;
+            background: linear-gradient(#39ff14, #39ff14) 1px 3px / 4px 2px no-repeat, #0a0a0a;
+        }
+        html.dark .sw.terminal i {
+            background: linear-gradient(#39ff14, #39ff14) 1px 3px / 4px 2px no-repeat, #0a0a0a;
+        }
+        /* material: brand-tinted tonal surface with the bright rounded sheet inset */
+        .sw.material i {
+            border-color: color-mix(in srgb, var(--accent) 30%, #c4c7c5);
+            border-radius: 4px;
+            background: linear-gradient(#fff, #fff) 5px 3px / 6px 7px no-repeat,
+                        color-mix(in srgb, var(--accent) 10%, #f7f9fc);
+            background-clip: padding-box;
+        }
+        html.dark .sw.material i {
+            background: linear-gradient(#1e1f20, #1e1f20) 5px 3px / 6px 7px no-repeat,
+                        color-mix(in srgb, var(--accent) 12%, #131314);
+        }
         /* classic: navy column beside a white bar */
         .sw.classic i {
             border-color: #001529;
@@ -433,8 +454,10 @@
                     <button class="sw default" data-skin="default" type="button"><i></i></button>
                     <button class="sw classic" data-skin="classic" type="button"><i></i></button>
                     <button class="sw workspace" data-skin="workspace" type="button"><i></i></button>
+                    <button class="sw material" data-skin="material" type="button"><i></i></button>
                     <button class="sw glass" data-skin="liquid-glass" type="button"><i></i></button>
                     <button class="sw brutalist" data-skin="brutalist" type="button"><i></i></button>
+                    <button class="sw terminal" data-skin="terminal" type="button"><i></i></button>
                 </div>
             </div>
             <div class="who">
@@ -623,8 +646,10 @@
             {value: "default", cls: null, key: null, label: T.skinDefault},
             {value: "classic", cls: "classic", key: "classic", label: "Classic"},
             {value: "workspace", cls: "workspace", key: "workspace", label: "Workspace"},
+            {value: "material", cls: "material", key: "material", label: "Material"},
             {value: "liquid-glass", cls: "liquid-glass", key: "liquid-glass", label: "Liquid Glass"},
-            {value: "brutalist", cls: "brutalist-theme", key: "brutalist-theme", label: "Brutalist"}
+            {value: "brutalist", cls: "brutalist-theme", key: "brutalist-theme", label: "Brutalist"},
+            {value: "terminal", cls: "terminal", key: "terminal", label: "Terminal"}
         ];
         function currentSkin() {
             for (var i = 1; i < SKINS.length; i++) if (parentRoot.classList.contains(SKINS[i].cls)) return SKINS[i];
@@ -672,13 +697,12 @@
 
     // ── data: who am I ───────────────────────────────────────────────────────
     var user = null, indexNode = null, userReady = false;
-    fetchJson(api + (isTenant(token) ? "/tenant/userinfo" : "/userinfo")).then(function (u) {
+    fetchJson(api + "/userinfo").then(function (u) {
         user = u || {};
         var name = user.nickname || "";
         var hello = $("hello");
         hello.textContent = greeting() + (name ? (lang.indexOf("zh") === 0 ? "，" : ", ") : "");
         if (name) hello.appendChild(el("b", null, name));
-        if (user.tenantName) { $("tenant").textContent = user.tenantName; $("tenant").hidden = false; $("tenantDot").hidden = false; }
         var av = $("avatar");
         if (user.avatar) {
             var src = /^https?:\/\//.test(user.avatar) ? user.avatar : attach + "/" + user.avatar.replace(/^\/+/, "");
@@ -696,7 +720,12 @@
 
     // ── data: what can I reach ──────────────────────────────────────────────
     var leaves = [], tables = 0, menusReady = false;
-    fetchJson(api + (isTenant(token) ? "/tenant/menu" : "/menu")).then(function (menus) {
+    // a tenant session only names its tenant here; the user and the menus are the platform's endpoints
+    if (isTenant(token)) fetchJson(api + "/tenant/info").then(function (t) {
+        if (t && t.tenantName) { $("tenant").textContent = t.tenantName; $("tenant").hidden = false; $("tenantDot").hidden = false; }
+    }).catch(function () {});
+
+    fetchJson(api + "/menu").then(function (menus) {
         if (!Array.isArray(menus)) return;
         var nodes = menus.filter(function (m) { return m.type !== "api" && m.type !== "button"; });
         var byId = {}, hasKids = {};
@@ -715,7 +744,7 @@
     //    has no /notice endpoints at all, so nothing is requested and nothing shown.
     var unread = null, appReady = false, noticeOn = false;
     fetchJson(api + "/erupt-app").then(function (app) {
-        noticeOn = !!(app && app.properties && app.properties["erupt-notice"]) && !isTenant(token);
+        noticeOn = !!(app && app.properties && app.properties["erupt-notice"]);
     }).catch(function () { noticeOn = false; }).then(function () {
         appReady = true;
         renderStats();
