@@ -21,7 +21,7 @@ import xyz.erupt.test.model.edit.MultiChoiceModel;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * erupt.choice-validate: writes whose choice values are not among the options are refused.
+ * erupt.choice-validate (on by default): writes whose choice values are not among the options are refused.
  */
 @Transactional
 class ChoiceValidateTest extends EruptApplicationTests {
@@ -33,14 +33,13 @@ class ChoiceValidateTest extends EruptApplicationTests {
     private EruptModifyService eruptModifyService;
 
     @BeforeEach
-    void on() {
+    void user() {
         MetaContext.register(new MetaUser(1L, "admin", "admin"));
-        eruptProp.setChoiceValidate(true);
     }
 
     @AfterEach
-    void off() {
-        eruptProp.setChoiceValidate(false);
+    void restore() {
+        eruptProp.setChoiceValidate(true);
         MetaContext.remove();
     }
 
@@ -55,7 +54,8 @@ class ChoiceValidateTest extends EruptApplicationTests {
     }
 
     @Test
-    void offByDefault() {
+    void onByDefaultAndCanBeTurnedOff() {
+        assertTrue(new EruptProp().isChoiceValidate(), "on out of the box");
         eruptProp.setChoiceValidate(false);
         eruptModifyService.insertEruptData(model(ChoiceModel.class), choice("9"));
     }
