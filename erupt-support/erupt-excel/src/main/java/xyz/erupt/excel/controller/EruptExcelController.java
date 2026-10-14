@@ -1,5 +1,7 @@
 package xyz.erupt.excel.controller;
 
+import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.util.EruptChoiceValidator;
 import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -179,6 +181,11 @@ public class EruptExcelController {
                 R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
                 if (!validation.isSuccess()) {
                     throw new EruptWebApiRuntimeException(String.format(I18nTranslate.$translate("excel.row_error"), row, validation.getMessage()));
+                }
+                try {
+                    EruptChoiceValidator.validate(eruptModel, data, null);
+                } catch (EruptApiErrorTip e) {
+                    throw new EruptWebApiRuntimeException(String.format(I18nTranslate.$translate("excel.row_error"), row, e.getMessage()));
                 }
                 eruptDataList.add(eruptModifyService.eruptInsertDataProcess(eruptModel, data));
             }

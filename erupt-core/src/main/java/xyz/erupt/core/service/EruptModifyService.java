@@ -28,6 +28,7 @@ import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.EruptChoiceValidator;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
@@ -117,6 +118,7 @@ public class EruptModifyService {
         if (!validation.isSuccess()) {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
         }
+        EruptChoiceValidator.validate(eruptModel, data, null);
         Object obj = this.eruptInsertDataProcess(eruptModel, data);
         eruptTreeLevelService.verify(eruptModel, obj, true);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeAdd(obj)));
@@ -174,6 +176,7 @@ public class EruptModifyService {
         JsonObject merged = GsonFactory.getGson().toJsonTree(old).getAsJsonObject();
         merged.add(fieldName, value);
         R<Void> validation = EruptUtil.validateEruptValue(eruptModel, merged);
+        EruptChoiceValidator.validate(eruptModel, merged, old);
         if (!validation.isSuccess()) {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
         }
@@ -221,6 +224,7 @@ public class EruptModifyService {
         Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
         EruptUtil.clearObjectDefaultValueByJson(o, data);
         Object old = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol()).get(o));
+        EruptChoiceValidator.validate(eruptModel, data, old);
         Object realOld = eruptModel.getClazz().getDeclaredConstructor().newInstance();
         BeanUtils.copyProperties(old, realOld);
         String oldData;

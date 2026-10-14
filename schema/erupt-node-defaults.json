@@ -101,7 +101,8 @@
           "choiceType": {
             "dependField": "",
             "fetchHandler": [],
-            "type": "SELECT"
+            "type": "SELECT",
+            "validate": true
           },
           "desc": "",
           "notNull": false,
