@@ -412,6 +412,9 @@ public class SsoLoginTest extends EruptApplicationTests {
     private static void respond(com.sun.net.httpserver.HttpExchange exchange, String body) throws java.io.IOException {
         byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().set("Content-Type", "application/json");
+        // the provider client is a shared bean that pools keep-alive connections, while each test starts
+        // a new stub on a fresh port: closing every connection keeps one test from reusing another's
+        exchange.getResponseHeaders().set("Connection", "close");
         exchange.sendResponseHeaders(200, bytes.length);
         try (OutputStream out = exchange.getResponseBody()) {
             out.write(bytes);
