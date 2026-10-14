@@ -63,7 +63,8 @@ public class EruptScopeService {
     @Value("${erupt.scope.secret:}")
     private String secret;
 
-    @Value("${erupt.scope.ttl-minutes:30}")
+    // Pages sign their pick again on every load, so a token only has to outlive one open page
+    @Value("${erupt.scope.ttl-minutes:720}")
     private long ttlMinutes;
 
     private byte[] key;
@@ -171,7 +172,7 @@ public class EruptScopeService {
 
     // ------------------------------------------------------------------ accepting a pick
 
-    public record Accepted(String token, JsonObject values, Map<String, String> labels, long expireAt) {
+    public record Accepted(String token, JsonObject values, Map<String, String> labels) {
     }
 
     /**
@@ -201,7 +202,7 @@ public class EruptScopeService {
             labels.put(field.getFieldName(), String.join(", ", picked.stream().map(options::get).toList()));
         }
         long expireAt = System.currentTimeMillis() / 1000 + ttlMinutes * 60;
-        return new Accepted(this.sign(scope.getSimpleName(), values, expireAt), values, labels, expireAt);
+        return new Accepted(this.sign(scope.getSimpleName(), values, expireAt), values, labels);
     }
 
     public Accepted acceptDefaults(Class<?> scope) {

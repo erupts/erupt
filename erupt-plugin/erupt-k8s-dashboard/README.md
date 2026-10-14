@@ -30,7 +30,7 @@ Namespaced lists follow the Workspace namespace, or span every namespace when no
 
 ## Which cluster: the Workspace
 
-The header shows a **Workspace** picker: a cluster and, optionally, one namespace. Every Kubernetes page follows it. Switching refreshes the open tabs, so no page keeps acting on the cluster it was opened with.
+The header shows a **Workspace** picker: a cluster and, optionally, one namespace. Every Kubernetes page follows it. Each browser window keeps its own Workspace, so two windows can look at two clusters. Switching refreshes the window's open tabs, so none keeps acting on the cluster it was opened with; a new window starts from the last pick.
 
 - **Cluster** lists the contexts of the kubeconfig the dashboard reads, current context first. That context is the default, so `kubectl config use-context` is no longer needed to look at another cluster.
 - **Namespace** lists that cluster's namespaces. Leave it empty to see every namespace. A picked namespace filters the namespaced pages, hides their namespace search and column, and new resources land in it.
@@ -67,5 +67,5 @@ The terminal opens in a bottom drawer. **Terminal** runs `bash`, or `sh` when th
 
 - **Volume.** Each list call reads up to 1000 items and pages them in memory. Narrow large clusters by namespace.
 - **Events** across every namespace are capped like any list; pick a namespace in the Workspace on busy clusters.
-- **Several erupt nodes.** Workspace tokens are signed with a key each node generates at startup. Behind a load balancer, set the same `erupt.scope.secret` on every node, or a pick made on one node is not honoured by another. `erupt.scope.ttl-minutes` (default 30) sets how long a pick holds before the page renews it.
+- **Several erupt nodes.** Workspace picks are signed with a key each node generates at startup. Behind a load balancer, set the same `erupt.scope.secret` on every node, or a pick made on one node is not honoured by another. A page signs its pick again on every load; `erupt.scope.ttl-minutes` (default 720) bounds how long one open page keeps it.
 - **Writes.** Editing from YAML is a replace with the manifest's `resourceVersion`. An edit based on a stale read fails instead of overwriting.
