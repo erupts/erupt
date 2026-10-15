@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>erupt-cloud-node-servlet</artifactId>
+    <name>Erupt : Cloud Node Servlet</name>
+    <description>Serves an erupt-cloud-node-lite node from any servlet container (jakarta.servlet 5+ and javax.servlet 3.1+)</description>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>xyz.erupt</groupId>
+        <artifactId>erupt</artifactId>
+        <version>2.3.0</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <properties>
+        <!-- Jetty 12's javax.servlet environment, for testing the javax servlet -->
+        <jetty-ee8.version>12.0.36</jetty-ee8.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-cloud-node-lite</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- both provided: the container brings one, and only its servlet class is loaded -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.ee8</groupId>
+            <artifactId>jetty-ee8-servlet</artifactId>
+            <version>${jetty-ee8.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
