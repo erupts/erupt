@@ -29,6 +29,9 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.sub_erupt.Drill;
+import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeContext;
@@ -47,6 +50,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.security.interceptor.EruptSecurityInterceptor;
 import xyz.erupt.security.service.OperationService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
@@ -334,11 +338,12 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         String prefix = nodeName + EruptConst.DOT;
         eruptBuildModel.getEruptModel().setEruptName(prefix + eruptBuildModel.getEruptModel().getEruptName());
         //Modify the Drill value
-        JsonArray drills = eruptBuildModel.getEruptModel().getEruptJson().getAsJsonArray("drills");
+        JsonArray drills = eruptBuildModel.getEruptModel().getEruptJson().getAsJsonArray(LambdaSee.method(Erupt::drills));
         if (!drills.isEmpty()) {
+            String linkErupt = LambdaSee.method(Link::linkErupt);
             for (JsonElement drill : drills) {
-                JsonObject link = drill.getAsJsonObject().get("link").getAsJsonObject();
-                link.addProperty("linkErupt", prefix + link.get("linkErupt").getAsString());
+                JsonObject link = drill.getAsJsonObject().get(LambdaSee.method(Drill::link)).getAsJsonObject();
+                link.addProperty(linkErupt, prefix + link.get(linkErupt).getAsString());
             }
         }
         Optional.ofNullable(eruptBuildModel.getOperationErupts()).ifPresent(it -> {

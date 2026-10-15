@@ -23,9 +23,9 @@ public class ScriptPlaceholderConst {
     public static final String RESPONSE_PLACEHOLDER = PLACEHOLDER.replace(SYMBOL, "response");
 
     // current page size
-    public static final String PAGE_SIZE_PLACEHOLDER = PLACEHOLDER.replace(SYMBOL, "pageIndex");
+    public static final String PAGE_SIZE_PLACEHOLDER = PLACEHOLDER.replace(SYMBOL, "pageSize");
 
     // current page index
-    public static final String PAGE_INDEX_PLACEHOLDER = PLACEHOLDER.replace(SYMBOL, "pageSize");
+    public static final String PAGE_INDEX_PLACEHOLDER = PLACEHOLDER.replace(SYMBOL, "pageIndex");
 
 }

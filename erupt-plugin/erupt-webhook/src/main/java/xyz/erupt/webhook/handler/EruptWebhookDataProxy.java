@@ -15,6 +15,7 @@ import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.webhook.model.EruptWebhook;
 import xyz.erupt.webhook.model.WebhookEvent;
 import xyz.erupt.webhook.service.EruptWebhookService;
@@ -84,8 +85,8 @@ public class EruptWebhookDataProxy implements DataProxy<EruptWebhook>, Operation
         for (Map<String, Object> row : list) {
             EruptWebhook webhook = byId.get(((Number) row.get(AnnotationConst.ID)).longValue());
             if (null == webhook) continue;
-            row.put("modelTags", GSON.toJson(this.modelLabels(webhook)));
-            row.put("eventTags", GSON.toJson(this.eventLabels(webhook.getEvents())));
+            row.put(LambdaSee.field(EruptWebhook::getModelTags), GSON.toJson(this.modelLabels(webhook)));
+            row.put(LambdaSee.field(EruptWebhook::getEventTags), GSON.toJson(this.eventLabels(webhook.getEvents())));
         }
     }
 

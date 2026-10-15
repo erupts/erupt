@@ -75,7 +75,7 @@ public class EruptDesignerService {
         model.setEruptFieldModels(new ArrayList<>());
         model.setEruptFieldMap(new LinkedCaseInsensitiveMap<>());
         // BaseModel.id carries @EruptField by default, ensuring the primary key participates in serialization and form rendering
-        EruptFieldModel idField = new EruptFieldModel(xyz.erupt.jpa.model.BaseModel.class.getDeclaredField("id"), false);
+        EruptFieldModel idField = new EruptFieldModel(xyz.erupt.jpa.model.BaseModel.class.getDeclaredField(LambdaSee.field(xyz.erupt.jpa.model.BaseModel::getId)), false);
         model.getEruptFieldModels().add(idField);
         model.getEruptFieldMap().put(idField.getFieldName(), idField);
         String editTypeMember = LambdaSee.method(Edit::type);

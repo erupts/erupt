@@ -54,7 +54,7 @@ public class Sort {
         String field, dirPart;
         if (sp == -1) {
             field = seg;
-            dirPart = "ASC";
+            dirPart = Direction.ASC.name();
         } else {
             field = seg.substring(0, sp).trim();
             dirPart = seg.substring(sp + 1).trim();
@@ -64,12 +64,11 @@ public class Sort {
             throw new IllegalArgumentException("Field name must not be empty");
         }
 
-        Direction direction = switch (dirPart.toUpperCase()) {
-            case "ASC" -> Direction.ASC;
-            case "DESC" -> Direction.DESC;
-            default -> throw new IllegalArgumentException("Sort direction must be ASC or DESC, but was: " + dirPart);
-        };
-        return new Sort(field, direction);
+        try {
+            return new Sort(field, Direction.valueOf(dirPart.toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Sort direction must be ASC or DESC, but was: " + dirPart);
+        }
     }
 
 }

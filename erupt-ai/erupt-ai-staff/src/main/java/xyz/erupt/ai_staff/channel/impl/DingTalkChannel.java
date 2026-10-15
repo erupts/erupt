@@ -12,6 +12,7 @@ import xyz.erupt.ai_staff.channel.ChannelRequest;
 import xyz.erupt.ai_staff.channel.StaffChannel;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.util.Arrays;
 import java.util.Base64;
@@ -51,8 +52,8 @@ public class DingTalkChannel extends StaffChannel {
     @Override
     public void push(JsonObject config, String content) {
         String token = accessToken(config);
-        String robotCode = str(config, "clientId");
-        String conversationId = str(config, "openConversationId");
+        String robotCode = str(config, LambdaSee.field(Config::getClientId));
+        String conversationId = str(config, LambdaSee.field(Config::getOpenConversationId));
         JsonObject body = new JsonObject();
         body.addProperty("robotCode", robotCode);
         body.addProperty("msgKey", "sampleMarkdown");
@@ -63,7 +64,7 @@ public class DingTalkChannel extends StaffChannel {
             this.post(GROUP_SEND_API, body.toString(), headers);
             return;
         }
-        String userIds = str(config, "userIds");
+        String userIds = str(config, LambdaSee.field(Config::getUserIds));
         if (StringUtils.isNotBlank(userIds)) {
             JsonArray ids = new JsonArray();
             Arrays.stream(userIds.split(",")).map(String::trim).filter(StringUtils::isNotBlank).forEach(ids::add);
@@ -76,7 +77,7 @@ public class DingTalkChannel extends StaffChannel {
 
     @Override
     public boolean testConnect(JsonObject config) {
-        if (StringUtils.isBlank(str(config, "clientId"))) return false;
+        if (StringUtils.isBlank(str(config, LambdaSee.field(Config::getClientId)))) return false;
         // Exchanging the credentials for an access token validates clientId/clientSecret
         accessToken(config);
         return true;
@@ -84,8 +85,8 @@ public class DingTalkChannel extends StaffChannel {
 
     // Exchange Client ID / Client Secret for a short-lived access token
     private String accessToken(JsonObject config) {
-        String clientId = str(config, "clientId");
-        String clientSecret = str(config, "clientSecret");
+        String clientId = str(config, LambdaSee.field(Config::getClientId));
+        String clientSecret = str(config, LambdaSee.field(Config::getClientSecret));
         if (StringUtils.isBlank(clientId) || StringUtils.isBlank(clientSecret)) {
             throw new EruptWebApiRuntimeException("DingTalk clientId/clientSecret not configured");
         }
@@ -100,7 +101,7 @@ public class DingTalkChannel extends StaffChannel {
 
     @Override
     public String onCallback(JsonObject config, ChannelRequest request, Consumer<ChannelMessage> listener) {
-        String clientSecret = str(config, "clientSecret");
+        String clientSecret = str(config, LambdaSee.field(Config::getClientSecret));
         if (StringUtils.isNotBlank(clientSecret)) {
             String timestamp = request.header("timestamp");
             String expected = Base64.getEncoder().encodeToString(hmacSha256(clientSecret, timestamp + "\n" + clientSecret));

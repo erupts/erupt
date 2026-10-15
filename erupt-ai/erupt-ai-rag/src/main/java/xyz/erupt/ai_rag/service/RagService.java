@@ -32,6 +32,7 @@ import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -236,7 +237,8 @@ public class RagService {
             store.removeAll(vectorIds);
         }
         transactionTemplate.executeWithoutResult(status -> eruptDao.getEntityManager()
-                .createQuery("delete from KnowledgeChunk where document.id = :docId")
+                .createQuery("delete from " + KnowledgeChunk.class.getSimpleName() + " where "
+                        + LambdaSee.field(KnowledgeChunk::getDocument) + ".id = :docId")
                 .setParameter("docId", doc.getId()).executeUpdate());
     }
 
