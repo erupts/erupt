@@ -30,6 +30,7 @@ import xyz.erupt.core.view.R;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Runtime of {@link EruptScope}. The picked values travel as plain JSON in the {@value #HEADER}
@@ -71,7 +72,8 @@ public class EruptScopeService {
         return scopeModel.getEruptFieldModels().stream().filter(it -> StringUtils.isNotBlank(it.getEruptField().edit().title())).toList();
     }
 
-    // Model fields bound to the scope: same name as a scope field
+    // Model fields bound to the scope: same name as a scope field. A reference field binds by its
+    // id: the scope holds the id, the model the referenced row
     public static List<String> boundFields(EruptModel eruptModel) {
         EruptScope scope = scopeOf(eruptModel);
         if (null == scope || !scope.bind()) return Collections.emptyList();
@@ -228,6 +230,32 @@ public class EruptScopeService {
 
     // ------------------------------------------------------------------ binding
 
+    // The id column of a reference field, null for a plain one
+    private static String refId(EruptFieldModel field) {
+        Edit edit = field.getEruptField().edit();
+        return switch (edit.type()) {
+            case REFERENCE_TABLE -> edit.referenceTableType().id();
+            case REFERENCE_TREE -> edit.referenceTreeType().id();
+            default -> null;
+        };
+    }
+
+    // The value a bound field holds for one scope value: the value itself, or the row it refers to
+    private static JsonElement bound(EruptFieldModel field, JsonElement value) {
+        String refId = refId(field);
+        if (null == refId) return value;
+        JsonObject ref = new JsonObject();
+        ref.add(refId, value);
+        return ref;
+    }
+
+    // The scope value a submitted field holds: the value itself, or the id of the row it refers to
+    private static JsonElement unbound(EruptFieldModel field, JsonElement submitted) {
+        String refId = refId(field);
+        if (null == refId || empty(submitted) || !submitted.isJsonObject()) return submitted;
+        return submitted.getAsJsonObject().get(refId);
+    }
+
     /**
      * Conditions that keep a bound model inside the current scope; empty when it has none or the
      * user picked "all".
@@ -240,13 +268,18 @@ public class EruptScopeService {
         for (String field : fields) {
             JsonElement value = values.get(field);
             if (empty(value)) continue;
-            Class<?> type = eruptModel.getEruptFieldMap().get(field).getField().getType();
+            EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
+            String refId = refId(fieldModel);
+            Class<?> type = fieldModel.getField().getType();
+            // a reference condition carries the id the way a search does: {id: value}
+            Function<JsonElement, Object> convert = it -> null == refId
+                    ? TypeUtil.typeStrConvertObject(it.getAsString(), type) : Map.of(refId, it.getAsString());
             if (value.isJsonArray()) {
                 List<Object> list = new ArrayList<>();
-                value.getAsJsonArray().forEach(it -> list.add(TypeUtil.typeStrConvertObject(it.getAsString(), type)));
+                value.getAsJsonArray().forEach(it -> list.add(convert.apply(it)));
                 conditions.add(new Condition(field, list, QueryExpression.IN));
             } else {
-                conditions.add(new Condition(field, TypeUtil.typeStrConvertObject(value.getAsString(), type), QueryExpression.EQ));
+                conditions.add(new Condition(field, convert.apply(value), QueryExpression.EQ));
             }
         }
         return conditions;
@@ -263,28 +296,41 @@ public class EruptScopeService {
         for (String field : fields) {
             JsonElement value = values.get(field);
             if (empty(value)) continue;
+            EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
             if (!value.isJsonArray()) {
-                data.add(field, value);
+                data.add(field, bound(fieldModel, value));
                 continue;
             }
-            JsonElement submitted = data.get(field);
-            if (empty(submitted) || !value.getAsJsonArray().contains(submitted)) {
-                String title = eruptModel.getEruptFieldMap().get(field).getEruptField().edit().title();
+            JsonElement submitted = unbound(fieldModel, data.get(field));
+            if (empty(submitted) || value.getAsJsonArray().asList().stream().noneMatch(it -> it.getAsString().equals(submitted.getAsString()))) {
+                String title = fieldModel.getEruptField().edit().title();
                 throw new EruptWebApiRuntimeException(title + " " + I18nTranslate.$translate("erupt.scope.out_of_scope"));
             }
         }
     }
 
     /**
-     * Fills a new form with the current scope, so the add form shows where the record will land.
+     * Fills a new form with the current scope, so the add form shows where the record will land. A
+     * reference field shows the scope option's label.
      */
     public void prefill(EruptModel eruptModel, JsonObject data) {
         List<String> fields = boundFields(eruptModel);
         if (fields.isEmpty()) return;
-        JsonObject values = this.current(scopeOf(eruptModel).value());
+        Class<?> scope = scopeOf(eruptModel).value();
+        JsonObject values = this.current(scope);
+        Map<String, String> labels = null;
         for (String field : fields) {
             JsonElement value = values.get(field);
-            if (!empty(value) && !value.isJsonArray()) data.add(field, value);
+            if (empty(value) || value.isJsonArray()) continue;
+            EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
+            JsonElement prefilled = bound(fieldModel, value);
+            if (prefilled.isJsonObject()) {
+                if (null == labels) labels = this.accept(scope, values).labels();
+                Edit edit = fieldModel.getEruptField().edit();
+                String label = edit.type() == EditType.REFERENCE_TREE ? edit.referenceTreeType().label() : edit.referenceTableType().label();
+                prefilled.getAsJsonObject().addProperty(label, labels.get(field));
+            }
+            data.add(field, prefilled);
         }
     }
 
