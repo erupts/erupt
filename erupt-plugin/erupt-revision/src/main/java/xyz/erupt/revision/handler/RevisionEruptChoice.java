@@ -7,6 +7,7 @@ import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.revision.model.EruptRecordRevision;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +28,8 @@ public class RevisionEruptChoice implements ChoiceFetchHandler<Void> {
 
     @Override
     public List<VLModel> fetch(String[] params) {
-        List<String> erupts = eruptDao.getEntityManager()
-                .createQuery("select distinct r.erupt from EruptRecordRevision r order by r.erupt", String.class)
-                .getResultList();
+        List<String> erupts = eruptDao.lambdaQuery(EruptRecordRevision.class).distinct()
+                .orderBy(EruptRecordRevision::getErupt).listSelect(EruptRecordRevision::getErupt);
         List<VLModel> list = new ArrayList<>(erupts.size());
         for (String erupt : erupts) {
             EruptModel model = EruptCoreService.getErupt(erupt);

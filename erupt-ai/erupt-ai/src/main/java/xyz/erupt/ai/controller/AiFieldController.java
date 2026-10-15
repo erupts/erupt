@@ -15,6 +15,8 @@ import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.service.AiFieldService;
 import xyz.erupt.ai.service.LLMService;
 import xyz.erupt.ai.vo.AiFieldRequest;
+import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
@@ -25,6 +27,7 @@ import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -77,13 +80,14 @@ public class AiFieldController {
         EruptFieldModel fieldModel = eruptModel.getEruptFieldModels().stream()
                 .filter(it -> it.getFieldName().equals(fieldName)).findFirst().orElse(null);
         Erupts.requireTrue(null != fieldModel, I18nTranslate.$translate("Field not found"));
-        JsonObject edit = fieldModel.getEruptFieldJson().getAsJsonObject("edit");
+        JsonObject edit = fieldModel.getEruptFieldJson().getAsJsonObject(LambdaSee.method(EruptField::edit));
         Erupts.requireTrue(null != edit, I18nTranslate.$translate("Field not found"));
         EditType editType = AiFieldService.editTypeOf(edit);
         Erupts.requireTrue(AI_TYPES.contains(editType),
                 I18nTranslate.$translate("The AI assistant is not available on this field type"));
         // The field can turn the assistant off; absent means on, matching the annotation default
-        Erupts.requireTrue(!edit.has("ai") || edit.get("ai").getAsBoolean(),
+        String ai = LambdaSee.method(Edit::ai);
+        Erupts.requireTrue(!edit.has(ai) || edit.get(ai).getAsBoolean(),
                 I18nTranslate.$translate("The AI assistant is disabled for this field"));
 
         LLM llmModel = eruptDao.lambdaQuery(LLM.class)

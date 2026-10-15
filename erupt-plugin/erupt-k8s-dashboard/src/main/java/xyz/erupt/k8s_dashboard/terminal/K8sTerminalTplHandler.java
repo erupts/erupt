@@ -10,6 +10,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.k8s.operation.K8sPodLogHandler;
 import xyz.erupt.k8s.service.EruptK8sClientService;
+import xyz.erupt.tpl.engine.EngineConst;
 
 import java.util.*;
 
@@ -29,9 +30,6 @@ public class K8sTerminalTplHandler implements Tpl.TplHandler {
 
     public static final String TPL = "/tpl/erupt-k8s-terminal.ftl";
 
-    // FreeMarker binding the operation-tpl endpoint fills with the selected rows
-    private static final String ROWS = "rows";
-
     private final EruptK8sClientService clientService;
 
     private final K8sTerminalTicketService ticketService;
@@ -43,9 +41,9 @@ public class K8sTerminalTplHandler implements Tpl.TplHandler {
 
     @Override
     public void bindTplData(Map<String, Object> binding, String[] params) {
-        K8sTerminalTicketService.Mode mode = null != params && params.length > 0 && "logs".equalsIgnoreCase(params[0])
+        K8sTerminalTicketService.Mode mode = null != params && params.length > 0 && K8sTerminalTicketService.Mode.LOGS.name().equalsIgnoreCase(params[0])
                 ? K8sTerminalTicketService.Mode.LOGS : K8sTerminalTicketService.Mode.EXEC;
-        Object rows = binding.get(ROWS);
+        Object rows = binding.get(EngineConst.INJECT_ROWS);
         if (!(rows instanceof List<?> list) || list.isEmpty() || null == list.get(0)) {
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("k8s.primary_key_missing"));
         }

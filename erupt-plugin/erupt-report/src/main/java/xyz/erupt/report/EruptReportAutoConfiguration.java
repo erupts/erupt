@@ -17,6 +17,7 @@ import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.report.model.*;
 
 import java.nio.charset.StandardCharsets;
@@ -58,7 +59,7 @@ public class EruptReportAutoConfiguration implements EruptModule {
         String code = "BI_FUN";
         eruptDao.persistIfNotExist(BiFunction.class, new BiFunction(code, code,
                 StreamUtils.copyToString(EruptReportAutoConfiguration.class.getResourceAsStream("/BiDefaultFunction.js")
-                        , StandardCharsets.UTF_8)), "code", code);
+                        , StandardCharsets.UTF_8)), LambdaSee.field(BiFunction::getCode), code);
     }
 
     @Override

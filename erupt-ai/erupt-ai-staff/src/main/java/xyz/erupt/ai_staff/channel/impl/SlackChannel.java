@@ -11,6 +11,7 @@ import xyz.erupt.ai_staff.channel.ChannelRequest;
 import xyz.erupt.ai_staff.channel.StaffChannel;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -42,7 +43,7 @@ public class SlackChannel extends StaffChannel {
 
     @Override
     public void push(JsonObject config, String content) {
-        String url = str(config, "webhook");
+        String url = str(config, LambdaSee.field(Config::getWebhook));
         if (StringUtils.isBlank(url)) throw new EruptWebApiRuntimeException("Slack webhook not configured");
         JsonObject body = new JsonObject();
         body.addProperty("text", content);
@@ -51,7 +52,7 @@ public class SlackChannel extends StaffChannel {
 
     @Override
     public boolean testConnect(JsonObject config) {
-        String botToken = str(config, "botToken");
+        String botToken = str(config, LambdaSee.field(Config::getBotToken));
         if (StringUtils.isBlank(botToken)) return false;
         JsonObject result = GsonFactory.getGson().fromJson(
                 this.post(AUTH_TEST_API, "{}", Map.of("Authorization", "Bearer " + botToken)), JsonObject.class);
@@ -61,7 +62,7 @@ public class SlackChannel extends StaffChannel {
 
     @Override
     public String onCallback(JsonObject config, ChannelRequest request, Consumer<ChannelMessage> listener) {
-        String signingSecret = str(config, "signingSecret");
+        String signingSecret = str(config, LambdaSee.field(Config::getSigningSecret));
         if (StringUtils.isNotBlank(signingSecret)) {
             String timestamp = request.header("x-slack-request-timestamp");
             String expected = "v0=" + hex(hmacSha256(signingSecret, "v0:" + timestamp + ":" + request.getBody()));
@@ -102,7 +103,7 @@ public class SlackChannel extends StaffChannel {
         body.addProperty("channel", message.getReplyTo());
         body.addProperty("text", content);
         this.post(POST_MESSAGE_API, body.toString(),
-                Map.of("Authorization", "Bearer " + str(config, "botToken")));
+                Map.of("Authorization", "Bearer " + str(config, LambdaSee.field(Config::getBotToken))));
     }
 
     @Getter

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.ai_canvas.model.AiCanvas;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.security.SecureRandom;
 import java.util.Collection;
@@ -48,7 +49,8 @@ public class AiCanvasDataProxy implements DataProxy<AiCanvas> {
 
     @Override
     public void afterFetch(Collection<Map<String, Object>> list) {
-        list.forEach(row -> row.put("path", FILL_PATH + row.get("code")));
+        String path = LambdaSee.field(AiCanvas::getPath), code = LambdaSee.field(AiCanvas::getCode);
+        list.forEach(row -> row.put(path, FILL_PATH + row.get(code)));
     }
 
     private String generateCode() {

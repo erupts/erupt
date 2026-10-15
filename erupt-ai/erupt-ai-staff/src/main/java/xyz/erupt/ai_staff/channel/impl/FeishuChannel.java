@@ -13,6 +13,7 @@ import xyz.erupt.ai_staff.channel.ChannelRequest;
 import xyz.erupt.ai_staff.channel.StaffChannel;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -52,10 +53,10 @@ public class FeishuChannel extends StaffChannel {
 
     @Override
     public void push(JsonObject config, String content) {
-        String url = str(config, "webhook");
+        String url = str(config, LambdaSee.field(Config::getWebhook));
         if (StringUtils.isBlank(url)) throw new EruptWebApiRuntimeException("Feishu webhook not configured");
         JsonObject body = new JsonObject();
-        String secret = str(config, "webhookSecret");
+        String secret = str(config, LambdaSee.field(Config::getWebhookSecret));
         if (StringUtils.isNotBlank(secret)) {
             long timestamp = System.currentTimeMillis() / 1000;
             // Feishu quirk: timestamp + "\n" + secret is the HMAC key, the data is empty
@@ -71,7 +72,7 @@ public class FeishuChannel extends StaffChannel {
     public String onCallback(JsonObject config, ChannelRequest request, Consumer<ChannelMessage> listener) {
         JsonObject body = GsonFactory.getGson().fromJson(request.getBody(), JsonObject.class);
         if (body.has("encrypt")) {
-            body = GsonFactory.getGson().fromJson(decrypt(str(config, "encryptKey"), str(body, "encrypt")), JsonObject.class);
+            body = GsonFactory.getGson().fromJson(decrypt(str(config, LambdaSee.field(Config::getEncryptKey)), str(body, "encrypt")), JsonObject.class);
         }
         if ("url_verification".equals(str(body, "type"))) {
             JsonObject challenge = new JsonObject();
@@ -96,7 +97,7 @@ public class FeishuChannel extends StaffChannel {
 
     @Override
     public boolean testConnect(JsonObject config) {
-        if (StringUtils.isBlank(str(config, "appId"))) return false;
+        if (StringUtils.isBlank(str(config, LambdaSee.field(Config::getAppId)))) return false;
         this.tenantToken(config);
         return true;
     }
@@ -113,8 +114,8 @@ public class FeishuChannel extends StaffChannel {
 
     private String tenantToken(JsonObject config) {
         JsonObject auth = new JsonObject();
-        auth.addProperty("app_id", str(config, "appId"));
-        auth.addProperty("app_secret", str(config, "appSecret"));
+        auth.addProperty("app_id", str(config, LambdaSee.field(Config::getAppId)));
+        auth.addProperty("app_secret", str(config, LambdaSee.field(Config::getAppSecret)));
         JsonObject token = GsonFactory.getGson().fromJson(this.post(TENANT_TOKEN_API, auth.toString()), JsonObject.class);
         String value = str(token, "tenant_access_token");
         if (null == value) throw new EruptWebApiRuntimeException("Feishu get token failed: " + token);

@@ -85,9 +85,9 @@ public class EruptModel implements Cloneable {
     public EruptModel(String eruptName, String remoteNode) {
         this.eruptName = eruptName;
         this.remoteNode = remoteNode;
+        String nameMethod = LambdaSee.method(Erupt::name);
         this.erupt = (Erupt) Proxy.newProxyInstance(Erupt.class.getClassLoader(), new Class[]{Erupt.class},
-                (proxy, method, args) -> switch (method.getName()) {
-                    case "name" -> eruptName;
+                (proxy, method, args) -> nameMethod.equals(method.getName()) ? eruptName : switch (method.getName()) {
                     case "annotationType" -> Erupt.class;
                     case "toString" -> "@" + Erupt.class.getName() + "(remote:" + eruptName + ")";
                     case "hashCode" -> System.identityHashCode(proxy);

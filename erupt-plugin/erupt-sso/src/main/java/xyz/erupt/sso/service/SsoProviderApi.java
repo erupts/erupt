@@ -63,13 +63,15 @@ public class SsoProviderApi {
     public String appAccessToken(EruptSso sso) {
         AppToken cached = appTokenCache.get(sso.getId());
         if (null != cached && cached.expiresAt() > System.currentTimeMillis()) return cached.value();
-        AppToken token = switch (null == sso.getType() ? "" : sso.getType().name()) {
-            case "FEISHU" -> this.feishuTenantToken(sso);
-            case "DINGTALK" -> this.dingTalkAppToken(sso);
-            case "WECOM" -> this.weComCorpToken(sso);
-            default -> throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.app_token_unsupported")
-                    + " (" + sso.getCode() + ")");
+        AppToken token = null == sso.getType() ? null : switch (sso.getType()) {
+            case FEISHU -> this.feishuTenantToken(sso);
+            case DINGTALK -> this.dingTalkAppToken(sso);
+            case WECOM -> this.weComCorpToken(sso);
+            default -> null;
         };
+        if (null == token) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.app_token_unsupported") + " (" + sso.getCode() + ")");
+        }
         appTokenCache.put(sso.getId(), token);
         return token.value();
     }

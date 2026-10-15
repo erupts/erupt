@@ -117,7 +117,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     @Override
     public void afterUpdate(EruptMenu eruptMenu) {
-        List<EruptMenu> subMenus = eruptDao.lambdaQuery(EruptMenu.class).addCondition("parentMenu.id = " + eruptMenu.getId()).list();
+        List<EruptMenu> subMenus = eruptDao.lambdaQuery(EruptMenu.class).with(EruptMenu::getParentMenu).eq(EruptMenu::getId, eruptMenu.getId()).with().list();
         for (EruptMenu subMenu : subMenus) {
             if (null != subMenu.getValue() && subMenu.getValue().contains("@")) {
                 String[] arr = subMenu.getValue().split("@");

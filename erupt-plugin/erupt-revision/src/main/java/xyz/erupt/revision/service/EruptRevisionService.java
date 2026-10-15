@@ -226,9 +226,9 @@ public class EruptRevisionService {
     }
 
     private Integer nextVersion(String erupt, String recordId) {
-        Integer max = eruptDao.getEntityManager().createQuery(
-                        "select max(r.version) from EruptRecordRevision r where r.erupt = :erupt and r.recordId = :id", Integer.class)
-                .setParameter("erupt", erupt).setParameter("id", recordId).getSingleResult();
+        Integer max = (Integer) eruptDao.lambdaQuery(EruptRecordRevision.class)
+                .eq(EruptRecordRevision::getErupt, erupt).eq(EruptRecordRevision::getRecordId, recordId)
+                .max(EruptRecordRevision::getVersion);
         return null == max ? 1 : max + 1;
     }
 

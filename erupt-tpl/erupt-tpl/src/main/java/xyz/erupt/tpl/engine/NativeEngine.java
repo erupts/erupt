@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class NativeEngine extends EngineTemplate<Void> {
 
-    public static final String baseDir = "${base}";
+    public static final String baseDir = "${" + EngineConst.INJECT_BASE + "}";
 
     @Override
     public Tpl.Engine engine() {

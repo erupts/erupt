@@ -31,7 +31,7 @@ public class EruptSkillTools {
         List<String> result = new ArrayList<>();
         for (File entry : dir.listFiles()) {
             if (!entry.isDirectory()) continue;
-            File skillMd = new File(entry, "SKILL.md");
+            File skillMd = new File(entry, SkillStore.SKILL_MD);
             if (!skillMd.exists()) continue;
             String description = SkillStore.readDescription(entry.toPath());
             result.add(entry.getName() + ": " + (null == description ? "(no description)" : description));
@@ -48,7 +48,7 @@ public class EruptSkillTools {
         File skillDir = new File(SKILL_DIR, skillName);
         if (!skillDir.isDirectory()) return "Skill not found: " + skillName;
 
-        File skillMd = new File(skillDir, "SKILL.md");
+        File skillMd = new File(skillDir, SkillStore.SKILL_MD);
         if (!skillMd.exists()) return "Error: SKILL.md not found in skill: " + skillName;
 
         StringBuilder sb = new StringBuilder();
@@ -99,7 +99,7 @@ public class EruptSkillTools {
         try {
             File skillDir = new File(SKILL_DIR, skillName);
             skillDir.mkdirs();
-            Files.writeString(new File(skillDir, "SKILL.md").toPath(), skillMdContent);
+            Files.writeString(new File(skillDir, SkillStore.SKILL_MD).toPath(), skillMdContent);
             return "Skill saved: " + skillName + " (use writeSkillFile to add scripts/ or references/)";
         } catch (Exception e) {
             return "Error: " + e.getMessage();
@@ -116,7 +116,7 @@ public class EruptSkillTools {
             @P("Replacement text") String newText) {
         if (isUnsafePath(skillName)) return "Error: invalid skill name.";
         if (oldText == null || oldText.isEmpty()) return "Error: oldText is empty.";
-        File skillMd = new File(SKILL_DIR + skillName, "SKILL.md");
+        File skillMd = new File(SKILL_DIR + skillName, SkillStore.SKILL_MD);
         if (!skillMd.exists()) return "Skill not found: " + skillName;
         try {
             String content = Files.readString(skillMd.toPath());

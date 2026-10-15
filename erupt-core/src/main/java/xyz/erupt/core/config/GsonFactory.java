@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.math.NumberUtils;
 import xyz.erupt.annotation.model.Location;
 import xyz.erupt.core.util.DateUtil;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -64,8 +65,10 @@ public class GsonFactory implements ToNumberStrategy {
         if (!json.isJsonObject()) return null;
         JsonObject o = json.getAsJsonObject();
         JsonObject coords = o.has("location") && o.get("location").isJsonObject() ? o.getAsJsonObject("location") : o;
-        Location location = new Location(number(coords, "lng"), number(coords, "lat"), string(o, "name"), string(o, "address"));
-        if (o.has("crs") && !o.get("crs").isJsonNull()) location.setCrs(Location.Crs.valueOf(o.get("crs").getAsString()));
+        Location location = new Location(number(coords, LambdaSee.field(Location::getLng)), number(coords, LambdaSee.field(Location::getLat)),
+                string(o, LambdaSee.field(Location::getName)), string(o, LambdaSee.field(Location::getAddress)));
+        String crs = string(o, LambdaSee.field(Location::getCrs));
+        if (null != crs) location.setCrs(Location.Crs.valueOf(crs));
         return location;
     }
 

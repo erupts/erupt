@@ -29,7 +29,7 @@ public class BiChartDataProxy implements DataProxy<BiChart> {
     @Override
     public void beforeAdd(BiChart biChart) {
         if (null == biChart.getSort()) {
-            Integer sort = (Integer) eruptDao.lambdaQuery(BiChart.class).addCondition("bi.id = " + biChart.getBi().getId()).max(BiChart::getSort);
+            Integer sort = (Integer) eruptDao.lambdaQuery(BiChart.class).eq(BiChart::getBi, biChart.getBi()).max(BiChart::getSort);
             biChart.setSort((sort == null) ? 10 : sort + 10);
         }
     }
