@@ -87,7 +87,7 @@ public class EruptDataController {
      * @return one page of rows as maps keyed by field name
      */
     @PostMapping({"/table/{erupt}"})
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.QUERY, payload = EruptRouter.Payload.TABLE_QUERY, resolve = EruptRouter.Resolve.PAGE)
     public Page getEruptData(@PathVariable("erupt") String eruptName, @RequestBody TableQuery tableQuery) {
         if (tableQuery.getPageSize() > MAX_PAGE_SIZE) {
             tableQuery.setPageSize(MAX_PAGE_SIZE);
@@ -104,7 +104,7 @@ public class EruptDataController {
      * @return column name to aggregated value
      */
     @PostMapping("/aggregate/{erupt}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.QUERY, payload = EruptRouter.Payload.TABLE_QUERY)
     public Map<String, Object> getEruptAggregate(@PathVariable("erupt") String eruptName, @RequestBody TableQuery tableQuery) {
         return eruptService.getEruptAggregate(EruptCoreService.getErupt(eruptName), tableQuery);
     }
@@ -116,7 +116,7 @@ public class EruptDataController {
      * @return nested tree nodes
      */
     @GetMapping("/tree/{erupt}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.QUERY)
     public Collection<TreeModel> getEruptTreeData(@PathVariable("erupt") String eruptName) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isQuery);
@@ -134,7 +134,7 @@ public class EruptDataController {
      */
     @GetMapping("/init-value/{erupt}")
     @SneakyThrows
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.ADD)
     public Map<String, Object> initEruptValue(@PathVariable("erupt") String eruptName) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Object behavior = eruptModel.getClazz().getDeclaredConstructor().newInstance();
@@ -157,7 +157,7 @@ public class EruptDataController {
      * @return record as a map keyed by field name
      */
     @GetMapping("/{erupt}/{id}")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.EDIT, EruptRouter.Power.VIEW_DETAILS}, resolve = EruptRouter.Resolve.RECORD)
     public Map<String, Object> getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
         // Remote resolution: called in-process by AI tools (findEruptDataByPk) with node erupt names
         EruptModel eruptModel = EruptCoreService.getEruptWithRemote(eruptName);
@@ -390,7 +390,7 @@ public class EruptDataController {
      * @return nested tree nodes
      */
     @GetMapping("/{erupt}/reference-tree/{fieldName}")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.REFERENCE_TREE)
     public Collection<TreeModel> getReferenceTree(@PathVariable("erupt") String erupt,
                                                   @PathVariable("fieldName") String fieldName,
                                                   @RequestParam(value = "dependValue", required = false) Serializable dependValue) {
@@ -424,7 +424,7 @@ public class EruptDataController {
      * @return extra rows
      */
     @PostMapping("/extra-row/{erupt}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.QUERY, payload = EruptRouter.Payload.TABLE_QUERY)
     public List<Row> extraRow(@PathVariable("erupt") String erupt, @RequestBody TableQuery tableQuery) {
         List<Row> rows = new ArrayList<>();
         DataProxyInvoke.invoke(EruptCoreService.getErupt(erupt), dataProxy ->

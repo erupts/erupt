@@ -55,7 +55,7 @@ public class EruptModifyController {
      */
     @PostMapping({"/{erupt}"})
     @EruptRecordOperate(value = "INSERT", dynamicConfig = EruptRecordNaming.class)
-    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true)
+    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true, power = EruptRouter.Power.ADD, payload = EruptRouter.Payload.RECORD)
     public R<Void> addEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Erupts.powerLegal(eruptModel, PowerObject::isAdd);
@@ -86,7 +86,7 @@ public class EruptModifyController {
      */
     @PostMapping("/{erupt}/update")
     @EruptRecordOperate(value = "UPDATE", dynamicConfig = EruptRecordNaming.class)
-    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true)
+    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true, power = EruptRouter.Power.EDIT, payload = EruptRouter.Payload.RECORD)
     @Transactional
     @SneakyThrows
     public R<Void> updateEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
@@ -106,7 +106,7 @@ public class EruptModifyController {
      */
     @PostMapping("/{erupt}/update-cell")
     @EruptRecordOperate(value = "UPDATE", dynamicConfig = EruptRecordNaming.class)
-    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true)
+    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true, power = EruptRouter.Power.EDIT)
     @Transactional
     @SneakyThrows
     public R<Void> updateEruptCell(@PathVariable("erupt") String erupt, @RequestBody EruptCellVo cell) {
@@ -127,7 +127,7 @@ public class EruptModifyController {
      * @return ok when deleted
      */
     @PostMapping("/{erupt}/delete")
-    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true)
+    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true, power = EruptRouter.Power.DELETE)
     @EruptRecordOperate(value = "DELETE", dynamicConfig = EruptRecordNaming.class)
     @Transactional
     public R<Void> deleteEruptData(@PathVariable("erupt") String erupt, @RequestBody List<Object> ids) {
@@ -148,7 +148,7 @@ public class EruptModifyController {
      */
     @PostMapping("/{erupt}/drag-sort")
     @EruptRecordOperate(value = "UPDATE", dynamicConfig = EruptRecordNaming.class)
-    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true)
+    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true, power = EruptRouter.Power.EDIT)
     public R<Void> dragSortEruptData(@PathVariable("erupt") String erupt, @RequestBody Map<String, Object> sortData) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Erupts.powerLegal(eruptModel, PowerObject::isEdit);

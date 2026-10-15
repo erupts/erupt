@@ -96,7 +96,9 @@ After it, the node should drain in-flight requests (Java default: up to 30s) bef
 
 | Header | Value | Node must |
 |--------|-------|-----------|
-| `Access-Token` | The node's access token | Compare (constant time) with its own; mismatch → reject. |
+| `Erupt-Timestamp`, `Erupt-Signature` | Request signature, see §4.3 | Verify; a present but invalid signature → 403. |
+| `Erupt-Enforced` | Checks the server ran before forwarding, see §4.2 (covered by the signature) | May skip those checks. |
+| `Access-Token` | The node's access token; omitted when the server runs with `plain-access-token: false` | Without a valid signature: compare (constant time) with its own; mismatch → reject. |
 | `erupt` | Node-local erupt name, e.g. `Article` | 404 if the node does not own it. |
 | `eruptParent` (or `_eruptParent` query param) | `nodeName.Parent`, present when a nested erupt (sub-table, tab, reference) is opened from a parent's menu | Strip the prefix; 404 unless `Parent` equals `erupt` or actually nests it. |
 | `user` | Base64 of the JSON user, see below | Treat as the acting user. |
@@ -113,10 +115,38 @@ After it, the node should drain in-flight requests (Java default: up to 30s) bef
 
 ### 4.2 What the server has already checked
 
-The server has verified the login and that the user holds the **menu** for the erupt (or for its
-parent). It has **not** checked add / edit / delete / export rights. Those are the node's job (§6.1).
+Always: the login, and that the user holds the **menu** for the erupt (or for its parent).
 
-### 4.3 Naming
+A server that sends `Erupt-Enforced` (erupt 2.3.x and later) has also run, for the listed values:
+
+| Value | Checked before forwarding |
+|-------|---------------------------|
+| `power` | The user's rights for the endpoint (`@EruptRouter(power = ...)`: add, edit or view-details, delete, export, import), refused with the standard "insufficient permissions" error; and the `power` of a build response restricted to the user's rights. |
+| `query` | A `TableQuery` against the build model: conditions only on searchable fields with a real operator (references: `EQ` `NEQ` `IN` `NOT_IN` `NULL` `NOT_NULL`), sorts only on sortable columns or the primary key, page size at most 1000 or the largest the model offers. |
+| `record` | An added or updated record: not-null, numbers, textarea length, choice options and XSS, with the messages of a local erupt. |
+
+Without the header (older servers) a node enforces §6.1 itself. With `power` it may skip the
+`erupt-power` callback entirely; its own declared power (a model with delete switched off) is still its
+job. A node keeps whitelisting field names it puts into SQL even when `query` is listed.
+
+### 4.3 Request signature
+
+Every forward carries an HMAC-SHA256 keyed by the node's access token, hex encoded:
+
+```
+Erupt-Signature = HMAC(accessToken, METHOD \n path?query \n timestamp \n enforced \n sha256(user) \n sha256(body))
+```
+
+`path?query` is the path the node is called on, below any context path; `enforced` is the
+`Erupt-Enforced` value or empty; `user` is the raw `user` header (empty when absent); the body digest is
+of the raw bytes (an empty body digests the empty string) or the literal `UNSIGNED-PAYLOAD` for a
+multipart upload, which the forward re-encodes. A node accepts a timestamp within 300 seconds of its
+clock. The server signs every call, including its own (`EruptRemoteRouter`), and also sends `Access-Token`
+until it is configured with `erupt.cloud-server.plain-access-token: false`; a Java node refuses unsigned
+calls when `erupt.cloud-node.require-signature: true`. The reference implementation is
+`xyz.erupt.cloud.common.http.CloudSignature`.
+
+### 4.4 Naming
 
 Paths, the `erupt` header and every name inside responses use the node-local name (`Article`).
 On build responses the server rewrites names to `nodeName.Article` itself (`eruptName`, drill
@@ -147,7 +177,7 @@ A node that implements only these gets a working table, search, detail view and 
 | `tree` | `GET /erupt-api/data/tree/{erupt}` |
 | `linkTree` | `GET /erupt-api/data/depend-tree/{erupt}` |
 | `rowOperation` | `POST /erupt-api/data/{erupt}/operator/{code}`, `POST .../operator/{code}/form-value` |
-| `REFERENCE_TABLE` / `REFERENCE_TREE` | `POST /erupt-api/data/{erupt}/reference-table/{field}`, `GET /erupt-api/data/{erupt}/reference-tree/{field}` |
+| `REFERENCE_TABLE` / `REFERENCE_TREE` | `POST /erupt-api/data/{erupt}/reference-table/{field}`; `GET /erupt-api/data/{erupt}/reference-tree/{field}` optional, a 404 leaves the tree to the server (§7.3) |
 | `CHECKBOX` | `GET /erupt-api/data/{erupt}/checkbox/{field}` |
 | `TAB_TREE` | `GET /erupt-api/data/tab/tree/{erupt}/{field}` |
 | `TAB_TABLE_ADD` / tab editing | `POST /erupt-api/data/modify/tab-add|tab-update|tab-delete/{erupt}/{field}` |
@@ -166,9 +196,17 @@ A node that implements only these gets a working table, search, detail view and 
 | Feature | Endpoints |
 |---------|-----------|
 | Attachments | `POST /erupt-api/file/upload/{erupt}/{field}`, `/uploads/...`, `/upload-html-editor/...` (multipart, field `file`) |
-| Excel import / export | `/erupt-api/excel/...` |
+| Excel import / export | `/erupt-api/excel/template|export|import/{erupt}`; a 404 leaves them to the server (below) |
 | Gantt / board / calendar views | `/erupt-api/data/modify/gantt/...`, `/board/...`, `/calendar/...` |
 | Template pages | any `/erupt-api/tpl/...` path, routed by the `_node` query param, forwarded verbatim |
+
+**Excel by the server.** When a node answers 404, the server writes the template from the build model,
+exports by paging through `POST /data/table/{erupt}` (signed `power,query`; selected ids through
+`GET /data/{erupt}/{id}`), with references resolved as in §7.3 and choices labelled from the build's
+`componentValue`, and imports by parsing the file, mapping labels back to keys (references through the
+referenced erupt's table, signed `power`), checking each row as a submitted record and adding it through
+`POST /data/modify/{erupt}` (signed `power,record`). Rows are added one by one: an import stops at the first
+failing row, keeps the rows before it and says how many there were.
 
 A node answers **404** for anything it does not implement. **[v1 proposal]** It also lists what it
 implements in a `capabilities` field at registration, so the server can hide the matching UI instead
@@ -184,9 +222,10 @@ of letting it fail.
 | GET | `/erupt-cloud-api/node-config/{nodeName}` | `Access-Token` | node config string set on the server |
 | GET | `/erupt-cloud-api/node-group-config/{nodeName}` | `Access-Token` | node group config string |
 
-### 6.1 Permissions are enforced on the node
+### 6.1 Permissions on the node (servers without `Erupt-Enforced: power`)
 
-For every request the node computes the effective power as **declared power AND server power**:
+The server enforces the user's rights itself when it says so (§4.2). For older servers, every request
+the node computes the effective power as **declared power AND server power**:
 
 1. Start from the model's declared `power` (all `true` by default).
 2. Fetch `erupt-power` for the acting user and turn off each of `add`, `edit`, `delete`, `viewDetails`,
@@ -287,12 +326,20 @@ With `referenceTableType` (or `referenceTreeType`) `{ "id": "id", "label": "name
 | Where | Value |
 |-------|-------|
 | add / update body, search condition value | `{"id": 2, "name": "Python"}` (an array of those for `IN`) |
-| `GET /data/{erupt}/{id}` row | `"category": {"id": "2", "name": "Python"}` (id as a string) |
-| table row | the same object plus the flattened column `"category_name": "Python"` (`field + "_" + view.column`, dots as `_`) |
+| `GET /data/{erupt}/{id}` row, table row | the key alone, `"category": 2`; the server completes it (below) |
 | picker rows | must carry the `id` key and the label key (dots as `_`) |
+
+**Resolved by the server.** A node answers rows with references as their key. For the table and get-by-id
+endpoints the server reads each distinct key once from the referenced erupt (`GET /data/{target}/{id}`,
+signed with `Erupt-Enforced: power`) and puts back what the browser reads: `"category": {"id": "2",
+"name": "Python"}` (id as a string) and, for every `@View(column)` of the field, the flattened
+`"category_name": "Python"` (`field + "_" + view.column`, dots as `_`). A key that does not resolve keeps
+its id and gets a null label. A reference that already is an object (a Java node) is left untouched.
 
 `GET /erupt-api/data/{host}/reference-tree/{field}` returns nested nodes:
 `[{ "id": "1", "label": "Tech", "pid": null, "root": true, "level": 1, "children": [ ... ] }]`.
+A node may answer 404 instead: the server then pages through the referenced erupt's table (signed with
+`Erupt-Enforced: power`, at most 10000 records) and builds the tree from its `id` / `label` / `pid` columns.
 
 ### 7.4 Row operations
 
@@ -339,11 +386,10 @@ Today the only version signal is `NodeInfo.version` (the erupt version). **[v1 p
 
 ## 10. Security checklist for node SDKs
 
-- Reject any request with an `Origin` header. Compare `Access-Token` in constant time.
+- Reject any request with an `Origin` header. Verify `Erupt-Signature` (§4.3); otherwise compare `Access-Token` in constant time.
 - Never expose the node port publicly. Only the server needs to reach it.
-- Trust `user` only after `Access-Token` passes. **[v1 proposal]** Sign `user` with an HMAC keyed by the
-  access token (plus a timestamp) so a leaked internal hop cannot impersonate users.
-- Enforce §6.1 on every write. Apply tenant / row filters in queries.
+- Trust `user` only after the signature (which covers it) or `Access-Token` passes.
+- Enforce §6.1 on every write unless the server lists `power` in `Erupt-Enforced`. Apply tenant / row filters in queries.
 - Whitelist `condition.key`, `sort.field` and every `{field}` path segment against the model. Parameterize all values.
 
 ## 11. Conformance **[v1 proposal]**
@@ -356,5 +402,6 @@ registers, survives heartbeat expiry, and round-trips a reference model (table, 
 
 1. Should `init-value` be optional (empty form) rather than Level 0?
 2. `erupts` in the heartbeat is the only model inventory. Should a node also report a per-model hash so the server can tell when a model changed?
-3. Excel import / export: keep it node-side, or let the server do it generically on top of Level 0 table + modify?
+3. ~~Excel import / export~~: done by the server on a 404 (§5.3). Open: an optional batch add, so an import
+   can be all-or-nothing on a node.
 4. Attachments: node-local storage vs. server-provided storage that the node only references.

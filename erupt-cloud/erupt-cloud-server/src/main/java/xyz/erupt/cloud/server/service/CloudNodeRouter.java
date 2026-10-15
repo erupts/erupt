@@ -1,6 +1,8 @@
 package xyz.erupt.cloud.server.service;
 
 import xyz.erupt.cloud.common.http.CloudHttp;
+import xyz.erupt.cloud.common.http.CloudSignature;
+import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import org.springframework.web.client.RestClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
@@ -29,9 +31,12 @@ import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TableQuery;
 
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Routes in-process erupt operations (AI/MCP tools, workflow, internal callers) against remote
@@ -53,6 +58,9 @@ public class CloudNodeRouter implements EruptRemoteRouter {
 
     @Resource
     private RestClient nodeRestClient;
+
+    @Resource
+    private EruptCloudServerProp eruptCloudServerProp;
 
 
     private static final Type MAP_TYPE = new TypeToken<Map<String, Object>>() {
@@ -95,8 +103,16 @@ public class CloudNodeRouter implements EruptRemoteRouter {
 
     @Override
     public String proxy(String eruptName, HttpMethod httpMethod, String pathTemplate, Object body) {
+        return proxy(eruptName, httpMethod, pathTemplate, body, Collections.emptySet());
+    }
+
+    /**
+     * @param enforced the checks the server vouches for (signed as Erupt-Enforced), e.g. POWER when it reads a
+     *                 referenced erupt the user reaches only through the erupt holding the reference
+     */
+    public String proxy(String eruptName, HttpMethod httpMethod, String pathTemplate, Object body, Set<CloudSignature.Enforced> enforced) {
         String path = pathTemplate.replace(EruptRestPath.ERUPT_NAME_HOLDER, "/" + simpleName(eruptName));
-        return exchange(eruptName, httpMethod, path, body);
+        return exchange(eruptName, httpMethod, path, body, enforced);
     }
 
     @Override
@@ -143,7 +159,7 @@ public class CloudNodeRouter implements EruptRemoteRouter {
      * @param path      node erupt-api path (relative to the node location)
      * @param body      request body to serialize as JSON, or null
      */
-    private String exchange(String eruptName, HttpMethod method, String path, Object body) {
+    private String exchange(String eruptName, HttpMethod method, String path, Object body, Set<CloudSignature.Enforced> enforced) {
         String nodeName = nodeName(eruptName);
         MetaNode metaNode = nodeManager.getNode(nodeName);
         if (null == metaNode) {
@@ -155,11 +171,19 @@ public class CloudNodeRouter implements EruptRemoteRouter {
         for (int i = 0; i < locations.size(); i++) {
             String location = locations.get(i);
             try {
+                String user = CloudHttp.base64(GsonFactory.getGson().toJson(MetaContext.getUser()));
+                long timestamp = System.currentTimeMillis() / 1000;
+                String enforcedHeader = enforced.isEmpty() ? null : CloudSignature.Enforced.header(enforced);
                 RestClient.RequestBodySpec httpRequest = nodeRestClient.method(method).uri(location + path)
-                        .header(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken())
+                        .headers(CloudHttp.header(CloudCommonConst.HEADER_ACCESS_TOKEN,
+                                eruptCloudServerProp.isPlainAccessToken() ? metaNode.getAccessToken() : null))
                         .headers(CloudHttp.header(EruptMutualConst.TOKEN, MetaContext.getToken()))
                         .header(EruptMutualConst.ERUPT, simpleName(eruptName))
-                        .header(EruptMutualConst.USER, CloudHttp.base64(GsonFactory.getGson().toJson(MetaContext.getUser())));
+                        .header(EruptMutualConst.USER, user)
+                        .header(CloudSignature.HEADER_TIMESTAMP, Long.toString(timestamp))
+                        .headers(CloudHttp.header(CloudSignature.HEADER_ENFORCED, enforcedHeader))
+                        .header(CloudSignature.HEADER_SIGNATURE, CloudSignature.sign(metaNode.getAccessToken(), method.name(), path,
+                                timestamp, enforcedHeader, user, null == payload ? new byte[0] : payload.getBytes(StandardCharsets.UTF_8)));
                 if (null != payload) {
                     httpRequest.contentType(MediaType.APPLICATION_JSON).body(payload);
                 }

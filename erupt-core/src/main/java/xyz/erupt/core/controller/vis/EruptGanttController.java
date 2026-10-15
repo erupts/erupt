@@ -56,7 +56,7 @@ public class EruptGanttController {
      * @return ok when saved
      */
     @PostMapping("/{erupt}/update_date")
-    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.EDIT)
     @Transactional
     @SneakyThrows
     public R<Void> updateDate(@PathVariable("erupt") String erupt, @RequestBody GanttDateCommand command) {
@@ -110,7 +110,7 @@ public class EruptGanttController {
      * @return ok when saved
      */
     @PostMapping("/{erupt}/link")
-    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.EDIT)
     @Transactional
     @SneakyThrows
     public R<Void> link(@PathVariable("erupt") String erupt, @RequestBody GanttLinkCommand command) {

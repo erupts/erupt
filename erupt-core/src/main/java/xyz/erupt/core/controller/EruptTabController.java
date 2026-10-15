@@ -46,7 +46,7 @@ public class EruptTabController {
      * @return validation result; data holds the row after the hooks
      */
     @PostMapping({"/tab-add/{erupt}/{tabName}"})
-    @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT})
     public R<?> addTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
         EruptModel eruptModel = getTabErupt(erupt, tabName);
         Object obj = gson.fromJson(data.toString(), eruptModel.getClazz());
@@ -68,7 +68,7 @@ public class EruptTabController {
      * @return validation result; data holds the row after the hooks
      */
     @PostMapping({"/tab-update/{erupt}/{tabName}"})
-    @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT})
     public R<?> updateTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
         EruptModel eruptModel = getTabErupt(erupt, tabName);
         Object obj = gson.fromJson(data.toString(), eruptModel.getClazz());
@@ -90,7 +90,7 @@ public class EruptTabController {
      * @return ok
      */
     @PostMapping({"/tab-delete/{erupt}/{tabName}"})
-    @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT})
     public R<Void> deleteTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
         EruptModel eruptModel = getTabErupt(erupt, tabName);
         Object obj = gson.fromJson(data.toString(), eruptModel.getClazz());

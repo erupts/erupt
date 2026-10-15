@@ -79,7 +79,8 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
     }
 
     public EruptField getEruptField() {
-        ProxyContext.set(field, this.starting);
+        // a remote erupt's field (EruptModel.remote) has no reflected field; its annotation needs no proxy context
+        if (null != field) ProxyContext.set(field, this.starting);
         return eruptField;
     }
 

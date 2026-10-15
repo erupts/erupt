@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Enforces on the server what an edit form declares, since an API call does not go through the
@@ -57,8 +58,9 @@ public final class EruptValueValidator {
      * @param old the stored record on an edit, null on an add
      */
     public static void validate(EruptModel eruptModel, JsonObject data, Object old) {
-        boolean choices = EruptSpringUtil.getBean(EruptProp.class).isChoiceValidate();
-        Object form = null;
+        // the form object the option handlers read, built once and only when a handler needs it
+        Object[] form = {null};
+        Supplier<Object> formOf = () -> null == form[0] ? form[0] = GsonFactory.getGson().fromJson(data, eruptModel.getClazz()) : form[0];
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
             JsonElement value = data.get(fieldModel.getFieldName());
@@ -68,60 +70,82 @@ public final class EruptValueValidator {
                 continue;
             }
             if (!CHECKED.contains(edit.type())) continue;
-            List<String> submitted = values(edit, value);
-            submitted.removeAll(stored(fieldModel, old));
-            if (submitted.isEmpty()) continue;
-            switch (edit.type()) {
+            validate(edit, value, stored(fieldModel, old), () -> switch (edit.type()) {
                 case CHOICE, MULTI_CHOICE -> {
                     boolean multiple = edit.type() == EditType.MULTI_CHOICE;
-                    if (!choices || !(multiple ? edit.multiChoiceType().validate() : edit.choiceType().validate())) continue;
                     // a choice that declares no options at all (no vl, no handler, not an enum) has nothing to check against
-                    if (!declaresOptions(fieldModel, edit, multiple)) continue;
+                    if (!declaresOptions(fieldModel, edit, multiple)) yield null;
                     // the linkage handlers read the rest of the form, as the page's choice-item-filter call does
-                    if (null == form) form = GsonFactory.getGson().fromJson(data, eruptModel.getClazz());
-                    Set<String> options = options(eruptModel, fieldModel, form,
+                    yield options(eruptModel, fieldModel, formOf.get(),
                             multiple ? edit.multiChoiceType().dependField() : edit.choiceType().dependField(), data);
-                    for (String one : submitted) {
-                        if (!options.contains(one)) throw refuse(edit, "erupt.choice.option_invalid", one);
-                    }
                 }
-                case INPUT -> {
-                    for (String one : submitted) {
-                        if (one.length() > edit.inputType().length()) throw refuse(edit, "erupt.data.limit_length", one.length() + " > " + edit.inputType().length());
-                    }
+                case TAGS -> tags(eruptModel, fieldModel, formOf.get());
+                default -> null;
+            });
+        }
+    }
+
+    /**
+     * The declared limits of one field, for a model that is not a local class (an erupt-cloud node's build
+     * model, whose {@code edit} JSON reads back as the annotation through {@code AnnotationProcess.jsonToAnnotation}).
+     *
+     * @param stored  the values the record already holds for the field (empty on an add): they pass unchecked
+     * @param options the values a CHOICE / MULTI_CHOICE / TAGS field may take, or null when it declares none;
+     *                asked only when a submitted value needs it
+     * @throws EruptApiErrorTip naming the field and the offending value
+     */
+    public static void validate(Edit edit, JsonElement value, Collection<String> stored, Supplier<Set<String>> options) {
+        if (null == value || value.isJsonNull() || !CHECKED.contains(edit.type())) return;
+        List<String> submitted = values(edit, value);
+        submitted.removeAll(stored);
+        if (submitted.isEmpty()) return;
+        switch (edit.type()) {
+            case CHOICE, MULTI_CHOICE -> {
+                boolean multiple = edit.type() == EditType.MULTI_CHOICE;
+                if (!EruptSpringUtil.getBean(EruptProp.class).isChoiceValidate()
+                        || !(multiple ? edit.multiChoiceType().validate() : edit.choiceType().validate())) return;
+                Set<String> choices = options.get();
+                if (null == choices) return;
+                for (String one : submitted) {
+                    if (!choices.contains(one)) throw refuse(edit, "erupt.choice.option_invalid", one);
                 }
-                case NUMBER -> {
-                    // the declared defaults are the int range, which a long column may rightly exceed: bound only what was set
-                    NumberType type = edit.numberType();
-                    Long min = type.min() == -Integer.MAX_VALUE ? null : type.min();
-                    Long max = type.max() == Integer.MAX_VALUE ? null : type.max();
-                    for (String one : submitted) range(edit, one, null == min ? null : BigDecimal.valueOf(min), null == max ? null : BigDecimal.valueOf(max));
+            }
+            case INPUT -> {
+                for (String one : submitted) {
+                    if (one.length() > edit.inputType().length()) throw refuse(edit, "erupt.data.limit_length", one.length() + " > " + edit.inputType().length());
                 }
-                case SLIDER -> {
-                    for (String one : submitted) range(edit, one, BigDecimal.valueOf(edit.sliderType().min()), BigDecimal.valueOf(edit.sliderType().max()));
+            }
+            case NUMBER -> {
+                // the declared defaults are the int range, which a long column may rightly exceed: bound only what was set
+                NumberType type = edit.numberType();
+                Long min = type.min() == -Integer.MAX_VALUE ? null : type.min();
+                Long max = type.max() == Integer.MAX_VALUE ? null : type.max();
+                for (String one : submitted) range(edit, one, null == min ? null : BigDecimal.valueOf(min), null == max ? null : BigDecimal.valueOf(max));
+            }
+            case SLIDER -> {
+                for (String one : submitted) range(edit, one, BigDecimal.valueOf(edit.sliderType().min()), BigDecimal.valueOf(edit.sliderType().max()));
+            }
+            case RATE -> {
+                for (String one : submitted) {
+                    BigDecimal rate = range(edit, one, BigDecimal.ZERO, BigDecimal.valueOf(edit.rateType().count()));
+                    BigDecimal step = edit.rateType().allowHalf() ? new BigDecimal("0.5") : BigDecimal.ONE;
+                    if (rate.remainder(step).signum() != 0) throw refuse(edit, "erupt.value.out_of_range", one);
                 }
-                case RATE -> {
-                    for (String one : submitted) {
-                        BigDecimal rate = range(edit, one, BigDecimal.ZERO, BigDecimal.valueOf(edit.rateType().count()));
-                        BigDecimal step = edit.rateType().allowHalf() ? new BigDecimal("0.5") : BigDecimal.ONE;
-                        if (rate.remainder(step).signum() != 0) throw refuse(edit, "erupt.value.out_of_range", one);
-                    }
+            }
+            case TAGS -> {
+                List<String> all = values(edit, value);
+                if (all.size() > edit.tagsType().maxTagCount()) throw refuse(edit, "erupt.value.out_of_range", all.size() + " > " + edit.tagsType().maxTagCount());
+                if (edit.tagsType().allowExtension()) return;
+                Set<String> tags = options.get();
+                if (null == tags) return;
+                for (String one : submitted) {
+                    if (!tags.contains(one)) throw refuse(edit, "erupt.choice.option_invalid", one);
                 }
-                case TAGS -> {
-                    List<String> all = values(edit, value);
-                    if (all.size() > edit.tagsType().maxTagCount()) throw refuse(edit, "erupt.value.out_of_range", all.size() + " > " + edit.tagsType().maxTagCount());
-                    if (edit.tagsType().allowExtension()) continue;
-                    if (null == form) form = GsonFactory.getGson().fromJson(data, eruptModel.getClazz());
-                    Set<String> tags = tags(eruptModel, fieldModel, form);
-                    for (String one : submitted) {
-                        if (!tags.contains(one)) throw refuse(edit, "erupt.choice.option_invalid", one);
-                    }
-                }
-                case DATE -> {
-                    for (String one : submitted) date(edit, one);
-                }
-                default -> {
-                }
+            }
+            case DATE -> {
+                for (String one : submitted) date(edit, one);
+            }
+            default -> {
             }
         }
     }

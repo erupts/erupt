@@ -39,6 +39,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * The format-independent half of import and export: turns a query page into a titled sheet of
@@ -147,6 +148,15 @@ public class EruptExcelService {
      * an export can be imported back as it is; only a title the model knows nothing about is an error.
      */
     public List<JsonObject> records(EruptModel eruptModel, List<Map<String, String>> rows) throws Exception {
+        return this.records(eruptModel, rows, field -> this.references(eruptModel, field));
+    }
+
+    /**
+     * @param references label → key of the erupt a reference field points at, for a model whose data is not
+     *                   local (an erupt-cloud node's)
+     */
+    public List<JsonObject> records(EruptModel eruptModel, List<Map<String, String>> rows,
+                                    Function<EruptFieldModel, Map<String, Object>> references) throws Exception {
         Map<String, EruptFieldModel> byTitle = new HashMap<>();
         Set<String> viewOnly = new HashSet<>();
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
@@ -172,7 +182,7 @@ public class EruptExcelService {
                 switch (edit.type()) {
                     case REFERENCE_TABLE, REFERENCE_TREE -> {
                         String idKey = edit.type() == EditType.REFERENCE_TREE ? edit.referenceTreeType().id() : edit.referenceTableType().id();
-                        Object id = lookups.computeIfAbsent(name, k -> this.lookup(eruptModel, fieldModel)).get(text);
+                        Object id = lookups.computeIfAbsent(name, k -> references.apply(fieldModel)).get(text);
                         if (null == id) throw new Exception(edit.title() + " → " + text + " not found");
                         JsonObject ref = new JsonObject();
                         ref.addProperty(idKey, id.toString());
@@ -208,18 +218,23 @@ public class EruptExcelService {
                 map.put(boolType.trueText(), true);
                 map.put(boolType.falseText(), false);
             }
-            case REFERENCE_TABLE, REFERENCE_TREE -> {
-                String id = edit.type() == EditType.REFERENCE_TREE ? edit.referenceTreeType().id() : edit.referenceTableType().id();
-                String label = edit.type() == EditType.REFERENCE_TREE ? edit.referenceTreeType().label() : edit.referenceTableType().label();
-                IEruptDataService dataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
-                List<Column> columns = List.of(new Column(id, id), new Column(label, label));
-                Collection<Map<String, Object>> list = dataService.queryColumn(EruptCoreService.getErupt(fieldModel.getFieldReturnName()), columns, EruptQuery.builder().build());
-                for (Map<String, Object> m : list) {
-                    if (null != m.get(label)) map.put(m.get(label).toString(), m.get(id));
-                }
-            }
             default -> {
             }
+        }
+        return map;
+    }
+
+    // Label → key of the local erupt a reference field points at
+    private Map<String, Object> references(EruptModel eruptModel, EruptFieldModel fieldModel) {
+        Edit edit = fieldModel.getEruptField().edit();
+        String id = edit.type() == EditType.REFERENCE_TREE ? edit.referenceTreeType().id() : edit.referenceTableType().id();
+        String label = edit.type() == EditType.REFERENCE_TREE ? edit.referenceTreeType().label() : edit.referenceTableType().label();
+        IEruptDataService dataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
+        List<Column> columns = List.of(new Column(id, id), new Column(label, label));
+        Collection<Map<String, Object>> list = dataService.queryColumn(EruptCoreService.getErupt(fieldModel.getFieldReturnName()), columns, EruptQuery.builder().build());
+        Map<String, Object> map = new HashMap<>();
+        for (Map<String, Object> m : list) {
+            if (null != m.get(label)) map.put(m.get(label).toString(), m.get(id));
         }
         return map;
     }
