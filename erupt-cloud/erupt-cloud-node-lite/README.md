@@ -1,6 +1,6 @@
 # erupt-cloud-node-lite
 
-An erupt cloud node **without Spring**: serve `@Erupt` classes from plain Java, Kotlin, Solon, Quarkus or Vert.x
+An erupt cloud node **without Spring**: serve `@Erupt` classes from plain Java, Kotlin, Solon, Quarkus, Micronaut, Vert.x or any servlet container
 through an erupt server, which renders the admin UI, logs users in and checks menus. Java 17+. The runtime
 dependencies are `erupt-annotation`, `erupt-cloud-common` and `linq.j`, all three dependency-free: models are
 declared with the very annotations a Spring erupt application uses, so a class moves between the two unchanged.
@@ -10,7 +10,9 @@ declared with the very annotations a Spring erupt application uses, so a class m
 | `erupt-cloud-node-lite` | plain Java / Kotlin on the JDK's HTTP server, or mounted in any HTTP stack |
 | `erupt-cloud-node-solon` | Solon 4: a plugin serving your `Node` bean on Solon's server |
 | `erupt-cloud-node-quarkus` | Quarkus 3: serves your `Node` bean on Quarkus' HTTP server |
+| `erupt-cloud-node-micronaut` | Micronaut 4: serves your `Node` bean on Micronaut's HTTP server |
 | `erupt-cloud-node-vertx` | Vert.x 4.5 / 5: mounts a node on a Vert.x Web router |
+| `erupt-cloud-node-servlet` | any servlet container, jakarta.servlet 5+ or javax.servlet 3.1+ |
 | `erupt-cloud-node` / `-jpa` | Spring Boot: the full erupt-core pipeline, not this module |
 
 It is released with erupt, so its version is erupt's and the annotations always match the server.
@@ -18,7 +20,7 @@ It is released with erupt, so its version is erupt's and the annotations always 
 ```xml
 <dependency>
     <groupId>xyz.erupt</groupId>
-    <artifactId>erupt-cloud-node-lite</artifactId>   <!-- or -solon, -quarkus, -vertx -->
+    <artifactId>erupt-cloud-node-lite</artifactId>   <!-- or -solon, -quarkus, -micronaut, -vertx, -servlet -->
     <version>${erupt.version}</version>
 </dependency>
 ```
@@ -158,6 +160,20 @@ public class EruptNodeConfig {
 }
 ```
 
+**Micronaut** (`erupt-cloud-node-micronaut`, on any Micronaut HTTP server with a JSON mapper): declare the node as a bean.
+
+```java
+@Factory
+public class EruptNodeConfig {
+    @Singleton
+    Node node(@Value("${erupt.cloud-node.access-token}") String token, DataSource dataSource, BeanContext ctx) {
+        return new Node("blog", token, "http://erupt-server:8080")
+                .factory(type -> ctx.findBean(type).orElse(null))
+                .register(Article.class, new JdbcRepository<>(dataSource, "article"));
+    }
+}
+```
+
 **Vert.x** (`erupt-cloud-node-vertx`): handlers run on worker threads, since repositories block.
 
 ```java
@@ -167,8 +183,24 @@ EruptNodeVertx.mount(router, node);                                    // or on 
 vertx.createHttpServer().requestHandler(router).listen(8080).onSuccess(s -> node.connect(s.actualPort()));
 ```
 
-**Anything else** (servlet, Ktor, Javalin, Micronaut...): `node.handle(Request)` answers one request and never
-throws. Mount it, call `node.connect(port)` once listening and `node.close()` on shutdown.
+**Servlet** (`erupt-cloud-node-servlet`): `EruptNodeServlet.mount(servletContext, node)` from a
+`ServletContainerInitializer` or `ServletContextListener` (`xyz.erupt.cloud.node.servlet` for jakarta.servlet,
+`xyz.erupt.cloud.node.servlet.javax` for javax.servlet). A servlet does not know its port: with `.address(...)` set
+the node connects when the servlet starts (the heartbeat retries until the container listens), otherwise call
+`node.connect(port, contextPath)` once it does. The servlet's `destroy` deregisters.
+
+```java
+public class EruptNodeInitializer implements ServletContainerInitializer {
+    public void onStartup(Set<Class<?>> classes, ServletContext context) {
+        EruptNodeServlet.mount(context, new Node("blog", token, "http://erupt-server:8080")
+                .address("http://10.0.0.12:8080" + context.getContextPath())
+                .register(Article.class, new JdbcRepository<>(dataSource, "article")));
+    }
+}
+```
+
+**Anything else** (Ktor, Javalin, Helidon...): `node.handle(Request)` answers one request and never
+throws. Mount it, call `node.connect(port)` (`connect(port, mountPoint)` under a mount point) once listening and `node.close()` on shutdown.
 
 ```java
 var target = Node.Request.target(req.getContextPath(), req.getRequestURI(), req.getQueryString());

@@ -83,7 +83,7 @@ The project is a multi-module Maven project (~50 modules):
 | AI | `erupt-ai/{erupt-ai,erupt-ai-canvas,erupt-ai-claw,erupt-ai-staff,erupt-ai-rag}` (LLM + MCP via langchain4j; RAG knowledge base with Qdrant/Milvus) |
 | Support | `erupt-support/{erupt-toolkit,erupt-excel,erupt-websocket}` (shared capabilities: cache/notify, import/export, realtime transport) |
 | Plugin | `erupt-plugin/{erupt-report,erupt-designer,erupt-job,erupt-generator,erupt-monitor,erupt-magic-api,erupt-notice,erupt-print,erupt-terminal,erupt-remote,erupt-comment,erupt-revision,erupt-k8s-dashboard}` — erupt-k8s-dashboard is the ready-made Kubernetes admin built on erupt-data-k8s |
-| Cloud | `erupt-cloud/{erupt-cloud-common,erupt-cloud-server,erupt-cloud-node,erupt-cloud-node-jpa}`; `erupt-cloud-node-lite` is a node without Spring (only `erupt-annotation`, `erupt-cloud-common` and `linq.j`; common's `spring-web` is optional for that reason), mounted by `erupt-cloud-node-{solon,quarkus,vertx}` |
+| Cloud | `erupt-cloud/{erupt-cloud-common,erupt-cloud-server,erupt-cloud-node,erupt-cloud-node-jpa}`; `erupt-cloud-node-lite` is a node without Spring (only `erupt-annotation`, `erupt-cloud-common` and `linq.j`; common's `spring-web` is optional for that reason), mounted by `erupt-cloud-node-{solon,quarkus,micronaut,vertx,servlet}` |
 | Deploy | `erupt-deploy/erupt-docker` (all-in-one Docker image; has its own `deploy.sh`) |
 | Dev | `erupt-test` (JUnit 5 + H2), `erupt-sample` (runnable demo) |
 

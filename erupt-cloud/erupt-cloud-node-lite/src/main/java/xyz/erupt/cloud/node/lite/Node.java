@@ -140,6 +140,11 @@ public final class Node implements AutoCloseable, Model.Registry {
         return this;
     }
 
+    /** The base URL set by {@link #address(String)} or detected by {@link #connect(int)}; null before either. */
+    public String address() {
+        return address;
+    }
+
     public Node heartbeat(Duration heartbeat) {
         this.heartbeat = heartbeat;
         return this;
@@ -570,7 +575,12 @@ public final class Node implements AutoCloseable, Model.Registry {
      * server is told this host's interface toward it.
      */
     public synchronized Node connect(int port) {
-        if (address == null) address = "http://" + localIp() + ":" + port;
+        return connect(port, null);
+    }
+
+    /** {@link #connect(int)} for a node mounted under {@code path} (a context path or mount point, null for none). */
+    public synchronized Node connect(int port, String path) {
+        if (address == null) address("http://" + localIp() + ":" + port + (path == null ? "" : path));
         return connect();
     }
 
