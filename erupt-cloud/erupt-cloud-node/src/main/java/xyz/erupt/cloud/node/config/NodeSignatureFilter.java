@@ -21,7 +21,6 @@ import xyz.erupt.core.constant.EruptRestPath;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.EnumSet;
 import java.util.Set;
 
 /**
@@ -85,19 +84,8 @@ public class NodeSignatureFilter extends OncePerRequestFilter {
             return;
         }
         target.setAttribute(VERIFIED, Boolean.TRUE);
-        target.setAttribute(ENFORCED, enforced(request.getHeader(CloudSignature.HEADER_ENFORCED)));
+        target.setAttribute(ENFORCED, CloudSignature.Enforced.parse(request.getHeader(CloudSignature.HEADER_ENFORCED)));
         chain.doFilter(target, response);
-    }
-
-    private static Set<CloudSignature.Enforced> enforced(String header) {
-        Set<CloudSignature.Enforced> enforced = EnumSet.noneOf(CloudSignature.Enforced.class);
-        if (null == header) return enforced;
-        for (String check : header.split(",")) {
-            for (CloudSignature.Enforced value : CloudSignature.Enforced.values()) {
-                if (value.name().equalsIgnoreCase(check.trim())) enforced.add(value);
-            }
-        }
-        return enforced;
     }
 
     private static final class CachedBodyRequest extends HttpServletRequestWrapper {
