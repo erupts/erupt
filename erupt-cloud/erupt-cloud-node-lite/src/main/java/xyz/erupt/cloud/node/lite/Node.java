@@ -13,13 +13,13 @@ import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
 import xyz.erupt.cloud.common.http.CloudSignature;
 import xyz.erupt.cloud.common.model.NodeInfo;
+import xyz.erupt.cloud.common.node.NodeRegistrar;
 import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.linq.lambda.SFunction;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URLDecoder;
@@ -29,16 +29,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.EnumSet;
-import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -46,11 +43,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * An erupt cloud node: registers with the server, then answers the requests it forwards (erupt-cloud/PROTOCOL.md,
@@ -76,7 +71,7 @@ public final class Node implements AutoCloseable, Model.Registry {
     private static final String HEADER_ERUPT = "erupt", HEADER_ERUPT_PARENT = "eruptParent", HEADER_USER = "user", HEADER_TOKEN = "token";
 
     // parameters of the server's cloud API that NodeInfo does not name
-    private static final String PARAM_ERUPT_NAME = "eruptName", PARAM_LOCATIONS = "locations", PARAM_ERUPT_PARENT = "_eruptParent";
+    private static final String PARAM_ERUPT_NAME = "eruptName", PARAM_ERUPT_PARENT = "_eruptParent";
 
     private static final System.Logger LOG = System.getLogger("erupt");
 
@@ -94,8 +89,7 @@ public final class Node implements AutoCloseable, Model.Registry {
     private static final ThreadLocal<Scope> SCOPE = new ThreadLocal<>();
 
     private final String name, accessToken;
-    private final List<String> servers;
-    private final AtomicInteger serverCycle = new AtomicInteger();
+    private final NodeRegistrar registrar;
     private final Map<String, Entry<?>> entries = new LinkedHashMap<>();
     private final Map<Class<?>, Model<?>> models = new ConcurrentHashMap<>();
     private final Map<Class<?>, Object> instances = new ConcurrentHashMap<>();
@@ -107,7 +101,6 @@ public final class Node implements AutoCloseable, Model.Registry {
     private Duration heartbeat = Duration.ofSeconds(15);
     private boolean requireSignature;
     private Function<Class<?>, Object> factory = type -> null;
-    private Thread heartbeatThread;
     private HttpServer server;
     private ExecutorService executor;
     private volatile boolean closed;
@@ -118,7 +111,7 @@ public final class Node implements AutoCloseable, Model.Registry {
         if (servers.length == 0) throw new IllegalArgumentException("at least one server address is required");
         this.name = name;
         this.accessToken = accessToken;
-        this.servers = Arrays.stream(servers).map(s -> s.replaceAll("/+$", "")).toList();
+        this.registrar = new NodeRegistrar(name, accessToken, List.of(servers));
         route("GET", ERUPT_API + "/build/([^/]+)", this::build);
         route("GET", ERUPT_API + "/build/([^/]+)/([^/]+)", this::buildByField);
         route("POST", ERUPT_API + "/data/table/([^/]+)", this::table);
@@ -305,11 +298,7 @@ public final class Node implements AutoCloseable, Model.Registry {
                 multipart ? null : req.body() == null ? new byte[0] : req.body(), signature, System.currentTimeMillis() / 1000)) {
             throw new Reply(403);
         }
-        if (enforced == null) return Set.of();
-        Set<String> names = Arrays.stream(enforced.split(",")).map(String::strip).collect(Collectors.toSet());
-        // header values are Enforced.header's: lower-case names; unknown ones are ignored
-        return Arrays.stream(CloudSignature.Enforced.values()).filter(it -> names.contains(it.name().toLowerCase(Locale.ROOT)))
-                .collect(Collectors.toCollection(() -> EnumSet.noneOf(CloudSignature.Enforced.class)));
+        return CloudSignature.Enforced.parse(enforced);
     }
 
     // ---------------------------------------------------------------- endpoints
@@ -559,12 +548,8 @@ public final class Node implements AutoCloseable, Model.Registry {
 
     // ---------------------------------------------------------------- server calls and lifecycle
 
-    private String nextServer() {
-        return servers.get(Math.floorMod(serverCycle.getAndIncrement(), servers.size()));
-    }
-
     private Map<?, ?> serverGet(String pathAndQuery, String token) throws IOException, InterruptedException {
-        HttpRequest req = HttpRequest.newBuilder(URI.create(nextServer() + pathAndQuery)).timeout(Duration.ofSeconds(5)).header(HEADER_TOKEN, token).GET().build();
+        HttpRequest req = HttpRequest.newBuilder(URI.create(registrar.nextServer() + pathAndQuery)).timeout(Duration.ofSeconds(5)).header(HEADER_TOKEN, token).GET().build();
         HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
         if (resp.statusCode() != 200) throw new IOException("HTTP " + resp.statusCode());
         return Json.parse(resp.body()) instanceof Map<?, ?> m ? m : Map.of();
@@ -580,56 +565,19 @@ public final class Node implements AutoCloseable, Model.Registry {
 
     /** {@link #connect(int)} for a node mounted under {@code path} (a context path or mount point, null for none). */
     public synchronized Node connect(int port, String path) {
-        if (address == null) address("http://" + localIp() + ":" + port + (path == null ? "" : path));
+        if (address == null) address(registrar.localAddress("http", port, path));
         return connect();
     }
 
     /** Starts registering with the server and heart-beating; for a node mounted in another HTTP stack. */
     public synchronized Node connect() {
-        if (heartbeatThread != null) return this;
         if (address == null) throw new IllegalStateException("set address(...) to where the server reaches this node");
-        String instanceId = HexFormat.of().formatHex(new SecureRandom().generateSeed(3));
-        heartbeatThread = new Thread(() -> heartbeatLoop(instanceId), "erupt-heartbeat");
-        heartbeatThread.setDaemon(true);
-        heartbeatThread.start();
+        NodeInfo info = new NodeInfo();
+        info.setVersion(VERSION);
+        info.setNodeAddress(new String[]{address});
+        info.setErupts(List.copyOf(entries.keySet()));
+        registrar.start(heartbeat, () -> info);
         return this;
-    }
-
-    private void heartbeatLoop(String instanceId) {
-        Map<String, Object> info = new LinkedHashMap<>();
-        info.put(LambdaSee.field(NodeInfo::getInstanceId), instanceId);
-        info.put(LambdaSee.field(NodeInfo::getNodeName), name);
-        info.put(LambdaSee.field(NodeInfo::getAccessToken), accessToken);
-        info.put(LambdaSee.field(NodeInfo::getVersion), VERSION);
-        info.put(LambdaSee.field(NodeInfo::getNodeAddress), List.of(address));
-        info.put(LambdaSee.field(NodeInfo::getEruptModules), List.of());
-        info.put(LambdaSee.field(NodeInfo::getErupts), List.copyOf(entries.keySet()));
-        info.put(LambdaSee.field(NodeInfo::getResources), Map.of());
-        String payload = Json.write(info);
-        boolean failing = false;
-        while (!closed) {
-            String server = nextServer();
-            long wait = heartbeat.toMillis();
-            try {
-                HttpResponse<Void> resp = http.send(HttpRequest.newBuilder(URI.create(server + CloudRestApiConst.REGISTER_NODE))
-                        .timeout(Duration.ofSeconds(10)).header("Content-Type", "application/json")
-                        .POST(HttpRequest.BodyPublishers.ofString(payload)).build(), HttpResponse.BodyHandlers.discarding());
-                if (resp.statusCode() / 100 != 2) throw new IOException("HTTP " + resp.statusCode());
-                if (failing) LOG.log(System.Logger.Level.INFO, server + " -> connection success");
-                failing = false;
-            } catch (InterruptedException e) {
-                return;
-            } catch (Exception e) {
-                failing = true;
-                wait /= 2;
-                LOG.log(System.Logger.Level.ERROR, server + " -> register failed: " + e);
-            }
-            try {
-                Thread.sleep(wait);
-            } catch (InterruptedException e) {
-                return;
-            }
-        }
     }
 
     /** Serves on the JDK HTTP server and connects; returns at once. {@link #close} undoes it. */
@@ -659,7 +607,7 @@ public final class Node implements AutoCloseable, Model.Registry {
         // HTTP first: the server probes /node-health while registering
         server.start();
         connect(port);
-        LOG.log(System.Logger.Level.INFO, "erupt node '" + name + "' at " + address + " -> " + String.join(", ", servers));
+        LOG.log(System.Logger.Level.INFO, "erupt node '" + name + "' at " + address + " -> " + String.join(", ", registrar.servers()));
         return this;
     }
 
@@ -675,35 +623,12 @@ public final class Node implements AutoCloseable, Model.Registry {
     public synchronized void close() {
         if (closed) return;
         closed = true;
-        if (heartbeatThread != null) {
-            heartbeatThread.interrupt();
-            String form = LambdaSee.field(NodeInfo::getNodeName) + "=" + encode(name) + "&" + LambdaSee.field(NodeInfo::getAccessToken) + "="
-                    + encode(accessToken) + "&" + PARAM_LOCATIONS + "=" + encode(address);
-            try {
-                http.send(HttpRequest.newBuilder(URI.create(nextServer() + CloudRestApiConst.REMOVE_INSTANCE_NODE)).timeout(Duration.ofSeconds(5))
-                        .header("Content-Type", "application/x-www-form-urlencoded").POST(HttpRequest.BodyPublishers.ofString(form)).build(),
-                        HttpResponse.BodyHandlers.discarding());
-            } catch (Exception e) {
-                LOG.log(System.Logger.Level.ERROR, "deregister failed: " + e);
-            }
-        }
+        registrar.close();
         if (server != null) {
             server.stop(2);
             executor.shutdown();
         }
         stopped.countDown();
-    }
-
-    /** The interface address the server would see us on. */
-    private String localIp() {
-        try (DatagramSocket s = new DatagramSocket()) {
-            URI uri = URI.create(servers.get(0));
-            s.connect(new InetSocketAddress(uri.getHost() == null ? "127.0.0.1" : uri.getHost(), 80));
-            String ip = s.getLocalAddress().getHostAddress();
-            return ip.equals("0.0.0.0") || ip.equals("::") ? "127.0.0.1" : ip;
-        } catch (IOException | RuntimeException e) {
-            return "127.0.0.1";
-        }
     }
 
     // ---------------------------------------------------------------- helpers

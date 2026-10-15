@@ -5,6 +5,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
+import java.util.EnumSet;
 import java.util.HexFormat;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -95,6 +96,18 @@ public final class CloudSignature {
         // The header value: the checks in declaration order, lower case, comma separated
         public static String header(Set<Enforced> enforced) {
             return enforced.stream().sorted().map(it -> it.name().toLowerCase()).collect(Collectors.joining(","));
+        }
+
+        // The checks a header value names, ignoring case, blanks and unknown names; empty for null
+        public static Set<Enforced> parse(String header) {
+            Set<Enforced> enforced = EnumSet.noneOf(Enforced.class);
+            if (null == header) return enforced;
+            for (String check : header.split(",")) {
+                for (Enforced value : values()) {
+                    if (value.name().equalsIgnoreCase(check.strip())) enforced.add(value);
+                }
+            }
+            return enforced;
         }
     }
 

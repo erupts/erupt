@@ -1,9 +1,12 @@
 package xyz.erupt.cloud.node.config;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author YuePeng
@@ -47,20 +50,14 @@ public class EruptNodeProp {
     // Refuse server calls without a valid Erupt-Signature (the plain access token alone no longer passes)
     private boolean requireSignature = false;
 
-    private int count = 0;
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private final AtomicInteger serverCycle = new AtomicInteger();
 
+    // the next server address, round-robin
     public String getBalanceAddress() {
-        if (this.serverAddresses.length == 1) {
-            return this.serverAddresses[0];
-        }
-        if (count == Integer.MAX_VALUE) {
-            count = 0;
-        }
-        String address = this.serverAddresses[count++ % this.serverAddresses.length];
-        if (address.endsWith("/")) {
-            return address.substring(0, address.length() - 1);
-        }
-        return address;
+        String address = this.serverAddresses[Math.floorMod(serverCycle.getAndIncrement(), this.serverAddresses.length)];
+        return address.endsWith("/") ? address.substring(0, address.length() - 1) : address;
     }
 
 }
