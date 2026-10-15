@@ -18,6 +18,8 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
+            <!-- only CloudHttp needs it: erupt-cloud-node-lite takes the rest without Spring -->
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
