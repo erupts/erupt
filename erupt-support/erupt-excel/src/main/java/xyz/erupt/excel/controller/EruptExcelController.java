@@ -101,7 +101,7 @@ public class EruptExcelController {
      * @download
      */
     @GetMapping(value = "/template/{erupt}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.IMPORTABLE, resolve = EruptRouter.Resolve.EXCEL_TEMPLATE)
     // The template is always Excel: it carries the validations and hints a text format cannot
     public void template(@PathVariable("erupt") String eruptName,
                          HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -125,7 +125,8 @@ public class EruptExcelController {
      */
     @PostMapping("/export/{erupt}")
     @EruptRecordOperate(value = "Export", dynamicConfig = EruptRecordNaming.class)
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.EXPORT,
+            payload = EruptRouter.Payload.TABLE_QUERY, resolve = EruptRouter.Resolve.EXCEL_EXPORT)
     public void export(@PathVariable("erupt") String eruptName,
                        @RequestBody TableQuery tableQuery,
                        @RequestParam(value = "ids", required = false) List<Object> ids,
@@ -158,7 +159,7 @@ public class EruptExcelController {
      */
     @PostMapping("/import/{erupt}")
     @EruptRecordOperate(value = "Import", dynamicConfig = EruptRecordNaming.class)
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.IMPORTABLE, resolve = EruptRouter.Resolve.EXCEL_IMPORT)
     @Transactional
     public R<Void> importData(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);

@@ -31,6 +31,13 @@
             <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!-- already present through erupt-upms; named for the export / import a node leaves to the server -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-excel</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-security</artifactId>

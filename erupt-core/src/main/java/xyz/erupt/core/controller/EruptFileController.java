@@ -74,7 +74,7 @@ public class EruptFileController {
      */
     @SneakyThrows
     @PostMapping("/upload/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT})
     public R<String> upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
         // Generating storage paths
         if (null == file.getOriginalFilename()) {
@@ -147,7 +147,7 @@ public class EruptFileController {
      * @return stored paths in request order
      */
     @PostMapping("/uploads/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT})
     public R<List<String>> uploads(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile[] files) {
         List<String> paths = new ArrayList<>();
         for (MultipartFile file : files) {
@@ -187,7 +187,7 @@ public class EruptFileController {
      * @return url, uploaded and state
      */
     @PostMapping("/upload-html-editor/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT})
     public Map<String, Object> uploadHtmlEditorImage(@PathVariable("erupt") String eruptName,
                                                      @PathVariable("field") String fieldName,
                                                      @RequestParam("upload") MultipartFile file) throws ClassNotFoundException {
@@ -222,7 +222,7 @@ public class EruptFileController {
      * @param file Image to store
      */
     @RequestMapping("/upload-ueditor/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT})
     public void uploadUEditorImage(@PathVariable("erupt") String eruptName,
                                    @PathVariable("field") String fieldName,
                                    @RequestParam(value = "callback", required = false) String callback,

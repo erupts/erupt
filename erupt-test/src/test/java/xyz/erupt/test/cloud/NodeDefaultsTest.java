@@ -5,12 +5,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Test;
+import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.test.EruptApplicationTests;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -35,8 +37,9 @@ public class NodeDefaultsTest extends EruptApplicationTests {
         EruptModel model = EruptCoreService.getEruptView(NodeDefaultsFixture.class.getSimpleName());
         JsonObject root = new JsonObject();
         JsonObject erupt = model.getEruptJson().deepCopy();
-        root.add("rowOperation", erupt.remove("rowOperation").getAsJsonArray().get(0));
-        erupt.add("rowOperation", new JsonArray());
+        String rowOperation = LambdaSee.method(Erupt::rowOperation);
+        root.add(rowOperation, erupt.remove(rowOperation).getAsJsonArray().get(0));
+        erupt.add(rowOperation, new JsonArray());
         root.add("erupt", erupt);
         root.add("power", GsonFactory.getGson().toJsonTree(new PowerObject()));
         JsonObject fields = new JsonObject();

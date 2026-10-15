@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.EruptTag;
 import xyz.erupt.core.invoke.DataProxyInvoke;
@@ -94,6 +95,31 @@ public class EruptModel implements Cloneable {
                     case "equals" -> proxy == args[0];
                     default -> method.getDefaultValue();
                 });
+    }
+
+    /**
+     * A remote erupt read back from its build response: the erupt and field annotations come from their JSON
+     * ({@link AnnotationProcess#jsonToAnnotation}), so code written against a local model (export sheets, import
+     * templates) runs on it. It has no class: no DataProxy, no reflected field types.
+     */
+    public static EruptModel remote(String eruptName, String remoteNode, EruptBuildModel build) {
+        EruptModel model = new EruptModel(eruptName, remoteNode);
+        EruptModel source = build.getEruptModel();
+        // name() is @Transient, so a build never carries it: the erupt's own name stands in
+        JsonObject eruptJson = source.getEruptJson().deepCopy();
+        if (!eruptJson.has(LambdaSee.method(Erupt::name))) {
+            eruptJson.addProperty(LambdaSee.method(Erupt::name), eruptName.substring(eruptName.lastIndexOf('.') + 1));
+        }
+        model.erupt = AnnotationProcess.jsonToAnnotation(Erupt.class, eruptJson);
+        model.eruptJson = source.getEruptJson();
+        model.eruptFieldModels = Optional.ofNullable(source.getEruptFieldModels()).orElse(List.of()).stream()
+                .filter(it -> null != it.getEruptFieldJson()).toList();
+        model.eruptFieldMap = new LinkedCaseInsensitiveMap<>();
+        for (EruptFieldModel field : model.eruptFieldModels) {
+            field.setEruptField(AnnotationProcess.jsonToAnnotation(EruptField.class, field.getEruptFieldJson()));
+            model.eruptFieldMap.put(field.getFieldName(), field);
+        }
+        return model;
     }
 
     public boolean isRemote() {

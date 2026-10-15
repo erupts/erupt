@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -187,6 +188,12 @@ public class EruptUtil {
     }
 
     public static List<VLModel> getChoiceList(EruptModel eruptModel, EruptFieldModel fieldModel) {
+        // a remote erupt's options, fetch handlers included, arrive resolved in its build
+        if (eruptModel.isRemote()) {
+            return null == fieldModel.getComponentValue() ? new ArrayList<>() : GsonFactory.getGson().fromJson(
+                    GsonFactory.getGson().toJsonTree(fieldModel.getComponentValue()), new TypeToken<List<VLModel>>() {
+                    }.getType());
+        }
         return enumFallback(eruptModel, fieldModel, getChoiceList(eruptModel, fieldModel.getEruptField().edit()));
     }
 

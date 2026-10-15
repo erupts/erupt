@@ -31,6 +31,8 @@ public class DataProxyInvoke {
     }
 
     public static void invoke(EruptModel eruptModel, Consumer<DataProxy<Object>> consumer) {
+        // a remote erupt's DataProxy runs on its node
+        if (eruptModel.isRemote()) return;
         // The @PreDataProxy in the annotation
         dataProxyAnnotationContainer.forEach(pc -> Optional.ofNullable(eruptModel.getClazz().getAnnotation(pc)).ifPresent(it -> {
             PreDataProxy preDataProxy = it.annotationType().getAnnotation(PreDataProxy.class);
