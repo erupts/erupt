@@ -135,6 +135,10 @@
         <module>erupt-cloud/erupt-cloud-server</module>
         <module>erupt-cloud/erupt-cloud-node</module>
         <module>erupt-cloud/erupt-cloud-node-jpa</module>
+        <module>erupt-cloud/erupt-cloud-node-lite</module>
+        <module>erupt-cloud/erupt-cloud-node-solon</module>
+        <module>erupt-cloud/erupt-cloud-node-quarkus</module>
+        <module>erupt-cloud/erupt-cloud-node-vertx</module>
 
         <!-- Test / Sample / Deploy -->
         <module>erupt-test</module>
