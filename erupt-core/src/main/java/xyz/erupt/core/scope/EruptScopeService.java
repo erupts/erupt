@@ -34,9 +34,10 @@ import java.util.function.Function;
 
 /**
  * Runtime of {@link EruptScope}. The picked values travel as plain JSON in the {@value #HEADER}
- * request header, {@code {"KubeScope":{"cluster":"orbstack"}}}, URL-encoded. The header is client
- * input: only the scope the requested model declares is read, and its values are checked against the
- * options the current user is offered on every request. Nothing is cached here: an option handler
+ * request header, {@code {"KubeScope":{"cluster":"orbstack"}}}, URL-encoded; a page opened by URL
+ * (a tpl), which cannot send headers, carries the same value in the {@value #PARAM} parameter. The
+ * value is client input: only the scope the requested model declares is read, and its values are
+ * checked against the options the current user is offered on every request. Nothing is cached here: an option handler
  * that is costly to ask caches its own options, since only it knows how long they stay valid.
  *
  * @author YuePeng
@@ -46,6 +47,8 @@ import java.util.function.Function;
 public class EruptScopeService {
 
     public static final String HEADER = "erupt-scope";
+
+    public static final String PARAM = "_scope";
 
     private static final String VARS_KEY = EruptScopeService.class.getName();
 
@@ -87,7 +90,8 @@ public class EruptScopeService {
     // ------------------------------------------------------------------ current values
 
     /**
-     * The current request's values of a scope: the checked header values, else the defaults.
+     * The current request's values of a scope: the checked header values, else the defaults. A
+     * required field still empty refuses the request: running it unscoped would reach every scope.
      */
     public JsonObject current(Class<?> scope) {
         Map<String, JsonObject> resolved = this.resolved();
@@ -95,6 +99,12 @@ public class EruptScopeService {
         if (null == values) {
             values = this.defaults(scope);
             resolved.put(scope.getSimpleName(), values);
+        }
+        for (EruptFieldModel field : scopeFields(scopeModel(scope))) {
+            Edit edit = field.getEruptField().edit();
+            if (edit.notNull() && empty(values.get(field.getFieldName()))) {
+                throw new EruptWebApiRuntimeException(edit.title() + " " + I18nTranslate.$translate("erupt.scope.required"));
+            }
         }
         return values;
     }
@@ -112,6 +122,7 @@ public class EruptScopeService {
         String header = null;
         if (RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attrs) {
             header = attrs.getRequest().getHeader(HEADER);
+            if (StringUtils.isBlank(header)) header = attrs.getRequest().getParameter(PARAM);
         }
         // Only the scope the requested model declares is read; any other key in the header is ignored
         String eruptName = MetaContext.getErupt().getName();
@@ -135,8 +146,8 @@ public class EruptScopeService {
     }
 
     /**
-     * What a user who never picked sees: the form's addBehavior values, and the first option of a
-     * required choice left empty.
+     * What a user who never picked sees: the form's addBehavior values, nothing more. A required
+     * field the form leaves empty stays empty, so the page asks the user instead of guessing.
      */
     public JsonObject defaults(Class<?> scope) {
         EruptModel model = scopeModel(scope);
@@ -147,16 +158,7 @@ public class EruptScopeService {
             throw new EruptWebApiRuntimeException("Scope needs a no-arg constructor: " + scope.getSimpleName());
         }
         DataProxyInvoke.invoke(model, it -> it.addBehavior(instance));
-        JsonObject values = gson.toJsonTree(instance).getAsJsonObject();
-        for (EruptFieldModel field : scopeFields(model)) {
-            JsonElement value = values.get(field.getFieldName());
-            if (field.getEruptField().edit().notNull() && empty(value) && CHOICE_TYPES.contains(field.getEruptField().edit().type())) {
-                Object current = gson.fromJson(values, scope);
-                List<VLModel> options = EruptUtil.getChoiceListFilter(model, field, current);
-                if (!options.isEmpty()) values.addProperty(field.getFieldName(), options.get(0).getValue());
-            }
-        }
-        return this.only(model, values);
+        return this.only(model, gson.toJsonTree(instance).getAsJsonObject());
     }
 
     // ------------------------------------------------------------------ accepting a pick

@@ -31,7 +31,6 @@ import xyz.erupt.upms.controller.EruptScopeController;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -108,9 +107,9 @@ class EruptScopeTest extends EruptApplicationTests {
     }
 
     @Test
-    void defaultsAreTheFirstOption() {
-        assertEquals("alpha", EruptScopes.get(ProjectScope.class).getProject());
-        assertEquals(List.of("a1", "a2"), this.names());
+    void noPickIsRefused() {
+        assertThrows(EruptWebApiRuntimeException.class, () -> EruptScopes.get(ProjectScope.class), "a required field is never guessed");
+        assertThrows(EruptWebApiRuntimeException.class, this::names, "nor is the list run unscoped");
     }
 
     @Test
@@ -129,11 +128,10 @@ class EruptScopeTest extends EruptApplicationTests {
     @Test
     void headerValuesOutsideTheOptionsAreIgnored() {
         this.request(pick("gamma"), 1L);
-        assertEquals("alpha", EruptScopes.get(ProjectScope.class).getProject(), "a value the user may not pick falls back to the defaults");
-        assertEquals(List.of("a1", "a2"), this.names());
+        assertThrows(EruptWebApiRuntimeException.class, this::names, "a value the user may not pick counts as no pick");
 
         this.request("not json", 1L);
-        assertEquals("alpha", EruptScopes.get(ProjectScope.class).getProject(), "a malformed header falls back too");
+        assertThrows(EruptWebApiRuntimeException.class, this::names, "so does a malformed header");
     }
 
     @Test
@@ -148,7 +146,7 @@ class EruptScopeTest extends EruptApplicationTests {
     void onlyTheScopeOfTheRequestedModelIsRead() {
         this.request(pick("beta"), 1L);
         MetaContext.register(new MetaErupt(RefTargetModel.class.getSimpleName()));
-        assertEquals("alpha", EruptScopes.get(ProjectScope.class).getProject(), "a model without the scope ignores it in the header");
+        assertThrows(EruptWebApiRuntimeException.class, () -> EruptScopes.get(ProjectScope.class), "a model without the scope ignores it in the header");
     }
 
     @Test
@@ -184,13 +182,13 @@ class EruptScopeTest extends EruptApplicationTests {
     }
 
     @Test
-    void headerListsVisibleScopesWithSignedDefaults() {
+    void headerListsVisibleScopesWithoutGuessedDefaults() {
         EruptScopeController.ScopeView view = scopeController.scopes().stream()
                 .filter(it -> it.getName().equals(ProjectScope.class.getSimpleName())).findFirst().orElseThrow();
         assertEquals(ScopedTask.class.getSimpleName(), view.getParent());
         assertEquals(List.of(ScopedTask.class.getSimpleName()), view.getModels(), "shown on the pages of these models only");
         assertEquals(List.of("project", "tag"), view.getFields());
-        assertEquals(Map.of("project", "Alpha"), view.getDefaults().labels());
+        assertNull(view.getDefaults(), "no addBehavior value for the required project: the page asks");
     }
 
     private JsonObject form(String project) {

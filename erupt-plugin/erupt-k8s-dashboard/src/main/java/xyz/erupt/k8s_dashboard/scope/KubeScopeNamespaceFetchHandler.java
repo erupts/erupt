@@ -5,7 +5,6 @@ import io.fabric8.kubernetes.client.KubernetesClientException;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
-import xyz.erupt.core.scope.EruptScopes;
 import xyz.erupt.k8s.service.EruptK8sClientService;
 import xyz.erupt.k8s_dashboard.model.KubeNamespace;
 
@@ -39,9 +38,11 @@ public class KubeScopeNamespaceFetchHandler implements ChoiceFetchHandler<KubeSc
         this.clientService = clientService;
     }
 
+    // Without a cluster there are no namespaces to offer: the form asks through fetchFilter with the
+    // cluster it holds. This runs while the scope form's schema is built, before anything is picked
     @Override
     public List<VLModel> fetch(String[] params) {
-        return this.namespaces(EruptScopes.get(KubeScope.class).getCluster());
+        return List.of();
     }
 
     @Override
