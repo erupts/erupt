@@ -151,7 +151,8 @@ abstract class NodeTest {
         assertEquals("Confirm whether to perform this operation", ops.get(0).get("callHint"));
         assertEquals("", ops.get(1).get("callHint"));
         assertEquals(List.of("publish"), List.copyOf(((Map<String, Object>) a.map().get("operationErupts")).keySet()));
-        assertEquals(false, ((Map<String, Object>) a.map().get("power")).get("cellEdit"), "unsupported, hidden");
+        assertEquals(false, ((Map<String, Object>) a.map().get("power")).get("print"), "unsupported, hidden");
+        assertEquals(true, ((Map<String, Object>) a.map().get("power")).get("cellEdit"), "done by the server");
         a = call("GET", "/erupt-api/build/Article", null, "Article", "root", Map.of());
         assertEquals(3, ((List<Object>) ((Map<String, Object>) ((Map<String, Object>) a.map().get("eruptModel")).get("eruptJson")).get("rowOperation")).size());
     }

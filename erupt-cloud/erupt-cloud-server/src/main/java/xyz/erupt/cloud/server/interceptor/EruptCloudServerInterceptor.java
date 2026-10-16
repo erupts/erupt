@@ -42,6 +42,7 @@ import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.http.CloudSignature;
 import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.service.CloudNodeRouter;
+import xyz.erupt.cloud.server.service.NodeCellService;
 import xyz.erupt.cloud.server.service.NodePowerService;
 import xyz.erupt.cloud.server.service.NodeExcelService;
 import xyz.erupt.cloud.server.service.NodeReferenceService;
@@ -127,6 +128,9 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
 
     @Resource
     private CloudNodeRouter cloudNodeRouter;
+
+    @Resource
+    private NodeCellService nodeCellService;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -240,6 +244,13 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 return true;
             }
             byte[] body = isMultipart(request) ? null : StreamUtils.copyToByteArray(request.getInputStream());
+            // A cell is the server's for every node: read the row, patch it, save it through the node's update
+            if (eruptRouter.resolve() == EruptRouter.Resolve.CELL) {
+                R<Void> result = nodeCellService.update(erupt, remoteBuild(erupt), body);
+                operationService.record(handler, result.isSuccess() ? null : new Exception(result.getMessage()));
+                writeJson(response, result);
+                return false;
+            }
             Set<CloudSignature.Enforced> enforced = EnumSet.of(CloudSignature.Enforced.POWER);
             if (eruptRouter.payload() != EruptRouter.Payload.NONE) {
                 validatePayload(eruptRouter.payload(), erupt, body);

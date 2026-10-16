@@ -185,7 +185,6 @@ A node that implements only these gets a working table, search, detail view and 
 | `AUTO_COMPLETE` | `POST /erupt-api/comp/auto-complete/{erupt}/{field}` |
 | `onchange` | `POST /erupt-api/data/onchange/{erupt}/{field}` |
 | `BUTTON` | `POST /erupt-api/comp/button/{erupt}/{field}` |
-| `cellEdit` | `POST /erupt-api/data/modify/{erupt}/update-cell` |
 | `dragSort` | `POST /erupt-api/data/modify/{erupt}/drag-sort` |
 | view `statistic` | `POST /erupt-api/data/aggregate/{erupt}` |
 | extra rows | `POST /erupt-api/data/extra-row/{erupt}` |
@@ -217,6 +216,7 @@ Endpoints the server answers for a node itself, from the node's build (fetched w
 |---------|-----------|-----|
 | Attachments, rich-text images | `POST /erupt-api/file/upload/{erupt}/{field}`, `/uploads/...`, `/upload-html-editor/...`, `/upload-ueditor/...` | Stored by the server under the field's `attachmentType` (file types, size, image dimensions, path) or `htmlEditorType.path`, after the user's `add` / `edit` right is checked; the download (`/erupt-api/file/download-attachment`, `/erupt-attachment`) serves them from the same storage. The node stores the returned path like any string column (several joined by `attachmentType.fileSeparator`). |
 | Static options | `choice-item`, `choice-item-filter`, `tags-item` of a field whose `choiceType` / `multiChoiceType` / `tagsType` names no `fetchHandler` | The build's `componentValue`. A field naming a handler is forwarded; a 404 then falls back to the same `componentValue`. |
+| Cell editing | `POST /erupt-api/data/modify/{erupt}/update-cell` | When the build's power allows `cellEdit` and the field's `edit` has a title, `cellEdit` and is not read-only: the row read through `GET /data/{erupt}/{id}` (signed `power`), patched, checked as a record, and saved whole through `POST /data/modify/{erupt}/update` (signed `power,record`). A node therefore leaves `cellEdit` as declared instead of turning it off. |
 
 A node answers **404** for anything it does not implement. **[v1 proposal]** It also lists what it
 implements in a `capabilities` field at registration, so the server can hide the matching UI instead

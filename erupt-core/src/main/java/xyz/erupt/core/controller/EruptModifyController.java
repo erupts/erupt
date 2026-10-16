@@ -106,7 +106,8 @@ public class EruptModifyController {
      */
     @PostMapping("/{erupt}/update-cell")
     @EruptRecordOperate(value = "UPDATE", dynamicConfig = EruptRecordNaming.class)
-    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true, power = EruptRouter.Power.EDIT)
+    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true, power = EruptRouter.Power.EDIT,
+            resolve = EruptRouter.Resolve.CELL)
     @Transactional
     @SneakyThrows
     public R<Void> updateEruptCell(@PathVariable("erupt") String erupt, @RequestBody EruptCellVo cell) {

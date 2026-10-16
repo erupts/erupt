@@ -76,10 +76,10 @@ public final class Node implements AutoCloseable, Model.Registry {
     private static final System.Logger LOG = System.getLogger("erupt");
 
     /**
-     * Features whose endpoints this node does not serve yet: hidden from the UI instead of failing there. Export and
-     * import pass: the server does the Excel work for a node that answers 404.
+     * Features whose endpoints this node does not serve yet: hidden from the UI instead of failing there. Export,
+     * import and cell editing pass: the server does them for every node through the endpoints a node serves.
      */
-    private static final Set<Right> UNSUPPORTED_POWER = EnumSet.of(Right.CELL_EDIT, Right.PRINT, Right.AI);
+    private static final Set<Right> UNSUPPORTED_POWER = EnumSet.of(Right.PRINT, Right.AI);
 
     /** Rights the server decides per user; the node ANDs them onto the declared power. */
     private static final Set<Right> SERVER_POWER = EnumSet.of(Right.ADD, Right.EDIT, Right.DELETE, Right.VIEW_DETAILS, Right.EXPORT, Right.IMPORTABLE);
@@ -371,6 +371,18 @@ public final class Node implements AutoCloseable, Model.Registry {
         if (op == QueryExpression.NULL || op == QueryExpression.NOT_NULL) return new Condition(f.name, null, op);
         if (f.isReference() && !Set.of(QueryExpression.EQ, QueryExpression.NEQ, QueryExpression.IN, QueryExpression.NOT_IN).contains(op)) {
             throw new EruptException("illegal operator '" + op + "' for a reference");
+        }
+        // a List / Map field matches its JSON text, one option (or fragment) at a time
+        if (f.json) {
+            List<?> l = value instanceof List<?> list ? list : List.of(value);
+            if (!Set.of(QueryExpression.EQ, QueryExpression.LIKE, QueryExpression.IN).contains(op) || l.size() != 1) {
+                throw new EruptException("illegal operator '" + op + "' for " + f.name);
+            }
+            try {
+                return new Condition(f.name, f.toCondition(l.get(0)), QueryExpression.LIKE);
+            } catch (IllegalArgumentException e) {
+                throw new EruptException(e.getMessage());
+            }
         }
         if (op == QueryExpression.LIKE || op == QueryExpression.NOT_LIKE) return new Condition(f.name, Values.text(value), op);
         try {
