@@ -1,6 +1,7 @@
 package xyz.erupt.core.controller;
 
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.CodeEditHintHandler;
 import xyz.erupt.annotation.fun.EruptButtonHandler;
@@ -137,7 +138,14 @@ public class EruptComponentController {
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
         // a node erupt reaches here only for tags no handler fetches: its build's tags() are the answer
         Object o = eruptModel.isRemote() ? null : GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
-        return EruptUtil.getTagList(fieldModel.getEruptField().edit().tagsType(), o);
+        List<String> tags = EruptUtil.getTagList(fieldModel.getEruptField().edit().tagsType(), o);
+        // a node whose build leaves tags() out (an older erupt, the language SDKs) sends them as the componentValue
+        if (eruptModel.isRemote() && tags.isEmpty() && null != fieldModel.getComponentValue()) {
+            return GsonFactory.getGson().fromJson(GsonFactory.getGson().toJsonTree(fieldModel.getComponentValue()),
+                    new TypeToken<List<String>>() {
+                    }.getType());
+        }
+        return tags;
     }
 
     /**
