@@ -22,7 +22,6 @@ public @interface MultiChoiceType {
     @Comment("Accessible by the fetchHandler interface")
     String[] fetchHandlerParams() default {};
 
-    @Transient
     @Comment("Dynamically fetched options")
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
 

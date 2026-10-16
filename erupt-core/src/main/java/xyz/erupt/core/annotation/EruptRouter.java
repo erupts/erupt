@@ -71,7 +71,11 @@ public @interface EruptRouter {
         @Comment("An export: the server pages through the node's table and encodes the file when the node answers 404")
         EXCEL_EXPORT,
         @Comment("An import: the server parses the file and adds its rows through the node when the node answers 404")
-        EXCEL_IMPORT
+        EXCEL_IMPORT,
+        @Comment("An upload: never forwarded, the server stores it by the rules of the node's build, so its download serves it")
+        UPLOAD,
+        @Comment("Choice / tags options: the server answers them from the node's build, forwarding only a field that fetches its own")
+        OPTIONS
     }
 
     enum Payload {

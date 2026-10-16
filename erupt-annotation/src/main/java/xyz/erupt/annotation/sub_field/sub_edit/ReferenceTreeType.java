@@ -25,7 +25,6 @@ public @interface ReferenceTreeType {
     @Language(value = "hql", prefix = "select ", suffix = " from")
     String pid() default "";
 
-    @Transient
     @Comment("Identifies what characteristic of pid marks a root node; must be used together with filter")
     Expr rootPid() default @Expr;
 

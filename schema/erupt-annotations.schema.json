@@ -22,9 +22,16 @@
           },
           "default": []
         },
+        "imageType": {
+          "$ref": "#/$defs/AttachmentTypeImageType"
+        },
         "maxLimit": {
           "type": "integer",
           "default": 1
+        },
+        "path": {
+          "type": "string",
+          "default": ""
         },
         "size": {
           "type": "integer",
@@ -38,9 +45,39 @@
       "required": [
         "fileSeparator",
         "fileTypes",
+        "imageType",
         "maxLimit",
+        "path",
         "size",
         "type"
+      ],
+      "additionalProperties": false
+    },
+    "AttachmentTypeImageType": {
+      "type": "object",
+      "properties": {
+        "maxHeight": {
+          "type": "integer",
+          "default": 2147483647
+        },
+        "maxWidth": {
+          "type": "integer",
+          "default": 2147483647
+        },
+        "minHeight": {
+          "type": "integer",
+          "default": 0
+        },
+        "minWidth": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "required": [
+        "maxHeight",
+        "maxWidth",
+        "minHeight",
+        "minWidth"
       ],
       "additionalProperties": false
     },
@@ -898,6 +935,19 @@
       ],
       "additionalProperties": false
     },
+    "Expr": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "default": ""
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false
+    },
     "GanttView": {
       "type": "object",
       "properties": {
@@ -967,11 +1017,16 @@
     "HtmlEditorType": {
       "type": "object",
       "properties": {
+        "path": {
+          "type": "string",
+          "default": ""
+        },
         "value": {
           "$ref": "#/$defs/HtmlEditorTypeType"
         }
       },
       "required": [
+        "path",
         "value"
       ],
       "additionalProperties": false
@@ -1001,6 +1056,10 @@
           },
           "default": []
         },
+        "regex": {
+          "type": "string",
+          "default": ""
+        },
         "suffix": {
           "type": "array",
           "items": {
@@ -1017,6 +1076,7 @@
         "fullSpan",
         "length",
         "prefix",
+        "regex",
         "suffix",
         "type"
       ],
@@ -1242,6 +1302,13 @@
           "type": "string",
           "default": ""
         },
+        "fetchHandler": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
         "type": {
           "$ref": "#/$defs/MultiChoiceTypeType",
           "default": "CHECKBOX"
@@ -1253,6 +1320,7 @@
       },
       "required": [
         "dependField",
+        "fetchHandler",
         "type",
         "validate"
       ],
@@ -1443,6 +1511,9 @@
         "pid": {
           "type": "string",
           "default": ""
+        },
+        "rootPid": {
+          "$ref": "#/$defs/Expr"
         }
       },
       "required": [
@@ -1450,7 +1521,8 @@
         "expandLevel",
         "id",
         "label",
-        "pid"
+        "pid",
+        "rootPid"
       ],
       "additionalProperties": false
     },
@@ -1645,13 +1717,21 @@
         "maxTagCount": {
           "type": "integer",
           "default": 9999
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
         }
       },
       "required": [
         "allowExtension",
         "fetchHandler",
         "joinSeparator",
-        "maxTagCount"
+        "maxTagCount",
+        "tags"
       ],
       "additionalProperties": false
     },
@@ -1855,6 +1935,10 @@
           "type": "string",
           "default": ""
         },
+        "export": {
+          "type": "boolean",
+          "default": true
+        },
         "group": {
           "type": "string",
           "default": ""
@@ -1894,6 +1978,7 @@
         "className",
         "column",
         "desc",
+        "export",
         "group",
         "show",
         "sortable",

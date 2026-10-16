@@ -140,7 +140,7 @@ Erupt-Signature = HMAC(accessToken, METHOD \n path?query \n timestamp \n enforce
 `path?query` is the path the node is called on, below any context path; `enforced` is the
 `Erupt-Enforced` value or empty; `user` is the raw `user` header (empty when absent); the body digest is
 of the raw bytes (an empty body digests the empty string) or the literal `UNSIGNED-PAYLOAD` for a
-multipart upload, which the forward re-encodes. A node accepts a timestamp within 300 seconds of its
+multipart body (an Excel import; attachments stay on the server, §5.4), which the forward re-encodes. A node accepts a timestamp within 300 seconds of its
 clock. The server signs every call, including its own (`EruptRemoteRouter`), and also sends `Access-Token`
 until it is configured with `erupt.cloud-server.plain-access-token: false`; a Java node refuses unsigned
 calls when `erupt.cloud-node.require-signature: true`. The reference implementation is
@@ -181,7 +181,8 @@ A node that implements only these gets a working table, search, detail view and 
 | `CHECKBOX` | `GET /erupt-api/data/{erupt}/checkbox/{field}` |
 | `TAB_TREE` | `GET /erupt-api/data/tab/tree/{erupt}/{field}` |
 | `TAB_TABLE_ADD` / tab editing | `POST /erupt-api/data/modify/tab-add|tab-update|tab-delete/{erupt}/{field}` |
-| dynamic `CHOICE` / `TAGS` / `AUTO_COMPLETE` | `GET /erupt-api/comp/choice-item/{erupt}/{field}`, `POST /erupt-api/comp/choice-item-filter/{erupt}/{field}`, `POST /erupt-api/comp/tags-item/{erupt}/{field}`, `POST /erupt-api/comp/auto-complete/{erupt}/{field}` |
+| `CHOICE` / `MULTI_CHOICE` / `TAGS` options fetched by a handler | `GET /erupt-api/comp/choice-item/{erupt}/{field}`, `POST /erupt-api/comp/choice-item-filter/{erupt}/{field}`, `POST /erupt-api/comp/tags-item/{erupt}/{field}`; only for a field whose build names a `fetchHandler`, the server answers the others (§5.4) |
+| `AUTO_COMPLETE` | `POST /erupt-api/comp/auto-complete/{erupt}/{field}` |
 | `onchange` | `POST /erupt-api/data/onchange/{erupt}/{field}` |
 | `BUTTON` | `POST /erupt-api/comp/button/{erupt}/{field}` |
 | `cellEdit` | `POST /erupt-api/data/modify/{erupt}/update-cell` |
@@ -195,7 +196,6 @@ A node that implements only these gets a working table, search, detail view and 
 
 | Feature | Endpoints |
 |---------|-----------|
-| Attachments | `POST /erupt-api/file/upload/{erupt}/{field}`, `/uploads/...`, `/upload-html-editor/...` (multipart, field `file`) |
 | Excel import / export | `/erupt-api/excel/template|export|import/{erupt}`; a 404 leaves them to the server (below) |
 | Gantt / board / calendar views | `/erupt-api/data/modify/gantt/...`, `/board/...`, `/calendar/...` |
 | Template pages | any `/erupt-api/tpl/...` path, routed by the `_node` query param, forwarded verbatim |
@@ -207,6 +207,16 @@ exports by paging through `POST /data/table/{erupt}` (signed `power,query`; sele
 referenced erupt's table, signed `power`), checking each row as a submitted record and adding it through
 `POST /data/modify/{erupt}` (signed `power,record`). Rows are added one by one: an import stops at the first
 failing row, keeps the rows before it and says how many there were.
+
+### 5.4 Done by the server
+
+Endpoints the server answers for a node itself, from the node's build (fetched with the server's own signed
+`GET /build/{erupt}` and cached for a minute); nothing is forwarded:
+
+| Feature | Endpoints | How |
+|---------|-----------|-----|
+| Attachments, rich-text images | `POST /erupt-api/file/upload/{erupt}/{field}`, `/uploads/...`, `/upload-html-editor/...`, `/upload-ueditor/...` | Stored by the server under the field's `attachmentType` (file types, size, image dimensions, path) or `htmlEditorType.path`, after the user's `add` / `edit` right is checked; the download (`/erupt-api/file/download-attachment`, `/erupt-attachment`) serves them from the same storage. The node stores the returned path like any string column (several joined by `attachmentType.fileSeparator`). |
+| Static options | `choice-item`, `choice-item-filter`, `tags-item` of a field whose `choiceType` / `multiChoiceType` / `tagsType` names no `fetchHandler` | The build's `componentValue`. A field naming a handler is forwarded; a 404 then falls back to the same `componentValue`. |
 
 A node answers **404** for anything it does not implement. **[v1 proposal]** It also lists what it
 implements in a `capabilities` field at registration, so the server can hide the matching UI instead
@@ -404,4 +414,4 @@ registers, survives heartbeat expiry, and round-trips a reference model (table, 
 2. `erupts` in the heartbeat is the only model inventory. Should a node also report a per-model hash so the server can tell when a model changed?
 3. ~~Excel import / export~~: done by the server on a 404 (§5.3). Open: an optional batch add, so an import
    can be all-or-nothing on a node.
-4. Attachments: node-local storage vs. server-provided storage that the node only references.
+4. ~~Attachments~~: stored by the server, the node only references the path (§5.4).

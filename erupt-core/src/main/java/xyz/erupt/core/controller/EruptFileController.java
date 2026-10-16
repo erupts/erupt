@@ -25,6 +25,7 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptFileService;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 
@@ -74,14 +75,19 @@ public class EruptFileController {
      */
     @SneakyThrows
     @PostMapping("/upload/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT})
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT}, resolve = EruptRouter.Resolve.UPLOAD)
     public R<String> upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
         // Generating storage paths
         if (null == file.getOriginalFilename()) {
             return R.errorDialog(I18nTranslate.$translate("filename is empty"));
         }
-        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
+        // an erupt-cloud node erupt is uploaded here too, by the rules of its node's build: the download serves it from here
+        EruptModel eruptModel = EruptCoreService.getEruptWithRemoteModel(eruptName);
+        EruptFieldModel fieldModel = null == eruptModel ? null : eruptModel.getEruptFieldMap().get(fieldName);
+        if (null == fieldModel) {
+            throw new EruptWebApiRuntimeException("field not found: " + fieldName);
+        }
+        Edit edit = fieldModel.getEruptField().edit();
         String path = eruptFileService.createPath(file).replace(edit.attachmentType().fileSeparator(), "");
         switch (edit.type()) {
             case ATTACHMENT:
@@ -147,7 +153,7 @@ public class EruptFileController {
      * @return stored paths in request order
      */
     @PostMapping("/uploads/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT})
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT}, resolve = EruptRouter.Resolve.UPLOAD)
     public R<List<String>> uploads(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile[] files) {
         List<String> paths = new ArrayList<>();
         for (MultipartFile file : files) {
@@ -187,7 +193,7 @@ public class EruptFileController {
      * @return url, uploaded and state
      */
     @PostMapping("/upload-html-editor/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT})
+    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT}, resolve = EruptRouter.Resolve.UPLOAD)
     public Map<String, Object> uploadHtmlEditorImage(@PathVariable("erupt") String eruptName,
                                                      @PathVariable("field") String fieldName,
                                                      @RequestParam("upload") MultipartFile file) throws ClassNotFoundException {
@@ -222,7 +228,7 @@ public class EruptFileController {
      * @param file Image to store
      */
     @RequestMapping("/upload-ueditor/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT})
+    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT}, resolve = EruptRouter.Resolve.UPLOAD)
     public void uploadUEditorImage(@PathVariable("erupt") String eruptName,
                                    @PathVariable("field") String fieldName,
                                    @RequestParam(value = "callback", required = false) String callback,

@@ -41,7 +41,6 @@ public @interface View {
     @Comment("Header group; adjacent columns sharing the same group are rendered under one merged header cell (multi-level header)")
     String group() default "";
 
-    @Transient
     @Comment("Export column")
     boolean export() default true;
 

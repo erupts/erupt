@@ -35,6 +35,10 @@ public interface EruptRemoteRouter {
     // Remote model carrying the node's schema (build) metadata, lazily fetched for display
     EruptModel resolveEruptView(String eruptName);
 
+    // Remote model read back from the node's build (EruptModel.remote): field annotations without a class, for
+    // the endpoints the server answers itself (uploads, static options); user-independent, so briefly cached
+    EruptModel resolveEruptModel(String eruptName);
+
     // Fully-qualified names of every erupt exposed by currently live nodes
     List<String> remoteEruptNames();
 
