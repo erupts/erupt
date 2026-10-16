@@ -101,9 +101,9 @@ public final class Model<T> implements AnnotationJson.Resolver {
         return pk == null ? null : pk.name;
     }
 
-    /** The {@code @EruptField} members, which are the columns, in display order. */
+    /** The stored {@code @EruptField} members (no layout control, no transient member), in display order. */
     public List<String> columns() {
-        return List.copyOf(fields.keySet());
+        return fields.values().stream().filter(f -> f.stored).map(f -> f.name).toList();
     }
 
     /** The stored value of a column: a reference as the referenced record's primary key. */

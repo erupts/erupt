@@ -75,7 +75,9 @@ public @interface EruptRouter {
         @Comment("An upload: never forwarded, the server stores it by the rules of the node's build, so its download serves it")
         UPLOAD,
         @Comment("Choice / tags options: the server answers them from the node's build, forwarding only a field that fetches its own")
-        OPTIONS
+        OPTIONS,
+        @Comment("A cell edit: the server reads the row through the node, patches the cell and saves the row through the node's update")
+        CELL
     }
 
     enum Payload {
