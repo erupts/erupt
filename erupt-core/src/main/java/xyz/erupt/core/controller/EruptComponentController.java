@@ -88,10 +88,11 @@ public class EruptComponentController {
      * @return value/label pairs
      */
     @GetMapping("/choice-item/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.OPTIONS)
     public List<VLModel> choiceItem(@PathVariable("erupt") String eruptName,
                                     @PathVariable("field") String field) {
-        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        // an erupt-cloud node erupt's static options are answered here, from its node's build
+        EruptModel eruptModel = EruptCoreService.getEruptWithRemoteModel(eruptName);
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
         return EruptUtil.getChoiceList(eruptModel, fieldModel);
     }
@@ -106,12 +107,14 @@ public class EruptComponentController {
      * @return value/label pairs
      */
     @PostMapping("/choice-item-filter/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.OPTIONS)
     public List<VLModel> choiceFilter(@PathVariable("erupt") String eruptName,
                                       @PathVariable("field") String field,
                                       @RequestBody JsonObject data) {
-        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        EruptModel eruptModel = EruptCoreService.getEruptWithRemoteModel(eruptName);
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
+        // a node erupt reaches here only for options no handler fetches: the form cannot change them
+        if (eruptModel.isRemote()) return EruptUtil.getChoiceList(eruptModel, fieldModel);
         Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
         return EruptUtil.getChoiceListFilter(eruptModel, fieldModel, o);
     }
@@ -125,14 +128,15 @@ public class EruptComponentController {
      * @return tags
      */
     @PostMapping("/tags-item/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.OPTIONS)
     public List<String> tagsItem(@PathVariable("erupt") String eruptName,
                                  @PathVariable("field") String field,
                                  @RequestBody JsonObject data
     ) {
-        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        EruptModel eruptModel = EruptCoreService.getEruptWithRemoteModel(eruptName);
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
-        Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
+        // a node erupt reaches here only for tags no handler fetches: its build's tags() are the answer
+        Object o = eruptModel.isRemote() ? null : GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
         return EruptUtil.getTagList(fieldModel.getEruptField().edit().tagsType(), o);
     }
 

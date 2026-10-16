@@ -29,7 +29,7 @@ public class RemoteRequestValidatorTest extends EruptApplicationTests {
                 {"fieldName": "views", "fieldReturnName": "number", "eruptFieldJson": {"views": [{"title": "Views", "column": "", "sortable": false}],
                   "edit": {"title": "Views", "type": "NUMBER", "notNull": false, "search": {"value": false}, "numberType": {"min": 0, "max": 100}}}},
                 {"fieldName": "code", "fieldReturnName": "String", "eruptFieldJson": {"views": [],
-                  "edit": {"title": "Code", "type": "INPUT", "notNull": false, "search": {"value": false}, "inputType": {"length": 4}}}},
+                  "edit": {"title": "Code", "type": "INPUT", "notNull": false, "search": {"value": false}, "inputType": {"length": 4, "regex": "[A-Z]+"}}}},
                 {"fieldName": "status", "fieldReturnName": "String", "eruptFieldJson": {"views": [{"title": "Status", "column": "", "sortable": false}],
                   "edit": {"title": "Status", "type": "CHOICE", "notNull": false, "search": {"value": true}}},
                   "componentValue": [{"value": "draft", "label": "Draft"}, {"value": "published", "label": "Published"}]},
@@ -79,6 +79,7 @@ public class RemoteRequestValidatorTest extends EruptApplicationTests {
                 record("{\"title\": \"t\", \"status\": \"deleted\"}").getMessage());
         assertEquals("Views " + I18nTranslate.$translate("erupt.value.out_of_range") + " → 101", record("{\"title\": \"t\", \"views\": 101}").getMessage());
         assertEquals("Code " + I18nTranslate.$translate("erupt.data.limit_length") + " → 5 > 4", record("{\"title\": \"t\", \"code\": \"ABCDE\"}").getMessage());
+        assertEquals("Code " + I18nTranslate.$translate("erupt.incorrect_format"), record("{\"title\": \"t\", \"code\": \"ab\"}").getMessage(), "regex");
         assertNull(record("{\"title\": \"t\", \"views\": 100, \"code\": \"ABCD\", \"status\": \"published\"}"));
         R<?> xss = record("{\"title\": \"<script>alert(1)</script>\"}");
         assertEquals("Title " + I18nTranslate.$translate("erupt.attack.xss"), xss.getMessage());

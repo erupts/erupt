@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.query.Condition;
@@ -25,6 +26,7 @@ import xyz.erupt.core.view.TableQuery;
 import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Checks a request against a model known only by its build model (an erupt-cloud node's erupt), before the
@@ -133,6 +135,11 @@ public final class RemoteRequestValidator {
                 }
                 if (edit.type() == EditType.TEXTAREA && value.getAsString().length() > edit.textareaType().length()) {
                     throw new EruptApiErrorTip(R.error(edit.title() + " " + I18nTranslate.$translate("erupt.data.limit_length")));
+                }
+                String regex = edit.inputType().regex();
+                if (edit.type() == EditType.INPUT && !AnnotationConst.EMPTY_STR.equals(regex)
+                        && StringUtils.isNotBlank(value.getAsString()) && !Pattern.matches(regex, value.getAsString())) {
+                    throw new EruptApiErrorTip(R.error(edit.title() + " " + I18nTranslate.$translate("erupt.incorrect_format")));
                 }
             }
             case NUMBER, SLIDER -> {

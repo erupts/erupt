@@ -18,7 +18,6 @@ public @interface InputType {
     @Comment("Display the whole line")
     boolean fullSpan() default false;
 
-    @Transient
     @Comment("Regex the input value")
     String regex() default "";
 

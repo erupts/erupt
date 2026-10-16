@@ -116,8 +116,13 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                 if (StringUtils.isNotBlank(parentEruptName)) {
                     // The client claims this request serves a sub-form of parentEruptName; verify the
                     // nesting relation against annotation metadata, then authorize by the parent's menu.
-                    EruptModel eruptParentModel = EruptCoreService.getErupt(parentEruptName);
-                    if (null == eruptParentModel || !EruptCoreService.isEruptNested(eruptParentModel, eruptModel.getEruptName())) {
+                    EruptModel eruptParentModel = EruptCoreService.getEruptWithRemote(parentEruptName);
+                    // a node erupt's nesting is known to its node only: the cloud server has already held the
+                    // child to its parent's node, so the parent's menu is what is left to check
+                    boolean nested = null != eruptParentModel && (eruptModel.isRemote()
+                            ? eruptParentModel.isRemote() && eruptParentModel.getRemoteNode().equals(eruptModel.getRemoteNode())
+                            : EruptCoreService.isEruptNested(eruptParentModel, eruptModel.getEruptName()));
+                    if (!nested) {
                         response.setStatus(HttpStatus.NOT_FOUND.value());
                         return false;
                     }

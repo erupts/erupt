@@ -32,6 +32,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.annotation.sub_erupt.Drill;
@@ -39,6 +41,7 @@ import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.http.CloudSignature;
 import xyz.erupt.cloud.server.config.EruptCloudServerProp;
+import xyz.erupt.cloud.server.service.CloudNodeRouter;
 import xyz.erupt.cloud.server.service.NodePowerService;
 import xyz.erupt.cloud.server.service.NodeExcelService;
 import xyz.erupt.cloud.server.service.NodeReferenceService;
@@ -47,7 +50,6 @@ import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.i18n.I18nTranslate;
-import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.view.R;
 import com.google.gson.JsonParser;
 import xyz.erupt.cloud.server.node.MetaNode;
@@ -78,6 +80,7 @@ import xyz.erupt.upms.service.EruptUserService;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * @author YuePeng
@@ -121,6 +124,9 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
 
     @Resource
     private EruptCloudServerProp eruptCloudServerProp;
+
+    @Resource
+    private CloudNodeRouter cloudNodeRouter;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -228,6 +234,11 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             if (!NodePowerService.allows(userPower, eruptRouter.power())) {
                 throw new EruptNoLegalPowerException();
             }
+            // Uploads, and options a field does not fetch on the node, are the server's: its own controller
+            // answers them from the node's build, nothing is forwarded
+            if (serverAnswers(eruptRouter.resolve(), erupt, request)) {
+                return true;
+            }
             byte[] body = isMultipart(request) ? null : StreamUtils.copyToByteArray(request.getInputStream());
             Set<CloudSignature.Enforced> enforced = EnumSet.of(CloudSignature.Enforced.POWER);
             if (eruptRouter.payload() != EruptRouter.Payload.NONE) {
@@ -297,17 +308,50 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
     }
 
     private static final Set<EruptRouter.Resolve> FALLBACKS = EnumSet.of(EruptRouter.Resolve.REFERENCE_TREE,
-            EruptRouter.Resolve.EXCEL_TEMPLATE, EruptRouter.Resolve.EXCEL_EXPORT, EruptRouter.Resolve.EXCEL_IMPORT);
+            EruptRouter.Resolve.EXCEL_TEMPLATE, EruptRouter.Resolve.EXCEL_EXPORT, EruptRouter.Resolve.EXCEL_IMPORT,
+            EruptRouter.Resolve.OPTIONS);
+
+    private boolean serverAnswers(EruptRouter.Resolve resolve, String erupt, HttpServletRequest request) {
+        return switch (resolve) {
+            case UPLOAD -> true;
+            case OPTIONS -> !fetchesOptions(erupt, lastPathSegment(request));
+            default -> false;
+        };
+    }
+
+    // Options a handler on the node fetches (choiceType / multiChoiceType / tagsType fetchHandler) are the node's
+    // to answer; the build names such a handler, an annotation read back from the build cannot hold its class
+    private boolean fetchesOptions(String erupt, String field) {
+        EruptFieldModel fieldModel = remoteField(erupt, field);
+        // an unknown field is left to the node, which owns the model
+        if (null == fieldModel) return true;
+        JsonObject edit = fieldModel.getEruptFieldJson().getAsJsonObject(LambdaSee.method(EruptField::edit));
+        if (null == edit) return false;
+        String fetchHandler = LambdaSee.method(ChoiceType::fetchHandler);
+        return Stream.of(LambdaSee.method(Edit::choiceType), LambdaSee.method(Edit::multiChoiceType), LambdaSee.method(Edit::tagsType))
+                .map(edit::get).filter(it -> null != it && it.isJsonObject())
+                .map(it -> it.getAsJsonObject().get(fetchHandler))
+                .anyMatch(it -> null != it && it.isJsonArray() && !it.getAsJsonArray().isEmpty());
+    }
+
+    private EruptFieldModel remoteField(String erupt, String field) {
+        return Optional.ofNullable(remoteBuild(erupt).getEruptModel().getEruptFieldModels()).orElse(List.of()).stream()
+                .filter(it -> field.equals(it.getFieldName()) && null != it.getEruptFieldJson()).findFirst().orElse(null);
+    }
+
+    private static String lastPathSegment(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        return UriUtils.decode(uri.substring(uri.lastIndexOf('/') + 1), StandardCharsets.UTF_8);
+    }
 
     private void fallback(EruptRouter.Resolve resolve, HttpServletRequest request, HttpServletResponse response,
                           String nodeName, String erupt, Forward forward) throws java.io.IOException {
         EruptBuildModel build = remoteBuild(erupt);
         switch (resolve) {
-            case REFERENCE_TREE -> {
-                String uri = request.getRequestURI();
-                String field = UriUtils.decode(uri.substring(uri.lastIndexOf('/') + 1), StandardCharsets.UTF_8);
-                writeJson(response, nodeReferenceService.tree(nodeName, build, field));
-            }
+            case REFERENCE_TREE -> writeJson(response, nodeReferenceService.tree(nodeName, build, lastPathSegment(request)));
+            // a field naming a fetch handler the node does not serve: the options its build resolved
+            case OPTIONS -> writeJson(response, Optional.ofNullable(remoteField(erupt, lastPathSegment(request)))
+                    .map(EruptFieldModel::getComponentValue).orElse(List.of()));
             case EXCEL_TEMPLATE -> nodeExcelService.template(erupt, build, request, response);
             case EXCEL_EXPORT -> nodeExcelService.export(erupt, build, forward.body(), request, response);
             case EXCEL_IMPORT -> writeJson(response, nodeExcelService.importData(erupt, build, request));
@@ -431,18 +475,8 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         return null != request.getContentType() && request.getContentType().contains(MediaType.MULTIPART_FORM_DATA_VALUE);
     }
 
-    // Field metadata of a node's erupt for validating requests; independent of the user, so briefly cached
-    private static final long BUILD_TTL_MILLIS = 60_000;
-
-    private final Map<String, Map.Entry<Long, EruptBuildModel>> builds = new java.util.concurrent.ConcurrentHashMap<>();
-
     private EruptBuildModel remoteBuild(String erupt) {
-        Map.Entry<Long, EruptBuildModel> cached = builds.get(erupt);
-        if (null != cached && cached.getKey() > System.currentTimeMillis()) return cached.getValue();
-        // resolveEruptView carries the node's whole build response
-        EruptBuildModel build = GsonFactory.getGson().fromJson(EruptRemoteRouterManager.get().resolveEruptView(erupt).getEruptJson(), EruptBuildModel.class);
-        builds.put(erupt, Map.entry(System.currentTimeMillis() + BUILD_TTL_MILLIS, build));
-        return build;
+        return cloudNodeRouter.resolveBuild(erupt);
     }
 
     private void validatePayload(EruptRouter.Payload payload, String erupt, byte[] body) {

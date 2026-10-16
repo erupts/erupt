@@ -167,7 +167,8 @@ public class AnnotationProcess {
             JsonObject complete = json.deepCopy();
             fillDefaults(complete, annotationToJsonByReflect(jsonToAnnotation(type, json)));
             return complete;
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
+            // reading an attribute back fails through Method.invoke, so it arrives as a (sneaky) checked exception
             return json;
         }
     }

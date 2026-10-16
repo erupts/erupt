@@ -88,6 +88,18 @@ public class EruptCoreService implements ApplicationRunner {
     }
 
     /**
+     * Like {@link #getErupt}, but an erupt-cloud node erupt comes back read from its node's build: its field
+     * annotations are there, its class is not. For the endpoints the server answers for a node itself.
+     */
+    public static EruptModel getEruptWithRemoteModel(String eruptName) {
+        EruptModel eruptModel = getErupt(eruptName);
+        if (null == eruptModel && EruptRemoteRouterManager.isRemote(eruptName)) {
+            return EruptRemoteRouterManager.get().resolveEruptModel(eruptName);
+        }
+        return eruptModel;
+    }
+
+    /**
      * Whether {@code eruptName} is reachable from {@code parentModel} through nested structures:
      * fields whose return type is a registered erupt (tab / multi-form / combine / reference)
      * and rowOperation forms. The security layer uses this to authorize sub-erupt requests
