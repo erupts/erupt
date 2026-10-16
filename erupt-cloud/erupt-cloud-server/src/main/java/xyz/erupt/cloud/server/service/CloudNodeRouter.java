@@ -24,6 +24,7 @@ import xyz.erupt.core.constant.EruptMutualConst;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.service.EruptRemoteRouter;
 import xyz.erupt.core.view.EruptBuildModel;
@@ -64,6 +65,9 @@ public class CloudNodeRouter implements EruptRemoteRouter {
     @Resource
     private EruptCloudServerProp eruptCloudServerProp;
 
+    @Resource
+    private I18nTranslate i18nTranslate;
+
 
     private static final Type MAP_TYPE = new TypeToken<Map<String, Object>>() {
     }.getType();
@@ -89,17 +93,19 @@ public class CloudNodeRouter implements EruptRemoteRouter {
         return EruptModel.remote(eruptName, nodeName(eruptName), resolveBuild(eruptName));
     }
 
-    // Field metadata of a node's erupt, independent of the user, so briefly cached: request validation,
-    // reference labels, Excel and the endpoints the server answers for a node itself all read it
+    // Field metadata of a node's erupt, briefly cached: request validation, reference labels, Excel and the
+    // endpoints the server answers for a node itself all read it. Independent of the user, not of the language:
+    // a node translates titles and option labels, so each language has its own entry
     private static final long BUILD_TTL_MILLIS = 60_000;
 
     private final Map<String, Map.Entry<Long, EruptBuildModel>> builds = new ConcurrentHashMap<>();
 
     public EruptBuildModel resolveBuild(String eruptName) {
-        Map.Entry<Long, EruptBuildModel> cached = builds.get(eruptName);
+        String key = eruptName + EruptConst.DOT + i18nTranslate.currentLang();
+        Map.Entry<Long, EruptBuildModel> cached = builds.get(key);
         if (null != cached && cached.getKey() > System.currentTimeMillis()) return cached.getValue();
         EruptBuildModel build = GsonFactory.getGson().fromJson(resolveEruptView(eruptName).getEruptJson(), EruptBuildModel.class);
-        builds.put(eruptName, Map.entry(System.currentTimeMillis() + BUILD_TTL_MILLIS, build));
+        builds.put(key, Map.entry(System.currentTimeMillis() + BUILD_TTL_MILLIS, build));
         return build;
     }
 
@@ -199,6 +205,8 @@ public class CloudNodeRouter implements EruptRemoteRouter {
                         .headers(CloudHttp.header(CloudCommonConst.HEADER_ACCESS_TOKEN,
                                 eruptCloudServerProp.isPlainAccessToken() ? metaNode.getAccessToken() : null))
                         .headers(CloudHttp.header(EruptMutualConst.TOKEN, MetaContext.getToken()))
+                        // the user's language, as a forwarded request carries it: the node translates its answer
+                        .headers(CloudHttp.header(EruptMutualConst.LANG, i18nTranslate.getLang()))
                         .header(EruptMutualConst.ERUPT, simpleName(eruptName))
                         .header(EruptMutualConst.USER, user)
                         .header(CloudSignature.HEADER_TIMESTAMP, Long.toString(timestamp))
