@@ -1,6 +1,6 @@
 # erupt-cloud-node-lite
 
-An erupt cloud node **without Spring**: serve `@Erupt` classes from plain Java, Kotlin, Solon, Quarkus, Micronaut, Vert.x or any servlet container
+An erupt cloud node **without Spring**: serve `@Erupt` classes from plain Java, Kotlin, Solon, Quarkus, Micronaut, Vert.x, Ktor or any servlet container
 through an erupt server, which renders the admin UI, logs users in and checks menus. Java 17+. The runtime
 dependencies are `erupt-annotation`, `erupt-cloud-common` and `linq.j`, all three dependency-free: models are
 declared with the very annotations a Spring erupt application uses, so a class moves between the two unchanged.
@@ -12,6 +12,7 @@ declared with the very annotations a Spring erupt application uses, so a class m
 | `erupt-cloud-node-quarkus` | Quarkus 3: serves your `Node` bean on Quarkus' HTTP server |
 | `erupt-cloud-node-micronaut` | Micronaut 4: serves your `Node` bean on Micronaut's HTTP server |
 | `erupt-cloud-node-vertx` | Vert.x 4.5 / 5: mounts a node on a Vert.x Web router |
+| `erupt-cloud-node-ktor` | Ktor 3: mounts a node on a Ktor server's routing |
 | `erupt-cloud-node-servlet` | any servlet container, jakarta.servlet 5+ or javax.servlet 3.1+ |
 | `erupt-cloud-node` / `-jpa` | Spring Boot: the full erupt-core pipeline, not this module |
 
@@ -20,7 +21,7 @@ It is released with erupt, so its version is erupt's and the annotations always 
 ```xml
 <dependency>
     <groupId>xyz.erupt</groupId>
-    <artifactId>erupt-cloud-node-lite</artifactId>   <!-- or -solon, -quarkus, -micronaut, -vertx, -servlet -->
+    <artifactId>erupt-cloud-node-lite</artifactId>   <!-- or -solon, -quarkus, -micronaut, -vertx, -ktor, -servlet -->
     <version>${erupt.version}</version>
 </dependency>
 ```
@@ -183,6 +184,17 @@ EruptNodeVertx.mount(router, node);                                    // or on 
 vertx.createHttpServer().requestHandler(router).listen(8080).onSuccess(s -> node.connect(s.actualPort()));
 ```
 
+**Ktor** (`erupt-cloud-node-ktor`, Ktor 3): calls run on `Dispatchers.IO`, since repositories block. Mount it under a
+constant path; the node connects on the port and path it is served at.
+
+```kotlin
+embeddedEruptNode(CIO, node, 9090).start(wait = true)                  // a server of its own
+
+routing {                                                              // or on the application's routing
+    route("/admin") { eruptNode(node) }
+}
+```
+
 **Servlet** (`erupt-cloud-node-servlet`): `EruptNodeServlet.mount(servletContext, node)` from a
 `ServletContainerInitializer` or `ServletContextListener` (`xyz.erupt.cloud.node.servlet` for jakarta.servlet,
 `xyz.erupt.cloud.node.servlet.javax` for javax.servlet). A servlet does not know its port: with `.address(...)` set
@@ -199,7 +211,7 @@ public class EruptNodeInitializer implements ServletContainerInitializer {
 }
 ```
 
-**Anything else** (Ktor, Javalin, Helidon...): `node.handle(Request)` answers one request and never
+**Anything else** (Javalin, Helidon, http4k...): `node.handle(Request)` answers one request and never
 throws. Mount it, call `node.connect(port)` (`connect(port, mountPoint)` under a mount point) once listening and `node.close()` on shutdown.
 
 ```java
