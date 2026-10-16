@@ -141,6 +141,7 @@
         <module>erupt-cloud/erupt-cloud-node-vertx</module>
         <module>erupt-cloud/erupt-cloud-node-servlet</module>
         <module>erupt-cloud/erupt-cloud-node-micronaut</module>
+        <module>erupt-cloud/erupt-cloud-node-ktor</module>
 
         <!-- Test / Sample / Deploy -->
         <module>erupt-test</module>
