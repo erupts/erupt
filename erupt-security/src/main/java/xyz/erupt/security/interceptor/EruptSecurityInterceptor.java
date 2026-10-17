@@ -74,7 +74,6 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
             parentEruptName = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARENT_PARAM_KEY);
         }
         if (eruptRouter.verifyType().equals(EruptRouter.VerifyType.ERUPT)) {
-            MetaContext.register(new MetaErupt(eruptName, eruptName));
             // WithRemote: an erupt-cloud node erupt ("nodeName.eruptName") has no local class, and a
             // server-owned API (@EruptRouter(cloudProxy = false)) answers for it here instead of being
             // forwarded to the node, so the placeholder model is what the checks below run against.
@@ -84,6 +83,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
                 return false;
             }
+            MetaContext.register(new MetaErupt(eruptName, eruptName));
             if (!erupt.getErupt().authVerify()) return true;
         }
         if (null == token || null == sessionService.get(SessionKey.TOKEN_OLINE + token)) {
