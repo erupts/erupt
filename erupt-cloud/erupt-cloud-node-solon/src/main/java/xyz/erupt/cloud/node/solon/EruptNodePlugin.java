@@ -51,7 +51,7 @@ public class EruptNodePlugin implements Plugin {
             // after the HTTP server listens: the erupt server probes the node while registering it
             @Override
             public void postStart() {
-                if (node != null) node.connect(Solon.cfg().serverPort());
+                if (node != null) node.connect(Solon.cfg().serverPort(), Solon.cfg().serverContextPath());
             }
         });
     }
