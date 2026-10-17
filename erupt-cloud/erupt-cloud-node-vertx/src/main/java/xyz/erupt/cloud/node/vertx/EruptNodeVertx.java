@@ -21,6 +21,9 @@ import java.util.List;
  * EruptNodeVertx.serve(vertx, node, 9090);              // a server of its own
  * EruptNodeVertx.mount(router, node);                   // or on the application's router,
  * server.listen(9090).onSuccess(s -> node.connect(s.actualPort()));
+ *
+ * app.route("/admin/*").subRouter(EruptNodeVertx.mount(Router.router(vertx), node));   // or a sub-router:
+ * server.listen(9090).onSuccess(s -> node.connect(s.actualPort(), "/admin"));        // tell it the mount point
  * }</pre>
  *
  * @author YuePeng

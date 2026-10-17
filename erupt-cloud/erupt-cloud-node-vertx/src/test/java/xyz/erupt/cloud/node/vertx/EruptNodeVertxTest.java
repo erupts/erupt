@@ -81,6 +81,8 @@ class EruptNodeVertxTest {
         app.route("/admin/*").subRouter(nodeRoutes);
         int port = vertx.createHttpServer().requestHandler(app).listen(0)
                 .toCompletionStage().toCompletableFuture().get(10, TimeUnit.SECONDS).actualPort();
+        node.connect(port, "/admin");
+        assertTrue(registered.get(10, TimeUnit.SECONDS).contains(":" + port + "/admin\""), "registers the mount point");
         assertEquals("app", get(port, "/hello"));
         assertEquals("vertx-node", get(port, "/admin/node-health"));
         // the server signs the path below the node's address, not the mount point

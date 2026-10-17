@@ -129,8 +129,10 @@ Without a sort, every repository returns rows by primary key ascending.
 ## Frameworks
 
 The adapters route only the paths the erupt server calls (`/erupt-api/**`, `/node-health`) next to the
-application's own, connect once the HTTP server listens (on its port, unless `.address(...)` is set) and
-deregister on shutdown. A context path or mount point is handled.
+application's own, connect once the HTTP server listens (on its port and context path, unless `.address(...)` is
+set) and deregister on shutdown: Solon's `server.contextPath`, Quarkus' `quarkus.http.root-path` and Micronaut's
+`micronaut.server.context-path` are registered with the address. Where the application mounts the node itself (a
+Vert.x sub-router, a servlet), it names the mount point: `node.connect(port, "/admin")`.
 
 **Solon** (`erupt-cloud-node-solon`): declare the node as a bean; the plugin does the rest.
 
@@ -182,6 +184,9 @@ EruptNodeVertx.serve(vertx, node, 9090);                               // a serv
 
 EruptNodeVertx.mount(router, node);                                    // or on the application's router
 vertx.createHttpServer().requestHandler(router).listen(8080).onSuccess(s -> node.connect(s.actualPort()));
+
+app.route("/admin/*").subRouter(EruptNodeVertx.mount(Router.router(vertx), node));   // or under a mount point,
+vertx.createHttpServer().requestHandler(app).listen(8080).onSuccess(s -> node.connect(s.actualPort(), "/admin"));
 ```
 
 **Ktor** (`erupt-cloud-node-ktor`, Ktor 3): calls run on `Dispatchers.IO`, since repositories block. Mount it under a
