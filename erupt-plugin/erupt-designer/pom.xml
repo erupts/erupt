@@ -36,7 +36,7 @@
         <dependency>
             <groupId>com.palantir.javapoet</groupId>
             <artifactId>javapoet</artifactId>
-            <version>0.16.0</version>
+            <version>0.20.0</version>
         </dependency>
     </dependencies>
 </project>

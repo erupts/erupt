@@ -3,6 +3,8 @@ package xyz.erupt.s3;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.checksums.RequestChecksumCalculation;
+import software.amazon.awssdk.core.checksums.ResponseChecksumValidation;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3ClientBuilder;
@@ -24,7 +26,13 @@ public class S3ClientFactory {
     public static S3Client build(String region, String endpoint, String bucket, String accessKey, String secretKey, boolean pathStyle) {
         S3ClientBuilder builder = S3Client.builder().region(Region.of(region));
         endpoint = endpoint(endpoint, bucket, pathStyle);
-        if (!endpoint.isEmpty()) builder.endpointOverride(URI.create(endpoint));
+        if (!endpoint.isEmpty()) {
+            builder.endpointOverride(URI.create(endpoint));
+            // since SDK 2.30 every upload carries a CRC32 checksum in an aws-chunked body, which several
+            // S3-compatible stores (OSS, older MinIO...) reject: checksum only where the operation requires it
+            builder.requestChecksumCalculation(RequestChecksumCalculation.WHEN_REQUIRED)
+                    .responseChecksumValidation(ResponseChecksumValidation.WHEN_REQUIRED);
+        }
         if (pathStyle) {
             builder.serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build());
         }
