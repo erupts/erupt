@@ -1417,3 +1417,13 @@ scope.pick,请选择,請選擇,Select,Sélectionner,選択してください,선
 scope.all,全部,全部,All,Tous,すべて,전체,Все,Todos,Alle,Todos,Semua,الكل
 scope.switch,切换,切換,Switch,Changer,切り替え,전환,Переключить,Cambiar,Wechseln,Mudar,Ganti,تبديل
 scope.switched,已切换到,已切換到,Switched to,Basculé vers,切り替えました：,전환됨:,Переключено на,Cambiado a,Gewechselt zu,Mudado para,Beralih ke,تم التبديل إلى
+scope.required,请先选择,請先選擇,Pick a,Choisissez :,選択してください：,선택하세요:,Выберите:,Seleccione:,Bitte wählen:,Selecione:,Pilih,اختر
+print.form_style,表单样式,表單樣式,Form Style,Style du formulaire,フォーム形式,양식 스타일,Стиль формы,Estilo de formulario,Formularstil,Estilo do formulário,Gaya Formulir,نمط النموذج
+print.label_top,标签在上,標籤在上,Label Above,Libellé au-dessus,ラベル上,레이블 위,Метка сверху,Etiqueta arriba,Beschriftung oben,Rótulo acima,Label di Atas,التسمية أعلى
+print.label_left,标签在左,標籤在左,Label Left,Libellé à gauche,ラベル左,레이블 왼쪽,Метка слева,Etiqueta a la izquierda,Beschriftung links,Rótulo à esquerda,Label di Kiri,التسمية يسار
+print.columns,每行列数,每行列數,Columns,Colonnes,列数,열 수,Столбцы,Columnas,Spalten,Colunas,Kolom,الأعمدة
+print.border,边框,邊框,Border,Bordure,枠線,테두리,Рамка,Borde,Rahmen,Borda,Garis Tepi,الحدود
+print.border_color,线框颜色,線框顏色,Border Color,Couleur de bordure,枠線の色,테두리 색상,Цвет рамки,Color del borde,Rahmenfarbe,Cor da borda,Warna Garis,لون الحدود
+print.font_size,字号,字號,Font Size,Taille de police,文字サイズ,글꼴 크기,Размер шрифта,Tamaño de fuente,Schriftgröße,Tamanho da fonte,Ukuran Huruf,حجم الخط
+print.show_title,标题,標題,Title,Titre,タイトル,제목,Заголовок,Título,Titel,Título,Judul,العنوان
+print.margin,页边距 (mm),頁邊距 (mm),Margin (mm),Marge (mm),余白 (mm),여백 (mm),Поля (мм),Margen (mm),Rand (mm),Margem (mm),Margin (mm),الهامش (مم)
