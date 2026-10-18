@@ -128,7 +128,6 @@
         <module>erupt-plugin/erupt-remote</module>
         <module>erupt-plugin/erupt-atlas</module>
         <module>erupt-plugin/erupt-sso</module>
-        <module>erupt-plugin/erupt-k8s-dashboard</module>
 
         <!-- Cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>
