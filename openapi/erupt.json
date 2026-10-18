@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Erupt",
-    "version": "2.3.0",
+    "version": "2.4.0",
     "description": "REST API of the erupt framework: every endpoint the admin UI calls, usable by any client.\n\n**Authentication.** `POST /erupt-api/login` returns a token (`token` field when `pass` is true). Server-to-server callers use `GET /erupt-api/open-api/create-token` with an appid and secret instead. Send the token in the `token` request header. Endpoints opened by the browser or by an editor (template pages, editor uploads) cannot set headers and take the same value as the `_token` query parameter. An expired or missing token answers 401, a missing menu or erupt permission answers 403.\n\n**The `erupt` header.** Data, build, component, file and export endpoints are scoped to one `@Erupt` class. The `erupt` header carries its simple class name and must match the `{erupt}` path segment, or name the parent erupt when the path addresses a nested erupt (tab, sub-form, reference).\n\n**Errors.** Business errors come back as HTTP 500 with an `R` body: `success` is false, `message` holds the text to show and `promptWay` tells the UI how to show it.\n",
     "license": {
       "name": "Apache-2.0",
@@ -91,6 +91,10 @@
     {
       "name": "Framework",
       "description": "Framework"
+    },
+    {
+      "name": "Page scope",
+      "description": "Page scope"
     }
   ],
   "paths": {
@@ -5286,6 +5290,117 @@
         "parameters": [],
         "security": []
       }
+    },
+    "/erupt-api/scope": {
+      "get": {
+        "summary": "Scopes visible to the current user, each with its signed defaults.",
+        "deprecated": false,
+        "tags": [
+          "Page scope"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EruptScopeControllerScopeView"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/R"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token missing or expired"
+          },
+          "403": {
+            "description": "The session has no permission on this menu or erupt"
+          }
+        },
+        "operationId": "scopes",
+        "parameters": [],
+        "security": [
+          {
+            "tokenHeader": []
+          }
+        ]
+      }
+    },
+    "/erupt-api/scope/{scope}": {
+      "post": {
+        "summary": "Checks a submitted scope form and signs it; send the token back in the erupt-scope header.",
+        "deprecated": false,
+        "tags": [
+          "Page scope"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EruptScopeServiceAccepted"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/R"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token missing or expired"
+          },
+          "403": {
+            "description": "The session has no permission on this menu or erupt"
+          }
+        },
+        "operationId": "pick",
+        "parameters": [
+          {
+            "schema": {
+              "format": "string",
+              "type": "string"
+            },
+            "in": "path",
+            "description": "No comments found.",
+            "required": true,
+            "name": "scope"
+          }
+        ],
+        "security": [
+          {
+            "tokenHeader": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -5334,9 +5449,9 @@
       "JsonObject": {
         "type": "object",
         "properties": {
-          "mapKey": {
-            "description": "A map key.(object)",
-            "$ref": "#/components/schemas/JsonObject"
+          "members": {
+            "description": "No comments found.(object)",
+            "$ref": "#/components/schemas/LinkedTreeMap"
           }
         }
       },
@@ -5712,6 +5827,46 @@
           }
         }
       },
+      "EruptScopeControllerScopeView": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "format": "string",
+            "description": "Simple class name of the scope form",
+            "type": "string"
+          },
+          "title": {
+            "format": "string",
+            "description": "Header label: the scope form's @Erupt name",
+            "type": "string"
+          },
+          "parent": {
+            "format": "string",
+            "description": "A model on the user's menus that declares the scope: send it as eruptParent to load the form",
+            "type": "string"
+          },
+          "models": {
+            "description": "Models on the user's menus that declare the scope: the header shows it only on their pages",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": "\"\"\",\"\"\""
+          },
+          "fields": {
+            "description": "The scope form's condition fields, in form order",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": "\"\"\",\"\"\""
+          },
+          "defaults": {
+            "description": "The defaults, signed: what the header holds until the user picks(object)",
+            "$ref": "#/components/schemas/EruptScopeServiceAccepted"
+          }
+        }
+      },
       "AnnotationProxyEruptFieldVoid": {
         "type": "object",
         "properties": {
@@ -5831,6 +5986,10 @@
           "power": {
             "description": "What the current user may do on this erupt(object)",
             "$ref": "#/components/schemas/PowerObject"
+          },
+          "scope": {
+            "description": "The scope the model lives in, when it declares one(object)",
+            "$ref": "#/components/schemas/EruptBuildModelScope"
           }
         }
       },
@@ -6366,6 +6525,19 @@
           }
         }
       },
+      "EruptScopeServiceAccepted": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "description": "No comments found.(object)",
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "labels": {
+            "description": "No comments found.(object)",
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      },
       "Condition": {
         "type": "object",
         "properties": {
@@ -6677,6 +6849,24 @@
           }
         }
       },
+      "EruptBuildModelScope": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "format": "string",
+            "description": "Simple class name of the scope form",
+            "type": "string"
+          },
+          "bind": {
+            "description": "Model fields the scope filters and fills; the page hides them from search",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": "\"\"\",\"\"\""
+          }
+        }
+      },
       "EruptFieldModel": {
         "type": "object",
         "properties": {
@@ -6797,6 +6987,18 @@
           "resetPwd": {
             "format": "boolean",
             "description": "Whether the user must change the password",
+            "type": "boolean",
+            "example": true
+          },
+          "pwdChangedTime": {
+            "format": "string",
+            "description": "When the password was last changed; null when it never was",
+            "type": "string",
+            "example": "yyyy-MM-dd HH:mm:ss"
+          },
+          "mfaBound": {
+            "format": "boolean",
+            "description": "Whether this account has an authenticator bound",
             "type": "boolean",
             "example": true
           },
@@ -7041,7 +7243,8 @@
         "Data query",
         "Data modify",
         "Tab rows",
-        "Form view"
+        "Form view",
+        "Page scope"
       ]
     },
     {

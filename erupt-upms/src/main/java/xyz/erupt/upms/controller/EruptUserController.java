@@ -210,7 +210,7 @@ public class EruptUserController {
     /**
      * Current user.
      *
-     * @return account, nickname, avatar, org, post, roles and the index menu
+     * @return account, nickname, avatar, org, post, roles, the index menu, when the password was last changed and whether MFA is bound
      */
     @GetMapping("/userinfo")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
@@ -221,6 +221,8 @@ public class EruptUserController {
         userinfoVo.setNickname(eruptUser.getName());
         userinfoVo.setAvatar(eruptUser.getAvatar());
         userinfoVo.setResetPwd(null == eruptUser.getResetPwdTime());
+        userinfoVo.setPwdChangedTime(eruptUser.getResetPwdTime());
+        userinfoVo.setMfaBound(Boolean.TRUE.equals(eruptUser.getMfaEnabled()));
         Optional.ofNullable(eruptUser.getEruptOrg()).ifPresent(it -> userinfoVo.setOrg(it.getCode()));
         Optional.ofNullable(eruptUser.getEruptPost()).ifPresent(it -> userinfoVo.setPost(it.getCode()));
         Optional.ofNullable(eruptUser.getRoles()).ifPresent(it -> userinfoVo.setRoles(it.stream().map(EruptRole::getCode).collect(Collectors.toList())));

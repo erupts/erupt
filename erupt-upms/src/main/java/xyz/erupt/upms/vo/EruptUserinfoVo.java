@@ -3,6 +3,7 @@ package xyz.erupt.upms.vo;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +31,12 @@ public class EruptUserinfoVo {
 
     /** Whether the user must change the password */
     private boolean resetPwd = false;
+
+    /** When the password was last changed; null when it never was */
+    private Date pwdChangedTime;
+
+    /** Whether this account has an authenticator bound */
+    private boolean mfaBound = false;
 
     /** Organization code */
     private String org;

@@ -1427,3 +1427,32 @@ print.border_color,线框颜色,線框顏色,Border Color,Couleur de bordure,枠
 print.font_size,字号,字號,Font Size,Taille de police,文字サイズ,글꼴 크기,Размер шрифта,Tamaño de fuente,Schriftgröße,Tamanho da fonte,Ukuran Huruf,حجم الخط
 print.show_title,标题,標題,Title,Titre,タイトル,제목,Заголовок,Título,Titel,Título,Judul,العنوان
 print.margin,页边距 (mm),頁邊距 (mm),Margin (mm),Marge (mm),余白 (mm),여백 (mm),Поля (мм),Margen (mm),Rand (mm),Margem (mm),Margin (mm),الهامش (مم)
+home.morning,早上好,早上好,Good morning,Bonjour,おはようございます,좋은 아침입니다,Доброе утро,Buenos días,Guten Morgen,Bom dia,Selamat pagi,صباح الخير
+home.noon,中午好,中午好,Good noon,Bon midi,こんにちは,안녕하세요,Добрый день,Buenas tardes,Guten Tag,Boa tarde,Selamat siang,ظهيرة سعيدة
+home.afternoon,下午好,下午好,Good afternoon,Bon après-midi,こんにちは,좋은 오후입니다,Добрый день,Buenas tardes,Guten Nachmittag,Boa tarde,Selamat sore,مساء الخير
+home.evening,晚上好,晚上好,Good evening,Bonsoir,こんばんは,좋은 저녁입니다,Добрый вечер,Buenas noches,Guten Abend,Boa noite,Selamat malam,مساء الخير
+home.night,夜深了,夜深了,Still up,Encore debout,夜更かしですね,늦은 밤이네요,Поздняя ночь,Aún despierto,Noch wach,Ainda acordado,Masih terjaga,ما زلت مستيقظاً
+home.menus,可访问菜单,可存取選單,Menus,Menus,メニュー,메뉴,Меню,Menús,Menüs,Menus,Menu,القوائم
+home.security,账号安全,帳號安全,Account security,Sécurité du compte,アカウントの安全,계정 보안,Безопасность аккаунта,Seguridad de la cuenta,Kontosicherheit,Segurança da conta,Keamanan akun,أمان الحساب
+home.days_ago,天前,天前,days ago,jours,日前,일 전,дн. назад,días,Tage,dias,hari lalu,يوماً
+home.pwd_changed,密码更新,密碼更新,Password changed,Mot de passe modifié,パスワード更新,비밀번호 변경,Пароль изменён,Contraseña cambiada,Passwort geändert,Senha alterada,Kata sandi diubah,تغيير كلمة المرور
+home.pwd_unchanged,密码未修改,密碼未修改,Pwd unchanged,Mot de passe inchangé,パスワード未変更,비밀번호 미변경,Пароль не менялся,Contraseña sin cambiar,Passwort unverändert,Senha não alterada,Sandi belum diubah,لم تُغيَّر كلمة المرور
+home.mfa_on,MFA 已开启,MFA 已開啟,MFA on,MFA activée,MFA 有効,MFA 사용 중,MFA включена,MFA activada,MFA aktiv,MFA ativada,MFA aktif,MFA مفعّل
+home.mfa_off,MFA 未开启,MFA 未開啟,MFA off,MFA désactivée,MFA 無効,MFA 미사용,MFA выключена,MFA desactivada,MFA inaktiv,MFA desativada,MFA nonaktif,MFA غير مفعّل
+home.unread,未读通知,未讀通知,Unread notices,Notifications non lues,未読通知,읽지 않은 알림,Непрочитанные уведомления,Avisos sin leer,Ungelesene Mitteilungen,Avisos não lidos,Notifikasi belum dibaca,إشعارات غير مقروءة
+home.pinned,常用菜单,常用選單,Pinned menus,Menus épinglés,ピン留めメニュー,고정 메뉴,Закреплённые меню,Menús fijados,Angeheftete Menüs,Menus fixados,Menu disematkan,القوائم المثبتة
+home.ai,AI 助手 · 回车发送,AI 助手 · Enter 送出,AI assistant · Enter ↵,Assistant IA · Entrée ↵,AI アシスタント · Enter ↵,AI 어시스턴트 · Enter ↵,ИИ-ассистент · Enter ↵,Asistente IA · Intro ↵,KI-Assistent · Enter ↵,Assistente IA · Enter ↵,Asisten AI · Enter ↵,مساعد الذكاء الاصطناعي · Enter ↵
+home.ask,问问 AI…,問問 AI…,Ask AI…,Demander à l'IA…,AI に聞く…,AI에게 묻기…,Спросить ИИ…,Pregunta a la IA…,KI fragen…,Perguntar à IA…,Tanya AI…,اسأل الذكاء الاصطناعي…
+home.quick,常用,常用,Pinned,Épinglés,ピン留め,고정,Закреплённые,Fijados,Angeheftet,Fixados,Disematkan,المثبتة
+home.frequent,常去,常去,Frequent,Fréquents,よく使う,자주 사용,Частые,Frecuentes,Häufig,Frequentes,Sering,المتكررة
+home.recent,快捷入口,快捷入口,Quick access,Accès rapide,クイックアクセス,빠른 액세스,Быстрый доступ,Acceso rápido,Schnellzugriff,Acesso rápido,Akses cepat,وصول سريع
+home.none,在左侧菜单点击图钉，把常用功能钉在这里,在左側選單點擊圖釘，把常用功能釘在這裡,Pin a menu from the sidebar to keep it here,Épinglez un menu depuis la barre latérale pour le garder ici,サイドバーのメニューをピン留めするとここに表示されます,사이드바에서 메뉴를 고정하면 여기에 표시됩니다,Закрепите меню в боковой панели и оно появится здесь,Fija un menú desde la barra lateral para tenerlo aquí,Hefte ein Menü aus der Seitenleiste an und es erscheint hier,Fixe um menu na barra lateral para o manter aqui,Sematkan menu dari bilah samping agar muncul di sini,ثبّت قائمة من الشريط الجانبي لتظهر هنا
+home.opened,最近打开,最近開啟,Recently opened,Ouverts récemment,最近開いた,최근 열어본,Недавно открытые,Abiertos recientemente,Zuletzt geöffnet,Abertos recentemente,Baru dibuka,فُتحت مؤخراً
+home.opened_none,打开过的菜单会出现在这里,開啟過的選單會出現在這裡,Menus you open will show up here,Les menus ouverts apparaîtront ici,開いたメニューがここに表示されます,열어본 메뉴가 여기에 표시됩니다,Открытые меню появятся здесь,Los menús que abras aparecerán aquí,Geöffnete Menüs erscheinen hier,Os menus que abrir aparecem aqui,Menu yang dibuka akan muncul di sini,ستظهر القوائم التي تفتحها هنا
+home.today,今天,今天,Today,Aujourd'hui,今日,오늘,Сегодня,Hoy,Heute,Hoje,Hari ini,اليوم
+home.yesterday,昨天,昨天,Yesterday,Hier,昨日,어제,Вчера,Ayer,Gestern,Ontem,Kemarin,أمس
+home.earlier,更早,更早,Earlier,Plus tôt,それ以前,이전,Ранее,Antes,Früher,Antes,Sebelumnya,أقدم
+home.dark,深色模式,深色模式,Dark mode,Mode sombre,ダークモード,다크 모드,Тёмная тема,Modo oscuro,Dunkler Modus,Modo escuro,Mode gelap,الوضع الداكن
+home.light,浅色模式,淺色模式,Light mode,Mode clair,ライトモード,라이트 모드,Светлая тема,Modo claro,Heller Modus,Modo claro,Mode terang,الوضع الفاتح
+home.skin,主题风格,主題風格,Skin,Thème,スキン,스킨,Оформление,Tema,Design,Tema,Tema,المظهر
+home.skin_default,默认,預設,Default,Par défaut,デフォルト,기본,По умолчанию,Predeterminado,Standard,Padrão,Bawaan,الافتراضي

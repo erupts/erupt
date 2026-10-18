@@ -11,15 +11,17 @@
            Dot-grid paper, guide lines growing out of the shell's header and sidebar
            edges, crosses where they meet, corner ticks — and inside the frame a
            panel that greets the current user, counts what they can reach, and lets
-           them jump to their pinned menus. Data: /erupt-api/userinfo, /erupt-api/menu,
-           /erupt-api/notice/unread-count; the shell hands this frame its token and
-           language on the URL (see routes/home/home.component). */
+           them jump to their pinned menus, shows how fresh their password and MFA are, and asks
+           the AI assistant when erupt-ai is on. Data: /erupt-api/userinfo, /erupt-api/menu,
+           /erupt-api/erupt-app, /erupt-api/notice/unread-count; the shell
+           hands this frame its token and language on the URL (see routes/home/home.component). */
         :root {
             --line: rgba(0, 0, 0, 0.10);
             --line-strong: rgba(0, 0, 0, 0.18);
             --dot: rgba(0, 0, 0, 0.09);
             --tint: rgba(22, 119, 255, 0.06);
             --accent: #1677ff;
+            --warn: #fa8c16;
             --accent-soft: rgba(22, 119, 255, 0.10);
             --accent-line: rgba(22, 119, 255, 0.35);
             --text: rgba(0, 0, 0, 0.85);
@@ -215,14 +217,33 @@
         .stat:hover { transform: translateY(-3px); background: var(--tile-hover); border-color: var(--accent-line); }
         .stat.go { cursor: pointer; }
         .stat .n {
-            font-size: clamp(20px, 3.4vh, 28px);
+            --big: clamp(20px, 3.4vh, 28px);
+            min-height: calc(var(--big) * 1.1);
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            font-size: var(--big);
             font-weight: 600;
             line-height: 1.1;
             font-variant-numeric: tabular-nums;
             letter-spacing: -0.02em;
         }
+        .stat .n .num { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .stat .n.badge { color: var(--accent); }
-        .stat .l { margin-top: 6px; font-size: 12px; color: var(--text-3); }
+        .stat .n.warn { color: var(--warn); }
+        /* a text line where the number would be (password never changed) */
+        .stat .n.t { font-size: clamp(16px, 2.8vh, 22px); }
+        .stat .n .unit { padding-bottom: 2px; font-size: 12px; font-weight: 500; letter-spacing: 0; color: var(--text-3); }
+        /* the AI tile: a one-line prompt where the number would be; Enter opens the chat with it */
+        .stat.ai { cursor: text; }
+        .stat.ai:focus-within { border-color: var(--accent-line); background: var(--tile-hover); }
+        .stat .ask {
+            display: block; flex: 1; min-width: 0; width: 100%; margin: 0; padding: 0; border: 0; outline: 0; background: transparent;
+            font: inherit; font-size: clamp(15px, 2.4vh, 18px); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em;
+            color: var(--text); caret-color: var(--accent);
+        }
+        .stat .ask::placeholder { color: var(--text-3); font-weight: 500; }
+        .stat .l { margin-top: 6px; font-size: 12px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .stat .l::before {
             content: "";
             display: inline-block;
@@ -521,28 +542,49 @@
         if (cfg && cfg.fileDomain) attach = cfg.fileDomain;
     } catch (e) { /* keep relative */ }
 
-    // ── strings ─────────────────────────────────────────────────────────────
-    var L = {
-        "zh-CN": {morning: "早上好", noon: "中午好", afternoon: "下午好", evening: "晚上好", night: "夜深了",
-            menus: "可访问菜单", models: "数据模型", unread: "未读通知", pinned: "常用菜单", quick: "常用", frequent: "常去",
-            recent: "快捷入口", home: "首页", none: "在左侧菜单点击图钉，把常用功能钉在这里",
-            opened: "最近打开", openedNone: "打开过的菜单会出现在这里",
-            today: "今天", yesterday: "昨天", earlier: "更早",
-            dark: "深色模式", light: "浅色模式", skin: "主题风格", skinDefault: "默认"},
-        "zh-TW": {morning: "早上好", noon: "中午好", afternoon: "下午好", evening: "晚上好", night: "夜深了",
-            menus: "可存取選單", models: "資料模型", unread: "未讀通知", pinned: "常用選單", quick: "常用", frequent: "常去",
-            recent: "快捷入口", home: "首頁", none: "在左側選單點擊圖釘，把常用功能釘在這裡",
-            opened: "最近開啟", openedNone: "開啟過的選單會出現在這裡",
-            today: "今天", yesterday: "昨天", earlier: "更早",
-            dark: "深色模式", light: "淺色模式", skin: "主題風格", skinDefault: "預設"},
-        "en-US": {morning: "Good morning", noon: "Good noon", afternoon: "Good afternoon", evening: "Good evening", night: "Still up",
-            menus: "Menus", models: "Data models", unread: "Unread notices", pinned: "Pinned menus", quick: "Pinned", frequent: "Frequent",
-            recent: "Quick access", home: "Home", none: "Pin a menu from the sidebar to keep it here",
-            opened: "Recently opened", openedNone: "Menus you open will show up here",
-            today: "Today", yesterday: "Yesterday", earlier: "Earlier",
-            dark: "Dark mode", light: "Light mode", skin: "Skin", skinDefault: "Default"}
+    // ── strings: the shell's erupt.i18n.csv, in the language the shell passed. Its first row
+    //    names the languages; a language the sheet lacks reads the en-US column, a key without a
+    //    cell shows its en-US cell, and when the sheet cannot be fetched the key itself is shown.
+    var KEYS = {
+        morning: "home.morning", noon: "home.noon", afternoon: "home.afternoon", evening: "home.evening", night: "home.night",
+        menus: "home.menus", security: "home.security", days: "home.days_ago", pwdAge: "home.pwd_changed", pwdNever: "home.pwd_unchanged",
+        mfaOn: "home.mfa_on", mfaOff: "home.mfa_off", unread: "home.unread", pinned: "home.pinned", ai: "home.ai", ask: "home.ask",
+        quick: "home.quick", frequent: "home.frequent", recent: "home.recent", home: "global.home", none: "home.none",
+        opened: "home.opened", openedNone: "home.opened_none", today: "home.today", yesterday: "home.yesterday", earlier: "home.earlier",
+        dark: "home.dark", light: "home.light", skin: "home.skin", skinDefault: "home.skin_default"
     };
-    var T = L[lang] || L["en-US"];
+    var T = {};
+    // the shell's CSV dialect: double quotes wrap a field, a backslash escapes the next character
+    function csvRow(line) {
+        var out = [], field = "", quoted = false, escaped = false;
+        for (var i = 0; i < line.length; i++) {
+            var ch = line.charAt(i);
+            if (escaped) { field += ch; escaped = false; }
+            else if (ch === '"') quoted = !quoted;
+            else if (ch === "," && !quoted) { out.push(field); field = ""; }
+            else if (ch === "\\") escaped = true;
+            else field += ch;
+        }
+        out.push(field);
+        return out;
+    }
+    function loadI18n() {
+        return fetch("erupt.i18n.csv?v=" + encodeURIComponent(params.get("v") || ""))
+            .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+            .then(function (text) {
+                var rows = text.split(/\r?\n|\r/), header = csvRow(rows[0]);
+                var en = header.indexOf("en-US"), col = header.indexOf(lang);
+                if (col < 0) col = en;
+                var map = {};
+                rows.forEach(function (line) {
+                    if (!line) return;
+                    var row = csvRow(line);
+                    if (row[0]) map[row[0]] = row[col] || row[en] || "";
+                });
+                Object.keys(KEYS).forEach(function (k) { T[k] = map[KEYS[k]] || KEYS[k]; });
+            })
+            .catch(function () { Object.keys(KEYS).forEach(function (k) { T[k] = KEYS[k]; }); });
+    }
 
     // ── helpers ─────────────────────────────────────────────────────────────
     function $(id) { return document.getElementById(id); }
@@ -589,299 +631,395 @@
         var path = menuPath(node.type, node.value);
         if (path) parentWin.location.hash = "#" + path;
     }
+    // Eases from whatever the node shows now to `to`; a newer call on the same node cancels
+    // the running one, so two values never race for the final frame.
     function countUp(node, to) {
-        var start = null, dur = 900;
+        var start = null, dur = 900, run = node._run = (node._run || 0) + 1;
+        var from = parseInt(String(node.textContent).replace(/\D/g, ""), 10) || 0;
         function step(ts) {
+            if (node._run !== run) return;
             if (start === null) start = ts;
             var p = Math.min(1, (ts - start) / dur);
             var e = 1 - Math.pow(1 - p, 3);
-            node.textContent = Math.round(to * e).toLocaleString();
+            node.textContent = Math.round(from + (to - from) * e).toLocaleString();
             if (p < 1) requestAnimationFrame(step);
         }
         requestAnimationFrame(step);
     }
 
-    // ── clock ────────────────────────────────────────────────────────────────
-    (function clock() {
-        var d = new Date(), pad = function (n) { return String(n).padStart(2, "0"); };
-        $("clock").textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
-        try {
-            $("date").textContent = d.toLocaleDateString(lang, {month: "long", day: "numeric", weekday: "long"});
-        } catch (e) { $("date").textContent = d.toLocaleDateString(); }
-        setTimeout(clock, 1000 - d.getMilliseconds());
-    })();
-    $("hello").textContent = greeting();
-
-    // ── pointer: tilt + sheen ───────────────────────────────────────────────
-    var panel = $("panel");
-    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!reduce) {
-        var tx = 0, ty = 0, cx = 0, cy = 0, inside = false;
-        panel.addEventListener("mousemove", function (e) {
-            var r = panel.getBoundingClientRect();
-            var px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
-            tx = (px - 0.5) * 2; ty = (py - 0.5) * 2; inside = true;
-            panel.classList.remove("idle");
-            panel.style.setProperty("--mx", (px * 100).toFixed(1) + "%");
-            panel.style.setProperty("--my", (py * 100).toFixed(1) + "%");
-        });
-        panel.addEventListener("mouseleave", function () { tx = 0; ty = 0; inside = false; panel.classList.add("idle"); });
-        (function tick() {
-            cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
-            panel.style.setProperty("--ry", (cx * 3).toFixed(2) + "deg");
-            panel.style.setProperty("--rx", (-cy * 2.5).toFixed(2) + "deg");
-            requestAnimationFrame(tick);
+    // Everything below paints text, so it waits for the strings.
+    loadI18n().then(function () {
+        // ── clock ────────────────────────────────────────────────────────────────
+        (function clock() {
+            var d = new Date(), pad = function (n) { return String(n).padStart(2, "0"); };
+            $("clock").textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+            try {
+                $("date").textContent = d.toLocaleDateString(lang, {month: "long", day: "numeric", weekday: "long"});
+            } catch (e) { $("date").textContent = d.toLocaleDateString(); }
+            setTimeout(clock, 1000 - d.getMilliseconds());
         })();
-    }
+        $("hello").textContent = greeting();
 
-    // ── appearance toolbar: same globals / classes / storage as the settings drawer ──
-    (function tools() {
-        if (!parentRoot) { $("tools").hidden = true; return; }
-        // site config may lock the appearance (eruptSiteConfig.theme.customizable = false):
-        // light/dark stays a per-user choice, the skin swatches go
-        var siteTheme = (parentWin.eruptSiteConfig && parentWin.eruptSiteConfig.theme) || {};
-        var skinLocked = siteTheme.customizable === false;
-        $("skinSeg").hidden = skinLocked;
-        var SKINS = [
-            {value: "default", cls: null, key: null, label: T.skinDefault},
-            {value: "classic", cls: "classic", key: "classic", label: "Classic"},
-            {value: "workspace", cls: "workspace", key: "workspace", label: "Workspace"},
-            {value: "material", cls: "material", key: "material", label: "Material"},
-            {value: "liquid-glass", cls: "liquid-glass", key: "liquid-glass", label: "Liquid Glass"},
-            {value: "brutalist", cls: "brutalist-theme", key: "brutalist-theme", label: "Brutalist"},
-            {value: "terminal", cls: "terminal", key: "terminal", label: "Terminal"}
-        ];
-        function currentSkin() {
-            for (var i = 1; i < SKINS.length; i++) if (parentRoot.classList.contains(SKINS[i].cls)) return SKINS[i];
-            return SKINS[0];
-        }
-        var swatches = Array.prototype.slice.call(document.querySelectorAll("#skinSeg .sw"));
-        function paint() {
-            var dark = parentRoot.classList.contains("dark");
-            $("tbLight").classList.toggle("on", !dark);
-            $("tbLight").title = T.light;
-            $("tbDark").classList.toggle("on", dark);
-            $("tbDark").title = T.dark;
-            var skin = currentSkin();
-            swatches.forEach(function (b) {
-                var def = SKINS.filter(function (sk) { return sk.value === b.getAttribute("data-skin"); })[0];
-                b.classList.toggle("on", def === skin);
-                b.title = T.skin + " · " + def.label;
+        // ── pointer: tilt + sheen ───────────────────────────────────────────────
+        var panel = $("panel");
+        var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!reduce) {
+            var tx = 0, ty = 0, cx = 0, cy = 0, inside = false;
+            panel.addEventListener("mousemove", function (e) {
+                var r = panel.getBoundingClientRect();
+                var px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+                tx = (px - 0.5) * 2; ty = (py - 0.5) * 2; inside = true;
+                panel.classList.remove("idle");
+                panel.style.setProperty("--mx", (px * 100).toFixed(1) + "%");
+                panel.style.setProperty("--my", (py * 100).toFixed(1) + "%");
             });
+            panel.addEventListener("mouseleave", function () { tx = 0; ty = 0; inside = false; panel.classList.add("idle"); });
+            (function tick() {
+                cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
+                panel.style.setProperty("--ry", (cx * 3).toFixed(2) + "deg");
+                panel.style.setProperty("--rx", (-cy * 2.5).toFixed(2) + "deg");
+                requestAnimationFrame(tick);
+            })();
         }
-        function setDark(dark) {
-            try { parentWin.localStorage.setItem("dark-theme", String(dark)); } catch (e) {}
-            if (typeof parentWin.eruptApplyDarkTheme === "function") parentWin.eruptApplyDarkTheme(dark);
-        }
-        $("tbLight").addEventListener("click", function () { setDark(false); });
-        $("tbDark").addEventListener("click", function () { setDark(true); });
-        swatches.forEach(function (b) {
-            b.addEventListener("click", function () {
-                var next = SKINS.filter(function (sk) { return sk.value === b.getAttribute("data-skin"); })[0];
-                if (typeof parentWin.eruptApplySkin === "function") {
-                    // the app's own switch: also swaps the theme color slot and the header bar
-                    parentWin.eruptApplySkin(next.value);
-                } else {
-                    SKINS.forEach(function (sk) {
-                        if (!sk.cls) return;
-                        parentRoot.classList.toggle(sk.cls, sk === next);
-                        try { parentWin.localStorage.setItem(sk.key, String(sk === next)); } catch (e) {}
-                    });
-                }
-                paint();
-            });
-        });
-        new MutationObserver(paint).observe(parentRoot, {attributes: true, attributeFilter: ["class"]});
-        paint();
-    })();
 
-    // ── data: who am I ───────────────────────────────────────────────────────
-    var user = null, indexNode = null, userReady = false;
-    fetchJson(api + "/userinfo").then(function (u) {
-        user = u || {};
-        var name = user.nickname || "";
-        var hello = $("hello");
-        hello.textContent = greeting() + (name ? (lang.indexOf("zh") === 0 ? "，" : ", ") : "");
-        if (name) hello.appendChild(el("b", null, name));
-        var av = $("avatar");
-        if (user.avatar) {
-            var src = /^https?:\/\//.test(user.avatar) ? user.avatar : attach + "/" + user.avatar.replace(/^\/+/, "");
-            src += (src.indexOf("?") === -1 ? "?" : "&") + "_token=" + encodeURIComponent(token);
-            var img = new Image();
-            img.onload = function () { av.textContent = ""; av.appendChild(img); };
-            img.onerror = function () { av.textContent = name.charAt(0); };
-            img.src = src;
-        }
-        if (!av.firstChild) av.textContent = name.charAt(0);
-        if (user.indexMenuType && user.indexMenuValue) indexNode = {type: user.indexMenuType, value: user.indexMenuValue, name: T.home};
-        userReady = true;
-        placeChips();
-    }).catch(function () { userReady = true; placeChips(); });
-
-    // ── data: what can I reach ──────────────────────────────────────────────
-    var leaves = [], tables = 0, menusReady = false;
-    // a tenant session only names its tenant here; the user and the menus are the platform's endpoints
-    if (isTenant(token)) fetchJson(api + "/tenant/info").then(function (t) {
-        if (t && t.tenantName) { $("tenant").textContent = t.tenantName; $("tenant").hidden = false; $("tenantDot").hidden = false; }
-    }).catch(function () {});
-
-    fetchJson(api + "/menu").then(function (menus) {
-        if (!Array.isArray(menus)) return;
-        var nodes = menus.filter(function (m) { return m.type !== "api" && m.type !== "button"; });
-        var byId = {}, hasKids = {};
-        nodes.forEach(function (m) { byId[m.id] = m; });
-        nodes.forEach(function (m) { if (m.pid != null && byId[m.pid]) hasKids[m.pid] = true; });
-        leaves = nodes.filter(function (m) { return !hasKids[m.id] && menuPath(m.type, m.value); });
-        tables = leaves.filter(function (m) { return m.type === "table"; }).length;
-        menusReady = true;
-        renderStats();
-        placeChips();
-        placeRecent();
-    }).catch(function () { menusReady = true; renderStats(); placeChips(); placeRecent(); });
-
-    // ── data: unread notices. The tile exists only when the backend reports the
-    //    notice module (erupt-app properties["erupt-notice"]); a project without it
-    //    has no /notice endpoints at all, so nothing is requested and nothing shown.
-    var unread = null, appReady = false, noticeOn = false;
-    fetchJson(api + "/erupt-app").then(function (app) {
-        noticeOn = !!(app && app.properties && app.properties["erupt-notice"]);
-    }).catch(function () { noticeOn = false; }).then(function () {
-        appReady = true;
-        renderStats();
-        if (!noticeOn) return;
-        fetchJson(api + "/notice/unread-count").then(function (r) {
-            unread = r && typeof r.data === "number" ? r.data : 0;
-            renderStats();
-        }).catch(function () {
-            // the endpoint is missing or refused after all: drop the tile instead of showing 0
-            var t = $("unreadStat");
-            if (t) t.remove();
-        });
-    });
-
-    // ── pinned menus (the sidebar's pushpins, kept in the shell's localStorage) ─
-    function pinnedKeys() {
-        try { return JSON.parse(parentWin.localStorage.getItem("erupt_menu_favorites") || "[]"); } catch (e) { return []; }
-    }
-
-    var statsDone = false;
-    function renderStats() {
-        if (!menusReady || !appReady) return;
-        var box = $("stats");
-        if (!statsDone) {
-            statsDone = true;
-            box.appendChild(stat(leaves.length, T.menus));
-            box.appendChild(stat(tables, T.models));
-            if (noticeOn) {
-                var u = stat(unread == null ? 0 : unread, T.unread); u.id = "unreadStat"; box.appendChild(u);
+        // ── appearance toolbar: same globals / classes / storage as the settings drawer ──
+        (function tools() {
+            if (!parentRoot) { $("tools").hidden = true; return; }
+            // site config may lock the appearance (eruptSiteConfig.theme.customizable = false):
+            // light/dark stays a per-user choice, the skin swatches go
+            var siteTheme = (parentWin.eruptSiteConfig && parentWin.eruptSiteConfig.theme) || {};
+            var skinLocked = siteTheme.customizable === false;
+            $("skinSeg").hidden = skinLocked;
+            var SKINS = [
+                {value: "default", cls: null, key: null, label: T.skinDefault},
+                {value: "classic", cls: "classic", key: "classic", label: "Classic"},
+                {value: "workspace", cls: "workspace", key: "workspace", label: "Workspace"},
+                {value: "material", cls: "material", key: "material", label: "Material"},
+                {value: "liquid-glass", cls: "liquid-glass", key: "liquid-glass", label: "Liquid Glass"},
+                {value: "brutalist", cls: "brutalist-theme", key: "brutalist-theme", label: "Brutalist"},
+                {value: "terminal", cls: "terminal", key: "terminal", label: "Terminal"}
+            ];
+            function currentSkin() {
+                for (var i = 1; i < SKINS.length; i++) if (parentRoot.classList.contains(SKINS[i].cls)) return SKINS[i];
+                return SKINS[0];
             }
-            var p = stat(pinnedKeys().length, T.pinned); box.appendChild(p);
-        } else if (unread != null && $("unreadStat")) {
-            var n = $("unreadStat").querySelector(".n");
-            countUp(n, unread);
-            n.classList.toggle("badge", unread > 0);
-        }
-    }
-    function stat(value, label) {
-        var s = el("div", "stat");
-        var n = el("div", "n", "0");
-        s.appendChild(n);
-        s.appendChild(el("div", "l", label));
-        setTimeout(function () { countUp(n, value); }, 1500);
-        return s;
-    }
-
-    // Quick access: the menus the user pinned in the sidebar; without pins, the
-    // menus they open most (visit counts from the "recently opened" list); with
-    // neither, a hint. Re-run whenever either list changes in the shell.
-    function mostVisited() {
-        var byPath = {};
-        leaves.forEach(function (m) { byPath[menuPath(m.type, m.value)] = m; });
-        return recentList()
-            .filter(function (r) { return byPath[r.link] && (r.count || 1) > 1; })
-            .sort(function (a, b) { return (b.count || 1) - (a.count || 1) || b.at - a.at; })
-            .slice(0, 8)
-            .map(function (r) { return byPath[r.link]; });
-    }
-    function placeChips() {
-        if (!menusReady || !userReady) return;
-        var pinned = [];
-        pinnedKeys().forEach(function (k) {
-            var hit = leaves.filter(function (m) { return menuPath(m.type, m.value) === k || m.name === k; })[0];
-            if (hit) pinned.push(hit);
-        });
-        var list = pinned.length ? pinned : mostVisited();
-        $("qh").textContent = pinned.length ? T.quick : list.length ? T.frequent : T.recent;
-        var box = $("chips");
-        box.textContent = "";
-        if (indexNode) box.appendChild(chip(indexNode, true));
-        list.forEach(function (m) { box.appendChild(chip(m, false)); });
-        if (!list.length) box.appendChild(el("div", "empty", T.none));
-    }
-    // ── recently opened (the layout appends to erupt_menu_recent on every navigation) ──
-    var RECENT_KEY = "erupt_menu_recent";
-    function recentList() {
-        try { return JSON.parse(parentWin.localStorage.getItem(RECENT_KEY) || "[]"); } catch (e) { return []; }
-    }
-    // Pins and visits are written by the shell in the parent window; those writes
-    // arrive here as storage events (never for this window's own writes), so the
-    // two blocks follow the sidebar without a reload.
-    window.addEventListener("storage", function (e) {
-        if (!e.key || e.key === "erupt_menu_favorites") placeChips();
-        if (!e.key || e.key === RECENT_KEY) { placeChips(); placeRecent(); }
-    });
-    function recentRemove(link) {
-        try {
-            parentWin.localStorage.setItem(RECENT_KEY, JSON.stringify(recentList().filter(function (r) { return r.link !== link; })));
-        } catch (e) { /* storage unavailable */ }
-    }
-    function placeRecent() {
-        if (!menusReady) return;
-        $("rh").textContent = T.opened;
-        var box = $("rchips");
-        box.textContent = "";
-        // only menus the account can still reach, matched by their route
-        var byPath = {};
-        leaves.forEach(function (m) { byPath[menuPath(m.type, m.value)] = m; });
-        var items = recentList().filter(function (r) { return byPath[r.link]; });
-        if (!items.length) { box.appendChild(el("div", "empty", T.openedNone)); return; }
-        // today / yesterday / earlier, by local calendar day
-        var dayStart = new Date(); dayStart.setHours(0, 0, 0, 0);
-        var today = dayStart.getTime(), yesterday = today - 86400000;
-        var lastGroup = null;
-        items.forEach(function (r) {
-            var g = r.at >= today ? T.today : r.at >= yesterday ? T.yesterday : T.earlier;
-            if (g !== lastGroup) { box.appendChild(el("div", "grp", g)); lastGroup = g; }
-            var node = byPath[r.link];
-            var c = chip(node, false);
-            if (r.count > 1) c.appendChild(el("span", "cnt", String(r.count)));
-            try { c.title = node.name + "  ·  " + new Date(r.at).toLocaleString(lang); } catch (e) { /* keep name */ }
-            var rm = el("span", "rm", "×");
-            rm.title = "";
-            rm.addEventListener("click", function (e) {
-                e.stopPropagation();
-                recentRemove(r.link);
-                c.classList.add("out");
-                setTimeout(function () {
-                    var prev = c.previousElementSibling, next = c.nextElementSibling;
-                    c.remove();
-                    if (prev && prev.classList.contains("grp") && (!next || next.classList.contains("grp"))) prev.remove();
-                    if (!box.querySelector(".chip")) { box.textContent = ""; box.appendChild(el("div", "empty", T.openedNone)); }
-                }, 180);
+            var swatches = Array.prototype.slice.call(document.querySelectorAll("#skinSeg .sw"));
+            function paint() {
+                var dark = parentRoot.classList.contains("dark");
+                $("tbLight").classList.toggle("on", !dark);
+                $("tbLight").title = T.light;
+                $("tbDark").classList.toggle("on", dark);
+                $("tbDark").title = T.dark;
+                var skin = currentSkin();
+                swatches.forEach(function (b) {
+                    var def = SKINS.filter(function (sk) { return sk.value === b.getAttribute("data-skin"); })[0];
+                    b.classList.toggle("on", def === skin);
+                    b.title = T.skin + " · " + def.label;
+                });
+            }
+            function setDark(dark) {
+                try { parentWin.localStorage.setItem("dark-theme", String(dark)); } catch (e) {}
+                if (typeof parentWin.eruptApplyDarkTheme === "function") parentWin.eruptApplyDarkTheme(dark);
+            }
+            $("tbLight").addEventListener("click", function () { setDark(false); });
+            $("tbDark").addEventListener("click", function () { setDark(true); });
+            swatches.forEach(function (b) {
+                b.addEventListener("click", function () {
+                    var next = SKINS.filter(function (sk) { return sk.value === b.getAttribute("data-skin"); })[0];
+                    if (typeof parentWin.eruptApplySkin === "function") {
+                        // the app's own switch: also swaps the theme color slot and the header bar
+                        parentWin.eruptApplySkin(next.value);
+                    } else {
+                        SKINS.forEach(function (sk) {
+                            if (!sk.cls) return;
+                            parentRoot.classList.toggle(sk.cls, sk === next);
+                            try { parentWin.localStorage.setItem(sk.key, String(sk === next)); } catch (e) {}
+                        });
+                    }
+                    paint();
+                });
             });
-            c.appendChild(rm);
-            box.appendChild(c);
-        });
-    }
+            new MutationObserver(paint).observe(parentRoot, {attributes: true, attributeFilter: ["class"]});
+            paint();
+        })();
 
-    function chip(node, isHome) {
-        var c = el("div", "chip" + (isHome ? " pin" : ""));
-        c.appendChild(el("span", "k", (node.name || "?").trim().charAt(0)));
-        c.appendChild(el("span", null, node.name || ""));
-        c.title = node.name || "";
-        c.addEventListener("click", function () { go(node); });
-        return c;
-    }
+        // ── data: who am I ───────────────────────────────────────────────────────
+        var user = null, indexNode = null, userReady = false;
+        fetchJson(api + "/userinfo").then(function (u) {
+            user = u || {};
+            var name = user.nickname || "";
+            var hello = $("hello");
+            var sep = lang.indexOf("zh") === 0 ? "，" : lang.indexOf("ja") === 0 ? "、" : ", ";
+            hello.textContent = greeting() + (name ? sep : "");
+            if (name) hello.appendChild(el("b", null, name));
+            var av = $("avatar");
+            if (user.avatar) {
+                var src = /^https?:\/\//.test(user.avatar) ? user.avatar : attach + "/" + user.avatar.replace(/^\/+/, "");
+                src += (src.indexOf("?") === -1 ? "?" : "&") + "_token=" + encodeURIComponent(token);
+                var img = new Image();
+                img.onload = function () { av.textContent = ""; av.appendChild(img); };
+                img.onerror = function () { av.textContent = name.charAt(0); };
+                img.src = src;
+            }
+            if (!av.firstChild) av.textContent = name.charAt(0);
+            if (user.indexMenuType && user.indexMenuValue) indexNode = {type: user.indexMenuType, value: user.indexMenuValue, name: T.home};
+            userReady = true;
+            placeChips();
+            fillSecurity();
+        }).catch(function () { userReady = true; placeChips(); fillSecurity(); });
+
+        // ── data: what can I reach ──────────────────────────────────────────────
+        var leaves = [], menusReady = false;
+        // a tenant session only names its tenant here; the user and the menus are the platform's endpoints
+        if (isTenant(token)) fetchJson(api + "/tenant/info").then(function (t) {
+            if (t && t.tenantName) { $("tenant").textContent = t.tenantName; $("tenant").hidden = false; $("tenantDot").hidden = false; }
+        }).catch(function () {});
+
+        fetchJson(api + "/menu").then(function (menus) {
+            if (!Array.isArray(menus)) return;
+            var nodes = menus.filter(function (m) { return m.type !== "api" && m.type !== "button"; });
+            var byId = {}, hasKids = {};
+            nodes.forEach(function (m) { byId[m.id] = m; });
+            nodes.forEach(function (m) { if (m.pid != null && byId[m.pid]) hasKids[m.pid] = true; });
+            leaves = nodes.filter(function (m) { return !hasKids[m.id] && menuPath(m.type, m.value); });
+            menusReady = true;
+            renderStats();
+            placeChips();
+            placeRecent();
+        }).catch(function () { menusReady = true; renderStats(); placeChips(); placeRecent(); });
+
+        // ── data: unread notices. The tile exists only when the backend reports the
+        //    notice module (erupt-app properties["erupt-notice"]); a project without it
+        //    has no /notice endpoints at all, so nothing is requested and nothing shown.
+        var unread = null, appReady = false, noticeOn = false, aiOn = false, mfaOffered = false;
+        fetchJson(api + "/erupt-app").then(function (app) {
+            noticeOn = !!(app && app.properties && app.properties["erupt-notice"]);
+            aiOn = !!(app && app.properties && app.properties["erupt-ai"]);
+            // a tenant session has no platform MFA binding of its own (see header-user)
+            mfaOffered = !!(app && app.mfa && app.mfa.enable) && !isTenant(token);
+        }).catch(function () { noticeOn = false; }).then(function () {
+            appReady = true;
+            renderStats();
+            fillSecurity();
+            if (!noticeOn) return;
+            fetchJson(api + "/notice/unread-count").then(function (r) {
+                unread = r && typeof r.data === "number" ? r.data : 0;
+                renderStats();
+            }).catch(function () {
+                // the endpoint is missing or refused after all: drop the tile instead of showing 0
+                noticeOn = false;
+                if (unreadStat) { unreadStat.remove(); unreadStat = null; }
+            });
+        });
+
+        // ── pinned menus (the sidebar's pushpins, kept in the shell's localStorage) ─
+        function pinnedKeys() {
+            try { return JSON.parse(parentWin.localStorage.getItem("erupt_menu_favorites") || "[]"); } catch (e) { return []; }
+        }
+
+        // The pins the sidebar actually shows. Keys live per browser, not per account, so a key
+        // may name a menu this account cannot reach or one that no longer exists; like the
+        // sidebar's loadFavorites, resolve each key against the current menu tree and keep the hits.
+        function pinnedMenus() {
+            var pinned = [];
+            pinnedKeys().forEach(function (k) {
+                var hit = leaves.filter(function (m) { return menuPath(m.type, m.value) === k || m.name === k; })[0];
+                if (hit && pinned.indexOf(hit) === -1) pinned.push(hit);
+            });
+            return pinned;
+        }
+
+        var statsDone = false, unreadStat = null, pinnedStat = null;
+        function renderStats() {
+            if (!menusReady || !appReady) return;
+            var box = $("stats");
+            if (!statsDone) {
+                statsDone = true;
+                box.appendChild(stat(leaves.length, T.menus));
+                box.appendChild(secStat = stat(0, T.security, false, T.days));
+                fillSecurity();
+                if (noticeOn) box.appendChild(unreadStat = stat(unread == null ? 0 : unread, T.unread, true));
+                // the fourth tile asks the AI when erupt-ai is on and this account has its chat menu,
+                // otherwise it counts the sidebar's pins
+                var ai = aiOn ? aiMenu() : null;
+                box.appendChild(ai ? aiStat(ai) : (pinnedStat = stat(pinnedMenus().length, T.pinned)));
+            } else if (unread != null && unreadStat) {
+                setStat(unreadStat, unread);
+            }
+        }
+        // A tile shows "0" until the intro has played, then counts up to its value. The value may
+        // change before or after that (the unread count arrives late, pins toggle in the sidebar),
+        // so the tile remembers its newest target and the deferred intro counts to that — never
+        // back to the number it was created with.
+        function stat(value, label, badge, unit) {
+            var s = el("div", "stat");
+            var n = el("div", "n");
+            n.appendChild(el("span", "num", "0"));
+            if (unit) n.appendChild(el("span", "unit", unit));
+            s.appendChild(n);
+            s.appendChild(el("div", "l", label));
+            s._to = value; s._badge = !!badge; s._ready = false;
+            setTimeout(function () { s._ready = true; setStat(s, s._to); }, 1500);
+            return s;
+        }
+        // value null leaves the tile as its owner wrote it (a dash, say) instead of counting
+        function setStat(s, value) {
+            s._to = value;
+            if (!s._ready || value == null) return;
+            var n = s.querySelector(".n");
+            countUp(n.querySelector(".num"), value);
+            if (s._badge) n.classList.toggle("badge", value > 0);
+        }
+
+        // ── account security: days since the password was last changed, and whether MFA is bound.
+        //    Orange when the password is older than 90 days, never changed, or MFA is offered but off.
+        var secStat = null;
+        function fillSecurity() {
+            if (!secStat || !userReady || !appReady) return;
+            var n = secStat.querySelector(".n"), parts = [], warn = false;
+            var at = user && user.pwdChangedTime ? Date.parse(user.pwdChangedTime) : NaN;
+            var tip = [T.security];
+            if (isNaN(at)) {
+                // the big line says it in words: "password unchanged"; the label keeps only the MFA state
+                setStat(secStat, null);
+                n.classList.add("t");
+                n.querySelector(".num").textContent = T.pwdNever;
+                n.querySelector(".unit").textContent = "";
+                tip.push(T.pwdNever);
+                warn = true;
+            } else {
+                var days = Math.max(0, Math.floor((Date.now() - at) / 86400000));
+                n.classList.remove("t");
+                n.querySelector(".unit").textContent = T.days;
+                setStat(secStat, days);
+                parts.push(T.pwdAge);
+                if (days > 90) warn = true;
+                try { tip.push(T.pwdAge + ": " + new Date(at).toLocaleString(lang)); } catch (e) { /* keep the label */ }
+            }
+            if (mfaOffered) {
+                var mfa = user && user.mfaBound ? T.mfaOn : T.mfaOff;
+                parts.push(mfa); tip.push(mfa);
+                if (!(user && user.mfaBound)) warn = true;
+            }
+            if (!parts.length) parts.push(T.security);
+            secStat.querySelector(".l").textContent = parts.join(" · ");
+            secStat.title = tip.join("\n");
+            n.classList.toggle("warn", warn);
+        }
+        // The AI tile: a prompt box in place of the number. Enter opens the chat route with the
+        // question (?q=), which the chat page sends as the first message of a new conversation.
+        function aiMenu() {
+            return leaves.filter(function (m) { return m.code === "ai-chat" && m.type === "router"; })[0] || null;
+        }
+        function aiStat(node) {
+            var s = el("div", "stat ai");
+            var input = el("input", "ask");
+            input.type = "text"; input.placeholder = T.ask; input.maxLength = 500; input.autocomplete = "off";
+            input.addEventListener("keydown", function (e) {
+                if (e.key !== "Enter" || e.isComposing) return;
+                var q = input.value.trim();
+                if (!q || !parentWin) return;
+                parentWin.location.hash = "#" + node.value + "?q=" + encodeURIComponent(q);
+            });
+            var n = el("div", "n");
+            n.appendChild(input);
+            s.appendChild(n);
+            s.appendChild(el("div", "l", T.ai));
+            s.addEventListener("click", function () { input.focus(); });
+            return s;
+        }
+
+        // Quick access: the menus the user pinned in the sidebar; without pins, the
+        // menus they open most (visit counts from the "recently opened" list); with
+        // neither, a hint. Re-run whenever either list changes in the shell.
+        function mostVisited() {
+            var byPath = {};
+            leaves.forEach(function (m) { byPath[menuPath(m.type, m.value)] = m; });
+            return recentList()
+                .filter(function (r) { return byPath[r.link] && (r.count || 1) > 1; })
+                .sort(function (a, b) { return (b.count || 1) - (a.count || 1) || b.at - a.at; })
+                .slice(0, 8)
+                .map(function (r) { return byPath[r.link]; });
+        }
+        function placeChips() {
+            if (!menusReady || !userReady) return;
+            var pinned = pinnedMenus();
+            var list = pinned.length ? pinned : mostVisited();
+            $("qh").textContent = pinned.length ? T.quick : list.length ? T.frequent : T.recent;
+            var box = $("chips");
+            box.textContent = "";
+            if (indexNode) box.appendChild(chip(indexNode, true));
+            list.forEach(function (m) { box.appendChild(chip(m, false)); });
+            if (!list.length) box.appendChild(el("div", "empty", T.none));
+        }
+        // ── recently opened (the layout appends to erupt_menu_recent on every navigation) ──
+        var RECENT_KEY = "erupt_menu_recent";
+        function recentList() {
+            try { return JSON.parse(parentWin.localStorage.getItem(RECENT_KEY) || "[]"); } catch (e) { return []; }
+        }
+        // Pins and visits are written by the shell in the parent window; those writes
+        // arrive here as storage events (never for this window's own writes), so the
+        // two blocks follow the sidebar without a reload.
+        window.addEventListener("storage", function (e) {
+            if (!e.key || e.key === "erupt_menu_favorites") {
+                placeChips();
+                if (pinnedStat) setStat(pinnedStat, pinnedMenus().length);
+            }
+            if (!e.key || e.key === RECENT_KEY) { placeChips(); placeRecent(); }
+        });
+        function recentRemove(link) {
+            try {
+                parentWin.localStorage.setItem(RECENT_KEY, JSON.stringify(recentList().filter(function (r) { return r.link !== link; })));
+            } catch (e) { /* storage unavailable */ }
+        }
+        function placeRecent() {
+            if (!menusReady) return;
+            $("rh").textContent = T.opened;
+            var box = $("rchips");
+            box.textContent = "";
+            // only menus the account can still reach, matched by their route
+            var byPath = {};
+            leaves.forEach(function (m) { byPath[menuPath(m.type, m.value)] = m; });
+            var items = recentList().filter(function (r) { return byPath[r.link]; });
+            if (!items.length) { box.appendChild(el("div", "empty", T.openedNone)); return; }
+            // today / yesterday / earlier, by local calendar day
+            var dayStart = new Date(); dayStart.setHours(0, 0, 0, 0);
+            var today = dayStart.getTime(), yesterday = today - 86400000;
+            var lastGroup = null;
+            items.forEach(function (r) {
+                var g = r.at >= today ? T.today : r.at >= yesterday ? T.yesterday : T.earlier;
+                if (g !== lastGroup) { box.appendChild(el("div", "grp", g)); lastGroup = g; }
+                var node = byPath[r.link];
+                var c = chip(node, false);
+                if (r.count > 1) c.appendChild(el("span", "cnt", String(r.count)));
+                try { c.title = node.name + "  ·  " + new Date(r.at).toLocaleString(lang); } catch (e) { /* keep name */ }
+                var rm = el("span", "rm", "×");
+                rm.title = "";
+                rm.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    recentRemove(r.link);
+                    c.classList.add("out");
+                    setTimeout(function () {
+                        var prev = c.previousElementSibling, next = c.nextElementSibling;
+                        c.remove();
+                        if (prev && prev.classList.contains("grp") && (!next || next.classList.contains("grp"))) prev.remove();
+                        if (!box.querySelector(".chip")) { box.textContent = ""; box.appendChild(el("div", "empty", T.openedNone)); }
+                    }, 180);
+                });
+                c.appendChild(rm);
+                box.appendChild(c);
+            });
+        }
+
+        function chip(node, isHome) {
+            var c = el("div", "chip" + (isHome ? " pin" : ""));
+            c.appendChild(el("span", "k", (node.name || "?").trim().charAt(0)));
+            c.appendChild(el("span", null, node.name || ""));
+            c.title = node.name || "";
+            c.addEventListener("click", function () { go(node); });
+            return c;
+        }
+    });
 })();
 </script>
 </body>
