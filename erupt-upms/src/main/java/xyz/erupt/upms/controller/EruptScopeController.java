@@ -17,8 +17,10 @@ import xyz.erupt.upms.service.EruptUserService;
 import java.util.*;
 
 /**
- * Scopes for the page header. A scope is offered when at least one model that declares it is on
- * the user's menus; that model is the parent its form loads under.
+ * Page scope
+ *
+ * @order 19
+ * @apiNote Scopes for the page header. A scope is offered when at least one model that declares it is on the user's menus; that model is the parent its form loads under.
  *
  * @author YuePeng
  */

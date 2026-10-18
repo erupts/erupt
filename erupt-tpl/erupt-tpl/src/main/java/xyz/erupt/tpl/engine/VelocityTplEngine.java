@@ -23,7 +23,7 @@ public class VelocityTplEngine extends EngineTemplate<VelocityEngine> {
     @Override
     public VelocityEngine init() {
         VelocityEngine ve = new VelocityEngine();
-        ve.setProperty(Velocity.INPUT_ENCODING, StandardCharsets.UTF_8);
+        ve.setProperty(Velocity.INPUT_ENCODING, StandardCharsets.UTF_8.name());
         ve.setProperty("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         ve.init();
         return ve;

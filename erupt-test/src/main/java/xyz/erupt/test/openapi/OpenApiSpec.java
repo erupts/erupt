@@ -37,7 +37,7 @@ public class OpenApiSpec {
 
     static {
         GROUPS.put("Account", List.of("Session and user", "Multi-factor auth", "Open API token", "Permission and app settings"));
-        GROUPS.put("Data", List.of("Page build", "Data query", "Data modify", "Tab rows", "Form view"));
+        GROUPS.put("Data", List.of("Page build", "Data query", "Data modify", "Tab rows", "Form view", "Page scope"));
         GROUPS.put("Widgets and files", List.of("Form components", "Files", "Import and export"));
         GROUPS.put("Views", List.of("Board view", "Calendar view", "Gantt view"));
         GROUPS.put("Platform", List.of("Template pages", "Developer tools", "Framework"));
