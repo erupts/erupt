@@ -2,7 +2,7 @@
 
 Kubernetes resources as erupt models, built on the fabric8 kubernetes-client (7.x, JDK HttpClient transport). Bind a `@Erupt` model to a resource kind (Pod, Deployment, ConfigMap, Node, any custom resource) and Erupt gives you a filtered, searchable, permissioned admin view of it, with arbitrary field extraction from `spec` / `status`.
 
-For a ready-made Kubernetes admin, with no models to write, use [erupt-k8s-dashboard](../../erupt-plugin/erupt-k8s-dashboard). It is built on this module. Use this module directly to model resources the dashboard does not ship, such as custom resources.
+For a ready-made Kubernetes admin, with no models to write, use [erupt-k8s-dashboard](https://github.com/erupt-io/erupt-k8s-dashboard). It is built on this module. Use this module directly to model resources the dashboard does not ship, such as custom resources.
 
 On top of browsing:
 
@@ -14,7 +14,7 @@ On top of browsing:
 | Rollout restart | `K8sRestartHandler` row operation (`kubectl rollout restart`) |
 | View YAML | `K8sYamlHandler` row operation (`kubectl get -o yaml`) |
 | Pod logs, last N lines | `K8sPodLogHandler` row operation (`kubectl logs --tail`) |
-| Live logs / shell | web terminal in [erupt-k8s-dashboard](../../erupt-plugin/erupt-k8s-dashboard) |
+| Live logs / shell | web terminal in [erupt-k8s-dashboard](https://github.com/erupt-io/erupt-k8s-dashboard) |
 | Namespace dropdown | `K8sNamespaceFetchHandler` choice handler |
 | Server-side filtering | `namespace` and `labelSelector` searches go to the API server |
 

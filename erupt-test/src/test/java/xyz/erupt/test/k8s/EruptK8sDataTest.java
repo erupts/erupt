@@ -28,26 +28,11 @@ import xyz.erupt.k8s.operation.K8sRestartHandler;
 import xyz.erupt.k8s.operation.K8sScaleForm;
 import xyz.erupt.k8s.operation.K8sScaleHandler;
 import xyz.erupt.k8s.operation.K8sYamlHandler;
-import xyz.erupt.k8s_dashboard.terminal.K8sTerminalTicketService;
-import xyz.erupt.k8s_dashboard.terminal.K8sTerminalTplHandler;
 import xyz.erupt.test.EruptApplicationTests;
 import xyz.erupt.test.k8s.model.K8sDeploymentModel;
 import xyz.erupt.test.k8s.model.K8sPodModel;
 
-import org.springframework.boot.test.web.server.LocalServerPort;
-import xyz.erupt.core.module.MetaUserinfo;
-import xyz.erupt.core.util.Erupts;
-import xyz.erupt.upms.service.EruptTokenService;
-
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.WebSocket;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -74,18 +59,6 @@ class EruptK8sDataTest extends EruptApplicationTests {
 
     @Resource
     private K8sYamlHandler yamlHandler;
-
-    @Resource
-    private K8sTerminalTplHandler terminalTplHandler;
-
-    @Resource
-    private K8sTerminalTicketService ticketService;
-
-    @Resource
-    private EruptTokenService eruptTokenService;
-
-    @LocalServerPort
-    private int port;
 
     @BeforeAll
     static void startCluster() {
@@ -249,78 +222,6 @@ class EruptK8sDataTest extends EruptApplicationTests {
         assertNotNull(annotations.get("kubectl.kubernetes.io/restartedAt"));
 
         assertTrue(yamlHandler.exec(List.of(web), null, new String[0]).startsWith("codeDrawer('yaml'"));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    void terminalTicketsAreBoundAndSingleUse() {
-        MetaContext.registerToken("terminal-test-token");
-        Object pod = data(K8sPodModel.class).findDataById(model(K8sPodModel.class), "other/p2");
-        Map<String, Object> binding = new HashMap<>();
-        binding.put("rows", List.of(pod));
-        terminalTplHandler.bindTplData(binding, new String[]{"logs"});
-        assertEquals("logs", binding.get("mode"));
-        List<Map<String, String>> containers = (List<Map<String, String>>) binding.get("containers");
-        assertEquals("main", containers.get(0).get("name"));
-
-        K8sTerminalTicketService.Ticket ticket = ticketService.consume(containers.get(0).get("ticket"));
-        assertNotNull(ticket);
-        assertEquals("other", ticket.namespace(), "the pod comes from the server-checked row, not the browser");
-        assertEquals("p2", ticket.pod());
-        assertEquals("terminal-test-token", ticket.token());
-        assertEquals(K8sTerminalTicketService.Mode.LOGS, ticket.mode());
-        assertNull(ticketService.consume(containers.get(0).get("ticket")), "a ticket opens one socket");
-    }
-
-    // Opens the terminal socket and returns the close code plus any text the server sent first
-    private String[] openTerminal(String ticket) throws Exception {
-        CompletableFuture<String[]> result = new CompletableFuture<>();
-        StringBuilder received = new StringBuilder();
-        HttpClient.newHttpClient().newWebSocketBuilder()
-                .buildAsync(URI.create("ws://localhost:" + port + "/erupt-k8s-terminal?ticket=" + ticket), new WebSocket.Listener() {
-                    @Override
-                    public CompletionStage<?> onBinary(WebSocket webSocket, ByteBuffer data, boolean last) {
-                        received.append(StandardCharsets.UTF_8.decode(data));
-                        webSocket.request(1);
-                        return null;
-                    }
-
-                    @Override
-                    public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
-                        result.complete(new String[]{String.valueOf(statusCode), received.toString()});
-                        return null;
-                    }
-
-                    @Override
-                    public void onError(WebSocket webSocket, Throwable error) {
-                        result.complete(new String[]{"error", error.getMessage()});
-                    }
-                }).get(5, TimeUnit.SECONDS);
-        return result.get(10, TimeUnit.SECONDS);
-    }
-
-    @Test
-    void terminalSocketRefusesBadTickets() throws Exception {
-        assertEquals("1008", this.openTerminal("not-a-ticket")[0]);
-
-        // A real ticket whose session has ended is refused too
-        String stale = ticketService.issue("logged-out-token", K8sPodModel.class, null, "other", "p2", "main", K8sTerminalTicketService.Mode.LOGS);
-        assertEquals("1008", this.openTerminal(stale)[0]);
-    }
-
-    @Test
-    void terminalSocketReachesThePod() throws Exception {
-        MetaUserinfo user = new MetaUserinfo();
-        user.setId(-7L);
-        user.setAccount("k8s-terminal");
-        user.setUsername("k8s-terminal");
-        String token = Erupts.generateCode(22);
-        eruptTokenService.loginToken(user, List.of(), token, 5);
-        String ticket = ticketService.issue(token, K8sPodModel.class, null, "other", "p2", "main", K8sTerminalTicketService.Mode.EXEC);
-        // The CRUD mock server has no exec support, so the bridge opens, reports the failure and closes
-        String[] outcome = this.openTerminal(ticket);
-        assertEquals("1011", outcome[0], Arrays.toString(outcome));
-        assertFalse(outcome[1].isBlank(), "the failure is shown in the terminal");
     }
 
 }
