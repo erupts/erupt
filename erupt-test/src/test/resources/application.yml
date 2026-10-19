@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: test
   datasource:
     url: jdbc:h2:mem:erupt-test;DB_CLOSE_DELAY=-1;MODE=MySQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE;DATABASE_TO_LOWER=TRUE
     username: sa
@@ -16,3 +18,5 @@ erupt:
   upload-path: ${java.io.tmpdir}/erupt-test-upload
   designer:
     db-path: target/designer-test.db
+  config:
+    refresh-seconds: 0

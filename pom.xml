@@ -129,6 +129,7 @@
         <module>erupt-plugin/erupt-atlas</module>
         <module>erupt-plugin/erupt-sso</module>
         <module>erupt-plugin/erupt-file-center</module>
+        <module>erupt-plugin/erupt-config</module>
 
         <!-- Cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>

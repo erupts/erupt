@@ -1,0 +1,43 @@
+key,zh-CN,en-US
+Config,配置中心,Config
+Config items,配置项,Config items
+Effective values,生效值,Effective values
+Source,来源,Source
+Attachment,附件,Attachment
+Profiles,Profile,Profiles
+Profile,Profile,Profile
+Code,代码,Code
+Remark,备注,Remark
+Key,键,Key
+Value,值,Value
+Enabled,启用,Enabled
+On,开,On
+Off,关,Off
+Secret,保密,Secret
+Masked,脱敏显示,Masked
+Plain,明文,Plain
+Copy to profile,复制到 profile,Copy to profile
+Target profile,目标 profile,Target profile
+Refresh now,立即刷新,Refresh now
+config.key_exists,该 profile 已有相同的键,The key already exists in this profile
+config.profile_default,default 是每个实例都读取的层，不能删除,The default profile is read by every instance and cannot be deleted
+config.profile_in_use,该 profile 下还有配置项，请先删除,The profile still has items; delete them first
+Type,类型,Type
+String,字符串,String
+Text,多行文本,Text
+Number,数字,Number
+Boolean,布尔,Boolean
+Key / value,键值对,Key / value
+JSON,JSON,JSON
+config.json_invalid,JSON 格式不正确,Invalid JSON
+config.yaml_invalid,YAML 格式不正确,Invalid YAML
+Password,密码,Password
+List,列表,List
+YAML,YAML,YAML
+Date,日期,Date
+Datetime,日期时间,Datetime
+Color,颜色,Color
+Time,时间,Time
+Icon,图标,Icon
+Image,图片,Image
+HTML,HTML,HTML
