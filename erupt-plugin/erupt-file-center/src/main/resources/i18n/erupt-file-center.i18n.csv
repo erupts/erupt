@@ -1,0 +1,24 @@
+key,zh-CN,en-US
+File Center,文件中心,File Center
+Write,写入（上传、新建、重命名、删除）,Write (upload, create, rename, delete)
+file.upload,上传,Upload
+file.new_folder,新建文件夹,New folder
+file.rename,重命名,Rename
+file.delete,删除,Delete
+file.download,下载,Download
+file.copy_link,复制链接,Copy link
+file.open,新窗口打开,Open
+file.search,搜索当前目录,Search this folder
+file.empty,空文件夹,Empty folder
+file.size,大小,Size
+file.modified,修改时间,Modified
+file.type,类型,Type
+file.confirm_delete,确定删除选中的项目？文件夹会连同内容一起删除。,Delete the selected items? A folder goes with everything in it.
+file.name,名称,Name
+file.link_copied,链接已复制,Link copied
+file.items,项,items
+file.read_only,没有写入权限,No write permission
+file.too_large,文件太大，不预览,Too large to preview
+file.store_unknown,未知的存储,Unknown store
+file.not_found,文件不存在,File not found
+file.io_failed,文件操作失败,File operation failed

@@ -105,6 +105,11 @@
             <artifactId>erupt-sso</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-file-center</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <!-- AI -->
         <dependency>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>xyz.erupt</groupId>
+        <artifactId>erupt</artifactId>
+        <version>2.4.0</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>erupt-file-center</artifactId>
+    <name>Erupt : File Center</name>
+    <description>erupt file center → a file center in the admin: the upload directory, extra folders and the S3 bucket browsed in Finder-style columns, with previews, upload, rename and delete</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-upms</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- The page is a FreeMarker template served by erupt-tpl -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-tpl</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+        <!-- The S3 store appears when erupt-data-s3 is on the classpath and a bucket is configured -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-data-s3</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+</project>
