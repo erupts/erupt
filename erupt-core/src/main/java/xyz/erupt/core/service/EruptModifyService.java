@@ -39,6 +39,7 @@ import xyz.erupt.core.view.R;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -217,6 +218,24 @@ public class EruptModifyService {
         this.modifyLog(eruptModel, "UPDATE", oldData + " -> " + maskedCell);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterUpdate(obj)));
         applicationEventPublisher.publishEvent(new EruptEditEvent<>(eruptModel.getClazz(), obj, realOld));
+    }
+
+    /**
+     * Set one field of several rows to the same value: the batch edit behind a multi-row selection.
+     * <p>
+     * Each row runs {@link #updateEruptCell}, so the field eligibility rules, the whole-row
+     * validation, the row permission check and every DataProxy hook apply per row. The caller's
+     * transaction makes the batch atomic: the first rejected row rolls back the rows before it,
+     * and its message names the row.
+     */
+    @Transactional
+    public void updateEruptCells(EruptModel eruptModel, List<String> ids, String fieldName, JsonElement value) {
+        if (null == ids || ids.isEmpty()) {
+            throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.row_not_exist"), R.PromptWay.MESSAGE);
+        }
+        for (String id : new LinkedHashSet<>(ids)) {
+            this.updateEruptCell(eruptModel, id, fieldName, value);
+        }
     }
 
     @SneakyThrows

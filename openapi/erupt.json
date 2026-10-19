@@ -2541,6 +2541,81 @@
         ]
       }
     },
+    "/erupt-api/data/modify/{erupt}/update-cells": {
+      "post": {
+        "summary": "Set one field of several rows to the same value.",
+        "deprecated": false,
+        "description": "Batch editing; only allowed when the model opts in with batchEdit. Every row runs the cell edit pipeline, so validation and DataProxy hooks apply per row, and the whole batch rolls back when any row is rejected.",
+        "tags": [
+          "Data modify"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EruptBatchCellVo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RVoid"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/R"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token missing or expired"
+          },
+          "403": {
+            "description": "The session has no permission on this menu or erupt"
+          }
+        },
+        "operationId": "updateEruptCells",
+        "parameters": [
+          {
+            "schema": {
+              "format": "string",
+              "type": "string"
+            },
+            "in": "path",
+            "description": "Simple class name of the @Erupt model",
+            "required": true,
+            "name": "erupt"
+          },
+          {
+            "schema": {
+              "format": "string",
+              "type": "string"
+            },
+            "in": "header",
+            "description": "Name of the @Erupt class the request is scoped to. Must match the {erupt} path segment, or name the parent erupt when the path addresses a nested erupt (tab, sub-form, reference).",
+            "required": true,
+            "name": "erupt"
+          }
+        ],
+        "security": [
+          {
+            "tokenHeader": []
+          }
+        ]
+      }
+    },
     "/erupt-api/data/modify/{erupt}/delete": {
       "post": {
         "summary": "Delete records by primary key.",
@@ -5724,6 +5799,28 @@
           }
         }
       },
+      "EruptBatchCellVo": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "description": "Primary keys of the rows",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": "\"\"\",\"\"\""
+          },
+          "field": {
+            "format": "string",
+            "description": "Field name",
+            "type": "string"
+          },
+          "value": {
+            "description": "New value, applied to every row(object)",
+            "type": "object"
+          }
+        }
+      },
       "EruptAppProp": {
         "type": "object",
         "properties": {
@@ -6789,6 +6886,12 @@
             "example": true
           },
           "cellEdit": {
+            "format": "boolean",
+            "description": "No comments found.",
+            "type": "boolean",
+            "example": true
+          },
+          "batchEdit": {
             "format": "boolean",
             "description": "No comments found.",
             "type": "boolean",
