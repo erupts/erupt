@@ -1,7 +1,10 @@
 key,zh-CN,en-US
 File Center,文件中心,File Center
-Write,写入（上传、新建、重命名、删除）,Write (upload, create, rename, delete)
+Write,写入（上传、新建、重命名、删除）,Write: upload / create / rename / delete
+file.stores,存储,Stores
 file.upload,上传,Upload
+file.cancel,取消,Cancel
+file.ok,确定,OK
 file.new_folder,新建文件夹,New folder
 file.rename,重命名,Rename
 file.delete,删除,Delete

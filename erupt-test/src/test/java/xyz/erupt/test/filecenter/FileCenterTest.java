@@ -18,10 +18,7 @@ import xyz.erupt.filecenter.store.FileEntry;
 import xyz.erupt.filecenter.store.FileStore;
 import xyz.erupt.filecenter.store.FileStores;
 import xyz.erupt.filecenter.web.FileCenterController;
-import xyz.erupt.filecenter.web.FileCenterTpl;
 import xyz.erupt.test.EruptApplicationTests;
-import xyz.erupt.tpl.service.EruptTplService;
-import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.upms.service.EruptTokenService;
 
 import java.nio.charset.StandardCharsets;
@@ -43,13 +40,7 @@ class FileCenterTest extends EruptApplicationTests {
     private FileCenterController controller;
 
     @Resource
-    private FileCenterTpl tpl;
-
-    @Resource
     private EruptTokenService eruptTokenService;
-
-    @Resource
-    private EruptTplService tplService;
 
     private String viewer;
 
@@ -57,8 +48,8 @@ class FileCenterTest extends EruptApplicationTests {
 
     @BeforeEach
     void setUp() throws Exception {
-        MetaMenu page = MetaMenu.createSimpleMenu("file-center", "File Center", FileCenterTpl.PAGE, null, 1, "tpl");
-        MetaMenu write = MetaMenu.createSimpleMenu("file-center-write", "Write", FileCenterTpl.WRITE, page, 1, "button");
+        MetaMenu page = MetaMenu.createSimpleMenu("file-center", "File Center", FileCenterController.PAGE, null, 1, "router");
+        MetaMenu write = MetaMenu.createSimpleMenu("file-center-write", "Write", FileCenterController.WRITE, page, 1, "button");
         viewer = this.login(-81L, List.of(page));
         writer = this.login(-82L, List.of(page, write));
         this.as(writer);
@@ -129,28 +120,15 @@ class FileCenterTest extends EruptApplicationTests {
     @Test
     void aChangeNeedsTheWriteButton() throws Exception {
         this.as(viewer);
-        assertFalse((Boolean) tpl.page().get("writable"));
+        assertFalse((Boolean) controller.info().getData().get("writable"));
         assertNotNull(controller.list(FileStores.UPLOADS, "/").getData(), "reading is the page's menu");
         assertThrows(EruptWebApiRuntimeException.class, () -> controller.mkdir(FileStores.UPLOADS, "/", "file-center-test"));
         assertThrows(EruptWebApiRuntimeException.class, () -> controller.delete(FileStores.UPLOADS, List.of("/file-center-test")));
 
         this.as(writer);
-        assertTrue((Boolean) tpl.page().get("writable"));
-        assertTrue(new EruptFileCenterAutoConfiguration().initMenus().stream().anyMatch(it -> FileCenterTpl.WRITE.equals(it.getValue())));
-    }
-
-    @Test
-    void thePageRendersWithItsStoresAndToken() throws Exception {
-        org.springframework.mock.web.MockHttpServletRequest request = new org.springframework.mock.web.MockHttpServletRequest();
-        request.addHeader("token", writer);
-        org.springframework.web.context.request.RequestContextHolder.setRequestAttributes(new org.springframework.web.context.request.ServletRequestAttributes(request, new MockHttpServletResponse()));
-        java.io.StringWriter out = new java.io.StringWriter();
-        tplService.tplRender(Tpl.Engine.FreeMarker, "tpl/" + FileCenterTpl.PAGE, tpl.page(), out);
-        String html = out.toString();
-        assertTrue(html.contains("const STORES = ['Uploads']"), html.substring(0, Math.min(html.length(), 400)));
-        assertTrue(html.contains("TOKEN = '" + writer + "'"));
-        assertTrue(html.contains("WRITABLE = true"));
-        java.nio.file.Files.writeString(java.nio.file.Path.of("target/file-center.rendered.html"), html);
+        assertTrue((Boolean) controller.info().getData().get("writable"));
+        assertEquals(List.of(FileStores.UPLOADS), controller.info().getData().get("stores"));
+        assertTrue(new EruptFileCenterAutoConfiguration().initMenus().stream().anyMatch(it -> FileCenterController.WRITE.equals(it.getValue())));
     }
 
 }

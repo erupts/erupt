@@ -76,6 +76,19 @@
             <artifactId>erupt-file-center</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <!-- erupt-file-center's SFTP store: JSch is optional there, and an in-process SFTP server to talk to -->
+        <dependency>
+            <groupId>com.github.mwiede</groupId>
+            <artifactId>jsch</artifactId>
+            <version>2.28.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sshd</groupId>
+            <artifactId>sshd-sftp</artifactId>
+            <version>2.15.0</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>

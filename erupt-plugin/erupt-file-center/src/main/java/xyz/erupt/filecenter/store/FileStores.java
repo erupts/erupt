@@ -17,7 +17,8 @@ import java.util.*;
 
 /**
  * The stores the page offers, in order: the upload directory, the extra local folders of
- * {@code erupt.file.roots}, and the S3 bucket when erupt-data-s3 is present and configured.
+ * {@code erupt.file-center.roots}, the S3 bucket when erupt-data-s3 is present and configured,
+ * then every entry of {@code erupt.file-center.stores} (local, S3 or SFTP).
  * Any other {@link FileStore} bean joins the list too.
  *
  * @author YuePeng
@@ -73,6 +74,12 @@ public class FileStores {
             if (StringUtils.isBlank(store.getBucket())) throw new EruptWebApiRuntimeException("erupt.file-center.stores." + store.getName() + ": bucket is required");
             return new S3FileStore(store.getName(), new S3Settings(store.getBucket(), store.getRegion(), store.getEndpoint(),
                     store.getAccessKey(), store.getSecretKey(), store.isPathStyle(), store.getPrefix(), store.getDomain()));
+        }
+        if (EruptFileCenterProperties.Store.SFTP.equalsIgnoreCase(store.getType())) {
+            if (!ClassUtils.isPresent("com.jcraft.jsch.JSch", FileStores.class.getClassLoader())) throw new EruptWebApiRuntimeException("erupt.file-center.stores." + store.getName() + ": an SFTP store needs JSch (com.github.mwiede:jsch) on the classpath");
+            if (StringUtils.isBlank(store.getHost()) || StringUtils.isBlank(store.getUsername())) throw new EruptWebApiRuntimeException("erupt.file-center.stores." + store.getName() + ": host and username are required");
+            return new SftpFileStore(store.getName(), new SftpSettings(store.getHost(), store.getPort(), store.getUsername(), store.getPassword(),
+                    store.getPrivateKey(), store.getPassphrase(), store.getKnownHosts(), store.getPath()));
         }
         if (StringUtils.isBlank(store.getPath())) throw new EruptWebApiRuntimeException("erupt.file-center.stores." + store.getName() + ": path is required");
         return new LocalFileStore(store.getName(), Path.of(store.getPath()), null);
