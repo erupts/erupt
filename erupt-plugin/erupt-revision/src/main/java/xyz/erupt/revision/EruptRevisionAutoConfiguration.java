@@ -19,8 +19,9 @@ import java.util.List;
 
 /**
  * Field-level change history for every erupt record: each add, update and delete that goes
- * through the erupt data pipeline leaves a revision row holding what changed, and an update
- * can be rolled back from the record panel. Opt-in by adding this module; a model opts out
+ * through the erupt data pipeline leaves a revision row holding what changed, an update
+ * can be rolled back from the record panel, and a deleted record can be restored from its
+ * delete revision. Opt-in by adding this module; a model opts out
  * with {@code @Power(revision = false)}. The frontend reads the {@link #ERUPT_REVISION}
  * property to show the entry.
  *

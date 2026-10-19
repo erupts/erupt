@@ -44,4 +44,11 @@ public class EruptRevisionController {
         eruptRevisionService.rollback(erupt, id, revisionId);
         return R.ok();
     }
+
+    /** Brings a deleted record back from the recycle bin; the body is the record's primary key, which may be new. */
+    @PostMapping("/{erupt}/{id}/restore")
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, cloudProxy = false)
+    public R<Object> restore(@PathVariable("erupt") String erupt, @PathVariable("id") String id) {
+        return R.ok(eruptRevisionService.restore(erupt, id));
+    }
 }
