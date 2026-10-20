@@ -7,7 +7,9 @@ import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.query.Direction;
+import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
@@ -31,7 +33,7 @@ final class Models {
 
     static final List<String> CALLS = new ArrayList<>();
 
-    @Erupt(name = "Category")
+    @Erupt(name = "Category", drills = @Drill(code = "articles", title = "Articles", link = @Link(linkErupt = Article.class, joinColumn = "category")))
     static class Category {
         @EruptField
         Long id;

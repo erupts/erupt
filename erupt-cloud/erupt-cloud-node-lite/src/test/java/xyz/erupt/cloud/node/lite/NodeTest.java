@@ -236,6 +236,12 @@ abstract class NodeTest {
         assertEquals(0, titles(List.of(cond("category", "IN", List.of(Map.of("id", 1), Map.of("id", 3))))).size());
         fail(call("POST", "/erupt-api/data/table/Article", Map.of("condition", List.of(cond("category", "LIKE", "x")))));
         assertEquals(404, call("GET", "/erupt-api/data/Article/reference-tree/topic", null).status());
+        // a drill from Category 1 opens its articles
+        Answer drilled = call("POST", "/erupt-api/data/table/Article", Map.of(), "Article", "admin",
+                Map.of("Drill", "articles", "DrillSourceErupt", "Category", "DrillValue", "2"));
+        assertEquals(List.of("Ref"), ((List<Map<String, Object>>) drilled.map().get("list")).stream().map(r -> r.get("title")).toList());
+        assertEquals(403, call("POST", "/erupt-api/data/table/Article", Map.of(), "Article", "admin",
+                Map.of("Drill", "nope", "DrillSourceErupt", "Category", "DrillValue", "2")).status());
         // the @LinkTree beside the table: the rows under the picked tree keys
         add(Map.of("title", "Other", "topic", Map.of("id", 3, "name", "Life")));
         Answer picked = call("POST", "/erupt-api/data/table/Article", Map.of("linkTreeVal", List.of(3)));

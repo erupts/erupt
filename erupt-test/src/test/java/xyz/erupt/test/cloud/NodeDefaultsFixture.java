@@ -81,5 +81,21 @@ public class NodeDefaultsFixture {
     private Set<NodeDefaultsRef> CHECKBOX;
     @EruptField(views = @View(title = "-", column = "name"), edit = @Edit(title = "-", type = EditType.TAB_TREE))
     private Set<NodeDefaultsRef> TAB_TREE;
+    @EruptField(views = @View(title = "-", column = "name"), edit = @Edit(title = "-", type = EditType.TRANSFER))
+    private Set<NodeDefaultsRef> TRANSFER;
+    @EruptField(views = @View(title = "-"), edit = @Edit(title = "-", type = EditType.COLOR))
+    private String COLOR;
+    @EruptField(views = @View(title = "-"), edit = @Edit(title = "-", type = EditType.ICON))
+    private String ICON;
+    @EruptField(views = @View(title = "-"), edit = @Edit(title = "-", type = EditType.RATE))
+    private Integer RATE;
+    @EruptField(views = @View(title = "-"), edit = @Edit(title = "-", type = EditType.SLIDER))
+    private Integer SLIDER;
+    @EruptField(views = @View(title = "-"), edit = @Edit(title = "-", type = EditType.SIGNATURE))
+    private String SIGNATURE;
+    @EruptField(views = @View(title = "-"), edit = @Edit(title = "-", type = EditType.MAP))
+    private String MAP;
+    @EruptField(edit = @Edit(title = "-", type = EditType.HIDDEN))
+    private String HIDDEN;
 
 }

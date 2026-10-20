@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpServer;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.Vis;
 import xyz.erupt.annotation.exception.EruptException;
+import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
@@ -11,6 +12,7 @@ import xyz.erupt.annotation.query.Direction;
 import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
+import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
@@ -73,6 +75,9 @@ public final class Node implements AutoCloseable, Model.Registry {
 
     // request headers the server forwards (EruptMutualConst in erupt-core)
     private static final String HEADER_ERUPT = "erupt", HEADER_ERUPT_PARENT = "eruptParent", HEADER_USER = "user", HEADER_TOKEN = "token";
+
+    // a drill into a table: the drill's code, the source row's key and the source erupt
+    private static final String HEADER_DRILL = "Drill", HEADER_DRILL_VALUE = "DrillValue", HEADER_DRILL_SOURCE = "DrillSourceErupt";
 
     // parameters of the server's cloud API that NodeInfo does not name
     private static final String PARAM_ERUPT_NAME = "eruptName", PARAM_ERUPT_PARENT = "_eruptParent";
@@ -276,7 +281,7 @@ public final class Node implements AutoCloseable, Model.Registry {
             String userHeader = req.header().apply(HEADER_USER);
             User user = userHeader == null || userHeader.isEmpty() ? null
                     : User.of(Json.parse(new String(Base64.getDecoder().decode(userHeader.strip()), StandardCharsets.UTF_8)));
-            SCOPE.set(new Scope(this, user, enforced, req.header().apply(HEADER_TOKEN)));
+            SCOPE.set(new Scope(this, user, enforced, req.header().apply(HEADER_TOKEN), req.header()));
             List<String> args = new ArrayList<>();
             for (int i = 2; i <= m.groupCount(); i++) args.add(decode(m.group(i)));
             return route.handler.handle(entry, req.body(), args);
@@ -360,6 +365,7 @@ public final class Node implements AutoCloseable, Model.Registry {
         }
         if (sort.isEmpty()) sort.addAll(model.orderBy);
         List<String> filters = new ArrayList<>();
+        drill(model, conditions, filters);
         if (vis != null) for (Filter f : vis.filter()) filters.add(f.value());
         model.proxies(p -> Optional.ofNullable(p.beforeFetch(conditions)).filter(s -> !s.isBlank()).ifPresent(filters::add));
         // a @LinkTree table shows the rows under the picked tree keys; with dependNode, none until one is picked
@@ -372,6 +378,24 @@ public final class Node implements AutoCloseable, Model.Registry {
         List<Map<String, Object>> rows = new ArrayList<>(page.records().stream().map(model::toRow).toList());
         model.proxies(p -> p.afterFetch(rows));
         return new PageView(pageIndex, pageSize, page.total(), (page.total() + pageSize - 1) / pageSize, rows, null, null, null);
+    }
+
+    // A drill into this table from a row of another erupt: the rows whose joinColumn holds the source row's column
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void drill(Model<?> model, List<Condition> conditions, List<String> filters) {
+        Scope scope = SCOPE.get();
+        String code = null == scope ? null : scope.header().apply(HEADER_DRILL);
+        if (code == null) return;
+        Entry source = entries.get(String.valueOf(scope.header().apply(HEADER_DRILL_SOURCE)));
+        Drill drill = source == null ? null : Arrays.stream(source.model.erupt.drills()).filter(d -> code.equals(Model.code(d))).findFirst().orElse(null);
+        if (drill == null) throw new Reply(403);
+        Link link = drill.link();
+        FieldDef join = model.fields.get(link.joinColumn().split("\\.")[0]);
+        if (link.linkErupt() != model.type || join == null) throw new EruptException("illegal erupt from drill '" + code + "'");
+        Object row = source.repo.get(pk(source.model, scope.header().apply(HEADER_DRILL_VALUE)));
+        if (row == null) throw new EruptException("record not found");
+        conditions.add(new Condition(join.name, join.toCondition(source.model.get(row, link.column())), QueryExpression.EQ));
+        if (!link.linkCondition().isEmpty()) filters.add(link.linkCondition());
     }
 
     private static Condition condition(Model<?> model, Map<?, ?> c) {
@@ -769,7 +793,7 @@ public final class Node implements AutoCloseable, Model.Registry {
         }
     }
 
-    private record Scope(Node node, User user, Set<CloudSignature.Enforced> enforced, String token) {
+    private record Scope(Node node, User user, Set<CloudSignature.Enforced> enforced, String token, Function<String, String> header) {
     }
 
     private static final class Reply extends RuntimeException {

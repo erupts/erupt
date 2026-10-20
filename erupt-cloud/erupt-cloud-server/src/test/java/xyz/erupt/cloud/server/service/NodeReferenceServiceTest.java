@@ -50,6 +50,12 @@ class NodeReferenceServiceTest {
     private static final String SECTIONS = "{\"fieldName\":\"sections\",\"fieldReturnName\":\"Category\",\"eruptFieldJson\":"
             + "{\"edit\":{\"title\":\"Sections\",\"type\":\"TAB_TREE\"}}}";
 
+    private static final String CITY = "{\"fieldName\":\"city\",\"fieldReturnName\":\"Category\",\"eruptFieldJson\":"
+            + "{\"edit\":{\"title\":\"City\",\"type\":\"REFERENCE_TABLE\",\"referenceTableType\":{\"id\":\"id\",\"label\":\"name\","
+            + "\"dependField\":\"category\",\"dependColumn\":\"parent\"}}}}";
+
+    private final List<Object> bodies = new ArrayList<>();
+
     private final List<String> calls = new ArrayList<>();
 
     private final Map<String, JsonObject> categories = new LinkedHashMap<>();
@@ -81,6 +87,7 @@ class NodeReferenceServiceTest {
                 assertEquals("blog.Category", eruptName);
                 assertTrue(enforced.contains(CloudSignature.Enforced.POWER));
                 calls.add(pathTemplate);
+                bodies.add(body);
                 if (method == HttpMethod.GET) {
                     String id = pathTemplate.substring(pathTemplate.lastIndexOf('/') + 1);
                     if (!categories.containsKey(id)) throw new xyz.erupt.core.exception.EruptWebApiRuntimeException("not found");
@@ -98,7 +105,7 @@ class NodeReferenceServiceTest {
         field.setAccessible(true);
         field.set(service, router);
         build = GsonFactory.getGson().fromJson("{\"eruptModel\":{\"eruptName\":\"Article\",\"eruptJson\":{},\"eruptFieldModels\":["
-                + CATEGORY + "," + PARENT + "," + SUB + "," + FILTERED + "," + TAGS + "," + SECTIONS + "]}}", EruptBuildModel.class);
+                + CATEGORY + "," + PARENT + "," + SUB + "," + FILTERED + "," + TAGS + "," + SECTIONS + "," + CITY + "]}}", EruptBuildModel.class);
     }
 
     private void category(int id, String name, Integer parent) {
@@ -186,11 +193,17 @@ class NodeReferenceServiceTest {
 
     @Test
     void thePickerIsTheTargetTableWithItsReferencesResolved() {
-        JsonObject page = JsonParser.parseString(service.picker("blog", build, "category",
+        JsonObject page = JsonParser.parseString(service.picker("blog", build, "category", null,
                 "{\"pageIndex\":1,\"pageSize\":10}".getBytes(java.nio.charset.StandardCharsets.UTF_8))).getAsJsonObject();
         assertEquals(3, page.getAsJsonArray("list").size());
         assertEquals("/erupt-api/data/table/{erupt}", calls.get(0));
-        assertNull(service.picker("blog", build, "missing", new byte[0]));
+        assertNull(service.picker("blog", build, "missing", null, new byte[0]));
+        // a dependent picker asks the node for the records under the depend value, its column read from the build
+        service.picker("blog", build, "city", "1", new byte[0]);
+        JsonObject condition = ((JsonObject) bodies.get(bodies.size() - 1)).getAsJsonArray("condition").get(0).getAsJsonObject();
+        assertEquals(List.of("parent", "EQ", "1"), List.of(condition.get("key").getAsString(), condition.get("expression").getAsString(),
+                condition.get("value").getAsString()));
+        assertThrows(xyz.erupt.core.exception.EruptWebApiRuntimeException.class, () -> service.picker("blog", build, "city", null, new byte[0]));
     }
 
     @Test

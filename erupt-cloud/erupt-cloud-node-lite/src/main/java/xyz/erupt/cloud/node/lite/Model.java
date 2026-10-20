@@ -239,6 +239,7 @@ public final class Model<T> implements AnnotationJson.Resolver {
             }
         }
         if (a instanceof Vis v && attr.equals("code")) return code(v);
+        if (a instanceof Drill d && attr.equals("code")) return code(d);
         if (a instanceof RowOperation op) {
             if (attr.equals("code") && op.code().isEmpty()) return Integer.toString(op.title().hashCode());
             if (attr.equals("callHint")) return I18N.getOrDefault(op.callHint(), op.callHint());
@@ -249,6 +250,11 @@ public final class Model<T> implements AnnotationJson.Resolver {
     /** A view's code: the title's hash when it declares none, as erupt-core's VisProxy answers. */
     static String code(Vis vis) {
         return vis.code().isEmpty() ? Integer.toString(vis.title().hashCode()) : vis.code();
+    }
+
+    /** A drill's code: the title's hash when it declares none, as erupt-core's DrillProxy answers. */
+    static String code(Drill drill) {
+        return drill.code().isEmpty() ? Integer.toString(drill.title().hashCode()) : drill.code();
     }
 
     /** The view of this code the user may see, or null. */

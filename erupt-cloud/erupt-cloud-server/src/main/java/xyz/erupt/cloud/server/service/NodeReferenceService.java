@@ -10,11 +10,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.cloud.common.http.CloudSignature;
 import xyz.erupt.core.config.GsonFactory;
@@ -147,9 +150,11 @@ public class NodeReferenceService {
     /**
      * A REFERENCE_TABLE picker: a page of the erupt the field points at, read through that erupt's own table
      * (signed {@code power,query}, the query checked against its build), its references resolved as a table's are.
-     * Null when the build does not carry the field, left to the node.
+     * A field with a dependField keeps the records whose dependColumn holds {@code dependValue}: the column is
+     * {@code @Transient}, so it is read from the build a node SDK writes it into. Null when the build does not carry
+     * the field, left to the node.
      */
-    public String picker(String nodeName, EruptBuildModel build, String fieldName, byte[] body) {
+    public String picker(String nodeName, EruptBuildModel build, String fieldName, String dependValue, byte[] body) {
         EruptFieldModel model = field(build, fieldName);
         if (null == model) return null;
         String target = nodeName + EruptConst.DOT + model.getFieldReturnName();
@@ -158,6 +163,23 @@ public class NodeReferenceService {
         if (!query.isJsonObject()) throw new EruptApiErrorTip(R.error(I18nTranslate.$translate("erupt.incorrect_format")));
         String problem = RemoteRequestValidator.validateQuery(targetBuild, query.getAsJsonObject());
         if (null != problem) throw new EruptApiErrorTip(R.error(problem));
+        ReferenceTableType tableType = AnnotationProcess.jsonToAnnotation(EruptField.class, model.getEruptFieldJson()).edit().referenceTableType();
+        if (StringUtils.isNotBlank(tableType.dependField())) {
+            if (StringUtils.isBlank(dependValue)) {
+                EruptFieldModel depend = field(build, tableType.dependField());
+                throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.select") + " " + (null == depend ? tableType.dependField()
+                        : AnnotationProcess.jsonToAnnotation(EruptField.class, depend.getEruptFieldJson()).edit().title()));
+            }
+            // added after the user's conditions were checked: the node takes it under the signed query
+            JsonObject condition = new JsonObject();
+            condition.addProperty(LambdaSee.field(Condition::getKey), tableType.dependColumn().split("\\.")[0]);
+            condition.addProperty(LambdaSee.field(Condition::getExpression), QueryExpression.EQ.name());
+            condition.addProperty(LambdaSee.field(Condition::getValue), dependValue);
+            JsonObject json = query.getAsJsonObject();
+            String key = LambdaSee.field(TableQuery::getCondition);
+            if (!json.has(key) || !json.get(key).isJsonArray()) json.add(key, new JsonArray());
+            json.getAsJsonArray(key).add(condition);
+        }
         return resolve(nodeName, targetBuild, true, cloudNodeRouter.proxy(target, HttpMethod.POST,
                 EruptRestPath.ERUPT_DATA + "/table" + EruptRestPath.ERUPT_NAME_HOLDER, query, QUERIED));
     }

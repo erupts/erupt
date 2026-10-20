@@ -212,7 +212,7 @@ Endpoints the server answers for a node itself, from the node's build (fetched w
 | Reference trees | `GET /erupt-api/data/{erupt}/reference-tree/{field}` | Built from the referenced erupt's records, paged through `POST /data/table/{erupt}` (signed `power`) and nested by `referenceTreeType` `id` / `label` / `pid`; with a `dependField`, only the records whose `dependColumn` holds the `dependValue` (a reference sent as its key counts as its `id`). A field with a `filter` or an `orderBy` is forwarded instead: those are the node's query language. |
 | Trees | `GET /erupt-api/data/tree/{erupt}`, `GET /erupt-api/data/depend-tree/{erupt}` | A `@Tree` erupt's records, paged through its `POST /data/table/{erupt}` (signed `power`), nested by `tree` `id` / `label` / `pid`, roots being the records with an empty parent. The tree beside a `@LinkTree` table is the records its `field` points at, nested by that field's `referenceTreeType`; a field the build does not carry is forwarded. Filtering the table by the picked nodes is the node's: `linkTreeVal` (§7.2). |
 | Tab trees, checkboxes | `GET /erupt-api/data/tab/tree/{erupt}/{field}`, `GET /erupt-api/data/{erupt}/checkbox/{field}` | A `TAB_TREE` is the records its field points at, nested by that erupt's own `tree` (a field with a `filter` is forwarded). `CHECKBOX` is forwarded first, and on a 404 answered as `[{id, label, remark}]`: the target's primary key and the field's first `@View(column)`, `name` without one, since `checkboxType` is `@Transient`. A node stores either as the list of picked keys; the browser submits `[{id: key}]` (`CHECKBOX`) or `[{<pk>: key}]` (`TAB_TREE`). |
-| Reference pickers | `POST /erupt-api/data/{erupt}/reference-table/{field}` | For a node with the `invoke` capability: the field's `fieldReturnName` read from the build, the query checked against that erupt's build and sent to its `POST /data/table/{erupt}` (signed `power,query`), references in the page resolved as a table's. A field the build does not carry is forwarded. |
+| Reference pickers | `POST /erupt-api/data/{erupt}/reference-table/{field}` | For a node with the `invoke` capability: the field's `fieldReturnName` read from the build, the query checked against that erupt's build and sent to its `POST /data/table/{erupt}` (signed `power,query`), references in the page resolved as a table's. With a `referenceTableType.dependField`, `dependValue` is required and added as `dependColumn = dependValue`; `dependColumn` is `@Transient` in Java, so a node SDK writes it into the build. A field the build does not carry is forwarded. |
 | Field sub-models | `GET /erupt-api/build/{erupt}/{field}` | The field's `fieldReturnName` read from the build, then that erupt's own `GET /build/{erupt}` (signed `power`), returned as the node answers it. A field the build does not carry is forwarded. |
 | Drag sort | `POST /erupt-api/data/modify/{erupt}/drag-sort` | Each row of the `{id: position}` body as a cell edit of the field `dragSort.field` names: read, patched, checked and saved whole through `update`, one row at a time. The field must be one of the model's fields. |
 | View writes | `POST /erupt-api/data/modify/board/{erupt}/update_group`, `/calendar/{erupt}/update_date`, `/gantt/{erupt}/update_date`, `/gantt/{erupt}/link` | The `@Vis` the command's `visCode` names, read from the build; the row's group (and swimlane), dates or `ganttView.dependencyField` patched and saved whole as a cell edit is. A dependency is the predecessor's key, or a list of keys (objects carrying `id` are read too); a link that would close a cycle is refused. |
@@ -345,6 +345,16 @@ node applies that view's own `filter` and, when no `sort` is sent, its `orderBy`
 a `@LinkTree`, `linkTreeVal` holds the tree keys the browser picked: the node keeps the rows
 whose `linkTree.field` is one of them (`IN`), and answers an empty page when `linkTree.dependNode` is set and
 nothing is picked.
+
+Under a signed `Erupt-Enforced: query` the server has checked every condition the browser sent against the
+build, and may add its own (a dependent picker's): the node then takes a condition on any stored field, still
+checking its operator and value.
+
+A drill (`@Erupt(drills)`) opens the linked erupt's table with the headers `Drill` (the drill's code),
+`DrillValue` (the key of the source row) and `DrillSourceErupt` (the source erupt). The node reads the source
+row, takes its `link.column` (`id` by default) and keeps the rows whose `link.joinColumn` holds it, plus
+`link.linkCondition` as written; `column` and `joinColumn` are `@Transient`, so they stay on the node. A drill
+the source erupt does not declare, or whose `linkErupt` is not the table read, is refused.
 
 ```json
 { "pageIndex": 1, "pageSize": 10, "total": 42, "totalPage": 5,

@@ -284,7 +284,8 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                     return false;
                 }
                 if (eruptRouter.resolve() == EruptRouter.Resolve.REFERENCE_TABLE) {
-                    String page = nodeReferenceService.picker(nodeName, remoteBuild(erupt), lastPathSegment(request), body);
+                    String page = nodeReferenceService.picker(nodeName, remoteBuild(erupt), lastPathSegment(request),
+                            request.getParameter(DEPEND_VALUE), body);
                     if (null != page) {
                         operationService.record(handler, null);
                         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
