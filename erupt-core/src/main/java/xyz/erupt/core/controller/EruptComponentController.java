@@ -53,7 +53,7 @@ public class EruptComponentController {
      */
     @SuppressWarnings("unchecked")
     @PostMapping("/auto-complete/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.AUTO_COMPLETE)
     public List<Object> autoCompleteValue(@PathVariable("erupt") String eruptName,
                                           @PathVariable("field") String field,
                                           @RequestParam("val") String val,
@@ -179,7 +179,7 @@ public class EruptComponentController {
      */
     @SuppressWarnings("unchecked")
     @PostMapping("/button/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.BUTTON)
     public R<EruptButtonVo> buttonClick(@PathVariable("erupt") String eruptName,
                                         @PathVariable("field") String field,
                                         @RequestBody JsonObject data) {

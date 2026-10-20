@@ -58,7 +58,8 @@ Content-Type: application/json
   "nodeAddress": ["http://10.0.0.12:8080"],
   "eruptModules": [],
   "erupts": ["Article", "Category"],
-  "resources": {}
+  "resources": {},
+  "capabilities": ["invoke"]
 }
 ```
 
@@ -69,6 +70,7 @@ Content-Type: application/json
 | `nodeAddress` | Base URLs the server should call. Must be reachable from the server. |
 | `erupts` | Node-local erupt names. Unique within the node, no `.` allowed. |
 | `eruptModules` / `resources` | Informational, shown on the server's node page. May be empty. |
+| `capabilities` | Optional parts of the protocol the node serves: `invoke` (§5.5). Absent means none. |
 
 Rules:
 
@@ -174,17 +176,10 @@ A node that implements only these gets a working table, search, detail view and 
 
 | Feature declared in build JSON | Endpoints |
 |--------------------------------|-----------|
-| `tree` | `GET /erupt-api/data/tree/{erupt}` |
-| `linkTree` | `GET /erupt-api/data/depend-tree/{erupt}` |
-| `rowOperation` | `POST /erupt-api/data/{erupt}/operator/{code}`, `POST .../operator/{code}/form-value` |
-| `REFERENCE_TABLE` | `POST /erupt-api/data/{erupt}/reference-table/{field}` (§7.3) |
-| `CHECKBOX` | `GET /erupt-api/data/{erupt}/checkbox/{field}` |
-| `TAB_TREE` | `GET /erupt-api/data/tab/tree/{erupt}/{field}` |
+| `rowOperation` | `invoke` kinds `operation` / `operation-form` (§5.5); a node without the `invoke` capability serves `POST /erupt-api/data/{erupt}/operator/{code}` and `POST .../operator/{code}/form-value` |
+| `REFERENCE_TABLE` | none for a node with the `invoke` capability, the server reads the picker (§5.4); otherwise `POST /erupt-api/data/{erupt}/reference-table/{field}` (§7.3) |
 | `TAB_TABLE_ADD` / tab editing | `POST /erupt-api/data/modify/tab-add|tab-update|tab-delete/{erupt}/{field}` |
-| `CHOICE` / `MULTI_CHOICE` / `TAGS` options fetched by a handler | `GET /erupt-api/comp/choice-item/{erupt}/{field}`, `POST /erupt-api/comp/choice-item-filter/{erupt}/{field}`, `POST /erupt-api/comp/tags-item/{erupt}/{field}`; only for a field whose build names a `fetchHandler`, the server answers the others (§5.4) |
-| `AUTO_COMPLETE` | `POST /erupt-api/comp/auto-complete/{erupt}/{field}` |
-| `onchange` | `POST /erupt-api/data/onchange/{erupt}/{field}` |
-| `BUTTON` | `POST /erupt-api/comp/button/{erupt}/{field}` |
+| Options fetched by the node (`fetchHandler` named), `AUTO_COMPLETE`, `onchange`, `BUTTON` | `POST /erupt-api/invoke/{erupt}/{kind}/{field}` (§5.5), for a node registered with the `invoke` capability. A node without it (a Java node) is sent the Java endpoints instead: `comp/choice-item`, `comp/choice-item-filter`, `comp/tags-item`, `comp/auto-complete`, `data/onchange`, `comp/button` |
 | view `statistic` | `POST /erupt-api/data/aggregate/{erupt}` |
 | extra rows | `POST /erupt-api/data/extra-row/{erupt}` |
 | form-view layout | `GET`/`POST /erupt-api/data/form-view/{erupt}` |
@@ -215,14 +210,41 @@ Endpoints the server answers for a node itself, from the node's build (fetched w
 | Static options | `choice-item`, `choice-item-filter`, `tags-item` of a field whose `choiceType` / `multiChoiceType` / `tagsType` names no `fetchHandler` | The build's `componentValue`. A field naming a handler is forwarded; a 404 then falls back to the same `componentValue`. |
 | Cell editing | `POST /erupt-api/data/modify/{erupt}/update-cell` | When the build's power allows `cellEdit` and the field's `edit` has a title, `cellEdit` and is not read-only: the row read through `GET /data/{erupt}/{id}` (signed `power`), patched, checked as a record, and saved whole through `POST /data/modify/{erupt}/update` (signed `power,record`). A node therefore leaves `cellEdit` as declared instead of turning it off. |
 | Reference trees | `GET /erupt-api/data/{erupt}/reference-tree/{field}` | Built from the referenced erupt's records, paged through `POST /data/table/{erupt}` (signed `power`) and nested by `referenceTreeType` `id` / `label` / `pid`; with a `dependField`, only the records whose `dependColumn` holds the `dependValue` (a reference sent as its key counts as its `id`). A field with a `filter` or an `orderBy` is forwarded instead: those are the node's query language. |
+| Trees | `GET /erupt-api/data/tree/{erupt}`, `GET /erupt-api/data/depend-tree/{erupt}` | A `@Tree` erupt's records, paged through its `POST /data/table/{erupt}` (signed `power`), nested by `tree` `id` / `label` / `pid`, roots being the records with an empty parent. The tree beside a `@LinkTree` table is the records its `field` points at, nested by that field's `referenceTreeType`; a field the build does not carry is forwarded. Filtering the table by the picked nodes is the node's: `linkTreeVal` (§7.2). |
+| Tab trees, checkboxes | `GET /erupt-api/data/tab/tree/{erupt}/{field}`, `GET /erupt-api/data/{erupt}/checkbox/{field}` | A `TAB_TREE` is the records its field points at, nested by that erupt's own `tree` (a field with a `filter` is forwarded). `CHECKBOX` is forwarded first, and on a 404 answered as `[{id, label, remark}]`: the target's primary key and the field's first `@View(column)`, `name` without one, since `checkboxType` is `@Transient`. A node stores either as the list of picked keys; the browser submits `[{id: key}]` (`CHECKBOX`) or `[{<pk>: key}]` (`TAB_TREE`). |
+| Reference pickers | `POST /erupt-api/data/{erupt}/reference-table/{field}` | For a node with the `invoke` capability: the field's `fieldReturnName` read from the build, the query checked against that erupt's build and sent to its `POST /data/table/{erupt}` (signed `power,query`), references in the page resolved as a table's. A field the build does not carry is forwarded. |
 | Field sub-models | `GET /erupt-api/build/{erupt}/{field}` | The field's `fieldReturnName` read from the build, then that erupt's own `GET /build/{erupt}` (signed `power`), returned as the node answers it. A field the build does not carry is forwarded. |
 | Drag sort | `POST /erupt-api/data/modify/{erupt}/drag-sort` | Each row of the `{id: position}` body as a cell edit of the field `dragSort.field` names: read, patched, checked and saved whole through `update`, one row at a time. The field must be one of the model's fields. |
 | View writes | `POST /erupt-api/data/modify/board/{erupt}/update_group`, `/calendar/{erupt}/update_date`, `/gantt/{erupt}/update_date`, `/gantt/{erupt}/link` | The `@Vis` the command's `visCode` names, read from the build; the row's group (and swimlane), dates or `ganttView.dependencyField` patched and saved whole as a cell edit is. A dependency is the predecessor's key, or a list of keys (objects carrying `id` are read too); a link that would close a cycle is refused. |
 | Gantt links | `POST /erupt-api/data/modify/gantt/{erupt}/links` | Each requested row read through `GET /data/{erupt}/{id}` and its `dependencyField` answered as predecessor keys. |
 
-A node answers **404** for anything it does not implement. **[v1 proposal]** It also lists what it
-implements in a `capabilities` field at registration, so the server can hide the matching UI instead
-of letting it fail.
+A node answers **404** for anything it does not implement. The optional parts it does serve are listed in
+`capabilities` at registration (§3.3). **[v1 proposal]** The server also hides the UI of what a node lists
+it cannot serve, instead of letting it fail.
+
+### 5.5 Invoke — a field's own code
+
+A node registered with `"capabilities": ["invoke"]` (§3.3) serves one endpoint for every field that runs its
+code, and the server turns the browser's calls into it:
+
+```
+POST /erupt-api/invoke/{erupt}/{kind}/{field}
+{ "form": { ...the form's values... }, "value": "Pa" }
+```
+
+`value` only for `autocomplete`; `form` is `{}` when the browser sent none. For `operation` and `operation-form`
+the last segment is the operation code and the body is the browser's own (`{ids, param}`). The answer is an `R` (§7.5):
+
+| `kind` | Browser call | Declared in the build | `R.data` |
+|--------|--------------|-----------------------|----------|
+| `options` | `choice-item`, `choice-item-filter`, `tags-item` | the `fetchHandler` of `choiceType` / `multiChoiceType` / `tagsType` names anything | `[{"value", "label"}]`, or `["tag"]` for `TAGS` |
+| `onchange` | `data/onchange` | `edit.onchange` is anything but `OnChange` | `{"formData": {}, "editExpr": {}}` |
+| `autocomplete` | `comp/auto-complete?val=` (the server checks `triggerLength`) | `type: AUTO_COMPLETE` | `["suggestion"]` |
+| `button` | `comp/button` | `type: BUTTON` | `{"eval": "js", "formData": {}, "editExpr": {}}` |
+| `operation` | `data/{erupt}/operator/{code}` | `rowOperation` | as the operator endpoint answers (§7.4) |
+| `operation-form` | `data/{erupt}/operator/{code}/form-value` | `rowOperation` with a form | the form's opening values; `null` without a form |
+
+A refused call is `success: false` with its message; the server shows it. An unknown field or `kind` is 404.
 
 ## 6. Calls a node makes back to the server
 
@@ -319,7 +341,10 @@ their meaning itself (e.g. the default sort).
 two-element array. The node must check `key` against its declared searchable fields and must never put
 `key` or `sort.field` into a query unescaped. `vis` is the `code` of the `@Vis` view the table is read for
 (a view without one is addressed by its title's hash in Java, by its title in the SDKs, as its build says): the
-node applies that view's own `filter` and, when no `sort` is sent, its `orderBy`, both kept out of the build.
+node applies that view's own `filter` and, when no `sort` is sent, its `orderBy`, both kept out of the build. With
+a `@LinkTree`, `linkTreeVal` holds the tree keys the browser picked: the node keeps the rows
+whose `linkTree.field` is one of them (`IN`), and answers an empty page when `linkTree.dependNode` is set and
+nothing is picked.
 
 ```json
 { "pageIndex": 1, "pageSize": 10, "total": 42, "totalPage": 5,

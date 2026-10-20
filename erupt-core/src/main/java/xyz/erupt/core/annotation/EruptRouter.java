@@ -70,6 +70,26 @@ public @interface EruptRouter {
         @Comment("The build of the erupt a field points at: the server resolves the field from the node's build and asks the " +
                 "node for that erupt's own build")
         FIELD_BUILD,
+        @Comment("The tree of a @Tree erupt: built by the server from the node's table")
+        TREE,
+        @Comment("The tree beside a @LinkTree table: built by the server from the records its field points at")
+        LINK_TREE,
+        @Comment("The tree of a TAB_TREE field: built by the server from the records it points at")
+        TAB_TREE,
+        @Comment("The options of a CHECKBOX field: built by the server from the records it points at when the node answers 404")
+        CHECKBOX,
+        @Comment("A field's onchange: the node's invoke for a node that serves it")
+        ONCHANGE,
+        @Comment("An AUTO_COMPLETE field's suggestions: the node's invoke for a node that serves it")
+        AUTO_COMPLETE,
+        @Comment("A BUTTON field's click: the node's invoke for a node that serves it")
+        BUTTON,
+        @Comment("A REFERENCE_TABLE picker: the referenced erupt's table, read by the server for a node that serves invoke")
+        REFERENCE_TABLE,
+        @Comment("A row operation run: the node's invoke for a node that serves it")
+        OPERATION,
+        @Comment("The form values a row operation opens with: the node's invoke for a node that serves it")
+        OPERATION_FORM,
         @Comment("The import template: written by the server from the build model when the node answers 404")
         EXCEL_TEMPLATE,
         @Comment("An export: the server pages through the node's table and encodes the file when the node answers 404")

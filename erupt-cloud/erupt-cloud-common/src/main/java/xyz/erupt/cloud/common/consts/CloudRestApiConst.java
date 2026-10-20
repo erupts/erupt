@@ -22,4 +22,7 @@ public class CloudRestApiConst {
 
     public static final String NODE_GROUP_CONFIG = ERUPT_CLOUD_API + "/node-group-config";
 
+    // served by a node with NodeCapability.INVOKE: /erupt-api/invoke/{erupt}/{kind}/{field}
+    public static final String NODE_INVOKE = "/erupt-api/invoke";
+
 }

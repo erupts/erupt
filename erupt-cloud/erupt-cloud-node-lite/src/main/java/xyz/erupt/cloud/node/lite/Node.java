@@ -10,6 +10,7 @@ import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.query.Direction;
 import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
@@ -361,7 +362,13 @@ public final class Node implements AutoCloseable, Model.Registry {
         List<String> filters = new ArrayList<>();
         if (vis != null) for (Filter f : vis.filter()) filters.add(f.value());
         model.proxies(p -> Optional.ofNullable(p.beforeFetch(conditions)).filter(s -> !s.isBlank()).ifPresent(filters::add));
-        Repository.Page<T> page = e.repo.page(new Query(conditions, sort, (pageIndex - 1) * pageSize, pageSize, filters));
+        // a @LinkTree table shows the rows under the picked tree keys; with dependNode, none until one is picked
+        LinkTree linkTree = model.erupt.linkTree();
+        Object picked = body.get(LambdaSee.field(TableQuery::linkTreeVal));
+        FieldDef tree = model.fields.get(linkTree.field());
+        if (tree != null && picked != null) conditions.add(new Condition(tree.name, list(picked).stream().map(tree::toCondition).toList(), QueryExpression.IN));
+        Repository.Page<T> page = tree != null && linkTree.dependNode() && picked == null ? new Repository.Page<>(0, List.of())
+                : e.repo.page(new Query(conditions, sort, (pageIndex - 1) * pageSize, pageSize, filters));
         List<Map<String, Object>> rows = new ArrayList<>(page.records().stream().map(model::toRow).toList());
         model.proxies(p -> p.afterFetch(rows));
         return new PageView(pageIndex, pageSize, page.total(), (page.total() + pageSize - 1) / pageSize, rows, null, null, null);
@@ -730,7 +737,7 @@ public final class Node implements AutoCloseable, Model.Registry {
     // wire shapes of erupt-core's classes, which this node cannot depend on; Json writes a record as an object
 
     /** erupt-core's TableQuery, of which the paging is read with PageView's keys. */
-    private record TableQuery(List<?> condition, List<?> sort, String vis) {
+    private record TableQuery(List<?> condition, List<?> sort, String vis, List<?> linkTreeVal) {
     }
 
     /** erupt-core's Page. */

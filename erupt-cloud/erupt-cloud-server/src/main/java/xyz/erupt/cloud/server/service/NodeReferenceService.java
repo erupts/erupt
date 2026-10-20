@@ -10,6 +10,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -18,14 +20,19 @@ import xyz.erupt.cloud.common.http.CloudSignature;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.util.DataHandlerUtil;
+import xyz.erupt.core.util.RemoteRequestValidator;
+import xyz.erupt.core.view.CheckboxModel;
 import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptFieldModel;
+import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
+import xyz.erupt.core.view.R;
 import xyz.erupt.core.view.TableQuery;
 import xyz.erupt.core.view.TreeModel;
 import xyz.erupt.linq.lambda.LambdaSee;
@@ -48,6 +55,8 @@ import java.util.*;
 public class NodeReferenceService {
 
     private static final Set<CloudSignature.Enforced> VOUCHED = EnumSet.of(CloudSignature.Enforced.POWER);
+
+    private static final Set<CloudSignature.Enforced> QUERIED = EnumSet.of(CloudSignature.Enforced.POWER, CloudSignature.Enforced.QUERY);
 
     private static final Set<EditType> REFERENCES = EnumSet.of(EditType.REFERENCE_TABLE, EditType.REFERENCE_TREE);
 
@@ -108,13 +117,88 @@ public class NodeReferenceService {
                     + (null == depend ? treeType.dependField() : AnnotationProcess.jsonToAnnotation(EruptField.class, depend.getEruptFieldJson()).edit().title()));
         }
         String root = ExprInvoke.getExpr(treeType.rootPid());
-        List<TreeModel> nodes = new ArrayList<>();
-        for (JsonObject record : targets(nodeName, field(build, fieldName).getFieldReturnName())) {
-            if (StringUtils.isNotBlank(treeType.dependField()) && !dependValue.equals(key(record, treeType.dependColumn()))) continue;
-            nodes.add(new TreeModel(text(record.get(treeType.id())), text(record.get(treeType.label())),
-                    treeType.pid().isEmpty() ? null : text(record.get(treeType.pid())), root));
+        List<JsonObject> records = targets(nodeName, field(build, fieldName).getFieldReturnName());
+        if (StringUtils.isNotBlank(treeType.dependField())) records.removeIf(it -> !dependValue.equals(key(it, treeType.dependColumn())));
+        return nest(records, treeType.id(), treeType.label(), treeType.pid(), root);
+    }
+
+    /**
+     * The tree of a @Tree erupt: all its records nested by the tree's id / label / pid. The tree's rootPid is
+     * {@code @Transient}, so roots are the records whose parent is empty.
+     */
+    public Collection<TreeModel> tree(String nodeName, EruptModel model) {
+        Tree tree = model.getErupt().tree();
+        return nest(targets(nodeName, model.getEruptName().substring(model.getEruptName().lastIndexOf(EruptConst.DOT) + 1)),
+                tree.id(), tree.label(), tree.pid(), null);
+    }
+
+    /**
+     * The tree beside a @LinkTree table: the records its field points at, nested by the field's referenceTreeType,
+     * or null when the build does not carry the field (a Java node's plain LinkTree.field), left to the node.
+     */
+    public Collection<TreeModel> linkTree(String nodeName, EruptBuildModel build, String fieldName) {
+        EruptFieldModel model = field(build, fieldName);
+        if (null == model) return null;
+        ReferenceTreeType treeType = AnnotationProcess.jsonToAnnotation(EruptField.class, model.getEruptFieldJson()).edit().referenceTreeType();
+        return nest(targets(nodeName, model.getFieldReturnName()), treeType.id(), treeType.label(), treeType.pid(),
+                ExprInvoke.getExpr(treeType.rootPid()));
+    }
+
+    /**
+     * A REFERENCE_TABLE picker: a page of the erupt the field points at, read through that erupt's own table
+     * (signed {@code power,query}, the query checked against its build), its references resolved as a table's are.
+     * Null when the build does not carry the field, left to the node.
+     */
+    public String picker(String nodeName, EruptBuildModel build, String fieldName, byte[] body) {
+        EruptFieldModel model = field(build, fieldName);
+        if (null == model) return null;
+        String target = nodeName + EruptConst.DOT + model.getFieldReturnName();
+        EruptBuildModel targetBuild = cloudNodeRouter.resolveBuild(target);
+        JsonElement query = null == body || body.length == 0 ? new JsonObject() : JsonParser.parseString(new String(body, StandardCharsets.UTF_8));
+        if (!query.isJsonObject()) throw new EruptApiErrorTip(R.error(I18nTranslate.$translate("erupt.incorrect_format")));
+        String problem = RemoteRequestValidator.validateQuery(targetBuild, query.getAsJsonObject());
+        if (null != problem) throw new EruptApiErrorTip(R.error(problem));
+        return resolve(nodeName, targetBuild, true, cloudNodeRouter.proxy(target, HttpMethod.POST,
+                EruptRestPath.ERUPT_DATA + "/table" + EruptRestPath.ERUPT_NAME_HOLDER, query, QUERIED));
+    }
+
+    /**
+     * The tree of a TAB_TREE field: the records it points at, nested by that erupt's own @Tree; null when the field
+     * has a filter, the node's query language, or the build does not carry it, both left to the node.
+     */
+    public Collection<TreeModel> tabTree(String nodeName, EruptBuildModel build, String fieldName) {
+        EruptFieldModel model = field(build, fieldName);
+        if (null == model || AnnotationProcess.jsonToAnnotation(EruptField.class, model.getEruptFieldJson()).edit().filter().length > 0) return null;
+        String target = nodeName + EruptConst.DOT + model.getFieldReturnName();
+        Tree tree = EruptModel.remote(target, nodeName, cloudNodeRouter.resolveBuild(target)).getErupt().tree();
+        return nest(targets(nodeName, model.getFieldReturnName()), tree.id(), tree.label(), tree.pid(), null);
+    }
+
+    /**
+     * The options of a CHECKBOX field: each record it points at as {id, label}. The field's checkboxType is
+     * {@code @Transient}, so the key is the target's primary key and the label the field's first view column,
+     * {@code name} without one.
+     */
+    public List<CheckboxModel<Object, Object, Object>> checkbox(String nodeName, EruptBuildModel build, String fieldName) {
+        EruptFieldModel model = field(build, fieldName);
+        if (null == model) throw new EruptWebApiRuntimeException("not found field " + fieldName);
+        String target = nodeName + EruptConst.DOT + model.getFieldReturnName();
+        String id = EruptModel.remote(target, nodeName, cloudNodeRouter.resolveBuild(target)).getErupt().primaryKeyCol();
+        String label = Arrays.stream(AnnotationProcess.jsonToAnnotation(EruptField.class, model.getEruptFieldJson()).views())
+                .map(View::column).filter(it -> !it.isEmpty()).findFirst().orElse(AnnotationConst.LABEL);
+        List<CheckboxModel<Object, Object, Object>> options = new ArrayList<>();
+        for (JsonObject record : targets(nodeName, model.getFieldReturnName())) {
+            options.add(new CheckboxModel<>(text(record.get(id)), text(column(record, label)), null));
         }
-        return treeType.pid().isEmpty() ? nodes : DataHandlerUtil.quoteTree(nodes);
+        return options;
+    }
+
+    private static Collection<TreeModel> nest(List<JsonObject> records, String id, String label, String pid, String root) {
+        List<TreeModel> nodes = new ArrayList<>();
+        for (JsonObject record : records) {
+            nodes.add(new TreeModel(text(record.get(id)), text(record.get(label)), pid.isEmpty() ? null : key(record, pid), root));
+        }
+        return pid.isEmpty() ? nodes : DataHandlerUtil.quoteTree(nodes);
     }
 
     /**

@@ -14,6 +14,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * One field per edit type a non-Java node SDK supports. {@link NodeDefaultsTest} serializes its build
@@ -59,5 +60,26 @@ public class NodeDefaultsFixture {
 
     @EruptField(views = @View(title = "-", column = "name"), edit = @Edit(title = "-", type = EditType.REFERENCE_TREE, search = @Search))
     private NodeDefaultsRef REFERENCE_TREE;
+    @EruptField(views = @View(title = "-"), edit = @Edit(title = "-", type = EditType.MULTI_CHOICE, search = @Search,
+            choiceType = @ChoiceType(vl = @VL(value = "-", label = "-"))))
+    private String MULTI_CHOICE;
+    @EruptField(views = @View(title = "-"), edit = @Edit(title = "-", type = EditType.TAGS, search = @Search))
+    private String TAGS;
+    @EruptField(views = @View(title = "-"), edit = @Edit(title = "-", type = EditType.AUTO_COMPLETE, search = @Search))
+    private String AUTO_COMPLETE;
+    @EruptField(views = @View(title = "-"), edit = @Edit(title = "-", type = EditType.ATTACHMENT))
+    private String ATTACHMENT;
+    @EruptField(views = @View(title = "-"), edit = @Edit(title = "-", type = EditType.HTML_EDITOR))
+    private String HTML_EDITOR;
+    @EruptField(views = @View(title = "-"), edit = @Edit(title = "-", type = EditType.MARKDOWN))
+    private String MARKDOWN;
+    @EruptField(views = @View(title = "-"), edit = @Edit(title = "-", type = EditType.CODE_EDITOR))
+    private String CODE_EDITOR;
+    @EruptField(edit = @Edit(title = "-", type = EditType.BUTTON))
+    private String BUTTON;
+    @EruptField(views = @View(title = "-", column = "name"), edit = @Edit(title = "-", type = EditType.CHECKBOX))
+    private Set<NodeDefaultsRef> CHECKBOX;
+    @EruptField(views = @View(title = "-", column = "name"), edit = @Edit(title = "-", type = EditType.TAB_TREE))
+    private Set<NodeDefaultsRef> TAB_TREE;
 
 }

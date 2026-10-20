@@ -116,7 +116,7 @@ public class EruptDataController {
      * @return nested tree nodes
      */
     @GetMapping("/tree/{erupt}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.QUERY)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.QUERY, resolve = EruptRouter.Resolve.TREE)
     public Collection<TreeModel> getEruptTreeData(@PathVariable("erupt") String eruptName) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isQuery);
@@ -182,7 +182,7 @@ public class EruptDataController {
      * @return form object, or null when no handler is configured
      */
     @PostMapping("/{erupt}" + OPERATOR_PATH_STR + "/{code}/form-value")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.OPERATION_FORM)
     @SneakyThrows
     public Object eruptOperatorFormValue(@PathVariable("erupt") String eruptName, @PathVariable("code") String code, @RequestParam(value = "ids", required = false) List<Object> ids) {
         if (null == ids) ids = new ArrayList<>();
@@ -213,7 +213,7 @@ public class EruptDataController {
      * @return result; data holds the handler script when there is one
      */
     @PostMapping("/{erupt}" + OPERATOR_PATH_STR + "/{code}")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.OPERATION)
     @EruptRecordOperate(value = "", dynamicConfig = EruptRowOperationNaming.class)
     public R<?> eruptOperatorExec(@PathVariable("erupt") String eruptName, @PathVariable("code") String code, @RequestBody JsonObject body) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
@@ -261,7 +261,7 @@ public class EruptDataController {
      * @return nested tree nodes
      */
     @GetMapping("/tab/tree/{erupt}/{tabFieldName}")
-    @EruptRouter(authIndex = 3, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 3, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.TAB_TREE)
     public Collection<TreeModel> findTabTree(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
 //        Erupts.powerLegal(eruptModel, powerObject -> powerObject.isViewDetails() || powerObject.isEdit());
@@ -282,7 +282,7 @@ public class EruptDataController {
      * @return id, label and remark of every option
      */
     @GetMapping("/{erupt}/checkbox/{fieldName}")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.CHECKBOX)
     public Collection<CheckboxModel<Object, Object, Object>> findCheckbox(@PathVariable("erupt") String eruptName, @PathVariable("fieldName") String fieldName) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
@@ -328,7 +328,7 @@ public class EruptDataController {
      * @return one page of referenced rows
      */
     @PostMapping("/{erupt}/reference-table/{fieldName}")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.REFERENCE_TABLE)
     public Page getReferenceTable(@PathVariable("erupt") String eruptName,
                                   @PathVariable("fieldName") String fieldName,
                                   @RequestParam(value = "dependValue", required = false) Serializable dependValue,
@@ -370,7 +370,7 @@ public class EruptDataController {
      */
     @SneakyThrows
     @GetMapping("/depend-tree/{erupt}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.LINK_TREE)
     public Collection<TreeModel> getDependTree(@PathVariable("erupt") String erupt) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         String field = eruptModel.getErupt().linkTree().field();
@@ -442,7 +442,7 @@ public class EruptDataController {
      * @return values to populate and edit expressions to apply
      */
     @PostMapping("/onchange/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.ONCHANGE)
     public R<OnChangeVo> onchange(@PathVariable("erupt") String eruptName, @PathVariable("field") String field, @RequestBody JsonObject data) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Edit edit = eruptModel.getEruptFieldMap().get(field).getEruptField().edit();

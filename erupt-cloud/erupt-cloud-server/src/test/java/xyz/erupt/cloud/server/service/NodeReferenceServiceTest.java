@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import xyz.erupt.cloud.common.http.CloudSignature;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.view.CheckboxModel;
 import xyz.erupt.core.view.EruptBuildModel;
+import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.TreeModel;
 
 import java.lang.reflect.Field;
@@ -42,6 +44,12 @@ class NodeReferenceServiceTest {
             + "{\"edit\":{\"title\":\"Filtered\",\"type\":\"REFERENCE_TREE\",\"filter\":[{\"value\":\"id > 1\"}],"
             + "\"referenceTreeType\":{\"id\":\"id\",\"label\":\"name\"}}}}";
 
+    private static final String TAGS = "{\"fieldName\":\"tags\",\"fieldReturnName\":\"Category\",\"eruptFieldJson\":"
+            + "{\"views\":[{\"title\":\"Tags\",\"column\":\"code\"}],\"edit\":{\"title\":\"Tags\",\"type\":\"CHECKBOX\"}}}";
+
+    private static final String SECTIONS = "{\"fieldName\":\"sections\",\"fieldReturnName\":\"Category\",\"eruptFieldJson\":"
+            + "{\"edit\":{\"title\":\"Sections\",\"type\":\"TAB_TREE\"}}}";
+
     private final List<String> calls = new ArrayList<>();
 
     private final Map<String, JsonObject> categories = new LinkedHashMap<>();
@@ -62,9 +70,16 @@ class NodeReferenceServiceTest {
         category(3, "Football", 2);
         CloudNodeRouter router = new CloudNodeRouter() {
             @Override
+            public EruptBuildModel resolveBuild(String eruptName) {
+                assertEquals("blog.Category", eruptName);
+                return GsonFactory.getGson().fromJson("{\"eruptModel\":{\"eruptName\":\"Category\",\"eruptJson\":{\"primaryKeyCol\":\"id\","
+                        + "\"tree\":{\"id\":\"id\",\"label\":\"name\",\"pid\":\"parent\"}},\"eruptFieldModels\":[]}}", EruptBuildModel.class);
+            }
+
+            @Override
             public String proxy(String eruptName, HttpMethod method, String pathTemplate, Object body, Set<CloudSignature.Enforced> enforced) {
                 assertEquals("blog.Category", eruptName);
-                assertEquals(EnumSet.of(CloudSignature.Enforced.POWER), enforced);
+                assertTrue(enforced.contains(CloudSignature.Enforced.POWER));
                 calls.add(pathTemplate);
                 if (method == HttpMethod.GET) {
                     String id = pathTemplate.substring(pathTemplate.lastIndexOf('/') + 1);
@@ -83,7 +98,7 @@ class NodeReferenceServiceTest {
         field.setAccessible(true);
         field.set(service, router);
         build = GsonFactory.getGson().fromJson("{\"eruptModel\":{\"eruptName\":\"Article\",\"eruptJson\":{},\"eruptFieldModels\":["
-                + CATEGORY + "," + PARENT + "," + SUB + "," + FILTERED + "]}}", EruptBuildModel.class);
+                + CATEGORY + "," + PARENT + "," + SUB + "," + FILTERED + "," + TAGS + "," + SECTIONS + "]}}", EruptBuildModel.class);
     }
 
     private void category(int id, String name, Integer parent) {
@@ -141,6 +156,41 @@ class NodeReferenceServiceTest {
         assertEquals(1, nodes.size());
         assertEquals("Sport", nodes.get(0).getLabel());
         assertThrows(xyz.erupt.core.exception.EruptWebApiRuntimeException.class, () -> service.tree("blog", build, "sub", null));
+    }
+
+    @Test
+    void aTreeEruptIsNestedByItsTree() {
+        EruptBuildModel category = GsonFactory.getGson().fromJson("{\"eruptModel\":{\"eruptName\":\"Category\",\"eruptJson\":"
+                + "{\"tree\":{\"id\":\"id\",\"label\":\"name\",\"pid\":\"parent\"}},\"eruptFieldModels\":[]}}", EruptBuildModel.class);
+        List<TreeModel> roots = new ArrayList<>(service.tree("blog", EruptModel.remote("blog.Category", "blog", category)));
+        assertEquals(List.of("News"), roots.stream().map(TreeModel::getLabel).toList());
+        assertEquals("Football", roots.get(0).getChildren().iterator().next().getChildren().iterator().next().getLabel());
+    }
+
+    @Test
+    void aLinkTreeIsTheTreeItsFieldPointsAt() {
+        List<TreeModel> roots = new ArrayList<>(service.linkTree("blog", build, "parent"));
+        assertEquals("Sport", roots.get(0).getChildren().iterator().next().getLabel());
+        assertNull(service.linkTree("blog", build, "missing"));
+    }
+
+    @Test
+    void tabTreeAndCheckboxOptionsAreTheTargetRecords() {
+        List<TreeModel> roots = new ArrayList<>(service.tabTree("blog", build, "sections"));
+        assertEquals("Sport", roots.get(0).getChildren().iterator().next().getLabel());
+        assertNull(service.tabTree("blog", build, "missing"));
+        List<CheckboxModel<Object, Object, Object>> options = service.checkbox("blog", build, "tags");
+        assertEquals(List.of("1", "2", "3"), options.stream().map(CheckboxModel::getId).toList());
+        assertEquals("c2", options.get(1).getLabel(), "labelled by the field's view column");
+    }
+
+    @Test
+    void thePickerIsTheTargetTableWithItsReferencesResolved() {
+        JsonObject page = JsonParser.parseString(service.picker("blog", build, "category",
+                "{\"pageIndex\":1,\"pageSize\":10}".getBytes(java.nio.charset.StandardCharsets.UTF_8))).getAsJsonObject();
+        assertEquals(3, page.getAsJsonArray("list").size());
+        assertEquals("/erupt-api/data/table/{erupt}", calls.get(0));
+        assertNull(service.picker("blog", build, "missing", new byte[0]));
     }
 
     @Test

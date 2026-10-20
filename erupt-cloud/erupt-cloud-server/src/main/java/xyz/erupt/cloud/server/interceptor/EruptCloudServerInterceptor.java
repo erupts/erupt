@@ -40,10 +40,12 @@ import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.http.CloudSignature;
+import xyz.erupt.cloud.common.node.NodeCapability;
 import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.service.CloudNodeRouter;
 import xyz.erupt.cloud.server.service.NodeCellService;
 import xyz.erupt.cloud.server.service.NodeVisService;
+import xyz.erupt.cloud.server.service.NodeInvokeService;
 import xyz.erupt.cloud.server.service.NodePowerService;
 import xyz.erupt.cloud.server.service.NodeExcelService;
 import xyz.erupt.cloud.server.service.NodeReferenceService;
@@ -71,6 +73,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.TreeModel;
 import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.security.interceptor.EruptSecurityInterceptor;
 import xyz.erupt.security.service.OperationService;
@@ -135,6 +138,9 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
 
     @Resource
     private NodeVisService nodeVisService;
+
+    @Resource
+    private NodeInvokeService nodeInvokeService;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -247,8 +253,8 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             if (serverAnswers(eruptRouter.resolve(), erupt, request)) {
                 return true;
             }
-            // A reference tree, and the build of the erupt a field points at, are built here from the node's own
-            // table and build, so a node serves neither
+            // Trees, and the build of the erupt a field points at, are built here from the node's own table and
+            // build, so a node serves none of them
             if (answer(eruptRouter.resolve(), request, response, handler, nodeName, erupt)) {
                 return false;
             }
@@ -263,6 +269,30 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 operationService.record(handler, result.isSuccess() ? null : new Exception(result.getMessage()));
                 writeJson(response, result);
                 return false;
+            }
+            // A node that serves invoke runs all its own code through it, and leaves the reference picker to the server
+            if (metaNode.can(NodeCapability.INVOKE)) {
+                if (INVOKED.containsKey(eruptRouter.resolve())) {
+                    Object answer = this.invoke(eruptRouter.resolve(), erupt, request, body);
+                    operationService.record(handler, null);
+                    // an operation without a form: the browser opens an empty one on a 404
+                    if (null == answer) {
+                        response.setStatus(HttpStatus.NOT_FOUND.value());
+                    } else {
+                        writeJson(response, answer);
+                    }
+                    return false;
+                }
+                if (eruptRouter.resolve() == EruptRouter.Resolve.REFERENCE_TABLE) {
+                    String page = nodeReferenceService.picker(nodeName, remoteBuild(erupt), lastPathSegment(request), body);
+                    if (null != page) {
+                        operationService.record(handler, null);
+                        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+                        response.getOutputStream().write(page.getBytes(StandardCharsets.UTF_8));
+                        return false;
+                    }
+                }
             }
             // So are the writes of a board, calendar or gantt view: each moves values of one row
             if (VIEWS.contains(eruptRouter.resolve())) {
@@ -340,7 +370,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
 
     private static final Set<EruptRouter.Resolve> FALLBACKS = EnumSet.of(EruptRouter.Resolve.REFERENCE_TREE,
             EruptRouter.Resolve.EXCEL_TEMPLATE, EruptRouter.Resolve.EXCEL_EXPORT, EruptRouter.Resolve.EXCEL_IMPORT,
-            EruptRouter.Resolve.OPTIONS);
+            EruptRouter.Resolve.OPTIONS, EruptRouter.Resolve.CHECKBOX);
 
     private static final Set<EruptRouter.Resolve> PATCHES = EnumSet.of(EruptRouter.Resolve.CELL, EruptRouter.Resolve.CELLS,
             EruptRouter.Resolve.DRAG_SORT);
@@ -348,6 +378,15 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
     private static final Set<EruptRouter.Resolve> VIEWS = EnumSet.of(EruptRouter.Resolve.VIS_BOARD_GROUP,
             EruptRouter.Resolve.VIS_CALENDAR_DATE, EruptRouter.Resolve.VIS_GANTT_DATE, EruptRouter.Resolve.VIS_GANTT_LINKS,
             EruptRouter.Resolve.VIS_GANTT_LINK);
+
+    private static final Map<EruptRouter.Resolve, NodeInvokeService.Kind> INVOKED = Map.of(
+            EruptRouter.Resolve.OPTIONS, NodeInvokeService.Kind.OPTIONS, EruptRouter.Resolve.ONCHANGE, NodeInvokeService.Kind.ONCHANGE,
+            EruptRouter.Resolve.AUTO_COMPLETE, NodeInvokeService.Kind.AUTOCOMPLETE, EruptRouter.Resolve.BUTTON, NodeInvokeService.Kind.BUTTON,
+            EruptRouter.Resolve.OPERATION, NodeInvokeService.Kind.OPERATION,
+            EruptRouter.Resolve.OPERATION_FORM, NodeInvokeService.Kind.OPERATION_FORM);
+
+    // the text an auto-complete sends, as a query parameter
+    private static final String AUTO_COMPLETE_VALUE = "val";
 
     private static final String DEPEND_VALUE = "dependValue";
 
@@ -387,6 +426,20 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 if (nodeReferenceService.nodeBuildsTree(build, field)) return false;
                 writeJson(response, nodeReferenceService.tree(nodeName, build, field, request.getParameter(DEPEND_VALUE)));
             }
+            case TREE -> writeJson(response, nodeReferenceService.tree(nodeName,
+                    EruptModel.remote(erupt, nodeName, remoteBuild(erupt))));
+            case LINK_TREE -> {
+                EruptBuildModel build = remoteBuild(erupt);
+                Collection<TreeModel> tree = nodeReferenceService.linkTree(nodeName, build,
+                        EruptModel.remote(erupt, nodeName, build).getErupt().linkTree().field());
+                if (null == tree) return false;
+                writeJson(response, tree);
+            }
+            case TAB_TREE -> {
+                Collection<TreeModel> tree = nodeReferenceService.tabTree(nodeName, remoteBuild(erupt), lastPathSegment(request));
+                if (null == tree) return false;
+                writeJson(response, tree);
+            }
             case FIELD_BUILD -> {
                 EruptFieldModel field = remoteField(erupt, lastPathSegment(request));
                 if (null == field) return false;
@@ -402,6 +455,33 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         }
         operationService.record(handler, null);
         return true;
+    }
+
+    // Options, suggestions and an operation's form values answer the bare value the browser reads; onchange, buttons
+    // and operations the node's R as it is
+    private Object invoke(EruptRouter.Resolve resolve, String erupt, HttpServletRequest request, byte[] body) {
+        NodeInvokeService.Kind kind = INVOKED.get(resolve);
+        JsonElement form = null == body || body.length == 0 ? null : JsonParser.parseString(new String(body, StandardCharsets.UTF_8));
+        if (kind == NodeInvokeService.Kind.OPERATION || kind == NodeInvokeService.Kind.OPERATION_FORM) {
+            // .../operator/{code} or .../operator/{code}/form-value
+            String[] segments = request.getRequestURI().split("/");
+            String code = UriUtils.decode(segments[segments.length - (kind == NodeInvokeService.Kind.OPERATION ? 1 : 2)], StandardCharsets.UTF_8);
+            R<JsonElement> answer = nodeInvokeService.invoke(erupt, kind, code, null == form ? new JsonObject() : form);
+            if (kind == NodeInvokeService.Kind.OPERATION) return answer;
+            JsonElement values = nodeInvokeService.data(answer);
+            return null == values || values.isJsonNull() ? null : values;
+        }
+        String field = lastPathSegment(request);
+        String value = null;
+        if (kind == NodeInvokeService.Kind.AUTOCOMPLETE) {
+            value = Optional.ofNullable(request.getParameter(AUTO_COMPLETE_VALUE)).orElse("");
+            EruptFieldModel model = remoteField(erupt, field);
+            int triggerLength = null == model ? 1 : AnnotationProcess.jsonToAnnotation(EruptField.class, model.getEruptFieldJson())
+                    .edit().autoCompleteType().triggerLength();
+            if (value.length() < triggerLength) throw new EruptWebApiRuntimeException("char length must >= " + triggerLength);
+        }
+        R<JsonElement> answer = nodeInvokeService.invoke(erupt, kind, field, form, value);
+        return kind == NodeInvokeService.Kind.OPTIONS || kind == NodeInvokeService.Kind.AUTOCOMPLETE ? nodeInvokeService.data(answer) : answer;
     }
 
     private EruptFieldModel remoteField(String erupt, String field) {
@@ -423,6 +503,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             // a field naming a fetch handler the node does not serve: the options its build resolved
             case OPTIONS -> writeJson(response, Optional.ofNullable(remoteField(erupt, lastPathSegment(request)))
                     .map(EruptFieldModel::getComponentValue).orElse(List.of()));
+            case CHECKBOX -> writeJson(response, nodeReferenceService.checkbox(nodeName, build, lastPathSegment(request)));
             case EXCEL_TEMPLATE -> nodeExcelService.template(erupt, build, request, response);
             case EXCEL_EXPORT -> nodeExcelService.export(erupt, build, forward.body(), request, response);
             case EXCEL_IMPORT -> writeJson(response, nodeExcelService.importData(erupt, build, request));

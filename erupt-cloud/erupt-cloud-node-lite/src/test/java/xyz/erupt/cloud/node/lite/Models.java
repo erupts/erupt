@@ -8,6 +8,7 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.query.Direction;
 import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Sort;
@@ -61,7 +62,7 @@ final class Models {
             @RowOperation(code = "rebuild", title = "Rebuild", mode = RowOperation.Mode.BUTTON, show = @ExprBool(exprHandler = RootOnly.class),
                     operationHandler = Rebuild.class)}, vis = {
             @Vis(code = "q", title = "Question", filter = @Filter("\"title\" = 'a?'")),
-            @Vis(title = "Reversed", orderBy = @Sort(field = "title", direction = Direction.DESC))})
+            @Vis(title = "Reversed", orderBy = @Sort(field = "title", direction = Direction.DESC))}, linkTree = @LinkTree(field = "topic"))
     static class Article {
         @EruptField
         Long id;
