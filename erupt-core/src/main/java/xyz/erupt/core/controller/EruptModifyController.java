@@ -19,6 +19,7 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptModifyService;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.Erupts;
+import xyz.erupt.core.view.EruptBatchCellVo;
 import xyz.erupt.core.view.EruptCellVo;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
@@ -116,6 +117,29 @@ public class EruptModifyController {
         // cell editing is opt-in per model; a crafted request must not bypass that
         Erupts.powerLegal(eruptModel, PowerObject::isCellEdit);
         eruptModifyService.updateEruptCell(eruptModel, cell.getId(), cell.getField(), cell.getValue());
+        return R.ok();
+    }
+
+    /**
+     * Set one field of several rows to the same value.
+     *
+     * @apiNote Batch editing; only allowed when the model opts in with batchEdit. Every row runs the cell edit pipeline, so validation and DataProxy hooks apply per row, and the whole batch rolls back when any row is rejected.
+     * @param erupt Simple class name of the @Erupt model
+     * @param cells Primary keys, field name and the new value
+     * @return ok when every row is updated
+     */
+    @PostMapping("/{erupt}/update-cells")
+    @EruptRecordOperate(value = "UPDATE", dynamicConfig = EruptRecordNaming.class)
+    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true, power = EruptRouter.Power.EDIT,
+            resolve = EruptRouter.Resolve.CELLS)
+    @Transactional
+    @SneakyThrows
+    public R<Void> updateEruptCells(@PathVariable("erupt") String erupt, @RequestBody EruptBatchCellVo cells) {
+        EruptModel eruptModel = EruptCoreService.getErupt(erupt);
+        Erupts.powerLegal(eruptModel, PowerObject::isEdit);
+        // batch editing is opt-in per model; a crafted request must not bypass that
+        Erupts.powerLegal(eruptModel, PowerObject::isBatchEdit);
+        eruptModifyService.updateEruptCells(eruptModel, cells.getIds(), cells.getField(), cells.getValue());
         return R.ok();
     }
 

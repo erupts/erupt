@@ -77,7 +77,9 @@ public @interface EruptRouter {
         @Comment("Choice / tags options: the server answers them from the node's build, forwarding only a field that fetches its own")
         OPTIONS,
         @Comment("A cell edit: the server reads the row through the node, patches the cell and saves the row through the node's update")
-        CELL
+        CELL,
+        @Comment("A batch edit: the cell edit of every selected row, done one row at a time through the node")
+        CELLS
     }
 
     enum Payload {

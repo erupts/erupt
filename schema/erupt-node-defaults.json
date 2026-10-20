@@ -602,6 +602,7 @@
   "power": {
     "add": true,
     "ai": true,
+    "batchEdit": true,
     "cellEdit": true,
     "comment": true,
     "copy": true,

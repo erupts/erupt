@@ -35,6 +35,10 @@ public @interface Power {
             "whose rows should always be changed as a reviewed whole")
     boolean cellEdit() default true;
 
+    @Comment("Whether one field of several selected rows may be set to the same value at once. " +
+            "Every row runs the cell edit pipeline, so a field that opted out of cellEdit is excluded here too")
+    boolean batchEdit() default true;
+
     @Comment("Whether AI tools may inspect and operate on this Erupt model")
     boolean ai() default true;
 

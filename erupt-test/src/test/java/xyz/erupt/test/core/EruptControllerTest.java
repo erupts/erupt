@@ -17,6 +17,7 @@ import xyz.erupt.test.model.edit.ChoiceModel;
 import xyz.erupt.test.model.edit.MultiFormModel;
 import xyz.erupt.test.model.edit.TabTableAddModel;
 import xyz.erupt.test.model.erupt.AuthVerifyModel;
+import xyz.erupt.test.model.erupt.BatchEditOffModel;
 import xyz.erupt.test.model.erupt.CellEditOffModel;
 import xyz.erupt.test.model.erupt.CellEditRowModel;
 import xyz.erupt.test.model.erupt.RowOperationModel;
@@ -26,6 +27,7 @@ import xyz.erupt.upms.prop.EruptUpmsProp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -313,6 +315,69 @@ public class EruptControllerTest extends EruptApplicationTests {
                         """), "a model with cellEdit = false must be rejected");
 
         post("/erupt-api/data/modify/" + erupt + "/delete", "[" + id + "]");
+    }
+
+    /**
+     * Batch editing: one field of every selected row is set to the same value, each row through
+     * the cell edit pipeline, and the whole batch rolls back when any row is rejected.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    void testHttpUpdateCells() {
+        String erupt = AuthVerifyModel.class.getSimpleName();
+        String prefix = "cells-test-" + System.nanoTime();
+        List<Long> ids = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            post("/erupt-api/data/modify/" + erupt,
+                    """
+                            {"key":"%s-%d","value":"v","description":"desc"}
+                            """.formatted(prefix, i));
+            Long id = findIdByName(erupt, prefix + "-" + i, "key");
+            assertNotNull(id, "must find persisted record after add");
+            ids.add(id);
+        }
+        String idList = ids.stream().map(String::valueOf).collect(Collectors.joining("\",\"", "[\"", "\"]"));
+
+        // ① every selected row gets the value, nothing else changes
+        ResponseEntity<Map> resp = post("/erupt-api/data/modify/" + erupt + "/update-cells",
+                """
+                        {"ids":%s,"field":"value","value":"v2"}
+                        """.formatted(idList));
+        assertEquals(HttpStatus.OK, resp.getStatusCode(), "update-cells must return 200");
+        assertTrue((Boolean) getBody(resp).get("success"), "update-cells must succeed");
+        for (int i = 0; i < ids.size(); i++) {
+            Map<String, Object> row = getBody(get("/erupt-api/data/" + erupt + "/" + ids.get(i)));
+            assertEquals("v2", row.get("value"), "patched field must be updated on every row");
+            assertEquals(prefix + "-" + i, row.get("key"), "untouched field must keep its value");
+        }
+
+        // ② one missing row rejects the batch and rolls back the rows before it
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cells",
+                """
+                        {"ids":["%d","99999999","%d"],"field":"value","value":"v3"}
+                        """.formatted(ids.get(0), ids.get(1))), "a batch with a missing row must be rejected");
+        assertEquals("v2", getBody(get("/erupt-api/data/" + erupt + "/" + ids.get(0))).get("value"),
+                "a rejected batch must not keep the rows saved before the failure");
+
+        // ③ the field rules of a cell edit apply to a batch too
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cells",
+                """
+                        {"ids":%s,"field":"locked","value":"x"}
+                        """.formatted(idList)), "a field with cellEdit = false must be rejected");
+
+        // ④ an empty selection is rejected
+        assertCellRejected(post("/erupt-api/data/modify/" + erupt + "/update-cells",
+                """
+                        {"ids":[],"field":"value","value":"x"}
+                        """), "an empty batch must be rejected");
+
+        // ⑤ a model that opted out rejects the request outright, even though it still allows cell editing
+        assertCellRejected(post("/erupt-api/data/modify/" + BatchEditOffModel.class.getSimpleName() + "/update-cells",
+                """
+                        {"ids":["1"],"field":"name","value":"x"}
+                        """), "a model with batchEdit = false must be rejected");
+
+        post("/erupt-api/data/modify/" + erupt + "/delete", idList);
     }
 
     /**

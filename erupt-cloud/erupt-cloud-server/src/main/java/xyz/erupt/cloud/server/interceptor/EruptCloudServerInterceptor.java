@@ -245,8 +245,10 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             }
             byte[] body = isMultipart(request) ? null : StreamUtils.copyToByteArray(request.getInputStream());
             // A cell is the server's for every node: read the row, patch it, save it through the node's update
-            if (eruptRouter.resolve() == EruptRouter.Resolve.CELL) {
-                R<Void> result = nodeCellService.update(erupt, remoteBuild(erupt), body);
+            if (eruptRouter.resolve() == EruptRouter.Resolve.CELL || eruptRouter.resolve() == EruptRouter.Resolve.CELLS) {
+                R<Void> result = eruptRouter.resolve() == EruptRouter.Resolve.CELL
+                        ? nodeCellService.update(erupt, remoteBuild(erupt), body)
+                        : nodeCellService.updateBatch(erupt, remoteBuild(erupt), body);
                 operationService.record(handler, result.isSuccess() ? null : new Exception(result.getMessage()));
                 writeJson(response, result);
                 return false;
