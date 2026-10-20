@@ -6,6 +6,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -15,6 +16,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Power;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -22,7 +24,9 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.revision.handler.RevisionDataProxy;
 import xyz.erupt.revision.handler.RevisionEruptChoice;
+import xyz.erupt.revision.handler.RevisionRestoreHandler;
 import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
 import xyz.erupt.upms.helper.UpmsTenant;
 
@@ -32,13 +36,21 @@ import xyz.erupt.upms.helper.UpmsTenant;
  * {@code changes} holds the field-level diff as a JSON array of {@code {field, title, before, after}};
  * an ADD lists every non-empty field with {@code before} absent, a DELETE every field with
  * {@code after} absent. Values are the record's masked JSON, so a password never lands here.
- * Revisions are written by the pipeline only, never by hand: the admin table is read-only.
+ * Revisions are written by the pipeline only, never by hand; the admin table only deletes.
+ * <p>
+ * The table doubles as the recycle bin: a DELETE revision holds the whole row, and its Restore
+ * button rebuilds the record through the add pipeline. Deleting the revision itself is how a
+ * deleted record leaves the bin for good.
  */
 @EruptI18n
 @Erupt(
         name = "Record Revision",
         orderBy = "createTime desc",
-        power = @Power(add = false, edit = false, delete = false, export = true, revision = false, comment = false)
+        // delete is the table's own: pruning history, or dropping a delete revision to empty the recycle bin
+        power = @Power(add = false, edit = false, delete = true, export = true, revision = false, comment = false),
+        rowOperation = @RowOperation(code = "restore", title = "Restore", icon = "fa fa-undo", mode = RowOperation.Mode.SINGLE,
+                ifExpr = "item.operation === 'DELETE'", operationHandler = RevisionRestoreHandler.class),
+        dataProxy = RevisionDataProxy.class
 )
 @Entity
 @Table(name = "e_record_revision", indexes = @Index(columnList = "erupt, recordId"))
@@ -69,6 +81,11 @@ public class EruptRecordRevision extends HyperModelCreatorOnlyVo {
             edit = @Edit(title = "Record ID", notNull = true, search = @Search)
     )
     private String recordId;
+
+    // a few values of the record as the change left it, filled by RevisionDataProxy
+    @Transient
+    @EruptField(views = @View(title = "Record"))
+    private String summary;
 
     // 1-based, increasing per record
     @EruptField(

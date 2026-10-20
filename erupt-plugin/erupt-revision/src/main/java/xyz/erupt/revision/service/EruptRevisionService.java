@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import jakarta.persistence.GeneratedValue;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +20,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.context.MetaUser;
 import xyz.erupt.core.event.EruptAddEvent;
 import xyz.erupt.core.event.EruptDeleteEvent;
@@ -45,6 +47,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Captures a revision for every record change that goes through the erupt pipeline and serves
@@ -284,6 +287,85 @@ public class EruptRevisionService {
             data.add(change.getField(), null == change.getBefore() ? JsonNull.INSTANCE : change.getBefore());
         }
         eruptModifyService.updateEruptData(eruptModel, data);
+    }
+
+    // ---------- recycle bin ----------
+
+    /**
+     * Rebuilds a deleted record from the {@code before} side of its delete revision, through the
+     * regular add pipeline (validation, DataProxy hooks, a fresh ADD revision). A generated key
+     * cannot be reused, so the record may come back under a new id: its history then follows it,
+     * numbered on from where it stopped.
+     *
+     * @return the restored record's primary key
+     */
+    @Transactional
+    public Object restore(String erupt, String recordId) {
+        EruptModel eruptModel = EruptCoreService.getErupt(erupt);
+        if (null == eruptModel) throw new EruptWebApiRuntimeException(I18nTranslate.$translate("revision.model_not_found"));
+        return this.asErupt(erupt, () -> this.restore(eruptModel, recordId));
+    }
+
+    // The power handlers and the model's own proxies read the current erupt from the context, which
+    // is the page the call came from (the recycle bin); a restore is a change of the target model
+    private <T> T asErupt(String erupt, Supplier<T> call) {
+        MetaErupt before = MetaContext.getErupt();
+        MetaContext.register(new MetaErupt(erupt));
+        try {
+            return call.get();
+        } finally {
+            MetaContext.register(before);
+        }
+    }
+
+    private Object restore(EruptModel eruptModel, String recordId) {
+        String erupt = eruptModel.getEruptName();
+        Erupts.powerLegal(eruptModel, PowerObject::isAdd);
+        EruptRecordRevision latest = this.latest(erupt, recordId);
+        if (null == latest || latest.getOperation() != RevisionOperation.DELETE) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("revision.not_deleted"));
+        }
+        if (null != DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, recordId))) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("revision.record_exists"));
+        }
+        JsonObject data = new JsonObject();
+        for (FieldChange change : RevisionVo.parse(latest.getChanges())) {
+            EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(change.getField());
+            if (null == fieldModel || null == change.getBefore()) continue;
+            // a masked password was never stored, so it comes back empty
+            if (fieldModel.getEruptField().edit().type() == EditType.PASSWORD) continue;
+            if (change.getBefore().isJsonPrimitive() && EruptConst.PASSWORD_PLACEHOLDER.equals(change.getBefore().getAsString())) continue;
+            data.add(change.getField(), change.getBefore());
+        }
+        String pkCol = eruptModel.getErupt().primaryKeyCol();
+        if (ReflectUtil.findClassField(eruptModel.getClazz(), pkCol).isAnnotationPresent(GeneratedValue.class)) {
+            data.remove(pkCol);
+        } else {
+            data.addProperty(pkCol, recordId);
+        }
+        Object pk = eruptModifyService.insertEruptData(eruptModel, data);
+        String newId = String.valueOf(pk);
+        if (!recordId.equals(newId)) {
+            // the ADD revision the insert just wrote carries version 1 under the new id: move the old
+            // history under that id and number the ADD on from its end
+            EruptRecordRevision added = eruptDao.lambdaQuery(EruptRecordRevision.class)
+                    .eq(EruptRecordRevision::getErupt, erupt).eq(EruptRecordRevision::getRecordId, newId)
+                    .orderByDesc(EruptRecordRevision::getVersion).list().stream().findFirst().orElse(null);
+            for (EruptRecordRevision old : this.revisions(erupt, recordId)) old.setRecordId(newId);
+            if (null != added) added.setVersion(latest.getVersion() + 1);
+            eruptDao.flush();
+        }
+        return pk;
+    }
+
+    private List<EruptRecordRevision> revisions(String erupt, String recordId) {
+        return eruptDao.lambdaQuery(EruptRecordRevision.class)
+                .eq(EruptRecordRevision::getErupt, erupt).eq(EruptRecordRevision::getRecordId, recordId)
+                .orderByDesc(EruptRecordRevision::getVersion).list();
+    }
+
+    private EruptRecordRevision latest(String erupt, String recordId) {
+        return this.revisions(erupt, recordId).stream().findFirst().orElse(null);
     }
 
     /**
