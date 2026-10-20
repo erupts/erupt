@@ -124,7 +124,7 @@ public class WebhookTest extends EruptApplicationTests {
         assertEquals("sha256=" + EruptWebhookService.sign(SECRET, body), received.get(0)[1]);
         assertEquals("abc", received.get(0)[2]);
 
-        EruptWebhookLog log = this.awaitLog();
+        EruptWebhookLog log = this.awaitLog(id);
         assertTrue(log.getSuccess());
         assertEquals(200, log.getStatus());
         assertEquals(1, log.getAttempts());
@@ -181,19 +181,19 @@ public class WebhookTest extends EruptApplicationTests {
         JsonObject data = new JsonObject();
         data.addProperty("key", "hook-key");
         data.addProperty("value", "v1");
-        modifyService.insertEruptData(this.model(), data);
+        Long id = (Long) modifyService.insertEruptData(this.model(), data);
         assertTrue(latch.await(10, TimeUnit.SECONDS));
-        EruptWebhookLog first = this.awaitLog();
+        EruptWebhookLog first = this.awaitLog(id);
         assertNotNull(first.getWebhookId());
 
         latch = new CountDownLatch(1);
         webhookService.redeliver(first);
         assertTrue(latch.await(10, TimeUnit.SECONDS), "resend was not delivered");
         assertEquals(received.get(0)[0], received.get(1)[0], "resend carries the stored payload unchanged");
-        for (int i = 0; i < 50 && eruptDao.lambdaQuery(EruptWebhookLog.class).eq(EruptWebhookLog::getWebhook, "test-hook").list().size() < 2; i++) {
+        for (int i = 0; i < 50 && this.logsOf(id).size() < 2; i++) {
             Thread.sleep(100);
         }
-        assertEquals(2, eruptDao.lambdaQuery(EruptWebhookLog.class).eq(EruptWebhookLog::getWebhook, "test-hook").list().size());
+        assertEquals(2, this.logsOf(id).size());
     }
 
     // the list query leaves collections out; the proxy summarises them into the tag columns
@@ -236,9 +236,15 @@ public class WebhookTest extends EruptApplicationTests {
         }
     }
 
-    private EruptWebhookLog awaitLog() throws InterruptedException {
+    // The log row is written after the receiver answered, so it can land after the previous test's
+    // cleanUp ran: only the log of this test's own record counts
+    private List<EruptWebhookLog> logsOf(Long recordId) {
+        return eruptDao.lambdaQuery(EruptWebhookLog.class).eq(EruptWebhookLog::getWebhook, "test-hook").eq(EruptWebhookLog::getRecordId, String.valueOf(recordId)).list();
+    }
+
+    private EruptWebhookLog awaitLog(Long recordId) throws InterruptedException {
         for (int i = 0; i < 50; i++) {
-            List<EruptWebhookLog> logs = eruptDao.lambdaQuery(EruptWebhookLog.class).eq(EruptWebhookLog::getWebhook, "test-hook").list();
+            List<EruptWebhookLog> logs = this.logsOf(recordId);
             if (!logs.isEmpty()) return logs.get(0);
             Thread.sleep(100);
         }
