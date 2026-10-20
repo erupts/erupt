@@ -1,27 +1,27 @@
-key,zh-CN,en-US
-File Center,文件中心,File Center
-Write,写入（上传、新建、重命名、删除）,Write: upload / create / rename / delete
-file.stores,存储,Stores
-file.upload,上传,Upload
-file.cancel,取消,Cancel
-file.ok,确定,OK
-file.new_folder,新建文件夹,New folder
-file.rename,重命名,Rename
-file.delete,删除,Delete
-file.download,下载,Download
-file.copy_link,复制链接,Copy link
-file.open,新窗口打开,Open
-file.search,搜索当前目录,Search this folder
-file.empty,空文件夹,Empty folder
-file.size,大小,Size
-file.modified,修改时间,Modified
-file.type,类型,Type
-file.confirm_delete,确定删除选中的项目？文件夹会连同内容一起删除。,Delete the selected items? A folder goes with everything in it.
-file.name,名称,Name
-file.link_copied,链接已复制,Link copied
-file.items,项,items
-file.read_only,没有写入权限,No write permission
-file.too_large,文件太大，不预览,Too large to preview
-file.store_unknown,未知的存储,Unknown store
-file.not_found,文件不存在,File not found
-file.io_failed,文件操作失败,File operation failed
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+File Center,文件中心,檔案中心,File Center,Centre de fichiers,ファイルセンター,파일 센터,Файловый центр,Centro de archivos,Dateizentrale,Centro de ficheiros,Pusat berkas,مركز الملفات
+Write,写入（上传、新建、重命名、删除）,寫入（上傳、新建、重新命名、刪除）,Write: upload / create / rename / delete,Écriture : envoi / création / renommage / suppression,書き込み（アップロード・作成・名前変更・削除）,쓰기: 업로드 / 생성 / 이름 변경 / 삭제,Запись: загрузка / создание / переименование / удаление,Escritura: subir / crear / renombrar / eliminar,Schreiben: Hochladen / Anlegen / Umbenennen / Löschen,Escrita: carregar / criar / mudar nome / eliminar,Tulis: unggah / buat / ganti nama / hapus,الكتابة: رفع / إنشاء / إعادة تسمية / حذف
+file.stores,存储,儲存,Stores,Stockages,ストレージ,저장소,Хранилища,Almacenes,Speicher,Armazenamentos,Penyimpanan,مواقع التخزين
+file.upload,上传,上傳,Upload,Envoyer,アップロード,업로드,Загрузить,Subir,Hochladen,Carregar,Unggah,رفع
+file.cancel,取消,取消,Cancel,Annuler,キャンセル,취소,Отмена,Cancelar,Abbrechen,Cancelar,Batal,إلغاء
+file.ok,确定,確定,OK,OK,OK,확인,ОК,Aceptar,OK,OK,OK,موافق
+file.new_folder,新建文件夹,新增資料夾,New folder,Nouveau dossier,新しいフォルダ,새 폴더,Новая папка,Nueva carpeta,Neuer Ordner,Nova pasta,Folder baru,مجلد جديد
+file.rename,重命名,重新命名,Rename,Renommer,名前を変更,이름 변경,Переименовать,Renombrar,Umbenennen,Mudar o nome,Ganti nama,إعادة تسمية
+file.delete,删除,刪除,Delete,Supprimer,削除,삭제,Удалить,Eliminar,Löschen,Eliminar,Hapus,حذف
+file.download,下载,下載,Download,Télécharger,ダウンロード,다운로드,Скачать,Descargar,Herunterladen,Transferir,Unduh,تنزيل
+file.copy_link,复制链接,複製連結,Copy link,Copier le lien,リンクをコピー,링크 복사,Копировать ссылку,Copiar enlace,Link kopieren,Copiar ligação,Salin tautan,نسخ الرابط
+file.open,新窗口打开,新視窗開啟,Open,Ouvrir,新しいウィンドウで開く,새 창에서 열기,Открыть,Abrir,Öffnen,Abrir,Buka,فتح
+file.search,搜索当前目录,搜尋目前目錄,Search this folder,Rechercher dans ce dossier,このフォルダを検索,이 폴더에서 검색,Поиск в этой папке,Buscar en esta carpeta,In diesem Ordner suchen,Pesquisar nesta pasta,Cari di folder ini,البحث في هذا المجلد
+file.empty,空文件夹,空資料夾,Empty folder,Dossier vide,空のフォルダ,빈 폴더,Пустая папка,Carpeta vacía,Leerer Ordner,Pasta vazia,Folder kosong,مجلد فارغ
+file.size,大小,大小,Size,Taille,サイズ,크기,Размер,Tamaño,Größe,Tamanho,Ukuran,الحجم
+file.modified,修改时间,修改時間,Modified,Modifié,更新日時,수정 시간,Изменён,Modificado,Geändert,Modificado,Diubah,تاريخ التعديل
+file.type,类型,類型,Type,Type,種類,유형,Тип,Tipo,Typ,Tipo,Jenis,النوع
+file.confirm_delete,确定删除选中的项目？文件夹会连同内容一起删除。,確定刪除選取的項目？資料夾會連同內容一起刪除。,Delete the selected items? A folder goes with everything in it.,Supprimer les éléments sélectionnés ? Un dossier est supprimé avec tout son contenu.,選択した項目を削除しますか？フォルダは中身ごと削除されます。,선택한 항목을 삭제할까요? 폴더는 내용과 함께 삭제됩니다.,Удалить выбранные элементы? Папка удаляется вместе с содержимым.,¿Eliminar los elementos seleccionados? Una carpeta se elimina con todo su contenido.,Ausgewählte Elemente löschen? Ein Ordner wird mit seinem gesamten Inhalt gelöscht.,Eliminar os itens selecionados? Uma pasta é eliminada com todo o conteúdo.,Hapus item yang dipilih? Folder akan dihapus beserta seluruh isinya.,حذف العناصر المحددة؟ يُحذف المجلد مع كل محتوياته.
+file.name,名称,名稱,Name,Nom,名前,이름,Имя,Nombre,Name,Nome,Nama,الاسم
+file.link_copied,链接已复制,連結已複製,Link copied,Lien copié,リンクをコピーしました,링크가 복사되었습니다,Ссылка скопирована,Enlace copiado,Link kopiert,Ligação copiada,Tautan disalin,تم نسخ الرابط
+file.items,项,項,items,éléments,件,개 항목,элем.,elementos,Elemente,itens,item,عنصر
+file.read_only,没有写入权限,沒有寫入權限,No write permission,Pas de droit d'écriture,書き込み権限がありません,쓰기 권한이 없습니다,Нет права на запись,Sin permiso de escritura,Keine Schreibberechtigung,Sem permissão de escrita,Tidak ada izin menulis,لا توجد صلاحية كتابة
+file.too_large,文件太大，不预览,檔案太大，不預覽,Too large to preview,Trop volumineux pour l'aperçu,ファイルが大きすぎるためプレビューできません,파일이 너무 커서 미리 볼 수 없습니다,Файл слишком большой для просмотра,Demasiado grande para la vista previa,Zu groß für die Vorschau,Demasiado grande para pré-visualizar,Terlalu besar untuk pratinjau,الملف أكبر من أن يُعاين
+file.store_unknown,未知的存储,未知的儲存,Unknown store,Stockage inconnu,不明なストレージ,알 수 없는 저장소,Неизвестное хранилище,Almacén desconocido,Unbekannter Speicher,Armazenamento desconhecido,Penyimpanan tidak dikenal,موقع تخزين غير معروف
+file.not_found,文件不存在,檔案不存在,File not found,Fichier introuvable,ファイルが見つかりません,파일을 찾을 수 없습니다,Файл не найден,Archivo no encontrado,Datei nicht gefunden,Ficheiro não encontrado,Berkas tidak ditemukan,الملف غير موجود
+file.io_failed,文件操作失败,檔案操作失敗,File operation failed,Échec de l'opération sur le fichier,ファイル操作に失敗しました,파일 작업에 실패했습니다,Ошибка операции с файлом,Error en la operación de archivo,Dateivorgang fehlgeschlagen,A operação de ficheiro falhou,Operasi berkas gagal,فشلت عملية الملف
