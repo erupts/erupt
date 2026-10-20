@@ -63,9 +63,10 @@ public interface FileStore {
         return slash <= 0 ? "/" : normal.substring(0, slash);
     }
 
-    static String join(String dir, String name) {
-        if (null == name || name.isBlank() || name.contains("/") || name.contains("\\") || "..".equals(name) || ".".equals(name)) {
-            throw new IllegalArgumentException("Illegal name: " + name);
+    static String join(String dir, String rawName) {
+        String name = null == rawName ? null : rawName.trim();
+        if (null == name || name.isEmpty() || name.contains("/") || name.contains("\\") || "..".equals(name) || ".".equals(name)) {
+            throw new IllegalArgumentException("Illegal name: " + rawName);
         }
         String parent = normalize(dir);
         return "/".equals(parent) ? "/" + name : parent + "/" + name;

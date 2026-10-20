@@ -10,6 +10,7 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.view.R;
+import xyz.erupt.filecenter.prop.EruptFileCenterProperties;
 import xyz.erupt.filecenter.store.FileEntry;
 import xyz.erupt.filecenter.store.FileStore;
 import xyz.erupt.filecenter.store.FileStores;
@@ -33,23 +34,39 @@ public class FileCenterController implements EruptRouter.VerifyHandler {
 
     public static final String PATH = EruptRestPath.ERUPT_API + "/file-center";
 
+    /** The erupt-web route, and the value of the page's menu. */
+    public static final String PAGE = "/file-center";
+
+    /** The button menu under the page that grants changes. */
+    public static final String WRITE = "file-center@write";
+
     private final FileStores stores;
+
+    private final EruptFileCenterProperties properties;
 
     private final EruptUserService userService;
 
-    public FileCenterController(FileStores stores, EruptUserService userService) {
+    public FileCenterController(FileStores stores, EruptFileCenterProperties properties, EruptUserService userService) {
         this.stores = stores;
+        this.properties = properties;
         this.userService = userService;
     }
 
     // Every endpoint here belongs to the page's menu
     @Override
     public String convertAuthStr(EruptRouter eruptRouter, HttpServletRequest request, String authStr) {
-        return FileCenterTpl.PAGE;
+        return PAGE;
     }
 
     private void writable() {
-        if (null == userService.getEruptMenuByValue(FileCenterTpl.WRITE)) throw new EruptWebApiRuntimeException(I18nTranslate.$translate("file.read_only"));
+        if (null == userService.getEruptMenuByValue(WRITE)) throw new EruptWebApiRuntimeException(I18nTranslate.$translate("file.read_only"));
+    }
+
+    /** What the page needs before its first listing: the stores, whether this user may change anything, and the preview limit. */
+    @GetMapping("/info")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, verifyHandler = FileCenterController.class)
+    public R<Map<String, Object>> info() {
+        return R.ok(Map.of("stores", stores.names(), "writable", null != userService.getEruptMenuByValue(WRITE), "textPreviewBytes", properties.getTextPreviewBytes()));
     }
 
     private static <T> T io(IoCall<T> call) {

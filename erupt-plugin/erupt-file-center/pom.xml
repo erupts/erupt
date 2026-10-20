@@ -11,7 +11,7 @@
 
     <artifactId>erupt-file-center</artifactId>
     <name>Erupt : File Center</name>
-    <description>erupt file center → a file center in the admin: the upload directory, extra folders and the S3 bucket browsed in Finder-style columns, with previews, upload, rename and delete</description>
+    <description>erupt file center → a file center in the admin: the upload directory, extra folders, S3 buckets and SFTP servers browsed in Finder-style columns by the erupt-web page, with previews, upload, rename and delete</description>
 
     <dependencies>
         <dependency>
@@ -19,21 +19,18 @@
             <artifactId>erupt-upms</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <!-- The page is a FreeMarker template served by erupt-tpl -->
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-tpl</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-        </dependency>
         <!-- The S3 store appears when erupt-data-s3 is on the classpath and a bucket is configured -->
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-data-s3</artifactId>
             <version>${project.parent.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <!-- The SFTP store needs JSch; erupt-remote already ships it, otherwise add it next to this module -->
+        <dependency>
+            <groupId>com.github.mwiede</groupId>
+            <artifactId>jsch</artifactId>
+            <version>2.28.7</version>
             <optional>true</optional>
         </dependency>
         <dependency>

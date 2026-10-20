@@ -16,10 +16,18 @@ import java.util.Map;
  *   file-center:
  *     roots:                         # extra local folders, by the name the page shows
  *       Reports: /data/reports
- *     stores:                        # any number of stores, local or S3, with their own settings
+ *     stores:                        # any number of stores: local, s3 or sftp, each with its own settings
  *       - name: Backups
  *         type: local
  *         path: /var/backups
+ *       - name: Partner SFTP
+ *         type: sftp
+ *         host: sftp.example.com
+ *         port: 22
+ *         username: exchange
+ *         password: ${SFTP_PASSWORD}  # or private-key: a PEM text or key file path, with passphrase
+ *         path: /outbound            # the remote directory that is the store's root
+ *         known-hosts: /etc/ssh/ssh_known_hosts   # optional; without it any host key is accepted
  *       - name: Media
  *         type: s3
  *         bucket: media
@@ -57,12 +65,29 @@ public class EruptFileCenterProperties {
 
         public static final String S3 = "s3";
 
+        public static final String SFTP = "sftp";
+
         private String name;
 
         private String type = LOCAL;
 
-        // local
+        // local: the folder; sftp: the remote directory that is the root
         private String path;
+
+        // sftp
+        private String host;
+
+        private int port = 22;
+
+        private String username;
+
+        private String password;
+
+        private String privateKey;
+
+        private String passphrase;
+
+        private String knownHosts;
 
         // s3
         private String bucket;
