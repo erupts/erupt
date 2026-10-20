@@ -7,6 +7,7 @@ import xyz.erupt.config.form.ConfigCopyForm;
 import xyz.erupt.config.model.ConfigItem;
 import xyz.erupt.config.model.ConfigProfile;
 import xyz.erupt.config.service.EruptConfigService;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import java.util.List;
@@ -50,7 +51,8 @@ public class ConfigItemHandler implements OperationHandler<ConfigItem, ConfigCop
             copied++;
         }
         if (configService.reads(target.getCode())) configService.refresh();
-        return "msg.success('" + copied + "')";
+        return ConfigRefreshHandler.message(0 == copied ? I18nTranslate.$translate("config.copied_none")
+                : I18nTranslate.$translate("config.copied").replace("{n}", String.valueOf(copied)));
     }
 
 }
