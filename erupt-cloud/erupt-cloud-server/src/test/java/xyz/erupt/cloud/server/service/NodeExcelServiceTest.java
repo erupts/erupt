@@ -7,9 +7,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.context.support.StaticApplicationContext;
-import xyz.erupt.core.prop.EruptProp;
-import xyz.erupt.core.util.EruptSpringUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -56,11 +53,7 @@ class NodeExcelServiceTest {
 
     @BeforeAll
     static void context() {
-        // EruptValueValidator reads erupt.choice-validate from EruptProp
-        StaticApplicationContext context = new StaticApplicationContext();
-        context.registerSingleton(EruptProp.class.getName(), EruptProp.class);
-        context.refresh();
-        new EruptSpringUtil().setApplicationContext(context);
+        TestContext.init();
     }
 
     @BeforeEach

@@ -3,6 +3,7 @@ package xyz.erupt.cloud.server.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
@@ -24,12 +25,15 @@ import xyz.erupt.core.view.R;
 
 import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
- * Cell editing of a node's erupt, done by the server for every node: a cell is the row read through the node's
- * get, patched with the one value, checked as a whole record and saved through the node's own update, so the
+ * Cell editing and drag sorting of a node's erupt, done by the server for every node: a cell (a row's position)
+ * is the row read through the node's get, patched with the one value, checked as a whole record and saved
+ * through the node's own update, so the
  * node runs its usual validation and DataProxy hooks and a node only needs the endpoints every node serves.
  * The whole row goes back, since a node may store what an update leaves out as empty.
  *
@@ -58,7 +62,7 @@ public class NodeCellService {
         EruptModel model = EruptModel.remote(erupt, erupt.substring(0, erupt.lastIndexOf(EruptConst.DOT)), build);
         EruptFieldModel field = editableField(model, cell.getField());
         if (null == field) return R.error(notEditable + ": " + cell.getField());
-        return updateOne(erupt, build, model, field, cell.getId(), cell.getValue());
+        return updateOne(erupt, build, model, field.getFieldName(), cell.getId(), cell.getValue());
     }
 
     /**
@@ -80,7 +84,28 @@ public class NodeCellService {
         if (null == field) return R.error(notEditable + ": " + cells.getField());
         for (String id : new LinkedHashSet<>(cells.getIds())) {
             if (StringUtils.isBlank(id)) return R.error(I18nTranslate.$translate("erupt.cell.row_not_exist"));
-            R<Void> result = updateOne(erupt, build, model, field, id, cells.getValue());
+            R<Void> result = updateOne(erupt, build, model, field.getFieldName(), id, cells.getValue());
+            if (!result.isSuccess()) return result;
+        }
+        return R.ok();
+    }
+
+    /**
+     * A drag sort writes each row's new position into the erupt's dragSort field, one row at a time as a batch edit.
+     *
+     * @param build the node's build; its dragSort names the field
+     * @param body  primary key → new position, as the table sends it
+     */
+    public R<Void> dragSort(String erupt, EruptBuildModel build, byte[] body) {
+        EruptModel model = EruptModel.remote(erupt, erupt.substring(0, erupt.lastIndexOf(EruptConst.DOT)), build);
+        String field = model.getErupt().dragSort().field();
+        if (StringUtils.isBlank(field)) return R.error("dragSort is not enabled");
+        Map<String, JsonElement> positions = GsonFactory.getGson().fromJson(new String(body, StandardCharsets.UTF_8),
+                new TypeToken<LinkedHashMap<String, JsonElement>>() {
+                }.getType());
+        if (null == positions) return R.ok();
+        for (Map.Entry<String, JsonElement> position : positions.entrySet()) {
+            R<Void> result = updateOne(erupt, build, model, field, position.getKey(), position.getValue());
             if (!result.isSuccess()) return result;
         }
         return R.ok();
@@ -96,16 +121,31 @@ public class NodeCellService {
         return field;
     }
 
-    private R<Void> updateOne(String erupt, EruptBuildModel build, EruptModel model, EruptFieldModel field, String id, JsonElement value) {
+    private R<Void> updateOne(String erupt, EruptBuildModel build, EruptModel model, String field, String id, JsonElement value) {
+        Map<String, JsonElement> values = new LinkedHashMap<>();
+        values.put(field, value);
+        return patch(erupt, build, model, id, values);
+    }
+
+    /**
+     * One row of a node's erupt as its get answers it, or null when the node has no such row.
+     */
+    public JsonObject read(String erupt, EruptModel model, String id) {
         JsonElement row = JsonParser.parseString(cloudNodeRouter.proxy(erupt, HttpMethod.GET, EruptRestPath.ERUPT_DATA
                 + EruptRestPath.ERUPT_NAME_HOLDER + "/" + UriUtils.encodePathSegment(id, StandardCharsets.UTF_8), null, VOUCHED));
         // a node answers a missing row with an error envelope, or nothing: a row is what carries its key
         String pk = model.getErupt().primaryKeyCol();
-        if (!row.isJsonObject() || !row.getAsJsonObject().has(pk) || row.getAsJsonObject().get(pk).isJsonNull()) {
-            return R.error(I18nTranslate.$translate("erupt.cell.row_not_exist") + ": " + id);
-        }
-        JsonObject record = row.getAsJsonObject();
-        record.add(field.getFieldName(), value);
+        if (!row.isJsonObject() || !row.getAsJsonObject().has(pk) || row.getAsJsonObject().get(pk).isJsonNull()) return null;
+        return row.getAsJsonObject();
+    }
+
+    /**
+     * A row read through the node's get, given {@code values}, checked as a record and saved whole through its update.
+     */
+    public R<Void> patch(String erupt, EruptBuildModel build, EruptModel model, String id, Map<String, JsonElement> values) {
+        JsonObject record = read(erupt, model, id);
+        if (null == record) return R.error(I18nTranslate.$translate("erupt.cell.row_not_exist") + ": " + id);
+        values.forEach(record::add);
         R<?> problem = RemoteRequestValidator.validateRecord(build, record);
         if (null != problem) return R.error(problem.getMessage());
         R<?> saved = GsonFactory.getGson().fromJson(cloudNodeRouter.proxy(erupt, HttpMethod.POST,

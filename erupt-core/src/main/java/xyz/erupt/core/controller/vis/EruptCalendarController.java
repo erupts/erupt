@@ -46,7 +46,8 @@ public class EruptCalendarController {
      * @return ok when saved
      */
     @PostMapping("/{erupt}/update_date")
-    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.EDIT)
+    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.EDIT,
+            resolve = EruptRouter.Resolve.VIS_CALENDAR_DATE)
     @Transactional
     @SneakyThrows
     public R<Void> updateDate(@PathVariable("erupt") String erupt, @RequestBody VisCalendarDateCommand command) {

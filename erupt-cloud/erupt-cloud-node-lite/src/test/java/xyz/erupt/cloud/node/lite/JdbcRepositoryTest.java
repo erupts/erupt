@@ -115,6 +115,9 @@ class JdbcRepositoryTest {
         assertEquals(List.of("100% pure"), titles(repo, List.of(c("live", QueryExpression.EQ, true)), byTitle), "boolean");
         assertEquals(List.of("100% pure"), titles(repo, List.of(c("views", QueryExpression.GT, 2)), byTitle), "GT");
         assertEquals(List.of("a_b"), titles(repo, List.of(c("views", QueryExpression.NULL, null)), byTitle), "NULL");
+        // beforeFetch SQL, ANDed as written with the conditions
+        assertEquals(List.of("wow!"), repo.page(new Query(List.of(c("live", QueryExpression.EQ, false)), byTitle, 0, 10,
+                List.of(repo.q("views") + " IS NOT NULL", repo.q("title") + " <> 'x'"))).records().stream().map(p -> p.title).toList(), "filters");
         Repository.Page<DbPost> page = repo.page(new Query(List.of(), List.of(new Sort("views", Direction.DESC)), 1, 1));
         assertEquals(3, page.total());
         assertEquals(1, page.records().size());

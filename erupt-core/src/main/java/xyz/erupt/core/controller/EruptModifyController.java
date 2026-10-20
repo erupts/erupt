@@ -173,7 +173,8 @@ public class EruptModifyController {
      */
     @PostMapping("/{erupt}/drag-sort")
     @EruptRecordOperate(value = "UPDATE", dynamicConfig = EruptRecordNaming.class)
-    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true, power = EruptRouter.Power.EDIT)
+    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true, power = EruptRouter.Power.EDIT,
+            resolve = EruptRouter.Resolve.DRAG_SORT)
     public R<Void> dragSortEruptData(@PathVariable("erupt") String erupt, @RequestBody Map<String, Object> sortData) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Erupts.powerLegal(eruptModel, PowerObject::isEdit);

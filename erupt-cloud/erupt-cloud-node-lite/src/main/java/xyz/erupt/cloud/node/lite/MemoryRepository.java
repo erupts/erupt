@@ -35,6 +35,7 @@ public final class MemoryRepository<T> implements Repository<T> {
 
     @Override
     public synchronized Page<T> page(Query query) {
+        if (!query.filters().isEmpty()) throw new IllegalStateException("MemoryRepository cannot apply the SQL of beforeFetch");
         List<T> match = new ArrayList<>();
         for (T r : rows.values()) {
             if (query.conditions().stream().allMatch(c -> matches(model.get(r, c.getKey()), c))) match.add(copy(r));

@@ -2,12 +2,14 @@ package xyz.erupt.cloud.node.lite;
 
 import com.sun.net.httpserver.HttpServer;
 import xyz.erupt.annotation.config.QueryExpression;
+import xyz.erupt.annotation.Vis;
 import xyz.erupt.annotation.exception.EruptException;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.query.Direction;
 import xyz.erupt.annotation.query.Sort;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
@@ -37,6 +39,7 @@ import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -349,8 +352,16 @@ public final class Node implements AutoCloseable, Model.Registry {
             if (f == null || !f.sortable()) throw new EruptException("illegal sort field '" + field + "'");
             sort.add(new Sort(f.name, Direction.DESC.name().equalsIgnoreCase(String.valueOf(s.get(LambdaSee.field(Sort::getDirection)))) ? Direction.DESC : Direction.ASC));
         }
+        // the @Vis view the table is read for: its filter, and its order when none is asked for
+        Vis vis = model.vis(String.valueOf(body.get(LambdaSee.field(TableQuery::vis))));
+        if (vis != null && sort.isEmpty()) {
+            for (xyz.erupt.annotation.sub_erupt.Sort s : vis.orderBy()) sort.add(new Sort(s.field(), s.direction()));
+        }
         if (sort.isEmpty()) sort.addAll(model.orderBy);
-        Repository.Page<T> page = e.repo.page(new Query(conditions, sort, (pageIndex - 1) * pageSize, pageSize));
+        List<String> filters = new ArrayList<>();
+        if (vis != null) for (Filter f : vis.filter()) filters.add(f.value());
+        model.proxies(p -> Optional.ofNullable(p.beforeFetch(conditions)).filter(s -> !s.isBlank()).ifPresent(filters::add));
+        Repository.Page<T> page = e.repo.page(new Query(conditions, sort, (pageIndex - 1) * pageSize, pageSize, filters));
         List<Map<String, Object>> rows = new ArrayList<>(page.records().stream().map(model::toRow).toList());
         model.proxies(p -> p.afterFetch(rows));
         return new PageView(pageIndex, pageSize, page.total(), (page.total() + pageSize - 1) / pageSize, rows, null, null, null);
@@ -719,7 +730,7 @@ public final class Node implements AutoCloseable, Model.Registry {
     // wire shapes of erupt-core's classes, which this node cannot depend on; Json writes a record as an object
 
     /** erupt-core's TableQuery, of which the paging is read with PageView's keys. */
-    private record TableQuery(List<?> condition, List<?> sort) {
+    private record TableQuery(List<?> condition, List<?> sort, String vis) {
     }
 
     /** erupt-core's Page. */

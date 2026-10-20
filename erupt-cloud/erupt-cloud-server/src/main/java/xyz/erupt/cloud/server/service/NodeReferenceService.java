@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import jakarta.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
@@ -18,6 +19,7 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.util.DataHandlerUtil;
@@ -34,7 +36,7 @@ import java.util.*;
 /**
  * Completes what a node SDK leaves to the server (erupt-cloud/PROTOCOL.md §7.3): a reference sent as its key
  * gets the {id, label} object the form reads and the flattened {@code <field>_<column>} columns the table reads,
- * and a reference tree the node does not build (404) is built here from the referenced erupt's records.
+ * and a reference tree is built here from the referenced erupt's records.
  * The referenced erupt is read through {@link CloudNodeRouter} with POWER vouched for: the user reaches it
  * through the erupt holding the reference, whose rights the server already checked. A reference that already
  * is an object (a Java node resolves its own) is left as it is.
@@ -94,22 +96,47 @@ public class NodeReferenceService {
     }
 
     /**
-     * The tree of a REFERENCE_TREE field, built as a local erupt's is ({@link DataHandlerUtil#quoteTree}).
+     * The tree of a REFERENCE_TREE field, built as a local erupt's is ({@link DataHandlerUtil#quoteTree}). A field with
+     * a dependField keeps the records whose dependColumn holds {@code dependValue}.
      */
-    public Collection<TreeModel> tree(String nodeName, EruptBuildModel build, String fieldName) {
-        EruptFieldModel model = build.getEruptModel().getEruptFieldModels().stream()
-                .filter(it -> it.getFieldName().equals(fieldName) && null != it.getEruptFieldJson()).findFirst()
-                .orElseThrow(() -> new EruptWebApiRuntimeException("not found field " + fieldName));
-        Edit edit = AnnotationProcess.jsonToAnnotation(EruptField.class, model.getEruptFieldJson()).edit();
-        if (edit.type() != EditType.REFERENCE_TREE) throw new EruptWebApiRuntimeException(fieldName + " is not a reference tree");
+    public Collection<TreeModel> tree(String nodeName, EruptBuildModel build, String fieldName, String dependValue) {
+        Edit edit = referenceTree(build, fieldName);
         ReferenceTreeType treeType = edit.referenceTreeType();
+        if (StringUtils.isNotBlank(treeType.dependField()) && StringUtils.isBlank(dependValue)) {
+            EruptFieldModel depend = field(build, treeType.dependField());
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.select") + " "
+                    + (null == depend ? treeType.dependField() : AnnotationProcess.jsonToAnnotation(EruptField.class, depend.getEruptFieldJson()).edit().title()));
+        }
         String root = ExprInvoke.getExpr(treeType.rootPid());
         List<TreeModel> nodes = new ArrayList<>();
-        for (JsonObject record : targets(nodeName, model.getFieldReturnName())) {
+        for (JsonObject record : targets(nodeName, field(build, fieldName).getFieldReturnName())) {
+            if (StringUtils.isNotBlank(treeType.dependField()) && !dependValue.equals(key(record, treeType.dependColumn()))) continue;
             nodes.add(new TreeModel(text(record.get(treeType.id())), text(record.get(treeType.label())),
                     treeType.pid().isEmpty() ? null : text(record.get(treeType.pid())), root));
         }
         return treeType.pid().isEmpty() ? nodes : DataHandlerUtil.quoteTree(nodes);
+    }
+
+    /**
+     * Whether the node builds a reference tree itself: its filter and orderBy are the node's own query language.
+     */
+    public boolean nodeBuildsTree(EruptBuildModel build, String fieldName) {
+        if (null == field(build, fieldName)) return true;
+        Edit edit = referenceTree(build, fieldName);
+        return edit.filter().length > 0 || StringUtils.isNotBlank(edit.orderBy());
+    }
+
+    private Edit referenceTree(EruptBuildModel build, String fieldName) {
+        EruptFieldModel model = field(build, fieldName);
+        if (null == model) throw new EruptWebApiRuntimeException("not found field " + fieldName);
+        Edit edit = AnnotationProcess.jsonToAnnotation(EruptField.class, model.getEruptFieldJson()).edit();
+        if (edit.type() != EditType.REFERENCE_TREE) throw new EruptWebApiRuntimeException(fieldName + " is not a reference tree");
+        return edit;
+    }
+
+    private static EruptFieldModel field(EruptBuildModel build, String fieldName) {
+        return Optional.ofNullable(build.getEruptModel().getEruptFieldModels()).orElse(List.of()).stream()
+                .filter(it -> it.getFieldName().equals(fieldName) && null != it.getEruptFieldJson()).findFirst().orElse(null);
     }
 
     /**
@@ -164,6 +191,16 @@ public class NodeReferenceService {
             value = value.getAsJsonObject().get(part);
         }
         return value;
+    }
+
+    // The key a column path names: "parent.id" of a reference sent as its key is that key
+    private static String key(JsonObject record, String path) {
+        JsonElement value = record;
+        for (String part : path.split("\\.")) {
+            if (null == value || !value.isJsonObject()) break;
+            value = value.getAsJsonObject().get(part);
+        }
+        return text(value);
     }
 
     private static String text(JsonElement value) {

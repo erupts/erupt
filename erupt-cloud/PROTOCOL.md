@@ -177,7 +177,7 @@ A node that implements only these gets a working table, search, detail view and 
 | `tree` | `GET /erupt-api/data/tree/{erupt}` |
 | `linkTree` | `GET /erupt-api/data/depend-tree/{erupt}` |
 | `rowOperation` | `POST /erupt-api/data/{erupt}/operator/{code}`, `POST .../operator/{code}/form-value` |
-| `REFERENCE_TABLE` / `REFERENCE_TREE` | `POST /erupt-api/data/{erupt}/reference-table/{field}`; `GET /erupt-api/data/{erupt}/reference-tree/{field}` optional, a 404 leaves the tree to the server (§7.3) |
+| `REFERENCE_TABLE` | `POST /erupt-api/data/{erupt}/reference-table/{field}` (§7.3) |
 | `CHECKBOX` | `GET /erupt-api/data/{erupt}/checkbox/{field}` |
 | `TAB_TREE` | `GET /erupt-api/data/tab/tree/{erupt}/{field}` |
 | `TAB_TABLE_ADD` / tab editing | `POST /erupt-api/data/modify/tab-add|tab-update|tab-delete/{erupt}/{field}` |
@@ -185,18 +185,15 @@ A node that implements only these gets a working table, search, detail view and 
 | `AUTO_COMPLETE` | `POST /erupt-api/comp/auto-complete/{erupt}/{field}` |
 | `onchange` | `POST /erupt-api/data/onchange/{erupt}/{field}` |
 | `BUTTON` | `POST /erupt-api/comp/button/{erupt}/{field}` |
-| `dragSort` | `POST /erupt-api/data/modify/{erupt}/drag-sort` |
 | view `statistic` | `POST /erupt-api/data/aggregate/{erupt}` |
 | extra rows | `POST /erupt-api/data/extra-row/{erupt}` |
 | form-view layout | `GET`/`POST /erupt-api/data/form-view/{erupt}` |
-| per-field sub-model | `GET /erupt-api/build/{erupt}/{field}` |
 
 ### 5.3 Level 2 — optional extensions
 
 | Feature | Endpoints |
 |---------|-----------|
 | Excel import / export | `/erupt-api/excel/template|export|import/{erupt}`; a 404 leaves them to the server (below) |
-| Gantt / board / calendar views | `/erupt-api/data/modify/gantt/...`, `/board/...`, `/calendar/...` |
 | Template pages | any `/erupt-api/tpl/...` path, routed by the `_node` query param, forwarded verbatim |
 
 **Excel by the server.** When a node answers 404, the server writes the template from the build model,
@@ -217,6 +214,11 @@ Endpoints the server answers for a node itself, from the node's build (fetched w
 | Attachments, rich-text images | `POST /erupt-api/file/upload/{erupt}/{field}`, `/uploads/...`, `/upload-html-editor/...`, `/upload-ueditor/...` | Stored by the server under the field's `attachmentType` (file types, size, image dimensions, path) or `htmlEditorType.path`, after the user's `add` / `edit` right is checked; the download (`/erupt-api/file/download-attachment`, `/erupt-attachment`) serves them from the same storage. The node stores the returned path like any string column (several joined by `attachmentType.fileSeparator`). |
 | Static options | `choice-item`, `choice-item-filter`, `tags-item` of a field whose `choiceType` / `multiChoiceType` / `tagsType` names no `fetchHandler` | The build's `componentValue`. A field naming a handler is forwarded; a 404 then falls back to the same `componentValue`. |
 | Cell editing | `POST /erupt-api/data/modify/{erupt}/update-cell` | When the build's power allows `cellEdit` and the field's `edit` has a title, `cellEdit` and is not read-only: the row read through `GET /data/{erupt}/{id}` (signed `power`), patched, checked as a record, and saved whole through `POST /data/modify/{erupt}/update` (signed `power,record`). A node therefore leaves `cellEdit` as declared instead of turning it off. |
+| Reference trees | `GET /erupt-api/data/{erupt}/reference-tree/{field}` | Built from the referenced erupt's records, paged through `POST /data/table/{erupt}` (signed `power`) and nested by `referenceTreeType` `id` / `label` / `pid`; with a `dependField`, only the records whose `dependColumn` holds the `dependValue` (a reference sent as its key counts as its `id`). A field with a `filter` or an `orderBy` is forwarded instead: those are the node's query language. |
+| Field sub-models | `GET /erupt-api/build/{erupt}/{field}` | The field's `fieldReturnName` read from the build, then that erupt's own `GET /build/{erupt}` (signed `power`), returned as the node answers it. A field the build does not carry is forwarded. |
+| Drag sort | `POST /erupt-api/data/modify/{erupt}/drag-sort` | Each row of the `{id: position}` body as a cell edit of the field `dragSort.field` names: read, patched, checked and saved whole through `update`, one row at a time. The field must be one of the model's fields. |
+| View writes | `POST /erupt-api/data/modify/board/{erupt}/update_group`, `/calendar/{erupt}/update_date`, `/gantt/{erupt}/update_date`, `/gantt/{erupt}/link` | The `@Vis` the command's `visCode` names, read from the build; the row's group (and swimlane), dates or `ganttView.dependencyField` patched and saved whole as a cell edit is. A dependency is the predecessor's key, or a list of keys (objects carrying `id` are read too); a link that would close a cycle is refused. |
+| Gantt links | `POST /erupt-api/data/modify/gantt/{erupt}/links` | Each requested row read through `GET /data/{erupt}/{id}` and its `dependencyField` answered as predecessor keys. |
 
 A node answers **404** for anything it does not implement. **[v1 proposal]** It also lists what it
 implements in a `capabilities` field at registration, so the server can hide the matching UI instead
@@ -315,7 +317,9 @@ their meaning itself (e.g. the default sort).
 
 `expression` is one of `EQ NEQ GT GTE LT LTE LIKE NOT_LIKE RANGE IN NOT_IN NULL NOT_NULL`. `RANGE` takes a
 two-element array. The node must check `key` against its declared searchable fields and must never put
-`key` or `sort.field` into a query unescaped.
+`key` or `sort.field` into a query unescaped. `vis` is the `code` of the `@Vis` view the table is read for
+(a view without one is addressed by its title's hash in Java, by its title in the SDKs, as its build says): the
+node applies that view's own `filter` and, when no `sort` is sent, its `orderBy`, both kept out of the build.
 
 ```json
 { "pageIndex": 1, "pageSize": 10, "total": 42, "totalPage": 5,
@@ -327,9 +331,9 @@ A reference column `@View(column = "name")` on field `category` is flattened to 
 ### 7.3 Reference fields (`REFERENCE_TABLE` / `REFERENCE_TREE`)
 
 The picker is requested under the **host** erupt's name, so the referenced model needs no menu:
-`GET /erupt-api/build/{host}/{field}` returns the referenced model's `EruptBuildModel`, and
-`POST /erupt-api/data/{host}/reference-table/{field}?tabRef=false[&dependValue=]` returns a `Page` of its rows.
-The server does not rewrite names in the by-field build response.
+`GET /erupt-api/build/{host}/{field}` returns the referenced model's `EruptBuildModel` (answered by the server,
+§5.4), and `POST /erupt-api/data/{host}/reference-table/{field}?tabRef=false[&dependValue=]` returns a `Page`
+of its rows. The server does not rewrite names in the by-field build response.
 
 With `referenceTableType` (or `referenceTreeType`) `{ "id": "id", "label": "name" }` on field `category`:
 
@@ -347,9 +351,8 @@ signed with `Erupt-Enforced: power`) and puts back what the browser reads: `"cat
 its id and gets a null label. A reference that already is an object (a Java node) is left untouched.
 
 `GET /erupt-api/data/{host}/reference-tree/{field}` returns nested nodes:
-`[{ "id": "1", "label": "Tech", "pid": null, "root": true, "level": 1, "children": [ ... ] }]`.
-A node may answer 404 instead: the server then pages through the referenced erupt's table (signed with
-`Erupt-Enforced: power`, at most 10000 records) and builds the tree from its `id` / `label` / `pid` columns.
+`[{ "id": "1", "label": "Tech", "pid": null, "root": true, "level": 1, "children": [ ... ] }]`, built by the
+server (§5.4) from the referenced erupt's table (signed with `Erupt-Enforced: power`, at most 10000 records).
 
 ### 7.4 Row operations
 

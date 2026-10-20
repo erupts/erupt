@@ -56,7 +56,8 @@ public class EruptGanttController {
      * @return ok when saved
      */
     @PostMapping("/{erupt}/update_date")
-    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.EDIT)
+    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.EDIT,
+            resolve = EruptRouter.Resolve.VIS_GANTT_DATE)
     @Transactional
     @SneakyThrows
     public R<Void> updateDate(@PathVariable("erupt") String erupt, @RequestBody GanttDateCommand command) {
@@ -82,7 +83,8 @@ public class EruptGanttController {
      * @return task primary key to the primary keys of its predecessors
      */
     @PostMapping("/{erupt}/links")
-    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT,
+            resolve = EruptRouter.Resolve.VIS_GANTT_LINKS)
     @Transactional
     @SneakyThrows
     public R<Map<String, List<String>>> links(@PathVariable("erupt") String erupt, @RequestBody GanttLinksCommand command) {
@@ -110,7 +112,8 @@ public class EruptGanttController {
      * @return ok when saved
      */
     @PostMapping("/{erupt}/link")
-    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.EDIT)
+    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.EDIT,
+            resolve = EruptRouter.Resolve.VIS_GANTT_LINK)
     @Transactional
     @SneakyThrows
     public R<Void> link(@PathVariable("erupt") String erupt, @RequestBody GanttLinkCommand command) {

@@ -2,11 +2,15 @@ package xyz.erupt.cloud.node.lite;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.Vis;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
+import xyz.erupt.annotation.query.Direction;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
+import xyz.erupt.annotation.sub_erupt.Sort;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -55,7 +59,9 @@ final class Models {
             @RowOperation(code = "publish", title = "Publish", eruptClass = PublishForm.class, operationHandler = Publish.class),
             @RowOperation(code = "feature", title = "Feature", mode = RowOperation.Mode.SINGLE, callHint = "", operationHandler = Feature.class),
             @RowOperation(code = "rebuild", title = "Rebuild", mode = RowOperation.Mode.BUTTON, show = @ExprBool(exprHandler = RootOnly.class),
-                    operationHandler = Rebuild.class)})
+                    operationHandler = Rebuild.class)}, vis = {
+            @Vis(code = "q", title = "Question", filter = @Filter("\"title\" = 'a?'")),
+            @Vis(title = "Reversed", orderBy = @Sort(field = "title", direction = Direction.DESC))})
     static class Article {
         @EruptField
         Long id;

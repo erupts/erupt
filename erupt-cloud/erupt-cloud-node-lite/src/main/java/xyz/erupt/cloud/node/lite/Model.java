@@ -238,11 +238,22 @@ public final class Model<T> implements AnnotationJson.Resolver {
                     break;
             }
         }
+        if (a instanceof Vis v && attr.equals("code")) return code(v);
         if (a instanceof RowOperation op) {
             if (attr.equals("code") && op.code().isEmpty()) return Integer.toString(op.title().hashCode());
             if (attr.equals("callHint")) return I18N.getOrDefault(op.callHint(), op.callHint());
         }
         return AnnotationJson.raw(a, m);
+    }
+
+    /** A view's code: the title's hash when it declares none, as erupt-core's VisProxy answers. */
+    static String code(Vis vis) {
+        return vis.code().isEmpty() ? Integer.toString(vis.title().hashCode()) : vis.code();
+    }
+
+    /** The view of this code the user may see, or null. */
+    Vis vis(String code) {
+        return Arrays.stream(erupt.vis()).filter(v -> code(v).equals(code) && expr(v.show())).findFirst().orElse(null);
     }
 
     boolean expr(ExprBool expr) {

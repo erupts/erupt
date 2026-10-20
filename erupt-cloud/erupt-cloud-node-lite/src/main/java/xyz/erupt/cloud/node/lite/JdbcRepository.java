@@ -83,13 +83,13 @@ public final class JdbcRepository<T> implements Repository<T> {
     @Override
     public Page<T> page(Query query) {
         try (Connection conn = dataSource.getConnection()) {
-            Sql count = new Sql("SELECT COUNT(*) FROM " + table()).where(query.conditions());
+            Sql count = new Sql("SELECT COUNT(*) FROM " + table()).where(query);
             long total;
             try (PreparedStatement ps = count.prepare(conn); ResultSet rs = ps.executeQuery()) {
                 rs.next();
                 total = rs.getLong(1);
             }
-            Sql select = new Sql("SELECT * FROM " + table()).where(query.conditions()).add(" ORDER BY ");
+            Sql select = new Sql("SELECT * FROM " + table()).where(query).add(" ORDER BY ");
             select.add(query.sort().isEmpty() ? q(model.pk()) + " ASC" : query.sort().stream()
                     .map(s -> q(s.getField()) + (s.getDirection() == Direction.DESC ? " DESC" : " ASC")).collect(Collectors.joining(", ")));
             if (dialect().fetch) select.add(" OFFSET ").p(query.offset()).add(" ROWS FETCH NEXT ").p(query.limit()).add(" ROWS ONLY");
@@ -148,7 +148,7 @@ public final class JdbcRepository<T> implements Repository<T> {
 
     /** The SQL and parameters {@link #page} would run for {@code conditions}: for tests and logging. */
     String where(List<Condition> conditions, List<Object> params) {
-        Sql sql = new Sql("").where(conditions);
+        Sql sql = new Sql("").where(new Query(conditions, List.of(), 0, 0));
         params.addAll(sql.params);
         return sql.text.toString();
     }
@@ -202,9 +202,14 @@ public final class JdbcRepository<T> implements Repository<T> {
             return this;
         }
 
-        Sql where(List<Condition> conditions) {
+        Sql where(Query query) {
             String glue = " WHERE ";
-            for (Condition c : conditions) {
+            // the developer's own SQL, as written
+            for (String filter : query.filters()) {
+                text.append(glue).append('(').append(filter).append(')');
+                glue = " AND ";
+            }
+            for (Condition c : query.conditions()) {
                 text.append(glue);
                 glue = " AND ";
                 String col = q(c.getKey());

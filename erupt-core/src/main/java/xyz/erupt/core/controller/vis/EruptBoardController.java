@@ -47,7 +47,8 @@ public class EruptBoardController {
      * @return ok when saved
      */
     @PostMapping("/{erupt}/update_group")
-    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.EDIT)
+    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.EDIT,
+            resolve = EruptRouter.Resolve.VIS_BOARD_GROUP)
     @Transactional
     @SneakyThrows
     public R<Void> updateGroup(@PathVariable("erupt") String erupt, @RequestBody VisBoardGroupCommand command) {

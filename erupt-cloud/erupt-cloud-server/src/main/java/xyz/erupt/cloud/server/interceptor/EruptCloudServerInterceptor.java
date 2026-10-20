@@ -43,6 +43,7 @@ import xyz.erupt.cloud.common.http.CloudSignature;
 import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.service.CloudNodeRouter;
 import xyz.erupt.cloud.server.service.NodeCellService;
+import xyz.erupt.cloud.server.service.NodeVisService;
 import xyz.erupt.cloud.server.service.NodePowerService;
 import xyz.erupt.cloud.server.service.NodeExcelService;
 import xyz.erupt.cloud.server.service.NodeReferenceService;
@@ -131,6 +132,9 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
 
     @Resource
     private NodeCellService nodeCellService;
+
+    @Resource
+    private NodeVisService nodeVisService;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -243,12 +247,26 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             if (serverAnswers(eruptRouter.resolve(), erupt, request)) {
                 return true;
             }
+            // A reference tree, and the build of the erupt a field points at, are built here from the node's own
+            // table and build, so a node serves neither
+            if (answer(eruptRouter.resolve(), request, response, handler, nodeName, erupt)) {
+                return false;
+            }
             byte[] body = isMultipart(request) ? null : StreamUtils.copyToByteArray(request.getInputStream());
-            // A cell is the server's for every node: read the row, patch it, save it through the node's update
-            if (eruptRouter.resolve() == EruptRouter.Resolve.CELL || eruptRouter.resolve() == EruptRouter.Resolve.CELLS) {
-                R<Void> result = eruptRouter.resolve() == EruptRouter.Resolve.CELL
-                        ? nodeCellService.update(erupt, remoteBuild(erupt), body)
-                        : nodeCellService.updateBatch(erupt, remoteBuild(erupt), body);
+            // A cell, and a drag sort, are the server's for every node: read the row, patch it, save it through the node's update
+            if (PATCHES.contains(eruptRouter.resolve())) {
+                R<Void> result = switch (eruptRouter.resolve()) {
+                    case CELL -> nodeCellService.update(erupt, remoteBuild(erupt), body);
+                    case CELLS -> nodeCellService.updateBatch(erupt, remoteBuild(erupt), body);
+                    default -> nodeCellService.dragSort(erupt, remoteBuild(erupt), body);
+                };
+                operationService.record(handler, result.isSuccess() ? null : new Exception(result.getMessage()));
+                writeJson(response, result);
+                return false;
+            }
+            // So are the writes of a board, calendar or gantt view: each moves values of one row
+            if (VIEWS.contains(eruptRouter.resolve())) {
+                R<?> result = nodeVisService.answer(eruptRouter.resolve(), erupt, remoteBuild(erupt), body);
                 operationService.record(handler, result.isSuccess() ? null : new Exception(result.getMessage()));
                 writeJson(response, result);
                 return false;
@@ -324,6 +342,17 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             EruptRouter.Resolve.EXCEL_TEMPLATE, EruptRouter.Resolve.EXCEL_EXPORT, EruptRouter.Resolve.EXCEL_IMPORT,
             EruptRouter.Resolve.OPTIONS);
 
+    private static final Set<EruptRouter.Resolve> PATCHES = EnumSet.of(EruptRouter.Resolve.CELL, EruptRouter.Resolve.CELLS,
+            EruptRouter.Resolve.DRAG_SORT);
+
+    private static final Set<EruptRouter.Resolve> VIEWS = EnumSet.of(EruptRouter.Resolve.VIS_BOARD_GROUP,
+            EruptRouter.Resolve.VIS_CALENDAR_DATE, EruptRouter.Resolve.VIS_GANTT_DATE, EruptRouter.Resolve.VIS_GANTT_LINKS,
+            EruptRouter.Resolve.VIS_GANTT_LINK);
+
+    private static final String DEPEND_VALUE = "dependValue";
+
+    private static final Set<CloudSignature.Enforced> VOUCHED = EnumSet.of(CloudSignature.Enforced.POWER);
+
     private boolean serverAnswers(EruptRouter.Resolve resolve, String erupt, HttpServletRequest request) {
         return switch (resolve) {
             case UPLOAD -> true;
@@ -347,6 +376,34 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 .anyMatch(it -> null != it && it.isJsonArray() && !it.getAsJsonArray().isEmpty());
     }
 
+    // Answered here rather than forwarded: false leaves the call to the node, for what only it can resolve (a reference
+    // tree's filter or orderBy, a field the build does not carry such as a Java node's LinkTree.field)
+    private boolean answer(EruptRouter.Resolve resolve, HttpServletRequest request, HttpServletResponse response, Object handler,
+                           String nodeName, String erupt) throws java.io.IOException {
+        switch (resolve) {
+            case REFERENCE_TREE -> {
+                EruptBuildModel build = remoteBuild(erupt);
+                String field = lastPathSegment(request);
+                if (nodeReferenceService.nodeBuildsTree(build, field)) return false;
+                writeJson(response, nodeReferenceService.tree(nodeName, build, field, request.getParameter(DEPEND_VALUE)));
+            }
+            case FIELD_BUILD -> {
+                EruptFieldModel field = remoteField(erupt, lastPathSegment(request));
+                if (null == field) return false;
+                // as the node's own answer was: names stay node-local, the picker keeps asking under the host erupt
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+                response.getOutputStream().write(cloudNodeRouter.proxy(nodeName + EruptConst.DOT + field.getFieldReturnName(), HttpMethod.GET,
+                        EruptRestPath.ERUPT_BUILD + EruptRestPath.ERUPT_NAME_HOLDER, null, VOUCHED).getBytes(StandardCharsets.UTF_8));
+            }
+            default -> {
+                return false;
+            }
+        }
+        operationService.record(handler, null);
+        return true;
+    }
+
     private EruptFieldModel remoteField(String erupt, String field) {
         return Optional.ofNullable(remoteBuild(erupt).getEruptModel().getEruptFieldModels()).orElse(List.of()).stream()
                 .filter(it -> field.equals(it.getFieldName()) && null != it.getEruptFieldJson()).findFirst().orElse(null);
@@ -361,7 +418,8 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                           String nodeName, String erupt, Forward forward) throws java.io.IOException {
         EruptBuildModel build = remoteBuild(erupt);
         switch (resolve) {
-            case REFERENCE_TREE -> writeJson(response, nodeReferenceService.tree(nodeName, build, lastPathSegment(request)));
+            case REFERENCE_TREE -> writeJson(response, nodeReferenceService.tree(nodeName, build, lastPathSegment(request),
+                    request.getParameter(DEPEND_VALUE)));
             // a field naming a fetch handler the node does not serve: the options its build resolved
             case OPTIONS -> writeJson(response, Optional.ofNullable(remoteField(erupt, lastPathSegment(request)))
                     .map(EruptFieldModel::getComponentValue).orElse(List.of()));

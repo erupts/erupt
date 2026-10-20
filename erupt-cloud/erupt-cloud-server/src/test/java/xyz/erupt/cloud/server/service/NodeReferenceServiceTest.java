@@ -3,6 +3,7 @@ package xyz.erupt.cloud.server.service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
@@ -32,6 +33,15 @@ class NodeReferenceServiceTest {
             + "{\"views\":[{\"title\":\"Parent\",\"column\":\"name\"}],"
             + "\"edit\":{\"title\":\"Parent\",\"type\":\"REFERENCE_TREE\",\"referenceTreeType\":{\"id\":\"id\",\"label\":\"name\",\"pid\":\"parent\"}}}}";
 
+    // the categories under the category picked in the form: dependColumn "parent.id" of a parent sent as its key
+    private static final String SUB = "{\"fieldName\":\"sub\",\"fieldReturnName\":\"Category\",\"eruptFieldJson\":"
+            + "{\"edit\":{\"title\":\"Sub\",\"type\":\"REFERENCE_TREE\",\"referenceTreeType\":{\"id\":\"id\",\"label\":\"name\","
+            + "\"dependField\":\"category\",\"dependColumn\":\"parent.id\"}}}}";
+
+    private static final String FILTERED = "{\"fieldName\":\"filtered\",\"fieldReturnName\":\"Category\",\"eruptFieldJson\":"
+            + "{\"edit\":{\"title\":\"Filtered\",\"type\":\"REFERENCE_TREE\",\"filter\":[{\"value\":\"id > 1\"}],"
+            + "\"referenceTreeType\":{\"id\":\"id\",\"label\":\"name\"}}}}";
+
     private final List<String> calls = new ArrayList<>();
 
     private final Map<String, JsonObject> categories = new LinkedHashMap<>();
@@ -39,6 +49,11 @@ class NodeReferenceServiceTest {
     private NodeReferenceService service;
 
     private EruptBuildModel build;
+
+    @BeforeAll
+    static void context() {
+        TestContext.init();
+    }
 
     @BeforeEach
     void setUp() throws Exception {
@@ -68,7 +83,7 @@ class NodeReferenceServiceTest {
         field.setAccessible(true);
         field.set(service, router);
         build = GsonFactory.getGson().fromJson("{\"eruptModel\":{\"eruptName\":\"Article\",\"eruptJson\":{},\"eruptFieldModels\":["
-                + CATEGORY + "," + PARENT + "]}}", EruptBuildModel.class);
+                + CATEGORY + "," + PARENT + "," + SUB + "," + FILTERED + "]}}", EruptBuildModel.class);
     }
 
     private void category(int id, String name, Integer parent) {
@@ -109,7 +124,7 @@ class NodeReferenceServiceTest {
 
     @Test
     void treeIsBuiltFromTheTargetRecords() {
-        List<TreeModel> roots = new ArrayList<>(service.tree("blog", build, "parent"));
+        List<TreeModel> roots = new ArrayList<>(service.tree("blog", build, "parent", null));
         assertEquals(1, roots.size());
         TreeModel news = roots.get(0);
         assertEquals("News", news.getLabel());
@@ -118,6 +133,21 @@ class NodeReferenceServiceTest {
         assertEquals("Sport", sport.getLabel());
         assertEquals("Football", sport.getChildren().iterator().next().getLabel());
         assertEquals(1, calls.size());
+    }
+
+    @Test
+    void dependentTreeKeepsTheRecordsUnderTheDependValue() {
+        List<TreeModel> nodes = new ArrayList<>(service.tree("blog", build, "sub", "1"));
+        assertEquals(1, nodes.size());
+        assertEquals("Sport", nodes.get(0).getLabel());
+        assertThrows(xyz.erupt.core.exception.EruptWebApiRuntimeException.class, () -> service.tree("blog", build, "sub", null));
+    }
+
+    @Test
+    void aTreeWithAFilterIsTheNodes() {
+        assertTrue(service.nodeBuildsTree(build, "filtered"));
+        assertTrue(service.nodeBuildsTree(build, "missing"));
+        assertFalse(service.nodeBuildsTree(build, "parent"));
     }
 
 }

@@ -64,8 +64,12 @@ public @interface EruptRouter {
         PAGE,
         @Comment("The response is one record: references sent as keys get their label and flattened columns")
         RECORD,
-        @Comment("A reference tree: built by the server from the referenced erupt's records when the node answers 404")
+        @Comment("A reference tree: built by the server from the referenced erupt's records, forwarded only for a field " +
+                "whose filter or orderBy the node evaluates")
         REFERENCE_TREE,
+        @Comment("The build of the erupt a field points at: the server resolves the field from the node's build and asks the " +
+                "node for that erupt's own build")
+        FIELD_BUILD,
         @Comment("The import template: written by the server from the build model when the node answers 404")
         EXCEL_TEMPLATE,
         @Comment("An export: the server pages through the node's table and encodes the file when the node answers 404")
@@ -79,7 +83,19 @@ public @interface EruptRouter {
         @Comment("A cell edit: the server reads the row through the node, patches the cell and saves the row through the node's update")
         CELL,
         @Comment("A batch edit: the cell edit of every selected row, done one row at a time through the node")
-        CELLS
+        CELLS,
+        @Comment("A drag sort: the server writes each row's new position into the dragSort field through the node's update")
+        DRAG_SORT,
+        @Comment("A card moved on a board view: the server writes its group (and swimlane) through the node's update")
+        VIS_BOARD_GROUP,
+        @Comment("An event moved on a calendar view: the server writes its dates through the node's update")
+        VIS_CALENDAR_DATE,
+        @Comment("A bar moved on a gantt view: the server writes its dates through the node's update")
+        VIS_GANTT_DATE,
+        @Comment("The links of a gantt view: the server reads them off the rows' dependencyField through the node's get")
+        VIS_GANTT_LINKS,
+        @Comment("A link drawn on a gantt view: the server writes the dependencyField through the node's update")
+        VIS_GANTT_LINK
     }
 
     enum Payload {

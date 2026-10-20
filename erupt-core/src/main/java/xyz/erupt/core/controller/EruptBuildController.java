@@ -97,7 +97,7 @@ public class EruptBuildController {
      * @return build model of the referenced erupt
      */
     @GetMapping("/{erupt}/{field}")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.FIELD_BUILD)
     public EruptBuildModel getEruptBuildByField(@PathVariable("erupt") String eruptName, @PathVariable("field") String field) {
         EruptModel eruptModel = EruptCoreService.getEruptView(eruptName);
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
