@@ -18,12 +18,12 @@ public interface EruptModule {
 
     }
 
-    @Comment("Initialize menus → executed only once; marker file location: .erupt/.${moduleName}")
+    @Comment("Menus of the module → reconciled into e_upms_menu on start whenever this definition changes; admin edits are kept")
     default List<MetaMenu> initMenus() {
         return null;
     }
 
-    @Comment("Initialization method → executed only once; marker file location: .erupt/.${moduleName}")
+    @Comment("Initialization method → executed once per database, before the module's first menu seeding (tracked in e_upms_module)")
     default void initFun() {
 
     }

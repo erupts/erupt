@@ -32,8 +32,10 @@ public class EruptProp {
     // Whether to preserve the original filename of uploaded files
     private boolean keepUploadFileName = false;
 
-    // Initialization detection method
-    private InitMethodEnum initMethodEnum = InitMethodEnum.FILE;
+    // Seed module menus on start (erupt.init-modules-menu); a module's initFun runs before its first
+    // seeding, so it goes with it. Turn off for a read-only database user, menus managed by scripts,
+    // or all but one of several applications sharing a database
+    private boolean initModulesMenu = true;
 
     // Specify which packages use Gson for serialization
     private String[] gsonHttpMessageConvertersPackages;
