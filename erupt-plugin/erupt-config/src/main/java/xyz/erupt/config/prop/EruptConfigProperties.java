@@ -23,6 +23,8 @@ public class EruptConfigProperties {
 
     public static final String PREFIX = "erupt.config";
 
-    private int refreshSeconds = 30;
+    // Seconds between polls for another instance's change; 0 (the default) does not poll. Only a
+    // cluster without erupt.redis-session needs it: with Redis sessions changes are broadcast
+    private int refreshSeconds = 0;
 
 }

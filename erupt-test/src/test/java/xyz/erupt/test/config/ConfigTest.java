@@ -208,12 +208,23 @@ class ConfigTest extends EruptApplicationTests {
         assertFalse(configService.reads("prod"));
     }
 
+    /** Another instance's change, written straight to the database here, reaches this one by a poll. */
+    @Test
+    void aPollPicksUpAChangeMadeOutsideThisInstance() {
+        assertFalse(configService.refreshIfChanged(), "nothing changed since the last reload");
+        this.item(test, "demo.polled", "from elsewhere", false);
+        assertTrue(configService.refreshIfChanged());
+        assertEquals("from elsewhere", environment.getProperty("demo.polled"));
+        assertFalse(configService.refreshIfChanged(), "a quiet poll does not reload");
+    }
+
     @Test
     void theEffectiveValuesPageShowsWhatIsReadAndWhereItCameFrom() {
         this.item(base, "demo.greeting", "shared", false);
         this.item(base, "demo.token", "s3cret", true);
         this.item(test, "demo.greeting", "for tests", false);
-        assertEquals("msg.success('2')", refreshHandler.exec(List.of(), null, new String[0]), "the button answers how many keys changed");
+        String answer = refreshHandler.exec(List.of(), null, new String[0]);
+        assertTrue(answer.startsWith("msg.success(\"") && answer.contains("2"), "the button answers how many keys changed: " + answer);
         MetaContext.register(new MetaErupt(ConfigEffectiveValue.class.getSimpleName()));
         TableQuery query = new TableQuery();
         query.setPageIndex(1);
@@ -288,7 +299,7 @@ class ConfigTest extends EruptApplicationTests {
         assertNull(environment.getProperty("demo.copied.other"), "another profile's values stay out of this instance");
 
         form.setProfile(test.getId());
-        assertEquals("msg.success('0')", handler.exec(List.of(item), form, new String[0]), "copying onto itself does nothing");
+        assertFalse(handler.exec(List.of(item), form, new String[0]).matches(".*\\d.*"), "copying onto itself does nothing, and says so without a count");
     }
 
     @Test

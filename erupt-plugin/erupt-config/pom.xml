@@ -19,6 +19,12 @@
             <artifactId>erupt-data-jpa</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <!-- RedisNotifier: a change reaches the other instances when erupt.redis-session is on -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-toolkit</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>

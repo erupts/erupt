@@ -25,7 +25,7 @@ import xyz.erupt.core.annotation.EruptDataProcessor;
 @Setter
 @Erupt(name = "Effective values", power = @Power(add = false, edit = false, delete = false, viewDetails = false, export = false),
         rowOperation = @RowOperation(code = "refresh", title = "Refresh now", icon = "fa fa-refresh", mode = RowOperation.Mode.BUTTON, callHint = "",
-                tip = "Reloads this instance's values from the database", operationHandler = ConfigRefreshHandler.class))
+                tip = "Reloads the values from the database on every instance", operationHandler = ConfigRefreshHandler.class))
 @EruptDataProcessor(ConfigEffectiveDataService.DATA_PROCESSOR)
 public class ConfigEffectiveValue {
 

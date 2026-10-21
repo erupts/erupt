@@ -19,6 +19,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.config.boot.ConfigValues;
 import xyz.erupt.config.form.ConfigCopyForm;
 import xyz.erupt.config.handler.ConfigItemHandler;
+import xyz.erupt.config.handler.ConfigRefreshHandler;
 import xyz.erupt.config.proxy.ConfigItemDataProxy;
 import xyz.erupt.jpa.model.MetaModel;
 
@@ -39,9 +40,14 @@ import java.util.Map;
 @Table(name = ConfigItem.TABLE, uniqueConstraints = @UniqueConstraint(columnNames = {ConfigItem.PROFILE_COLUMN, ConfigItem.KEY_COLUMN}))
 @Erupt(name = "Config items", dataProxy = ConfigItemDataProxy.class, orderBy = "key", power = @Power(export = false),
         linkTree = @LinkTree(field = "profile", dependNode = true),
-        rowOperation = @RowOperation(code = "copy", title = "Copy to profile", icon = "fa fa-copy", mode = RowOperation.Mode.MULTI,
-                tip = "Copies the selected keys into another profile, replacing values already there",
-                eruptClass = ConfigCopyForm.class, operationHandler = ConfigItemHandler.class))
+        rowOperation = {
+                @RowOperation(code = "copy", title = "Copy to profile", icon = "fa fa-copy", mode = RowOperation.Mode.MULTI,
+                        tip = "Copies the selected keys into another profile, replacing values already there",
+                        eruptClass = ConfigCopyForm.class, operationHandler = ConfigItemHandler.class),
+                // saving refreshes already; this is for a change made outside the page (SQL, another tool)
+                @RowOperation(code = "refresh", title = "Refresh now", icon = "fa fa-refresh", mode = RowOperation.Mode.BUTTON, callHint = "",
+                        tip = "Reloads the values from the database on every instance", operationHandler = ConfigRefreshHandler.class)
+        })
 public class ConfigItem extends MetaModel {
 
     public static final String TABLE = "e_config_item";

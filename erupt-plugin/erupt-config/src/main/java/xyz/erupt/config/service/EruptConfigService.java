@@ -15,8 +15,8 @@ import xyz.erupt.config.model.ConfigItem;
 import xyz.erupt.config.model.ConfigProfile;
 import xyz.erupt.config.prop.EruptConfigProperties;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.toolkit.notify.RedisNotifier;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,8 +25,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * The running values: the items of the layered profiles ({@link #layers()}), merged and held as
  * the property source named {@value #SOURCE} in front of every file. {@link #refresh()} reloads
- * them, sets the {@code @Value} fields again and publishes {@link EruptConfigRefreshedEvent}; a
- * poller does the same when another instance changed something.
+ * them, sets the {@code @Value} fields again and publishes {@link EruptConfigRefreshedEvent}.
+ * <p>
+ * Changes are rare, so nothing polls by default: a change made here refreshes this instance and,
+ * with {@code erupt.redis-session=true}, tells the others over Redis once it commits. A cluster
+ * without Redis sessions sets {@code erupt.config.refresh-seconds} to poll instead.
  *
  * @author YuePeng
  */
@@ -35,6 +38,11 @@ import java.util.concurrent.TimeUnit;
 public class EruptConfigService {
 
     public static final String SOURCE = "erupt-config";
+
+    // the broadcast channel; a message is the sending instance's id, so it skips its own
+    public static final String TOPIC = "erupt-config:refresh";
+
+    private static final String INSTANCE = UUID.randomUUID().toString();
 
     private final EruptDao eruptDao;
 
@@ -45,6 +53,8 @@ public class EruptConfigService {
     private final ConfigValueRefresher refresher;
 
     private final ApplicationEventPublisher publisher;
+
+    private final RedisNotifier notifier;
 
     private ScheduledExecutorService poller;
 
@@ -58,18 +68,27 @@ public class EruptConfigService {
     private Map<String, Origin> origins = Map.of();
 
     public EruptConfigService(EruptDao eruptDao, ConfigurableEnvironment environment, EruptConfigProperties properties,
-                              ConfigValueRefresher refresher, ApplicationEventPublisher publisher) {
+                              ConfigValueRefresher refresher, ApplicationEventPublisher publisher, RedisNotifier notifier) {
         this.eruptDao = eruptDao;
         this.environment = environment;
         this.properties = properties;
         this.refresher = refresher;
         this.publisher = publisher;
+        this.notifier = notifier;
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void start() {
         this.ensureProfiles();
-        this.refresh();
+        this.reload();
+        notifier.subscribe(TOPIC, sender -> {
+            if (INSTANCE.equals(sender)) return;
+            try {
+                this.reload();
+            } catch (RuntimeException e) {
+                log.warn("erupt-config: refresh on another instance's change failed: {}", e.getMessage());
+            }
+        });
         if (properties.getRefreshSeconds() > 0) {
             poller = Executors.newSingleThreadScheduledExecutor(runnable -> {
                 Thread thread = new Thread(runnable, "erupt-config");
@@ -122,8 +141,18 @@ public class EruptConfigService {
         return origins;
     }
 
-    /** Reloads the running values from the database and tells the beans. */
-    public synchronized Set<String> refresh() {
+    /**
+     * After a change made on this instance: reloads the running values, tells the beans, and has
+     * the other instances do the same once the change commits.
+     */
+    public Set<String> refresh() {
+        Set<String> changed = this.reload();
+        notifier.publish(TOPIC, INSTANCE);
+        return changed;
+    }
+
+    // Reloads the running values from the database and tells the beans
+    private synchronized Set<String> reload() {
         List<ConfigItem> items = this.items();
         Map<String, Object> next = new LinkedHashMap<>();
         Map<String, Origin> from = new TreeMap<>();
@@ -142,7 +171,7 @@ public class EruptConfigService {
         MapPropertySource source = new MapPropertySource(SOURCE, Collections.unmodifiableMap(next));
         if (sources.contains(SOURCE)) sources.replace(SOURCE, source);
         else sources.addFirst(source);
-        this.signature = signature(items);
+        this.signature = this.signature();
         this.origins = Collections.unmodifiableMap(from);
         if (!changed.isEmpty()) {
             int fields = refresher.refresh(environment);
@@ -152,17 +181,29 @@ public class EruptConfigService {
         return changed;
     }
 
-    private void refreshIfChanged() {
+    /**
+     * One poll: reloads when the database differs from the last reload. Compared by an aggregate,
+     * count and latest update time of the enabled items, so a quiet poll reads no values.
+     *
+     * @return whether it reloaded
+     */
+    public boolean refreshIfChanged() {
         try {
-            if (!signature(this.items()).equals(signature)) this.refresh();
+            if (this.signature().equals(signature)) return false;
+            this.reload();
+            return true;
         } catch (RuntimeException e) {
             log.warn("erupt-config: refresh failed: {}", e.getMessage());
+            return false;
         }
     }
 
-    private static String signature(List<ConfigItem> items) {
-        LocalDateTime latest = items.stream().map(ConfigItem::getUpdateTime).filter(Objects::nonNull).max(Comparator.naturalOrder()).orElse(null);
-        return items.size() + "@" + latest;
+    private String signature() {
+        Long count = eruptDao.lambdaQuery(ConfigItem.class).eq(ConfigItem::getEnabled, true)
+                .with(ConfigItem::getProfile).in(ConfigProfile::getCode, this.layers()).with().count();
+        Object latest = eruptDao.lambdaQuery(ConfigItem.class).eq(ConfigItem::getEnabled, true)
+                .with(ConfigItem::getProfile).in(ConfigProfile::getCode, this.layers()).with().max(ConfigItem::getUpdateTime);
+        return count + "@" + latest;
     }
 
 }

@@ -16,7 +16,7 @@ spring:
     active: prod           # the profiles this instance reads, on top of default; nothing erupt-specific
 erupt:
   config:
-    refresh-seconds: 30    # how often another instance's changes are picked up; 0 turns polling off
+    refresh-seconds: 0     # poll for other instances' changes every n seconds; 0 (default) does not poll
 ```
 
 ## Page
@@ -30,7 +30,7 @@ A secret item is masked in the table and still read by the application. An item 
 ## How values reach the application
 
 1. **Before the context starts**, `EruptConfigEnvironmentPostProcessor` reads the layered profiles with plain JDBC through `spring.datasource.*` and puts the merged map in front of every file. A database without the tables yet is skipped: first boot runs on the files' values.
-2. **At runtime**, saving an item refreshes this instance: the property source is replaced, every singleton's `@Value("${...}")` field is set again, and `EruptConfigRefreshedEvent` is published with the keys that changed. Other instances notice within `refresh-seconds`.
+2. **At runtime**, saving an item refreshes this instance: the property source is replaced, every singleton's `@Value("${...}")` field is set again, and `EruptConfigRefreshedEvent` is published with the keys that changed. Other instances: with `erupt.redis-session: true` the change is broadcast over Redis once it commits and they refresh at once; a cluster without Redis sessions sets `refresh-seconds` to poll (a quiet poll is one count query, no values are read). A single instance needs neither.
 
 ```java
 @Value("${app.mail.host:localhost}")   // follows a change

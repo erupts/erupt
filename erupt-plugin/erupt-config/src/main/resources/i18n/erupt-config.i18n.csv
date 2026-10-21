@@ -1,43 +1,48 @@
-key,zh-CN,en-US
-Config,配置中心,Config
-Config items,配置项,Config items
-Effective values,生效值,Effective values
-Source,来源,Source
-Attachment,附件,Attachment
-Profiles,Profile,Profiles
-Profile,Profile,Profile
-Code,代码,Code
-Remark,备注,Remark
-Key,键,Key
-Value,值,Value
-Enabled,启用,Enabled
-On,开,On
-Off,关,Off
-Secret,保密,Secret
-Masked,脱敏显示,Masked
-Plain,明文,Plain
-Copy to profile,复制到 profile,Copy to profile
-Target profile,目标 profile,Target profile
-Refresh now,立即刷新,Refresh now
-config.key_exists,该 profile 已有相同的键,The key already exists in this profile
-config.profile_default,default 是每个实例都读取的层，不能删除,The default profile is read by every instance and cannot be deleted
-config.profile_in_use,该 profile 下还有配置项，请先删除,The profile still has items; delete them first
-Type,类型,Type
-String,字符串,String
-Text,多行文本,Text
-Number,数字,Number
-Boolean,布尔,Boolean
-Key / value,键值对,Key / value
-JSON,JSON,JSON
-config.json_invalid,JSON 格式不正确,Invalid JSON
-config.yaml_invalid,YAML 格式不正确,Invalid YAML
-Password,密码,Password
-List,列表,List
-YAML,YAML,YAML
-Date,日期,Date
-Datetime,日期时间,Datetime
-Color,颜色,Color
-Time,时间,Time
-Icon,图标,Icon
-Image,图片,Image
-HTML,HTML,HTML
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+Config,配置中心,配置中心,Config,Configuration,設定センター,설정 센터,Конфигурация,Configuración,Konfiguration,Configuração,Konfigurasi,الإعدادات
+Config items,配置项,配置項,Config items,Éléments de configuration,設定項目,설정 항목,Параметры,Elementos de configuración,Konfigurationseinträge,Itens de configuração,Item konfigurasi,عناصر الإعداد
+Effective values,生效值,生效值,Effective values,Valeurs effectives,有効な値,적용 값,Действующие значения,Valores efectivos,Wirksame Werte,Valores efetivos,Nilai efektif,القيم الفعالة
+Source,来源,來源,Source,Source,出所,출처,Источник,Origen,Quelle,Origem,Sumber,المصدر
+Attachment,附件,附件,Attachment,Pièce jointe,添付ファイル,첨부 파일,Вложение,Adjunto,Anhang,Anexo,Lampiran,مرفق
+Profiles,Profile,Profile,Profiles,Profils,プロファイル,프로필,Профили,Perfiles,Profile,Perfis,Profil,الملفات الشخصية
+Profile,Profile,Profile,Profile,Profil,プロファイル,프로필,Профиль,Perfil,Profil,Perfil,Profil,الملف الشخصي
+Code,代码,代碼,Code,Code,コード,코드,Код,Código,Code,Código,Kode,الرمز
+Remark,备注,備註,Remark,Remarque,備考,비고,Примечание,Observación,Bemerkung,Observação,Catatan,ملاحظة
+Key,键,鍵,Key,Clé,キー,키,Ключ,Clave,Schlüssel,Chave,Kunci,المفتاح
+Value,值,值,Value,Valeur,値,값,Значение,Valor,Wert,Valor,Nilai,القيمة
+Enabled,启用,啟用,Enabled,Activé,有効,사용,Включено,Habilitado,Aktiviert,Ativado,Aktif,مفعّل
+On,开,開,On,Activé,オン,켜짐,Вкл.,Activado,Ein,Ligado,Aktif,تشغيل
+Off,关,關,Off,Désactivé,オフ,꺼짐,Выкл.,Desactivado,Aus,Desligado,Nonaktif,إيقاف
+Secret,保密,保密,Secret,Secret,機密,비밀,Секрет,Secreto,Geheim,Secreto,Rahasia,سري
+Masked,脱敏显示,脫敏顯示,Masked,Masqué,マスク表示,마스킹,Скрыто,Enmascarado,Maskiert,Mascarado,Disamarkan,مخفي
+Plain,明文,明文,Plain,En clair,平文,평문,Открыто,Texto plano,Klartext,Texto simples,Teks biasa,نص عادي
+Copy to profile,复制到 profile,複製到 profile,Copy to profile,Copier vers un profil,プロファイルへコピー,프로필로 복사,Копировать в профиль,Copiar al perfil,In Profil kopieren,Copiar para perfil,Salin ke profil,نسخ إلى ملف شخصي
+Target profile,目标 profile,目標 profile,Target profile,Profil cible,コピー先プロファイル,대상 프로필,Целевой профиль,Perfil de destino,Zielprofil,Perfil de destino,Profil tujuan,الملف الشخصي الهدف
+Refresh now,立即刷新,立即重新整理,Refresh now,Actualiser maintenant,今すぐ更新,지금 새로 고침,Обновить сейчас,Actualizar ahora,Jetzt aktualisieren,Atualizar agora,Segarkan sekarang,تحديث الآن
+config.key_exists,该 profile 已有相同的键,該 profile 已有相同的鍵,The key already exists in this profile,Cette clé existe déjà dans ce profil,このプロファイルには同じキーが既にあります,이 프로필에 같은 키가 이미 있습니다,Этот ключ уже есть в профиле,La clave ya existe en este perfil,Der Schlüssel existiert in diesem Profil bereits,A chave já existe neste perfil,Kunci sudah ada di profil ini,المفتاح موجود بالفعل في هذا الملف الشخصي
+config.profile_default,default 是每个实例都读取的层，不能删除,default 是每個實例都讀取的層，不能刪除,The default profile is read by every instance and cannot be deleted,Le profil default est lu par chaque instance et ne peut pas être supprimé,default はすべてのインスタンスが読み込むため削除できません,default 프로필은 모든 인스턴스가 읽으므로 삭제할 수 없습니다,Профиль default читают все экземпляры; его нельзя удалить,El perfil default lo leen todas las instancias y no se puede eliminar,Das Profil default wird von jeder Instanz gelesen und kann nicht gelöscht werden,O perfil default é lido por todas as instâncias e não pode ser eliminado,Profil default dibaca semua instans dan tidak dapat dihapus,يقرأ كل مثيل الملف default ولا يمكن حذفه
+config.profile_in_use,该 profile 下还有配置项，请先删除,該 profile 下還有配置項，請先刪除,The profile still has items; delete them first,Le profil contient encore des éléments ; supprimez-les d'abord,このプロファイルにはまだ項目があります。先に削除してください,이 프로필에 아직 항목이 있습니다. 먼저 삭제하세요,В профиле ещё есть параметры; сначала удалите их,El perfil aún tiene elementos; elimínelos primero,Das Profil enthält noch Einträge; löschen Sie diese zuerst,O perfil ainda tem itens; elimine-os primeiro,Profil masih memiliki item; hapus terlebih dahulu,لا يزال الملف الشخصي يحتوي على عناصر؛ احذفها أولاً
+Type,类型,類型,Type,Type,種類,유형,Тип,Tipo,Typ,Tipo,Jenis,النوع
+String,字符串,字串,String,Chaîne,文字列,문자열,Строка,Cadena,Zeichenkette,Texto,String,نص
+Text,多行文本,多行文字,Text,Texte,テキスト,텍스트,Текст,Texto,Text,Texto longo,Teks,نص طويل
+Number,数字,數字,Number,Nombre,数値,숫자,Число,Número,Zahl,Número,Angka,رقم
+Boolean,布尔,布林,Boolean,Booléen,真偽値,불리언,Логический,Booleano,Boolesch,Booleano,Boolean,منطقي
+Key / value,键值对,鍵值對,Key / value,Clé / valeur,キー / 値,키 / 값,Ключ / значение,Clave / valor,Schlüssel / Wert,Chave / valor,Kunci / nilai,مفتاح / قيمة
+JSON,JSON,JSON,JSON,JSON,JSON,JSON,JSON,JSON,JSON,JSON,JSON,JSON
+config.json_invalid,JSON 格式不正确,JSON 格式不正確,Invalid JSON,JSON invalide,JSON の形式が正しくありません,잘못된 JSON입니다,Некорректный JSON,JSON no válido,Ungültiges JSON,JSON inválido,JSON tidak valid,JSON غير صالح
+config.yaml_invalid,YAML 格式不正确,YAML 格式不正確,Invalid YAML,YAML invalide,YAML の形式が正しくありません,잘못된 YAML입니다,Некорректный YAML,YAML no válido,Ungültiges YAML,YAML inválido,YAML tidak valid,YAML غير صالح
+Password,密码,密碼,Password,Mot de passe,パスワード,비밀번호,Пароль,Contraseña,Passwort,Palavra-passe,Kata sandi,كلمة المرور
+List,列表,列表,List,Liste,リスト,목록,Список,Lista,Liste,Lista,Daftar,قائمة
+YAML,YAML,YAML,YAML,YAML,YAML,YAML,YAML,YAML,YAML,YAML,YAML,YAML
+Date,日期,日期,Date,Date,日付,날짜,Дата,Fecha,Datum,Data,Tanggal,التاريخ
+Datetime,日期时间,日期時間,Datetime,Date et heure,日時,날짜 및 시간,Дата и время,Fecha y hora,Datum und Uhrzeit,Data e hora,Tanggal dan waktu,التاريخ والوقت
+Color,颜色,顏色,Color,Couleur,色,색상,Цвет,Color,Farbe,Cor,Warna,اللون
+Time,时间,時間,Time,Heure,時刻,시간,Время,Hora,Uhrzeit,Hora,Waktu,الوقت
+Icon,图标,圖示,Icon,Icône,アイコン,아이콘,Иконка,Icono,Symbol,Ícone,Ikon,أيقونة
+Image,图片,圖片,Image,Image,画像,이미지,Изображение,Imagen,Bild,Imagem,Gambar,صورة
+HTML,HTML,HTML,HTML,HTML,HTML,HTML,HTML,HTML,HTML,HTML,HTML,HTML
+config.refreshed,已刷新：{n} 项配置发生变化,已重新整理：{n} 項設定發生變化,Refreshed: {n} keys changed,Actualisé : {n} clés modifiées,更新しました：{n} 件のキーが変更されました,새로 고침 완료: {n}개 키 변경됨,Обновлено: изменено ключей — {n},Actualizado: {n} claves cambiaron,Aktualisiert: {n} Schlüssel geändert,Atualizado: {n} chaves alteradas,Diperbarui: {n} kunci berubah,تم التحديث: تغيّر {n} من المفاتيح
+config.refreshed_none,已刷新：没有变化,已重新整理：沒有變化,Refreshed: nothing changed,Actualisé : aucun changement,更新しました：変更はありません,새로 고침 완료: 변경 사항 없음,Обновлено: изменений нет,Actualizado: sin cambios,Aktualisiert: keine Änderungen,Atualizado: sem alterações,Diperbarui: tidak ada perubahan,تم التحديث: لا توجد تغييرات
+config.copied,已复制 {n} 项,已複製 {n} 項,Copied {n} keys,{n} clés copiées,{n} 件をコピーしました,{n}개 키를 복사했습니다,Скопировано ключей: {n},{n} claves copiadas,{n} Schlüssel kopiert,{n} chaves copiadas,{n} kunci disalin,تم نسخ {n} من المفاتيح
+config.copied_none,没有需要复制的配置项,沒有需要複製的設定項,Nothing to copy,Rien à copier,コピーする項目はありません,복사할 항목이 없습니다,Нечего копировать,Nada que copiar,Nichts zu kopieren,Nada para copiar,Tidak ada yang disalin,لا يوجد ما يُنسخ
+Reloads the values from the database on every instance,从数据库重新加载所有实例的配置值,從資料庫重新載入所有實例的設定值,Reloads the values from the database on every instance,Recharge les valeurs depuis la base de données sur chaque instance,すべてのインスタンスでデータベースから値を再読み込みします,모든 인스턴스에서 데이터베이스의 값을 다시 불러옵니다,Перезагружает значения из базы данных на всех экземплярах,Recarga los valores desde la base de datos en todas las instancias,Lädt die Werte auf jeder Instanz neu aus der Datenbank,Recarrega os valores da base de dados em todas as instâncias,Memuat ulang nilai dari basis data di setiap instans,يعيد تحميل القيم من قاعدة البيانات على كل مثيل
