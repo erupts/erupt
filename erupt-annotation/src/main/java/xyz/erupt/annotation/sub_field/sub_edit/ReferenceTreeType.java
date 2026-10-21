@@ -39,4 +39,7 @@ public @interface ReferenceTreeType {
 
     @Comment("Number of expanded levels")
     int expandLevel() default 999;
+
+    @Comment("Only leaf nodes can be selected")
+    boolean leafOnly() default false;
 }
