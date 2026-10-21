@@ -65,6 +65,29 @@ not defaults of the machine a feature happens to be written on — check a new f
 - **Test against more than H2.** `erupt-test` runs on H2 in MySQL mode; a feature that touches SQL,
   metadata or DDL deserves a look at how Oracle, PostgreSQL and SQL Server would read it.
 
+## Extension Compatibility
+
+A feature that works in the erupt core is not done until it also holds for the three extensions built on
+top of it. Every new feature or behavior change must be checked against each of them; state the result
+(affected or not, and what was done) in the PR description.
+
+- **erupt-cloud (remote models).** A model may live on a node, not in this JVM: the server then has no
+  entity class, no JPA mapping, no `DataProxy` and no Spring bean for it. A feature that reaches for
+  `EruptModel.getClazz()`, `eruptDao` on the entity, reflection on fields or a local handler must either
+  go through the wire protocol (`erupt-cloud/PROTOCOL.md`) or be explicitly switched off for cloud models
+  — never fail silently. `erupt-cloud-node-lite` has no Spring at all, so node-side code cannot assume it.
+- **erupt-sdk (non-Java nodes, `../erupt-sdk`).** Ten language SDKs implement the node side from
+  `schema/` and `PROTOCOL.md` alone. A new annotation attribute, field type, endpoint or response field
+  is a protocol change: regenerate `schema/` (`-Pnode-schema`), update `PROTOCOL.md`, keep the change
+  backward compatible (old nodes omit the new field — the server must default it), and note whether the
+  SDKs and the conformance suite need a follow-up.
+- **erupt-tenant (multi-tenant SaaS, `../erupt-tenant`).** It builds on `MetaUser.tenantId`,
+  `UpmsTenantSessions`, `UpmsTenant`, `EruptUser`, `EruptMenu`, `LoginModel`, the token/session services
+  and interceptor ordering. New tables holding per-user or business data, caches, Redis keys, broadcasts,
+  scheduled jobs and file paths must be tenant-scoped (one tenant never sees another's data); new menus
+  must pass through the tenant menu scope; and a signature change to an upms/core class it imports
+  breaks it — grep `../erupt-tenant` before renaming or changing one.
+
 ## Architecture Overview
 
 Erupt is a **low-code platform framework** that auto-generates admin UIs from Java annotations, with zero frontend code required.
