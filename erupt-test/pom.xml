@@ -95,6 +95,17 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-ai-dev</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- optional to erupt-ai-dev; here so its agents run against the MCP endpoint -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-ai</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>

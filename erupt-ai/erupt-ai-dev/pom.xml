@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>xyz.erupt</groupId>
+        <artifactId>erupt</artifactId>
+        <version>2.4.0</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>erupt-ai-dev</artifactId>
+    <name>Erupt : AI Dev</name>
+    <description>AI software delivery: projects with git repositories, a requirement pool and per-requirement worktrees that coding agents work in.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-upms</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- optional: with erupt-ai the agents read their requirement and report through its MCP endpoint;
+             without it they report through marker lines in their output -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-ai</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-git</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- stage changes become in-app notices when the application has erupt-notice -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-notice</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+</project>

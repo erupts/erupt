@@ -106,11 +106,13 @@
         <module>erupt-ai/erupt-ai-canvas</module>
         <module>erupt-ai/erupt-ai-rag</module>
         <module>erupt-ai/erupt-ai-decision</module>
+        <module>erupt-ai/erupt-ai-dev</module>
 
         <!-- Support (shared capabilities) -->
         <module>erupt-support/erupt-toolkit</module>
         <module>erupt-support/erupt-excel</module>
         <module>erupt-support/erupt-websocket</module>
+        <module>erupt-support/erupt-git</module>
 
         <!-- Plugin -->
         <module>erupt-plugin/erupt-report</module>

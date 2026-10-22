@@ -25,6 +25,9 @@ public class McpRequest {
         private String name;
 
         private Map<String, Object> arguments;
+
+        // initialize only: the version the client speaks
+        private String protocolVersion;
     }
 
 }

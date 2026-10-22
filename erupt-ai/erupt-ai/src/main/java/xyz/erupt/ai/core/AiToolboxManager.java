@@ -38,13 +38,28 @@ public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler<V
 
     private static final Map<String, Object> aiMethodBeanMap = new HashMap<>();
 
+    // tools of @AiToolbox(exposed = false): reachable through an McpAuthenticator grant only
+    @Getter
+    private static final Map<String, Method> grantedMethodMap = new LinkedHashMap<>();
+
     @Getter
     private static final List<Object> tools = new ArrayList<>();
 
 
-    @SneakyThrows
     public static Object invoke(ToolExecutionRequest request) {
+        return invoke(aiMethodMap.get(request.name()), request);
+    }
+
+    /**
+     * Invokes an exposed or a granted tool; the caller has checked the grant allows it.
+     */
+    public static Object invokeGranted(ToolExecutionRequest request) {
         Method method = aiMethodMap.get(request.name());
+        return invoke(null != method ? method : grantedMethodMap.get(request.name()), request);
+    }
+
+    @SneakyThrows
+    private static Object invoke(Method method, ToolExecutionRequest request) {
         if (null != method) {
             Object[] args = new Object[method.getParameterCount()];
             if (StringUtils.isNotBlank(request.arguments())) {
@@ -66,10 +81,11 @@ public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler<V
         applicationContext.getBeansWithAnnotation(AiToolbox.class).values().forEach(bean -> {
             Object target = AopProxyUtils.getSingletonTarget(bean);
             Object realBean = target != null ? target : bean;
-            tools.add(realBean);
+            boolean exposed = realBean.getClass().getAnnotation(AiToolbox.class).exposed();
+            if (exposed) tools.add(realBean);
             for (Method method : realBean.getClass().getDeclaredMethods()) {
                 if (method.isAnnotationPresent(Tool.class)) {
-                    aiMethodMap.put(method.getName(), method);
+                    (exposed ? aiMethodMap : grantedMethodMap).put(method.getName(), method);
                     aiMethodBeanMap.put(method.getName(), realBean);
                 }
             }
