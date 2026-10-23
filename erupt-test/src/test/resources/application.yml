@@ -20,3 +20,6 @@ erupt:
     db-path: target/designer-test.db
   config:
     refresh-seconds: 0
+  ai-dev:
+    # keep bare clones and worktrees out of the user's home directory
+    root: target/ai-dev-test

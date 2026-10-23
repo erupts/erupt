@@ -103,8 +103,8 @@ The project is a multi-module Maven project (~50 modules):
 | Platform | `erupt-upms` (user/permissions), `erupt-security`, `erupt-admin`, `erupt-web` (frontend assets) |
 | Starter | `erupt-starter/{erupt-spring-boot-starter,erupt-spring-boot-starter-all}` |
 | Templates | `erupt-tpl/erupt-tpl` (engine) + `erupt-tpl/{ant-design,element-ui,element-plus,amis}` (skins) |
-| AI | `erupt-ai/{erupt-ai,erupt-ai-canvas,erupt-ai-claw,erupt-ai-staff,erupt-ai-rag}` (LLM + MCP via langchain4j; RAG knowledge base with Qdrant/Milvus) |
-| Support | `erupt-support/{erupt-toolkit,erupt-excel,erupt-websocket}` (shared capabilities: cache/notify, import/export, realtime transport) |
+| AI | `erupt-ai/{erupt-ai,erupt-ai-canvas,erupt-ai-claw,erupt-ai-staff,erupt-ai-rag,erupt-ai-dev}` (LLM + MCP via langchain4j; RAG knowledge base with Qdrant/Milvus; erupt-ai-dev is AI software delivery: projects with git repos, a requirement pool scoped by `@EruptScope`, worktrees read live from git) |
+| Support | `erupt-support/{erupt-toolkit,erupt-excel,erupt-websocket,erupt-git}` (shared capabilities: cache/notify, import/export, realtime transport, git over the CLI: bare repos, worktrees, rebase/push) |
 | Plugin | `erupt-plugin/{erupt-report,erupt-designer,erupt-job,erupt-generator,erupt-monitor,erupt-magic-api,erupt-notice,erupt-print,erupt-terminal,erupt-remote,erupt-comment,erupt-revision,erupt-file-center}` — erupt-file-center is a Finder-style file center over the upload directory, extra folders and the S3 bucket — the ready-made Kubernetes admin built on erupt-data-k8s lives in its own repo, github.com/erupt-io/erupt-k8s-dashboard |
 | Cloud | `erupt-cloud/{erupt-cloud-common,erupt-cloud-server,erupt-cloud-node,erupt-cloud-node-jpa}`; `erupt-cloud-node-lite` is a node without Spring (only `erupt-annotation`, `erupt-cloud-common` and `linq.j`; common's `spring-web` is optional for that reason), mounted by `erupt-cloud-node-{solon,quarkus,micronaut,vertx,ktor,servlet}` (`-ktor` is Kotlin, built by `kotlin-maven-plugin`) |
 | Deploy | `erupt-deploy/erupt-docker` (all-in-one Docker image; has its own `deploy.sh`) |
