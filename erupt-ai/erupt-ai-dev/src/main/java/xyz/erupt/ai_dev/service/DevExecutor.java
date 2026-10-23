@@ -124,8 +124,8 @@ public class DevExecutor {
      */
     public void start() {
         if (!this.enabled()) return;
-        for (DevRequirement r : this.across(RequirementStage.RUNNING, RequirementStage.VERIFYING)) {
-            this.fail(r.getTenantId(), r.getId(), "Interrupted by a server restart, retry to continue");
+        for (Pending r : this.across(RequirementStage.RUNNING, RequirementStage.VERIFYING)) {
+            this.fail(r.tenant(), r.id(), "Interrupted by a server restart, retry to continue");
         }
         poller.scheduleWithFixedDelay(this::poll, 5, eruptAiDevProp.getExecutor().getPollSeconds(), TimeUnit.SECONDS);
     }
@@ -139,11 +139,11 @@ public class DevExecutor {
 
     private void poll() {
         try {
-            for (DevRequirement r : this.across(RequirementStage.QUEUED)) {
+            for (Pending r : this.across(RequirementStage.QUEUED)) {
                 if (active.size() >= eruptAiDevProp.getExecutor().getMaxConcurrent()) return;
-                if (!active.add(r.getId())) continue;
-                String tenant = r.getTenantId();
-                Long id = r.getId();
+                if (!active.add(r.id())) continue;
+                String tenant = r.tenant();
+                Long id = r.id();
                 workers.execute(() -> {
                     try {
                         this.execute(tenant, id);
@@ -158,11 +158,16 @@ public class DevExecutor {
         }
     }
 
+    // a requirement to act on, with the tenant of its project that every later step binds to
+    private record Pending(Long id, String tenant) {
+    }
+
     // requirements in these stages in every tenant, oldest first
-    private List<DevRequirement> across(RequirementStage... stages) {
+    private List<Pending> across(RequirementStage... stages) {
         return devTx.call(UpmsTenant.PLATFORM, () -> eruptDao.lambdaQuery(DevRequirement.class).allTenants()
                 .in(DevRequirement::getStage, List.of(stages)).list().stream()
                 .sorted(Comparator.comparing(DevRequirement::getUpdateTime, Comparator.nullsFirst(Comparator.naturalOrder())))
+                .map(r -> new Pending(r.getId(), r.getProject().getTenantId()))
                 .toList());
     }
 

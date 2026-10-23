@@ -10,6 +10,7 @@ import xyz.erupt.ai_dev.model.DevRequirement;
 import xyz.erupt.ai_dev.runner.DevRunners;
 import xyz.erupt.ai_dev.service.DevAccessService;
 import xyz.erupt.ai_dev.service.DevRunContext;
+import xyz.erupt.ai_dev.service.DevReviewService;
 import xyz.erupt.ai_dev.service.DevWorkspaceService;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -45,6 +46,9 @@ public class DevRequirementProxy implements DataProxy<DevRequirement> {
     @Resource
     private EruptDao eruptDao;
 
+    @Resource
+    private DevReviewService devReviewService;
+
     @Override
     public void beforeAdd(DevRequirement requirement) {
         DevProject project = this.project(requirement);
@@ -55,7 +59,6 @@ public class DevRequirementProxy implements DataProxy<DevRequirement> {
         requirement.setSeq(null == max ? 1 : max + 1);
         requirement.setCode("REQ-" + requirement.getSeq());
         requirement.setStage(RequirementStage.DRAFT);
-        requirement.setVersion(0);
         requirement.setProgress(0);
         MetaUserinfo user = devAccessService.user();
         if (null != user) requirement.setCreator(eruptDao.find(EruptUser.class, user.getId()));
@@ -106,6 +109,7 @@ public class DevRequirementProxy implements DataProxy<DevRequirement> {
                 + "(select s.id from DevAgentSession s where s.requirement.id = :id)").setParameter("id", requirement.getId()).executeUpdate();
         em.createQuery("delete from DevAgentSession s where s.requirement.id = :id").setParameter("id", requirement.getId()).executeUpdate();
         em.createQuery("delete from DevRequirementDelivery d where d.requirement.id = :id").setParameter("id", requirement.getId()).executeUpdate();
+        devReviewService.delete(requirement.getId());
     }
 
     private DevProject project(DevRequirement requirement) {

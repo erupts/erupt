@@ -12,6 +12,7 @@ import xyz.erupt.ai_dev.runner.DevRunners;
 import xyz.erupt.ai_dev.model.*;
 import xyz.erupt.ai_dev.service.DevAccessService;
 import xyz.erupt.ai_dev.service.DevExecutor;
+import xyz.erupt.ai_dev.service.DevReviewService;
 import xyz.erupt.ai_dev.service.DevRepoService;
 import xyz.erupt.ai_dev.service.DevRunContext;
 import xyz.erupt.ai_dev.service.DevWorkspaceService;
@@ -79,9 +80,15 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
                            LocalDateTime deliveredAt) {
     }
 
-    public record Detail(Row requirement, String description, Integer version, Long projectId, String projectName, String qaAgent,
+    public record Detail(Row requirement, String description, Long projectId, String projectName, String qaAgent,
                          List<Session> sessions, List<Delivery> deliveries, boolean canReview, boolean executorEnabled,
-                         boolean canApprove) {
+                         boolean canApprove, List<Review> reviews) {
+    }
+
+    /**
+     * One review, newest first: an approval with its note, or a rejection with its reason.
+     */
+    public record Review(ReviewDecision decision, String comment, String reviewer, String reviewerAvatar, LocalDateTime reviewedAt) {
     }
 
     public record RepoDiff(String alias, String base, String branch, List<String> files, String patch, boolean truncated) {
@@ -104,6 +111,9 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
 
     @Resource
     private DevWorkspaceService devWorkspaceService;
+
+    @Resource
+    private DevReviewService devReviewService;
 
     @Override
     public String convertAuthStr(EruptRouter eruptRouter, HttpServletRequest request, String authStr) {
@@ -195,9 +205,13 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
                 .setParameter("id", id).getResultList().stream()
                 .map(d -> new Delivery(d.getRepoAlias(), d.getBranch(), d.getCommitSha(), d.getStatus(), d.getMessage(), d.getDeliveredAt())).toList();
         boolean review = this.canReview(r.getProject().getId());
-        return R.ok(new Detail(this.row(r, r.getProject(), review), r.getDescription(), r.getVersion(), r.getProject().getId(), r.getProject().getName(),
+        List<DevRequirementReview> reviews = devReviewService.reviews(id);
+        return R.ok(new Detail(this.row(r, r.getProject(), review), r.getDescription(), r.getProject().getId(), r.getProject().getName(),
                 Boolean.TRUE.equals(r.getQaReview()) ? this.agent(r) + " QA" : null, sessions, deliveries, review, devExecutor.enabled(),
-                devAccessService.mayApprove(r)));
+                devAccessService.mayApprove(r),
+                reviews.stream().map(v -> new Review(v.getDecision(), v.getComment(),
+                        null == v.getReviewer() ? null : v.getReviewer().getName(),
+                        null == v.getReviewer() ? null : v.getReviewer().getAvatar(), v.getReviewedAt())).toList()));
     }
 
     /**

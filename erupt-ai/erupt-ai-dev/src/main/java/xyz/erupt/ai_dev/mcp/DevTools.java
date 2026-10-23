@@ -56,7 +56,6 @@ public class DevTools {
             JsonArray repos = new JsonArray();
             r.getRepos().stream().sorted().forEach(repos::add);
             json.add("repositories", repos);
-            json.addProperty("version", r.getVersion());
             return json.toString();
         });
     }
