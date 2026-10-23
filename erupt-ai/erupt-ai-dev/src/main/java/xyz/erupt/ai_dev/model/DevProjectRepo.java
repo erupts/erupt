@@ -3,8 +3,6 @@ package xyz.erupt.ai_dev.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.TenantId;
 import xyz.erupt.ai_dev.constant.RepoStatus;
 import xyz.erupt.ai_dev.scope.RemoteBranchFetch;
 import xyz.erupt.annotation.Erupt;
@@ -16,7 +14,6 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.AutoCompleteType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
-import xyz.erupt.upms.helper.UpmsTenant;
 import xyz.erupt.jpa.model.BaseModel;
 
 import java.time.LocalDateTime;
@@ -35,13 +32,6 @@ import java.time.LocalDateTime;
 @Entity
 @EruptI18n
 public class DevProjectRepo extends BaseModel {
-
-    // owner tenant, UpmsTenant.PLATFORM for the platform: stamped from the writer's session and
-    // applied by Hibernate to every query, so one tenant never reads another's rows
-    @TenantId
-    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
-    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
-    private String tenantId;
 
     @EruptField(
             views = @View(title = "Alias"),
