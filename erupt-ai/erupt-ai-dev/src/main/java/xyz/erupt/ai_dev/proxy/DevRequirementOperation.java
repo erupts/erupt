@@ -13,12 +13,15 @@ import xyz.erupt.ai_dev.runner.DevAgentProcess;
 import xyz.erupt.ai_dev.service.DevAccessService;
 import xyz.erupt.ai_dev.service.DevDeliveryService;
 import xyz.erupt.ai_dev.service.DevExecutor;
+import xyz.erupt.ai_dev.service.DevRunContext;
+import xyz.erupt.ai_dev.service.DevWorkspaceService;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptUser;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -50,6 +53,9 @@ public class DevRequirementOperation implements OperationHandler<DevRequirement,
 
     @Resource
     private DevNotices devNotices;
+
+    @Resource
+    private DevWorkspaceService devWorkspaceService;
 
     @Resource
     private TransactionTemplate transactionTemplate;
@@ -121,10 +127,25 @@ public class DevRequirementOperation implements OperationHandler<DevRequirement,
                     throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai_dev.stage_invalid"));
                 }
                 r.setStage(RequirementStage.CANCELLED);
+                // nothing will run from it again: its worktrees go with it
+                this.discard(r);
+            }
+            case "cleanup" -> {
+                // agents never work from it at this point; acceptance still needs the change to deliver it
+                this.from(r, RequirementStage.DRAFT, RequirementStage.REVIEW, RequirementStage.FAILED, RequirementStage.CANCELLED);
+                this.discard(r);
             }
             default -> throw new EruptWebApiRuntimeException("Unknown action " + action);
         }
         return null;
+    }
+
+    private void discard(DevRequirement r) {
+        try {
+            devWorkspaceService.discard(DevRunContext.of(r.getProject(), r));
+        } catch (IOException | RuntimeException e) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai_dev.cleanup_failed") + " " + e.getMessage());
+        }
     }
 
     // any instance may queue; the one with the executor enabled runs it

@@ -6,12 +6,15 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.TenantId;
 import xyz.erupt.ai_dev.constant.RepoStatus;
+import xyz.erupt.ai_dev.scope.RemoteBranchFetch;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.AutoCompleteType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.upms.helper.UpmsTenant;
 import xyz.erupt.jpa.model.BaseModel;
@@ -57,14 +60,18 @@ public class DevProjectRepo extends BaseModel {
 
     @EruptField(
             views = @View(title = "Base Branch"),
-            edit = @Edit(title = "Base Branch", desc = "Worktrees start from the latest origin of this branch; blank takes the remote's default branch")
+            edit = @Edit(title = "Base Branch", type = EditType.AUTO_COMPLETE,
+                    desc = "Worktrees start from the latest origin of this branch; blank takes the remote's default branch",
+                    // the remote's branches as soon as the field is focused
+                    autoCompleteType = @AutoCompleteType(handler = RemoteBranchFetch.class, triggerLength = 0))
     )
     private String baseBranch;
 
     @EruptField(
             views = @View(title = "Target Branch"),
-            edit = @Edit(title = "Target Branch",
-                    desc = "Branch a delivery is pushed to after rebasing; blank pushes to a branch of its own, req/<code>")
+            edit = @Edit(title = "Target Branch", type = EditType.AUTO_COMPLETE,
+                    desc = "Branch a delivery is pushed to after rebasing; blank pushes to a branch of its own, req/<code>",
+                    autoCompleteType = @AutoCompleteType(handler = RemoteBranchFetch.class, triggerLength = 0))
     )
     private String targetBranch;
 

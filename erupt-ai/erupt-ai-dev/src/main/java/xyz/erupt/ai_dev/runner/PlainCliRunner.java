@@ -37,6 +37,11 @@ public class PlainCliRunner implements CodingAgentRunner {
     }
 
     @Override
+    public String icon() {
+        return StringUtils.trimToNull(cli.getIcon());
+    }
+
+    @Override
     public String binary() {
         return StringUtils.defaultIfBlank(cli.getBinary(), code);
     }

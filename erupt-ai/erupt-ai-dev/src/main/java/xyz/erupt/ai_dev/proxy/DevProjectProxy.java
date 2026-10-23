@@ -4,6 +4,11 @@ import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai_dev.constant.MemberRole;
+import xyz.erupt.ai_dev.constant.RequirementStage;
+import xyz.erupt.ai_dev.model.DevRequirement;
+import xyz.erupt.ai_dev.service.DevLayout;
+import xyz.erupt.ai_dev.service.DevRunContext;
+import xyz.erupt.ai_dev.service.DevWorkspaceService;
 import xyz.erupt.ai_dev.model.DevProject;
 import xyz.erupt.ai_dev.model.DevProjectMember;
 import xyz.erupt.ai_dev.model.DevProjectRepo;
@@ -22,6 +27,10 @@ import xyz.erupt.git.model.GitRemote;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptUser;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +45,9 @@ import java.util.Set;
  */
 @Component
 public class DevProjectProxy implements DataProxy<DevProject>, OperationHandler<DevProject, Void> {
+
+    @Resource
+    private DevWorkspaceService devWorkspaceService;
 
     @Resource
     private DevAccessService devAccessService;
@@ -116,18 +128,54 @@ public class DevProjectProxy implements DataProxy<DevProject>, OperationHandler<
     // Row operation: sync repositories
     @Override
     public String exec(List<DevProject> data, Void form, String[] param) {
+        boolean cleanup = null != param && param.length > 0 && "cleanup".equals(param[0]);
         for (DevProject project : data) {
-            devAccessService.requireMember(project.getId());
-            devRepoService.syncAfterCommit(project.getId());
+            if (cleanup) {
+                devAccessService.requireManage(project.getId());
+                this.cleanUpLeftovers(eruptDao.find(DevProject.class, project.getId()));
+            } else {
+                devAccessService.requireMember(project.getId());
+                devRepoService.syncAfterCommit(project.getId());
+            }
         }
         return null;
+    }
+
+    // workspaces nothing will run from again: delivered, cancelled, or of a requirement since deleted
+    private void cleanUpLeftovers(DevProject project) {
+        Map<String, DevRequirement> byDir = new HashMap<>();
+        eruptDao.getEntityManager().createQuery("select r from DevRequirement r where r.project.id = :pid", DevRequirement.class)
+                .setParameter("pid", project.getId()).getResultList()
+                .forEach(r -> byDir.put(DevLayout.requirementDir(r.getCode()), r));
+        for (String dir : devWorkspaceService.workspaces(project.getTenantId(), project.getCode())) {
+            DevRequirement r = byDir.get(dir);
+            try {
+                if (null == r) {
+                    devWorkspaceService.discardDirectory(project.getTenantId(), project.getCode(), dir);
+                } else if (r.getStage() == RequirementStage.DELIVERED || r.getStage() == RequirementStage.CANCELLED) {
+                    devWorkspaceService.discard(DevRunContext.of(project, r));
+                }
+            } catch (IOException | RuntimeException e) {
+                throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai_dev.cleanup_failed") + " " + dir + ": " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public void afterFetch(Collection<Map<String, Object>> list) {
+        for (Map<String, Object> row : list) {
+            Object id = row.get("id");
+            if (null == id) continue;
+            DevProject project = eruptDao.find(DevProject.class, Long.valueOf(id.toString()));
+            if (null != project) row.put("activeWorkspaces", devWorkspaceService.workspaces(project.getTenantId(), project.getCode()).size());
+        }
     }
 
     // the base branch must exist on the remote, when it answers; blank takes the remote's default branch
     private void checkBaseBranch(DevProjectRepo repo) {
         GitRemote remote;
         try {
-            remote = eruptGit.remote(repo.getUrl(), devRepoService.auth(repo.getCredential()));
+            remote = eruptGit.remote(repo.getUrl(), devRepoService.auth(repo.getCredential(), repo.getUrl()));
         } catch (GitException e) {
             // a remote that is down for now does not block the save of a named branch; the run checks again
             if (StringUtils.isNotBlank(repo.getBaseBranch())) return;
@@ -173,6 +221,13 @@ public class DevProjectProxy implements DataProxy<DevProject>, OperationHandler<
             }
             if (StringUtils.isNotBlank(repo.getCredential()) && !devRepoService.credentialExists(repo.getCredential())) {
                 throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai_dev.credential_unknown") + ": " + repo.getCredential());
+            }
+            try {
+                // the credential may go to this host at all: refused before anything is sent
+                devRepoService.auth(repo.getCredential(), repo.getUrl());
+            } catch (GitException e) {
+                throw new EruptWebApiRuntimeException(repo.getAlias() + ": " + I18nTranslate.$translate("ai_dev.credential_host_denied")
+                        .replace("{0}", repo.getCredential()));
             }
             this.checkBaseBranch(repo);
         }

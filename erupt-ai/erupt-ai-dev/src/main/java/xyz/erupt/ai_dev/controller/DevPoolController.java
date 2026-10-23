@@ -13,6 +13,7 @@ import xyz.erupt.ai_dev.service.DevAccessService;
 import xyz.erupt.ai_dev.service.DevExecutor;
 import xyz.erupt.ai_dev.service.DevRepoService;
 import xyz.erupt.ai_dev.service.DevRunContext;
+import xyz.erupt.ai_dev.service.DevWorkspaceService;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -57,7 +58,7 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
     public record Row(Long id, String code, String title, RequirementStage stage, Priority priority, Integer progress,
                       String phase, Set<String> repos, String verdict, String statusMessage, String createBy, String reviewer,
                       String agent, LocalDateTime createTime, LocalDateTime updateTime, boolean mine, boolean toReview,
-                      String createByAvatar, String reviewerAvatar, String model) {
+                      String createByAvatar, String reviewerAvatar, String model, String executor, String executorIcon) {
     }
 
     public record Session(Long id, AgentRole role, String agentName, String executor, SessionStatus status,
@@ -91,6 +92,9 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
     @Resource
     private DevRunners devRunners;
 
+    @Resource
+    private DevWorkspaceService devWorkspaceService;
+
     @Override
     public String convertAuthStr(EruptRouter eruptRouter, HttpServletRequest request, String authStr) {
         return PAGE;
@@ -116,14 +120,14 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, verifyHandler = DevPoolController.class)
     public R<Executors> executors(@RequestParam("project") Long project) {
         devAccessService.requireMember(project);
-        return R.ok(new Executors(devRunners.installed().stream().map(it -> new Executor(it.code(), it.label(), devRunners.models(it))).toList(),
+        return R.ok(new Executors(devRunners.installed().stream().map(it -> new Executor(it.code(), it.label(), devRunners.models(it), it.icon())).toList(),
                 devRunners.preferred(project, devAccessService.user()), devExecutor.enabled()));
     }
 
     /**
      * @param models model ids to suggest, empty when the CLI cannot tell
      */
-    public record Executor(String code, String label, List<String> models) {
+    public record Executor(String code, String label, List<String> models, String icon) {
     }
 
     /**
@@ -170,6 +174,22 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
         return R.ok(new Detail(this.row(r, r.getProject(), review), r.getDescription(), r.getVersion(), r.getProject().getId(), r.getProject().getName(),
                 Boolean.TRUE.equals(r.getQaReview()) ? this.agent(r) + " QA" : null, sessions, deliveries, review, devExecutor.enabled(),
                 devAccessService.mayApprove(r)));
+    }
+
+    /**
+     * The requirement's workspace on the server, one entry per repository: whether its worktree is there,
+     * how far its branch is ahead of the base and what is left uncommitted. Paths are shown to super admins only.
+     *
+     * @param id requirement id
+     */
+    @GetMapping("/requirement/{id}/workspace")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, verifyHandler = DevPoolController.class)
+    public R<List<DevWorkspaceService.Workspace>> workspace(@PathVariable("id") Long id) {
+        DevRequirement r = this.load(id);
+        boolean admin = devAccessService.superAdmin();
+        return R.ok(devWorkspaceService.describe(DevRunContext.of(r.getProject(), r)).stream()
+                .map(w -> admin ? w : new DevWorkspaceService.Workspace(w.alias(), w.branch(), w.base(), w.exists(), w.ahead(), w.changed(), null))
+                .toList());
     }
 
     /**
@@ -221,7 +241,8 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
                 null == r.getReviewer() ? null : r.getReviewer().getName(), this.agent(r),
                 r.getCreateTime(), r.getUpdateTime(), mine, toReview,
                 null == r.getCreator() ? null : r.getCreator().getAvatar(), null == r.getReviewer() ? null : r.getReviewer().getAvatar(),
-                StringUtils.trimToNull(r.getModel()));
+                StringUtils.trimToNull(r.getModel()), this.executorCode(r),
+                devRunners.find(this.executorCode(r)).map(CodingAgentRunner::icon).orElse(null));
     }
 
     private boolean canReview(Long projectId) {
@@ -231,8 +252,14 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
 
     // the executor's name as people know it, e.g. Claude Code
     private String agent(DevRequirement r) {
-        String code = StringUtils.defaultIfBlank(r.getExecutor(), ClaudeCodeRunner.CODE);
+        String code = this.executorCode(r);
         return devRunners.find(code).map(CodingAgentRunner::label).orElse(code);
+    }
+
+    // its code, as the runner knows it: an older claude_code reads as claude
+    private String executorCode(DevRequirement r) {
+        String code = StringUtils.defaultIfBlank(r.getExecutor(), ClaudeCodeRunner.CODE);
+        return devRunners.find(code).map(CodingAgentRunner::code).orElse(code);
     }
 
 }

@@ -63,7 +63,7 @@ public class DevDeliveryService {
         List<String> conflicts = new ArrayList<>();
         for (DevRunContext.Repo repo : ctx.repos()) {
             GitRepo gitRepo = devRepoService.fetch(ctx.tenant(), ctx.projectCode(), repo.alias(), repo.credential());
-            GitAuth auth = devRepoService.auth(repo.credential());
+            GitAuth auth = devRepoService.auth(repo.credential(), gitRepo.originUrl());
             Path worktree = devWorkspaceService.worktree(ctx, repo);
             if (!Files.exists(worktree)) throw new IllegalStateException("Worktree of " + repo.alias() + " is missing, retry the requirement");
             String target = StringUtils.defaultIfBlank(repo.targetBranch(), ctx.workBranch());

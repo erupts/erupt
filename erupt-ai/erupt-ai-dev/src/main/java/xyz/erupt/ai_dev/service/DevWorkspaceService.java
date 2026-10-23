@@ -2,10 +2,14 @@ package xyz.erupt.ai_dev.service;
 
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
+import xyz.erupt.git.model.GitStatus;
 import org.springframework.stereotype.Service;
 import xyz.erupt.git.GitRepo;
 import xyz.erupt.git.model.GitIdent;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -73,6 +77,99 @@ public class DevWorkspaceService {
     /**
      * Removes the requirement's worktrees and workspace; the branches stay.
      */
+    /**
+     * One repository of a requirement's workspace, as it stands on the server.
+     *
+     * @param exists  whether the worktree is there; false once delivered, discarded or not yet run
+     * @param ahead   commits on the branch beyond the latest base, -1 when unknown
+     * @param changed files changed or added and not committed
+     */
+    public record Workspace(String alias, String branch, String base, boolean exists, int ahead, int changed, String path) {
+    }
+
+    public List<Workspace> describe(DevRunContext ctx) {
+        List<Workspace> list = new ArrayList<>();
+        for (DevRunContext.Repo repo : ctx.repos()) {
+            Path wt = this.worktree(ctx, repo);
+            if (!Files.exists(wt)) {
+                list.add(new Workspace(repo.alias(), ctx.workBranch(), repo.baseBranch(), false, 0, 0, wt.toString()));
+                continue;
+            }
+            int ahead = -1, changed = 0;
+            try {
+                GitRepo gitRepo = devRepoService.open(ctx.tenant(), ctx.projectCode(), repo.alias());
+                GitStatus status = gitRepo.status(wt);
+                changed = status.changed() + status.untracked();
+                ahead = gitRepo.commitsAhead("origin/" + repo.baseBranch(), ctx.workBranch());
+            } catch (RuntimeException e) {
+                // a half-removed or foreign worktree still shows, with what could be read
+            }
+            list.add(new Workspace(repo.alias(), ctx.workBranch(), repo.baseBranch(), true, ahead, changed, wt.toString()));
+        }
+        return list;
+    }
+
+    /**
+     * Throws a requirement's work away: its worktrees, uncommitted changes included, its local branch and its
+     * workspace directory. The next run starts from the latest base again. Nothing pushed is touched.
+     */
+    public void discard(DevRunContext ctx) throws IOException {
+        for (DevRunContext.Repo repo : ctx.repos()) {
+            GitRepo gitRepo;
+            try {
+                gitRepo = devRepoService.open(ctx.tenant(), ctx.projectCode(), repo.alias());
+            } catch (RuntimeException e) {
+                continue;
+            }
+            Path wt = this.worktree(ctx, repo);
+            if (Files.exists(wt)) gitRepo.removeWorktree(wt, true);
+            gitRepo.prune();
+            if (gitRepo.hasBranch(ctx.workBranch())) gitRepo.deleteBranch(ctx.workBranch());
+        }
+        Path workspace = devLayout.workspace(ctx.tenant(), ctx.projectCode(), ctx.code());
+        if (Files.exists(workspace)) {
+            try (var paths = Files.walk(workspace)) {
+                for (Path path : paths.sorted(Comparator.reverseOrder()).toList()) Files.delete(path);
+            }
+        }
+    }
+
+    /**
+     * A workspace left by a requirement that no longer exists: its worktrees are dropped from every
+     * repository of the project, then the directory goes.
+     */
+    public void discardDirectory(String tenant, String projectCode, String dir) throws IOException {
+        Path workspace = devLayout.worktreeRoot(tenant, projectCode).resolve(dir).normalize();
+        // only a direct child of the project's worktree root
+        if (!workspace.getParent().equals(devLayout.worktreeRoot(tenant, projectCode))) throw new IOException("Not a workspace: " + dir);
+        try (var paths = Files.walk(workspace)) {
+            for (Path path : paths.sorted(Comparator.reverseOrder()).toList()) Files.delete(path);
+        }
+        Path repos = devLayout.repoDir(tenant, projectCode, "x").getParent();
+        if (Files.isDirectory(repos)) {
+            try (var bare = Files.list(repos)) {
+                for (Path repo : bare.filter(Files::isDirectory).toList()) {
+                    try {
+                        devRepoService.open(tenant, projectCode, repo.getFileName().toString().replaceFirst("\\.git$", "")).prune();
+                    } catch (RuntimeException e) {
+                        // a repository not cloned yet has nothing to prune
+                    }
+                }
+            }
+        }
+    }
+
+    // requirement workspaces of a project still on the server
+    public List<String> workspaces(String tenant, String projectCode) {
+        Path root = devLayout.worktreeRoot(tenant, projectCode);
+        if (!Files.isDirectory(root)) return List.of();
+        try (var dirs = Files.list(root)) {
+            return dirs.filter(Files::isDirectory).map(it -> it.getFileName().toString()).sorted().toList();
+        } catch (IOException e) {
+            return List.of();
+        }
+    }
+
     public void cleanUp(DevRunContext ctx) throws IOException {
         for (DevRunContext.Repo repo : ctx.repos()) {
             Path wt = this.worktree(ctx, repo);

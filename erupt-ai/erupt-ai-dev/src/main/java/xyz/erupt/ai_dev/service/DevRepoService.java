@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -116,7 +117,7 @@ public class DevRepoService {
 
     private void syncOne(RepoRef repo) {
         Path dir = devLayout.repoDir(repo.tenant(), repo.project(), repo.alias());
-        GitAuth auth = this.auth(repo.credential());
+        GitAuth auth = this.auth(repo.credential(), repo.url());
         synchronized (locks.computeIfAbsent(dir, it -> new Object())) {
             if (!Files.exists(dir)) {
                 eruptGit.cloneBare(repo.url(), dir, auth);
@@ -147,7 +148,7 @@ public class DevRepoService {
      */
     public GitRepo fetch(String tenant, String project, String alias, String credential) {
         GitRepo repo = this.open(tenant, project, alias);
-        GitAuth auth = this.auth(credential);
+        GitAuth auth = this.auth(credential, repo.originUrl());
         this.locked(tenant, project, alias, () -> repo.fetch(auth));
         return repo;
     }
@@ -164,14 +165,63 @@ public class DevRepoService {
     /**
      * Credentials named by a repository, resolved from {@code erupt.ai-dev.credentials}.
      */
-    public GitAuth auth(String key) {
+    /**
+     * The credential of a key, for one remote: refused unless the remote's host is one the credential lists.
+     */
+    public GitAuth auth(String key, String url) {
         if (StringUtils.isBlank(key)) return GitAuth.NONE;
         EruptAiDevProp.Credential credential = eruptAiDevProp.getCredentials().get(key);
         if (null == credential) throw new GitException("Unknown credential: " + key);
+        String host = host(url);
+        if (!allowed(credential.getHosts(), host)) {
+            throw new GitException("Credential " + key + " is not allowed for host " + (null == host ? "(none)" : host)
+                    + "; list it under erupt.ai-dev.credentials." + key + ".hosts");
+        }
         if (StringUtils.isNotBlank(credential.getSshKey())) return GitAuth.ssh(Path.of(credential.getSshKey()));
         if (StringUtils.isNotBlank(credential.getToken())) return GitAuth.token(credential.getToken());
         if (StringUtils.isNotBlank(credential.getPassword())) return GitAuth.basic(credential.getUsername(), credential.getPassword());
         throw new GitException("Credential " + key + " has no token, password or ssh-key");
+    }
+
+    /**
+     * The host of a remote URL: scheme://[user@]host[:port]/path or the scp form user@host:path; null for a
+     * local path or anything unreadable.
+     */
+    static String host(String url) {
+        if (StringUtils.isBlank(url)) return null;
+        String value = url.trim();
+        int scheme = value.indexOf("://");
+        String rest;
+        if (scheme > 0) {
+            rest = value.substring(scheme + 3);
+        } else if (value.indexOf(':') > 0 && (value.indexOf('/') < 0 || value.indexOf(':') < value.indexOf('/'))) {
+            // scp form: a colon before any slash
+            rest = value.substring(0, value.indexOf(':'));
+        } else {
+            return null;
+        }
+        int slash = rest.indexOf('/');
+        if (slash >= 0) rest = rest.substring(0, slash);
+        int at = rest.lastIndexOf('@');
+        if (at >= 0) rest = rest.substring(at + 1);
+        if (rest.startsWith("[")) {
+            int close = rest.indexOf(']');
+            return close > 0 ? rest.substring(1, close).toLowerCase(Locale.ROOT) : null;
+        }
+        int colon = rest.indexOf(':');
+        if (colon >= 0) rest = rest.substring(0, colon);
+        return rest.isEmpty() ? null : rest.toLowerCase(Locale.ROOT);
+    }
+
+    static boolean allowed(List<String> hosts, String host) {
+        if (null == hosts) return false;
+        for (String pattern : hosts) {
+            String p = StringUtils.trimToEmpty(pattern).toLowerCase(Locale.ROOT);
+            if (p.equals("*")) return true;
+            if (null == host) continue;
+            if (p.startsWith("*.") ? host.endsWith(p.substring(1)) : host.equals(p)) return true;
+        }
+        return false;
     }
 
     public boolean credentialExists(String key) {

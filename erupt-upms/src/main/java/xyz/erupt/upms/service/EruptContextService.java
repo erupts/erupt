@@ -30,7 +30,10 @@ public class EruptContextService {
         // scope is unavailable; fall back to the token propagated through MetaContext
         if (!EruptSpringUtil.isMvcContext()) return MetaContext.getToken();
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
-        return StringUtils.isNotBlank(token) ? token : request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
+        if (StringUtils.isNotBlank(token)) return token;
+        token = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
+        // a request authenticated some other way (an MCP bearer token) may carry a session through MetaContext
+        return StringUtils.isNotBlank(token) ? token : MetaContext.getToken();
     }
 
     //Get the current menu object

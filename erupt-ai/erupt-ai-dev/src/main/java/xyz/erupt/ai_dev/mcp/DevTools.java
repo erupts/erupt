@@ -6,7 +6,6 @@ import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.mcp.McpContext;
 import xyz.erupt.ai_dev.constant.AgentRole;
@@ -20,7 +19,7 @@ import xyz.erupt.jpa.dao.EruptDao;
 
 /**
  * What a running coding agent calls back on erupt's MCP endpoint: read its requirement, report progress or
- * a QA verdict. Only wired when erupt-ai is on the classpath. Not exposed to chat or user tokens; a run's token ({@link DevMcpGrants}) grants them, and
+ * a QA verdict. Not exposed to chat or user tokens; a run's token ({@link DevMcpGrants}) grants them, and
  * each call acts on that run's requirement only.
  *
  * @author YuePeng
@@ -28,7 +27,6 @@ import xyz.erupt.jpa.dao.EruptDao;
  */
 @AiToolbox(exposed = false)
 @Component
-@ConditionalOnClass(name = "xyz.erupt.ai.mcp.McpContext")
 public class DevTools {
 
     public static final String REQUIREMENT = "devRequirement";

@@ -44,15 +44,13 @@ Row actions on the requirement table drive it. Members submit, retry, stop and c
 
 ### MCP endpoint
 
-erupt-ai is an **optional** dependency. With it on the classpath the agents use the endpoint below; without it there is no MCP endpoint, and every CLI reports progress and verdicts through the `PROGRESS` / `VERDICT` marker lines in its output. Everything else works the same.
-
 
 Each run reaches erupt-ai's MCP endpoint at `/mcp` with a token of its own: `DevMcpGrants` is an `McpAuthenticator`, so the token works whether or not `erupt.ai.mcp.server-enabled` is on, and it lists and calls only the tools of its role.
 
 - **Token**: the run is given a random bearer token, minted for that run and revoked when it ends.
 - **Config file**: the agent's `--mcp-config` file is written under `{root}/run/` with mode 0600 and deleted after the run.
 - **Isolation**: `--strict-mcp-config` keeps the account's other MCP servers out of the run.
-- **Tools**: `DevTools`, an `@AiToolbox(exposed = false)` bean, so chat agents and user tokens never see them: `devRequirement` for both roles; `devReportProgress` for the developer; `devReportVerdict` for QA.
+- **Tools**: `DevTools`, an `@AiToolbox(exposed = false)` bean, so chat agents and user tokens never see them: `devRequirement` for both roles; `devReportProgress` for the developer; `devReportVerdict` for QA. Next to them the run gets erupt's own tools (`@AiToolbox`), run as the requirement's creator in their tenant and limited to what that creator's AI roles allow in AI chat: the agent can read erupt models and their data the way the creator could, no further. What it reads goes to the model provider with the rest of its context.
 - **Reach**: a token touches only its own requirement.
 - **Address**: the agent reaches the endpoint at `http://127.0.0.1:<port>`. When the agent runs elsewhere, a container for example, set `executor.mcp-url`.
 
@@ -74,7 +72,7 @@ An agent's executor is a coding CLI on the server. The picker offers only the on
 
 Claude Code, Cursor CLI and Qwen Code print the same stream-json, read by one parser (`StreamJsonRunner`).
 
-Each built-in takes its `binary`, `label` and `args` from `executor.clis.<code>` when set. Any other key adds a plain CLI, so other tools need no code:
+Each built-in takes its `binary`, `label`, `args` and `icon` (an image URL; without one the page draws a badge of the CLI's initials in its color) from `executor.clis.<code>` when set. Any other key adds a plain CLI, so other tools need no code:
 
 ```yaml
 erupt:
@@ -94,6 +92,7 @@ The executor is **off by default**. An agent edits files and runs commands with 
 - Enable it on one instance only, ideally a container or VM dedicated to it.
 - The agent process gets a clean environment (`PATH`, `HOME`, `LANG`, …) plus `erupt.ai-dev.executor.env` only. Server secrets such as database passwords never reach it.
 - Git credentials never reach it either: erupt does every fetch and push itself.
+- A credential goes only to the hosts listed under `erupt.ai-dev.credentials.<key>.hosts` (`github.com`, `*.example.com`, or `*` for any). None listed means it is never used, so a repository URL typed into a project cannot carry it to another server.
 - Claude Code also loads the account's own `~/.claude` settings and hooks. Point `CLAUDE_CONFIG_DIR` at a dedicated directory to keep them apart.
 - `executor.clis.<code>.args` grants the tools a headless run may use. For Claude Code, `Bash` means any command on that host.
 
@@ -121,15 +120,14 @@ erupt:
 
 | Menu | Model | |
 |---|---|---|
-| Dev Project | `DevProject` | Code (unique per tenant, also the directory name), name, `AGENTS.md`, Self Review (off by default: the creator of a requirement cannot approve or reject it), and two tabs: repositories and members |
+| Dev Project | `DevProject` | Code (unique per tenant, also the directory name), name, `AGENTS.md`, Active Workspaces (requirement workspaces still on the server) with *Clean Up Leftover Workspaces* for delivered, cancelled and deleted requirements, Self Review (off by default: the creator of a requirement cannot approve or reject it), and two tabs: repositories and members |
 | *(hidden)* | `DevRequirement` | Lives in the project picked in the page header; numbered `REQ-n` per project; stage, version and progress are server-controlled. Its menu stays, hidden, because the pool writes through its add API and row operations |
-| Worktree | `DevWorktree` | Virtual model, read live from `git worktree list` of each repository; delete removes a clean worktree |
 | — | `DevAgentSession` / `DevAgentEvent` | Plain JPA entities, shown only by the pool: one row per agent run (status, CLI session id, cost, tokens) and its full log |
 | — | `DevRequirementDelivery` | Plain JPA entity, shown only by the pool: one row per requirement × repository push |
 
 ## Project scope
 
-`DevProjectScope` is an `@EruptScope` form whose only field is a `CHOICE` of the user's own projects. `DevRequirement` and `DevWorktree` declare it, so the page header picks a project once and every list, detail and write follows it. The options are re-checked on every request, so a hand-edited `erupt-scope` header cannot reach a project the user is not a member of.
+`DevProjectScope` is an `@EruptScope` form whose only field is a `CHOICE` of the user's own projects. `DevRequirement` declares it, so the page header picks a project once and every list, detail and write follows it. The options are re-checked on every request, so a hand-edited `erupt-scope` header cannot reach a project the user is not a member of.
 
 ## Access
 
@@ -163,3 +161,7 @@ erupt:
 ```
 
 Secrets stay in the configuration (inject them through environment variables or a secret manager), never in the database.
+
+## Workspaces
+
+A requirement's workspace (one worktree per repository on the branch `req/req-n`) lives as long as it can still run: delivery removes it, and so does cancelling. The requirement page shows it per repository (present or not, commits ahead of the base, uncommitted files; the server path for super admins), and *Clean Up Workspace* throws it away (worktrees, uncommitted changes and the local branch) for a draft, a requirement in review, a failed or a cancelled one, so the next run starts from the latest base. Nothing pushed is touched.
