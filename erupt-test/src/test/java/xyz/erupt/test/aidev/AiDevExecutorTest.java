@@ -528,6 +528,27 @@ class AiDevExecutorTest extends EruptApplicationTests {
     }
 
     @Test
+    void deletingARequirementTakesItsRunsAndWorkspaceAlong() throws IOException {
+        DevProject project = this.project(this.remote("web"), this.remote("api"));
+        DevRequirement r = this.requirement(project, "please-fail and delete " + mark);
+        this.act(r, "submit");
+        this.act(r, "approve");
+        devExecutor.execute(project.getTenantId(), r.getId());
+        Long id = r.getId();
+        assertEquals(RequirementStage.FAILED, this.reload(r).getStage());
+        Path workspace = devLayout.workspace(project.getTenantId(), project.getCode(), r.getCode());
+        assertTrue(Files.exists(workspace));
+
+        this.as(DevRequirement.class, project.getId());
+        transactionTemplate.executeWithoutResult(tx -> eruptModifyService.deleteEruptData(EruptCoreService.getErupt("DevRequirement"), List.of(id), false));
+        assertNull(transactionTemplate.execute(tx -> eruptDao.find(DevRequirement.class, id)));
+        assertFalse(Files.exists(workspace), "its workspace is gone");
+        Long left = transactionTemplate.execute(tx -> eruptDao.getEntityManager()
+                .createQuery("select count(s) from DevAgentSession s where s.requirement.id = :id", Long.class).setParameter("id", id).getSingleResult());
+        assertEquals(0L, left, "its sessions and their logs go with it");
+    }
+
+    @Test
     void branchPickerListsTheRemoteDefaultFirst() throws IOException {
         Path web = this.remote("web");
         Path seed = tmp.resolve("web-seed");

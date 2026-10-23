@@ -9,6 +9,8 @@ import xyz.erupt.ai_dev.model.DevProjectRepo;
 import xyz.erupt.ai_dev.model.DevRequirement;
 import xyz.erupt.ai_dev.runner.DevRunners;
 import xyz.erupt.ai_dev.service.DevAccessService;
+import xyz.erupt.ai_dev.service.DevRunContext;
+import xyz.erupt.ai_dev.service.DevWorkspaceService;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
@@ -16,6 +18,7 @@ import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptUser;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,6 +32,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class DevRequirementProxy implements DataProxy<DevRequirement> {
+
+    @Resource
+    private DevWorkspaceService devWorkspaceService;
 
     @Resource
     private DevRunners devRunners;
@@ -84,6 +90,22 @@ public class DevRequirementProxy implements DataProxy<DevRequirement> {
         if (FROZEN.contains(requirement.getStage())) {
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai_dev.requirement_frozen"));
         }
+        // its creator, or whoever manages the project
+        Long project = this.project(requirement).getId();
+        if (!devAccessService.isCreator(requirement) && !devAccessService.manages(project)) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai_dev.no_delete_permission"));
+        }
+        // nothing of it stays behind: its worktrees and branch, then its runs, their logs and deliveries
+        try {
+            devWorkspaceService.discard(DevRunContext.of(this.project(requirement), requirement));
+        } catch (IOException | RuntimeException e) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai_dev.cleanup_failed") + " " + e.getMessage());
+        }
+        var em = eruptDao.getEntityManager();
+        em.createQuery("delete from DevAgentEvent e where e.session.id in "
+                + "(select s.id from DevAgentSession s where s.requirement.id = :id)").setParameter("id", requirement.getId()).executeUpdate();
+        em.createQuery("delete from DevAgentSession s where s.requirement.id = :id").setParameter("id", requirement.getId()).executeUpdate();
+        em.createQuery("delete from DevRequirementDelivery d where d.requirement.id = :id").setParameter("id", requirement.getId()).executeUpdate();
     }
 
     private DevProject project(DevRequirement requirement) {
