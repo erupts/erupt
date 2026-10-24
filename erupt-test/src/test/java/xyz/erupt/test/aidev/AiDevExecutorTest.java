@@ -2,24 +2,42 @@ package xyz.erupt.test.aidev;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonElement;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import xyz.erupt.ai_dev.constant.*;
 import xyz.erupt.ai_dev.notice.DevNoticeListener;
+import xyz.erupt.ai_dev.mcp.DevMcpAuthenticator;
+import xyz.erupt.ai_dev.mcp.DevMcpGrants;
+import xyz.erupt.ai_dev.mcp.DevTools;
+import xyz.erupt.ai.mcp.McpGrant;
+import xyz.erupt.ai.core.AiToolboxManager;
+import xyz.erupt.upms.helper.UpmsTenant;
+import xyz.erupt.ai.controller.McpController;
+import xyz.erupt.ai.vo.mcp.McpCallResult;
+import xyz.erupt.ai.vo.mcp.McpRequest;
+import xyz.erupt.ai.vo.mcp.McpResult;
 import xyz.erupt.ai_dev.runner.ClaudeCodeRunner;
+import xyz.erupt.ai_dev.scope.RemoteBranchFetch;
+import xyz.erupt.ai_dev.model.DevProjectRepo;
 import xyz.erupt.ai_dev.model.*;
 import xyz.erupt.ai_dev.prop.EruptAiDevProp;
 import xyz.erupt.ai_dev.proxy.DevRequirementOperation;
 import xyz.erupt.ai_dev.service.DevExecutor;
 import xyz.erupt.ai_dev.service.DevLayout;
 import xyz.erupt.ai_dev.service.DevRepoService;
+import xyz.erupt.ai_dev.service.DevRunContext;
+import xyz.erupt.ai_dev.service.DevWorkspaceService;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
@@ -32,6 +50,7 @@ import xyz.erupt.core.service.EruptModifyService;
 import xyz.erupt.git.EruptGit;
 import xyz.erupt.git.GitAuth;
 import xyz.erupt.git.GitCli;
+import xyz.erupt.git.GitRepo;
 import xyz.erupt.git.GitException;
 import xyz.erupt.git.GitProp;
 import xyz.erupt.test.EruptApplicationTests;
@@ -99,6 +118,18 @@ class AiDevExecutorTest extends EruptApplicationTests {
     private EruptModifyService eruptModifyService;
 
     @Resource
+    private RemoteBranchFetch remoteBranchFetch;
+
+    @Resource
+    private DevMcpGrants devMcpGrants;
+
+    @Resource
+    private DevMcpAuthenticator devMcpAuthenticator;
+
+    @Resource
+    private McpController mcpController;
+
+    @Resource
     private EruptSessionService eruptSessionService;
 
     @Resource
@@ -115,6 +146,9 @@ class AiDevExecutorTest extends EruptApplicationTests {
 
     @Resource
     private DevLayout devLayout;
+
+    @Resource
+    private DevWorkspaceService devWorkspaceService;
 
     @Resource
     private EruptGit eruptGit;
@@ -354,6 +388,157 @@ class AiDevExecutorTest extends EruptApplicationTests {
                 .createQuery("select d.status from DevRequirementDelivery d where d.requirement.id = :id", DeliveryStatus.class)
                 .setParameter("id", id).getResultList());
         assertEquals(List.of(DeliveryStatus.PUSHED, DeliveryStatus.PUSHED), deliveries);
+    }
+
+    @Test
+    void aFailedRunsWorkspaceCanBeThrownAway() throws IOException {
+        DevProject project = this.project(this.remote("web"), this.remote("api"));
+        DevRequirement r = this.requirement(project, "please-fail and clean " + mark);
+        this.act(r, "submit");
+        this.act(r, "approve");
+        // as a requirement from before creators were kept by id: the run finds it by the creator's name
+        Long rid = r.getId();
+        transactionTemplate.executeWithoutResult(tx -> eruptDao.find(DevRequirement.class, rid).setCreator(null));
+        devExecutor.execute(project.getTenantId(), r.getId());
+        r = this.reload(r);
+        assertEquals(RequirementStage.FAILED, r.getStage());
+        assertNotNull(r.getCreator(), "the creator is found again and kept");
+        Long id = r.getId();
+        DevRunContext ctx = transactionTemplate.execute(tx -> {
+            DevRequirement fresh = eruptDao.find(DevRequirement.class, id);
+            return DevRunContext.of(fresh.getProject(), fresh);
+        });
+        assertTrue(devWorkspaceService.describe(ctx).stream().allMatch(DevWorkspaceService.Workspace::exists));
+
+        this.act(r, "cleanup");
+        assertTrue(devWorkspaceService.describe(ctx).stream().noneMatch(DevWorkspaceService.Workspace::exists));
+        assertFalse(Files.exists(devLayout.workspace(project.getTenantId(), project.getCode(), r.getCode())));
+        GitRepo web = devRepoService.open(project.getTenantId(), project.getCode(), "web");
+        assertFalse(web.hasBranch(ctx.workBranch()), "the next run starts from the latest base");
+    }
+
+    @Test
+    void aRunsTokenCarriesTheCreatorsAiTools() {
+        String withCreator = devMcpGrants.issue(UpmsTenant.PLATFORM, -1L, -1L, -1L, AgentRole.DEVELOPER, admin.getId());
+        String anonymous = devMcpGrants.issue(UpmsTenant.PLATFORM, -1L, -1L, -1L, AgentRole.DEVELOPER, null);
+        try {
+            McpGrant grant = devMcpAuthenticator.authenticate(withCreator);
+            assertEquals(admin.getId(), grant.uid(), "erupt tools run as the creator");
+            assertTrue(grant.tools().containsAll(List.of(DevTools.REQUIREMENT, DevTools.REPORT_PROGRESS)));
+            // a super admin may use every exposed tool in AI chat, so the agent may too
+            assertTrue(grant.tools().containsAll(AiToolboxManager.getAiMethodMap().keySet()), grant.tools().toString());
+            assertFalse(grant.tools().contains(DevTools.REPORT_VERDICT), "the verdict stays the QA run's");
+            assertEquals(Set.of(DevTools.REQUIREMENT, DevTools.REPORT_PROGRESS), devMcpAuthenticator.authenticate(anonymous).tools());
+            assertNull(devMcpAuthenticator.authenticate("not-a-token"));
+        } finally {
+            devMcpGrants.revoke(withCreator);
+            devMcpGrants.revoke(anonymous);
+        }
+    }
+
+    @Test
+    void anEruptToolCalledOverMcpSeesTheCreatorsSession() {
+        String token = devMcpGrants.issue(UpmsTenant.PLATFORM, -1L, -1L, -1L, AgentRole.DEVELOPER, admin.getId());
+        MetaContext.remove();
+        try {
+            MockHttpServletRequest http = new MockHttpServletRequest();
+            http.addHeader("Authorization", "Bearer " + token);
+            // as over HTTP: the request is bound, and it carries no erupt token header of its own
+            RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(http));
+            McpRequest call = new McpRequest();
+            call.setId(1);
+            call.setMethod("tools/call");
+            McpRequest.RequestParams params = new McpRequest.RequestParams();
+            params.setName("mcpSessionProbe");
+            params.setArguments(Map.of());
+            call.setParams(params);
+            McpResult result = (McpResult) mcpController.call(http, call).getBody();
+            McpCallResult answer = (McpCallResult) result.getResult();
+            assertFalse(answer.isError(), answer.getContent().get(0).getText());
+            assertEquals(admin.getAccount(), answer.getContent().get(0).getText(), "the tool runs as the creator, logged in");
+            // and erupt's data API, powers included, answers as it does for that user's own requests
+            params.setName("mcpReadUser");
+            params.setArguments(Map.of("id", admin.getId()));
+            answer = (McpCallResult) ((McpResult) mcpController.call(http, call).getBody()).getResult();
+            assertFalse(answer.isError(), answer.getContent().get(0).getText());
+            assertEquals(admin.getAccount(), answer.getContent().get(0).getText());
+        } finally {
+            RequestContextHolder.resetRequestAttributes();
+            devMcpGrants.revoke(token);
+            MetaContext.remove();
+        }
+    }
+
+    @Test
+    void structuredToolArgumentsTravelAsJson() {
+        String token = devMcpGrants.issue(UpmsTenant.PLATFORM, -1L, -1L, -1L, AgentRole.DEVELOPER, admin.getId());
+        MetaContext.remove();
+        try {
+            MockHttpServletRequest http = new MockHttpServletRequest();
+            http.addHeader("Authorization", "Bearer " + token);
+            RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(http));
+            McpRequest list = new McpRequest();
+            list.setId(1);
+            list.setMethod("tools/list");
+            // what goes out is erupt's own Gson, nulls included: check that JSON, not the Java objects
+            JsonObject listed = JsonParser.parseString(GsonFactory.getGson().toJson(mcpController.call(http, list).getBody())).getAsJsonObject();
+            JsonArray tools = listed.getAsJsonObject("result").getAsJsonArray("tools");
+            assertFalse(tools.isEmpty());
+            for (JsonElement tool : tools) {
+                JsonObject schema = tool.getAsJsonObject().getAsJsonObject("inputSchema");
+                assertEquals("object", schema.get("type").getAsString(), tool.toString());
+                assertValidSchema(schema, tool.getAsJsonObject().get("name").getAsString());
+            }
+            JsonObject filters = tools.asList().stream().map(JsonElement::getAsJsonObject)
+                    .filter(t -> t.get("name").getAsString().equals("mcpEchoFilters")).findFirst().orElseThrow()
+                    .getAsJsonObject("inputSchema").getAsJsonObject("properties").getAsJsonObject("filters");
+            assertEquals("array", filters.get("type").getAsString(), "a list is declared as an array");
+            assertEquals("object", filters.getAsJsonObject("items").get("type").getAsString(), "of objects");
+
+            McpRequest call = new McpRequest();
+            call.setId(2);
+            call.setMethod("tools/call");
+            McpRequest.RequestParams params = new McpRequest.RequestParams();
+            params.setName("mcpEchoFilters");
+            call.setParams(params);
+            params.setArguments(Map.of("filters", List.of(Map.of("field", "name", "value", "erupt"))));
+            assertEquals("name=erupt", ((McpCallResult) ((McpResult) mcpController.call(http, call).getBody()).getResult()).getContent().get(0).getText());
+            // a client that stringifies structured arguments still gets through
+            params.setArguments(Map.of("filters", "[{\"field\":\"account\",\"value\":\"erupt\"}]"));
+            McpCallResult lenient = (McpCallResult) ((McpResult) mcpController.call(http, call).getBody()).getResult();
+            assertFalse(lenient.isError(), lenient.getContent().get(0).getText());
+            assertEquals("account=erupt", lenient.getContent().get(0).getText());
+        } finally {
+            RequestContextHolder.resetRequestAttributes();
+            devMcpGrants.revoke(token);
+            MetaContext.remove();
+        }
+    }
+
+    // what MCP clients (and the Anthropic API behind Claude Code) refuse: a null anywhere, an array without items
+    private static void assertValidSchema(JsonElement node, String tool) {
+        if (node.isJsonNull()) fail(tool + ": null in its input schema");
+        if (node.isJsonArray()) node.getAsJsonArray().forEach(it -> assertValidSchema(it, tool));
+        if (!node.isJsonObject()) return;
+        JsonObject o = node.getAsJsonObject();
+        if (o.has("type") && o.get("type").isJsonPrimitive() && "array".equals(o.get("type").getAsString())) {
+            assertTrue(o.has("items") && o.get("items").isJsonObject(), tool + ": an array without items");
+        }
+        o.entrySet().forEach(e -> assertValidSchema(e.getValue(), tool));
+    }
+
+    @Test
+    void branchPickerListsTheRemoteDefaultFirst() throws IOException {
+        Path web = this.remote("web");
+        Path seed = tmp.resolve("web-seed");
+        eruptGit.getCli().run(seed, "push", "origin", "develop:alpha");
+        eruptGit.getCli().run(seed, "push", "origin", "develop:release");
+        DevProjectRepo repo = new DevProjectRepo();
+        repo.setUrl(web.toUri().toString());
+        assertEquals(List.of("develop", "alpha", "release"), remoteBranchFetch.completeHandler(repo, "", null));
+        assertEquals(List.of("release"), remoteBranchFetch.completeHandler(repo, "REL", null), "matched whatever the case");
+        repo.setUrl(tmp.resolve("missing.git").toUri().toString());
+        assertEquals(List.of(), remoteBranchFetch.completeHandler(repo, "", null), "an unreachable remote offers nothing");
     }
 
     @Test

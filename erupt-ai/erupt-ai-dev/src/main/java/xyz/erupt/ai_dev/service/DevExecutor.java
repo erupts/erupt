@@ -21,6 +21,7 @@ import xyz.erupt.ai_dev.runner.DevRunners;
 import xyz.erupt.ai_dev.runner.DevAgentProcess;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.helper.UpmsTenant;
 
 import com.google.gson.JsonObject;
@@ -247,15 +248,14 @@ public class DevExecutor {
         });
         SessionLog sessionLog = new SessionLog(ctx, sessionRow, agent.role() == AgentRole.DEVELOPER);
         logs.put(sessionRow, sessionLog);
-        String token = devMcpGrants.issue(ctx.tenant(), ctx.projectId(), ctx.requirementId(), sessionRow, agent.role());
+        Long creator = devTx.call(ctx.tenant(), () -> this.creatorOf(eruptDao.find(DevRequirement.class, ctx.requirementId())));
+        String token = devMcpGrants.issue(ctx.tenant(), ctx.projectId(), ctx.requirementId(), sessionRow, agent.role(), creator);
         Path mcpConfig = this.mcpConfig(token);
         DevAgentProcess.Outcome outcome;
         DevMcpGrants.Grant grant;
         try {
             sessionLog.event(EventKind.SYSTEM, "prompt", prompt);
-            if (null == mcpConfig) sessionLog.event(EventKind.SYSTEM, "mcp", devMcpGrants.served()
-                    ? "No MCP endpoint address: progress comes from marker lines"
-                    : "erupt-ai is not installed, so there is no MCP endpoint: progress comes from marker lines");
+            if (null == mcpConfig) sessionLog.event(EventKind.SYSTEM, "mcp", "No MCP endpoint address: progress comes from marker lines");
             outcome = devAgentProcess.run(ctx.requirementId(), runner,
                     new CodingAgentRunner.Spec(workspace, prompt, agent.model(), resume, mcpConfig,
                             null == mcpConfig ? null : this.mcpUrl(), null == mcpConfig ? null : token), sessionLog);
@@ -292,6 +292,21 @@ public class DevExecutor {
      * The agent's MCP client configuration for one run, readable by the server account only; null when the
      * endpoint's address is unknown (no web server, e.g. a batch process).
      */
+    /**
+     * The user a requirement's run acts for in erupt's tools: its creator, or for a requirement from before
+     * creators were kept by id, the one user its creator's name belongs to. Null when that is not clear.
+     */
+    private Long creatorOf(DevRequirement r) {
+        if (null == r) return null;
+        if (null != r.getCreator()) return r.getCreator().getId();
+        if (StringUtils.isBlank(r.getCreateBy())) return null;
+        List<EruptUser> named = eruptDao.lambdaQuery(EruptUser.class).eq(EruptUser::getName, r.getCreateBy()).limit(2).list();
+        if (named.size() != 1) return null;
+        // kept, so the next run and the notices find it directly
+        r.setCreator(named.get(0));
+        return named.get(0).getId();
+    }
+
     // erupt-ai's MCP endpoint as the agent reaches it, null when unknown (no web server)
     private String mcpUrl() {
         String url = StringUtils.trimToNull(eruptAiDevProp.getExecutor().getMcpUrl());
@@ -302,7 +317,6 @@ public class DevExecutor {
     }
 
     private Path mcpConfig(String token) throws IOException {
-        if (!devMcpGrants.served()) return null;
         String url = this.mcpUrl();
         if (null == url) return null;
         JsonObject server = new JsonObject();

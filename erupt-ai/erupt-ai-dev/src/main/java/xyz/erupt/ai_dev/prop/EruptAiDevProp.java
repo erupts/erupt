@@ -18,13 +18,17 @@ import java.util.Map;
  *     credentials:
  *       github:
  *         token: ${GITHUB_TOKEN}
+ *         hosts: [github.com]
  *       internal:
  *         username: deploy
  *         password: ${GIT_INTERNAL_PASSWORD}
+ *         hosts: [git.internal.example.com]
  *       gitlab-ssh:
  *         ssh-key: /etc/erupt/keys/gitlab
+ *         hosts: ["*.gitlab.example.com"]
  * </pre>
- * A repository names its entry by key; secrets stay in the configuration, never in the database.
+ * A repository names its entry by key; secrets stay in the configuration, never in the database. A credential
+ * goes only to the hosts it lists, so a repository URL typed into a project cannot send it anywhere else.
  *
  * @author YuePeng
  * date 2026/10/21
@@ -94,6 +98,9 @@ public class EruptAiDevProp {
         // shown in the executor picker; blank uses the built-in's label or the key
         private String label;
 
+        // image URL shown for this CLI; blank draws its default badge (its initials in its color)
+        private String icon;
+
         // Extra arguments, replacing the built-in's defaults when set. Headless runs cannot ask for
         // permission, so this is where the tools a run may use are granted
         private List<String> args;
@@ -113,6 +120,10 @@ public class EruptAiDevProp {
         private String password;
 
         private String sshKey;
+
+        // Hosts this credential may be sent to: exact names, "*.example.com" for subdomains, or "*" for any
+        // host. None listed means it is never used, so a project cannot point it at a server of its own
+        private List<String> hosts = new ArrayList<>();
 
         // Never print the secret
         @Override

@@ -20,8 +20,7 @@ import xyz.erupt.ai_dev.model.DevProjectRepo;
 import xyz.erupt.ai_dev.model.DevRequirement;
 import xyz.erupt.ai_dev.service.DevLayout;
 import xyz.erupt.ai_dev.service.DevRepoService;
-import xyz.erupt.ai_dev.worktree.DevWorktree;
-import xyz.erupt.ai_dev.worktree.DevWorktreeDataService;
+import xyz.erupt.ai_dev.service.DevWorkspaceService;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
@@ -85,7 +84,7 @@ class AiDevTest extends EruptApplicationTests {
     private DevLayout devLayout;
 
     @Resource
-    private DevWorktreeDataService devWorktreeDataService;
+    private DevWorkspaceService devWorkspaceService;
 
     @Resource
     private EruptGit eruptGit;
@@ -265,7 +264,7 @@ class AiDevTest extends EruptApplicationTests {
     }
 
     @Test
-    void repositoriesAreClonedAndWorktreesReadFromGit() throws IOException {
+    void repositoriesAreClonedAndLeftoverWorkspacesRemoved() throws IOException {
         GitCli cli = eruptGit.getCli();
         try {
             eruptGit.version();
@@ -299,20 +298,16 @@ class AiDevTest extends EruptApplicationTests {
         // a worktree outside the project's directory is not the project's
         gitRepo.addWorktree(tmp.resolve("elsewhere"), "other", "origin/develop");
 
-        this.as(admin, DevWorktree.class, project.getId());
-        List<Map<String, Object>> rows = this.list(DevWorktree.class);
-        assertEquals(1, rows.size(), rows.toString());
-        assertEquals("REQ-1", rows.get(0).get("requirement"));
-        assertEquals("web", rows.get(0).get("alias"));
-        assertEquals("req/req-1", rows.get(0).get("branch"));
+        // the project counts the workspace of REQ-1, not a worktree outside its directory
+        assertEquals(List.of("req-1"), devWorkspaceService.workspaces(project.getTenantId(), project.getCode()));
 
-        DevWorktree row = new DevWorktree();
-        row.setPath((String) rows.get(0).get("path"));
-        row.setAlias("web");
-        row.setMissing(false);
-        devWorktreeDataService.deleteData(model(DevWorktree.class), row);
+        // a workspace of a requirement that no longer exists is removed, and git forgets its worktree
+        devWorkspaceService.discardDirectory(project.getTenantId(), project.getCode(), "req-1");
         assertFalse(Files.exists(wt));
-        assertTrue(this.list(DevWorktree.class).isEmpty());
+        assertTrue(devWorkspaceService.workspaces(project.getTenantId(), project.getCode()).isEmpty());
+        assertTrue(gitRepo.worktrees().stream().noneMatch(it -> it.path().endsWith(Path.of("req-1", "web"))), "pruned from the repository");
+        assertThrows(IOException.class, () -> devWorkspaceService.discardDirectory(project.getTenantId(), project.getCode(), "../escape"),
+                "only a workspace of the project itself");
     }
 
 }

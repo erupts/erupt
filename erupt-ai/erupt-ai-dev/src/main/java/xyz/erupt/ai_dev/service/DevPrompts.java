@@ -42,6 +42,10 @@ public final class DevPrompts {
                 - Report progress with the erupt tool devReportProgress (percent, phase) whenever you enter a new phase:
                   assess, design, implement, verify. Without that tool, print a line of its own instead:
                   PROGRESS <0-100> <phase>, for example "PROGRESS 40 implement".
+                - The erupt MCP server may offer more tools, such as reading erupt models and their data. Use them
+                  when the requirement asks about the running system's data rather than guessing from the code.
+                  Count and list with a query (its result carries the total); do not walk primary keys one by one,
+                  since a missing id answers like a permission error. Change data only when the requirement asks.
                 - Finish with a short summary: what you changed in which repository, and how you verified it.
                 """.formatted(ctx.projectName(), aliases(ctx), ctx.workBranch(), ctx.code(), ctx.title(),
                 StringUtils.defaultIfBlank(ctx.description(), "(no description)"), instruction(ctx), ctx.code());

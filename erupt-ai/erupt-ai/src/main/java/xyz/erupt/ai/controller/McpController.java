@@ -1,7 +1,9 @@
 package xyz.erupt.ai.controller;
 
-import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
+import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.agent.tool.ToolSpecifications;
+import dev.langchain4j.internal.JsonSchemaElementJsonUtils;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,18 +21,19 @@ import xyz.erupt.ai.mcp.McpAuthenticator;
 import xyz.erupt.ai.mcp.McpContext;
 import xyz.erupt.ai.mcp.McpGrant;
 import xyz.erupt.ai.service.LLMRoleService;
-import xyz.erupt.ai.util.McpUtil;
 import xyz.erupt.ai.vo.mcp.*;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.EruptInformation;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptOpenApi;
+import xyz.erupt.upms.helper.UpmsTenant;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.service.EruptTokenService;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -59,6 +62,12 @@ public class McpController {
 
     @Resource
     private ObjectProvider<McpAuthenticator> authenticators;
+
+    @Resource
+    private EruptTokenService eruptTokenService;
+
+    // a call's session outlives it only if the call never returns
+    private static final int SESSION_MINUTES = 5;
 
     @GetMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @PostMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -102,12 +111,15 @@ public class McpController {
         String token = (auth.startsWith(bearer) ? auth.substring(bearer.length()) : auth).trim();
         McpGrant grant = this.grant(token);
         if (null == grant) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        EruptUser user = null;
         if (null != grant.uid()) {
-            EruptUser user = eruptDao.find(EruptUser.class, grant.uid());
+            // looked up across tenants, then the call runs in the user's own tenant: their data, not the platform's
+            user = eruptDao.lambdaQuery(EruptUser.class).allTenants().eq(EruptUser::getId, grant.uid()).one();
             if (null == user) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             MetaContext.getUser().setUid(user.getId());
             MetaContext.getUser().setName(user.getName());
             MetaContext.getUser().setAccount(user.getAccount());
+            MetaContext.getUser().setTenantId(UpmsTenant.isPlatform(user.getTenantId()) ? null : user.getTenantId());
         }
         // a notification (no id) gets no answer
         if (null == request.getId()) return ResponseEntity.accepted().build();
@@ -123,6 +135,8 @@ public class McpController {
                 McpCallResult mcpCallResult = new McpCallResult();
                 McpCallResult.Content content = new McpCallResult.Content();
                 String name = null == request.getParams() ? null : request.getParams().getName();
+                // tools that check permissions read the user's session, as in AI chat: one lives for this call only
+                String session = null == user ? null : this.openSession(user);
                 try {
                     content.setText(McpContext.call(grant, () -> this.mcpCall(grant, name,
                             null == request.getParams() ? null : request.getParams().getArguments())));
@@ -130,6 +144,8 @@ public class McpController {
                     log.error("MCP call error [" + name + "]", e);
                     content.setText(e.getMessage());
                     mcpCallResult.setError(true);
+                } finally {
+                    if (null != session) eruptTokenService.logoutToken(user.getAccount(), session);
                 }
                 mcpCallResult.setContent(List.of(content));
                 result.setResult(mcpCallResult);
@@ -140,6 +156,14 @@ public class McpController {
             }
         }
         return ResponseEntity.ok(result);
+    }
+
+    // a short session of the user, registered as the current token: menus and powers as at login
+    private String openSession(EruptUser user) {
+        String session = "MCP" + Erupts.generateCode(24).toUpperCase();
+        eruptTokenService.loginToken(user, session, SESSION_MINUTES);
+        MetaContext.registerToken(session);
+        return session;
     }
 
     // a module's own token first, then a user's open-api secret when the user server is on
@@ -173,31 +197,39 @@ public class McpController {
         return mcpInfo;
     }
 
+    // erupt's Gson writes nulls, and a schema with "items": null is rejected whole: nulls never go out
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> withoutNulls(Map<String, Object> map) {
+        Map<String, Object> clean = new LinkedHashMap<>();
+        map.forEach((k, v) -> {
+            if (v instanceof Map<?, ?> m) clean.put(k, withoutNulls((Map<String, Object>) m));
+            else if (v instanceof List<?> l) clean.put(k, l.stream().filter(Objects::nonNull)
+                    .map(it -> it instanceof Map<?, ?> m ? withoutNulls((Map<String, Object>) m) : it).toList());
+            else if (null != v) clean.put(k, v);
+        });
+        return clean;
+    }
+
     private static Method method(String name) {
         Method method = AiToolboxManager.getAiMethodMap().get(name);
         return null != method ? method : AiToolboxManager.getGrantedMethodMap().get(name);
     }
 
+    // the schema langchain4j builds for chat models, so a tool reads the same to an MCP client as in AI chat
     private List<McpTool> mcpTools(Set<String> allowedTools) {
         List<McpTool> mcpTools = new ArrayList<>();
         for (String name : allowedTools) {
             Method method = method(name);
-            Tool tool = null == method ? null : method.getAnnotation(Tool.class);
-            if (null == tool) continue;
+            if (null == method || null == method.getAnnotation(Tool.class)) continue;
+            ToolSpecification spec = ToolSpecifications.toolSpecificationFrom(method);
             McpTool mcpTool = new McpTool();
-            mcpTools.add(mcpTool);
             mcpTool.setName(name);
-            mcpTool.setDescription(String.join("\n", tool.value()));
-            McpTool.InputSchema inputSchema = new McpTool.InputSchema();
-            mcpTool.setInputSchema(inputSchema);
-            for (Parameter parameter : method.getParameters()) {
-                P p = parameter.getAnnotation(P.class);
-                McpTool.SchemaProperties schema = new McpTool.SchemaProperties();
-                schema.setType(McpUtil.toMcp(parameter.getType()));
-                schema.setDescription(null == p ? "" : p.value());
-                inputSchema.getProperties().put(parameter.getName(), schema);
-                if (null != p && p.required()) inputSchema.getRequired().add(parameter.getName());
-            }
+            mcpTool.setDescription(StringUtils.defaultString(spec.description()));
+            Map<String, Object> schema = null == spec.parameters() ? new LinkedHashMap<>(Map.of("type", "object"))
+                    : new LinkedHashMap<>(JsonSchemaElementJsonUtils.toMap(spec.parameters()));
+            schema.putIfAbsent("properties", new LinkedHashMap<>());
+            mcpTool.setInputSchema(withoutNulls(schema));
+            mcpTools.add(mcpTool);
         }
         mcpTools.sort(Comparator.comparing(McpTool::getName));
         return mcpTools;

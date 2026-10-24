@@ -27,6 +27,13 @@ public interface CodingAgentRunner {
     String label();
 
     /**
+     * Image URL configured for the CLI, null for the page's default badge.
+     */
+    default String icon() {
+        return null;
+    }
+
+    /**
      * Executable, from PATH unless absolute; whether it is found decides whether the executor is offered.
      */
     String binary();

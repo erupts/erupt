@@ -1,7 +1,6 @@
 package xyz.erupt.ai_dev.mcp;
 
 import org.springframework.stereotype.Component;
-import org.springframework.util.ClassUtils;
 import xyz.erupt.ai_dev.constant.AgentRole;
 
 import java.security.SecureRandom;
@@ -24,9 +23,6 @@ public class DevMcpGrants {
     // the agent's name for erupt's MCP server: its tools show up as mcp__erupt__<tool>
     public static final String SERVER = "erupt";
 
-    // the MCP endpoint comes with erupt-ai, an optional dependency
-    private static final boolean SERVED = ClassUtils.isPresent("xyz.erupt.ai.mcp.McpAuthenticator", DevMcpGrants.class.getClassLoader());
-
     static final Set<String> DEVELOPER_TOOLS = Set.of(DevTools.REQUIREMENT, DevTools.REPORT_PROGRESS);
 
     static final Set<String> QA_TOOLS = Set.of(DevTools.REQUIREMENT, DevTools.REPORT_VERDICT);
@@ -46,14 +42,22 @@ public class DevMcpGrants {
 
         private final AgentRole role;
 
+        // the requirement's creator: erupt's own tools run as them, with what their AI roles allow
+        private final Long uid;
+
         private volatile String verdict;
 
-        Grant(String tenant, Long projectId, Long requirementId, Long sessionRow, AgentRole role) {
+        Grant(String tenant, Long projectId, Long requirementId, Long sessionRow, AgentRole role, Long uid) {
             this.tenant = tenant;
             this.projectId = projectId;
             this.requirementId = requirementId;
             this.sessionRow = sessionRow;
             this.role = role;
+            this.uid = uid;
+        }
+
+        public Long uid() {
+            return uid;
         }
 
         public String tenant() {
@@ -89,19 +93,12 @@ public class DevMcpGrants {
 
     private final Map<String, Grant> grants = new ConcurrentHashMap<>();
 
-    public String issue(String tenant, Long projectId, Long requirementId, Long sessionRow, AgentRole role) {
+    public String issue(String tenant, Long projectId, Long requirementId, Long sessionRow, AgentRole role, Long uid) {
         byte[] bytes = new byte[32];
         random.nextBytes(bytes);
         String token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
-        grants.put(token, new Grant(tenant, projectId, requirementId, sessionRow, role));
+        grants.put(token, new Grant(tenant, projectId, requirementId, sessionRow, role, uid));
         return token;
-    }
-
-    /**
-     * Whether erupt serves the MCP endpoint at all; without erupt-ai the agents report through marker lines.
-     */
-    public boolean served() {
-        return SERVED;
     }
 
     public Grant get(String token) {

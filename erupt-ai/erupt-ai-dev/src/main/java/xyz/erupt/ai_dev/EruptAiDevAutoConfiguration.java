@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.ai_dev.model.DevProject;
 import xyz.erupt.ai_dev.model.DevRequirement;
 import xyz.erupt.ai_dev.service.DevExecutor;
-import xyz.erupt.ai_dev.worktree.DevWorktree;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.ai_dev.controller.DevPoolController;
 import xyz.erupt.core.constant.MenuStatus;
@@ -52,12 +51,11 @@ public class EruptAiDevAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$ai-dev", "AI Dev", "fa fa-code-fork", 27));
+        menus.add(MetaMenu.createRootMenu("$ai-dev", "AI Dev", "fa fa-laptop-code", 28));
         menus.add(MetaMenu.createSimpleMenu("ai-dev-pool", "Requirement Pool", DevPoolController.PAGE, menus.get(0), 5, MenuTypeEnum.ROUTER.getCode()));
         menus.add(MetaMenu.createEruptClassMenu(DevProject.class, menus.get(0), 10));
         // the pool page is the way in; the model stays for its own API and permissions, which a hidden menu still grants
         menus.add(MetaMenu.createEruptClassMenu(DevRequirement.class, menus.get(0), 20, MenuStatus.HIDE));
-        menus.add(MetaMenu.createEruptClassMenu(DevWorktree.class, menus.get(0), 30));
         return menus;
     }
 

@@ -36,8 +36,13 @@ import java.util.Set;
 @Erupt(
         name = "Dev Project",
         dataProxy = DevProjectProxy.class,
-        rowOperation = @RowOperation(code = "sync", icon = "fa fa-refresh", title = "Sync Repositories",
-                mode = RowOperation.Mode.SINGLE, operationHandler = DevProjectProxy.class)
+        rowOperation = {
+                @RowOperation(code = "sync", icon = "fa fa-refresh", title = "Sync Repositories",
+                        mode = RowOperation.Mode.SINGLE, operationHandler = DevProjectProxy.class, operationParam = "sync"),
+                @RowOperation(code = "cleanup", icon = "fa fa-eraser", title = "Clean Up Leftover Workspaces",
+                        mode = RowOperation.Mode.SINGLE, operationHandler = DevProjectProxy.class, operationParam = "cleanup",
+                        tip = "Removes the workspaces of delivered and cancelled requirements, and of requirements that no longer exist")
+        }
 )
 @Table(name = "e_ai_dev_project", uniqueConstraints = @UniqueConstraint(name = "uk_ai_dev_project_code", columnNames = {"tenantId", "code"}))
 @Getter
@@ -103,6 +108,11 @@ public class DevProject extends MetaModelUpdateVo {
                     desc = "Project instructions written into the workspace root of every agent run, next to the repositories")
     )
     private String agentsMd;
+
+    // requirement workspaces of the project still on the server, counted when listed
+    @Transient
+    @EruptField(views = @View(title = "Active Workspaces", width = "120px"))
+    private Integer activeWorkspaces;
 
     // who created it, by id: the project list shows a user only their own, super admins every one
     @ManyToOne

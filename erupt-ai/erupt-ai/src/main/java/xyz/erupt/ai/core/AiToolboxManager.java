@@ -1,5 +1,8 @@
 package xyz.erupt.ai.core;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
@@ -58,6 +61,24 @@ public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler<V
         return invoke(null != method ? method : grantedMethodMap.get(request.name()), request);
     }
 
+    /**
+     * A list, a map or a bean that a client sent as JSON text ("[...]", "{...}") is read as that JSON: some
+     * MCP clients stringify structured arguments. A string parameter keeps its text as it is.
+     */
+    static JsonElement structured(JsonElement value, Class<?> type) {
+        if (null == value || !value.isJsonPrimitive() || !value.getAsJsonPrimitive().isString()) return value;
+        if (CharSequence.class.isAssignableFrom(type) || type.isEnum() || type.isPrimitive() || Number.class.isAssignableFrom(type)
+                || type == Boolean.class || type == Character.class) return value;
+        String text = value.getAsString().trim();
+        if (text.isEmpty() || "null".equals(text)) return JsonNull.INSTANCE;
+        if (!(text.startsWith("[") || text.startsWith("{"))) return value;
+        try {
+            return JsonParser.parseString(text);
+        } catch (RuntimeException e) {
+            return value;
+        }
+    }
+
     @SneakyThrows
     private static Object invoke(Method method, ToolExecutionRequest request) {
         if (null != method) {
@@ -67,7 +88,8 @@ public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler<V
                 for (int i = 0; i < method.getParameters().length; i++) {
                     String paramName = method.getParameters()[i].getName();
                     if (jsonObject.has(paramName)) {
-                        args[i] = GsonFactory.getGson().fromJson(jsonObject.get(paramName), method.getGenericParameterTypes()[i]);
+                        args[i] = GsonFactory.getGson().fromJson(structured(jsonObject.get(paramName), method.getParameterTypes()[i]),
+                                method.getGenericParameterTypes()[i]);
                     }
                 }
             }

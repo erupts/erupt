@@ -40,7 +40,7 @@ class AiDevRealClaudeMcpTest extends EruptApplicationTests {
 
     @Test
     void claudeCodeCallsTheTools() throws Exception {
-        String token = devMcpGrants.issue("0", -1L, -1L, -1L, AgentRole.DEVELOPER);
+        String token = devMcpGrants.issue("0", -1L, -1L, -1L, AgentRole.DEVELOPER, null);
         Path dir = Files.createTempDirectory("ai-dev-real");
         Path config = dir.resolve("mcp.json");
         Files.writeString(config, "{\"mcpServers\":{\"erupt\":{\"type\":\"http\",\"url\":\"http://127.0.0.1:" + port

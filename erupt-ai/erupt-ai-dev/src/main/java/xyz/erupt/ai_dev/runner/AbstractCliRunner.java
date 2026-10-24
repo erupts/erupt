@@ -41,6 +41,11 @@ public abstract class AbstractCliRunner implements CodingAgentRunner {
     }
 
     @Override
+    public String icon() {
+        return StringUtils.trimToNull(this.cli().getIcon());
+    }
+
+    @Override
     public String label() {
         return StringUtils.defaultIfBlank(this.cli().getLabel(), this.defaultLabel());
     }
