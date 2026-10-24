@@ -13,6 +13,8 @@ import xyz.erupt.ai_dev.constant.DeliveryStatus;
 import xyz.erupt.ai_dev.constant.MemberRole;
 import xyz.erupt.ai_dev.model.DevProjectMember;
 import xyz.erupt.ai_dev.model.DevRequirement;
+import xyz.erupt.ai_dev.model.DevRequirementReview;
+import xyz.erupt.ai_dev.service.DevReviewService;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.notice.channel.EruptInternalNotice;
@@ -52,6 +54,9 @@ public class DevNoticeListener {
 
     @Resource
     private EruptDao eruptDao;
+
+    @Resource
+    private DevReviewService devReviewService;
 
     @Resource
     private UpmsTenantSessions upmsTenantSessions;
@@ -98,7 +103,10 @@ public class DevNoticeListener {
     // what the notice says beyond its title; null falls back to the kind's own sentence
     private String detail(DevRequirement r, DevNoticeEvent.Kind kind) {
         return switch (kind) {
-            case SUBMITTED, APPROVED, REJECTED -> r.getDescription();
+            case SUBMITTED -> r.getDescription();
+            // the reviewer's reason or note first, else what was reviewed
+            case APPROVED, REJECTED -> devReviewService.latest(r.getId()).map(DevRequirementReview::getComment)
+                    .filter(StringUtils::isNotBlank).orElse(r.getDescription());
             case ACCEPTANCE -> r.getVerdict();
             case FAILED -> r.getStatusMessage();
             case DELIVERED -> String.join("\n", eruptDao.getEntityManager().createQuery(

@@ -33,6 +33,7 @@ import xyz.erupt.ai_dev.model.DevProjectRepo;
 import xyz.erupt.ai_dev.model.*;
 import xyz.erupt.ai_dev.prop.EruptAiDevProp;
 import xyz.erupt.ai_dev.proxy.DevRequirementOperation;
+import xyz.erupt.ai_dev.controller.DevPoolController;
 import xyz.erupt.ai_dev.service.DevExecutor;
 import xyz.erupt.ai_dev.service.DevLayout;
 import xyz.erupt.ai_dev.service.DevRepoService;
@@ -151,6 +152,9 @@ class AiDevExecutorTest extends EruptApplicationTests {
     private DevWorkspaceService devWorkspaceService;
 
     @Resource
+    private DevPoolController devPoolController;
+
+    @Resource
     private EruptGit eruptGit;
 
     @Resource
@@ -214,6 +218,8 @@ class AiDevExecutorTest extends EruptApplicationTests {
         MetaContext.remove();
         RequestContextHolder.resetRequestAttributes();
         transactionTemplate.executeWithoutResult(tx -> {
+            eruptDao.getEntityManager().createQuery("delete from DevRequirementReview v where v.requirement.id in "
+                    + "(select r.id from DevRequirement r where r.project.code like :c)").setParameter("c", "%" + mark).executeUpdate();
             for (Class<?> type : List.of(DevAgentEvent.class, DevAgentSession.class, DevRequirementDelivery.class, DevRequirement.class)) {
                 eruptDao.getEntityManager().createQuery("delete from " + type.getSimpleName() + " x where x.project.code like :c")
                         .setParameter("c", "%" + mark).executeUpdate();
@@ -324,7 +330,6 @@ class AiDevExecutorTest extends EruptApplicationTests {
         this.act(r, "approve");
         r = this.reload(r);
         assertEquals(RequirementStage.QUEUED, r.getStage());
-        assertEquals(1, r.getVersion());
 
         devExecutor.execute(project.getTenantId(), r.getId());
         r = this.reload(r);
@@ -597,6 +602,34 @@ class AiDevExecutorTest extends EruptApplicationTests {
         r = this.reload(r);
         assertEquals(RequirementStage.QUEUED, r.getStage());
         assertEquals("Try a smaller change.", r.getInstruction());
+    }
+
+    @Test
+    void aRejectionSaysWhyAndAnApprovalNoteReachesTheAgent() throws IOException {
+        DevProject project = this.project(this.remote("web"), this.remote("api"));
+        DevRequirement r = this.requirement(project, "review " + mark);
+        Long id = r.getId();
+        this.act(r, "submit");
+        DevRequirement submitted = r;
+        assertThrows(EruptWebApiRuntimeException.class, () -> this.act(submitted, "reject"), "no rejection without a reason");
+        this.review(r, "reject", "Name the mockup's colours.");
+        assertEquals(RequirementStage.DRAFT, this.reload(r).getStage());
+
+        this.act(r, "submit");
+        this.review(r, "approve", "Keep the old layout on mobile.");
+        r = this.reload(r);
+        assertEquals(RequirementStage.QUEUED, r.getStage());
+        assertEquals("Reviewer's note: Keep the old layout on mobile.", r.getInstruction());
+        DevPoolController.Detail detail = devPoolController.requirement(id).getData();
+        assertEquals(List.of(ReviewDecision.APPROVED, ReviewDecision.REJECTED),
+                detail.reviews().stream().map(DevPoolController.Review::decision).toList());
+        assertEquals("Name the mockup's colours.", detail.reviews().get(1).comment());
+    }
+
+    private void review(DevRequirement r, String action, String comment) {
+        DevReviewForm form = new DevReviewForm();
+        form.setComment(comment);
+        devRequirementOperation.exec(List.of(r), form, new String[]{action});
     }
 
 }

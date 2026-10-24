@@ -32,7 +32,7 @@ public class DevNotices {
     }
 
     private void publish(DevRequirement requirement, DevNoticeEvent.Kind kind, Long actor) {
-        publisher.publishEvent(new DevNoticeEvent(requirement.getTenantId(), requirement.getId(), kind, actor));
+        publisher.publishEvent(new DevNoticeEvent(requirement.getProject().getTenantId(), requirement.getId(), kind, actor));
     }
 
 }

@@ -3,8 +3,6 @@ package xyz.erupt.ai_dev.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.TenantId;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import xyz.erupt.ai_dev.constant.Priority;
@@ -30,7 +28,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.MultiChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.upms.helper.UpmsTenant;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.model.EruptUser;
 
@@ -38,7 +35,8 @@ import java.util.Set;
 
 /**
  * A unit of work in a project's requirement pool. It lives in the project picked in the page header
- * ({@link DevProjectScope}); its stage, version and progress move only through the pool's own actions.
+ * ({@link DevProjectScope}); its stage and progress move only through the pool's own actions. Tenants are kept
+ * apart by its project: every read and write goes through a project the user is a member of.
  *
  * @author YuePeng
  * date 2026/10/21
@@ -51,10 +49,10 @@ import java.util.Set;
                         operationHandler = DevRequirementOperation.class, operationParam = "submit",
                         ifExpr = "item.stage === 'DRAFT'", ifExprBehavior = RowOperation.IfExprBehavior.HIDE),
                 @RowOperation(code = "approve", title = "Approve and Run", icon = "fa fa-check", mode = RowOperation.Mode.SINGLE,
-                        operationHandler = DevRequirementOperation.class, operationParam = "approve",
+                        operationHandler = DevRequirementOperation.class, operationParam = "approve", eruptClass = DevReviewForm.class,
                         ifExpr = "item.stage === 'REVIEW'", ifExprBehavior = RowOperation.IfExprBehavior.HIDE),
                 @RowOperation(code = "reject", title = "Reject", icon = "fa fa-undo", mode = RowOperation.Mode.SINGLE,
-                        operationHandler = DevRequirementOperation.class, operationParam = "reject",
+                        operationHandler = DevRequirementOperation.class, operationParam = "reject", eruptClass = DevReviewForm.class,
                         ifExpr = "item.stage === 'REVIEW'", ifExprBehavior = RowOperation.IfExprBehavior.HIDE),
                 @RowOperation(code = "stop", title = "Stop", icon = "fa fa-stop", mode = RowOperation.Mode.SINGLE,
                         operationHandler = DevRequirementOperation.class, operationParam = "stop",
@@ -86,13 +84,6 @@ import java.util.Set;
 @Entity
 @EruptI18n
 public class DevRequirement extends MetaModelUpdateVo {
-
-    // owner tenant, UpmsTenant.PLATFORM for the platform: stamped from the writer's session and
-    // applied by Hibernate to every query, so one tenant never reads another's rows
-    @TenantId
-    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
-    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
-    private String tenantId;
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false, foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
@@ -187,10 +178,6 @@ public class DevRequirement extends MetaModelUpdateVo {
     @ManyToOne
     @JoinColumn(name = "creator_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private EruptUser creator;
-
-    // approved definition version, bumped on every approval
-    @EruptField(views = @View(title = "Version", width = "80px"))
-    private Integer version = 0;
 
     // 0-100, reported by the agent
     @EruptField(views = @View(title = "Progress", width = "90px"))

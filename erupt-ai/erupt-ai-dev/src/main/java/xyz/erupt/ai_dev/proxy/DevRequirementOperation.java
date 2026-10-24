@@ -5,8 +5,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 import xyz.erupt.ai_dev.constant.RequirementStage;
+import xyz.erupt.ai_dev.constant.ReviewDecision;
 import xyz.erupt.ai_dev.model.DevInstructionForm;
 import xyz.erupt.ai_dev.model.DevRequirement;
+import xyz.erupt.ai_dev.model.DevReviewForm;
 import xyz.erupt.ai_dev.notice.DevNoticeEvent;
 import xyz.erupt.ai_dev.notice.DevNotices;
 import xyz.erupt.ai_dev.runner.DevAgentProcess;
@@ -14,6 +16,7 @@ import xyz.erupt.ai_dev.service.DevAccessService;
 import xyz.erupt.ai_dev.service.DevDeliveryService;
 import xyz.erupt.ai_dev.service.DevExecutor;
 import xyz.erupt.ai_dev.service.DevRunContext;
+import xyz.erupt.ai_dev.service.DevReviewService;
 import xyz.erupt.ai_dev.service.DevWorkspaceService;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -34,7 +37,7 @@ import java.util.Set;
  * date 2026/10/22
  */
 @Component
-public class DevRequirementOperation implements OperationHandler<DevRequirement, DevInstructionForm> {
+public class DevRequirementOperation implements OperationHandler<DevRequirement, Object> {
 
     @Resource
     private DevAccessService devAccessService;
@@ -60,10 +63,15 @@ public class DevRequirementOperation implements OperationHandler<DevRequirement,
     @Resource
     private TransactionTemplate transactionTemplate;
 
+    @Resource
+    private DevReviewService devReviewService;
+
     @Override
-    public String exec(List<DevRequirement> data, DevInstructionForm form, String[] param) {
+    public String exec(List<DevRequirement> data, Object form, String[] param) {
         String action = param[0];
-        String instruction = null == form ? null : StringUtils.trimToNull(form.getInstruction());
+        // retry and rework carry an instruction for the agent, approve and reject the reviewer's comment
+        String instruction = StringUtils.trimToNull(form instanceof DevInstructionForm f ? f.getInstruction()
+                : form instanceof DevReviewForm f ? f.getComment() : null);
         boolean queued = false;
         String message = null;
         for (DevRequirement row : data) {
@@ -89,14 +97,18 @@ public class DevRequirementOperation implements OperationHandler<DevRequirement,
             case "approve" -> {
                 this.from(r, RequirementStage.REVIEW);
                 devAccessService.requireApprover(r);
-                if (null == r.getReviewer()) r.setReviewer(eruptDao.find(EruptUser.class, devAccessService.user().getId()));
-                r.setVersion(r.getVersion() + 1);
-                this.queue(r, null);
+                EruptUser approver = eruptDao.find(EruptUser.class, devAccessService.user().getId());
+                if (null == r.getReviewer()) r.setReviewer(approver);
+                devReviewService.record(r, ReviewDecision.APPROVED, instruction, approver);
+                // the reviewer's note goes to the run
+                this.queue(r, null == instruction ? null : "Reviewer's note: " + instruction);
                 devNotices.publish(r, DevNoticeEvent.Kind.APPROVED);
             }
             case "reject" -> {
                 this.from(r, RequirementStage.REVIEW);
                 devAccessService.requireApprover(r);
+                if (null == instruction) throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai_dev.reject_reason_required"));
+                devReviewService.record(r, ReviewDecision.REJECTED, instruction, eruptDao.find(EruptUser.class, devAccessService.user().getId()));
                 r.setStage(RequirementStage.DRAFT);
                 devNotices.publish(r, DevNoticeEvent.Kind.REJECTED);
             }
