@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import xyz.erupt.ai_dev.constant.DeliveryStatus;
 import xyz.erupt.ai_dev.constant.*;
 import xyz.erupt.ai_dev.runner.ClaudeCodeRunner;
 import xyz.erupt.ai_dev.runner.CodingAgentRunner;
@@ -26,6 +27,9 @@ import xyz.erupt.jpa.dao.EruptDao;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Set;
 
@@ -58,7 +62,13 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
     public record Row(Long id, String code, String title, RequirementStage stage, Priority priority, Integer progress,
                       String phase, Set<String> repos, String verdict, String statusMessage, String createBy, String reviewer,
                       String agent, LocalDateTime createTime, LocalDateTime updateTime, boolean mine, boolean toReview,
-                      String createByAvatar, String reviewerAvatar, String model, String executor, String executorIcon) {
+                      String createByAvatar, String reviewerAvatar, String model, String executor, String executorIcon,
+                      Map<String, RepoState> deliveries) {
+
+        Row withDeliveries(Map<String, RepoState> deliveries) {
+            return new Row(id, code, title, stage, priority, progress, phase, repos, verdict, statusMessage, createBy, reviewer,
+                    agent, createTime, updateTime, mine, toReview, createByAvatar, reviewerAvatar, model, executor, executorIcon, deliveries);
+        }
     }
 
     public record Session(Long id, AgentRole role, String agentName, String executor, SessionStatus status,
@@ -127,6 +137,12 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
     /**
      * @param models model ids to suggest, empty when the CLI cannot tell
      */
+    /**
+     * The latest delivery of one repository: where it went and how.
+     */
+    public record RepoState(DeliveryStatus status, String branch, String message) {
+    }
+
     public record Executor(String code, String label, List<String> models, String icon) {
     }
 
@@ -147,9 +163,17 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
         devAccessService.requireMember(project);
         DevProject p = eruptDao.find(DevProject.class, project);
         boolean review = this.canReview(project);
+        // each requirement's latest delivery per repository, in one query for the whole list
+        Map<Long, Map<String, RepoState>> deliveries = new HashMap<>();
+        eruptDao.getEntityManager().createQuery(
+                        "select d from DevRequirementDelivery d where d.project.id = :p order by d.id", DevRequirementDelivery.class)
+                .setParameter("p", project).getResultList()
+                .forEach(d -> deliveries.computeIfAbsent(d.getRequirement().getId(), k -> new LinkedHashMap<>())
+                        .put(d.getRepoAlias(), new RepoState(d.getStatus(), d.getBranch(), d.getMessage())));
         return R.ok(eruptDao.getEntityManager().createQuery(
                         "select r from DevRequirement r where r.project.id = :p order by r.updateTime desc, r.id desc", DevRequirement.class)
-                .setParameter("p", project).getResultList().stream().map(r -> this.row(r, p, review)).toList());
+                .setParameter("p", project).getResultList().stream()
+                .map(r -> this.row(r, p, review).withDeliveries(deliveries.getOrDefault(r.getId(), Map.of()))).toList());
     }
 
     /**
@@ -242,7 +266,7 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
                 r.getCreateTime(), r.getUpdateTime(), mine, toReview,
                 null == r.getCreator() ? null : r.getCreator().getAvatar(), null == r.getReviewer() ? null : r.getReviewer().getAvatar(),
                 StringUtils.trimToNull(r.getModel()), this.executorCode(r),
-                devRunners.find(this.executorCode(r)).map(CodingAgentRunner::icon).orElse(null));
+                devRunners.find(this.executorCode(r)).map(CodingAgentRunner::icon).orElse(null), Map.of());
     }
 
     private boolean canReview(Long projectId) {
