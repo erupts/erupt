@@ -26,6 +26,7 @@ import xyz.erupt.git.GitException;
 import xyz.erupt.git.model.GitRemote;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -83,7 +84,7 @@ public class DevProjectProxy implements DataProxy<DevProject>, OperationHandler<
         this.check(project);
         // the creator owns what they create, so they keep access to it
         Long uid = devAccessService.user().getId();
-        project.setCreator(eruptDao.find(EruptUser.class, uid));
+        project.setCreator(eruptDao.find(EruptUserVo.class, uid));
         if (project.getMembers().stream().noneMatch(it -> null != it.getUser() && uid.equals(it.getUser().getId()))) {
             DevProjectMember owner = new DevProjectMember();
             owner.setUser(eruptDao.find(EruptUser.class, uid));

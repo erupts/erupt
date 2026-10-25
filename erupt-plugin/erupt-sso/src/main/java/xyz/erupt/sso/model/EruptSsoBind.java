@@ -22,7 +22,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.helper.UpmsTenant;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 
 import java.time.LocalDateTime;
 
@@ -70,10 +70,10 @@ public class EruptSsoBind extends MetaModelUpdateVo {
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "User", column = "account"),
+            views = @View(title = "User", column = "name"),
             edit = @Edit(title = "User", type = EditType.REFERENCE_TABLE, search = @Search)
     )
-    private EruptUser eruptUser;
+    private EruptUserVo eruptUser;
 
     @Column(length = 255, nullable = false)
     @EruptField(

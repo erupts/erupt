@@ -26,6 +26,7 @@ import xyz.erupt.sso.vo.EruptSsoProviderVo;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.constant.EncryptType;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
@@ -337,7 +338,7 @@ public class EruptSsoService {
         if (null != bind) {
             this.recordLogin(sso, bind, claims);
             em.merge(bind);
-            return this.applyProfile(em, sso, claims, bind.getEruptUser());
+            return this.applyProfile(em, sso, claims, em.find(EruptUser.class, bind.getEruptUser().getId()));
         }
 
         String account = claim(claims, sso.getAccountClaim());
@@ -352,7 +353,8 @@ public class EruptSsoService {
         }
         EruptSsoBind newBind = new EruptSsoBind();
         newBind.setSso(sso);
-        newBind.setEruptUser(eruptUser);
+        // a reference: a user created just above is not flushed yet
+        newBind.setEruptUser(em.getReference(EruptUserVo.class, eruptUser.getId()));
         newBind.setSubject(subject);
         this.recordLogin(sso, newBind, claims);
         em.persist(newBind);

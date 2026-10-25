@@ -60,7 +60,7 @@ public class EruptOpenApi extends MetaModelUpdateVo {
             views = @View(title = "Bind User Permissions", column = "name"),
             edit = @Edit(title = "Bind User Permissions", type = EditType.REFERENCE_TABLE, notNull = true)
     )
-    private EruptUser eruptUser;
+    private EruptUserVo eruptUser;
 
     @EruptField(
             views = @View(title = "status", sortable = true),

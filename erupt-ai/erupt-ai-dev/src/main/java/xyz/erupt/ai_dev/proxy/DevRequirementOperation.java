@@ -23,6 +23,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 
 import java.io.IOException;
 import java.util.List;
@@ -98,7 +99,7 @@ public class DevRequirementOperation implements OperationHandler<DevRequirement,
                 this.from(r, RequirementStage.REVIEW);
                 devAccessService.requireApprover(r);
                 EruptUser approver = eruptDao.find(EruptUser.class, devAccessService.user().getId());
-                if (null == r.getReviewer()) r.setReviewer(approver);
+                if (null == r.getReviewer()) r.setReviewer(eruptDao.find(EruptUserVo.class, approver.getId()));
                 devReviewService.record(r, ReviewDecision.APPROVED, instruction, approver);
                 // the reviewer's note goes to the run
                 this.queue(r, null == instruction ? null : "Reviewer's note: " + instruction);
