@@ -1,13 +1,18 @@
 package xyz.erupt.jpa.service;
 
 import jakarta.annotation.Resource;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Query;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.constant.EruptConst;
@@ -50,9 +55,29 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     @Resource
     private JpaSupport jpaSupport;
 
+    // SUPPORTS keeps the EntityManager open for the whole call without starting a transaction,
+    // so to-many collections load here and callers can read them without open-in-view
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
     public Object findDataById(EruptModel eruptModel, Object id) {
-        return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> em.find(eruptModel.getClazz(), id));
+        return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> {
+            Object entity = em.find(eruptModel.getClazz(), id);
+            if (null != entity) this.initializeCollections(eruptModel.getClazz(), entity);
+            return entity;
+        });
+    }
+
+    private void initializeCollections(Class<?> clazz, Object entity) {
+        ReflectUtil.findClassAllFields(clazz, field -> {
+            if (null != field.getAnnotation(OneToMany.class) || null != field.getAnnotation(ManyToMany.class)) {
+                try {
+                    field.setAccessible(true);
+                    Hibernate.initialize(field.get(entity));
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
 
