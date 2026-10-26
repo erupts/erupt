@@ -3,13 +3,10 @@ package xyz.erupt.ai_dev.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.TenantId;
 import xyz.erupt.ai_dev.constant.AgentRole;
 import xyz.erupt.ai_dev.constant.SessionStatus;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.jpa.model.BaseModel;
-import xyz.erupt.upms.helper.UpmsTenant;
 
 import java.time.LocalDateTime;
 
@@ -25,11 +22,6 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 public class DevAgentSession extends BaseModel {
-
-    @TenantId
-    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
-    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
-    private String tenantId;
 
     // denormalised so access checks reach the project without a join
     @ManyToOne

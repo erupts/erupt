@@ -52,7 +52,8 @@ import java.util.Set;
 public class DevProject extends MetaModelUpdateVo {
 
     // owner tenant, UpmsTenant.PLATFORM for the platform: stamped from the writer's session and
-    // applied by Hibernate to every query, so one tenant never reads another's rows
+    // applied by Hibernate to every query, so one tenant never reads another's rows. The only tenant
+    // column of the module: everything else belongs to a project and is reached through it
     @TenantId
     @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
     @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)

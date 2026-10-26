@@ -3,12 +3,9 @@ package xyz.erupt.ai_dev.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.TenantId;
 import xyz.erupt.ai_dev.constant.EventKind;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.jpa.model.BaseModel;
-import xyz.erupt.upms.helper.UpmsTenant;
 
 import java.time.LocalDateTime;
 
@@ -23,11 +20,6 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 public class DevAgentEvent extends BaseModel {
-
-    @TenantId
-    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
-    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
-    private String tenantId;
 
     @ManyToOne
     @JoinColumn(name = "project_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
