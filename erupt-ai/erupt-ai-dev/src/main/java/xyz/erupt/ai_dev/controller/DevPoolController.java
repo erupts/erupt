@@ -81,7 +81,7 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
     }
 
     public record Detail(Row requirement, String description, Long projectId, String projectName, String qaAgent,
-                         List<Session> sessions, List<Delivery> deliveries, boolean canReview, boolean executorEnabled,
+                         List<Session> sessions, List<Delivery> deliveries, boolean canReview,
                          boolean canApprove, List<Review> reviews) {
     }
 
@@ -141,7 +141,7 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
     public R<Executors> executors(@RequestParam("project") Long project) {
         devAccessService.requireMember(project);
         return R.ok(new Executors(devRunners.installed().stream().map(it -> new Executor(it.code(), it.label(), devRunners.models(it), it.icon())).toList(),
-                devRunners.preferred(project, devAccessService.user()), devExecutor.enabled()));
+                devRunners.preferred(project, devAccessService.user())));
     }
 
     /**
@@ -156,10 +156,7 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
     public record Executor(String code, String label, List<String> models, String icon) {
     }
 
-    /**
-     * @param enabled whether this instance runs queued requirements; when no instance does, they stay queued
-     */
-    public record Executors(List<Executor> options, String preferred, boolean enabled) {
+    public record Executors(List<Executor> options, String preferred) {
     }
 
     /**
@@ -207,7 +204,7 @@ public class DevPoolController implements EruptRouter.VerifyHandler {
         boolean review = this.canReview(r.getProject().getId());
         List<DevRequirementReview> reviews = devReviewService.reviews(id);
         return R.ok(new Detail(this.row(r, r.getProject(), review), r.getDescription(), r.getProject().getId(), r.getProject().getName(),
-                Boolean.TRUE.equals(r.getQaReview()) ? this.agent(r) + " QA" : null, sessions, deliveries, review, devExecutor.enabled(),
+                Boolean.TRUE.equals(r.getQaReview()) ? this.agent(r) + " QA" : null, sessions, deliveries, review,
                 devAccessService.mayApprove(r),
                 reviews.stream().map(v -> new Review(v.getDecision(), v.getComment(),
                         null == v.getReviewer() ? null : v.getReviewer().getName(),

@@ -87,9 +87,9 @@ A CLI without a closing result event is judged by its exit code, its last text t
 
 ### Running agents safely
 
-The executor is **off by default**. An agent edits files and runs commands with the server's account, so:
+An instance runs agents as soon as a coding CLI is installed on it, and approving a requirement needs one there. An agent edits files and runs commands with the server's account, so:
 
-- Enable it on one instance only, ideally a container or VM dedicated to it.
+- Install a CLI on one instance only, ideally a container or VM dedicated to it.
 - The agent process gets a clean environment (`PATH`, `HOME`, `LANG`, …) plus `erupt.ai-dev.executor.env` only. Server secrets such as database passwords never reach it.
 - Git credentials never reach it either: erupt does every fetch and push itself.
 - A credential goes only to the hosts listed under `erupt.ai-dev.credentials.<key>.hosts` (`github.com`, `*.example.com`, or `*` for any). None listed means it is never used, so a repository URL typed into a project cannot carry it to another server.
@@ -100,7 +100,6 @@ The executor is **off by default**. An agent edits files and runs commands with 
 erupt:
   ai-dev:
     executor:
-      enabled: true
       max-concurrent: 2
       run-timeout-minutes: 60
       env:

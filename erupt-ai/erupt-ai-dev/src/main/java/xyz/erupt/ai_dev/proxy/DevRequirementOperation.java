@@ -11,7 +11,9 @@ import xyz.erupt.ai_dev.model.DevRequirement;
 import xyz.erupt.ai_dev.model.DevReviewForm;
 import xyz.erupt.ai_dev.notice.DevNoticeEvent;
 import xyz.erupt.ai_dev.notice.DevNotices;
+import xyz.erupt.ai_dev.runner.ClaudeCodeRunner;
 import xyz.erupt.ai_dev.runner.DevAgentProcess;
+import xyz.erupt.ai_dev.runner.DevRunners;
 import xyz.erupt.ai_dev.service.DevAccessService;
 import xyz.erupt.ai_dev.service.DevDeliveryService;
 import xyz.erupt.ai_dev.service.DevExecutor;
@@ -48,6 +50,9 @@ public class DevRequirementOperation implements OperationHandler<DevRequirement,
 
     @Resource
     private DevAgentProcess devAgentProcess;
+
+    @Resource
+    private DevRunners devRunners;
 
     @Resource
     private DevDeliveryService devDeliveryService;
@@ -161,11 +166,15 @@ public class DevRequirementOperation implements OperationHandler<DevRequirement,
         }
     }
 
-    // any instance may queue; the one with the executor enabled runs it
+    // only queues what this instance can run: the requirement's CLI installed
     private void queue(DevRequirement r, String instruction) {
+        String executor = StringUtils.defaultIfBlank(r.getExecutor(), ClaudeCodeRunner.CODE);
+        if (devRunners.find(executor).filter(devRunners::installed).isEmpty()) {
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("ai_dev.no_executor") + ": " + executor);
+        }
         r.setStage(RequirementStage.QUEUED);
         r.setInstruction(instruction);
-        r.setStatusMessage(devExecutor.enabled() ? null : I18nTranslate.$translate("ai_dev.waiting_for_executor"));
+        r.setStatusMessage(null);
         r.setProgress(0);
         r.setPhase(null);
     }

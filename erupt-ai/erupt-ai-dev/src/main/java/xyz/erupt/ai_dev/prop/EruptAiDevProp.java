@@ -47,15 +47,13 @@ public class EruptAiDevProp {
     private Executor executor = new Executor();
 
     /**
-     * Runs coding agents on this server. Off by default: an agent edits files and runs commands with the
-     * server's account, so turn it on only on a host meant for it (ideally a container or a VM of its own),
-     * and on one instance only.
+     * Runs coding agents on this server whenever a coding CLI is installed: an agent edits files and runs
+     * commands with the server's account, so install one only on a host meant for it (ideally a container or
+     * a VM of its own), and on one instance only.
      */
     @Getter
     @Setter
     public static class Executor {
-
-        private boolean enabled = false;
 
         // agent runs at the same time on this instance
         private int maxConcurrent = 2;
@@ -84,7 +82,7 @@ public class EruptAiDevProp {
 
         @Override
         public String toString() {
-            return "Executor[enabled=" + enabled + "]";
+            return "Executor[maxConcurrent=" + maxConcurrent + "]";
         }
     }
 

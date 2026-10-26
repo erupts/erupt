@@ -114,16 +114,11 @@ public class DevExecutor {
         workers.shutdownNow();
     }
 
-    public boolean enabled() {
-        return eruptAiDevProp.getExecutor().isEnabled();
-    }
-
     /**
-     * Starts polling on an instance with the executor enabled. Runs a restart cut short are failed first:
+     * Starts polling. Runs a restart cut short are failed first:
      * no process of theirs survived it.
      */
     public void start() {
-        if (!this.enabled()) return;
         for (Pending r : this.across(RequirementStage.RUNNING, RequirementStage.VERIFYING)) {
             this.fail(r.tenant(), r.id(), "Interrupted by a server restart, retry to continue");
         }
@@ -134,7 +129,7 @@ public class DevExecutor {
      * Checks the queue now, e.g. right after an approval.
      */
     public void kick() {
-        if (this.enabled()) poller.execute(this::poll);
+        poller.execute(this::poll);
     }
 
     private void poll() {
