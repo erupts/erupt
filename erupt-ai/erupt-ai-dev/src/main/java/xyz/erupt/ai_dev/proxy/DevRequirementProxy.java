@@ -17,7 +17,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -61,7 +61,7 @@ public class DevRequirementProxy implements DataProxy<DevRequirement> {
         requirement.setStage(RequirementStage.DRAFT);
         requirement.setProgress(0);
         MetaUserinfo user = devAccessService.user();
-        if (null != user) requirement.setCreator(eruptDao.find(EruptUser.class, user.getId()));
+        if (null != user) requirement.setCreator(eruptDao.find(EruptUserVo.class, user.getId()));
         if (StringUtils.isBlank(requirement.getExecutor())) requirement.setExecutor(devRunners.preferred(project.getId(), user));
         this.checkExecutor(requirement);
         this.checkRepos(requirement, project);

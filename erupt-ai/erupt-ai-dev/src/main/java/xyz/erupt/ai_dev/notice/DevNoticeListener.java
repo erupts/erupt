@@ -17,11 +17,11 @@ import xyz.erupt.ai_dev.model.DevRequirementReview;
 import xyz.erupt.ai_dev.service.DevReviewService;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.notice.channel.EruptInternalNotice;
 import xyz.erupt.notice.model.NoticeScene;
 import xyz.erupt.notice.pojo.NoticeMessage;
 import xyz.erupt.notice.service.EruptNoticeService;
-import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.tenant.UpmsTenantSessions;
 
 import java.util.LinkedHashSet;
@@ -141,7 +141,7 @@ public class DevNoticeListener {
         eruptDao.persistAndFlush(scene);
     }
 
-    private static Long id(EruptUser user) {
+    private static Long id(BaseModel user) {
         return null == user ? null : user.getId();
     }
 

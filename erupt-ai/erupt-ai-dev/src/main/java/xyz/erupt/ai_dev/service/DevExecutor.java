@@ -21,7 +21,7 @@ import xyz.erupt.ai_dev.runner.DevRunners;
 import xyz.erupt.ai_dev.runner.DevAgentProcess;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.helper.UpmsTenant;
 
 import com.google.gson.JsonObject;
@@ -305,7 +305,7 @@ public class DevExecutor {
         if (null == r) return null;
         if (null != r.getCreator()) return r.getCreator().getId();
         if (StringUtils.isBlank(r.getCreateBy())) return null;
-        List<EruptUser> named = eruptDao.lambdaQuery(EruptUser.class).eq(EruptUser::getName, r.getCreateBy()).limit(2).list();
+        List<EruptUserVo> named = eruptDao.lambdaQuery(EruptUserVo.class).eq(EruptUserVo::getName, r.getCreateBy()).limit(2).list();
         if (named.size() != 1) return null;
         // kept, so the next run and the notices find it directly
         r.setCreator(named.get(0));

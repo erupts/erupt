@@ -20,7 +20,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.upms.helper.UpmsTenant;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import java.util.LinkedHashSet;
@@ -117,7 +117,7 @@ public class DevProject extends MetaModelUpdateVo {
     // who created it, by id: the project list shows a user only their own, super admins every one
     @ManyToOne
     @JoinColumn(name = "creator_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
-    private EruptUser creator;
+    private EruptUserVo creator;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(

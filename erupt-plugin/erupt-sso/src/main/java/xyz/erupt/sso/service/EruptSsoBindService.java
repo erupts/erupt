@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.sso.model.EruptSso;
 import xyz.erupt.sso.model.EruptSsoBind;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +38,7 @@ public class EruptSsoBindService {
         if (null == userId || StringUtils.isBlank(providerCode)) return Optional.empty();
         EruptSso sso = eruptDao.lambdaQuery(EruptSso.class).eq(EruptSso::getCode, providerCode).one();
         if (null == sso) return Optional.empty();
-        EruptUser user = eruptDao.find(EruptUser.class, userId);
+        EruptUserVo user = eruptDao.find(EruptUserVo.class, userId);
         if (null == user) return Optional.empty();
         return Optional.ofNullable(eruptDao.lambdaQuery(EruptSsoBind.class)
                 .eq(EruptSsoBind::getSso, sso).eq(EruptSsoBind::getEruptUser, user).one());
@@ -49,7 +49,7 @@ public class EruptSsoBindService {
      */
     public List<EruptSsoBind> findAll(Long userId) {
         if (null == userId) return List.of();
-        EruptUser user = eruptDao.find(EruptUser.class, userId);
+        EruptUserVo user = eruptDao.find(EruptUserVo.class, userId);
         if (null == user) return List.of();
         return eruptDao.lambdaQuery(EruptSsoBind.class).eq(EruptSsoBind::getEruptUser, user).list();
     }

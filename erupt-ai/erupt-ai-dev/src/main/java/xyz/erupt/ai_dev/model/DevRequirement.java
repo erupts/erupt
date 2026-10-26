@@ -29,7 +29,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.MultiChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 
 import java.util.Set;
 
@@ -172,12 +172,12 @@ public class DevRequirement extends MetaModelUpdateVo {
             views = @View(title = "Reviewer", column = "name"),
             edit = @Edit(title = "Reviewer", type = EditType.REFERENCE_TABLE)
     )
-    private EruptUser reviewer;
+    private EruptUserVo reviewer;
 
     // who created it, by id: createBy holds a display name only, and notices need the account
     @ManyToOne
     @JoinColumn(name = "creator_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
-    private EruptUser creator;
+    private EruptUserVo creator;
 
     // 0-100, reported by the agent
     @EruptField(views = @View(title = "Progress", width = "90px"))

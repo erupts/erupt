@@ -25,6 +25,7 @@ import xyz.erupt.sso.model.EruptSsoBind;
 import xyz.erupt.sso.service.SsoProviderApi;
 import xyz.erupt.test.EruptApplicationTests;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 
 import java.io.IOException;
@@ -277,7 +278,7 @@ public class SsoNoticeChannelTest extends EruptApplicationTests {
         transactionTemplate.executeWithoutResult(status -> {
             EruptSsoBind bind = new EruptSsoBind();
             bind.setSso(dao.lambdaQuery(EruptSso.class).eq(EruptSso::getCode, CODE).one());
-            bind.setEruptUser(this.defaultUser());
+            bind.setEruptUser(dao.find(EruptUserVo.class, this.defaultUser().getId()));
             bind.setSubject("subject-" + openId);
             bind.setOpenId(openId);
             dao.persist(bind);
