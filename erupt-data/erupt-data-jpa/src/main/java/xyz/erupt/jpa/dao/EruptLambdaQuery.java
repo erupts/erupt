@@ -6,7 +6,6 @@ import jakarta.persistence.Query;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import xyz.erupt.core.util.ReflectUtil;
@@ -41,10 +40,23 @@ public class EruptLambdaQuery<T> {
     // lifts the tenant restriction for this query only, see allTenants()
     private boolean allTenants;
 
+    // Placeholder names are deterministic (prefix + ordinal), so the same chain of calls yields the
+    // same HQL text and Hibernate's query interpretation cache can serve it; a random name per call
+    // would miss that cache on every execution. A nested or() gets its own prefix so its parameters
+    // never collide with the enclosing query's when they are merged
+    private final String placeholderPrefix;
+
+    private int placeholderSeq;
+
     public EruptLambdaQuery(EntityManager entityManager, Class<T> eruptClass) {
+        this(entityManager, eruptClass, "lq");
+    }
+
+    private EruptLambdaQuery(EntityManager entityManager, Class<T> eruptClass, String placeholderPrefix) {
         this.entityManager = entityManager;
         this.activeEntityManager = entityManager;
         this.eruptClass = eruptClass;
+        this.placeholderPrefix = placeholderPrefix;
     }
 
     public <E, R> EruptLambdaQuery<T> with(SFunction<E, R> field) {
@@ -256,7 +268,7 @@ public class EruptLambdaQuery<T> {
     }
 
     public EruptLambdaQuery<T> or(Consumer<EruptLambdaQuery<T>> consumer) {
-        EruptLambdaQuery<T> sub = new EruptLambdaQuery<>(entityManager, eruptClass);
+        EruptLambdaQuery<T> sub = new EruptLambdaQuery<>(entityManager, eruptClass, this.genePlaceholder() + "_");
         consumer.accept(sub);
         if (!sub.querySchema.getWheres().isEmpty()) {
             querySchema.getWheres().add("(" + String.join(SqlLang.OR, sub.querySchema.getWheres()) + ")");
@@ -530,7 +542,7 @@ public class EruptLambdaQuery<T> {
     }
 
     private String genePlaceholder() {
-        return RandomStringUtils.randomAlphabetic(8);
+        return placeholderPrefix + placeholderSeq++;
     }
 
     private String geneField(SFunction<?, ?> field) {
