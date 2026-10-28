@@ -161,6 +161,35 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Every test shares one application context: erupt keeps static registries (the Spring context
+                 holder, the erupt models, the AI tool beans) that a second context in the same JVM would
+                 repoint at its own beans. A test that must boot an application of its own is tagged
+                 own-context and runs in a JVM of its own. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- -Dtest=X matches X in one of the two executions, and the other one may match nothing -->
+                    <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <excludedGroups>own-context</excludedGroups>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>own-context</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <groups>own-context</groups>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>

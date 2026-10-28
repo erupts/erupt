@@ -183,6 +183,13 @@ Uses **langchain4j 1.14.1** and **langchain4j-mcp/langchain4j-agentic-a2a 1.14.1
 
 Tests live in `erupt-test/`. Base class `EruptApplicationTests` provides a login helper. Uses H2 in-memory DB configured in `erupt-test/src/test/resources/application.yml`. Test data generation via **Instancio**.
 
+**One Spring context per JVM.** erupt keeps static registries (`EruptSpringUtil`'s context, the erupt models,
+the AI tool beans), so a second context started in the same JVM repoints them at its own beans and later
+tests act on the wrong context. Never give a test `@Import`, `@TestConfiguration`, `@MockBean`,
+`@TestPropertySource` or `@SpringBootTest(classes/properties)` of its own: put a stand-in bean into the
+shared context (e.g. `StandInTenantModule`) instead. A test that truly must boot its own application is
+tagged `@Tag("own-context")`, which surefire runs in a separate JVM (see `erupt-test/pom.xml`).
+
 ### Caveats
 
 - **`spring-boot-devtools` is incompatible** — the framework detects and warns at startup.

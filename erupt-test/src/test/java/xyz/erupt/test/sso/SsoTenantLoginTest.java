@@ -6,11 +6,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -19,11 +16,9 @@ import xyz.erupt.sso.constant.SsoProviderType;
 import xyz.erupt.sso.model.EruptSso;
 import xyz.erupt.sso.model.EruptSsoBind;
 import xyz.erupt.test.EruptApplicationTests;
-import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.helper.UpmsSecurityHelper;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptUpmsProp;
-import xyz.erupt.upms.spi.UpmsTenantLogin;
 import xyz.erupt.upms.tenant.UpmsTenantSessions;
 
 import java.io.IOException;
@@ -34,9 +29,7 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,12 +40,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * further address registered there; the tenant comes from the state. The platform's providers and
  * users stay out of reach, and a provider code may be used by the platform and a tenant alike.
  */
-@Import(SsoTenantLoginTest.StandInTenantModule.class)
 public class SsoTenantLoginTest extends EruptApplicationTests {
 
-    private static final String TENANT_CODE = "acme-sso";
+    private static final String TENANT_CODE = StandInTenantModule.TENANT_CODE;
 
-    private static final String TENANT_ID = "t-sso-test";
+    private static final String TENANT_ID = StandInTenantModule.TENANT_ID;
 
     // the same code on a platform row and on a tenant row
     private static final String PROVIDER = "tenant-test";
@@ -62,43 +54,6 @@ public class SsoTenantLoginTest extends EruptApplicationTests {
     private static final String PLATFORM_CALLBACK = "/erupt-api/sso/callback/" + PROVIDER;
 
     private static final String TENANT_CALLBACK = "/erupt-api/sso/tenant/" + TENANT_CODE + "/callback/" + PROVIDER;
-
-    /**
-     * What erupt-tenant contributes, reduced to the answers this test needs.
-     */
-    @TestConfiguration
-    static class StandInTenantModule {
-
-        static final List<EruptUser> LOGINS = new CopyOnWriteArrayList<>();
-
-        static volatile String refusal;
-
-        @Bean
-        UpmsTenantLogin standInTenantLogin() {
-            return new UpmsTenantLogin() {
-                @Override
-                public String tenantId(String tenantCode) {
-                    return TENANT_CODE.equals(tenantCode) ? TENANT_ID : null;
-                }
-
-                @Override
-                public LoginModel login(String tenantId, EruptUser user) {
-                    assertEquals(TENANT_ID, tenantId);
-                    if (null != refusal) return new LoginModel(false, refusal);
-                    LOGINS.add(user);
-                    LoginModel model = new LoginModel(true, user);
-                    model.setToken("t_stand_in_" + user.getId());
-                    model.setAccount(user.getAccount());
-                    return model;
-                }
-
-                @Override
-                public String loginPage(String tenantCode) {
-                    return "/#/passport/tenant?tenantCode=" + tenantCode;
-                }
-            };
-        }
-    }
 
     @Autowired
     private TestRestTemplate rest;
