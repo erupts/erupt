@@ -73,6 +73,17 @@ public class EruptJpaDao {
         });
     }
 
+    // The count half of queryEruptList alone: same joins and where clause, no row fetch
+    public long countErupt(EruptModel eruptModel, EruptQuery eruptQuery) {
+        String countHql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "count(*)", eruptQuery, true);
+        return entityManagerService.getEntityManager(eruptModel.getClazz(), entityManager -> {
+            @SuppressWarnings("SqlSourceToSinkFlow")
+            Query countQuery = entityManager.createQuery(countHql);
+            bindConditions(eruptModel, eruptQuery, countQuery);
+            return (Long) countQuery.getSingleResult();
+        });
+    }
+
     /**
      * Column totals over every row the query matches, in one SQL round trip:
      * {@code select new map(sum(E.amount) as a0, count(distinct E.owner) as a1, ...)} with the

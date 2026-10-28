@@ -30,6 +30,8 @@ import xyz.erupt.core.view.TableQuery;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -211,6 +213,9 @@ public class EruptService {
         }
     }
 
+    // Oracle caps an in-list at 1000 entries
+    private static final int VERIFY_ID_CHUNK = 500;
+
     /**
      * Verify the usage permissions of the ID
      *
@@ -218,15 +223,29 @@ public class EruptService {
      * @param id         PK
      */
     public void verifyIdPermissions(EruptModel eruptModel, String id) {
-        List<Condition> conditions = new ArrayList<>();
-        conditions.add(new Condition(eruptModel.getErupt().primaryKeyCol(), id, QueryExpression.EQ));
+        this.verifyIdPermissions(eruptModel, Collections.singletonList(id));
+    }
+
+    /**
+     * Same check for a batch of ids in one count query per chunk instead of a page query per id;
+     * the joins are all to-one, so count(*) counts rows of the model itself.
+     *
+     * @param eruptModel eruptModel
+     * @param ids        PKs, duplicates allowed
+     */
+    public void verifyIdPermissions(EruptModel eruptModel, Collection<String> ids) {
+        List<String> distinct = new ArrayList<>(new LinkedHashSet<>(ids));
         // A record outside the current scope is treated as missing, whatever id the client sends
-        conditions.addAll(eruptScopeService.conditions(eruptModel));
-        Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
-                .queryList(eruptModel, new Page(1, 1),
-                        EruptQuery.builder().conditions(conditions).build());
-        if (page.getList().isEmpty()) {
-            throw new EruptNoLegalPowerException();
+        List<Condition> scope = eruptScopeService.conditions(eruptModel);
+        IEruptDataService dataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
+        for (int i = 0; i < distinct.size(); i += VERIFY_ID_CHUNK) {
+            List<String> chunk = distinct.subList(i, Math.min(i + VERIFY_ID_CHUNK, distinct.size()));
+            List<Condition> conditions = new ArrayList<>();
+            conditions.add(new Condition(eruptModel.getErupt().primaryKeyCol(), new ArrayList<>(chunk), QueryExpression.IN));
+            conditions.addAll(scope);
+            if (dataService.count(eruptModel, EruptQuery.builder().conditions(conditions).build()) < chunk.size()) {
+                throw new EruptNoLegalPowerException();
+            }
         }
     }
 

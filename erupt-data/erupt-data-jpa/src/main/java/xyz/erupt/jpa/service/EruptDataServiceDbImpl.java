@@ -87,6 +87,11 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     }
 
     @Override
+    public long count(EruptModel eruptModel, EruptQuery query) {
+        return eruptJpaDao.countErupt(eruptModel, query);
+    }
+
+    @Override
     public Map<String, Object> aggregate(EruptModel eruptModel, EruptQuery eruptQuery, List<Aggregate> aggregates) {
         return eruptJpaDao.queryEruptAggregate(eruptModel, eruptQuery, aggregates);
     }
