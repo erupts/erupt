@@ -23,3 +23,7 @@ erupt:
   ai-dev:
     # keep bare clones and worktrees out of the user's home directory
     root: target/ai-dev-test
+    executor:
+      # the poller stays idle: a test runs the executor by hand, and an approval must not start a run in
+      # the background that races the test's own call and outlives the test's rows
+      max-concurrent: 0
