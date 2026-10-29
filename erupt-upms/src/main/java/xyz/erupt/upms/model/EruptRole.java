@@ -97,7 +97,9 @@ public class EruptRole extends HyperModelUpdateVo {
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             foreignKey = @ForeignKey(name = "fk_user_role_role"),
             inverseForeignKey = @ForeignKey(name = "fk_user_role_user"))
-    @ManyToMany(fetch = FetchType.EAGER)
+    // Lazy on purpose: EruptUser.roles is eager, and an eager users set here would pull every member
+    // of every role of the user (with their org and post) into each current-user lookup
+    @ManyToMany(fetch = FetchType.LAZY)
     @EruptField(
             views = @View(title = "Contain User"),
             edit = @Edit(
