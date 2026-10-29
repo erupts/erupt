@@ -13,6 +13,7 @@ import org.hibernate.integrator.spi.Integrator;
 import org.hibernate.mapping.Column;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
+import org.hibernate.mapping.Value;
 import org.hibernate.service.spi.SessionFactoryServiceRegistry;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -103,7 +104,13 @@ public class CommentIntegrator implements Integrator {
                     comment = eruptField.views()[0].title();
                 }
                 if (StringUtils.isNotBlank(comment)) {
-                    String sqlColumnName = persistentClass.getProperty(columnName).getValue().getColumns().iterator().next().getText();
+                    Value value = persistentClass.getProperty(columnName).getValue();
+
+                    if (value.hasFormula()) {
+                        return;
+                    }
+
+                    String sqlColumnName = value.getColumns().iterator().next().getText();
                     for (Column column : persistentClass.getTable().getColumns()) {
                         if (sqlColumnName.equalsIgnoreCase(column.getName())) {
                             column.setComment(i18nTranslate.translate(comment));
