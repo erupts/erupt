@@ -29,6 +29,11 @@ public interface IEruptDataService {
     @Comment("Query paginated data")
     Page queryList(EruptModel eruptModel, @Comment("Pagination object") Page page, @Comment("Conditions") EruptQuery eruptQuery);
 
+    @Comment("Number of rows the conditions match; a source with a cheaper way than a one-row page overrides this")
+    default long count(EruptModel eruptModel, @Comment("Conditions") EruptQuery eruptQuery) {
+        return this.queryList(eruptModel, new Page(1, 1), eruptQuery).getTotal();
+    }
+
     @Comment("Column totals over every row the conditions match, keyed by column; null when the source cannot aggregate")
     default Map<String, Object> aggregate(EruptModel eruptModel, @Comment("Conditions") EruptQuery eruptQuery, @Comment("Columns and their statistic") List<Aggregate> aggregates) {
         return null;

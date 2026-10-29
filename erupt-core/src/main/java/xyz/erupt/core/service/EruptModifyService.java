@@ -285,8 +285,8 @@ public class EruptModifyService {
         }
         IEruptDataService dataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
         Field field = ReflectUtil.findClassField(eruptModel.getClazz(), sortField);
+        eruptService.verifyIdPermissions(eruptModel, sortData.keySet());
         for (Map.Entry<String, Object> entry : sortData.entrySet()) {
-            eruptService.verifyIdPermissions(eruptModel, entry.getKey());
             Object obj = dataService.findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, entry.getKey()));
             field.set(obj, TypeUtil.typeStrConvertObject(entry.getValue(), field.getType()));
             dataService.editData(eruptModel, obj);
@@ -302,11 +302,11 @@ public class EruptModifyService {
             return;
         }
         List<Object> deletedObjs = new ArrayList<>();
+        if (verifyIdPermissions) {
+            eruptService.verifyIdPermissions(eruptModel, ids.stream().map(Object::toString).toList());
+        }
+        IEruptDataService dataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
         for (Object id : ids) {
-            if (verifyIdPermissions) {
-                eruptService.verifyIdPermissions(eruptModel, id.toString());
-            }
-            IEruptDataService dataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
             // Retrieve object data for use in DataProxy callbacks
             Object obj = dataService.findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id.toString()));
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeDelete(obj)));

@@ -458,7 +458,7 @@ public class EruptDataController {
     // A row operation on a scoped model only reaches rows inside the current scope
     private void verifyScope(EruptModel eruptModel, List<String> ids) {
         if (EruptScopeService.boundFields(eruptModel).isEmpty()) return;
-        ids.forEach(id -> eruptService.verifyIdPermissions(eruptModel, id));
+        eruptService.verifyIdPermissions(eruptModel, ids);
     }
 
 }

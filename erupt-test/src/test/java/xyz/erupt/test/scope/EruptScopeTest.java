@@ -157,6 +157,14 @@ class EruptScopeTest extends EruptApplicationTests {
     }
 
     @Test
+    void aBatchOfIdsIsCheckedAtOnce() {
+        this.request(pick("beta"), 1L);
+        eruptService.verifyIdPermissions(tasks(), List.of(String.valueOf(this.id("b1")), String.valueOf(this.id("b2")), String.valueOf(this.id("b1"))));
+        assertThrows(EruptWebApiRuntimeException.class, () -> eruptService.verifyIdPermissions(tasks(),
+                List.of(String.valueOf(this.id("b1")), String.valueOf(this.id("a1")))), "one id outside the scope fails the whole batch");
+    }
+
+    @Test
     void writesAreForcedIntoTheScope() {
         this.request(pick("beta"), 1L);
         JsonObject add = new JsonObject();
