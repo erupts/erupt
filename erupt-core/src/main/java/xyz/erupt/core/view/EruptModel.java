@@ -44,6 +44,9 @@ public class EruptModel implements Cloneable {
 
     private transient boolean i18n;
 
+    // The resolved DataProxy chain of this model, filled on first use by DataProxyInvoke
+    private transient volatile DataProxyInvoke.Chain dataProxyChain;
+
     private String eruptName;
 
     // erupt-cloud: the node this erupt physically lives on; null means local

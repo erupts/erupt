@@ -1,6 +1,7 @@
 package xyz.erupt.core.service;
 
 import xyz.erupt.annotation.EruptScope;
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.fusesource.jansi.Ansi;
@@ -50,6 +51,12 @@ public class EruptCoreService implements ApplicationRunner {
 
     private static final List<String> MODULES = new ArrayList<>();
 
+    // Read once at startup: getErupt is the hottest lookup in the framework and must not touch the bean factory
+    private static volatile boolean hotBuild;
+
+    @Resource
+    private EruptProp eruptProp;
+
     public static List<String> getModules() {
         return MODULES;
     }
@@ -63,7 +70,7 @@ public class EruptCoreService implements ApplicationRunner {
     }
 
     public static EruptModel getErupt(String eruptName) {
-        if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
+        if (hotBuild) {
             if (null == ERUPTS.get(eruptName) || RUNTIME_ERUPTS.contains(eruptName.toLowerCase())) {
                 return ERUPTS.get(eruptName);
             } else {
@@ -214,6 +221,7 @@ public class EruptCoreService implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        hotBuild = eruptProp.isHotBuild();
         TimeRecorder totalRecorder = new TimeRecorder();
         TimeRecorder timeRecorder = new TimeRecorder();
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
@@ -230,7 +238,7 @@ public class EruptCoreService implements ApplicationRunner {
         });
         String sep = ansi().fgBright(Ansi.Color.BLACK).a("─".repeat(54)).reset().toString();
         log.info(sep);
-        if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
+        if (hotBuild) {
             log.warn(ansi().fg(Ansi.Color.RED).a("  ⚠ Hot build enabled").reset().toString());
         }
         EruptModuleInvoke.invoke(it -> {
