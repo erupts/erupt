@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
-import xyz.erupt.security.scope.SessionScopeGuard;
+import xyz.erupt.core.interceptor.SessionScopeGuard;
 import xyz.erupt.share.model.EruptShareLink;
 import xyz.erupt.share.vo.ShareScope;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
