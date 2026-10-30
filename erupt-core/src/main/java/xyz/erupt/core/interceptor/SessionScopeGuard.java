@@ -1,4 +1,4 @@
-package xyz.erupt.security.scope;
+package xyz.erupt.core.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import xyz.erupt.core.annotation.EruptRouter;
@@ -8,8 +8,10 @@ import xyz.erupt.core.annotation.EruptRouter;
  * guard lets it through; a session minted for a narrower purpose (a public share link, for
  * example) carries one, and the module that minted it refuses everything outside it here.
  * <p>
- * Runs in the security interceptor right after the token has been verified and the user
- * registered, before the menu and erupt permission checks: a refusal answers 403.
+ * Declared in core so a module can register a guard without depending on erupt-security;
+ * the security interceptor runs every registered guard right after the token has been
+ * verified and the user registered, before the menu and erupt permission checks, and a
+ * refusal answers 403.
  *
  * @author YuePeng
  */
