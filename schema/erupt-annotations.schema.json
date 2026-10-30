@@ -1508,6 +1508,10 @@
           "type": "string",
           "default": "name"
         },
+        "leafOnly": {
+          "type": "boolean",
+          "default": false
+        },
         "pid": {
           "type": "string",
           "default": ""
@@ -1521,6 +1525,7 @@
         "expandLevel",
         "id",
         "label",
+        "leafOnly",
         "pid",
         "rootPid"
       ],

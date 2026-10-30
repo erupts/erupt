@@ -190,6 +190,10 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
             MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername(), metaUserinfo.getTenantId()));
             MetaContext.registerToken(token);
+            if (!eruptSecurityInterceptor.scopeAllows(token, request, eruptRouter)) {
+                response.sendError(HttpStatus.FORBIDDEN.value());
+                return false;
+            }
             return proxyAndRespond(request, response, handler, metaNode, tplNode, null, null, null);
         }
         if (EruptRouter.VerifyType.ERUPT == eruptRouter.verifyType()) {
@@ -243,6 +247,10 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername(), metaUserinfo.getTenantId()));
             MetaContext.register(new MetaErupt(erupt));
             MetaContext.registerToken(token);
+            if (!eruptSecurityInterceptor.scopeAllows(token, request, eruptRouter)) {
+                response.sendError(HttpStatus.FORBIDDEN.value());
+                return false;
+            }
             // The user's rights, checked here so a node does not have to (and cannot forget to)
             PowerObject userPower = nodePowerService.userPower(authErupt);
             if (!NodePowerService.allows(userPower, eruptRouter.power())) {

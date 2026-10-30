@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
@@ -20,6 +21,7 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.security.scope.SessionScopeGuard;
 import xyz.erupt.security.service.OperationService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
@@ -28,6 +30,8 @@ import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -53,6 +57,21 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
 
     @Resource
     private EruptSessionService sessionService;
+
+    // Modules that mint narrowed sessions register a guard; none is the common case
+    @Autowired(required = false)
+    private List<SessionScopeGuard> scopeGuards = Collections.emptyList();
+
+    /**
+     * Whether every registered {@link SessionScopeGuard} lets this request through. Public so the
+     * erupt-cloud-server interceptor, which verifies tokens of its own, applies the same scopes.
+     */
+    public boolean scopeAllows(String token, HttpServletRequest request, EruptRouter eruptRouter) {
+        for (SessionScopeGuard guard : scopeGuards) {
+            if (!guard.allow(token, request, eruptRouter)) return false;
+        }
+        return true;
+    }
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws IOException {
@@ -94,6 +113,11 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
         MetaContext.registerToken(token);
         MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername(), metaUserinfo.getTenantId()));
+        if (!this.scopeAllows(token, request, eruptRouter)) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.sendError(HttpStatus.FORBIDDEN.value());
+            return false;
+        }
         //Permission verification
         String authStr = request.getServletPath().split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex()];
         switch (eruptRouter.verifyType()) {

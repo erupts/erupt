@@ -1128,6 +1128,7 @@
             "expandLevel": 999,
             "id": "id",
             "label": "name",
+            "leafOnly": false,
             "pid": "",
             "rootPid": {
               "value": ""
