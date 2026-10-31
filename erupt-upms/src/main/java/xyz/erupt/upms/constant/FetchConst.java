@@ -1,7 +1,7 @@
 package xyz.erupt.upms.constant;
 
 /**
- * @author liyuepeng
+ * @author YuePeng
  * date 2021/3/27 23:21
  */
 public class FetchConst {
