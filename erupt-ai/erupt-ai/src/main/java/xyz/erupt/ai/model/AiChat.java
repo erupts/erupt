@@ -3,7 +3,7 @@ package xyz.erupt.ai.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -31,7 +31,7 @@ import java.time.LocalDateTime;
 )
 @Entity
 @EruptI18n
-@Where(clause = "deleted = false or deleted is null")
+@SQLRestriction("deleted = false or deleted is null")
 public class AiChat extends BaseModel {
 
     @EruptField(

@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.TenantId;
 import org.hibernate.boot.Metadata;
+import org.hibernate.boot.spi.BootstrapContext;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.integrator.spi.Integrator;
 import org.hibernate.mapping.Column;
@@ -35,8 +36,8 @@ public class TenantColumnIntegrator implements Integrator {
     private static final Field QUOTED = quotedField();
 
     @Override
-    public void integrate(@NonNull Metadata metadata, @NonNull SessionFactoryImplementor sessionFactory,
-                          @NonNull SessionFactoryServiceRegistry serviceRegistry) {
+    public void integrate(@NonNull Metadata metadata, @NonNull BootstrapContext bootstrapContext,
+                          @NonNull SessionFactoryImplementor sessionFactory) {
         if (null == QUOTED) return;
         for (PersistentClass persistentClass : metadata.getEntityBindings()) {
             for (Property property : persistentClass.getProperties()) {

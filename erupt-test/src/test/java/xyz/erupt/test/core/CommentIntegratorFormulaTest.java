@@ -6,7 +6,7 @@ import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 import org.hibernate.mapping.Table;
 import org.hibernate.mapping.Value;
-import org.hibernate.service.spi.SessionFactoryServiceRegistry;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.junit.jupiter.api.Test;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -45,11 +45,7 @@ class CommentIntegratorFormulaTest {
 
         CommentIntegrator integrator = new CommentIntegrator(translator);
 
-        integrator.integrate(
-                metadata,
-                null,
-                (SessionFactoryServiceRegistry) null
-        );
+        integrator.integrate(metadata, null, (SessionFactoryImplementor) null);
 
         verify(value, never()).getColumns();
     }

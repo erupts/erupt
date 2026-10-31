@@ -2,6 +2,7 @@ package xyz.erupt.s3.upload;
 
 import jakarta.annotation.PreDestroy;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.core.exception.SdkClientException;
@@ -66,7 +67,7 @@ public class S3AttachmentProxy implements AttachmentProxy {
     @Override
     public String fileDomain() {
         String base = StringUtils.isNotBlank(prop.getDomain()) ? prop.getDomain() : this.bucketUrl();
-        base = StringUtils.removeEnd(base, "/");
+        base = Strings.CS.removeEnd(base, "/");
         String prefix = StringUtils.strip(prop.getPrefix(), "/");
         return prefix.isEmpty() ? base : base + "/" + prefix;
     }
@@ -81,7 +82,7 @@ public class S3AttachmentProxy implements AttachmentProxy {
      */
     String key(String path) {
         String prefix = StringUtils.strip(prop.getPrefix(), "/");
-        String name = StringUtils.removeStart(path, "/");
+        String name = Strings.CS.removeStart(path, "/");
         return prefix.isEmpty() ? name : prefix + "/" + name;
     }
 
@@ -94,7 +95,7 @@ public class S3AttachmentProxy implements AttachmentProxy {
             return "https://" + prop.getBucket() + ".s3." + prop.getRegion() + ".amazonaws.com";
         }
         String configured = S3ClientFactory.endpoint(prop.getEndpoint(), prop.getBucket(), prop.isPathStyle());
-        URI endpoint = URI.create(StringUtils.removeEnd(configured, "/"));
+        URI endpoint = URI.create(Strings.CS.removeEnd(configured, "/"));
         if (prop.isPathStyle()) return endpoint + "/" + prop.getBucket();
         String port = endpoint.getPort() == -1 ? "" : ":" + endpoint.getPort();
         return endpoint.getScheme() + "://" + prop.getBucket() + "." + endpoint.getHost() + port;

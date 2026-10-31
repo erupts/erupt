@@ -385,50 +385,54 @@ public class EruptLambdaQuery<T> {
 
 
     public T one() {
-        try {
-            return (T) this.run(() -> this.geneQuery().getSingleResult());
-        } catch (NoResultException e) {
-            return null;
-        }
+        return this.singleResult();
     }
 
     public List<T> list() {
-        return this.run(() -> this.geneQuery().getResultList());
+        return this.resultList();
     }
 
     public final <S> S oneSelect(SFunction<T, S> field) {
         this.querySchema.columns.add(LambdaSee.field(field));
-        try {
-            return (S) this.run(() -> this.geneQuery().getSingleResult());
-        } catch (NoResultException e) {
-            return null;
-        }
+        return this.singleResult();
     }
 
     public final <S> List<S> listSelect(SFunction<T, S> field) {
         this.querySchema.columns.add(LambdaSee.field(field));
-        return this.run(() -> this.geneQuery().getResultList());
+        return this.resultList();
     }
 
     @SafeVarargs
     public final <R> List<R> listSelect(Class<R> requiredType, SFunction<T, ?>... fields) {
         for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
-        List<Object[]> objects = this.run(() -> this.geneQuery().getResultList());
+        List<Object[]> objects = this.resultList();
         return objects.stream().map(it -> objectToClazz(requiredType, it, fields)).collect(Collectors.toList());
     }
 
     @SafeVarargs
     public final <R> R oneSelect(Class<R> requiredType, SFunction<T, ?>... fields) {
         for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
+        Object[] row = this.singleResult();
+        return null == row ? null : objectToClazz(requiredType, row, fields);
+    }
+
+    public final <R> List<R> selectByPath(Class<R> requiredType, String... fields) {
+        this.querySchema.columns.addAll(Arrays.asList(fields));
+        return this.resultList();
+    }
+
+    // the jakarta Query is untyped: these two are the only place its results are trusted into the generic type
+    @SuppressWarnings("unchecked")
+    private <R> R singleResult() {
         try {
-            return objectToClazz(requiredType, (Object[]) this.run(() -> this.geneQuery().getSingleResult()), fields);
+            return (R) this.run(() -> this.geneQuery().getSingleResult());
         } catch (NoResultException e) {
             return null;
         }
     }
 
-    public final <R> List<R> selectByPath(Class<R> requiredType, String... fields) {
-        this.querySchema.columns.addAll(Arrays.asList(fields));
+    @SuppressWarnings("unchecked")
+    private <R> List<R> resultList() {
         return this.run(() -> this.geneQuery().getResultList());
     }
 

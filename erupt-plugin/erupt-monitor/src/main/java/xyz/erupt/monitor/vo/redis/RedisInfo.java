@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
@@ -54,13 +55,13 @@ public class RedisInfo {
 
     public RedisInfo(RedisConnectionFactory redisConnectionFactory) {
         RedisConnection redisConnection = redisConnectionFactory.getConnection();
-        Optional.of(redisConnection.info("commandstats")).ifPresent(commandStats -> {
+        Optional.of(redisConnection.serverCommands().info("commandstats")).ifPresent(commandStats -> {
             String cs = "cmdstat_";
             redisCmdStat = commandStats.stringPropertyNames().stream().filter(it -> it.startsWith(cs))
-                    .map(it -> new RedisCmdStat(StringUtils.removeStart(it, cs),
+                    .map(it -> new RedisCmdStat(Strings.CS.removeStart(it, cs),
                             StringUtils.substringBetween(commandStats.getProperty(it), "calls=", ",usec"))).collect(Collectors.toList());
         });
-        Optional.of(redisConnection.info()).ifPresent(properties -> {
+        Optional.of(redisConnection.serverCommands().info()).ifPresent(properties -> {
             this.setKeyNum(redisConnection.serverCommands().dbSize());
             this.setVersion(properties.getProperty("redis_version"));
             this.setUsedMem(properties.getProperty("used_memory_human"));

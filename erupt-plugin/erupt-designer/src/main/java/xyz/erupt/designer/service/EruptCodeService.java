@@ -221,6 +221,7 @@ public class EruptCodeService {
     }
 
     // whether the json effective values equal the default annotation instance held by the parent member
+    @SuppressWarnings("unchecked")
     private boolean sameAsDefault(Class<? extends Annotation> type, JsonObject json, Annotation def) {
         try {
             for (Method method : type.getDeclaredMethods()) {
@@ -237,7 +238,6 @@ public class EruptCodeService {
                     if (je.getAsJsonArray().size() != Array.getLength(defValue)) return false;
                     if (!je.getAsJsonArray().isEmpty()) return false; // non-empty arrays → always emit
                 } else if (rt.isAnnotation()) {
-                    //noinspection unchecked
                     if (!je.isJsonObject() || !sameAsDefault((Class<? extends Annotation>) rt, je.getAsJsonObject(), (Annotation) defValue))
                         return false;
                 } else if (rt.isEnum()) {

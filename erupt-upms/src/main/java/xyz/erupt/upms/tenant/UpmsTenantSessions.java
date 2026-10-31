@@ -114,6 +114,6 @@ public class UpmsTenantSessions {
     }
 
     private Session openSession(String tenant) {
-        return entityManagerFactory.unwrap(SessionFactory.class).withOptions().tenantIdentifier(tenant).openSession();
+        return entityManagerFactory.unwrap(SessionFactory.class).withOptions().tenantIdentifier((Object) tenant).openSession();
     }
 }

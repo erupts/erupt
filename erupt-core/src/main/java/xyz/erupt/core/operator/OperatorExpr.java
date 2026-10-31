@@ -15,7 +15,7 @@ public interface OperatorExpr {
     }
 
     default String placeholder() {
-        return RandomStringUtils.randomAlphabetic(8);
+        return RandomStringUtils.secure().nextAlphabetic(8);
     }
 
 }

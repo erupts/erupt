@@ -3,6 +3,7 @@ package xyz.erupt.decision.core;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.decision.model.DecisionModel;
 
@@ -102,7 +103,7 @@ public abstract class HttpDecisionCore extends DecisionCore {
     }
 
     static String endpoint(String apiUrl) {
-        String url = StringUtils.removeEnd(StringUtils.trimToEmpty(apiUrl), "/");
+        String url = Strings.CS.removeEnd(StringUtils.trimToEmpty(apiUrl), "/");
         return url.endsWith(PATH) ? url : url + PATH;
     }
 

@@ -23,7 +23,7 @@ public class BiChartDataProxy implements DataProxy<BiChart> {
 
     @Override
     public void addBehavior(BiChart biChart) {
-        biChart.setCode(RandomStringUtils.randomAlphabetic(8));
+        biChart.setCode(RandomStringUtils.secure().nextAlphabetic(8));
     }
 
     @Override
