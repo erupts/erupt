@@ -22,13 +22,11 @@ import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
-import xyz.erupt.annotation.sub_field.sub_edit.Dynamic;
-import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.share.handler.ShareCopyLinkOperation;
-import xyz.erupt.share.handler.ShareEruptChoice;
 import xyz.erupt.share.handler.ShareLinkProxy;
-import xyz.erupt.share.handler.SharePageChoice;
+import xyz.erupt.share.handler.ShareTargetChoice;
 import xyz.erupt.share.handler.ShareScopeFilter;
 import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
 import xyz.erupt.upms.helper.UpmsTenant;
@@ -64,7 +62,7 @@ public class EruptShareLink extends HyperModelCreatorOnlyVo {
 
     public static final String TYPE_FORM = "FORM";
 
-    public static final String TYPE_PAGE = "PAGE";
+    public static final String TYPE_MENU = "MENU";
 
     public static final int CODE_LENGTH = 22;
 
@@ -88,6 +86,7 @@ public class EruptShareLink extends HyperModelCreatorOnlyVo {
     )
     private String title;
 
+    // A form anyone may fill, or a menu entry anyone may open as a user holding that menu alone would
     @Column(length = 10, nullable = false)
     @EruptField(
             views = @View(title = "Type", width = "110px"),
@@ -95,41 +94,29 @@ public class EruptShareLink extends HyperModelCreatorOnlyVo {
                     readonly = @Readonly(add = false),
                     choiceType = @ChoiceType(vl = {
                             @VL(value = TYPE_FORM, label = "Public Form"),
-                            @VL(value = TYPE_PAGE, label = "Public Page")
+                            @VL(value = TYPE_MENU, label = "Public Page")
                     }))
     )
     private String type = TYPE_FORM;
 
-    // FORM: the erupt whose add form the visitor fills; issuer must hold the model and its add right
+    // FORM: the erupt whose add form the visitor fills; MENU: the code of the menu the visitor opens.
+    // The options follow the type chosen above
     @Column(length = 100)
     @EruptField(
-            views = @View(title = "Model", show = false),
-            edit = @Edit(title = "Model", type = EditType.CHOICE, search = @Search,
+            views = @View(title = "Target", show = false),
+            edit = @Edit(title = "Target", notNull = true, type = EditType.CHOICE, search = @Search,
                     readonly = @Readonly(add = false),
-                    choiceType = @ChoiceType(fetchHandler = ShareEruptChoice.class),
-                    dynamic = @Dynamic(dependField = "type", condition = "value == '" + TYPE_FORM + "'", match = Dynamic.Ctrl.NOTNULL))
+                    choiceType = @ChoiceType(fetchHandler = ShareTargetChoice.class, dependField = "type"))
     )
-    private String erupt;
+    private String target;
 
-    // PAGE: the template path, picked among the issuer's own tpl menus
-    @Column(length = 500)
-    @EruptField(
-            views = @View(title = "Page", show = false),
-            edit = @Edit(title = "Page", type = EditType.CHOICE,
-                    readonly = @Readonly(add = false),
-                    choiceType = @ChoiceType(fetchHandler = SharePageChoice.class),
-                    dynamic = @Dynamic(dependField = "type", condition = "value == '" + TYPE_PAGE + "'", match = Dynamic.Ctrl.NOTNULL))
-    )
-    private String path;
-
-    // What the link opens, in one column: the model's name for a form, the page path for a page.
-    // Filled by ShareLinkProxy.afterFetch from the two hidden columns above
+    // The target as the list names it: the model's display name, the menu's name; filled by ShareLinkProxy.afterFetch
     @Transient
     @EruptField(
             views = @View(title = "Target", width = "200px"),
             edit = @Edit(title = "Target", show = false, cellEdit = false)
     )
-    private String target;
+    private String targetName;
 
     @EruptField(
             views = @View(title = "Expire Time", sortable = true),
@@ -188,5 +175,4 @@ public class EruptShareLink extends HyperModelCreatorOnlyVo {
     public boolean isForm() {
         return TYPE_FORM.equals(type);
     }
-
 }

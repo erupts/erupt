@@ -19,6 +19,8 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.context.MetaUser;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.annotation.EruptRouter;
+import lombok.SneakyThrows;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.view.TableQuery;
@@ -35,6 +37,7 @@ import xyz.erupt.share.service.ShareScopeGuard;
 import xyz.erupt.test.EruptApplicationTests;
 import xyz.erupt.test.model.erupt.OrderByModel;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
+import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptTokenService;
 
@@ -58,6 +61,9 @@ class ShareLinkTest extends EruptApplicationTests {
     private static final String ORDERS = OrderByModel.class.getSimpleName();
 
     private static final String PAGE = "share-demo.html";
+
+    // The tpl menu the issuer holds, as a real row: a page link stores the menu's code
+    private static final String PAGE_MENU = "share-demo-page";
 
     private static final String MARK = "share-test";
 
@@ -102,6 +108,7 @@ class ShareLinkTest extends EruptApplicationTests {
             eruptDao.lambdaQuery(EruptShareLink.class).like(EruptShareLink::getTitle, MARK).delete();
             eruptDao.lambdaQuery(OrderByModel.class).eq(OrderByModel::getName, MARK).delete();
             eruptDao.lambdaQuery(EruptUser.class).like(EruptUser::getAccount, MARK).delete();
+            eruptDao.lambdaQuery(EruptMenu.class).eq(EruptMenu::getCode, PAGE_MENU).delete();
         });
     }
 
@@ -117,7 +124,8 @@ class ShareLinkTest extends EruptApplicationTests {
         Map<String, Object> session = this.exchange(link.getCode(), "secret");
         assertTrue((Boolean) session.get("success"), String.valueOf(session.get("message")));
         Map<?, ?> data = (Map<?, ?>) session.get("data");
-        assertEquals("/share/form/" + ORDERS, data.get("route"));
+        assertEquals("FORM", data.get("type"));
+        assertEquals(ORDERS, data.get("target"));
         String token = (String) data.get("token");
 
         // the session is the issuer's, with the add right on the orders model and nothing else
@@ -152,7 +160,7 @@ class ShareLinkTest extends EruptApplicationTests {
 
         this.as(issuer, LINKS);
         modifyService.updateEruptData(this.model(LINKS), JsonParser.parseString("{\"id\":" + link.getId() + ",\"title\":\"" + link.getTitle()
-                + "\",\"type\":\"FORM\",\"erupt\":\"" + ORDERS + "\",\"expireTime\":\"" + this.later(60) + "\",\"enabled\":false}").getAsJsonObject());
+                + "\",\"type\":\"FORM\",\"target\":\"" + ORDERS + "\",\"expireTime\":\"" + this.later(60) + "\",\"enabled\":false}").getAsJsonObject());
         EruptShareLink stored = eruptDao.find(EruptShareLink.class, link.getId());
         assertNotNull(stored.getCreateUser(), "the creator survives an update that did not send it");
         assertEquals(link.getCode(), stored.getCode());
@@ -169,25 +177,45 @@ class ShareLinkTest extends EruptApplicationTests {
         assertTrue((Boolean) this.exchange(once.getCode(), null).get("success"));
         assertFalse((Boolean) this.exchange(once.getCode(), null).get("success"), "the second visit is over the cap");
 
-        EruptShareLink expired = this.issue("{\"title\":\"" + MARK + " expired\",\"type\":\"FORM\",\"erupt\":\"" + ORDERS + "\",\"expireTime\":\"" + this.later(-1) + "\"}");
+        assertThrows(RuntimeException.class, () -> this.issue("{\"title\":\"" + MARK + " expired\",\"type\":\"FORM\",\"target\":\"" + ORDERS
+                + "\",\"expireTime\":\"" + this.later(-1) + "\"}"), "a link that is already over is refused in the form");
+        EruptShareLink expired = this.issue(this.formLink(null, null));
+        transactionTemplate.executeWithoutResult(status -> {
+            EruptShareLink row = eruptDao.find(EruptShareLink.class, expired.getId());
+            row.setExpireTime(new Date(System.currentTimeMillis() - 60_000L));
+            eruptDao.merge(row);
+        });
         assertFalse((Boolean) this.exchange(expired.getCode(), null).get("success"));
         assertEquals(HttpStatus.OK, this.rest.getForEntity("/erupt-api/share/meta/not-a-code", String.class).getStatusCode());
         assertEquals(false, this.meta("not-a-code").get("available"));
     }
 
     @Test
-    void aPageLinkReachesItsTemplateOnly() {
-        EruptShareLink link = this.issue("{\"title\":\"" + MARK + " page\",\"type\":\"PAGE\",\"path\":\"" + PAGE + "\",\"expireTime\":\"" + this.later(60) + "\"}");
-        assertEquals(PAGE, link.getPath());
+    void aMenuLinkOpensThatMenuAsAUserHoldingItAloneWould() {
+        EruptShareLink link = this.issue("{\"title\":\"" + MARK + " page\",\"type\":\"MENU\",\"target\":\"" + PAGE_MENU + "\",\"expireTime\":\"" + this.later(60) + "\"}");
+        assertEquals(PAGE_MENU, link.getTarget());
+        assertThrows(RuntimeException.class, () -> this.issue("{\"title\":\"" + MARK + " page\",\"type\":\"MENU\",\"target\":\"not-mine\",\"expireTime\":\"" + this.later(60) + "\"}"),
+                "a menu the issuer does not hold is refused");
         Map<?, ?> data = (Map<?, ?>) this.exchange(link.getCode(), null).get("data");
-        assertEquals("/share/page/" + PAGE, data.get("route"));
+        // the frontend builds the route the way it does for that menu type
+        assertEquals("MENU", data.get("type"));
+        assertEquals("tpl", data.get("menuType"));
+        assertEquals(PAGE, data.get("target"));
         String token = (String) data.get("token");
         ResponseEntity<String> page = this.rest.getForEntity("/erupt-api/tpl/" + PAGE + "?_token=" + token, String.class);
         assertEquals(HttpStatus.OK, page.getStatusCode());
         assertTrue(page.getBody().contains("share page"));
-        assertTrue(this.allowed(token, "/erupt-api/tpl/" + PAGE, null));
-        assertFalse(this.allowed(token, "/erupt-api/tpl/other.html", null));
-        assertFalse(this.allowed(token, "/erupt-api/build/" + ORDERS, null));
+        // routes verified by menu or erupt are already narrowed to the one menu the session holds
+        assertTrue(this.allowed(token, "/erupt-api/tpl/" + PAGE, null, this.router("menuRoute")));
+        assertTrue(this.allowed(token, "/erupt-api/data/table/" + ORDERS, null, this.router("eruptRoute")));
+        // a login-level route passes only when it declares itself a read; one that declares nothing is closed
+        assertTrue(this.allowed(token, "/erupt-api/cube/semantic/query", null, this.router("readRoute")));
+        assertFalse(this.allowed(token, "/erupt-api/change-pwd", null, this.router("loginRoute")));
+        assertFalse(this.allowed(token, "/erupt-api/flow/instance/list", null, null), "a route verified by another annotation declares nothing");
+        assertTrue(this.allowed(issuer.token(), "/erupt-api/change-pwd", null, this.router("loginRoute")), "a login session is not scoped");
+        // the issuer's list names the page by its menu name
+        this.as(issuer, LINKS);
+        assertEquals("Demo", this.links().getList().iterator().next().get("targetName"));
     }
 
     @Test
@@ -204,7 +232,7 @@ class ShareLinkTest extends EruptApplicationTests {
         this.as(issuer, LINKS);
         Page mine = this.links();
         assertEquals(1, mine.getList().size());
-        assertEquals("OrderBy Demo", mine.getList().iterator().next().get("target"));
+        assertEquals("OrderBy Demo", mine.getList().iterator().next().get("targetName"));
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────────────
@@ -220,6 +248,11 @@ class ShareLinkTest extends EruptApplicationTests {
             eruptDao.persist(u);
             return u;
         });
+        transactionTemplate.executeWithoutResult(status -> {
+            if (eruptDao.lambdaQuery(EruptMenu.class).eq(EruptMenu::getCode, PAGE_MENU).count() == 0) {
+                eruptDao.persist(new EruptMenu(PAGE_MENU, "Demo", "tpl", PAGE, null, 3));
+            }
+        });
         MetaUserinfo user = new MetaUserinfo();
         user.setId(row.getId());
         user.setAccount(row.getAccount());
@@ -231,7 +264,7 @@ class ShareLinkTest extends EruptApplicationTests {
                 MetaMenu.createSimpleMenu("links-add", "Add", LINKS + "@ADD", links, 1, "button"),
                 MetaMenu.createSimpleMenu("links-edit", "Edit", LINKS + "@EDIT", links, 2, "button"),
                 orders, MetaMenu.createSimpleMenu("orders-add", "Add", ORDERS + "@ADD", orders, 1, "button"),
-                MetaMenu.createSimpleMenu("demo-page", "Demo", PAGE, null, 3, "tpl"))
+                MetaMenu.createSimpleMenu(PAGE_MENU, "Demo", PAGE, null, 3, "tpl"))
                 : List.of(links, MetaMenu.createSimpleMenu("links-add", "Add", LINKS + "@ADD", links, 1, "button"));
         eruptTokenService.loginToken(user, menus, token, 5);
         return new Login(token, row.getId(), row.getAccount());
@@ -251,14 +284,40 @@ class ShareLinkTest extends EruptApplicationTests {
 
     // What the security interceptor would ask the guard about this request of a session
     private boolean allowed(String token, String path, String parentErupt) {
+        return this.allowed(token, path, parentErupt, null);
+    }
+
+    private boolean allowed(String token, String path, String parentErupt, EruptRouter router) {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setServletPath(path);
         if (null != parentErupt) request.addHeader(EruptReqHeaderConst.ERUPT_PARENT_HEADER_KEY, parentErupt);
-        return guard.allow(token, request, null);
+        return guard.allow(token, request, router);
+    }
+
+    // The verification rules routes declare, read off these stand-in methods
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    void menuRoute() {
+    }
+
+    @EruptRouter(verifyType = EruptRouter.VerifyType.ERUPT)
+    void eruptRoute() {
+    }
+
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    void loginRoute() {
+    }
+
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, power = EruptRouter.Power.QUERY)
+    void readRoute() {
+    }
+
+    @SneakyThrows
+    private EruptRouter router(String rule) {
+        return ShareLinkTest.class.getDeclaredMethod(rule).getAnnotation(EruptRouter.class);
     }
 
     private String formLink(String password, Integer maxVisits) {
-        return "{\"title\":\"" + MARK + " form\",\"type\":\"FORM\",\"erupt\":\"" + ORDERS + "\",\"expireTime\":\"" + this.later(60) + "\""
+        return "{\"title\":\"" + MARK + " form\",\"type\":\"FORM\",\"target\":\"" + ORDERS + "\",\"expireTime\":\"" + this.later(60) + "\""
                 + (null == password ? "" : ",\"password\":\"" + password + "\"")
                 + (null == maxVisits ? "" : ",\"maxVisits\":" + maxVisits) + "}";
     }

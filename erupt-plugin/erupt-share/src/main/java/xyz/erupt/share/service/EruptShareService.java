@@ -5,17 +5,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.upms.enums.EruptFunPermissions;
+import xyz.erupt.upms.model.EruptMenu;
+import xyz.erupt.upms.service.EruptContextService;
+import xyz.erupt.upms.util.UPMSUtil;
+import xyz.erupt.upms.vo.EruptMenuVo;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
-import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.MetaUserinfo;
-import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EncryptUtil;
 import xyz.erupt.core.util.Erupts;
-import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.share.constant.ShareSessionKey;
 import xyz.erupt.share.model.EruptShareLink;
@@ -23,20 +29,18 @@ import xyz.erupt.share.prop.EruptShareProp;
 import xyz.erupt.share.vo.ShareMetaVo;
 import xyz.erupt.share.vo.ShareScope;
 import xyz.erupt.share.vo.ShareSessionVo;
-import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.helper.UpmsTenant;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.IpUtil;
-import xyz.erupt.upms.util.UPMSUtil;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -50,11 +54,6 @@ import java.util.regex.Pattern;
 public class EruptShareService {
 
     private static final Pattern CODE = Pattern.compile("^[A-Za-z0-9]{" + EruptShareLink.CODE_LENGTH + "}$");
-
-    // Frontend routes that render each target; the landing page navigates to them with the new token
-    private static final String FORM_ROUTE = "/share/form/";
-
-    private static final String PAGE_ROUTE = "/share/page/";
 
     @Resource
     private EruptDao eruptDao;
@@ -74,6 +73,12 @@ public class EruptShareService {
     @Resource
     private HttpServletRequest request;
 
+    @Resource
+    private EruptContextService eruptContextService;
+
+    // Menu types a visitor cannot open as a page
+    private static final Set<String> NOT_A_PAGE = Set.of(MenuTypeEnum.BUTTON.getCode(), MenuTypeEnum.API.getCode());
+
     /**
      * Whether a user holding these menu values may open a public form for the model: the model
      * must be local, allow adding, and the user must hold both its menu and its add button.
@@ -83,6 +88,28 @@ public class EruptShareService {
         String name = model.getEruptName();
         return menuValues.containsKey(name.toLowerCase())
                 && menuValues.containsKey(UPMSUtil.getEruptFunPermissionsCode(name, EruptFunPermissions.ADD).toLowerCase());
+    }
+
+    // The models the current user may open a public form for, labelled by the raw @Erupt(name)
+    public List<VLModel> formTargets() {
+        Map<String, Boolean> menus = eruptUserService.getEruptMenuValuesMap();
+        return EruptCoreService.getErupts().stream()
+                .filter(it -> canAdd(it, menus))
+                .map(it -> new VLModel(it.getEruptName(), it.getErupt().name()))
+                .toList();
+    }
+
+    // The pages the current user may share: every menu of theirs that opens something, by code
+    public List<VLModel> menuTargets() {
+        return this.issuerMenus().stream()
+                .filter(it -> null != it.getType() && !NOT_A_PAGE.contains(it.getType()) && null != it.getValue())
+                .map(it -> new VLModel(it.getCode(), it.getName()))
+                .toList();
+    }
+
+    private List<EruptMenuVo> issuerMenus() {
+        List<EruptMenuVo> menus = eruptTokenService.menuView(eruptContextService.getCurrentToken());
+        return null == menus ? List.of() : menus;
     }
 
     // The code doubles as salt: unique per link, so equal passwords never share a digest
@@ -95,33 +122,19 @@ public class EruptShareService {
      * than its issuer has. Called when a link is created or changed.
      */
     public void verifyTarget(EruptShareLink link) {
-        Map<String, Boolean> menus = eruptUserService.getEruptMenuValuesMap();
         if (link.isForm()) {
-            link.setPath(null);
-            if (StringUtils.isBlank(link.getErupt())) throw tip("Model not found");
-            EruptModel model = EruptCoreService.getErupt(link.getErupt());
+            if (StringUtils.isBlank(link.getTarget())) throw tip("Model not found");
+            EruptModel model = EruptCoreService.getErupt(link.getTarget());
             if (null == model) throw tip("Model not found");
             if (model.isRemote()) throw tip("Remote models cannot be shared");
             if (!model.getErupt().power().add()) throw tip("Model does not allow adding records");
-            if (!canAdd(model, menus)) throw tip("No permission to share this model");
-        } else if (EruptShareLink.TYPE_PAGE.equals(link.getType())) {
-            link.setErupt(null);
-            String path = normalizePath(link.getPath());
-            if (StringUtils.isBlank(path)) throw tip("Page path is required");
-            if (!menus.containsKey(path.toLowerCase())) throw tip("No permission to share this page");
-            link.setPath(path);
+            if (!canAdd(model, eruptUserService.getEruptMenuValuesMap())) throw tip("No permission to share this model");
+            link.setTarget(model.getEruptName());
+        } else if (EruptShareLink.TYPE_MENU.equals(link.getType())) {
+            if (this.menuTargets().stream().noneMatch(it -> it.getValue().equals(link.getTarget()))) throw tip("No permission to share this page");
         } else {
             throw tip("Unknown share type");
         }
-    }
-
-    // A tpl menu value is the path under /erupt-api/tpl/, without a leading slash or query string
-    static String normalizePath(String path) {
-        if (null == path) return null;
-        String p = path.trim();
-        while (p.startsWith("/")) p = p.substring(1);
-        int q = p.indexOf('?');
-        return q == -1 ? p : p.substring(0, q);
     }
 
     public ShareMetaVo meta(String code) {
@@ -169,15 +182,18 @@ public class EruptShareService {
                         + "l.lastVisitTime = :now where l.id = :id and (l.maxVisits is null or coalesce(l.visitCount, 0) < l.maxVisits)")
                 .setParameter("now", new Date()).setParameter("id", link.getId()).executeUpdate();
         if (counted == 0) throw error("Share link visit limit reached");
+        EruptMenu menu = link.isForm() ? null : eruptDao.lambdaQuery(EruptMenu.class).eq(EruptMenu::getCode, link.getTarget()).one();
+        if (!link.isForm() && null == menu) throw error("Share link not found");
         int minutes = sessionMinutes(link);
         String token = Erupts.generateCode(22);
         // loginToken shortens the expiry by one minute, so it is handed one more
-        eruptTokenService.loginToken(issuerInfo(link), targetMenus(link), token, minutes + 1);
-        ShareScope scope = new ShareScope(link.getCode(), link.getType(), link.getErupt(), link.getPath());
+        eruptTokenService.loginToken(issuerInfo(link), targetMenus(link, menu), token, minutes + 1);
+        ShareScope scope = new ShareScope(link.getCode(), link.getType(), link.getTarget());
         sessionService.put(ShareSessionKey.SCOPE + token, GsonFactory.getGson().toJson(scope), minutes, TimeUnit.MINUTES);
         this.recordVisit(link, token);
-        String route = link.isForm() ? FORM_ROUTE + link.getErupt() : PAGE_ROUTE + link.getPath();
-        return new ShareSessionVo(token, route, minutes);
+        return link.isForm()
+                ? new ShareSessionVo(token, link.getType(), link.getTarget(), null, minutes)
+                : new ShareSessionVo(token, link.getType(), menu.getValue(), menu.getType(), minutes);
     }
 
     /**
@@ -235,18 +251,18 @@ public class EruptShareService {
         return info;
     }
 
-    // Exactly the menu values the interceptor and the power handler look for, nothing else
-    private List<MetaMenu> targetMenus(EruptShareLink link) {
-        List<MetaMenu> menus = new ArrayList<>();
+    // Exactly the menu values the interceptor and the power handler look for, nothing else: a form
+    // gets its model's menu and add button, a page gets the one menu it is, without any button
+    private List<MetaMenu> targetMenus(EruptShareLink link, EruptMenu menu) {
         String code = "$share-" + link.getCode();
         if (link.isForm()) {
-            menus.add(MetaMenu.createSimpleMenu(code, link.getTitle(), link.getErupt(), null, 0, MenuTypeEnum.TABLE.getCode()));
-            menus.add(MetaMenu.createSimpleMenu(code + "-add", link.getTitle(),
-                    UPMSUtil.getEruptFunPermissionsCode(link.getErupt(), EruptFunPermissions.ADD), null, 1, MenuTypeEnum.BUTTON.getCode()));
-        } else {
-            menus.add(MetaMenu.createSimpleMenu(code, link.getTitle(), link.getPath(), null, 0, MenuTypeEnum.LINK.getCode()));
+            return List.of(
+                    MetaMenu.createSimpleMenu(code, link.getTitle(), link.getTarget(), null, 0, MenuTypeEnum.TABLE.getCode()),
+                    MetaMenu.createSimpleMenu(code + "-add", link.getTitle(),
+                            UPMSUtil.getEruptFunPermissionsCode(link.getTarget(), EruptFunPermissions.ADD), null, 1, MenuTypeEnum.BUTTON.getCode())
+            );
         }
-        return menus;
+        return List.of(MetaMenu.createSimpleMenu(code, menu.getName(), menu.getValue(), null, 0, menu.getType()));
     }
 
     // A visit is a sign-in of the issuer: it goes to the login log, under the issuer's tenant, named by the link
