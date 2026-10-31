@@ -2,6 +2,8 @@ package xyz.erupt.webhook.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -60,6 +62,7 @@ public class EruptWebhookLog extends BaseModel {
     )
     private String erupt;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "Event", width = "90px"),

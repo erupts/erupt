@@ -47,6 +47,12 @@ public class EnumColumnTest extends EruptApplicationTests {
     }
 
     @Test
+    public void ordinalEnumIsLeftToJpaTest() throws Exception {
+        //not stored by name: the integrator keeps its hands off, so the column is the number hibernate chose
+        assertNotEquals("character varying", columnType("e_test_enum_column", "ordinal").toLowerCase());
+    }
+
+    @Test
     @Rollback
     @Transactional
     public void everyEnumValueIsAcceptedTest() {

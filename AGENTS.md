@@ -65,6 +65,43 @@ not defaults of the machine a feature happens to be written on — check a new f
 - **Test against more than H2.** `erupt-test` runs on H2 in MySQL mode; a feature that touches SQL,
   metadata or DDL deserves a look at how Oracle, PostgreSQL and SQL Server would read it.
 
+### Database compatibility review
+
+A change that touches an entity mapping, generated DDL, a native query, a Hibernate hook (`Integrator`,
+`Dialect`, type contributions) or anything in `erupt-data-jpa` / `erupt-data-jdbc` is reviewed against
+PostgreSQL, MySQL and H2 before it is merged, and against Oracle and SQL Server by reading the dialect
+when it cannot be run. State the result in the PR description, as the extension section does. Go through:
+
+- **Types.** A varchar is not a number: MySQL and H2 coerce `'1' = 1`, PostgreSQL rejects it. Keep enums
+  stored as ordinals in integer columns, booleans as booleans, and never compare across types in a check.
+- **Check constraints and native enums.** H2 and MySQL turn `@Enumerated(STRING)` into a native enum
+  type and write no check, so a passing H2 test proves nothing about the `check (... in (...))`
+  PostgreSQL, Oracle and SQL Server emit. Read the generated DDL on PostgreSQL, not only on H2. Entity
+  enums are always `@Enumerated(EnumType.STRING)`: `EnumColumnIntegrator` relaxes those alone and
+  warns about an ordinal at startup.
+- **Identifiers.** Quoted identifiers are case sensitive everywhere but folded differently when
+  unquoted (Oracle and H2 upper-case, PostgreSQL lower-cases, MySQL keeps them). A filter, a native
+  query or an `information_schema` lookup must agree with the DDL on quoting.
+- **Dialect-only syntax.** `limit`, `ifnull`, `now()`, backticks, `auto_increment`, `text` and
+  `datetime` are not portable. Prefer JPQL or Hibernate functions; a native fragment needs a reason and
+  a note on each database it was checked on.
+- **Schema update is append-only.** Whatever the create statement pins (type, check, default, enum
+  list) stays forever on databases already created; a fix to generation must also cope with schemas
+  the old generation left behind.
+
+To run the suite on a local PostgreSQL, add `org.postgresql:postgresql` with test scope to
+`erupt-test/pom.xml` for the run (do not commit it) and override the datasource on the forked JVM:
+
+```bash
+mvn -pl erupt-test -am -Dtest=EnumColumnTest -Dsurefire.failIfNoSpecifiedTests=false \
+  -DargLine="-Dspring.datasource.url=jdbc:postgresql://localhost:5432/erupt_test \
+  -Dspring.datasource.username=<user> -Dspring.datasource.password= \
+  -Dspring.datasource.driver-class-name=org.postgresql.Driver -Dspring.jpa.database=postgresql" test
+```
+
+`-am` matters: without it `erupt-test` resolves the sibling modules from `~/.m2` and tests yesterday's
+jar. The same override with a MySQL URL and driver checks MySQL.
+
 ## Extension Compatibility
 
 A feature that works in the erupt core is not done until it also holds for the four extensions built on
