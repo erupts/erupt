@@ -19,9 +19,10 @@ import java.util.List;
 
 /**
  * Public links. A logged-in user issues a code for one target: a form that anyone holding the
- * link may submit once or many times (a sign-up sheet, a ticket, a survey), or a template page
- * anyone may read (a report for the board, a dashboard for a customer). The code expires, may
- * be capped in visits, may ask a password, and can be switched off at any time.
+ * link may submit once or many times (a sign-up sheet, a ticket, a survey), or one of their menus
+ * that anyone may open as a user holding that menu alone would (a template page, a report, a
+ * dashboard, a canvas, a read-only table). The code expires, may be capped in visits, may ask a
+ * password, and can be switched off at any time.
  * <p>
  * Opening a link mints an ordinary erupt session of the issuer, narrowed by
  * {@link xyz.erupt.share.service.ShareScopeGuard} to the calls the target needs: the visitor

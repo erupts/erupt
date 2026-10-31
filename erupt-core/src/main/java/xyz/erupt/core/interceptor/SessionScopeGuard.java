@@ -20,7 +20,8 @@ public interface SessionScopeGuard {
     /**
      * @param token       the verified session token
      * @param request     the current request
-     * @param eruptRouter the route's verification rule
+     * @param eruptRouter the route's verification rule; null for a route that verifies the login
+     *                    through another annotation and declares nothing about itself
      * @return false to refuse the request
      */
     boolean allow(String token, HttpServletRequest request, EruptRouter eruptRouter);

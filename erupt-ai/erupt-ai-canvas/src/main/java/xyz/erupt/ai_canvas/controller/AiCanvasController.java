@@ -50,7 +50,7 @@ public class AiCanvasController {
     private EruptUserService eruptUserService;
 
     @GetMapping(value = HTML_PATH + "/{code}", produces = "text/html;charset=utf-8")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, power = EruptRouter.Power.QUERY)
     public String html(@PathVariable("code") String code, HttpServletRequest request) {
         // A published canvas is opened through a menu whose value is its code; designers may open any canvas
         if (null == eruptUserService.getEruptMenuByValue(code) && null == eruptUserService.getEruptMenuByValue(AiCanvas.MENU_VALUE)) {

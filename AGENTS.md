@@ -197,6 +197,11 @@ Implement these interfaces and reference them in annotations for custom behavior
 - `PowerHandler` — custom permission logic
 - `AutoCompleteHandler` — search auto-complete
 
+A session narrowed to one target (an erupt-share link) may call a login-level route only if the route
+declares the right it exercises: give a read-only `@EruptRouter(verifyType = LOGIN)` endpoint
+`power = EruptRouter.Power.QUERY` (the semantic layer's reads, a published canvas page) and leave a
+route that changes the account (password, MFA, profile) undeclared, so it stays closed to visitors.
+
 ### LambdaQuery (Type-Safe Queries)
 
 Use `eruptDao.lambdaQuery(Entity.class)` for type-safe JPA queries using method references instead of strings:
