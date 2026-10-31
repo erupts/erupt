@@ -1,7 +1,6 @@
 package xyz.erupt.filecenter.store;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
@@ -57,8 +56,8 @@ public class S3FileStore implements FileStore {
     }
 
     private String path(String key) {
-        String relative = prop.prefix().isEmpty() ? key : Strings.CS.removeStart(key, prop.prefix() + "/");
-        return "/" + Strings.CS.removeEnd(relative, "/");
+        String relative = prop.prefix().isEmpty() ? key : StringUtils.removeStart(key, prop.prefix() + "/");
+        return "/" + StringUtils.removeEnd(relative, "/");
     }
 
     @Override
@@ -164,13 +163,13 @@ public class S3FileStore implements FileStore {
     @Override
     public String publicUrl(String path) {
         String base = StringUtils.isNotBlank(prop.domain()) ? prop.domain() : this.bucketUrl();
-        return Strings.CS.removeEnd(base, "/") + "/" + this.key(path);
+        return StringUtils.removeEnd(base, "/") + "/" + this.key(path);
     }
 
     // Mirrors S3AttachmentProxy: path-style keeps the bucket in the path, virtual-hosted puts it in front
     private String bucketUrl() {
         if (prop.endpoint().isEmpty()) return "https://" + prop.bucket() + ".s3." + prop.region() + ".amazonaws.com";
-        URI endpoint = URI.create(Strings.CS.removeEnd(S3ClientFactory.endpoint(prop.endpoint(), prop.bucket(), prop.pathStyle()), "/"));
+        URI endpoint = URI.create(StringUtils.removeEnd(S3ClientFactory.endpoint(prop.endpoint(), prop.bucket(), prop.pathStyle()), "/"));
         if (prop.pathStyle()) return endpoint + "/" + prop.bucket();
         String port = endpoint.getPort() == -1 ? "" : ":" + endpoint.getPort();
         return endpoint.getScheme() + "://" + prop.bucket() + "." + endpoint.getHost() + port;

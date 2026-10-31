@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
@@ -58,7 +57,7 @@ public class RedisInfo {
         Optional.of(redisConnection.serverCommands().info("commandstats")).ifPresent(commandStats -> {
             String cs = "cmdstat_";
             redisCmdStat = commandStats.stringPropertyNames().stream().filter(it -> it.startsWith(cs))
-                    .map(it -> new RedisCmdStat(Strings.CS.removeStart(it, cs),
+                    .map(it -> new RedisCmdStat(StringUtils.removeStart(it, cs),
                             StringUtils.substringBetween(commandStats.getProperty(it), "calls=", ",usec"))).collect(Collectors.toList());
         });
         Optional.of(redisConnection.serverCommands().info()).ifPresent(properties -> {
