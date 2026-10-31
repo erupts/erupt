@@ -39,7 +39,7 @@ public class S3ClientFactory {
         if (!accessKey.isEmpty()) {
             builder.credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)));
         } else {
-            builder.credentialsProvider(DefaultCredentialsProvider.create());
+            builder.credentialsProvider(DefaultCredentialsProvider.builder().build());
         }
         return builder.build();
     }

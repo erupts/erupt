@@ -16,10 +16,16 @@
     </parent>
 
     <properties>
-        <!-- the oldest line served and the Kotlin it was built with: an application on any newer Ktor 3 reads it -->
+        <!-- the oldest line served: the stdlib compiled against and the language level the class metadata is
+             written for, so an application on any newer Kotlin / Ktor 3 reads it -->
         <ktor.version>3.0.3</ktor.version>
         <kotlin.version>2.0.21</kotlin.version>
+        <kotlin.language.version>2.0</kotlin.language.version>
         <kotlinx.coroutines.version>1.9.0</kotlinx.coroutines.version>
+        <!-- the compiler that does the work: independent of the line above, because a compiler refuses to run on
+             a JDK newer than it knows (2.0.21 stops at JDK 24). It warns that language version 2.0 is deprecated;
+             once a compiler drops it, the served line moves up with it -->
+        <kotlin.compiler.version>2.4.21</kotlin.compiler.version>
     </properties>
 
     <dependencyManagement>
@@ -93,9 +99,11 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
+                <version>${kotlin.compiler.version}</version>
                 <configuration>
                     <jvmTarget>${java.version}</jvmTarget>
+                    <languageVersion>${kotlin.language.version}</languageVersion>
+                    <apiVersion>${kotlin.language.version}</apiVersion>
                 </configuration>
                 <executions>
                     <execution>

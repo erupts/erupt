@@ -5,6 +5,7 @@ import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.pgvector.PgVectorEmbeddingStore;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
@@ -128,7 +129,7 @@ public class PgVectorStore extends VectorStoreCore {
             return new PgUri(
                     uri.getHost(),
                     uri.getPort() > 0 ? uri.getPort() : DEFAULT_PORT,
-                    StringUtils.removeStart(uri.getPath(), "/"),
+                    Strings.CS.removeStart(uri.getPath(), "/"),
                     user,
                     StringUtils.defaultIfBlank(password, config.getApiKey())
             );

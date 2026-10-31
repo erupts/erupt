@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -621,7 +622,7 @@ public class EruptSsoService {
     }
 
     private Endpoints discover(String issuer) {
-        String url = StringUtils.removeEnd(issuer, "/") + "/.well-known/openid-configuration";
+        String url = Strings.CS.removeEnd(issuer, "/") + "/.well-known/openid-configuration";
         JsonObject json;
         try {
             json = this.send(HttpRequest.newBuilder(URI.create(url)).timeout(TIMEOUT)

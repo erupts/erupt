@@ -2,6 +2,7 @@ package xyz.erupt.jpa.support;
 
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.boot.Metadata;
+import org.hibernate.boot.spi.BootstrapContext;
 import org.hibernate.engine.jdbc.Size;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.integrator.spi.Integrator;
@@ -34,8 +35,8 @@ public class EnumColumnIntegrator implements Integrator {
     private static final long DEFAULT_LENGTH = 255L;
 
     @Override
-    public void integrate(@NonNull Metadata metadata, @NonNull SessionFactoryImplementor sessionFactory,
-                          @NonNull SessionFactoryServiceRegistry serviceRegistry) {
+    public void integrate(@NonNull Metadata metadata, @NonNull BootstrapContext bootstrapContext,
+                          @NonNull SessionFactoryImplementor sessionFactory) {
         DdlTypeRegistry ddlTypes = metadata.getDatabase().getTypeConfiguration().getDdlTypeRegistry();
         for (PersistentClass persistentClass : metadata.getEntityBindings()) {
             for (Property property : persistentClass.getProperties()) {
@@ -61,7 +62,7 @@ public class EnumColumnIntegrator implements Integrator {
         if (null != column.getSqlType()) return;
         //the dialect spells the varchar, the field says how wide it has to be
         Size size = Size.length(null == column.getLength() ? DEFAULT_LENGTH : column.getLength());
-        column.setSqlType(ddlTypes.getTypeName(SqlTypes.VARCHAR, size));
+        column.setSqlType(ddlTypes.getTypeName(SqlTypes.VARCHAR, size, null));
     }
 
     @Override

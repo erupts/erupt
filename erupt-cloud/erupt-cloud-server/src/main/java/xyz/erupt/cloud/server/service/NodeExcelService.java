@@ -1,5 +1,6 @@
 package xyz.erupt.cloud.server.service;
 
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.JsonObject;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
@@ -112,7 +113,8 @@ public class NodeExcelService {
             for (String id : ids) {
                 rows.add(GsonFactory.getGson().fromJson(nodeReferenceService.resolve(node, build, false, cloudNodeRouter.proxy(erupt, HttpMethod.GET,
                         EruptRestPath.ERUPT_DATA + EruptRestPath.ERUPT_NAME_HOLDER + "/" + UriUtils.encodePathSegment(id, StandardCharsets.UTF_8),
-                        null, VOUCHED)), Map.class));
+                        null, VOUCHED)), new TypeToken<Map<String, Object>>() {
+                }));
             }
         }
         Page page = new Page();

@@ -149,15 +149,9 @@ public class EruptUtil {
                         map.put(field.getName(), EruptConst.PASSWORD_PLACEHOLDER);
                         break;
                     case CHOICE:
-                        if (valueMapping) {
-                            Map<String, String> kv = EruptUtil.getChoiceMap(eruptModel, fieldModel);
-                            if (kv.containsKey(value.toString())) {
-                                map.put(field.getName(), kv.get(value.toString()));
-                            } else {
-                                map.put(field.getName(), value);
-                            }
-                            break;
-                        }
+                        String choiceLabel = valueMapping ? EruptUtil.getChoiceMap(eruptModel, fieldModel).get(value.toString()) : null;
+                        map.put(field.getName(), null == choiceLabel ? value : choiceLabel);
+                        break;
                     default:
                         if (value instanceof Date d) {
                             map.put(field.getName(), DateUtil.getFormatDate(d, DateUtil.ISO_8601));
@@ -214,6 +208,7 @@ public class EruptUtil {
         return vls;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<VLModel> getChoiceList(EruptModel eruptModel, Edit edit) {
         List<VLModel> vls = new ArrayList<>();
         if (edit.type() == EditType.CHOICE) {
@@ -231,6 +226,7 @@ public class EruptUtil {
         return vls;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<VLModel> getChoiceListFilter(EruptModel eruptModel, Edit edit, Object data) {
         List<VLModel> vls = new ArrayList<>();
         if (edit.type() == EditType.CHOICE) {
@@ -248,6 +244,7 @@ public class EruptUtil {
         return vls;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<String> getTagList(TagsType tagsType, Object data) {
         List<String> tags = new ArrayList<>(Arrays.asList(tagsType.tags()));
         Stream.of(tagsType.fetchHandler()).filter(clazz -> !clazz.isInterface())
@@ -255,6 +252,7 @@ public class EruptUtil {
         return tags;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<String> getMentionList(TextareaType textareaType, Object data) {
         List<String> mentions = new ArrayList<>(Arrays.asList(textareaType.mentions()));
         Stream.of(textareaType.mentionFetchHandler()).filter(clazz -> !clazz.isInterface())
@@ -262,6 +260,7 @@ public class EruptUtil {
         return mentions;
     }
 
+    @SuppressWarnings("unchecked")
     public static Object convertObjectType(EruptFieldModel eruptFieldModel, Object obj) {
         if (null == obj) return null;
         if (null == eruptFieldModel) {
@@ -431,7 +430,7 @@ public class EruptUtil {
                 switch (edit.type()) {
                     case NUMBER:
                     case SLIDER:
-                        if (!NumberUtils.isNumber(value.getAsString())) {
+                        if (!NumberUtils.isCreatable(value.getAsString())) {
                             return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.must.number"));
                         }
                         break;

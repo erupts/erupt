@@ -37,7 +37,7 @@ public class EruptOpenApiDataProxy implements DataProxy<EruptOpenApi>, Operation
 
     @Override
     public void beforeAdd(EruptOpenApi eruptOpenApi) {
-        eruptOpenApi.setAppid("es" + RandomStringUtils.random(14, EruptConst.AN));
+        eruptOpenApi.setAppid("es" + RandomStringUtils.secure().next(14, EruptConst.AN));
         eruptOpenApi.setSecret(Erupts.generateCode(24).toUpperCase());
     }
 

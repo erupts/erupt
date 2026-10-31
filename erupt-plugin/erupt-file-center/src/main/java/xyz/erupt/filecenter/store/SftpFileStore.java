@@ -53,7 +53,7 @@ public class SftpFileStore implements FileStore {
             Session ssh = jsch.getSession(prop.username(), prop.host(), prop.port());
             ssh.setConfig("StrictHostKeyChecking", prop.knownHosts().isEmpty() ? "no" : "yes");
             ssh.setConfig("PreferredAuthentications", prop.privateKey().isEmpty() ? "password,keyboard-interactive" : "publickey");
-            if (!prop.password().isEmpty()) ssh.setPassword(prop.password());
+            if (!prop.password().isEmpty()) ssh.setPassword(prop.password().getBytes(StandardCharsets.UTF_8));
             ssh.setServerAliveInterval(30_000);
             ssh.connect(CONNECT_TIMEOUT_MS);
             session = ssh;
