@@ -12,7 +12,6 @@ import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -254,7 +253,7 @@ public class RagService {
                 }
             }
             Path uploadRoot = Paths.get(eruptProp.getUploadPath()).toAbsolutePath().normalize();
-            Path file = uploadRoot.resolve(Strings.CS.removeStart(doc.getAttachment(), "/")).normalize();
+            Path file = uploadRoot.resolve(StringUtils.removeStart(doc.getAttachment(), "/")).normalize();
             // Reject any path escaping the upload directory
             if (!file.startsWith(uploadRoot)) {
                 throw new EruptWebApiRuntimeException(I18nTranslate.$translate("rag.illegal_attachment_path"));

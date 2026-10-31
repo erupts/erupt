@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import xyz.erupt.ai_dev.constant.EventKind;
 
 import java.util.List;
@@ -55,7 +54,7 @@ public abstract class StreamJsonRunner extends AbstractCliRunner {
                 if (null == call || call.keySet().isEmpty()) return;
                 String key = call.keySet().iterator().next();
                 JsonObject body = object(call, key);
-                String name = Strings.CS.removeEnd(key, "ToolCall");
+                String name = StringUtils.removeEnd(key, "ToolCall");
                 if ("started".equals(text(msg, "subtype"))) listener.event(EventKind.TOOL, name, text(body, "args"));
                 else if ("completed".equals(text(msg, "subtype"))) listener.event(EventKind.TOOL_RESULT, name, text(body, "result"));
             }

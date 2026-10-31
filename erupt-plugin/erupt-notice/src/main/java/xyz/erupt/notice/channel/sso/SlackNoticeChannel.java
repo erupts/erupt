@@ -2,7 +2,6 @@ package xyz.erupt.notice.channel.sso;
 
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 import xyz.erupt.notice.pojo.NoticeMessage;
@@ -33,7 +32,7 @@ public class SlackNoticeChannel extends AbstractSsoNoticeChannel {
         JsonObject body = new JsonObject();
         body.addProperty("channel", userId);
         body.addProperty("text", text.toString());
-        String base = Strings.CS.removeEnd(StringUtils.defaultIfBlank(sso.getIssuer(), "https://slack.com"), "/");
+        String base = StringUtils.removeEnd(StringUtils.defaultIfBlank(sso.getIssuer(), "https://slack.com"), "/");
         api.postJson(base + "/api/chat.postMessage", Map.of("Authorization", "Bearer " + botToken), body, "slack message");
     }
 
