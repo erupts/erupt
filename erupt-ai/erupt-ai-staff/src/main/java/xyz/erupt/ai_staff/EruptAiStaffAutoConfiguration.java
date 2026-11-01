@@ -16,6 +16,7 @@ import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.jpa.dao.EruptDao;
 
@@ -46,7 +47,9 @@ public class EruptAiStaffAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-ai-staff").description("Digital AI employees — autonomous staff with duties, schedules and work reports").build();
+        return ModuleInfo.builder().name("erupt-ai-staff").group(ModuleGroup.AI)
+                .description("Digital employees with duties, schedules and work reports")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-ai-staff")).build();
     }
 
     @Override
@@ -63,7 +66,7 @@ public class EruptAiStaffAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$ai-staff", "AI Staff", "fa fa-robot", 26));
+        menus.add(MetaMenu.createRootMenu("$ai-staff", "AI Staff", "fa fa-robot", 130));
         menus.add(MetaMenu.createEruptClassMenu(AiStaff.class, menus.get(0), 10));
         menus.add(MetaMenu.createEruptClassMenu(AiStaffChannel.class, menus.get(0), 20));
         menus.add(MetaMenu.createEruptClassMenu(AiStaffTask.class, menus.get(0), 30, MenuStatus.HIDE));

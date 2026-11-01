@@ -8,6 +8,7 @@ import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.generator.model.GeneratorClass;
 
@@ -31,13 +32,15 @@ public class EruptGeneratorAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-generator").description("Generator erupt code").build();
+        return ModuleInfo.builder().name("erupt-generator").group(ModuleGroup.DEV_TOOLS)
+                .description("Erupt code generated from a model drawn in the admin")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-generator")).build();
     }
 
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        MetaMenu menu = MetaMenu.createEruptClassMenu(GeneratorClass.class, null, 40);
+        MetaMenu menu = MetaMenu.createEruptClassMenu(GeneratorClass.class, null, 210);
         menu.setIcon("fa fa-code");
         menus.add(menu);
         return menus;

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import xyz.erupt.airtable.prop.EruptAirtableProperties;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 
 /**
@@ -22,7 +23,9 @@ public class EruptAirtableAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-data-airtable").description("Airtable data source implement").build();
+        return ModuleInfo.builder().name("erupt-data-airtable").group(ModuleGroup.DATA)
+                .description("Airtable data source")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-airtable")).build();
     }
 
 }

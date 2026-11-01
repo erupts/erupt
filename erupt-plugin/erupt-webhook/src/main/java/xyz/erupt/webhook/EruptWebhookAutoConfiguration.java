@@ -8,6 +8,7 @@ import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.constant.MenuStatus;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.upms.EruptUpmsAutoConfiguration;
 import xyz.erupt.webhook.model.EruptWebhook;
@@ -38,7 +39,8 @@ public class EruptWebhookAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name(ERUPT_WEBHOOK).description("Outbound webhooks on data events").build();
+        return ModuleInfo.builder().name(ERUPT_WEBHOOK).group(ModuleGroup.PLATFORM)
+                .description("Outbound webhooks fired by data events").build();
     }
 
     @Override
@@ -46,9 +48,9 @@ public class EruptWebhookAutoConfiguration implements EruptModule {
         List<MetaMenu> menus = new ArrayList<>();
         MetaMenu manager = EruptUpmsAutoConfiguration.managerMenu();
         menus.add(manager);
-        menus.add(MetaMenu.createEruptClassMenu(EruptWebhook.class, manager, 87));
+        menus.add(MetaMenu.createEruptClassMenu(EruptWebhook.class, manager, 62));
         // reached through the "Deliveries" drill of a webhook; the hidden menu only grants the permission
-        menus.add(MetaMenu.createEruptClassMenu(EruptWebhookLog.class, manager, 88, MenuStatus.HIDE));
+        menus.add(MetaMenu.createEruptClassMenu(EruptWebhookLog.class, manager, 63, MenuStatus.HIDE));
         return menus;
     }
 

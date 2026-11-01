@@ -10,6 +10,7 @@ import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.monitor.constant.MonitorConstant;
 import xyz.erupt.monitor.interceptor.HttpStatInterceptor;
@@ -39,14 +40,16 @@ public class EruptMonitorAutoConfiguration implements EruptModule, WebMvcConfigu
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-monitor").description("Erupt system monitor").build();
+        return ModuleInfo.builder().name("erupt-monitor").group(ModuleGroup.OPS)
+                .description("Server, cache and diagnosis monitoring")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-monitor")).build();
     }
 
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> metaMenus = new ArrayList<>();
         String router = MenuTypeEnum.ROUTER.getCode();
-        MetaMenu root = MetaMenu.createRootMenu("monitor", "System Monitoring", "fa fa-gauge-high", 10);
+        MetaMenu root = MetaMenu.createRootMenu("monitor", "System Monitoring", "fa fa-gauge-high", 300);
         metaMenus.add(root);
         metaMenus.add(MetaMenu.createSimpleMenu(MonitorConstant.MENU_SERVER, "Service Monitoring", MonitorConstant.MENU_SERVER, root, 10, router));
         metaMenus.add(MetaMenu.createSimpleMenu(MonitorConstant.MENU_REDIS, "Cache Monitoring", MonitorConstant.MENU_REDIS, root, 20, router));

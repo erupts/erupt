@@ -15,6 +15,7 @@ import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
@@ -45,7 +46,9 @@ public class EruptReportAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-report").build();
+        return ModuleInfo.builder().name("erupt-report").group(ModuleGroup.BUSINESS)
+                .description("Reports and dashboards built from SQL and data sources")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-report/")).build();
     }
 
     @Override
@@ -65,7 +68,7 @@ public class EruptReportAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$mbi", "Reports", "fa fa-chart-column", 20));
+        menus.add(MetaMenu.createRootMenu("$mbi", "Reports", "fa fa-chart-column", 30));
         menus.add(MetaMenu.createEruptClassMenu(BiDataSource.class, menus.get(0), 10));
         menus.add(MetaMenu.createEruptClassMenu(BiClassHandler.class, menus.get(0), 20));
         menus.add(MetaMenu.createEruptClassMenu(BiTpl.class, menus.get(0), 30));

@@ -11,6 +11,7 @@ import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.remote.model.RemoteHost;
 
@@ -41,13 +42,15 @@ public class EruptRemoteAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-remote").description("Erupt remote desktop").build();
+        return ModuleInfo.builder().name("erupt-remote").group(ModuleGroup.OPS)
+                .description("Remote desktops reached from the browser")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-remote")).build();
     }
 
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        MetaMenu root = MetaMenu.createRootMenu("$remote", "Remote Desktop", "fa fa-display", 56);
+        MetaMenu root = MetaMenu.createRootMenu("$remote", "Remote Desktop", "fa fa-display", 330);
         menus.add(root);
         menus.add(MetaMenu.createEruptClassMenu(RemoteHost.class, root, 10));
         return menus;

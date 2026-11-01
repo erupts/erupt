@@ -3,6 +3,7 @@ package xyz.erupt.excel;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.module.EruptModule;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 
 /**
@@ -15,7 +16,8 @@ public class EruptExcelAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-excel").description("Support Excel").build();
+        return ModuleInfo.builder().name("erupt-excel").group(ModuleGroup.PLATFORM)
+                .description("Excel import and export of table data").build();
     }
 
 }

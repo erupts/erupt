@@ -11,7 +11,9 @@ import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
+import xyz.erupt.upms.controller.EruptModuleController;
 import xyz.erupt.tpl.service.EruptTplService;
 import xyz.erupt.upms.model.*;
 import xyz.erupt.upms.model.log.EruptLoginLog;
@@ -36,6 +38,8 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
         EruptModuleInvoke.addEruptModule(EruptUpmsAutoConfiguration.class);
     }
 
+    public static final String ERUPT_UPMS = "erupt-upms";
+
     public static final String MANAGER_MENU = "$manager";
 
     /**
@@ -45,12 +49,14 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
      * to load first — build it through this method so the two declarations cannot drift apart.
      */
     public static MetaMenu managerMenu() {
-        return MetaMenu.createRootMenu(MANAGER_MENU, "System Management", "fa fa-cogs", 1);
+        return MetaMenu.createRootMenu(MANAGER_MENU, "System Management", "fa fa-cogs", 10);
     }
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-upms").description("User privilege management").build();
+        return ModuleInfo.builder().name(ERUPT_UPMS).group(ModuleGroup.PLATFORM)
+                .description("Users, roles, organizations, menus and permissions of the application")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-upms/")).build();
     }
 
     @Override
@@ -64,12 +70,13 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
         menus.add(MetaMenu.createEruptClassMenu(EruptPost.class, menus.get(0), 30, MenuTypeEnum.TREE));
         menus.add(MetaMenu.createEruptClassMenu(EruptUser.class, menus.get(0), 40));
         menus.add(MetaMenu.createEruptClassMenu(EruptDict.class, menus.get(0), 50));
-        menus.add(MetaMenu.createEruptClassMenu(EruptDictItem.class, menus.get(0), 60, MenuStatus.HIDE));
+        menus.add(MetaMenu.createEruptClassMenu(EruptDictItem.class, menus.get(0), 51, MenuStatus.HIDE));
         menus.add(MetaMenu.createEruptClassMenu(EruptOpenApi.class, menus.get(0), 60));
         menus.add(MetaMenu.createEruptClassMenu(EruptOnline.class, menus.get(0), 65));
         menus.add(MetaMenu.createEruptClassMenu(EruptLoginLog.class, menus.get(0), 70));
         menus.add(MetaMenu.createEruptClassMenu(EruptOperateLog.class, menus.get(0), 80));
         menus.add(MetaMenu.createSimpleMenu(EruptConst.ERUPT_LOG, "System Log", EruptConst.ERUPT_LOG, menus.get(0), 90, EruptTplService.TPL));
+        menus.add(MetaMenu.createSimpleMenu("$modules", "Module Center", EruptModuleController.PAGE, menus.get(0), 95, MenuTypeEnum.ROUTER.getCode()));
         return menus;
     }
 

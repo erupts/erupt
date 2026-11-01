@@ -7,6 +7,7 @@ import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.filecenter.web.FileCenterController;
 
@@ -32,13 +33,14 @@ public class EruptFileCenterAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-file-center").description("File center").build();
+        return ModuleInfo.builder().name("erupt-file-center").group(ModuleGroup.BUSINESS)
+                .description("Finder-style browsing of uploads, folders and object storage").build();
     }
 
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        MetaMenu page = MetaMenu.createSimpleMenu("file-center", "File Center", FileCenterController.PAGE, null, 53, MenuTypeEnum.ROUTER.getCode());
+        MetaMenu page = MetaMenu.createSimpleMenu("file-center", "File Center", FileCenterController.PAGE, null, 80, MenuTypeEnum.ROUTER.getCode());
         page.setIcon("fa fa-folder-open");
         menus.add(page);
         menus.add(MetaMenu.createSimpleMenu("file-center-write", "Write", FileCenterController.WRITE, page, 10, MenuTypeEnum.BUTTON.getCode()));

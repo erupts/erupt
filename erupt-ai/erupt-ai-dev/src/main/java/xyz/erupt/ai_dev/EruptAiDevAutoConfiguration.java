@@ -15,6 +15,7 @@ import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 
 import java.util.ArrayList;
@@ -37,7 +38,8 @@ public class EruptAiDevAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-ai-dev").description("AI software delivery — projects, requirement pool and worktrees for coding agents").build();
+        return ModuleInfo.builder().name("erupt-ai-dev").group(ModuleGroup.AI)
+                .description("AI software delivery: projects, requirement pool and worktrees").build();
     }
 
     @Resource
@@ -51,7 +53,7 @@ public class EruptAiDevAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$ai-dev", "AI Dev", "fa fa-laptop-code", 28));
+        menus.add(MetaMenu.createRootMenu("$ai-dev", "AI Dev", "fa fa-laptop-code", 150));
         menus.add(MetaMenu.createSimpleMenu("ai-dev-pool", "Requirement Pool", DevPoolController.PAGE, menus.get(0), 5, MenuTypeEnum.ROUTER.getCode()));
         menus.add(MetaMenu.createEruptClassMenu(DevProject.class, menus.get(0), 10));
         // the pool page is the way in; the model stays for its own API and permissions, which a hidden menu still grants

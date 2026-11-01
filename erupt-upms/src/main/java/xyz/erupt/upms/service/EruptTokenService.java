@@ -33,6 +33,9 @@ public class EruptTokenService {
     @Resource
     private EruptSessionService eruptSessionService;
 
+    @Resource
+    private EruptModuleCenterService moduleCenterService;
+
     public void loginToken(MetaUserinfo metaUserinfo, List<MetaMenu> metaMenus, String token, Integer tokenExpire) {
         // Map<String, EruptMenu>
         Map<String, Object> eruptMenuMap = new HashMap<>();
@@ -44,7 +47,11 @@ public class EruptTokenService {
                     eruptMenuMap.put(menu.getValue().toLowerCase().split("\\?")[0], EruptMenu.fromMetaMenu(menu));
                 }
                 if (menu.getStatus() == MenuStatus.OPEN) {
-                    eruptMenuVos.add(EruptMenuVo.fromMetaMenu(menu));
+                    EruptMenuVo vo = EruptMenuVo.fromMetaMenu(menu);
+                    if (null == menu.getParentMenu()) {
+                        Optional.ofNullable(moduleCenterService.groupOf(menu.getCode())).ifPresent(it -> vo.setGroup(it.name()));
+                    }
+                    eruptMenuVos.add(vo);
                 }
             }
         });

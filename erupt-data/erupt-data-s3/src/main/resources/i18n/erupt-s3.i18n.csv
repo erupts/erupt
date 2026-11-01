@@ -9,3 +9,4 @@ Last Modified,最后修改时间,最後修改時間,Last Modified,Dernière modi
 ETag,ETag,ETag,ETag,ETag,ETag,ETag,ETag,ETag,ETag,ETag,ETag,ETag
 Storage Class,存储类型,儲存類型,Storage Class,Classe de stockage,ストレージクラス,스토리지 클래스,Класс хранения,Clase de almacenamiento,Speicherklasse,Classe de armazenamento,Kelas penyimpanan,فئة التخزين
 Content Type,内容类型,內容類型,Content Type,Type de contenu,コンテンツタイプ,콘텐츠 유형,Тип содержимого,Tipo de contenido,Inhaltstyp,Tipo de conteúdo,Tipe konten,نوع المحتوى
+S3-compatible object storage data source,S3 兼容对象存储数据源,S3 相容物件儲存資料來源,S3-compatible object storage data source,Source de données stockage objet compatible S3,S3 互換オブジェクトストレージデータソース,S3 호환 오브젝트 스토리지 데이터 소스,Источник данных S3-совместимого объектного хранилища,Fuente de datos de almacenamiento de objetos compatible con S3,S3-kompatible Objektspeicher-Datenquelle,Fonte de dados de armazenamento de objetos compatível com S3,Sumber data penyimpanan objek kompatibel S3,مصدر بيانات تخزين كائنات متوافق مع S3

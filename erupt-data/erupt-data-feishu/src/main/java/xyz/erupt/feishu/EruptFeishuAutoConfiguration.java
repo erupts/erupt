@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.feishu.prop.EruptFeishuProperties;
 
@@ -22,7 +23,9 @@ public class EruptFeishuAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-data-feishu").description("Feishu Bitable data source implement").build();
+        return ModuleInfo.builder().name("erupt-data-feishu").group(ModuleGroup.DATA)
+                .description("Feishu Bitable data source")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-feishu")).build();
     }
 
 }
