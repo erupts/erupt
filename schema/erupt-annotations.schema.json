@@ -265,11 +265,16 @@
         "coverField": {
           "type": "string",
           "default": ""
+        },
+        "layout": {
+          "$ref": "#/$defs/CardViewLayout",
+          "default": "GRID"
         }
       },
       "required": [
         "coverEffect",
-        "coverField"
+        "coverField",
+        "layout"
       ],
       "additionalProperties": false
     },
@@ -278,6 +283,13 @@
       "enum": [
         "FIT",
         "CLIP"
+      ]
+    },
+    "CardViewLayout": {
+      "type": "string",
+      "enum": [
+        "GRID",
+        "MASONRY"
       ]
     },
     "ChoiceType": {
