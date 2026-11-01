@@ -27,8 +27,8 @@ import xyz.erupt.upms.helper.UpmsTenant;
 import java.util.Date;
 
 /**
- * One public link. The code in the URL is the only secret: 22 random alphanumerics, never
- * reused. The row carries the issuer's tenant as a plain column rather than {@code @TenantId},
+ * One public link. The code in the URL is the only secret: 12 random alphanumerics (about
+ * 71 bits, out of reach of guessing yet short enough to read out), never reused. The row carries the issuer's tenant as a plain column rather than {@code @TenantId},
  * because a visitor opens the link before any tenant is known and the lookup has to find the
  * row from a platform session; {@link ShareScopeFilter} keeps the admin view tenant-bound.
  * <p>
@@ -61,7 +61,7 @@ public class EruptShareLink extends HyperModelCreatorOnlyVo {
 
     public static final String TYPE_MENU = "MENU";
 
-    public static final int CODE_LENGTH = 22;
+    public static final int CODE_LENGTH = 12;
 
     // Owner tenant, UpmsTenant.PLATFORM for the platform; stamped from the issuer's session
     @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
