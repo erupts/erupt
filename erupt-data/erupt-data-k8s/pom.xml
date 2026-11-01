@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <fabric8.version>6.13.5</fabric8.version>
+        <fabric8.version>6.14.0</fabric8.version>
     </properties>
 
     <dependencies>
