@@ -1,10 +1,6 @@
 package xyz.erupt.share.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -22,12 +18,9 @@ import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
-import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.share.handler.ShareCopyLinkOperation;
-import xyz.erupt.share.handler.ShareLinkProxy;
-import xyz.erupt.share.handler.ShareTargetChoice;
-import xyz.erupt.share.handler.ShareScopeFilter;
+import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.share.handler.*;
 import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
 import xyz.erupt.upms.helper.UpmsTenant;
 
@@ -51,8 +44,12 @@ import java.util.Date;
         dataProxy = ShareLinkProxy.class,
         filter = @Filter(conditionHandler = ShareScopeFilter.class),
         power = @Power(export = false, importable = false),
-        rowOperation = @RowOperation(code = ShareCopyLinkOperation.CODE, title = "Copy Link", icon = "fa fa-link",
-                mode = RowOperation.Mode.SINGLE, callHint = "", operationHandler = ShareCopyLinkOperation.class)
+        rowOperation = {
+                @RowOperation(code = ShareCopyLinkOperation.CODE, title = "Copy Link", icon = "fa fa-link",
+                        mode = RowOperation.Mode.SINGLE, callHint = "", operationHandler = ShareCopyLinkOperation.class),
+                @RowOperation(code = ShareOpenLinkOperation.CODE, title = "Open Link", icon = "fa fa-external-link",
+                        mode = RowOperation.Mode.SINGLE, callHint = "", operationHandler = ShareOpenLinkOperation.class)
+        }
 )
 @Entity
 @Table(name = "e_share_link", indexes = @Index(columnList = "code", unique = true))
@@ -71,7 +68,7 @@ public class EruptShareLink extends HyperModelCreatorOnlyVo {
     @Column(length = AnnotationConst.CODE_LENGTH, nullable = false, updatable = false)
     private String tenantId;
 
-    // The secret in the URL; the "Copy Link" row button turns it into the full address
+    // The secret in the URL; the "Copy Link" and "Open Link" row buttons turn it into the full address
     @Column(length = 32, nullable = false, updatable = false)
     @EruptField(
             views = @View(title = "Code", width = "200px"),
