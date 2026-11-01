@@ -44,6 +44,12 @@ public class EruptBuildController {
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @SneakyThrows
     public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName) {
+        return this.build(eruptName, new HashSet<>());
+    }
+
+    // building: the erupts being built above this one. A model nested in itself, directly (a self
+    // @ManyToMany such as GanttView.dependencyField) or through others, comes back without its own tabs
+    private EruptBuildModel build(String eruptName, Set<String> building) {
         EruptModel eruptView = EruptCoreService.getEruptView(eruptName);
         {
             //default search conditions
@@ -60,6 +66,7 @@ public class EruptBuildController {
             scope.setBind(EruptScopeService.boundFields(eruptView));
             eruptBuildModel.setScope(scope);
         });
+        if (!building.add(eruptName)) return eruptBuildModel;
         eruptView.getEruptFieldModels().forEach(fieldModel -> {
             switch (fieldModel.getEruptField().edit().type()) {
                 case TAB_TREE:
@@ -72,7 +79,7 @@ public class EruptBuildController {
                 case MULTI_FORM:
                 case TAB_TABLE_REFER:
                     eruptBuildModel.setTabErupts(Optional.ofNullable(eruptBuildModel.getTabErupts()).orElse(new LinkedHashMap<>()));
-                    eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), getEruptBuild(fieldModel.getFieldReturnName()));
+                    eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), this.build(fieldModel.getFieldReturnName(), building));
                     break;
                 case COMBINE:
                     eruptBuildModel.setCombineErupts(Optional.ofNullable(eruptBuildModel.getCombineErupts()).orElse(new LinkedHashMap<>()));
@@ -85,6 +92,7 @@ public class EruptBuildController {
             eruptBuildModel.setOperationErupts(Optional.ofNullable(eruptBuildModel.getOperationErupts()).orElse(new LinkedHashMap<>()));
             eruptBuildModel.getOperationErupts().put(operation.code(), EruptCoreService.getEruptView(operation.eruptClass().getSimpleName()));
         });
+        building.remove(eruptName);
         return eruptBuildModel;
     }
 
