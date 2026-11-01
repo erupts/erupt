@@ -12,6 +12,7 @@ import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.print.model.EruptPrintTpl;
 import xyz.erupt.upms.prop.EruptAppProp;
@@ -49,13 +50,15 @@ public class EruptPrintAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name(ERUPT_PRINT).description("Print module").build();
+        return ModuleInfo.builder().name(ERUPT_PRINT).group(ModuleGroup.BUSINESS)
+                .description("Print templates for records")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-print")).build();
     }
 
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$print", "Print Manager", "fa fa-print", 110));
+        menus.add(MetaMenu.createRootMenu("$print", "Print Manager", "fa fa-print", 70));
         menus.add(MetaMenu.createEruptClassMenu(EruptPrintTpl.class, menus.get(0), 10));
         menus.add(MetaMenu.createSimpleMenu(PRINT_CONFIG, "Print Config", PRINT_CONFIG, menus.get(0), 20, MenuTypeEnum.BUTTON.getCode()));
         return menus;

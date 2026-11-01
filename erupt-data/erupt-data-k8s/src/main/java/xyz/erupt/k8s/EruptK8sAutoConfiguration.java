@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 
 /**
@@ -22,7 +23,9 @@ public class EruptK8sAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-data-k8s").description("Kubernetes resources data source implement").build();
+        return ModuleInfo.builder().name("erupt-data-k8s").group(ModuleGroup.DATA)
+                .description("Kubernetes resources as a data source")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-k8s")).build();
     }
 
 }

@@ -11,6 +11,7 @@ import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 
 import java.util.ArrayList;
@@ -36,13 +37,14 @@ public class EruptConfigAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-config").description("Runtime settings per Spring profile").build();
+        return ModuleInfo.builder().name("erupt-config").group(ModuleGroup.DEV_TOOLS)
+                .description("Runtime settings per Spring profile, edited in the admin").build();
     }
 
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        MetaMenu root = MetaMenu.createRootMenu("$config", "Config", "fa fa-sliders", 54);
+        MetaMenu root = MetaMenu.createRootMenu("$config", "Config", "fa fa-sliders", 240);
         menus.add(root);
         menus.add(MetaMenu.createEruptClassMenu(ConfigItem.class, root, 10));
         menus.add(MetaMenu.createEruptClassMenu(ConfigEffectiveValue.class, root, 15));

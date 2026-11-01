@@ -9,6 +9,7 @@ import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.tpl.service.EruptTplService;
 
@@ -39,7 +40,9 @@ public class EruptTplAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-tpl").description("Erupt Template Engine").build();
+        return ModuleInfo.builder().name("erupt-tpl").group(ModuleGroup.PLATFORM)
+                .description("Template engine for custom pages inside the admin")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-tpl")).build();
     }
 
 }

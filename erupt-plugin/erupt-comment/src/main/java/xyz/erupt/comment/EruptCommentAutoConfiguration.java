@@ -10,6 +10,7 @@ import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.upms.EruptUpmsAutoConfiguration;
 import xyz.erupt.upms.prop.EruptAppProp;
@@ -47,7 +48,9 @@ public class EruptCommentAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name(ERUPT_COMMENT).description("Record comments").build();
+        return ModuleInfo.builder().name(ERUPT_COMMENT).group(ModuleGroup.PLATFORM)
+                .description("Comments on any record")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-comment")).build();
     }
 
     @Override

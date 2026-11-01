@@ -9,6 +9,7 @@ import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.revision.model.EruptRecordRevision;
@@ -50,7 +51,8 @@ public class EruptRevisionAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name(ERUPT_REVISION).description("Record revisions").build();
+        return ModuleInfo.builder().name(ERUPT_REVISION).group(ModuleGroup.PLATFORM)
+                .description("Record history: every change kept and restorable").build();
     }
 
     @Override

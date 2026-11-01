@@ -9,6 +9,7 @@ import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.share.model.EruptShareLink;
 import xyz.erupt.upms.EruptUpmsAutoConfiguration;
@@ -53,7 +54,8 @@ public class EruptShareAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name(ERUPT_SHARE).description("Public share links").build();
+        return ModuleInfo.builder().name(ERUPT_SHARE).group(ModuleGroup.PLATFORM)
+                .description("Public links that open a form or a page without an account").build();
     }
 
     @Override
@@ -61,7 +63,7 @@ public class EruptShareAutoConfiguration implements EruptModule {
         List<MetaMenu> menus = new ArrayList<>();
         MetaMenu manager = EruptUpmsAutoConfiguration.managerMenu();
         menus.add(manager);
-        menus.add(MetaMenu.createEruptClassMenu(EruptShareLink.class, manager, 86));
+        menus.add(MetaMenu.createEruptClassMenu(EruptShareLink.class, manager, 64));
         return menus;
     }
 }

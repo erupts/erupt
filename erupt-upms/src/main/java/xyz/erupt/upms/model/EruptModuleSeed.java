@@ -51,4 +51,11 @@ public class EruptModuleSeed extends BaseModel {
     @Column(length = 255)
     private String payload;
 
+    // false once the module center switched the module off; null for a row from before the switch existed
+    private Boolean enabled;
+
+    public boolean isDisabled() {
+        return Boolean.FALSE.equals(enabled);
+    }
+
 }

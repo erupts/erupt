@@ -10,6 +10,7 @@ import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.sso.model.EruptSso;
 import xyz.erupt.sso.model.EruptSsoBind;
@@ -51,7 +52,9 @@ public class EruptSsoAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name(ERUPT_SSO).description("Single sign-on").build();
+        return ModuleInfo.builder().name(ERUPT_SSO).group(ModuleGroup.PLATFORM)
+                .description("Single sign-on with external identity providers")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-sso")).build();
     }
 
     @Override

@@ -4,6 +4,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 
 /**
@@ -19,8 +20,9 @@ public class EruptFileAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-data-file")
-                .description("File data source implement (csv / json / yaml / properties / markdown / xml)").build();
+        return ModuleInfo.builder().name("erupt-data-file").group(ModuleGroup.DATA)
+                .description("Files on disk as a data source: csv, json, yaml, properties, markdown and xml")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-file")).build();
     }
 
 }

@@ -9,6 +9,7 @@ import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.designer.model.DesignerEntity;
 import xyz.erupt.designer.service.EruptDesignerService;
@@ -37,7 +38,9 @@ public class EruptDesignerAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-designer").description("Visual erupt form designer").build();
+        return ModuleInfo.builder().name("erupt-designer").group(ModuleGroup.DEV_TOOLS)
+                .description("Visual form designer: models published without code")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-designer")).build();
     }
 
     @Override
@@ -49,7 +52,7 @@ public class EruptDesignerAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        MetaMenu menu = MetaMenu.createEruptClassMenu(DesignerEntity.class, null, 45);
+        MetaMenu menu = MetaMenu.createEruptClassMenu(DesignerEntity.class, null, 200);
         menu.setIcon("fa fa-pen-ruler");
         menus.add(menu);
         return menus;

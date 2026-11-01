@@ -36,3 +36,4 @@ Active,激活,激活,Active,Actif,アクティブ,활성,Активный,Activo
 Locked,锁定,鎖定,Locked,Verrouillé,ロック中,잠금,Заблокирован,Bloqueado,Gesperrt,Bloqueado,Terkunci,مقفل
 Remark,备注,備註,Remark,Remarque,備考,비고,Примечание,Observación,Bemerkung,Observação,Keterangan,ملاحظة
 Sort,排序,排序,Sort,Tri,並び順,정렬,Сортировка,Orden,Sortierung,Ordenação,Urutan,الترتيب
+Typed decisions the AI makes for a program to branch on,由 AI 做出、供程序分支判断的类型化决策,由 AI 做出、供程式分支判斷的型別化決策,Typed decisions the AI makes for a program to branch on,Décisions typées prises par l'IA pour orienter un programme,プログラムの分岐に使う AI の型付き判断,프로그램 분기에 쓰는 AI의 타입화된 판단,"Типизированные решения ИИ, на которых ветвится программа",Decisiones tipadas de la IA para que un programa ramifique,"Typisierte KI-Entscheidungen, an denen ein Programm verzweigt",Decisões tipadas da IA para um programa ramificar,Keputusan bertipe yang dibuat AI untuk percabangan program,قرارات منمّطة يتخذها الذكاء الاصطناعي ليتفرع عليها البرنامج

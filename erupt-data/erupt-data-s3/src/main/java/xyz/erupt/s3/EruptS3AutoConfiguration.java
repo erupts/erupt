@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.s3.prop.EruptS3Properties;
 
@@ -22,7 +23,9 @@ public class EruptS3AutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-data-s3").description("S3-compatible object storage data source implement").build();
+        return ModuleInfo.builder().name("erupt-data-s3").group(ModuleGroup.DATA)
+                .description("S3-compatible object storage data source")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-s3")).build();
     }
 
 }

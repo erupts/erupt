@@ -10,6 +10,7 @@ import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.notice.model.NoticeAnnouncement;
 import xyz.erupt.notice.model.NoticeLog;
@@ -46,13 +47,15 @@ public class EruptNoticeAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name(ERUPT_NOTICE).build();
+        return ModuleInfo.builder().name(ERUPT_NOTICE).group(ModuleGroup.BUSINESS)
+                .description("Notices and announcements by mail, SMS and in-app message")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-notice")).build();
     }
 
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        MetaMenu notice = MetaMenu.createRootMenu("$notice", "Notice Manager", "fa fa-bell-o", 90);
+        MetaMenu notice = MetaMenu.createRootMenu("$notice", "Notice Manager", "fa fa-bell-o", 60);
         menus.add(notice);
         menus.add(MetaMenu.createEruptClassMenu(NoticeScene.class, notice, 10, MenuTypeEnum.TREE));
         menus.add(MetaMenu.createEruptClassMenu(NoticeLog.class, notice, 20));

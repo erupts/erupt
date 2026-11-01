@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.dingtalk.prop.EruptDingTalkProperties;
 
@@ -22,7 +23,9 @@ public class EruptDingTalkAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-data-dingtalk").description("DingTalk Notable data source implement").build();
+        return ModuleInfo.builder().name("erupt-data-dingtalk").group(ModuleGroup.DATA)
+                .description("DingTalk Notable data source")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-dingtalk")).build();
     }
 
 }

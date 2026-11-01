@@ -42,6 +42,8 @@ import java.util.function.Function;
  *     <li>A menu the module no longer declares is disabled, not deleted, unless another module still
  *     declares it: it leaves the tree and grants nothing (a hidden menu would still grant access).
  *     Declaring it again opens it again.</li>
+ *     <li>A module switched off in the module center has its own menus disabled the same way and is
+ *     skipped on start until it is switched on again.</li>
  *     <li>Instances starting together serialize on the module's row, so nothing is inserted twice.</li>
  * </ul>
  * A menu declared with {@link MetaMenu#after(String)} is placed right after that sibling.
@@ -63,30 +65,79 @@ public class EruptMenuSeeder {
     @Resource
     private EruptModuleStore moduleStore;
 
-    /** Seeds every registered module that declares menus. */
+    /** Seeds every registered module that declares menus, except those switched off in the module center. */
     @Transactional
     public void seedAll() {
-        Map<String, EruptModule> modules = new LinkedHashMap<>();
-        Map<String, List<MetaMenu>> definitions = new LinkedHashMap<>();
-        Map<String, Set<String>> owners = new HashMap<>();
-        EruptModuleInvoke.invoke(module -> {
-            List<MetaMenu> menus = module.initMenus();
-            if (null == menus) return;
-            String name = module.info().getName();
-            List<MetaMenu> expanded = expand(menus);
-            modules.put(name, module);
-            definitions.put(name, expanded);
-            for (MetaMenu menu : expanded) owners.computeIfAbsent(menu.getCode(), it -> new HashSet<>()).add(name);
-        });
+        Map<String, EruptModule> modules = declaring();
+        Map<String, List<MetaMenu>> definitions = definitions(modules);
         Map<String, EruptModuleSeed> known = new HashMap<>();
         for (EruptModuleSeed seed : eruptDao.lambdaQuery(EruptModuleSeed.class).list()) known.put(seed.getModule(), seed);
         definitions.forEach((name, menus) -> {
-            Set<String> shared = new HashSet<>();
-            owners.forEach((code, by) -> {
-                if (by.size() > 1 || !by.contains(name)) shared.add(code);
-            });
-            this.seed(name, menus, shared, false, modules.get(name)::initFun, known.get(name));
+            EruptModuleSeed seed = known.get(name);
+            if (null != seed && seed.isDisabled()) return;
+            this.seed(name, menus, shared(name, definitions), false, modules.get(name)::initFun, seed);
         });
+    }
+
+    /**
+     * Switches a module off: the menus it alone declares are disabled, as if it no longer declared
+     * them, and startup leaves them so until {@link #enable(String)}.
+     */
+    @Transactional
+    public void disable(String module) {
+        Map<String, List<MetaMenu>> definitions = definitions(declaring());
+        EruptModuleSeed seed = moduleStore.lock(module, moduleStore.find(module));
+        Map<String, Snap> snapshot = this.reconcile(List.of(), parse(seed.getSnapshot()), shared(module, definitions));
+        seed.setSnapshot(GSON.toJson(snapshot));
+        seed.setEnabled(false);
+        moduleStore.markSeeded(seed);
+        log.info("Module '{}' switched off, its menus are disabled", module);
+    }
+
+    /** Switches a module back on: its menus are reconciled with the definition again, initFun does not run twice. */
+    @Transactional
+    public void enable(String module) {
+        Map<String, EruptModule> modules = declaring();
+        Map<String, List<MetaMenu>> definitions = definitions(modules);
+        EruptModuleSeed seed = moduleStore.lock(module, moduleStore.find(module));
+        this.seed(module, definitions.get(module), shared(module, definitions), true, () -> {
+        }, seed);
+        seed.setEnabled(true);
+        log.info("Module '{}' switched on", module);
+    }
+
+    /** Whether the module center switched the module off. */
+    public boolean disabled(String module) {
+        EruptModuleSeed seed = moduleStore.find(module);
+        return null != seed && seed.isDisabled();
+    }
+
+    // Every registered module that declares menus, by name, in registration order
+    private static Map<String, EruptModule> declaring() {
+        Map<String, EruptModule> modules = new LinkedHashMap<>();
+        EruptModuleInvoke.invoke(module -> {
+            if (null != module.initMenus()) modules.put(module.info().getName(), module);
+        });
+        return modules;
+    }
+
+    private static Map<String, List<MetaMenu>> definitions(Map<String, EruptModule> modules) {
+        Map<String, List<MetaMenu>> definitions = new LinkedHashMap<>();
+        modules.forEach((name, module) -> definitions.put(name, expand(module.initMenus())));
+        return definitions;
+    }
+
+    // Menu codes the module does not own alone: declared by another module too, or not by it at all
+    private static Set<String> shared(String module, Map<String, List<MetaMenu>> definitions) {
+        Map<String, Set<String>> owners = new HashMap<>();
+        definitions.forEach((name, menus) -> {
+            for (MetaMenu menu : menus) owners.computeIfAbsent(menu.getCode(), it -> new HashSet<>()).add(name);
+        });
+        Set<String> shared = new HashSet<>();
+        owners.forEach((code, by) -> {
+            if (by.size() > 1 || !by.contains(module)) shared.add(code);
+        });
+        return shared;
     }
 
     /**
@@ -154,7 +205,7 @@ public class EruptMenuSeeder {
             EruptMenu row = rows.get(code);
             Snap retired = last.withStatus(MenuStatus.DISABLE.getValue());
             if (null != row && Objects.equals(row.getStatus(), last.status)) {
-                if (!Objects.equals(row.getStatus(), retired.status)) log.info("Menu '{}' is no longer declared by its module and is disabled", code);
+                if (!Objects.equals(row.getStatus(), retired.status)) log.info("Menu '{}' is disabled: its module no longer declares it or was switched off", code);
                 row.setStatus(retired.status);
                 after.put(code, retired);
             } else {

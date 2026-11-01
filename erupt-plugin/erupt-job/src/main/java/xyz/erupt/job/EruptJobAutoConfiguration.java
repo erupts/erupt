@@ -17,6 +17,7 @@ import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.job.config.EruptJobProp;
 import xyz.erupt.job.model.EruptJob;
@@ -88,13 +89,15 @@ public class EruptJobAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-job").description("Scheduled Task Management").build();
+        return ModuleInfo.builder().name("erupt-job").group(ModuleGroup.OPS)
+                .description("Scheduled jobs with their logs and mail")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-job")).build();
     }
 
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$job", "Job Manager", "fa fa-clock-rotate-left", 30));
+        menus.add(MetaMenu.createRootMenu("$job", "Job Manager", "fa fa-clock-rotate-left", 310));
         menus.add(MetaMenu.createEruptClassMenu(EruptJob.class, menus.get(0), 0));
         menus.add(MetaMenu.createEruptClassMenu(EruptJobLog.class, menus.get(0), 10));
         menus.add(MetaMenu.createEruptClassMenu(EruptMail.class, menus.get(0), 20));
