@@ -17,7 +17,7 @@
 
     <properties>
         <!-- the oldest line served, which Quarkus 3 ships; only API Vert.x 5 keeps is used -->
-        <vertx.version>4.5.34</vertx.version>
+        <vertx.version>4.5.35</vertx.version>
     </properties>
 
     <dependencyManagement>

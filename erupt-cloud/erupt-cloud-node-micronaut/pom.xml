@@ -16,9 +16,9 @@
     </parent>
 
     <properties>
-        <micronaut.platform.version>4.10.20</micronaut.platform.version>
+        <micronaut.platform.version>4.10.22</micronaut.platform.version>
         <!-- the core of that platform, for the annotation processor -->
-        <micronaut.core.version>4.10.30</micronaut.core.version>
+        <micronaut.core.version>4.10.35</micronaut.core.version>
     </properties>
 
     <dependencyManagement>

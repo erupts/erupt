@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
-            <version>3.53.4.0</version>
+            <version>3.54.1.0</version>
         </dependency>
         <dependency>
             <groupId>net.bytebuddy</groupId>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>com.palantir.javapoet</groupId>
             <artifactId>javapoet</artifactId>
-            <version>0.20.0</version>
+            <version>0.22.0</version>
         </dependency>
     </dependencies>
 </project>

@@ -50,7 +50,7 @@
         <spring.boot.version>3.5.16</spring.boot.version>
         <!-- Versions converged here because several third-party jars pull different releases:
              nashorn (asm 7) vs json-smart (asm 9), kotlin-stdlib (annotations 13) vs ours, oshi vs pty4j (jna) -->
-        <asm.version>9.10.1</asm.version>
+        <asm.version>9.11.1</asm.version>
         <jna.version>5.19.1</jna.version>
         <jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
         <!-- calcite 1.41 (erupt-cube-sql) needs guava 33.4.8-jre but shardingsphere pins 30.0-jre; qdrant pulls the
