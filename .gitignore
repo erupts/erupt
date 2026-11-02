@@ -42,3 +42,4 @@ promo/**
 .xcodemap/
 *.db
 .claude/settings.local.json
+.flattened-pom.xml
