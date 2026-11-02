@@ -33,7 +33,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -324,6 +326,13 @@ public class EruptModelTest extends EruptApplicationTests {
     // ─── Reflection Helpers ───────────────────────────────────────────────────
 
     private BaseModel buildEntity(Class<?> clazz) throws Exception {
+        return buildEntity(clazz, new HashSet<>());
+    }
+
+    // chain holds the models being built above this one; a reference back to one of them (a model
+    // referring to itself) is left empty, or building it would never end
+    private BaseModel buildEntity(Class<?> clazz, Set<Class<?>> chain) throws Exception {
+        chain.add(clazz);
         BaseModel entity = (BaseModel) clazz.getDeclaredConstructor().newInstance();
         for (Field field : clazz.getDeclaredFields()) {
             if (Modifier.isStatic(field.getModifiers())) continue;
@@ -331,18 +340,22 @@ public class EruptModelTest extends EruptApplicationTests {
             field.setAccessible(true);
 
             if (field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(OneToOne.class)) {
-                BaseModel ref = buildEntity(field.getType());
+                if (chain.contains(field.getType())) continue;
+                BaseModel ref = buildEntity(field.getType(), chain);
                 eruptDao.persist(ref);
                 field.set(entity, ref);
             } else if (field.isAnnotationPresent(ManyToMany.class) || field.isAnnotationPresent(OneToMany.class)) {
                 Class<?> refType = resolveCollectionGeneric(field);
-                BaseModel ref = buildEntity(refType);
+                if (chain.contains(refType)) continue;
+                BaseModel ref = buildEntity(refType, chain);
                 eruptDao.persist(ref);
-                field.set(entity, new ArrayList<>(List.of(ref)));
+                field.set(entity, Set.class.isAssignableFrom(field.getType())
+                        ? new HashSet<>(List.of(ref)) : new ArrayList<>(List.of(ref)));
             } else {
                 setScalarValue(entity, field);
             }
         }
+        chain.remove(clazz);
         return entity;
     }
 
