@@ -8,6 +8,7 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.view.EruptModel;
 
 import java.lang.reflect.Field;
 
@@ -23,7 +24,11 @@ public class EruptGsonExclusionStrategies implements ExclusionStrategy {
         MetaErupt metaErupt = MetaContext.getErupt();
         if (null == metaErupt || null == metaErupt.getName()) return false;
         if (null == f.getAnnotation(EruptSmartSkipSerialize.class)) return false;
-        Class<?> currEruptClass = EruptCoreService.getErupt(metaErupt.getName()).getClazz();
+        EruptModel eruptModel = EruptCoreService.getErupt(metaErupt.getName());
+        // No local class to compare against (a remote erupt, or a name no model answers to), so
+        // there is nothing to skip on its behalf
+        if (null == eruptModel) return false;
+        Class<?> currEruptClass = eruptModel.getClazz();
         if (f.getDeclaringClass().isAssignableFrom(currEruptClass)) {
             Field ff = ReflectUtil.findClassField(currEruptClass, f.getName());
             if (null == ff) return false;

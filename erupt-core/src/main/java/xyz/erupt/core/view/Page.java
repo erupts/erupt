@@ -22,21 +22,29 @@ public class Page {
 
     public static final int PAGE_MAX_DATA = 1000000;
 
+    /** 1-based page number */
     private Integer pageIndex;
 
+    /** Rows per page */
     private Integer pageSize;
 
+    /** Sort fields in priority order */
     private List<Sort> sort;
 
+    /** Number of pages, response only */
     private Integer totalPage;
 
+    /** Number of rows matched, response only */
     private Long total;
 
     @Comment("Map → when the value is a complex object, special handling is required. For example: {region:{id:1,name:'xxxx'}} must be converted to region_name for the frontend to render correctly")
+    /** Rows keyed by field name, response only */
     private Collection<Map<String, Object>> list;
 
+    /** Banner to show above the table, response only */
     private Alert alert;
 
+    /** Extra HTML rendered under the table, response only */
     private String extraContent;
 
     public void setTotal(Long total) {

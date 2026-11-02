@@ -13,10 +13,10 @@ import lombok.Setter;
 @Setter
 public class EruptMfaEnrollVo {
 
-    //otpauth:// provisioning URI, rendered as a QR code by the client
+    /** otpauth:// provisioning URI, rendered as a QR code by the client */
     private String uri;
 
-    //the same secret in groups of four, for users who cannot scan
+    /** The same secret in groups of four, for users who cannot scan */
     private String secret;
 
 }

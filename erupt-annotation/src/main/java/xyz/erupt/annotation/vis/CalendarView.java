@@ -20,4 +20,11 @@ public @interface CalendarView {
     @Language(value = "hql", prefix = "select ", suffix = " from")
     String colorField() default "";
 
+    @Comment("Initial view; the user can switch between month, week and year")
+    Mode mode() default Mode.MONTH;
+
+    enum Mode {
+        MONTH, WEEK, YEAR
+    }
+
 }

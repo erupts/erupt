@@ -20,6 +20,7 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptMutualConst;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.Erupts;
@@ -102,6 +103,15 @@ public class ReportService {
     }
 
     private final EruptCache<List<Map<String, Object>>> eruptCache = new EruptCacheLRU<>(500);
+
+    // The sort column is spliced into "order by" as an identifier, so the request value is only a
+    // key: what reaches the SQL is the name of a column the report's author marked sortable
+    public String sortColumn(Bi bi, String column) {
+        return Optional.ofNullable(bi.getBiColumns()).orElse(Set.of()).stream()
+                .filter(it -> Boolean.TRUE.equals(it.getSortable()) && it.getName().equals(column))
+                .map(BiColumn::getName).findFirst()
+                .orElseThrow(() -> new EruptWebApiRuntimeException("Illegal sort column: " + column));
+    }
 
     public BiData queryBiData(Bi bi, int pageIndex, int pageSize, String sort,
                               Map<String, Object> query, boolean export) {

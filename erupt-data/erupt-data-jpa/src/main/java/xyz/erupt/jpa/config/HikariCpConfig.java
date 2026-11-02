@@ -3,9 +3,7 @@ package xyz.erupt.jpa.config;
 import com.zaxxer.hikari.HikariConfig;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 
-import java.lang.reflect.Field;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -77,15 +75,12 @@ public class HikariCpConfig {
 
     private Properties healthCheckProperties;
 
-    @SneakyThrows
     public HikariConfig toHikariConfig() {
         HikariCpConfig g = this;
         HikariConfig config = new HikariConfig();
         String tempSchema = this.schema == null ? g.getSchema() : this.schema;
         if (tempSchema != null) {
-            Field schemaField = HikariConfig.class.getDeclaredField("schema");
-            schemaField.setAccessible(true);
-            schemaField.set(config, tempSchema);
+            config.setSchema(tempSchema);
         }
         String tempCatalog = this.catalog == null ? g.getCatalog() : this.catalog;
         if (tempCatalog != null) {

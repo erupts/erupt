@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
+import xyz.erupt.comment.model.EruptRecordComment;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
@@ -32,9 +33,8 @@ public class CommentEruptChoice implements ChoiceFetchHandler<Void> {
 
     @Override
     public List<VLModel> fetch(String[] params) {
-        List<String> erupts = eruptDao.getEntityManager()
-                .createQuery("select distinct c.erupt from EruptRecordComment c order by c.erupt", String.class)
-                .getResultList();
+        List<String> erupts = eruptDao.lambdaQuery(EruptRecordComment.class).distinct()
+                .orderBy(EruptRecordComment::getErupt).listSelect(EruptRecordComment::getErupt);
         List<VLModel> list = new ArrayList<>(erupts.size());
         for (String erupt : erupts) {
             EruptModel model = EruptCoreService.getErupt(erupt);

@@ -12,14 +12,19 @@ import java.io.Serializable;
 @Setter
 public class R<T> implements Serializable {
 
+    /** Payload */
     private T data;
 
+    /** Message to show the user */
     private String message;
 
+    /** Whether the call succeeded */
     private boolean success;
 
+    /** SUCCESS, ERROR, INFO or WARNING */
     private Status status;
 
+    /** How the frontend shows the message: DIALOG, MESSAGE, NOTIFY or NONE */
     private PromptWay promptWay = PromptWay.MESSAGE;
 
     public static <T> R<T> ok(T data) {

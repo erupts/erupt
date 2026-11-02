@@ -2,10 +2,13 @@ package xyz.erupt.jpa.dao;
 
 import jakarta.annotation.Resource;
 import jakarta.persistence.Query;
+import jakarta.persistence.metamodel.Attribute;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.query.Condition;
+import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.constant.EruptConst;
+import xyz.erupt.core.query.Aggregate;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -14,8 +17,11 @@ import xyz.erupt.core.view.Page;
 import xyz.erupt.jpa.service.EntityManagerService;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -56,48 +62,7 @@ public class EruptJpaDao {
             Query query = entityManager.createQuery(hql);
             @SuppressWarnings("SqlSourceToSinkFlow")
             Query countQuery = entityManager.createQuery(countHql);
-            Map<String, EruptFieldModel> eruptFieldMap = eruptModel.getEruptFieldMap();
-            if (null != eruptQuery.getConditions()) {
-                for (Condition condition : eruptQuery.getConditions()) {
-                    EruptFieldModel eruptFieldModel = eruptFieldMap.get(condition.getKey());
-                    condition.setKey(condition.getKey().replace(EruptConst.DOT, "_"));
-                    switch (condition.getExpression()) {
-                        case EQ:
-                        case NEQ:
-                        case GT:
-                        case GTE:
-                        case LT:
-                        case LTE:
-                            countQuery.setParameter(condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, condition.getValue()));
-                            query.setParameter(condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, condition.getValue()));
-                            break;
-                        case LIKE:
-                        case NOT_LIKE:
-                            countQuery.setParameter(condition.getKey(), EruptJpaUtils.PERCENT + condition.getValue() + EruptJpaUtils.PERCENT);
-                            query.setParameter(condition.getKey(), EruptJpaUtils.PERCENT + condition.getValue() + EruptJpaUtils.PERCENT);
-                            break;
-                        case RANGE:
-                            List<?> list = (List<?>) condition.getValue();
-                            countQuery.setParameter(EruptJpaUtils.L_VAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(0)));
-                            countQuery.setParameter(EruptJpaUtils.R_VAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
-                            query.setParameter(EruptJpaUtils.L_VAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(0)));
-                            query.setParameter(EruptJpaUtils.R_VAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
-                            break;
-                        case IN:
-                        case NOT_IN:
-                            List<Object> listIn = new ArrayList<>();
-                            for (Object o : (List<?>) condition.getValue()) {
-                                listIn.add(EruptUtil.convertObjectType(eruptFieldModel, o));
-                            }
-                            countQuery.setParameter(condition.getKey(), listIn);
-                            query.setParameter(condition.getKey(), listIn);
-                            break;
-                        case NULL:
-                        case NOT_NULL:
-                            break;
-                    }
-                }
-            }
+            bindConditions(eruptModel, eruptQuery, query, countQuery);
             page.setTotal((Long) countQuery.getSingleResult());
             if (page.getTotal() > 0) {
                 page.setList(query.setMaxResults(page.getPageSize()).setFirstResult((page.getPageIndex() - 1) * page.getPageSize()).getResultList());
@@ -106,6 +71,116 @@ public class EruptJpaDao {
             }
             return page;
         });
+    }
+
+    // The count half of queryEruptList alone: same joins and where clause, no row fetch
+    public long countErupt(EruptModel eruptModel, EruptQuery eruptQuery) {
+        String countHql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "count(*)", eruptQuery, true);
+        return entityManagerService.getEntityManager(eruptModel.getClazz(), entityManager -> {
+            @SuppressWarnings("SqlSourceToSinkFlow")
+            Query countQuery = entityManager.createQuery(countHql);
+            bindConditions(eruptModel, eruptQuery, countQuery);
+            return (Long) countQuery.getSingleResult();
+        });
+    }
+
+    /**
+     * Column totals over every row the query matches, in one SQL round trip:
+     * {@code select new map(sum(E.amount) as a0, count(distinct E.owner) as a1, ...)} with the
+     * same joins and where clause as the list query.
+     */
+    public Map<String, Object> queryEruptAggregate(EruptModel eruptModel, EruptQuery eruptQuery, List<Aggregate> aggregates) {
+        return entityManagerService.getEntityManager(eruptModel.getClazz(), entityManager -> {
+            // a @Transient field (filled by a DataProxy) has no column: leave it out and the
+            // service computes it over the fetched rows instead
+            Set<String> persistent = entityManager.getMetamodel().entity(eruptModel.getClazz()).getAttributes()
+                    .stream().map(Attribute::getName).collect(Collectors.toSet());
+            List<Aggregate> mapped = aggregates.stream()
+                    .filter(a -> persistent.contains(a.getPath().split("\\" + EruptConst.DOT)[0])).collect(Collectors.toList());
+            Map<String, Object> result = new LinkedHashMap<>();
+            if (mapped.isEmpty()) return result;
+            List<String> cols = new ArrayList<>();
+            for (int i = 0; i < mapped.size(); i++) {
+                Aggregate aggregate = mapped.get(i);
+                String path = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), EruptJpaUtils.legalPath(aggregate.getPath()));
+                cols.add(aggregateHql(aggregate.getStatistic(), path) + EruptJpaUtils.AS + "a" + i);
+            }
+            String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "new map(" + String.join(", ", cols) + ")", eruptQuery, true);
+            @SuppressWarnings("SqlSourceToSinkFlow")
+            Query query = entityManager.createQuery(hql);
+            bindConditions(eruptModel, eruptQuery, query);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> row = (Map<String, Object>) query.getSingleResult();
+            for (int i = 0; i < mapped.size(); i++) {
+                result.put(mapped.get(i).getKey(), row.get("a" + i));
+            }
+            return result;
+        });
+    }
+
+    private static String aggregateHql(View.Statistic statistic, String path) {
+        switch (statistic) {
+            case COUNT:
+                return "count(" + path + ")";
+            case DISTINCT_COUNT:
+                return "count(distinct " + path + ")";
+            case SUM:
+                return "sum(" + path + ")";
+            case AVG:
+                return "avg(" + path + ")";
+            case MAX:
+                return "max(" + path + ")";
+            case MIN:
+                return "min(" + path + ")";
+            default:
+                throw new IllegalArgumentException("no aggregate for " + statistic);
+        }
+    }
+
+    /**
+     * Binds the typed search conditions of a query onto every JPA query built from the same
+     * hql; the parameter names are the condition keys with dots replaced, as the hql
+     * generator writes them.
+     */
+    private static void bindConditions(EruptModel eruptModel, EruptQuery eruptQuery, Query... queries) {
+        if (null == eruptQuery.getConditions()) return;
+        Map<String, EruptFieldModel> eruptFieldMap = eruptModel.getEruptFieldMap();
+        for (Condition condition : eruptQuery.getConditions()) {
+            EruptFieldModel eruptFieldModel = eruptFieldMap.get(condition.getKey());
+            condition.setKey(condition.getKey().replace(EruptConst.DOT, "_"));
+            for (Query query : queries) {
+                switch (condition.getExpression()) {
+                    case EQ:
+                    case NEQ:
+                    case GT:
+                    case GTE:
+                    case LT:
+                    case LTE:
+                        query.setParameter(condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, condition.getValue()));
+                        break;
+                    case LIKE:
+                    case NOT_LIKE:
+                        query.setParameter(condition.getKey(), EruptJpaUtils.PERCENT + condition.getValue() + EruptJpaUtils.PERCENT);
+                        break;
+                    case RANGE:
+                        List<?> list = (List<?>) condition.getValue();
+                        query.setParameter(EruptJpaUtils.L_VAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(0)));
+                        query.setParameter(EruptJpaUtils.R_VAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
+                        break;
+                    case IN:
+                    case NOT_IN:
+                        List<Object> listIn = new ArrayList<>();
+                        for (Object o : (List<?>) condition.getValue()) {
+                            listIn.add(EruptUtil.convertObjectType(eruptFieldModel, o));
+                        }
+                        query.setParameter(condition.getKey(), listIn);
+                        break;
+                    case NULL:
+                    case NOT_NULL:
+                        break;
+                }
+            }
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package xyz.erupt.core.controller;
 
 
+import xyz.erupt.core.scope.EruptScopeService;
 import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,10 @@ import xyz.erupt.core.view.EruptModel;
 import java.util.*;
 
 /**
- * Erupt page structure build information
+ * Page build
+ *
+ * @order 5
+ * @apiNote Page structure of an @Erupt model: fields, edit/view types, operations and the caller's permissions.
  *
  * @author YuePeng
  * date 2018-09-28.
@@ -29,10 +33,23 @@ import java.util.*;
 @RequestMapping(EruptRestPath.ERUPT_BUILD)
 public class EruptBuildController {
 
+    /**
+     * Build model of an erupt.
+     *
+     * @apiNote Everything the frontend needs to render the table, search bar, form and buttons of one @Erupt class: field metadata, default search conditions, the current user's PowerObject, plus the build models of nested erupts (tab, multi-form, combine) and of row operations that open another erupt as a form.
+     * @param eruptName Simple class name of the @Erupt model
+     * @return build model
+     */
     @GetMapping("/{erupt}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @SneakyThrows
     public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName) {
+        return this.build(eruptName, new HashSet<>());
+    }
+
+    // building: the erupts being built above this one. A model nested in itself, directly (a self
+    // @ManyToMany such as GanttView.dependencyField) or through others, comes back without its own tabs
+    private EruptBuildModel build(String eruptName, Set<String> building) {
         EruptModel eruptView = EruptCoreService.getEruptView(eruptName);
         {
             //default search conditions
@@ -43,6 +60,13 @@ public class EruptBuildController {
         EruptBuildModel eruptBuildModel = new EruptBuildModel();
         eruptBuildModel.setPower(PowerInvoke.getPowerObject(eruptView));
         eruptBuildModel.setEruptModel(eruptView);
+        Optional.ofNullable(EruptScopeService.scopeOf(eruptView)).ifPresent(it -> {
+            EruptBuildModel.Scope scope = new EruptBuildModel.Scope();
+            scope.setName(it.value().getSimpleName());
+            scope.setBind(EruptScopeService.boundFields(eruptView));
+            eruptBuildModel.setScope(scope);
+        });
+        if (!building.add(eruptName)) return eruptBuildModel;
         eruptView.getEruptFieldModels().forEach(fieldModel -> {
             switch (fieldModel.getEruptField().edit().type()) {
                 case TAB_TREE:
@@ -55,7 +79,7 @@ public class EruptBuildController {
                 case MULTI_FORM:
                 case TAB_TABLE_REFER:
                     eruptBuildModel.setTabErupts(Optional.ofNullable(eruptBuildModel.getTabErupts()).orElse(new LinkedHashMap<>()));
-                    eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), getEruptBuild(fieldModel.getFieldReturnName()));
+                    eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), this.build(fieldModel.getFieldReturnName(), building));
                     break;
                 case COMBINE:
                     eruptBuildModel.setCombineErupts(Optional.ofNullable(eruptBuildModel.getCombineErupts()).orElse(new LinkedHashMap<>()));
@@ -68,11 +92,20 @@ public class EruptBuildController {
             eruptBuildModel.setOperationErupts(Optional.ofNullable(eruptBuildModel.getOperationErupts()).orElse(new LinkedHashMap<>()));
             eruptBuildModel.getOperationErupts().put(operation.code(), EruptCoreService.getEruptView(operation.eruptClass().getSimpleName()));
         });
+        building.remove(eruptName);
         return eruptBuildModel;
     }
 
+    /**
+     * Build model of the erupt referenced by a field.
+     *
+     * @apiNote Resolves the target class of a reference, tab or link-tree field and returns its build model, so a nested erupt can be rendered without knowing its class name up front.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param field Field name on the erupt; its declared type is the erupt to build
+     * @return build model of the referenced erupt
+     */
     @GetMapping("/{erupt}/{field}")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.FIELD_BUILD)
     public EruptBuildModel getEruptBuildByField(@PathVariable("erupt") String eruptName, @PathVariable("field") String field) {
         EruptModel eruptModel = EruptCoreService.getEruptView(eruptName);
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
@@ -20,6 +21,7 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.interceptor.SessionScopeGuard;
 import xyz.erupt.security.service.OperationService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
@@ -28,6 +30,8 @@ import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,6 +58,21 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
     @Resource
     private EruptSessionService sessionService;
 
+    // Modules that mint narrowed sessions register a guard; none is the common case
+    @Autowired(required = false)
+    private List<SessionScopeGuard> scopeGuards = Collections.emptyList();
+
+    /**
+     * Whether every registered {@link SessionScopeGuard} lets this request through. Public so the
+     * erupt-cloud-server interceptor, which verifies tokens of its own, applies the same scopes.
+     */
+    public boolean scopeAllows(String token, HttpServletRequest request, EruptRouter eruptRouter) {
+        for (SessionScopeGuard guard : scopeGuards) {
+            if (!guard.allow(token, request, eruptRouter)) return false;
+        }
+        return true;
+    }
+
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws IOException {
         EruptRouter eruptRouter = null;
@@ -71,10 +90,9 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         } else if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.PARAM) {
             token = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
             eruptName = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
-            parentEruptName = request.getHeader(EruptReqHeaderConst.URL_ERUPT_PARENT_PARAM_KEY);
+            parentEruptName = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARENT_PARAM_KEY);
         }
         if (eruptRouter.verifyType().equals(EruptRouter.VerifyType.ERUPT)) {
-            MetaContext.register(new MetaErupt(eruptName, eruptName));
             // WithRemote: an erupt-cloud node erupt ("nodeName.eruptName") has no local class, and a
             // server-owned API (@EruptRouter(cloudProxy = false)) answers for it here instead of being
             // forwarded to the node, so the placeholder model is what the checks below run against.
@@ -84,6 +102,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
                 return false;
             }
+            MetaContext.register(new MetaErupt(eruptName, eruptName));
             if (!erupt.getErupt().authVerify()) return true;
         }
         if (null == token || null == sessionService.get(SessionKey.TOKEN_OLINE + token)) {
@@ -94,6 +113,11 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
         MetaContext.registerToken(token);
         MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername(), metaUserinfo.getTenantId()));
+        if (!this.scopeAllows(token, request, eruptRouter)) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.sendError(HttpStatus.FORBIDDEN.value());
+            return false;
+        }
         //Permission verification
         String authStr = request.getServletPath().split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex()];
         switch (eruptRouter.verifyType()) {
@@ -116,8 +140,13 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                 if (StringUtils.isNotBlank(parentEruptName)) {
                     // The client claims this request serves a sub-form of parentEruptName; verify the
                     // nesting relation against annotation metadata, then authorize by the parent's menu.
-                    EruptModel eruptParentModel = EruptCoreService.getErupt(parentEruptName);
-                    if (null == eruptParentModel || !EruptCoreService.isEruptNested(eruptParentModel, eruptModel.getEruptName())) {
+                    EruptModel eruptParentModel = EruptCoreService.getEruptWithRemote(parentEruptName);
+                    // a node erupt's nesting is known to its node only: the cloud server has already held the
+                    // child to its parent's node, so the parent's menu is what is left to check
+                    boolean nested = null != eruptParentModel && (eruptModel.isRemote()
+                            ? eruptParentModel.isRemote() && eruptParentModel.getRemoteNode().equals(eruptModel.getRemoteNode())
+                            : EruptCoreService.isEruptNested(eruptParentModel, eruptModel.getEruptName()));
+                    if (!nested) {
                         response.setStatus(HttpStatus.NOT_FOUND.value());
                         return false;
                     }

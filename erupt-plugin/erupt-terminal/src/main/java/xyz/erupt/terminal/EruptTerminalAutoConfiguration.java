@@ -12,6 +12,7 @@ import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 
 import java.util.ArrayList;
@@ -41,14 +42,16 @@ public class EruptTerminalAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-terminal").description("Erupt server terminal").build();
+        return ModuleInfo.builder().name("erupt-terminal").group(ModuleGroup.OPS)
+                .description("Shell of the server in the browser")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-terminal")).build();
     }
 
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
         MetaMenu metaMenu = MetaMenu.createSimpleMenu("terminal", "Terminal",
-                TERMINAL_KEY, null, 55, MenuTypeEnum.ROUTER.getCode());
+                TERMINAL_KEY, null, 320, MenuTypeEnum.ROUTER.getCode());
         metaMenu.setIcon("fa fa-terminal");
         menus.add(metaMenu);
         return menus;

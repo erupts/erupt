@@ -25,7 +25,6 @@ public @interface ReferenceTreeType {
     @Language(value = "hql", prefix = "select ", suffix = " from")
     String pid() default "";
 
-    @Transient
     @Comment("Identifies what characteristic of pid marks a root node; must be used together with filter")
     Expr rootPid() default @Expr;
 
@@ -40,4 +39,7 @@ public @interface ReferenceTreeType {
 
     @Comment("Number of expanded levels")
     int expandLevel() default 999;
+
+    @Comment("Only leaf nodes can be selected")
+    boolean leafOnly() default false;
 }

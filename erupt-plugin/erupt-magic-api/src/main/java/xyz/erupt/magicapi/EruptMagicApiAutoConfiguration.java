@@ -8,6 +8,7 @@ import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.magicapi.action.MagicApiTpl;
 import xyz.erupt.tpl.service.EruptTplService;
@@ -39,7 +40,9 @@ public class EruptMagicApiAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-magic-api").description("Online IDE").build();
+        return ModuleInfo.builder().name("erupt-magic-api").group(ModuleGroup.DEV_TOOLS)
+                .description("Online IDE for scripted APIs")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-magic-api")).build();
     }
 
     @Override
@@ -51,7 +54,7 @@ public class EruptMagicApiAutoConfiguration implements EruptModule {
         }
         AtomicInteger sort = new AtomicInteger();
         List<MetaMenu> metaMenus = new ArrayList<>();
-        MetaMenu metaMenu = MetaMenu.createSimpleMenu(menuKey, "Online IDE", MagicApiTpl.MAGIC_API_PERMISSION, null, 50, EruptTplService.TPL);
+        MetaMenu metaMenu = MetaMenu.createSimpleMenu(menuKey, "Online IDE", MagicApiTpl.MAGIC_API_PERMISSION, null, 220, EruptTplService.TPL);
         metaMenu.setIcon("fa fa-bolt");
         metaMenus.add(metaMenu);
         metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + FUNCTION.toLowerCase(), "Function", MAGIC_API_MENU_PREFIX + FUNCTION.toUpperCase(), metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));

@@ -4,13 +4,12 @@ import com.google.gson.reflect.TypeToken;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import org.quartz.SchedulerException;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
-import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.toolkit.notify.DataAction;
 import xyz.erupt.toolkit.notify.NotifyData;
+import xyz.erupt.toolkit.notify.RedisNotifier;
 
 import java.text.ParseException;
 
@@ -20,33 +19,28 @@ public class JobMessageListener {
     public static final String JOB_TOPIC = "erupt-job:data-proxy:notify";
 
     @Resource
-    private RedisConnectionFactory redisConnectionFactory;
-
-    @Resource
-    private EruptProp eruptProp;
+    private RedisNotifier redisNotifier;
 
     @Resource
     private EruptJobService eruptJobService;
 
     @PostConstruct
     public void post() {
-        if (eruptProp.isRedisSession()) {
-            redisConnectionFactory.getConnection().subscribe((message, pattern) -> {
-                NotifyData<EruptJob> notifyData = GsonFactory.getGson().fromJson(message.toString(), new TypeToken<NotifyData<EruptJob>>() {
-                }.getType());
-                try {
-                    if (DataAction.ADD.equals(notifyData.getAction())) {
-                        eruptJobService.addJob(notifyData.getData());
-                    } else if (DataAction.UPDATE.equals(notifyData.getAction())) {
-                        eruptJobService.modifyJob(notifyData.getData());
-                    } else if (DataAction.DELETE.equals(notifyData.getAction())) {
-                        eruptJobService.deleteJob(notifyData.getData());
-                    }
-                } catch (SchedulerException | ParseException e) {
-                    throw new RuntimeException(e);
+        redisNotifier.subscribe(JOB_TOPIC, message -> {
+            NotifyData<EruptJob> notifyData = GsonFactory.getGson().fromJson(message, new TypeToken<NotifyData<EruptJob>>() {
+            }.getType());
+            try {
+                if (DataAction.ADD.equals(notifyData.getAction())) {
+                    eruptJobService.addJob(notifyData.getData());
+                } else if (DataAction.UPDATE.equals(notifyData.getAction())) {
+                    eruptJobService.modifyJob(notifyData.getData());
+                } else if (DataAction.DELETE.equals(notifyData.getAction())) {
+                    eruptJobService.deleteJob(notifyData.getData());
                 }
-            }, JOB_TOPIC.getBytes());
-        }
+            } catch (SchedulerException | ParseException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 }

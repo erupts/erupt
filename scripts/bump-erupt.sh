@@ -37,6 +37,7 @@ REPOS=(
     erupt
     erupt-cube
     erupt-flow
+    erupt-k8s-dashboard
     erupt-tenant
     erupt-demo
 )

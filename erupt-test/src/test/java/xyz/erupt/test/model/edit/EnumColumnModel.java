@@ -37,6 +37,10 @@ public class EnumColumnModel extends BaseModel {
     @EruptField(views = @View(title = "Declared"), edit = @Edit(title = "Declared"))
     private Kind declared;
 
+    //no @Enumerated: an ordinal is left to plain JPA, the integrator only warns
+    @EruptField(views = @View(title = "Ordinal"), edit = @Edit(title = "Ordinal"))
+    private Kind ordinal;
+
     public enum Kind {
         A, B
     }

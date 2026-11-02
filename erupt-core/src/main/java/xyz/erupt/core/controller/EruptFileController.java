@@ -25,6 +25,7 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptFileService;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 
@@ -43,6 +44,11 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
+ * Files
+ *
+ * @order 11
+ * @apiNote Attachment upload and download.
+ *
  * @author YuePeng
  * date 10/15/18.
  */
@@ -58,16 +64,30 @@ public class EruptFileController {
 
     private static final String FS_SEP = "/";
 
+    /**
+     * Upload one file for an ATTACHMENT or HTML_EDITOR field.
+     *
+     * @apiNote Multipart form field "file". Extension, size and image dimensions are checked against @AttachmentType; the stored path is returned and is what the record field should hold.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param fieldName Field name with edit type ATTACHMENT or HTML_EDITOR
+     * @param file File to store
+     * @return stored path
+     */
     @SneakyThrows
     @PostMapping("/upload/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT}, resolve = EruptRouter.Resolve.UPLOAD)
     public R<String> upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
         // Generating storage paths
         if (null == file.getOriginalFilename()) {
             return R.errorDialog(I18nTranslate.$translate("filename is empty"));
         }
-        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
+        // an erupt-cloud node erupt is uploaded here too, by the rules of its node's build: the download serves it from here
+        EruptModel eruptModel = EruptCoreService.getEruptWithRemoteModel(eruptName);
+        EruptFieldModel fieldModel = null == eruptModel ? null : eruptModel.getEruptFieldMap().get(fieldName);
+        if (null == fieldModel) {
+            throw new EruptWebApiRuntimeException("field not found: " + fieldName);
+        }
+        Edit edit = fieldModel.getEruptField().edit();
         String path = eruptFileService.createPath(file).replace(edit.attachmentType().fileSeparator(), "");
         switch (edit.type()) {
             case ATTACHMENT:
@@ -123,8 +143,17 @@ public class EruptFileController {
     }
 
 
+    /**
+     * Upload several files for one field.
+     *
+     * @apiNote Same rules as the single upload, applied to every part named "file".
+     * @param eruptName Simple class name of the @Erupt model
+     * @param fieldName Field name with edit type ATTACHMENT
+     * @param files Files to store
+     * @return stored paths in request order
+     */
     @PostMapping("/uploads/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT}, resolve = EruptRouter.Resolve.UPLOAD)
     public R<List<String>> uploads(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile[] files) {
         List<String> paths = new ArrayList<>();
         for (MultipartFile file : files) {
@@ -135,8 +164,13 @@ public class EruptFileController {
     }
 
 
-    // Generic editor upload shared by all scenarios without an erupt field context
-    // (form designer callout, cube report, print template, etc.)
+    /**
+     * Image upload for a rich text editor without a bound field.
+     *
+     * @apiNote Multipart form field "upload"; the token travels in the _token query parameter because editors cannot set headers. Response shape follows the CKEditor upload adapter.
+     * @param file Image to store
+     * @return url, uploaded and state
+     */
     @PostMapping("/upload-editor")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public Map<String, Object> uploadEditor(@RequestParam("upload") MultipartFile file) {
@@ -149,8 +183,17 @@ public class EruptFileController {
         return map;
     }
 
+    /**
+     * Image upload for an HTML_EDITOR field.
+     *
+     * @apiNote Multipart form field "upload"; token in the _token query parameter. The url is prefixed with the AttachmentProxy file domain when one is registered.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param fieldName Field name with edit type HTML_EDITOR
+     * @param file Image to store
+     * @return url, uploaded and state
+     */
     @PostMapping("/upload-html-editor/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT}, resolve = EruptRouter.Resolve.UPLOAD)
     public Map<String, Object> uploadHtmlEditorImage(@PathVariable("erupt") String eruptName,
                                                      @PathVariable("field") String fieldName,
                                                      @RequestParam("upload") MultipartFile file) throws ClassNotFoundException {
@@ -175,8 +218,17 @@ public class EruptFileController {
     }
 
 
+    /**
+     * UEditor endpoint: configuration and image upload.
+     *
+     * @apiNote Without a file it returns the UEditor config (optionally wrapped in the JSONP callback); with a multipart "file" part it behaves like upload-html-editor and answers in the UEditor response format. Token in the _token query parameter.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param fieldName Field name with edit type HTML_EDITOR
+     * @param callback JSONP callback name for the configuration request
+     * @param file Image to store
+     */
     @RequestMapping("/upload-ueditor/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT, power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT}, resolve = EruptRouter.Resolve.UPLOAD)
     public void uploadUEditorImage(@PathVariable("erupt") String eruptName,
                                    @PathVariable("field") String fieldName,
                                    @RequestParam(value = "callback", required = false) String callback,
@@ -200,8 +252,14 @@ public class EruptFileController {
         }
     }
 
-    private static final String DOWNLOAD_PATH = "/download-attachment";
+    public static final String DOWNLOAD_PATH = "/download-attachment";
 
+    /**
+     * Download an uploaded file.
+     *
+     * @apiNote The part of the path after download-attachment is the stored path returned by upload, resolved under the configured upload directory. No session is needed.
+     * @download
+     */
     @GetMapping(value = DOWNLOAD_PATH + "/**", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public void downloadAttachment(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = request.getServletPath().replace(EruptRestPath.ERUPT_FILE + DOWNLOAD_PATH, "");

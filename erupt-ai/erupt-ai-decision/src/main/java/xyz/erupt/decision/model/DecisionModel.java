@@ -36,7 +36,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
         name = "Decision Model", dataProxy = DecisionModelDataProxy.class,
         orderBy = "sort",
         dragSort = @DragSort(field = "sort"),
-        rowOperation = @RowOperation(title = "Default Decision Model", icon = "fa fa-wand-magic-sparkles",
+        rowOperation = @RowOperation(code = "setDefault", title = "Default Decision Model", icon = "fa fa-wand-magic-sparkles",
                 ifExpr = "item.defaultModel !== true",
                 mode = RowOperation.Mode.SINGLE, operationHandler = DecisionModelDataProxy.class)
 )

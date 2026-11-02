@@ -6,10 +6,13 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.TenantId;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.QueryExpression;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -17,6 +20,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.comment.handler.CommentEruptChoice;
+import xyz.erupt.upms.helper.UpmsTenant;
 
 /**
  * One comment on one record of any erupt model. The record is addressed by model name plus
@@ -34,6 +38,13 @@ import xyz.erupt.comment.handler.CommentEruptChoice;
 @Getter
 @Setter
 public class EruptRecordComment extends xyz.erupt.upms.helper.HyperModelCreatorOnlyVo {
+
+    // Owner tenant, UpmsTenant.PLATFORM for the platform: stamped from the writer's session, so a
+    // comment on a tenant's record is read back by that tenant only, whatever record id is asked for
+    @TenantId
+    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
+    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
+    private String tenantId;
 
     // stored as the erupt name ("nodeName.eruptName" for a cloud node model); shown and filtered by
     // the data model's own translated name, which is what the choice list labels it with

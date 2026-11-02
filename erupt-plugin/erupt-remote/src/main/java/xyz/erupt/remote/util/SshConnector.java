@@ -46,7 +46,7 @@ public final class SshConnector {
         ssh.setConfig("PreferredAuthentications", privateKey != null ? "publickey" : "password,keyboard-interactive");
         ssh.setServerAliveInterval(30_000);
         if (privateKey == null && password != null) {
-            ssh.setPassword(password);
+            ssh.setPassword(password.getBytes(StandardCharsets.UTF_8));
             ssh.setUserInfo(new PasswordOnly(password));
         }
         ssh.connect(connectTimeoutMs);

@@ -37,6 +37,9 @@ public class EruptSuperInterceptor implements AsyncHandlerInterceptor {
     @Resource
     private I18nTranslate i18nTranslate;
 
+    @Resource
+    private EruptSecurityInterceptor eruptSecurityInterceptor;
+
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,@NonNull Object handler) throws IOException {
@@ -60,6 +63,12 @@ public class EruptSuperInterceptor implements AsyncHandlerInterceptor {
                 MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
                 MetaContext.registerToken(token);
                 MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername(), metaUserinfo.getTenantId()));
+                // a session narrowed to a target (a share link) is refused here as under /erupt-api
+                if (!eruptSecurityInterceptor.scopeAllows(token, request, null)) {
+                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                    response.sendError(HttpStatus.FORBIDDEN.value());
+                    return false;
+                }
             }
             if (null != eruptMenuAuth) {
                 if (null == eruptUserService.getEruptMenuByValue(eruptMenuAuth.value())) {
@@ -70,6 +79,22 @@ public class EruptSuperInterceptor implements AsyncHandlerInterceptor {
             }
         }
         return true;
+    }
+
+    // MetaContext is a thread local and Tomcat reuses its workers. EruptSecurityInterceptor clears
+    // it for /erupt-api only, so without this a caller outside it (MCP, @EruptLoginAuth APIs) left
+    // its identity, tenant included, to the next request on the thread, whose Hibernate session
+    // resolves its tenant from MetaContext before any interceptor has run
+    @Override
+    public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception ex) {
+        MetaContext.remove();
+    }
+
+    // An async request (SSE) hands its worker back here instead of through afterCompletion; the
+    // async work holds its own copy of the context, so the worker can drop it all the same
+    @Override
+    public void afterConcurrentHandlingStarted(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
+        MetaContext.remove();
     }
 
 }

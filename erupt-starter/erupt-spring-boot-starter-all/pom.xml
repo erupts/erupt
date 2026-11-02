@@ -11,7 +11,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>2.3.0</version>
+        <version>2.4.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -77,6 +77,21 @@
         </dependency>
         <dependency>
             <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-revision</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-share</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-webhook</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-terminal</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
@@ -93,6 +108,16 @@
         <dependency>
             <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-sso</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-file-center</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-config</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
@@ -125,6 +150,11 @@
         <dependency>
             <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-ai-decision</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-ai-dev</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

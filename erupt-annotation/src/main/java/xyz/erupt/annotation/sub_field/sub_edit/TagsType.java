@@ -16,7 +16,6 @@ public @interface TagsType {
     @Comment("Maximum number of tags")
     int maxTagCount() default 9999;
 
-    @Transient
     @Comment("List of selectable tags")
     String[] tags() default {};
 

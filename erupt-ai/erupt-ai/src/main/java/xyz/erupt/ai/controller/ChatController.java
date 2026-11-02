@@ -75,6 +75,7 @@ public class ChatController {
                            // JSON array of attachment paths returned by /upload-image
                            @RequestParam(value = "images", required = false) String images
     ) {
+        AiChat chat = userChat(chatId);
         LLMAgent llmAgent = agentId == null ? null : eruptDao.find(LLMAgent.class, agentId);
         LLM llmModel;
         if (llmAgent != null && llmAgent.getLlm() != null) {
@@ -107,12 +108,22 @@ public class ChatController {
             chatMessage.setAgentId(agentId);
             chatMessage.setImages(checkImages(images));
             eruptDao.persist(chatMessage);
-            AiChat chat = eruptDao.find(AiChat.class, chatId);
             llmService.sendSse(MetaContext.get(), autoToolCall, llmAgent, emitter, llm, llmModel, chatMessage,
                     message, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()), contextPrompt);
         }
 
         return emitter;
+    }
+
+    // Every chatId from the client resolves through the owner, so one user never reads or
+    // writes another's session
+    private AiChat userChat(Long chatId) {
+        AiChat chat = eruptDao.lambdaQuery(AiChat.class)
+                .eq(AiChat::getId, chatId)
+                .with(AiChat::getEruptUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
+                .one();
+        if (null == chat) throw new EruptWebApiRuntimeException(I18nTranslate.$translate("Chat not found"));
+        return chat;
     }
 
     // Validate the images param is a JSON array of image attachment paths before it is persisted
@@ -153,11 +164,7 @@ public class ChatController {
     @EruptMenuAuth(AiConst.AI_CHAT)
     @GetMapping("/stop")
     public R<Void> stop(@RequestParam("chatId") Long chatId) {
-        AiChat chat = eruptDao.lambdaQuery(AiChat.class)
-                .eq(AiChat::getId, chatId)
-                .with(AiChat::getEruptUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
-                .one();
-        if (null == chat) return R.error("Chat not found");
+        userChat(chatId);
         // Signal is polled by the generating instance; works across nodes when redisSession is on
         llmService.stopChat(chatId);
         return R.ok();
@@ -167,7 +174,7 @@ public class ChatController {
     @GetMapping("/delete-chat")
     @Transactional
     public R<Void> deleteChat(@RequestParam("chatId") Long chatId) {
-        AiChat chat = eruptDao.find(AiChat.class, chatId);
+        AiChat chat = userChat(chatId);
         chat.setDeleted(true);
         return R.ok();
     }
@@ -176,7 +183,7 @@ public class ChatController {
     @PostMapping("/rename-chat")
     @Transactional
     public R<Void> renameChat(@RequestParam("chatId") Long chatId, @RequestParam("title") String title) {
-        AiChat chat = eruptDao.find(AiChat.class, chatId);
+        AiChat chat = userChat(chatId);
         chat.setTitle(title);
         eruptDao.persist(chat);
         return R.ok();
@@ -213,6 +220,7 @@ public class ChatController {
     public R<List<AiChatMessage>> messages(@RequestParam("chatId") Long chatId,
                                            @RequestParam("size") Integer size,
                                            @RequestParam("index") Integer index) {
+        userChat(chatId);
         return R.ok(eruptDao.lambdaQuery(AiChatMessage.class)
                 .eq(AiChatMessage::getChatId, chatId)
                 .orderByDesc(AiChatMessage::getCreatedAt)

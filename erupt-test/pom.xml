@@ -16,7 +16,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>2.3.0</version>
+        <version>2.4.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -57,6 +57,54 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-revision</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-share</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-webhook</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-data-k8s</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-file-center</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- erupt-file-center's SFTP store: JSch is optional there, and an in-process SFTP server to talk to -->
+        <dependency>
+            <groupId>com.github.mwiede</groupId>
+            <artifactId>jsch</artifactId>
+            <version>2.28.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sshd</groupId>
+            <artifactId>sshd-sftp</artifactId>
+            <version>2.15.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-config</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-ai-dev</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
@@ -74,10 +122,23 @@
             <version>5.2.0</version>
             <scope>test</scope>
         </dependency>
+        <!-- CRUD-mode Kubernetes API server for the erupt-data-k8s tests -->
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-server-mock</artifactId>
+            <version>7.3.1</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>kubernetes-httpclient-vertx</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.instancio</groupId>
             <artifactId>instancio-junit</artifactId>
-            <version>5.5.1</version>
+            <version>5.6.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -105,10 +166,39 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Every test shares one application context: erupt keeps static registries (the Spring context
+                 holder, the erupt models, the AI tool beans) that a second context in the same JVM would
+                 repoint at its own beans. A test that must boot an application of its own is tagged
+                 own-context and runs in a JVM of its own. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- -Dtest=X matches X in one of the two executions, and the other one may match nothing -->
+                    <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <excludedGroups>own-context</excludedGroups>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>own-context</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <groups>own-context</groups>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.8.0</version>
+                <version>0.11.0</version>
                 <executions>
                     <execution>
                         <id>injected-central-publishing</id>
@@ -121,5 +211,81 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- OpenAPI spec generated from controller Javadoc by smart-doc, no annotations involved, then finished by
+             OpenApiSpec (security scheme, info, servers): mvn -pl erupt-test -Popenapi process-classes -> openapi/erupt.json -->
+        <profile>
+            <id>openapi</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.ly.smart-doc</groupId>
+                        <artifactId>smart-doc-maven-plugin</artifactId>
+                        <version>3.1.2</version>
+                        <configuration>
+                            <configFile>${project.basedir}/../openapi/smart-doc.json</configFile>
+                            <projectName>Erupt</projectName>
+                            <!-- only erupt's own sources are loaded for type resolution; third-party types stay opaque objects -->
+                            <includes>
+                                <include>xyz.erupt:.*</include>
+                            </includes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>openapi</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.6.3</version>
+                        <executions>
+                            <!-- after compile: the smart-doc goal forks the lifecycle up to compile, so an earlier phase would run before the spec exists -->
+                            <execution>
+                                <phase>process-classes</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>xyz.erupt.test.openapi.OpenApiSpec</mainClass>
+                                    <arguments>
+                                        <argument>${project.build.directory}/smart-doc/openapi.json</argument>
+                                        <argument>${project.basedir}/../openapi/erupt.json</argument>
+                                        <argument>${project.version}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- Contract files for non-Java node SDKs (github.com/erupt-io/erupt-sdk), rewritten instead of checked:
+             mvn -pl erupt-test -Pnode-schema test -> schema/erupt-annotations.schema.json, schema/erupt-node-defaults.json -->
+        <profile>
+            <id>node-schema</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <test>NodeSchemaTest,NodeDefaultsTest</test>
+                            <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+                            <systemPropertyVariables>
+                                <erupt.node-schema.write>true</erupt.node-schema.write>
+                                <erupt.node-defaults.write>true</erupt.node-defaults.write>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

@@ -56,6 +56,11 @@ public class ProjectUtil {
         }
     }
 
+    /** Whether the marker file of a first run exists, as installs from before e_upms_module left them. */
+    public static boolean loaded(String projectName) {
+        return new File(EruptConst.ERUPT_DIR_PATH, projectName + LOADED_EXT).exists();
+    }
+
     @SneakyThrows
     private void createLoadedFile(File file, String warnTxt) {
         if (file.createNewFile()) {

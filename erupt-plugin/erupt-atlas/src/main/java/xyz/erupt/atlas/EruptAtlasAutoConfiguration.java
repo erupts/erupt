@@ -11,6 +11,7 @@ import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.service.EruptTplService;
@@ -32,7 +33,9 @@ public class EruptAtlasAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-atlas").description("Erupt model atlas: relations, lineage and structural audit").build();
+        return ModuleInfo.builder().name("erupt-atlas").group(ModuleGroup.DEV_TOOLS)
+                .description("Model atlas: relations, lineage and structural audit")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-atlas")).build();
     }
 
     @Override
@@ -44,7 +47,7 @@ public class EruptAtlasAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        MetaMenu root = MetaMenu.createRootMenu(AtlasConstant.MENU_ROOT, "Model Atlas", "fa fa-diagram-project", 60);
+        MetaMenu root = MetaMenu.createRootMenu(AtlasConstant.MENU_ROOT, "Model Atlas", "fa fa-diagram-project", 230);
         menus.add(root);
         // Graph and registry read the same live registry: the graph for relations, the table for search and publish
         menus.add(MetaMenu.createSimpleMenu("erupt-atlas", "Model Graph", AtlasConstant.MENU_ATLAS, root, 10, EruptTplService.TPL));

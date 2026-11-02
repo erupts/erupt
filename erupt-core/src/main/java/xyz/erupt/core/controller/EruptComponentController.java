@@ -1,6 +1,7 @@
 package xyz.erupt.core.controller;
 
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.CodeEditHintHandler;
 import xyz.erupt.annotation.fun.EruptButtonHandler;
@@ -28,6 +29,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Form components
+ *
+ * @order 10
+ * @apiNote Data sources for form widgets: auto-complete, choice, tags, mention, button and code hints.
+ *
  * @author YuePeng
  * date 2020-08-14
  */
@@ -36,16 +42,18 @@ import java.util.List;
 public class EruptComponentController {
 
     /**
-     * autoComplete component Interconnection Interface
+     * Auto-complete suggestions for an AUTO_COMPLETE field.
      *
-     * @param field Auto-fill component fields
-     * @param val   The value of the input box
-     * @param data  Erupt form object
-     * @return Association results
+     * @apiNote Static values from @AutoCompleteType.values are matched case-insensitively, then the configured handler adds its own. The input must be at least triggerLength characters.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param field Field name with edit type AUTO_COMPLETE
+     * @param val Text typed so far
+     * @param data Current form values keyed by field name
+     * @return suggestions
      */
     @SuppressWarnings("unchecked")
     @PostMapping("/auto-complete/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.AUTO_COMPLETE)
     public List<Object> autoCompleteValue(@PathVariable("erupt") String eruptName,
                                           @PathVariable("field") String field,
                                           @RequestParam("val") String val,
@@ -72,41 +80,82 @@ public class EruptComponentController {
         return result;
     }
 
-    //Gets the CHOICE component drop-down list
+    /**
+     * Options of a CHOICE field.
+     *
+     * @apiNote Static @ChoiceType.vl entries plus whatever the ChoiceFetchHandler returns.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param field Field name with edit type CHOICE
+     * @return value/label pairs
+     */
     @GetMapping("/choice-item/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.OPTIONS)
     public List<VLModel> choiceItem(@PathVariable("erupt") String eruptName,
                                     @PathVariable("field") String field) {
-        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        // an erupt-cloud node erupt's static options are answered here, from its node's build
+        EruptModel eruptModel = EruptCoreService.getEruptWithRemoteModel(eruptName);
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
-        return EruptUtil.getChoiceList(eruptModel, fieldModel.getEruptField().edit());
+        return EruptUtil.getChoiceList(eruptModel, fieldModel);
     }
 
+    /**
+     * Options of a CHOICE field filtered by the current form.
+     *
+     * @apiNote Same as choice-item but the ChoiceFetchHandler sees the form values, so options can depend on other fields.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param field Field name with edit type CHOICE
+     * @param data Current form values keyed by field name
+     * @return value/label pairs
+     */
     @PostMapping("/choice-item-filter/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.OPTIONS)
     public List<VLModel> choiceFilter(@PathVariable("erupt") String eruptName,
                                       @PathVariable("field") String field,
                                       @RequestBody JsonObject data) {
-        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        EruptModel eruptModel = EruptCoreService.getEruptWithRemoteModel(eruptName);
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
+        // a node erupt reaches here only for options no handler fetches: the form cannot change them
+        if (eruptModel.isRemote()) return EruptUtil.getChoiceList(eruptModel, fieldModel);
         Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
-        return EruptUtil.getChoiceListFilter(eruptModel, fieldModel.getEruptField().edit(), o);
+        return EruptUtil.getChoiceListFilter(eruptModel, fieldModel, o);
     }
 
-    //Gets the TAGS component data
+    /**
+     * Tag suggestions for a TAGS field.
+     *
+     * @param eruptName Simple class name of the @Erupt model
+     * @param field Field name with edit type TAGS
+     * @param data Current form values keyed by field name
+     * @return tags
+     */
     @PostMapping("/tags-item/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.OPTIONS)
     public List<String> tagsItem(@PathVariable("erupt") String eruptName,
                                  @PathVariable("field") String field,
                                  @RequestBody JsonObject data
     ) {
-        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        EruptModel eruptModel = EruptCoreService.getEruptWithRemoteModel(eruptName);
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
-        Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
-        return EruptUtil.getTagList(fieldModel.getEruptField().edit().tagsType(), o);
+        // a node erupt reaches here only for tags no handler fetches: its build's tags() are the answer
+        Object o = eruptModel.isRemote() ? null : GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
+        List<String> tags = EruptUtil.getTagList(fieldModel.getEruptField().edit().tagsType(), o);
+        // a node whose build leaves tags() out (an older erupt, the language SDKs) sends them as the componentValue
+        if (eruptModel.isRemote() && tags.isEmpty() && null != fieldModel.getComponentValue()) {
+            return GsonFactory.getGson().fromJson(GsonFactory.getGson().toJsonTree(fieldModel.getComponentValue()),
+                    new TypeToken<List<String>>() {
+                    }.getType());
+        }
+        return tags;
     }
 
-    //Gets the TEXTAREA component mention suggestions
+    /**
+     * Mention suggestions for a TEXTAREA field.
+     *
+     * @param eruptName Simple class name of the @Erupt model
+     * @param field Field name with edit type TEXTAREA
+     * @param data Current form values keyed by field name
+     * @return mention candidates
+     */
     @PostMapping("/textarea-mention/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<String> textareaMention(@PathVariable("erupt") String eruptName,
@@ -119,10 +168,18 @@ public class EruptComponentController {
         return EruptUtil.getMentionList(fieldModel.getEruptField().edit().textareaType(), o);
     }
 
-    //BUTTON component click event, passes all current form values to the handler
+    /**
+     * Click of a BUTTON field.
+     *
+     * @apiNote Hands the whole form to the EruptButtonHandler and returns what it wants the frontend to do: a script to evaluate, form values to populate and edit expressions to apply.
+     * @param eruptName Simple class name of the @Erupt model
+     * @param field Field name with edit type BUTTON
+     * @param data Current form values keyed by field name
+     * @return handler result
+     */
     @SuppressWarnings("unchecked")
     @PostMapping("/button/{erupt}/{field}")
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, resolve = EruptRouter.Resolve.BUTTON)
     public R<EruptButtonVo> buttonClick(@PathVariable("erupt") String eruptName,
                                         @PathVariable("field") String field,
                                         @RequestBody JsonObject data) {
@@ -145,7 +202,13 @@ public class EruptComponentController {
         return R.success(I18nTranslate.$translate("erupt.exec_success"), buttonVo);
     }
 
-    //Gets the CodeEdit component hint data
+    /**
+     * Completion hints for a CODE_EDITOR field.
+     *
+     * @param eruptName Simple class name of the @Erupt model
+     * @param field Field name with edit type CODE_EDITOR
+     * @return hint words
+     */
     @GetMapping("/code-edit-hints/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<String> codeEditHints(@PathVariable("erupt") String eruptName,

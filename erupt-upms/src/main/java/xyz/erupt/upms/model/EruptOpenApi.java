@@ -30,7 +30,7 @@ import xyz.erupt.upms.model.data_proxy.EruptOpenApiDataProxy;
 @Erupt(
         name = "Open API",
         dataProxy = EruptOpenApiDataProxy.class,
-        rowOperation = @RowOperation(title = "Update Secret Key", icon = "fa fa-refresh", operationHandler = EruptOpenApiDataProxy.class, mode = RowOperation.Mode.SINGLE)
+        rowOperation = @RowOperation(code = "updateSecret", title = "Update Secret Key", icon = "fa fa-refresh", operationHandler = EruptOpenApiDataProxy.class, mode = RowOperation.Mode.SINGLE)
 )
 @EruptI18n
 @Getter
@@ -60,7 +60,7 @@ public class EruptOpenApi extends MetaModelUpdateVo {
             views = @View(title = "Bind User Permissions", column = "name"),
             edit = @Edit(title = "Bind User Permissions", type = EditType.REFERENCE_TABLE, notNull = true)
     )
-    private EruptUser eruptUser;
+    private EruptUserVo eruptUser;
 
     @EruptField(
             views = @View(title = "status", sortable = true),

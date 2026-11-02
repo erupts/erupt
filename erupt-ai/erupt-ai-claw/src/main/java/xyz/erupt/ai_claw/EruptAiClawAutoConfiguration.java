@@ -9,6 +9,7 @@ import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 
 import java.util.ArrayList;
@@ -31,14 +32,16 @@ public class EruptAiClawAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-ai-claw").description("Drop-in admin agent built on erupt-ai — natural language to Erupt admin operations").build();
+        return ModuleInfo.builder().name("erupt-ai-claw").group(ModuleGroup.AI)
+                .description("Admin agent that turns natural language into admin operations")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-ai-claw/")).build();
     }
 
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
         // Reuse the shared "AI Manager" root created by erupt-ai; menus are de-duplicated by code on persist
-        MetaMenu ai = MetaMenu.createRootMenu("$ai", "AI Manager", "fa fa-wand-magic-sparkles", 25);
+        MetaMenu ai = MetaMenu.createRootMenu("$ai", "AI Manager", "fa fa-wand-magic-sparkles", 100);
         menus.add(ai);
         menus.add(MetaMenu.createEruptClassMenu(EruptSkill.class, ai, 60));
         return menus;

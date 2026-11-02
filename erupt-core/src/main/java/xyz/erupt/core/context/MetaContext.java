@@ -14,12 +14,35 @@ import java.util.Map;
 @Setter
 public class MetaContext {
 
-    private static final ThreadLocal<MetaContext> threadLocal = InheritableThreadLocal.withInitial(() -> {
+    // Inheritable so work spawned from a request (async SSE generation, tool execution) starts with
+    // the request's identity. A child thread gets its own copy: the JDK default hands the parent's
+    // instance over as-is, and a pool thread created from a request thread would then keep sharing
+    // one mutable context with it for as long as it lives - every register() of one thread
+    // (an erupt name, a user, a tenant) silently becoming the other's
+    private static final ThreadLocal<MetaContext> threadLocal = new InheritableThreadLocal<>() {
+        @Override
+        protected MetaContext initialValue() {
+            MetaContext metaContext = new MetaContext();
+            metaContext.setMetaErupt(new MetaErupt());
+            metaContext.setMetaUser(new MetaUser());
+            return metaContext;
+        }
+
+        @Override
+        protected MetaContext childValue(MetaContext parent) {
+            return null == parent ? null : parent.copy();
+        }
+    };
+
+    private MetaContext copy() {
         MetaContext metaContext = new MetaContext();
-        metaContext.setMetaErupt(new MetaErupt());
-        metaContext.setMetaUser(new MetaUser());
+        metaContext.metaErupt = null == metaErupt ? null : new MetaErupt(metaErupt.getName(), metaErupt.getMenuValue());
+        metaContext.metaUser = null == metaUser ? null : new MetaUser(metaUser.getUid(), metaUser.getAccount(), metaUser.getName(), metaUser.getTenantId());
+        metaContext.token = token;
+        metaContext.lang = lang;
+        metaContext.vars = new HashMap<>(vars);
         return metaContext;
-    });
+    }
 
     public static void set(MetaContext metaContext) {
         threadLocal.set(metaContext);

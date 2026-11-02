@@ -11,8 +11,11 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.TenantId;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -33,6 +36,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
+import xyz.erupt.upms.helper.UpmsTenant;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.sso.constant.SsoProviderType;
 import xyz.erupt.sso.model.data_proxy.EruptSsoDataProxy;
@@ -40,7 +44,8 @@ import xyz.erupt.sso.model.data_proxy.EruptSsoDataProxy;
 import java.util.Set;
 
 /**
- * An external identity provider erupt delegates login to, over OAuth2 authorization code.
+ * An external identity provider erupt delegates login to, over OAuth2 authorization code
+ * or SAML 2.0.
  *
  * <p>Both OIDC providers (Keycloak, Authing, Okta, Feishu) and plain OAuth2 ones (GitHub,
  * Gitee) fit the same row: erupt never reads the id_token, it asks the user info endpoint
@@ -49,11 +54,17 @@ import java.util.Set;
  * WeCom, WeChat) are told apart by {@link #type}, which selects the matching
  * {@link SsoProviderType.Flow} at login.
  *
+ * <p>A SAML row reuses the same columns under their protocol's names: the issuer is the
+ * IdP entity id, the authorize URL its single sign-on URL, the client id the SP entity id,
+ * and the redirect URI the assertion consumer service. What SAML has and OAuth2 lacks, the
+ * IdP's signing certificate, has a column of its own; what OAuth2 has and SAML lacks (the
+ * client secret, the scopes, the token and user info endpoints) is hidden on a SAML row.
+ *
  * @author YuePeng
  * date 2026-09-18
  */
 @Entity
-@Table(name = "e_upms_sso")
+@Table(name = "e_upms_sso", uniqueConstraints = @UniqueConstraint(name = "uk_upms_sso_code", columnNames = {"tenantId", "code"}))
 @Erupt(
         name = "SSO Provider",
         orderBy = "EruptSso.sort asc",
@@ -67,6 +78,13 @@ import java.util.Set;
 @Getter
 @Setter
 public class EruptSso extends MetaModelUpdateVo {
+
+    // Owner tenant, UpmsTenant.PLATFORM for the platform: each tenant signs in through providers of
+    // its own, restricted and stamped by Hibernate like the user directory, see UpmsTenantSessions
+    @TenantId
+    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
+    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
+    private String tenantId;
 
     @Transient
     @EruptField(edit = @Edit(title = "Basic", type = EditType.DIVIDE))
@@ -86,7 +104,8 @@ public class EruptSso extends MetaModelUpdateVo {
     )
     private SsoProviderType type = SsoProviderType.CUSTOM;
 
-    @Column(length = AnnotationConst.CODE_LENGTH, unique = true, nullable = false)
+    // unique per tenant: a tenant callback URL carries the tenant code as well
+    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
     @EruptField(
             views = @View(title = "Code", sortable = true),
             // the code is part of the callback URL registered at the provider, so it is
@@ -125,34 +144,39 @@ public class EruptSso extends MetaModelUpdateVo {
 
     @Column(length = 512)
     @EruptField(
-            edit = @Edit(title = "Issuer", desc = "OIDC issuer; endpoints below are discovered from it when left empty",
+            edit = @Edit(title = "Issuer",
+                    desc = "OIDC issuer, endpoints below are discovered from it when left empty; SAML: the IdP entity id, checked against the response when set",
                     inputType = @InputType(fullSpan = true))
     )
     private String issuer;
 
     @Column(length = 512)
     @EruptField(
-            edit = @Edit(title = "Authorize URL", inputType = @InputType(fullSpan = true))
+            edit = @Edit(title = "Authorize URL", desc = "SAML: the IdP single sign-on URL (HTTP-Redirect binding)",
+                    inputType = @InputType(fullSpan = true))
     )
     private String authorizeUrl;
 
     @Column(length = 512)
     @EruptField(
-            edit = @Edit(title = "Token URL", inputType = @InputType(fullSpan = true))
+            edit = @Edit(title = "Token URL", inputType = @InputType(fullSpan = true),
+                    dynamic = @Dynamic(dependField = "type", condition = SsoProviderType.OAUTH_CONDITION))
     )
     private String tokenUrl;
 
     @Column(length = 512)
     @EruptField(
-            edit = @Edit(title = "User Info URL", inputType = @InputType(fullSpan = true))
+            edit = @Edit(title = "User Info URL", inputType = @InputType(fullSpan = true),
+                    dynamic = @Dynamic(dependField = "type", condition = SsoProviderType.OAUTH_CONDITION))
     )
     private String userInfoUrl;
 
     @Column(length = 512)
     @EruptField(
             edit = @Edit(title = "Redirect URI",
-                    desc = "Where the provider sends the browser back, must be registered there verbatim; "
-                            + "empty means http(s)://<this host>/erupt-api/sso/callback/<code>, fill it only behind a proxy or a different public domain",
+                    desc = "Where the provider sends the browser back (SAML: the assertion consumer service), must be registered there verbatim; "
+                            + "empty means http(s)://<this host>/erupt-api/sso/callback/<code>, for a tenant's SAML row http(s)://<this host>/erupt-api/sso/tenant/<tenant code>/callback/<code>; "
+                            + "fill it only behind a proxy or a different public domain",
                     inputType = @InputType(fullSpan = true))
     )
     private String redirectUri;
@@ -169,12 +193,27 @@ public class EruptSso extends MetaModelUpdateVo {
     private String clientId;
 
     // No @View: a client secret is write only, the framework masks the form value
-    // and restores the stored one when the mask comes back unchanged
+    // and restores the stored one when the mask comes back unchanged. Required for every
+    // OAuth2 flow and meaningless for SAML, which EruptSsoDataProxy enforces per flow
     @Column(length = 512)
     @EruptField(
-            edit = @Edit(title = "Client Secret", notNull = true, type = EditType.PASSWORD)
+            edit = @Edit(title = "Client Secret", type = EditType.PASSWORD,
+                    dynamic = @Dynamic(dependField = "type", condition = SsoProviderType.OAUTH_CONDITION,
+                            match = Dynamic.Ctrl.NOTNULL, noMatch = Dynamic.Ctrl.HIDE))
     )
     private String clientSecret;
+
+    // The IdP's signing certificate, the only trust anchor of a SAML login: a response is
+    // accepted when, and only when, its signature verifies against this key
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
+    @EruptField(
+            edit = @Edit(title = "IdP Certificate", type = EditType.TEXTAREA,
+                    desc = "X.509 signing certificate from the IdP metadata, PEM or bare base64; "
+                            + "the SP metadata to import at the IdP is served at /erupt-api/sso/saml/<code>/metadata",
+                    dynamic = @Dynamic(dependField = "type", condition = SsoProviderType.SAML_CONDITION,
+                            match = Dynamic.Ctrl.NOTNULL, noMatch = Dynamic.Ctrl.HIDE))
+    )
+    private String idpCertificate;
 
     // What a notification channel needs beyond the client credentials, and what that is
     // depends on the provider; login never reads it, so an empty value costs nothing
@@ -191,8 +230,10 @@ public class EruptSso extends MetaModelUpdateVo {
             // A space is what the authorization request wants, so it is what gets stored:
             // the tags join and split on it and no conversion sits in between. The presets
             // are the OIDC standard scopes; anything a provider invents is typed in.
-            edit = @Edit(title = "Scopes", notNull = true, type = EditType.TAGS,
-                    tagsType = @TagsType(joinSeparator = " ")
+            edit = @Edit(title = "Scopes", type = EditType.TAGS,
+                    tagsType = @TagsType(joinSeparator = " "),
+                    dynamic = @Dynamic(dependField = "type", condition = SsoProviderType.OAUTH_CONDITION,
+                            match = Dynamic.Ctrl.NOTNULL, noMatch = Dynamic.Ctrl.HIDE)
     ))
     private String scopes = "openid profile email";
 
@@ -284,5 +325,12 @@ public class EruptSso extends MetaModelUpdateVo {
             edit = @Edit(title = "remark", type = EditType.TEXTAREA)
     )
     private String remark;
+
+    /**
+     * How this row is talked to at login. A row from before the type column existed is plain OAuth2.
+     */
+    public SsoProviderType.Flow flow() {
+        return null == type ? SsoProviderType.Flow.OAUTH2 : type.flow();
+    }
 
 }

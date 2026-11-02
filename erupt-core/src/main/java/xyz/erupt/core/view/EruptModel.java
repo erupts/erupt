@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.EruptTag;
 import xyz.erupt.core.invoke.DataProxyInvoke;
@@ -17,6 +18,8 @@ import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
+import org.springframework.util.LinkedCaseInsensitiveMap;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +43,9 @@ public class EruptModel implements Cloneable {
     private transient Map<String, EruptFieldModel> eruptFieldMap;
 
     private transient boolean i18n;
+
+    // The resolved DataProxy chain of this model, filled on first use by DataProxyInvoke
+    private transient volatile DataProxyInvoke.Chain dataProxyChain;
 
     private String eruptName;
 
@@ -83,15 +89,40 @@ public class EruptModel implements Cloneable {
     public EruptModel(String eruptName, String remoteNode) {
         this.eruptName = eruptName;
         this.remoteNode = remoteNode;
+        String nameMethod = LambdaSee.method(Erupt::name);
         this.erupt = (Erupt) Proxy.newProxyInstance(Erupt.class.getClassLoader(), new Class[]{Erupt.class},
-                (proxy, method, args) -> switch (method.getName()) {
-                    case "name" -> eruptName;
+                (proxy, method, args) -> nameMethod.equals(method.getName()) ? eruptName : switch (method.getName()) {
                     case "annotationType" -> Erupt.class;
                     case "toString" -> "@" + Erupt.class.getName() + "(remote:" + eruptName + ")";
                     case "hashCode" -> System.identityHashCode(proxy);
                     case "equals" -> proxy == args[0];
                     default -> method.getDefaultValue();
                 });
+    }
+
+    /**
+     * A remote erupt read back from its build response: the erupt and field annotations come from their JSON
+     * ({@link AnnotationProcess#jsonToAnnotation}), so code written against a local model (export sheets, import
+     * templates) runs on it. It has no class: no DataProxy, no reflected field types.
+     */
+    public static EruptModel remote(String eruptName, String remoteNode, EruptBuildModel build) {
+        EruptModel model = new EruptModel(eruptName, remoteNode);
+        EruptModel source = build.getEruptModel();
+        // name() is @Transient, so a build never carries it: the erupt's own name stands in
+        JsonObject eruptJson = source.getEruptJson().deepCopy();
+        if (!eruptJson.has(LambdaSee.method(Erupt::name))) {
+            eruptJson.addProperty(LambdaSee.method(Erupt::name), eruptName.substring(eruptName.lastIndexOf('.') + 1));
+        }
+        model.erupt = AnnotationProcess.jsonToAnnotation(Erupt.class, eruptJson);
+        model.eruptJson = source.getEruptJson();
+        model.eruptFieldModels = Optional.ofNullable(source.getEruptFieldModels()).orElse(List.of()).stream()
+                .filter(it -> null != it.getEruptFieldJson()).toList();
+        model.eruptFieldMap = new LinkedCaseInsensitiveMap<>();
+        for (EruptFieldModel field : model.eruptFieldModels) {
+            field.setEruptField(AnnotationProcess.jsonToAnnotation(EruptField.class, field.getEruptFieldJson()));
+            model.eruptFieldMap.put(field.getFieldName(), field);
+        }
+        return model;
     }
 
     public boolean isRemote() {
@@ -116,6 +147,11 @@ public class EruptModel implements Cloneable {
             Optional.ofNullable(this.getClazz().getAnnotation(ex)).ifPresent(it -> extra.add(ex.getSimpleName(), AnnotationProcess.annotationToJsonByReflect(it)));
         }
         eruptModel.eruptFieldModels = eruptFieldModels.stream().map(CloneSupport::clone).peek(EruptFieldModel::serializable).collect(Collectors.toList());
+        // The map must point at the cloned field models, not the originals, so per-view state such as componentValue is visible through it
+        if (null != eruptFieldMap) {
+            eruptModel.eruptFieldMap = new LinkedCaseInsensitiveMap<>();
+            eruptModel.eruptFieldModels.forEach(it -> eruptModel.eruptFieldMap.put(it.getFieldName(), it));
+        }
         return eruptModel;
     }
 

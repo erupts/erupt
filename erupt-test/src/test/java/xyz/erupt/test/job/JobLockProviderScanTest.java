@@ -2,6 +2,7 @@ package xyz.erupt.test.job;
 
 import jakarta.annotation.Resource;
 import net.javacrumbs.shedlock.core.LockProvider;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -18,6 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * so it pulls EruptJobAutoConfiguration in as an ordinary component ahead of every auto
  * configuration; the LockProvider bean must survive that ordering.
  */
+// Boots an application of its own, so it runs in a JVM of its own (see the surefire setup in pom.xml):
+// a second context in the JVM of the other tests would repoint erupt's static registries at its beans
+@Tag("own-context")
 @SpringBootTest(classes = JobLockProviderScanTest.ScanJobApplication.class, properties = "erupt.redis-session=true")
 public class JobLockProviderScanTest {
 

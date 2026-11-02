@@ -41,7 +41,6 @@ public @interface View {
     @Comment("Header group; adjacent columns sharing the same group are rendered under one merged header cell (multi-level header)")
     String group() default "";
 
-    @Transient
     @Comment("Export column")
     boolean export() default true;
 
@@ -55,5 +54,12 @@ public @interface View {
             "3. value   (current column value)")
     @Language("javascript")
     String template() default "";
+
+    @Comment("Aggregate of this column shown in the table footer and in group headers")
+    Statistic statistic() default Statistic.NONE;
+
+    enum Statistic {
+        NONE, COUNT, DISTINCT_COUNT, SUM, AVG, MAX, MIN
+    }
 
 }

@@ -59,7 +59,7 @@ public class BiDataProxy implements DataProxy<Bi> {
     @Override
     public void afterFetch(Collection<Map<String, Object>> list) {
         for (Map<String, Object> map : list) {
-            map.put(LambdaSee.field(Bi::getView), "#/fill/bi/" + map.get("code"));
+            map.put(LambdaSee.field(Bi::getView), "#/fill/bi/" + map.get(LambdaSee.field(Bi::getCode)));
         }
     }
 }

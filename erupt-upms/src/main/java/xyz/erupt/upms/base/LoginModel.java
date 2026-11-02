@@ -14,22 +14,31 @@ import java.time.LocalDateTime;
 @Setter
 public class LoginModel {
 
-    private boolean pass; //Whether validation passed
+    /** Whether the credentials were accepted and a session was created */
+    private boolean pass;
 
-    private boolean resetPwd = false; //Whether password reset is required
+    /** Whether the user must change the password before going on */
+    private boolean resetPwd = false;
 
-    private boolean useVerifyCode = false; //Whether a verification code is required
+    /** Whether the next attempt must carry a captcha */
+    private boolean useVerifyCode = false;
 
-    private boolean mfaRequired = false; //Password accepted, a one-time code is still owed
+    /** Password accepted, a one-time code is still owed: continue with login-mfa */
+    private boolean mfaRequired = false;
 
-    private String mfaTicket; //Short lived handle for the second step, never a session token
+    /** Short lived handle for the second step, never a session token */
+    private String mfaTicket;
 
-    private String reason; //Reason for validation failure
+    /** Why the login was refused */
+    private String reason;
 
+    /** Session token, sent back in the token header */
     private String token;
 
-    private String account; //Who the session belongs to; a delegated login is the client's only way to know
+    /** Who the session belongs to; a delegated login is the client's only way to know */
+    private String account;
 
+    /** When the token expires */
     private LocalDateTime expire;
 
     private transient EruptUser eruptUser;

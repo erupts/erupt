@@ -5,10 +5,12 @@ import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
+import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.designer.pojo.DesignerForm;
 import xyz.erupt.jpa.model.BaseModel;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
@@ -47,7 +49,7 @@ public class DesignerClassFactory {
                 .subclass(BaseModel.class)
                 .name(PKG + form.getClassName())
                 .annotateType(AnnotationDescription.Builder.ofType(EruptDataProcessor.class)
-                        .define("value", DATA_PROCESSOR).build());
+                        .define(LambdaSee.method(EruptDataProcessor::value), DATA_PROCESSOR).build());
         // ERUPT_FLOW is null when erupt-flow is absent; skip without creating a hard dependency
         if (null != ERUPT_FLOW) {
             builder = builder.annotateType(AnnotationDescription.Builder.ofType(ERUPT_FLOW).build());
@@ -69,9 +71,10 @@ public class DesignerClassFactory {
     }
 
     private static Class<?> javaType(DesignerForm.DesignerField field) {
+        String type = LambdaSee.method(Edit::type);
         EditType editType = Optional.ofNullable(field.getEdit())
-                .filter(it -> it.has("type"))
-                .map(it -> EditType.valueOf(it.get("type").getAsString())).orElse(EditType.INPUT);
+                .filter(it -> it.has(type))
+                .map(it -> EditType.valueOf(it.get(type).getAsString())).orElse(EditType.INPUT);
         return switch (editType) {
             case NUMBER, SLIDER, RATE -> switch (Optional.ofNullable(field.getFieldType()).orElse("Integer")) {
                 case "Long" -> Long.class;

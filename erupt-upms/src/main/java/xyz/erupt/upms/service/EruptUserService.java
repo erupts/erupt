@@ -33,6 +33,7 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.prop.EruptUpmsProp;
+import xyz.erupt.upms.tenant.UpmsTenantSessions;
 import xyz.erupt.upms.util.IpUtil;
 import xyz.erupt.upms.util.IpWhiteListMatcher;
 
@@ -75,6 +76,9 @@ public class EruptUserService {
 
     @Resource
     private EruptTokenService eruptTokenService;
+
+    @Resource
+    private UpmsTenantSessions upmsTenantSessions;
 
     private final Gson gson = GsonFactory.getGson();
 
@@ -202,6 +206,11 @@ public class EruptUserService {
         return true;
     }
 
+    /**
+     * Records a sign-in under the user's own tenant. A login runs before the request has a tenant,
+     * so for a tenant user the row is written in a session of that tenant; Hibernate would
+     * otherwise stamp it with the platform.
+     */
     @Transactional
     public void saveLoginLog(EruptUser user, String token) {
         UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
@@ -214,7 +223,7 @@ public class EruptUserService {
         loginLog.setRegion(IpUtil.getCityInfo(loginLog.getIp()));
         loginLog.setBrowser(userAgent.getBrowser().getName() + " " + (userAgent.getBrowserVersion() == null ? "" : userAgent.getBrowserVersion().getMajorVersion()));
         loginLog.setDeviceType(userAgent.getOperatingSystem().getDeviceType().getName());
-        eruptDao.getEntityManager().persist(loginLog);
+        upmsTenantSessions.runAs(user.getTenantId(), em -> em.persist(loginLog));
     }
 
     /**
@@ -356,13 +365,11 @@ public class EruptUserService {
         return getEruptMenuValues(token).stream().collect(Collectors.toMap(it -> it, it -> true));
     }
 
-    // Current user's id in the platform (EruptUser) id space. A tenant session has no such id:
-    // its uid lives in the tenant user table and collides with platform ids, so every consumer
-    // (HyperModel audit columns, per-user queries in plugins, login checks) must see null instead.
+    // Id of the current user, platform or tenant alike: every user lives in e_upms_user, so the id
+    // is unique and the row is reachable from the session's own tenant
     public Long getCurrentUid() {
         MetaUserinfo metaUserinfo = getSimpleUserInfo();
-        if (null == metaUserinfo || null != metaUserinfo.getTenantId()) return null;
-        return metaUserinfo.getId();
+        return null == metaUserinfo ? null : metaUserinfo.getId();
     }
 
     //Get basic info of the currently logged-in user (from cache)
@@ -378,7 +385,7 @@ public class EruptUserService {
 
     //Get the current logged-in user object (from database)
     public EruptUser getCurrentEruptUser() {
-        Long uid = this.getCurrentUid(); // null for tenant sessions, see getCurrentUid()
+        Long uid = this.getCurrentUid();
         return null == uid ? null : eruptDao.getEntityManager().find(EruptUser.class, uid);
     }
 

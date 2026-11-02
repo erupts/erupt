@@ -1,9 +1,11 @@
 package xyz.erupt.jpa;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 
 /**
@@ -12,6 +14,8 @@ import xyz.erupt.core.module.ModuleInfo;
  */
 @Configuration
 @ComponentScan
+// registers the auto-apply converters of this package with Hibernate
+@EntityScan
 public class EruptJpaAutoConfiguration implements EruptModule {
 
     static {
@@ -20,7 +24,9 @@ public class EruptJpaAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-data-jpa").description("erupt orm").build();
+        return ModuleInfo.builder().name("erupt-data-jpa").group(ModuleGroup.DATA)
+                .description("Relational databases through JPA, the default data source")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-jpa")).build();
     }
 
 }

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.boot.Metadata;
+import org.hibernate.boot.spi.BootstrapContext;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.integrator.spi.Integrator;
 import org.hibernate.mapping.Column;
@@ -42,12 +43,12 @@ public class CommentIntegrator implements Integrator {
     /**
      * Perform comment integration.
      *
-     * @param metadata        The "compiled" representation of the mapping information
-     * @param sessionFactory  The session factory being created
-     * @param serviceRegistry The session factory's service registry
+     * @param metadata         The "compiled" representation of the mapping information
+     * @param bootstrapContext The context the session factory is bootstrapped in
+     * @param sessionFactory   The session factory being created
      */
     @Override
-    public void integrate(@NonNull Metadata metadata, @NonNull SessionFactoryImplementor sessionFactory,@NonNull SessionFactoryServiceRegistry serviceRegistry) {
+    public void integrate(@NonNull Metadata metadata, @NonNull BootstrapContext bootstrapContext, @NonNull SessionFactoryImplementor sessionFactory) {
         this.processComment(metadata);
     }
 

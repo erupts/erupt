@@ -14,10 +14,13 @@ import lombok.Setter;
 @Setter
 public class EruptCellVo {
 
+    /** Primary key of the row */
     private String id;
 
+    /** Field name */
     private String field;
 
+    /** New value */
     private JsonElement value;
 
 }

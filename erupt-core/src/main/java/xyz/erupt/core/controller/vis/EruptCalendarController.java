@@ -23,6 +23,11 @@ import xyz.erupt.core.view.R;
 import java.lang.reflect.Field;
 
 /**
+ * Calendar view
+ *
+ * @order 14
+ * @apiNote Writes made from the calendar view.
+ *
  * @author YuePeng
  * date 2026/6/2
  */
@@ -32,8 +37,17 @@ import java.lang.reflect.Field;
 @RequiredArgsConstructor
 public class EruptCalendarController {
 
+    /**
+     * Move an event to another date.
+     *
+     * @apiNote Sets @CalendarView.dateField (and endDateField when configured and sent) and saves through the DataProxy update hooks.
+     * @param erupt Simple class name of the @Erupt model
+     * @param command Event and new dates
+     * @return ok when saved
+     */
     @PostMapping("/{erupt}/update_date")
-    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, power = EruptRouter.Power.EDIT,
+            resolve = EruptRouter.Resolve.VIS_CALENDAR_DATE)
     @Transactional
     @SneakyThrows
     public R<Void> updateDate(@PathVariable("erupt") String erupt, @RequestBody VisCalendarDateCommand command) {
@@ -62,12 +76,16 @@ public class EruptCalendarController {
     @Setter
     public static class VisCalendarDateCommand {
 
+        /** Code of the @Vis calendar view */
         private String visCode;
 
+        /** Primary key of the event */
         private Object pk;
 
+        /** New start date */
         private String date;
 
+        /** New end date, when the view has an endDateField */
         private String endDate;
 
     }

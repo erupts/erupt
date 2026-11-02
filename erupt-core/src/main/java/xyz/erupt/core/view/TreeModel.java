@@ -14,16 +14,22 @@ import java.util.Collection;
 @Setter
 public class TreeModel {
 
+    /** Node id */
     private String id;
 
+    /** Node text */
     private String label;
 
+    /** Parent node id */
     private String pid;
 
-    private Integer level; // tree level
+    /** Depth, root is 0 */
+    private Integer level;
 
+    /** Whether this is a root node */
     private boolean root;
 
+    /** Child nodes */
     private Collection<TreeModel> children;
 
     public TreeModel(Object id, Object label, Object pid, Object root) {

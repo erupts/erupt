@@ -55,7 +55,9 @@ public class EruptNodeInterceptor implements WebMvcConfigurer, AsyncHandlerInter
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
-        if (!eruptNodeProp.getAccessToken().equals(request.getHeader(CloudCommonConst.HEADER_ACCESS_TOKEN))) {
+        // a valid signature (NodeSignatureFilter) stands for the token, which then need not travel
+        if (!Boolean.TRUE.equals(request.getAttribute(NodeSignatureFilter.VERIFIED))
+                && !eruptNodeProp.getAccessToken().equals(request.getHeader(CloudCommonConst.HEADER_ACCESS_TOKEN))) {
             throw new EruptWebApiRuntimeException("AccessToken incorrect");
         }
         MetaContext.registerToken(request.getHeader(EruptMutualConst.TOKEN));

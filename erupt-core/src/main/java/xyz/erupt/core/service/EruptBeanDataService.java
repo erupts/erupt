@@ -7,8 +7,10 @@ import xyz.erupt.annotation.query.Direction;
 import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.query.Aggregate;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
+import xyz.erupt.core.util.AggregateUtil;
 import xyz.erupt.core.util.TypeUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -110,6 +112,16 @@ public abstract class EruptBeanDataService<T> implements IEruptDataService {
         int from = Math.min((page.getPageIndex() - 1) * page.getPageSize(), rows.size());
         page.setList(rows.subList(from, Math.min(from + page.getPageSize(), rows.size())));
         return page;
+    }
+
+    @Override
+    public Map<String, Object> aggregate(EruptModel eruptModel, EruptQuery eruptQuery, List<Aggregate> aggregates) {
+        List<Map<String, Object>> rows = this.rows(eruptModel, eruptQuery);
+        Map<String, Object> result = new LinkedHashMap<>();
+        for (Aggregate aggregate : aggregates) {
+            result.put(aggregate.getKey(), AggregateUtil.compute(rows, aggregate));
+        }
+        return result;
     }
 
     @Override

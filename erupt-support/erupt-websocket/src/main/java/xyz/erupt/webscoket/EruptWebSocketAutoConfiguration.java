@@ -12,6 +12,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.upms.prop.EruptAppProp;
 
@@ -68,7 +69,9 @@ public class EruptWebSocketAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name(ERUPT_WEBSOCKET).build();
+        return ModuleInfo.builder().name(ERUPT_WEBSOCKET).group(ModuleGroup.PLATFORM)
+                .description("Realtime push from the server to the browser")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-websocket")).build();
     }
 
 }

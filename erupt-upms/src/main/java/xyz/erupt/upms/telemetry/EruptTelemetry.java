@@ -18,6 +18,7 @@ import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptInformation;
+import xyz.erupt.upms.service.EruptModuleStore;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -83,7 +84,10 @@ public class EruptTelemetry implements ApplicationListener<ApplicationReadyEvent
 
     private static final int MAX_ADVISORY_CHARS = 300;
 
+    // the file earlier versions kept the id in, read once to keep the instance's identity
     private static final String INSTANCE_ID_FILE = "telemetry.id";
+
+    private static final String INSTANCE_ID_MODULE = "erupt-telemetry";
 
     // os-release lives in /etc, /usr/lib is the fallback mandated by the freedesktop spec
     private static final String[] OS_RELEASE_FILES = {"/etc/os-release", "/usr/lib/os-release"};
@@ -97,6 +101,8 @@ public class EruptTelemetry implements ApplicationListener<ApplicationReadyEvent
 
     private final ObjectProvider<DataSource> dataSourceProvider;
 
+    private final EruptModuleStore moduleStore;
+
     private final AtomicBoolean started = new AtomicBoolean();
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(runnable -> {
@@ -107,10 +113,11 @@ public class EruptTelemetry implements ApplicationListener<ApplicationReadyEvent
     });
 
     public EruptTelemetry(EruptProp eruptProp, TelemetryProp telemetryProp,
-                          ObjectProvider<DataSource> dataSourceProvider) {
+                          ObjectProvider<DataSource> dataSourceProvider, EruptModuleStore moduleStore) {
         this.eruptProp = eruptProp;
         this.telemetryProp = telemetryProp;
         this.dataSourceProvider = dataSourceProvider;
+        this.moduleStore = moduleStore;
     }
 
     @Override
@@ -139,26 +146,28 @@ public class EruptTelemetry implements ApplicationListener<ApplicationReadyEvent
     }
 
     /**
-     * Read the instance id from {@code .erupt/telemetry.id}, creating it on first run.
-     * Persisting it is what makes deduplication and active-instance counts possible, if the
-     * file cannot be written telemetry is skipped rather than reporting a fresh identity on
-     * every restart.
+     * The instance id, kept per database in e_upms_module so a new container or another node of
+     * the same deployment reports as the same instance. An id left in {@code .erupt/telemetry.id}
+     * by an earlier version is taken over. When it cannot be stored, telemetry is skipped rather
+     * than reporting a fresh identity on every restart.
      */
     private String resolveInstanceId() {
-        File dir = new File(EruptConst.ERUPT_DIR_PATH);
-        File file = new File(dir, INSTANCE_ID_FILE);
         try {
-            if (file.exists()) {
-                String id = FileUtils.readFileToString(file, StandardCharsets.UTF_8).trim();
-                if (StringUtils.isNotBlank(id)) return id;
-            }
-            if (!dir.exists() && !dir.mkdirs()) return null;
-            String id = UUID.randomUUID().toString();
-            FileUtils.writeStringToFile(file, id, StandardCharsets.UTF_8);
-            // creating the id file means this is the first run: disclose once, then stay silent
-            log.info("Erupt collects anonymous usage statistics (see README); "
-                    + "disable with erupt.telemetry.enabled=false or ERUPT_TELEMETRY_DISABLED=1");
-            return id;
+            return moduleStore.value(INSTANCE_ID_MODULE, () -> {
+                File legacy = new File(EruptConst.ERUPT_DIR_PATH, INSTANCE_ID_FILE);
+                try {
+                    if (legacy.exists()) {
+                        String id = FileUtils.readFileToString(legacy, StandardCharsets.UTF_8).trim();
+                        if (StringUtils.isNotBlank(id)) return id;
+                    }
+                } catch (Exception e) {
+                    log.debug("telemetry: legacy instance id unreadable", e);
+                }
+                // a new id means this is the first run: disclose once, then stay silent
+                log.info("Erupt collects anonymous usage statistics (see README); "
+                        + "disable with erupt.telemetry.enabled=false or ERUPT_TELEMETRY_DISABLED=1");
+                return UUID.randomUUID().toString();
+            });
         } catch (Exception e) {
             log.debug("telemetry instance id unavailable", e);
             return null;

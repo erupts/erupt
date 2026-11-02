@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 
 /**
@@ -22,7 +23,8 @@ public class EruptSecurityAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-security").description("Erupt api security").build();
+        return ModuleInfo.builder().name("erupt-security").group(ModuleGroup.PLATFORM)
+                .description("API security: tokens, login protection and request verification").build();
     }
 
 }

@@ -24,7 +24,7 @@ public class LlmCoreRegistryTest {
             new ChatGpt(), new Claude(), new DeepSeek(), new Doubao(), new Fireworks(),
             new GLM(), new Gemini(), new Grok(), new Mimo(), new MiniMax(),
             new Mistral(), new Moonshot(), new Ollama(), new OpenAIAdapter(), new OpenRouter(),
-            new OrcaRouter(), new Qwen(), new Requesty(), new Together()
+            new Qwen(), new Together()
     );
 
     @Test

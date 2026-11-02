@@ -29,7 +29,7 @@ import xyz.erupt.atlas.service.EruptFieldInfoDataService;
         name = "Erupt Field Info",
         power = @Power(add = false, edit = false, delete = false, viewDetails = false),
         // Field rows belong to one class: jump to that class in the graph
-        rowOperation = @RowOperation(
+        rowOperation = @RowOperation(code = "openAtlas",
                 title = "Open in Atlas",
                 icon = "fa fa-diagram-project",
                 mode = RowOperation.Mode.SINGLE,

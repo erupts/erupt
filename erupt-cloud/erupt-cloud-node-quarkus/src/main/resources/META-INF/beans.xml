@@ -1,0 +1,2 @@
+<!-- lets Quarkus discover EruptNodeRoutes in this jar -->
+<beans/>

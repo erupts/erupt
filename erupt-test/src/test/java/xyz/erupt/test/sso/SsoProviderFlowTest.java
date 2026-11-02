@@ -19,6 +19,7 @@ import xyz.erupt.sso.model.EruptSso;
 import xyz.erupt.sso.model.EruptSsoBind;
 import xyz.erupt.sso.model.data_proxy.EruptSsoDataProxy;
 import xyz.erupt.sso.service.EruptSsoBindService;
+import xyz.erupt.sso.service.SsoSamlService;
 import xyz.erupt.test.EruptApplicationTests;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptUpmsProp;
@@ -150,7 +151,16 @@ public class SsoProviderFlowTest extends EruptApplicationTests {
     void everyPresetIsConsistent() {
         for (SsoProviderType type : SsoProviderType.values()) {
             SsoProviderType.Preset preset = type.preset();
+            boolean saml = type.flow() == SsoProviderType.Flow.SAML;
+            // the form hides and shows fields by a constant that has to name exactly the SAML types
+            assertEquals(saml, SsoProviderType.SAML_CONDITION.contains("'" + type.name() + "'"), type + " and SAML_CONDITION disagree");
             if (null == preset) continue;
+            if (saml) {
+                assertNotNull(preset.getAuthorizeUrl(), type + " has no single sign-on URL");
+                assertNull(preset.getScopes(), type + " has scopes, which SAML does not know");
+                assertEquals(SsoSamlService.NAME_ID, preset.getAccountClaim(), type + " should match on the NameID");
+                continue;
+            }
             boolean spelledOut = null != preset.getAuthorizeUrl() && null != preset.getTokenUrl() && null != preset.getUserInfoUrl();
             assertTrue(spelledOut || null != preset.getIssuer(), type + " has to name an issuer or all three endpoints");
             assertTrue(type.flow() == SsoProviderType.Flow.OAUTH2 || spelledOut, type + " cannot rely on discovery");
@@ -350,6 +360,9 @@ public class SsoProviderFlowTest extends EruptApplicationTests {
     private static void respond(HttpExchange exchange, String body) throws IOException {
         byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().set("Content-Type", "application/json");
+        // the provider client is a shared bean that pools keep-alive connections, while each test starts
+        // a new stub on a fresh port: closing every connection keeps one test from reusing another's
+        exchange.getResponseHeaders().set("Connection", "close");
         exchange.sendResponseHeaders(200, bytes.length);
         try (OutputStream out = exchange.getResponseBody()) {
             out.write(bytes);

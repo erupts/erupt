@@ -1,5 +1,8 @@
 package xyz.erupt.ai.core;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
@@ -38,13 +41,46 @@ public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler<V
 
     private static final Map<String, Object> aiMethodBeanMap = new HashMap<>();
 
+    // tools of @AiToolbox(exposed = false): reachable through an McpAuthenticator grant only
+    @Getter
+    private static final Map<String, Method> grantedMethodMap = new LinkedHashMap<>();
+
     @Getter
     private static final List<Object> tools = new ArrayList<>();
 
 
-    @SneakyThrows
     public static Object invoke(ToolExecutionRequest request) {
+        return invoke(aiMethodMap.get(request.name()), request);
+    }
+
+    /**
+     * Invokes an exposed or a granted tool; the caller has checked the grant allows it.
+     */
+    public static Object invokeGranted(ToolExecutionRequest request) {
         Method method = aiMethodMap.get(request.name());
+        return invoke(null != method ? method : grantedMethodMap.get(request.name()), request);
+    }
+
+    /**
+     * A list, a map or a bean that a client sent as JSON text ("[...]", "{...}") is read as that JSON: some
+     * MCP clients stringify structured arguments. A string parameter keeps its text as it is.
+     */
+    static JsonElement structured(JsonElement value, Class<?> type) {
+        if (null == value || !value.isJsonPrimitive() || !value.getAsJsonPrimitive().isString()) return value;
+        if (CharSequence.class.isAssignableFrom(type) || type.isEnum() || type.isPrimitive() || Number.class.isAssignableFrom(type)
+                || type == Boolean.class || type == Character.class) return value;
+        String text = value.getAsString().trim();
+        if (text.isEmpty() || "null".equals(text)) return JsonNull.INSTANCE;
+        if (!(text.startsWith("[") || text.startsWith("{"))) return value;
+        try {
+            return JsonParser.parseString(text);
+        } catch (RuntimeException e) {
+            return value;
+        }
+    }
+
+    @SneakyThrows
+    private static Object invoke(Method method, ToolExecutionRequest request) {
         if (null != method) {
             Object[] args = new Object[method.getParameterCount()];
             if (StringUtils.isNotBlank(request.arguments())) {
@@ -52,7 +88,8 @@ public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler<V
                 for (int i = 0; i < method.getParameters().length; i++) {
                     String paramName = method.getParameters()[i].getName();
                     if (jsonObject.has(paramName)) {
-                        args[i] = GsonFactory.getGson().fromJson(jsonObject.get(paramName), method.getGenericParameterTypes()[i]);
+                        args[i] = GsonFactory.getGson().fromJson(structured(jsonObject.get(paramName), method.getParameterTypes()[i]),
+                                method.getGenericParameterTypes()[i]);
                     }
                 }
             }
@@ -66,10 +103,11 @@ public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler<V
         applicationContext.getBeansWithAnnotation(AiToolbox.class).values().forEach(bean -> {
             Object target = AopProxyUtils.getSingletonTarget(bean);
             Object realBean = target != null ? target : bean;
-            tools.add(realBean);
+            boolean exposed = realBean.getClass().getAnnotation(AiToolbox.class).exposed();
+            if (exposed) tools.add(realBean);
             for (Method method : realBean.getClass().getDeclaredMethods()) {
                 if (method.isAnnotationPresent(Tool.class)) {
-                    aiMethodMap.put(method.getName(), method);
+                    (exposed ? aiMethodMap : grantedMethodMap).put(method.getName(), method);
                     aiMethodBeanMap.put(method.getName(), realBean);
                 }
             }

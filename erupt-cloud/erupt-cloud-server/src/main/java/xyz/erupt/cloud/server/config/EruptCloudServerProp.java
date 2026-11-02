@@ -30,4 +30,8 @@ public class EruptCloudServerProp {
     // Node node request timeout period
     private Integer nodeRequestTimeout = 1000 * 30;
 
+    // Also send the access token itself next to the request signature. Nodes released before signatures only
+    // know the token; turn this off once every node verifies Erupt-Signature, so the token never travels
+    private boolean plainAccessToken = true;
+
 }

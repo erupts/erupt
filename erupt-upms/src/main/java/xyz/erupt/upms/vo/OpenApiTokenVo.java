@@ -15,10 +15,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class OpenApiTokenVo {
 
-    //token
+    /** Token to send in the token header */
     private String token;
 
-    //token expiration time
+    /** When the token expires */
     private LocalDateTime expireTime;
 
     public OpenApiTokenVo(String token, LocalDateTime expireTime) {

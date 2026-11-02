@@ -39,9 +39,92 @@ public @interface EruptRouter {
             "server must answer the call itself, under the 'nodeName.eruptName' it addressed")
     boolean cloudProxy() default true;
 
+    @Comment("Rights of which the user needs at least one, besides the menu: checked by erupt-cloud-server " +
+            "before it forwards a call to a node, so the node does not have to. Empty means the menu alone")
+    Power[] power() default {};
+
+    @Comment("What the request body carries, so erupt-cloud-server can validate it against the node's model " +
+            "before forwarding")
+    Payload payload() default Payload.NONE;
+
+    @Comment("What erupt-cloud-server completes for a node's erupt: references a node sends as keys, a tree it does not build")
+    Resolve resolve() default Resolve.NONE;
 
     @Comment("Custom parameters")
     String[] params() default {};
+
+    // Mirrors the rights of PowerObject that a role can grant
+    enum Power {
+        QUERY, ADD, EDIT, DELETE, VIEW_DETAILS, EXPORT, IMPORTABLE
+    }
+
+    enum Resolve {
+        NONE,
+        @Comment("The response is a Page: references sent as keys get their label and flattened columns")
+        PAGE,
+        @Comment("The response is one record: references sent as keys get their label and flattened columns")
+        RECORD,
+        @Comment("A reference tree: built by the server from the referenced erupt's records, forwarded only for a field " +
+                "whose filter or orderBy the node evaluates")
+        REFERENCE_TREE,
+        @Comment("The build of the erupt a field points at: the server resolves the field from the node's build and asks the " +
+                "node for that erupt's own build")
+        FIELD_BUILD,
+        @Comment("The tree of a @Tree erupt: built by the server from the node's table")
+        TREE,
+        @Comment("The tree beside a @LinkTree table: built by the server from the records its field points at")
+        LINK_TREE,
+        @Comment("The tree of a TAB_TREE field: built by the server from the records it points at")
+        TAB_TREE,
+        @Comment("The options of a CHECKBOX field: built by the server from the records it points at when the node answers 404")
+        CHECKBOX,
+        @Comment("A field's onchange: the node's invoke for a node that serves it")
+        ONCHANGE,
+        @Comment("An AUTO_COMPLETE field's suggestions: the node's invoke for a node that serves it")
+        AUTO_COMPLETE,
+        @Comment("A BUTTON field's click: the node's invoke for a node that serves it")
+        BUTTON,
+        @Comment("A REFERENCE_TABLE picker: the referenced erupt's table, read by the server for a node that serves invoke")
+        REFERENCE_TABLE,
+        @Comment("A row operation run: the node's invoke for a node that serves it")
+        OPERATION,
+        @Comment("The form values a row operation opens with: the node's invoke for a node that serves it")
+        OPERATION_FORM,
+        @Comment("The import template: written by the server from the build model when the node answers 404")
+        EXCEL_TEMPLATE,
+        @Comment("An export: the server pages through the node's table and encodes the file when the node answers 404")
+        EXCEL_EXPORT,
+        @Comment("An import: the server parses the file and adds its rows through the node when the node answers 404")
+        EXCEL_IMPORT,
+        @Comment("An upload: never forwarded, the server stores it by the rules of the node's build, so its download serves it")
+        UPLOAD,
+        @Comment("Choice / tags options: the server answers them from the node's build, forwarding only a field that fetches its own")
+        OPTIONS,
+        @Comment("A cell edit: the server reads the row through the node, patches the cell and saves the row through the node's update")
+        CELL,
+        @Comment("A batch edit: the cell edit of every selected row, done one row at a time through the node")
+        CELLS,
+        @Comment("A drag sort: the server writes each row's new position into the dragSort field through the node's update")
+        DRAG_SORT,
+        @Comment("A card moved on a board view: the server writes its group (and swimlane) through the node's update")
+        VIS_BOARD_GROUP,
+        @Comment("An event moved on a calendar view: the server writes its dates through the node's update")
+        VIS_CALENDAR_DATE,
+        @Comment("A bar moved on a gantt view: the server writes its dates through the node's update")
+        VIS_GANTT_DATE,
+        @Comment("The links of a gantt view: the server reads them off the rows' dependencyField through the node's get")
+        VIS_GANTT_LINKS,
+        @Comment("A link drawn on a gantt view: the server writes the dependencyField through the node's update")
+        VIS_GANTT_LINK
+    }
+
+    enum Payload {
+        NONE,
+        @Comment("TableQuery against the erupt in the path: search conditions, sort and paging")
+        TABLE_QUERY,
+        @Comment("One record of the erupt in the path, as added or updated")
+        RECORD
+    }
 
     enum VerifyMethod {
         @Comment("Token must be placed in the request header")

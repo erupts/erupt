@@ -12,6 +12,7 @@ import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.context.OldEntityTL;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.remote.model.RemoteHost;
 import xyz.erupt.remote.service.RemoteHostAccess;
 import xyz.erupt.remote.util.RemoteCrypto;
@@ -83,7 +84,7 @@ public class RemoteHostDataProxy implements DataProxy<RemoteHost> {
         String json = OldEntityTL.get();
         if (json == null) return null;
         JsonObject old = GsonFactory.getGson().fromJson(json, JsonObject.class);
-        JsonElement el = old.get("privateKey");
+        JsonElement el = old.get(LambdaSee.field(RemoteHost::getPrivateKey));
         return el == null || el.isJsonNull() ? null : el.getAsString();
     }
 

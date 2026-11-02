@@ -21,7 +21,8 @@ public @interface Power {
 
     boolean viewDetails() default true;
 
-    boolean export() default false;
+    @Comment("who may export is the role's EXPORT button, columns opt out with @View(export = false)")
+    boolean export() default true;
 
     boolean importable() default false;
 
@@ -34,11 +35,18 @@ public @interface Power {
             "whose rows should always be changed as a reviewed whole")
     boolean cellEdit() default true;
 
+    @Comment("Whether one field of several selected rows may be set to the same value at once. " +
+            "Every row runs the cell edit pipeline, so a field that opted out of cellEdit is excluded here too")
+    boolean batchEdit() default true;
+
     @Comment("Whether AI tools may inspect and operate on this Erupt model")
     boolean ai() default true;
 
     @Comment("Whether records of this model carry a comment stream (needs the erupt-comment module)")
     boolean comment() default true;
+
+    @Comment("Whether changes to records of this model are kept as a field-level history with rollback (needs the erupt-revision module)")
+    boolean revision() default true;
 
     @Transient
     @Comment("Dynamic handling of Power permissions")

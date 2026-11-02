@@ -2,10 +2,13 @@ package xyz.erupt.sso.service;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import jakarta.annotation.Resource;
+import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import xyz.erupt.core.config.GsonFactory;
@@ -15,18 +18,22 @@ import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.EncryptUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.base.LoginModel;
-import xyz.erupt.upms.constant.EncryptType;
 import xyz.erupt.sso.constant.SsoProviderType;
 import xyz.erupt.sso.constant.SsoSessionKey;
-import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.sso.model.EruptSso;
 import xyz.erupt.sso.model.EruptSsoBind;
+import xyz.erupt.sso.vo.EruptSsoProviderVo;
+import xyz.erupt.upms.base.LoginModel;
+import xyz.erupt.upms.constant.EncryptType;
+import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
-import xyz.erupt.sso.vo.EruptSsoProviderVo;
+import xyz.erupt.upms.spi.UpmsTenantLogin;
+import xyz.erupt.upms.tenant.UpmsTenantSessions;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpRequest;
@@ -34,20 +41,13 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * Single sign-on over the OAuth2 authorization code flow, with PKCE.
+ * Single sign-on over the OAuth2 authorization code flow, with PKCE, or over SAML 2.0.
  *
  * <p>erupt is the relying party and never the token audience: the code is exchanged server
  * side and the resulting access token is spent on one call, the provider's user info
@@ -55,9 +55,21 @@ import java.util.stream.Collectors;
  * it is a key into a short lived server side record holding the provider and the PKCE
  * verifier, and it is burnt on first use.
  *
+ * <p>A SAML row takes the same two steps with different payloads: the state becomes the
+ * AuthnRequest id and RelayState, and what comes back is a signed assertion instead of a
+ * code, checked by {@link SsoSamlService}. From the claims on, the two protocols are one.
+ *
+ * <p>A tenant signs in through providers of its own. The tenant code comes with the first
+ * request, from the tenant login page, and is resolved through {@link UpmsTenantLogin}; from then
+ * on the tenant travels in the server side state, never in what the browser sends back. Provider
+ * rows, bindings and users are read and written in a session of that tenant, and the session
+ * handed out is the tenant's. Without a tenant code, or without the tenant module, it is all the
+ * platform's, as before.
+ *
  * @author YuePeng
  * date 2026-09-18
  */
+@Slf4j
 @Service
 public class EruptSsoService {
 
@@ -69,8 +81,8 @@ public class EruptSsoService {
     private static final int TICKET_EXPIRE_SECONDS = 60;
 
 
-    // Providers disagree on what the stable identifier is called; OIDC says sub, the rest improvise
-    private static final String[] SUBJECT_CLAIMS = {"sub", "id", "openid", "open_id", "openId", "unionid", "union_id", "unionId", "userid", "userId", "user_id"};
+    // Providers disagree on what the stable identifier is called; SAML has its NameID, OIDC says sub, the rest improvise
+    private static final String[] SUBJECT_CLAIMS = {SsoSamlService.NAME_ID, "sub", "id", "openid", "open_id", "openId", "unionid", "union_id", "unionId", "userid", "userId", "user_id"};
 
     @Resource
     private EruptDao eruptDao;
@@ -90,15 +102,29 @@ public class EruptSsoService {
     @Resource
     private SsoProviderApi api;
 
+    @Resource
+    private SsoSamlService saml;
+
+    @Resource
+    private UpmsTenantSessions sessions;
+
+    // registered by the tenant module; without it every sign-on is the platform's
+    @Autowired
+    private ObjectProvider<UpmsTenantLogin> tenantLogin;
+
     // A discovery document is a deployment constant; cache it per issuer and drop it when the row changes
     private final Map<String, Endpoints> discoveryCache = new ConcurrentHashMap<>();
 
     /**
-     * Providers offered on the login page. Nothing secret leaves this method.
+     * Providers offered on the login page, the platform's or, with a tenant code, the tenant's.
+     * Nothing secret leaves this method, and an unknown tenant code gets the same empty list as a
+     * tenant without providers, so the page tells nobody which codes exist.
      */
-    public List<EruptSsoProviderVo> providers() {
-        return eruptDao.lambdaQuery(EruptSso.class).eq(EruptSso::getStatus, true)
-                .orderBy(EruptSso::getSort).list().stream()
+    public List<EruptSsoProviderVo> providers(String tenantCode) {
+        Scope scope = this.findScope(tenantCode);
+        if (null == scope) return List.of();
+        return sessions.callAs(scope.tenantId(), em -> eruptDao.lambdaQuery(em, EruptSso.class).eq(EruptSso::getStatus, true)
+                        .orderBy(EruptSso::getSort).list()).stream()
                 .map(it -> new EruptSsoProviderVo(it.getCode(), I18nTranslate.$translate(it.getName()), it.getIcon()))
                 .collect(Collectors.toList());
     }
@@ -125,21 +151,28 @@ public class EruptSsoService {
     /**
      * Where the browser has to go to meet the provider, with a freshly parked state.
      */
-    public String authorizeUrl(String providerCode, HttpServletRequest request) {
-        EruptSso sso = this.findEnabled(providerCode);
+    public String authorizeUrl(String providerCode, String tenantCode, HttpServletRequest request) {
+        Scope scope = this.scope(tenantCode);
+        EruptSso sso = this.findEnabled(scope, providerCode);
         Endpoints endpoints = this.endpoints(sso);
         String state = Erupts.generateCode(32);
         String verifier = Erupts.generateCode(64);
         SsoState payload = new SsoState();
         payload.setSsoId(sso.getId());
         payload.setVerifier(verifier);
+        payload.setTenantCode(scope.tenantCode());
+        payload.setTenantId(scope.tenantId());
         sessionService.put(SsoSessionKey.SSO_STATE + state, GsonFactory.getGson().toJson(payload), STATE_EXPIRE_MINUTES, TimeUnit.MINUTES);
         Map<String, String> params = new LinkedHashMap<>();
-        switch (flow(sso)) {
+        switch (sso.flow()) {
+            case SAML -> {
+                // no query of our own: the request is one deflated XML parameter, the state rides as RelayState
+                return saml.authnRequestUrl(sso, state, this.redirectUri(sso, scope, request));
+            }
             case WECOM, WECHAT -> {
                 // Tencent calls the client id appid; WeCom's agent id is part of the configured URL
                 params.put("appid", sso.getClientId());
-                params.put("redirect_uri", this.redirectUri(sso, request));
+                params.put("redirect_uri", this.redirectUri(sso, scope, request));
                 params.put("response_type", "code");
                 params.put("scope", sso.getScopes());
                 params.put("state", state);
@@ -147,7 +180,7 @@ public class EruptSsoService {
             case DINGTALK -> {
                 params.put("response_type", "code");
                 params.put("client_id", sso.getClientId());
-                params.put("redirect_uri", this.redirectUri(sso, request));
+                params.put("redirect_uri", this.redirectUri(sso, scope, request));
                 params.put("scope", sso.getScopes());
                 params.put("state", state);
                 params.put("prompt", "consent");
@@ -155,7 +188,7 @@ public class EruptSsoService {
             default -> {
                 params.put("response_type", "code");
                 params.put("client_id", sso.getClientId());
-                params.put("redirect_uri", this.redirectUri(sso, request));
+                params.put("redirect_uri", this.redirectUri(sso, scope, request));
                 params.put("scope", sso.getScopes());
                 params.put("state", state);
                 params.put("code_challenge", challenge(verifier));
@@ -165,45 +198,118 @@ public class EruptSsoService {
         return authorizeQuery(endpoints.authorizeUrl(), params);
     }
 
-    private static SsoProviderType.Flow flow(EruptSso sso) {
-        return null == sso.getType() ? SsoProviderType.Flow.OAUTH2 : sso.getType().flow();
+    /**
+     * The SP metadata an IdP imports to learn about this provider row.
+     */
+    public String samlMetadata(String providerCode, String tenantCode, HttpServletRequest request) {
+        Scope scope = this.scope(tenantCode);
+        EruptSso sso = this.findEnabled(scope, providerCode);
+        Erupts.requireTrue(sso.flow() == SsoProviderType.Flow.SAML, I18nTranslate.$translate("sso.provider_not_found"));
+        return saml.metadata(sso, this.redirectUri(sso, scope, request));
     }
 
     // -------------------------------------------------------------- callback
 
     /**
-     * Turn the provider's authorization code into an erupt session, handed back as a
-     * one-time ticket: a session token has no business travelling in a redirect URL.
+     * Turn the provider's authorization code (for SAML: the posted response) into an erupt
+     * session, handed back as a one-time ticket: a session token has no business travelling
+     * in a redirect URL.
      */
-    public String callback(String providerCode, String state, String authCode, HttpServletRequest request) {
+    public String callback(String providerCode, String tenantCode, String state, String authCode, HttpServletRequest request) {
         Erupts.requireTrue(StringUtils.isNotBlank(state) && StringUtils.isNotBlank(authCode),
                 I18nTranslate.$translate("sso.state_invalid"));
         Object raw = sessionService.get(SsoSessionKey.SSO_STATE + state);
         sessionService.remove(SsoSessionKey.SSO_STATE + state); // single use, whatever happens next
         Erupts.requireNonNull(raw, I18nTranslate.$translate("sso.state_invalid"));
         SsoState payload = GsonFactory.getGson().fromJson(raw.toString(), SsoState.class);
-        EruptSso sso = this.findEnabled(providerCode);
+        // the tenant is the one the state was issued for. A tenant's provider may call back on the
+        // platform's address (it does by default, see redirectUri); a tenant path has to agree
+        Erupts.requireTrue(StringUtils.isBlank(tenantCode) || tenantCode.equals(payload.getTenantCode()),
+                I18nTranslate.$translate("sso.state_invalid"));
+        Scope scope = null == payload.getTenantCode() ? Scope.PLATFORM : new Scope(payload.getTenantCode(), payload.getTenantId());
+        EruptSso sso = this.findEnabled(scope, providerCode);
         // the state was issued for one provider; a code replayed against another must not pass
         Erupts.requireTrue(sso.getId().equals(payload.getSsoId()), I18nTranslate.$translate("sso.state_invalid"));
 
         Endpoints endpoints = this.endpoints(sso);
-        JsonObject claims = switch (flow(sso)) {
+        JsonObject claims = switch (sso.flow()) {
+            case SAML -> saml.identity(sso, authCode, SsoSamlService.requestId(state), this.redirectUri(sso, scope, request));
             case DINGTALK -> this.dingTalkIdentity(sso, endpoints, authCode);
             case WECOM -> this.weComIdentity(sso, endpoints, authCode);
             case WECHAT -> this.weChatIdentity(sso, endpoints, authCode);
-            default -> this.userInfo(endpoints, this.exchangeCode(sso, endpoints, authCode, payload.getVerifier(), request));
+            default -> this.userInfo(endpoints, this.exchangeCode(sso, endpoints, authCode, payload.getVerifier(), this.redirectUri(sso, scope, request)));
         };
         // only now is there anything to write, and the provider is no longer on the line
-        EruptUser eruptUser = transactionTemplate.execute(status -> this.resolveUser(sso, claims));
+        EruptUser eruptUser = transactionTemplate.execute(status ->
+                sessions.callAs(scope.tenantId(), em -> this.resolveUser(em, sso.getId(), claims)));
 
-        String reason = eruptUserService.checkAccountUsable(eruptUser);
-        if (null != reason) throw new EruptWebApiRuntimeException(reason);
-
-        LoginModel loginModel = new LoginModel(true, eruptUser);
-        eruptUserService.completeLogin(loginModel, EruptUserService.findEruptLogin());
+        LoginModel loginModel;
+        if (scope.isPlatform()) {
+            String reason = eruptUserService.checkAccountUsable(eruptUser);
+            if (null != reason) throw new EruptWebApiRuntimeException(reason);
+            loginModel = new LoginModel(true, eruptUser);
+            eruptUserService.completeLogin(loginModel, EruptUserService.findEruptLogin());
+        } else {
+            // the tenant module decides whether the tenant may sign in and what its session is
+            loginModel = this.requireTenantLogin().login(scope.tenantId(), eruptUser);
+            if (!loginModel.isPass()) throw new EruptWebApiRuntimeException(loginModel.getReason());
+        }
         String ticket = Erupts.generateCode(32);
         sessionService.put(SsoSessionKey.SSO_TICKET + ticket, GsonFactory.getGson().toJson(loginModel), TICKET_EXPIRE_SECONDS, TimeUnit.SECONDS);
         return ticket;
+    }
+
+    /**
+     * Where the browser goes to start a sign-on: the provider, or back to the login page with the
+     * reason it could not start.
+     */
+    public String authorizeRedirect(String providerCode, String tenantCode, HttpServletRequest request) {
+        try {
+            return this.authorizeUrl(providerCode, tenantCode, request);
+        } catch (Exception e) {
+            log.warn("sso authorize failed: {}", providerCode, e);
+            return this.loginPageUrl(tenantCode, request, Map.of("ssoError", message(e)));
+        }
+    }
+
+    /**
+     * Where the browser goes once the provider called back. Both outcomes end on the login page:
+     * a one-time ticket to exchange, or a message to show.
+     *
+     * @param proof the authorization code, or for SAML the posted response
+     */
+    public String callbackRedirect(String providerCode, String tenantCode, String state, String proof, HttpServletRequest request) {
+        // read before the callback spends the state: a failure has to end on the right login page too
+        String loginTenant = this.loginTenant(tenantCode, state);
+        Map<String, String> params;
+        try {
+            params = Map.of("ssoTicket", this.callback(providerCode, tenantCode, state, proof, request));
+        } catch (Exception e) {
+            log.warn("sso callback failed: {}", providerCode, e);
+            params = Map.of("ssoError", message(e));
+        }
+        return this.loginPageUrl(loginTenant, request, params);
+    }
+
+    /**
+     * Where the browser goes when the provider refused before calling back with a code.
+     */
+    public String errorRedirect(String tenantCode, String state, String error, HttpServletRequest request) {
+        return this.loginPageUrl(this.loginTenant(tenantCode, state), request, Map.of("ssoError", error));
+    }
+
+    /**
+     * The tenant whose login page a callback returns to: the one in the path, otherwise the one the
+     * state was issued for. The state is only read here, the callback itself spends it.
+     */
+    private String loginTenant(String tenantCode, String state) {
+        if (StringUtils.isNotBlank(tenantCode) || StringUtils.isBlank(state)) return tenantCode;
+        Object raw = sessionService.get(SsoSessionKey.SSO_STATE + state);
+        return null == raw ? null : GsonFactory.getGson().fromJson(raw.toString(), SsoState.class).getTenantCode();
+    }
+
+    private static String message(Exception e) {
+        return null == e.getMessage() ? I18nTranslate.$translate("sso.login_failed") : e.getMessage();
     }
 
     /**
@@ -222,34 +328,37 @@ public class EruptSsoService {
     /**
      * Who signed in. The subject owns the binding; a claim may only ever create one.
      */
-    private EruptUser resolveUser(EruptSso sso, JsonObject claims) {
+    private EruptUser resolveUser(EntityManager em, Long ssoId, JsonObject claims) {
+        // loaded again in this session: the default roles are read below
+        EruptSso sso = em.find(EruptSso.class, ssoId);
         String subject = this.subject(claims);
         Erupts.requireTrue(StringUtils.isNotBlank(subject), I18nTranslate.$translate("sso.no_subject") + claimNames(claims));
-        EruptSsoBind bind = eruptDao.lambdaQuery(EruptSsoBind.class)
+        EruptSsoBind bind = eruptDao.lambdaQuery(em, EruptSsoBind.class)
                 .eq(EruptSsoBind::getSso, sso).eq(EruptSsoBind::getSubject, subject).one();
         if (null != bind) {
             this.recordLogin(sso, bind, claims);
-            eruptDao.merge(bind);
-            return this.applyProfile(sso, claims, bind.getEruptUser());
+            em.merge(bind);
+            return this.applyProfile(em, sso, claims, em.find(EruptUser.class, bind.getEruptUser().getId()));
         }
 
         String account = claim(claims, sso.getAccountClaim());
         if (StringUtils.isBlank(account)) account = claim(claims, sso.getEmailClaim());
         Erupts.requireTrue(StringUtils.isNotBlank(account), I18nTranslate.$translate("sso.no_account_claim") + claimNames(claims));
-        EruptUser eruptUser = eruptDao.lambdaQuery(EruptUser.class).eq(EruptUser::getAccount, account).one();
+        EruptUser eruptUser = eruptDao.lambdaQuery(em, EruptUser.class).eq(EruptUser::getAccount, account).one();
         if (null == eruptUser) {
             // the value is the caller's own identifier at the provider; naming it tells the admin what to create
             Erupts.requireTrue(Boolean.TRUE.equals(sso.getAutoCreate()),
                     I18nTranslate.$translate("sso.account_not_found") + " (" + sso.getAccountClaim() + ": " + account + ")");
-            eruptUser = this.createUser(sso, claims, account);
+            eruptUser = this.createUser(em, sso, claims, account);
         }
         EruptSsoBind newBind = new EruptSsoBind();
         newBind.setSso(sso);
-        newBind.setEruptUser(eruptUser);
+        // a reference: a user created just above is not flushed yet
+        newBind.setEruptUser(em.getReference(EruptUserVo.class, eruptUser.getId()));
         newBind.setSubject(subject);
         this.recordLogin(sso, newBind, claims);
-        eruptDao.persist(newBind);
-        return this.applyProfile(sso, claims, eruptUser);
+        em.persist(newBind);
+        return this.applyProfile(em, sso, claims, eruptUser);
     }
 
     /**
@@ -267,14 +376,14 @@ public class EruptSsoService {
      * filled, so a name or avatar somebody set by hand survives; with sync on, the provider
      * is the source of truth and every mapped claim is written on every login.
      */
-    private EruptUser applyProfile(EruptSso sso, JsonObject claims, EruptUser eruptUser) {
+    private EruptUser applyProfile(EntityManager em, EruptSso sso, JsonObject claims, EruptUser eruptUser) {
         boolean sync = Boolean.TRUE.equals(sso.getSyncProfile());
         boolean changed = this.grantRoles(sso, eruptUser);
         changed |= assign(sync, claim(claims, sso.getNameClaim()), eruptUser.getName(), eruptUser::setName);
         changed |= assign(sync, claim(claims, sso.getEmailClaim()), eruptUser.getEmail(), eruptUser::setEmail);
         changed |= assign(sync, claim(claims, sso.getPhoneClaim()), eruptUser.getPhone(), eruptUser::setPhone);
         changed |= assign(sync, claim(claims, sso.getAvatarClaim()), eruptUser.getAvatar(), eruptUser::setAvatar);
-        if (changed) eruptDao.merge(eruptUser);
+        if (changed) em.merge(eruptUser);
         return eruptUser;
     }
 
@@ -299,7 +408,7 @@ public class EruptSsoService {
      * A user the provider vouches for but erupt has never seen. Created with no usable
      * password and only the role the provider row names, never an inherited privilege.
      */
-    private EruptUser createUser(EruptSso sso, JsonObject claims, String account) {
+    private EruptUser createUser(EntityManager em, EruptSso sso, JsonObject claims, String account) {
         EruptUser eruptUser = new EruptUser();
         eruptUser.setAccount(account);
         // the rest of the profile (name, email, phone, avatar) is mapped in applyProfile
@@ -317,7 +426,8 @@ public class EruptSsoService {
         // never null: the login path streams the roles, and a user with no role is a valid outcome
         eruptUser.setRoles(new HashSet<>());
         if (null != sso.getDefaultRoles()) eruptUser.getRoles().addAll(sso.getDefaultRoles());
-        eruptDao.persistAndFlush(eruptUser);
+        em.persist(eruptUser);
+        em.flush();
         return eruptUser;
     }
 
@@ -349,11 +459,11 @@ public class EruptSsoService {
 
     // ------------------------------------------------------------------ http
 
-    private String exchangeCode(EruptSso sso, Endpoints endpoints, String authCode, String verifier, HttpServletRequest request) {
+    private String exchangeCode(EruptSso sso, Endpoints endpoints, String authCode, String verifier, String redirectUri) {
         Map<String, String> form = new LinkedHashMap<>();
         form.put("grant_type", "authorization_code");
         form.put("code", authCode);
-        form.put("redirect_uri", this.redirectUri(sso, request));
+        form.put("redirect_uri", redirectUri);
         form.put("code_verifier", verifier);
         HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(endpoints.tokenUrl()))
                 .timeout(TIMEOUT)
@@ -482,6 +592,11 @@ public class EruptSsoService {
      * issuer's discovery document.
      */
     private Endpoints endpoints(EruptSso sso) {
+        if (sso.flow() == SsoProviderType.Flow.SAML) {
+            // the single sign-on URL is all SAML has; nothing to discover, no token, no user info
+            Erupts.requireTrue(StringUtils.isNotBlank(sso.getAuthorizeUrl()), I18nTranslate.$translate("sso.saml_endpoint_missing"));
+            return new Endpoints(sso.getAuthorizeUrl(), null, null, false);
+        }
         if (StringUtils.isNoneBlank(sso.getAuthorizeUrl(), sso.getTokenUrl(), sso.getUserInfoUrl())) {
             // without a discovery document the preset is the only thing that knows how the token endpoint authenticates
             boolean basicAuth = null != sso.getType() && null != sso.getType().preset() && sso.getType().preset().isBasicAuth();
@@ -512,8 +627,14 @@ public class EruptSsoService {
             json = this.send(HttpRequest.newBuilder(URI.create(url)).timeout(TIMEOUT)
                     .header("Accept", "application/json").GET().build(), "discovery");
         } catch (EruptWebApiRuntimeException e) {
-            // whatever came back, it was not a discovery document: the fix is the same either way
-            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.discovery_failed") + " (" + url + ")");
+            if (e.getCause() instanceof IOException cause) {
+                // the issuer never answered (DNS, connect, proxy, TLS or timeout): the document may well exist,
+                // it is the server that cannot reach it, so telling the admin to type the URLs by hand would mislead
+                throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.discovery_unreachable") + " (" + url + ": "
+                        + cause.getClass().getSimpleName() + (null == cause.getMessage() ? "" : " " + cause.getMessage()) + ")", e);
+            }
+            // the issuer answered, but not with a discovery document (404, HTML page, non JSON): the endpoints have to be typed in
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("sso.discovery_failed") + " (" + url + ")", e);
         }
         Endpoints endpoints = new Endpoints(
                 claim(json, "authorization_endpoint"),
@@ -541,17 +662,28 @@ public class EruptSsoService {
      * The callback address the provider must know. Derived from the incoming request so a
      * single-host deployment needs no configuration, overridable for everything else.
      */
-    public String redirectUri(EruptSso sso, HttpServletRequest request) {
+    private String redirectUri(EruptSso sso, Scope scope, HttpServletRequest request) {
         if (StringUtils.isNotBlank(sso.getRedirectUri())) return sso.getRedirectUri();
-        return baseUrl(request) + EruptRestPath.ERUPT_API + "/sso/callback/" + sso.getCode();
+        String base = baseUrl(request) + EruptRestPath.ERUPT_API + "/sso";
+        // An OAuth2 tenant provider calls back on the platform's address: the tenant is in the
+        // state, and a tenant reusing the platform's app (one Feishu app for every tenant) needs no
+        // further address registered there. A SAML IdP tells service providers apart by this URL,
+        // so a tenant's SAML row gets the tenant's own.
+        if (scope.isPlatform() || sso.flow() != SsoProviderType.Flow.SAML) return base + "/callback/" + sso.getCode();
+        return base + "/tenant/" + urlEncode(scope.tenantCode()) + "/callback/" + sso.getCode();
     }
 
     /**
      * Where the browser lands once the provider is done. Never taken from the request:
      * a client supplied return address is an open redirect waiting to happen.
      */
-    public String loginPageUrl(HttpServletRequest request, Map<String, String> params) {
-        String page = StringUtils.defaultIfBlank(eruptAppProp.getLoginPagePath(), baseUrl(request) + "/#/passport/login");
+    public String loginPageUrl(String tenantCode, HttpServletRequest request, Map<String, String> params) {
+        // a relative address: the browser stays on whatever host it reached erupt through, and
+        // nothing from the request headers takes part in where it is sent
+        UpmsTenantLogin login = StringUtils.isBlank(tenantCode) ? null : tenantLogin.getIfAvailable();
+        String page = null == login
+                ? StringUtils.defaultIfBlank(eruptAppProp.getLoginPagePath(), request.getContextPath() + "/#/passport/login")
+                : request.getContextPath() + login.loginPage(tenantCode);
         return appendQuery(page, params);
     }
 
@@ -568,7 +700,10 @@ public class EruptSsoService {
         if (params.isEmpty()) return url;
         int hash = url.lastIndexOf('#');
         String tail = hash < 0 ? url : url.substring(hash);
-        return url + (tail.contains("?") ? "&" : "?") + formBody(params);
+        // the parameters are written behind a '?' before they meet the url: wherever that url
+        // came from, nothing in them can read as part of its host
+        String query = "?" + formBody(params);
+        return url + (tail.contains("?") ? "&" + query.substring(1) : query);
     }
 
     /**
@@ -600,10 +735,47 @@ public class EruptSsoService {
         }
     }
 
-    private EruptSso findEnabled(String code) {
-        EruptSso sso = eruptDao.lambdaQuery(EruptSso.class).eq(EruptSso::getCode, code).eq(EruptSso::getStatus, true).one();
+    private EruptSso findEnabled(Scope scope, String code) {
+        EruptSso sso = sessions.callAs(scope.tenantId(), em -> eruptDao.lambdaQuery(em, EruptSso.class)
+                .eq(EruptSso::getCode, code).eq(EruptSso::getStatus, true).one());
         Erupts.requireNonNull(sso, I18nTranslate.$translate("sso.provider_not_found"));
         return sso;
+    }
+
+    /**
+     * The tenant a sign-on runs for: the platform without a code, {@code null} for a code that
+     * names no tenant or a deployment without the tenant module.
+     */
+    private Scope findScope(String tenantCode) {
+        if (StringUtils.isBlank(tenantCode)) return Scope.PLATFORM;
+        UpmsTenantLogin login = tenantLogin.getIfAvailable();
+        String tenantId = null == login ? null : login.tenantId(tenantCode);
+        return null == tenantId ? null : new Scope(tenantCode, tenantId);
+    }
+
+    private Scope scope(String tenantCode) {
+        Scope scope = this.findScope(tenantCode);
+        Erupts.requireNonNull(scope, I18nTranslate.$translate("sso.tenant_not_found"));
+        return scope;
+    }
+
+    private UpmsTenantLogin requireTenantLogin() {
+        UpmsTenantLogin login = tenantLogin.getIfAvailable();
+        Erupts.requireNonNull(login, I18nTranslate.$translate("sso.tenant_not_found"));
+        return login;
+    }
+
+    /**
+     * @param tenantCode {@code null} for the platform
+     * @param tenantId   {@code null} for the platform
+     */
+    private record Scope(String tenantCode, String tenantId) {
+
+        static final Scope PLATFORM = new Scope(null, null);
+
+        boolean isPlatform() {
+            return null == tenantCode;
+        }
     }
 
     private record Endpoints(String authorizeUrl, String tokenUrl, String userInfoUrl, boolean basicAuth) {
@@ -616,6 +788,11 @@ public class EruptSsoService {
         private Long ssoId;
 
         private String verifier;
+
+        // null for the platform
+        private String tenantCode;
+
+        private String tenantId;
 
     }
 

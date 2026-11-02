@@ -40,7 +40,7 @@ public class EruptFileService {
         } else {
             String[] fileNameSplit = file.getOriginalFilename().split("\\.");
             return File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE)
-                    + File.separator + RandomStringUtils.randomAlphabetic(12) + EruptConst.DOT + fileNameSplit[fileNameSplit.length - 1];
+                    + File.separator + RandomStringUtils.secure().nextAlphabetic(12) + EruptConst.DOT + fileNameSplit[fileNameSplit.length - 1];
         }
     }
 

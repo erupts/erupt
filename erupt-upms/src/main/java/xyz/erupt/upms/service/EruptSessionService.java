@@ -140,6 +140,7 @@ public class EruptSessionService {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getMapValue(String key, String mapKey, Class<T> type) {
         if (eruptProp.isRedisSession()) {
             Object obj = stringRedisTemplate.boundHashOps(key).get(mapKey);

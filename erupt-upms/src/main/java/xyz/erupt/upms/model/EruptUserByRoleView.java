@@ -1,10 +1,13 @@
 package xyz.erupt.upms.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.TenantId;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -15,7 +18,9 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.jpa.model.BaseModel;
+import xyz.erupt.upms.helper.UpmsTenant;
 
 /**
  * @author YuePeng
@@ -30,6 +35,12 @@ import xyz.erupt.jpa.model.BaseModel;
 @Getter
 @Setter
 public class EruptUserByRoleView extends BaseModel {
+
+    // same table as EruptUser: the tenant restriction has to apply to this view as well
+    @TenantId
+    @ColumnDefault("'" + UpmsTenant.PLATFORM + "'")
+    @Column(length = AnnotationConst.CODE_LENGTH, nullable = false)
+    private String tenantId;
 
     @EruptField(
             views = @View(title = "Account", sortable = true),

@@ -11,10 +11,13 @@ import lombok.Setter;
 @Setter
 public class ChangePwdBody {
 
+    /** Current password, encoded like the login password */
     private String pwd;
 
+    /** New password, encoded like the login password */
     private String newPwd;
 
+    /** New password repeated */
     private String newPwd2;
 
 }

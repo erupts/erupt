@@ -15,8 +15,18 @@ window.eruptSiteConfig = {
     logoText: null,
     registerPage: null,
     // faviconPath: "https://docs.erupt.xyz/icon.svg",
-    amapKey: 'da01c124bff9d9be1ad44e04f23aa32e',
-    amapSecurityJsCode: "5bf6c7828a97fe987c8292f00629a6d9",
+    // Map vendor for EditType.MAP fields and the map view:
+    // "amap" (高德) | "baidu" | "tencent" | "tianditu" (天地图) | "google" | "osm" (OpenStreetMap, no key).
+    // The vendor SDK is fetched from its CDN at runtime; nothing is bundled.
+    map: {
+        provider: "amap",
+        key: 'da01c124bff9d9be1ad44e04f23aa32e',
+        securityJsCode: "5bf6c7828a97fe987c8292f00629a6d9", // amap only
+        // mapId: "DEMO_MAP_ID", // google only: map ID for advanced markers
+        // darkStyleId: "",      // baidu / tencent: custom style id from the vendor console, used in dark mode
+        // tileUrl: "",          // osm only: any XYZ tile url template instead of OpenStreetMap's
+        // center: {lng: 116.4, lat: 39.9}, // where an empty map opens
+    },
     // Installed app (PWA). Name, description and color come from logoText / title / desc and the
     // top bar; this block only adds the icon and the icon's right-click menu.
     pwa: {
@@ -36,7 +46,7 @@ window.eruptSiteConfig = {
         // headerColor: 'primary',   // "primary" (follow the primary color) or any CSS color
         dark: false,        // false | true | "auto" (follow the OS color scheme)
         compact: false,     // denser spacing across the UI
-        skin: "default",    // "default" | "brutalist" | "liquid-glass" | "workspace" (chat-app frame: dark brand-tinted sidebar + header, content as a rounded card) | "classic" (Ant Design Pro: navy sidebar, white header)
+        skin: "default",    // "default" | "brutalist" | "liquid-glass" | "workspace" (chat-app frame: dark brand-tinted sidebar + header, content as a rounded card) | "classic" (Ant Design Pro: navy sidebar, white header) | "terminal" (phosphor console: black canvas, monospace, one glowing accent) | "material" (Material 3 / Gmail: brand-tinted tonal chrome, rounded sheet, pill rows)
         // workspaceFrame: "sky", // workspace skin only — navigation frame preset (unset = derived from primaryColor):
         //   light: "mist" | "sky" | "azure" | "salt" | "gray" | "mint" | "mint-chip" | "lime" | "citrus" | "banana" | "brass" | "almond" | "peach"
         //          | "dawn" | "blush" | "raspberry" | "mauve" | "lilac" | "lavender-mint"

@@ -25,7 +25,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 @Erupt(
         name = "MCP",
         dataProxy = McpServerService.class,
-        rowOperation = @RowOperation(
+        rowOperation = @RowOperation(code = "refresh",
                 title = "Refresh",
                 icon = "fa fa-refresh",
                 mode = RowOperation.Mode.SINGLE,

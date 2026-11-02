@@ -9,8 +9,10 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.annotation.vis.CalendarView;
 import xyz.erupt.annotation.vis.CardView;
 import xyz.erupt.annotation.vis.GanttView;
+import xyz.erupt.annotation.vis.TimelineView;
 import xyz.erupt.jpa.model.BaseModel;
 
 import java.util.Date;
@@ -24,6 +26,14 @@ import java.util.Date;
                 @Vis(
                         type = Vis.Type.GANTT, title = "Gantt",
                         ganttView = @GanttView(startDateField = "start", endDateField = "end")
+                ),
+                @Vis(
+                        type = Vis.Type.CALENDAR, title = "Calendar",
+                        calendarView = @CalendarView(dateField = "start", endDateField = "end", colorField = "color")
+                ),
+                @Vis(
+                        type = Vis.Type.TIMELINE, title = "Timeline",
+                        timelineView = @TimelineView(dateField = "start", colorField = "color")
                 )
         }
 )

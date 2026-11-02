@@ -15,6 +15,7 @@ import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.upms.prop.EruptAppProp;
 
@@ -48,7 +49,9 @@ public class EruptAiAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-ai").description("The large-model-driven ERUPT AI infrastructure").build();
+        return ModuleInfo.builder().name("erupt-ai").group(ModuleGroup.AI)
+                .description("Large-model infrastructure: models, MCP, agents, roles and chat")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-ai/")).build();
     }
 
     @Override
@@ -59,7 +62,7 @@ public class EruptAiAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$ai", "AI Manager", "fa fa-wand-magic-sparkles", 25));
+        menus.add(MetaMenu.createRootMenu("$ai", "AI Manager", "fa fa-wand-magic-sparkles", 100));
         menus.add(MetaMenu.createEruptClassMenu(LLM.class, menus.get(0), 10));
         menus.add(MetaMenu.createEruptClassMenu(EmbeddingLLM.class, menus.get(0), 15));
         menus.add(MetaMenu.createEruptClassMenu(McpServer.class, menus.get(0), 20));

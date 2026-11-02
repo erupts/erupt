@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -42,6 +43,7 @@ import java.net.URI;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -147,15 +149,9 @@ public class EruptUtil {
                         map.put(field.getName(), EruptConst.PASSWORD_PLACEHOLDER);
                         break;
                     case CHOICE:
-                        if (valueMapping) {
-                            Map<String, String> kv = EruptUtil.getChoiceMap(eruptModel, eruptField.edit());
-                            if (kv.containsKey(value.toString())) {
-                                map.put(field.getName(), kv.get(value.toString()));
-                            } else {
-                                map.put(field.getName(), value);
-                            }
-                            break;
-                        }
+                        String choiceLabel = valueMapping ? EruptUtil.getChoiceMap(eruptModel, fieldModel).get(value.toString()) : null;
+                        map.put(field.getName(), null == choiceLabel ? value : choiceLabel);
+                        break;
                     default:
                         if (value instanceof Date d) {
                             map.put(field.getName(), DateUtil.getFormatDate(d, DateUtil.ISO_8601));
@@ -179,6 +175,40 @@ public class EruptUtil {
         return choiceMap;
     }
 
+    public static Map<String, String> getChoiceMap(EruptModel eruptModel, EruptFieldModel fieldModel) {
+        Map<String, String> choiceMap = new LinkedHashMap<>();
+        getChoiceList(eruptModel, fieldModel).forEach(vl -> choiceMap.put(vl.getValue(), vl.getLabel()));
+        return choiceMap;
+    }
+
+    public static List<VLModel> getChoiceList(EruptModel eruptModel, EruptFieldModel fieldModel) {
+        // a remote erupt's options, fetch handlers included, arrive resolved in its build
+        if (eruptModel.isRemote()) {
+            return null == fieldModel.getComponentValue() ? new ArrayList<>() : GsonFactory.getGson().fromJson(
+                    GsonFactory.getGson().toJsonTree(fieldModel.getComponentValue()), new TypeToken<List<VLModel>>() {
+                    }.getType());
+        }
+        return enumFallback(eruptModel, fieldModel, getChoiceList(eruptModel, fieldModel.getEruptField().edit()));
+    }
+
+    public static List<VLModel> getChoiceListFilter(EruptModel eruptModel, EruptFieldModel fieldModel, Object data) {
+        return enumFallback(eruptModel, fieldModel, getChoiceListFilter(eruptModel, fieldModel.getEruptField().edit(), data));
+    }
+
+    // A CHOICE field typed as a Java enum needs neither vl nor fetchHandler: its constants are the options,
+    // stored and submitted by name, labelled by name so a CSV row per constant translates them
+    private static List<VLModel> enumFallback(EruptModel eruptModel, EruptFieldModel fieldModel, List<VLModel> vls) {
+        Class<?> type = Optional.ofNullable(fieldModel.getField()).map(Field::getType).orElse(null);
+        if (null != type && Collection.class.isAssignableFrom(type)) type = ReflectUtil.fieldGenericClass(fieldModel.getField()); // MULTI_CHOICE over Set<Enum>
+        if (!vls.isEmpty() || null == type || !type.isEnum()) return vls;
+        for (Object constant : type.getEnumConstants()) {
+            String name = ((Enum<?>) constant).name();
+            vls.add(new VLModel(name, eruptModel.isI18n() ? I18nTranslate.$translate(name) : name));
+        }
+        return vls;
+    }
+
+    @SuppressWarnings("unchecked")
     public static List<VLModel> getChoiceList(EruptModel eruptModel, Edit edit) {
         List<VLModel> vls = new ArrayList<>();
         if (edit.type() == EditType.CHOICE) {
@@ -196,6 +226,7 @@ public class EruptUtil {
         return vls;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<VLModel> getChoiceListFilter(EruptModel eruptModel, Edit edit, Object data) {
         List<VLModel> vls = new ArrayList<>();
         if (edit.type() == EditType.CHOICE) {
@@ -213,6 +244,7 @@ public class EruptUtil {
         return vls;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<String> getTagList(TagsType tagsType, Object data) {
         List<String> tags = new ArrayList<>(Arrays.asList(tagsType.tags()));
         Stream.of(tagsType.fetchHandler()).filter(clazz -> !clazz.isInterface())
@@ -220,6 +252,7 @@ public class EruptUtil {
         return tags;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<String> getMentionList(TextareaType textareaType, Object data) {
         List<String> mentions = new ArrayList<>(Arrays.asList(textareaType.mentions()));
         Stream.of(textareaType.mentionFetchHandler()).filter(clazz -> !clazz.isInterface())
@@ -227,6 +260,7 @@ public class EruptUtil {
         return mentions;
     }
 
+    @SuppressWarnings("unchecked")
     public static Object convertObjectType(EruptFieldModel eruptFieldModel, Object obj) {
         if (null == obj) return null;
         if (null == eruptFieldModel) {
@@ -396,7 +430,7 @@ public class EruptUtil {
                 switch (edit.type()) {
                     case NUMBER:
                     case SLIDER:
-                        if (!NumberUtils.isNumber(value.getAsString())) {
+                        if (!NumberUtils.isCreatable(value.getAsString())) {
                             return R.error(edit.title() + " " + I18nTranslate.$translate("erupt.must.number"));
                         }
                         break;
@@ -608,9 +642,28 @@ public class EruptUtil {
             return true;
         } else if (LocalDate.class.getSimpleName().equals(fieldType)) {
             return true;
+        } else if (LocalTime.class.getSimpleName().equals(fieldType)) {
+            return true;
         } else {
             return LocalDateTime.class.getSimpleName().equals(fieldType);
         }
+    }
+
+    // What a date field holds, read from its Java type; a java.util.Date is a timestamp unless JPA's
+    // @Temporal (matched by name: core has no JPA dependency) narrows it. A String keeps the old DATE default
+    @SneakyThrows
+    public static DateType.Type inferDateType(Field field) {
+        Class<?> type = field.getType();
+        if (LocalDateTime.class == type) return DateType.Type.DATE_TIME;
+        if (LocalTime.class == type) return DateType.Type.TIME;
+        if (Date.class == type) {
+            return switch (ReflectUtil.annotationNamed(field, "Temporal").map(it -> ReflectUtil.annotationValue(it, "value")).orElse("")) {
+                case "DATE" -> DateType.Type.DATE;
+                case "TIME" -> DateType.Type.TIME;
+                default -> DateType.Type.DATE_TIME;
+            };
+        }
+        return DateType.Type.DATE;
     }
 
 }

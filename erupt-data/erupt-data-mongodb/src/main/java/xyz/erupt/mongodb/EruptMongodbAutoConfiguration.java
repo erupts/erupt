@@ -4,6 +4,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 
 /**
@@ -20,7 +21,9 @@ public class EruptMongodbAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-data-mongodb").description("Mongodb implement").build();
+        return ModuleInfo.builder().name("erupt-data-mongodb").group(ModuleGroup.DATA)
+                .description("MongoDB data source")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-mongodb")).build();
     }
 
 }

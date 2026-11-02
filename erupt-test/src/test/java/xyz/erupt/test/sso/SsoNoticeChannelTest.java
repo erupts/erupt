@@ -25,6 +25,7 @@ import xyz.erupt.sso.model.EruptSsoBind;
 import xyz.erupt.sso.service.SsoProviderApi;
 import xyz.erupt.test.EruptApplicationTests;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 
 import java.io.IOException;
@@ -277,7 +278,7 @@ public class SsoNoticeChannelTest extends EruptApplicationTests {
         transactionTemplate.executeWithoutResult(status -> {
             EruptSsoBind bind = new EruptSsoBind();
             bind.setSso(dao.lambdaQuery(EruptSso.class).eq(EruptSso::getCode, CODE).one());
-            bind.setEruptUser(this.defaultUser());
+            bind.setEruptUser(dao.find(EruptUserVo.class, this.defaultUser().getId()));
             bind.setSubject("subject-" + openId);
             bind.setOpenId(openId);
             dao.persist(bind);
@@ -316,6 +317,9 @@ public class SsoNoticeChannelTest extends EruptApplicationTests {
     private static void respond(HttpExchange exchange, String body) throws IOException {
         byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().set("Content-Type", "application/json");
+        // the provider client is a shared bean that pools keep-alive connections, while each test starts
+        // a new stub on a fresh port: closing every connection keeps one test from reusing another's
+        exchange.getResponseHeaders().set("Connection", "close");
         exchange.sendResponseHeaders(200, bytes.length);
         try (OutputStream out = exchange.getResponseBody()) {
             out.write(bytes);

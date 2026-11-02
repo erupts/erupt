@@ -17,6 +17,7 @@ import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 
 import java.time.Duration;
@@ -40,12 +41,14 @@ public class EruptCloudServerAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-cloud-server").description("Erupt Cloud Microservice control center").build();
+        return ModuleInfo.builder().name("erupt-cloud-server").group(ModuleGroup.OPS)
+                .description("Control center of remote erupt nodes and their models")
+                .docs(ModuleInfo.eruptDocs("modules/cloud-server")).build();
     }
 
     @Override
     public List<MetaMenu> initMenus() {
-        MetaMenu nodeManager = MetaMenu.createRootMenu("$NodeManager", "Micronode Management", "fa fa-cloud", 70);
+        MetaMenu nodeManager = MetaMenu.createRootMenu("$NodeManager", "Micronode Management", "fa fa-cloud", 340);
         MetaMenu nodeMenu = MetaMenu.createEruptClassMenu(CloudNode.class, nodeManager, 20);
         return Arrays.asList(nodeManager,
                 MetaMenu.createEruptClassMenu(CloudNodeGroup.class, nodeManager, 10, MenuTypeEnum.TREE, MenuStatus.HIDE),

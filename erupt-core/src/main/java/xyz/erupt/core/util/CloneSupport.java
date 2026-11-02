@@ -7,6 +7,7 @@ package xyz.erupt.core.util;
 public class CloneSupport<T> implements Cloneable {
 
     @Override
+    @SuppressWarnings("unchecked")
     public T clone() {
         try {
             return (T) super.clone();

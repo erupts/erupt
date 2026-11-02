@@ -9,9 +9,9 @@ import xyz.erupt.core.cache.EruptCacheLRU;
 import xyz.erupt.core.util.EruptAssert;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.FetchConst;
+import xyz.erupt.upms.model.EruptDict;
 import xyz.erupt.upms.model.EruptDictItem;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,10 +32,7 @@ public class DictCodeChoiceFetchHandler implements ChoiceFetchHandler<Void> {
         EruptAssert.notNull(params, DictCodeChoiceFetchHandler.class.getSimpleName() + " → params[0] must dict → code");
         return dictCache.getAndSet(DictCodeChoiceFetchHandler.class.getName() + ":" + params[0],
                 params.length == 2 ? Long.parseLong(params[1]) : FetchConst.DEFAULT_CACHE_TIME, () ->
-                        eruptDao.lambdaQuery(EruptDictItem.class).addCondition("eruptDict.code = :code",
-                                        new HashMap<>() {{
-                                            this.put("code", params[0]);
-                                        }}).orderBy(EruptDictItem::getSort).list()
+                        eruptDao.lambdaQuery(EruptDictItem.class).with(EruptDictItem::getEruptDict).eq(EruptDict::getCode, params[0]).with().orderBy(EruptDictItem::getSort).list()
                                 .stream().map((item) -> new VLModel(item.getCode(), item.getName())).collect(Collectors.toList()));
     }
 

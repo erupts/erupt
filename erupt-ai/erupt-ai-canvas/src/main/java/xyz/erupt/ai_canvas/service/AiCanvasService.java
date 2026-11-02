@@ -17,6 +17,7 @@ import xyz.erupt.ai.core.LlmCore;
 import xyz.erupt.ai.core.LlmRequest;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai_canvas.fun.CanvasModelProvider;
+import xyz.erupt.ai_canvas.fun.EruptCanvasModelProvider.WriteOp;
 import xyz.erupt.ai_canvas.model.AiCanvas;
 import xyz.erupt.ai_canvas.model.AiCanvasModel;
 import xyz.erupt.ai_canvas.model.AiCanvasVersion;
@@ -449,9 +450,9 @@ public class AiCanvasService {
     // read-only. Legacy rows created before the switches existed carry nulls = off
     public static List<String> allowedWrites(AiCanvasModel binding) {
         List<String> writes = new ArrayList<>();
-        if (Boolean.TRUE.equals(binding.getAllowAdd())) writes.add("add");
-        if (Boolean.TRUE.equals(binding.getAllowEdit())) writes.add("update");
-        if (Boolean.TRUE.equals(binding.getAllowDelete())) writes.add("delete");
+        if (Boolean.TRUE.equals(binding.getAllowAdd())) writes.add(WriteOp.ADD.sdkName());
+        if (Boolean.TRUE.equals(binding.getAllowEdit())) writes.add(WriteOp.UPDATE.sdkName());
+        if (Boolean.TRUE.equals(binding.getAllowDelete())) writes.add(WriteOp.DELETE.sdkName());
         return writes;
     }
 

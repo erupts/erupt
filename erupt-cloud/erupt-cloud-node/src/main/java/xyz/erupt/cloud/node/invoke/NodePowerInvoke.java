@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.PowerHandler;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
+import xyz.erupt.cloud.common.http.CloudSignature;
 import xyz.erupt.cloud.node.config.EruptNodeProp;
+import xyz.erupt.cloud.node.config.NodeSignatureFilter;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptMutualConst;
 import xyz.erupt.core.context.MetaContext;
@@ -34,6 +36,8 @@ public class NodePowerInvoke implements PowerHandler {
 
     @Override
     public void handler(PowerObject power) {
+        // the server checked the user's rights and restricts the build's power itself
+        if (NodeSignatureFilter.enforced(CloudSignature.Enforced.POWER)) return;
         EruptModel eruptModel = EruptCoreService.getErupt(MetaContext.getErupt().getName());
         String body = serverRestClient.get().uri(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.ERUPT_POWER, builder -> builder
                         .queryParam("nodeName", eruptNodeProp.getNodeName())

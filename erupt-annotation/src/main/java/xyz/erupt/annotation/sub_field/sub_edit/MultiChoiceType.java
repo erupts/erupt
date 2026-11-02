@@ -22,13 +22,15 @@ public @interface MultiChoiceType {
     @Comment("Accessible by the fetchHandler interface")
     String[] fetchHandlerParams() default {};
 
-    @Transient
     @Comment("Dynamically fetched options")
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
 
     @Comment("Dependent field name for linkage")
     @Language(value = "java", prefix = "Object get() { ", suffix = ";}")
     String dependField() default "";
+
+    @Comment("Refuse an add or edit whose value is not one of the options (erupt.choice-validate, on by default); turn off for a field that legitimately stores values outside them")
+    boolean validate() default true;
 
     enum Type {
         @Comment("Dropdown multi-select")

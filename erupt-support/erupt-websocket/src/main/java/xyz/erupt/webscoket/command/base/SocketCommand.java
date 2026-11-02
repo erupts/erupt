@@ -19,6 +19,7 @@ public abstract class SocketCommand<T> {
         socketCommandMap.put(this.command(), this);
     }
 
+    @SuppressWarnings("unchecked")
     public static <S> SocketCommand<S> getCommand(String command) {
         return (SocketCommand<S>) socketCommandMap.get(command);
     }

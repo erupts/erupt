@@ -5,9 +5,6 @@ package xyz.erupt.decision.constant;
  */
 public class DecisionConst {
 
-    // Path segment of the decision REST API, under /erupt-api
-    public static final String API = "/decision";
-
     // Question id generated for a question asked from java code, suffixed with its position
     public static final String GENERATED_ID = "q";
 

@@ -13,6 +13,7 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.annotation.EruptMenuAuth;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class RagController {
     @Resource
     private RagService ragService;
 
+    @EruptMenuAuth(KnowledgeBase.MENU_VALUE)
     @GetMapping("/retrieve")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public R<List<RetrievedChunk>> retrieve(@RequestParam("kbId") Long kbId,

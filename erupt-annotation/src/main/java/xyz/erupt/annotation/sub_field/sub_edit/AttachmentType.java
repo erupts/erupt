@@ -3,7 +3,6 @@ package xyz.erupt.annotation.sub_field.sub_edit;
 import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 
-import java.beans.Transient;
 
 /**
  * @author YuePeng
@@ -14,7 +13,6 @@ public @interface AttachmentType {
     @Comment("Attachment size limit in KB")
     long size() default -1;
 
-    @Transient
     @Comment("Define a dedicated storage path for easier file lookup")
     @Language("file-reference")
     String path() default "";
@@ -28,7 +26,6 @@ public @interface AttachmentType {
     @Comment("Maximum number of uploads")
     int maxLimit() default 1;
 
-    @Transient
     ImageType imageType() default @ImageType;
 
     @Comment("Separator character for multiple file paths")

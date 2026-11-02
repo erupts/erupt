@@ -33,7 +33,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 @Erupt(
         name = "A2A",
         dataProxy = A2AAgentService.class,
-        rowOperation = @RowOperation(
+        rowOperation = @RowOperation(code = "refresh",
                 title = "Refresh",
                 icon = "fa fa-refresh",
                 mode = RowOperation.Mode.SINGLE,

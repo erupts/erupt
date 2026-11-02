@@ -1,5 +1,6 @@
 package xyz.erupt.core.service;
 
+import xyz.erupt.core.scope.EruptScopeService;
 import com.google.gson.JsonObject;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -28,6 +29,7 @@ import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.EruptValueValidator;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
@@ -37,6 +39,7 @@ import xyz.erupt.core.view.R;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -57,8 +60,11 @@ public class EruptModifyService {
 
     private final EruptTreeLevelService eruptTreeLevelService;
 
+    private final EruptScopeService eruptScopeService;
+
     @SneakyThrows
     public Object eruptInsertDataProcess(EruptModel eruptModel, JsonObject data) {
+        eruptScopeService.bind(eruptModel, data);
         Map<String, Object> extraData = new HashMap<>();
         if (EruptSpringUtil.isMvcContext()) {
             this.setLinkValue(eruptModel, extraData);
@@ -113,10 +119,13 @@ public class EruptModifyService {
         if (eruptModel.isRemote()) {
             return EruptRemoteRouterManager.get().insert(eruptModel.getEruptName(), data);
         }
+        // Before validation, so a required field the scope fills is not reported missing
+        eruptScopeService.bind(eruptModel, data);
         R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
         if (!validation.isSuccess()) {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
         }
+        EruptValueValidator.validate(eruptModel, data, null);
         Object obj = this.eruptInsertDataProcess(eruptModel, data);
         eruptTreeLevelService.verify(eruptModel, obj, true);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeAdd(obj)));
@@ -153,6 +162,10 @@ public class EruptModifyService {
         if (fieldModel.getEruptField().edit().readonly().edit()) {
             throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.not_editable") + ": " + fieldName, R.PromptWay.MESSAGE);
         }
+        // the scope owns a bound field: moving a row out of it is an edit no cell may make
+        if (EruptScopeService.boundFields(eruptModel).contains(fieldName)) {
+            throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.not_editable") + ": " + fieldName, R.PromptWay.MESSAGE);
+        }
         if (eruptModel.isRemote()) {
             // the owning node runs its own validation / DataProxy pipeline
             JsonObject remote = new JsonObject();
@@ -174,6 +187,7 @@ public class EruptModifyService {
         JsonObject merged = GsonFactory.getGson().toJsonTree(old).getAsJsonObject();
         merged.add(fieldName, value);
         R<Void> validation = EruptUtil.validateEruptValue(eruptModel, merged);
+        EruptValueValidator.validate(eruptModel, merged, old);
         if (!validation.isSuccess()) {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
         }
@@ -206,6 +220,24 @@ public class EruptModifyService {
         applicationEventPublisher.publishEvent(new EruptEditEvent<>(eruptModel.getClazz(), obj, realOld));
     }
 
+    /**
+     * Set one field of several rows to the same value: the batch edit behind a multi-row selection.
+     * <p>
+     * Each row runs {@link #updateEruptCell}, so the field eligibility rules, the whole-row
+     * validation, the row permission check and every DataProxy hook apply per row. The caller's
+     * transaction makes the batch atomic: the first rejected row rolls back the rows before it,
+     * and its message names the row.
+     */
+    @Transactional
+    public void updateEruptCells(EruptModel eruptModel, List<String> ids, String fieldName, JsonElement value) {
+        if (null == ids || ids.isEmpty()) {
+            throw new EruptApiErrorTip(I18nTranslate.$translate("erupt.cell.row_not_exist"), R.PromptWay.MESSAGE);
+        }
+        for (String id : new LinkedHashSet<>(ids)) {
+            this.updateEruptCell(eruptModel, id, fieldName, value);
+        }
+    }
+
     @SneakyThrows
     @Transactional
     public void updateEruptData(EruptModel eruptModel, JsonObject data) {
@@ -213,6 +245,7 @@ public class EruptModifyService {
             EruptRemoteRouterManager.get().update(eruptModel.getEruptName(), data);
             return;
         }
+        eruptScopeService.bind(eruptModel, data);
         R<Void> validation = EruptUtil.validateEruptValue(eruptModel, data);
         if (!validation.isSuccess()) {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
@@ -221,6 +254,7 @@ public class EruptModifyService {
         Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
         EruptUtil.clearObjectDefaultValueByJson(o, data);
         Object old = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol()).get(o));
+        EruptValueValidator.validate(eruptModel, data, old);
         Object realOld = eruptModel.getClazz().getDeclaredConstructor().newInstance();
         BeanUtils.copyProperties(old, realOld);
         String oldData;
@@ -251,8 +285,8 @@ public class EruptModifyService {
         }
         IEruptDataService dataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
         Field field = ReflectUtil.findClassField(eruptModel.getClazz(), sortField);
+        eruptService.verifyIdPermissions(eruptModel, sortData.keySet());
         for (Map.Entry<String, Object> entry : sortData.entrySet()) {
-            eruptService.verifyIdPermissions(eruptModel, entry.getKey());
             Object obj = dataService.findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, entry.getKey()));
             field.set(obj, TypeUtil.typeStrConvertObject(entry.getValue(), field.getType()));
             dataService.editData(eruptModel, obj);
@@ -268,11 +302,11 @@ public class EruptModifyService {
             return;
         }
         List<Object> deletedObjs = new ArrayList<>();
+        if (verifyIdPermissions) {
+            eruptService.verifyIdPermissions(eruptModel, ids.stream().map(Object::toString).toList());
+        }
+        IEruptDataService dataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
         for (Object id : ids) {
-            if (verifyIdPermissions) {
-                eruptService.verifyIdPermissions(eruptModel, id.toString());
-            }
-            IEruptDataService dataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
             // Retrieve object data for use in DataProxy callbacks
             Object obj = dataService.findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id.toString()));
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeDelete(obj)));

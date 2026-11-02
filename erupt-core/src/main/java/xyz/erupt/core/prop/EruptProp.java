@@ -19,6 +19,10 @@ public class EruptProp {
     // Hot-build erupt: when enabled, erupt will be rebuilt on every request. Useful for modifying erupt annotations at startup. Do NOT enable in production.
     private boolean hotBuild = false;
 
+    // Check on add, edit, cell edit and import that CHOICE / MULTI_CHOICE values are among the options the user is offered;
+    // a field that legitimately stores other values opts out with validate = false
+    private boolean choiceValidate = true;
+
     // Root path for attachment storage
     private String uploadPath = "/opt/erupt-attachment";
 
@@ -28,8 +32,10 @@ public class EruptProp {
     // Whether to preserve the original filename of uploaded files
     private boolean keepUploadFileName = false;
 
-    // Initialization detection method
-    private InitMethodEnum initMethodEnum = InitMethodEnum.FILE;
+    // Seed module menus on start (erupt.init-modules-menu); a module's initFun runs before its first
+    // seeding, so it goes with it. Turn off for a read-only database user, menus managed by scripts,
+    // or all but one of several applications sharing a database
+    private boolean initModulesMenu = true;
 
     // Specify which packages use Gson for serialization
     private String[] gsonHttpMessageConvertersPackages;

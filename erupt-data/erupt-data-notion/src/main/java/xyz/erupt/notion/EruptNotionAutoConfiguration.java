@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.notion.prop.EruptNotionProperties;
 
@@ -22,7 +23,9 @@ public class EruptNotionAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-data-notion").description("Notion database data source implement").build();
+        return ModuleInfo.builder().name("erupt-data-notion").group(ModuleGroup.DATA)
+                .description("Notion database data source")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-notion")).build();
     }
 
 }

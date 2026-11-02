@@ -32,9 +32,13 @@ public class PowerObject {
 
     private boolean cellEdit = true;
 
+    private boolean batchEdit = true;
+
     private boolean ai = true;
 
     private boolean comment = true;
+
+    private boolean revision = true;
 
     public PowerObject(Power power) {
         this.add = power.add();
@@ -47,8 +51,10 @@ public class PowerObject {
         this.print = power.print();
         this.copy = power.copy();
         this.cellEdit = power.cellEdit();
+        this.batchEdit = power.batchEdit();
         this.ai = power.ai();
         this.comment = power.comment();
+        this.revision = power.revision();
     }
 
     public PowerObject() {

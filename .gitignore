@@ -5,6 +5,7 @@ data/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+promo/**
 
 ### STS ###
 .apt_generated

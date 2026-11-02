@@ -42,6 +42,14 @@ public class JpaExceptionAdvice {
         } else if (8152 == errorCode) {
             return rb.body(R.error(I18nTranslate.$translate("erupt.data.limit_length")));
         }
+        // Oracle: ORA-xxxxx codes arrive as the vendor error code, while sqlState is the generic 23000
+        if (2291 == errorCode || 2292 == errorCode) {
+            return rb.body(R.error(I18nTranslate.$translate("erupt.data.delete_fail_may_be_associated_data")));
+        } else if (1 == errorCode && "23000".equals(sqlState)) {
+            return rb.body(R.error(I18nTranslate.$translate("erupt.data.data_duplication")));
+        } else if (12899 == errorCode) {
+            return rb.body(R.error(I18nTranslate.$translate("erupt.data.limit_length")));
+        }
         // PostgreSQL
         if ("23503".equals(sqlState)) {
             return rb.body(R.error(I18nTranslate.$translate("erupt.data.delete_fail_may_be_associated_data")));
@@ -51,14 +59,6 @@ public class JpaExceptionAdvice {
             return rb.body(R.error("Number out of range"));
         } else if ("23000".equals(sqlState)) {
             return rb.body(R.error(ex.getMessage()));
-        }
-        // Oracle
-        if ("2291".equals(sqlState)) {
-            return rb.body(R.error(I18nTranslate.$translate("erupt.data.delete_fail_may_be_associated_data")));
-        } else if ("1".equals(sqlState)) {
-            return rb.body(R.error(I18nTranslate.$translate("erupt.data.data_duplication")));
-        } else if ("12899".equals(sqlState)) {
-            return rb.body(R.error(I18nTranslate.$translate("erupt.data.limit_length")));
         }
         throw ex;
     }

@@ -635,6 +635,9 @@ designer.vis.fields_placeholder,选择字段,選擇字段,Select fields,Sélecti
 designer.vis.group_field,分组字段,分組字段,Group Field,Champ de groupe,グループフィールド,그룹 필드,Поле группировки,Campo de grupo,Gruppierungsfeld,Campo de agrupamento,Bidang grup,حقل التجميع
 designer.vis.cover_field,封面字段,封面字段,Cover Field,Champ de couverture,カバーフィールド,커버 필드,Поле обложки,Campo de portada,Coverfeld,Campo de capa,Bidang sampul,حقل الغلاف
 designer.vis.cover_effect,封面效果,封面效果,Cover Effect,Effet de couverture,カバー効果,커버 효과,Эффект обложки,Efecto de portada,Cover-Effekt,Efeito de capa,Efek sampul,تأثير الغلاف
+designer.vis.card_layout,布局,佈局,Layout,Disposition,レイアウト,레이아웃,Макет,Diseño,Layout,Layout,Tata letak,التخطيط
+designer.vis.card_layout.grid,网格,網格,Grid,Grille,グリッド,그리드,Сетка,Cuadrícula,Raster,Grelha,Kisi,شبكة
+designer.vis.card_layout.masonry,瀑布流,瀑布流,Masonry,Mosaïque,メイソンリー,메이슨리,Плитка,Mosaico,Masonry,Mosaico,Masonry,شلال
 designer.vis.start_date_field,开始日期字段,開始日期字段,Start Date Field,Champ date de début,開始日フィールド,시작일 필드,Поле даты начала,Campo fecha de inicio,Startdatumsfeld,Campo data de início,Bidang tanggal mulai,حقل تاريخ البدء
 designer.vis.end_date_field,结束日期字段,結束日期字段,End Date Field,Champ date de fin,終了日フィールド,종료일 필드,Поле даты окончания,Campo fecha de fin,Enddatumsfeld,Campo data de término,Bidang tanggal selesai,حقل تاريخ الانتهاء
 designer.vis.progress_field,进度字段,進度字段,Progress Field,Champ de progression,進捗フィールド,진행률 필드,Поле прогресса,Campo de progreso,Fortschrittsfeld,Campo de progresso,Bidang progres,حقل التقدم
@@ -815,17 +818,17 @@ edit_type.prev_step,上一步,上一步,Previous,Précédent,前へ,이전,На�
 edit_type.next_step,下一步,下一步,Next,Suivant,次へ,다음,Далее,Siguiente,Weiter,Próximo,Berikutnya,التالي
 edit_type.color_presets,预设颜色,預設顏色,Presets,Préréglages,プリセット,프리셋,Пресеты,Preajustes,Voreinstellungen,Predefinições,Prasetel,الإعدادات المسبقة
 edit_type.step_required,不能为空,不能為空,cannot be empty,ne peut pas être vide,を入力してください,을(를) 입력하세요,не может быть пустым,no puede estar vacío,darf nicht leer sein,não pode estar vazio,tidak boleh kosong,لا يمكن أن يكون فارغًا
-amap.close_point_select,关闭点选,關閉點選,Disable Point Select,Désactiver la sélection,点選を無効化,점 선택 비활성화,Отключить выбор точки,Desactivar selección,Punktauswahl deaktivieren,Desativar seleção,Nonaktifkan Pemilihan,تعطيل التحديد
-amap.point_select,点击地图选点,點擊地圖選點,Click Map to Select,Cliquer sur la carte,地図をクリックして選択,지도 클릭으로 선택,Клик на карте для выбора,Clic en mapa para seleccionar,Auf Karte klicken,Clique no mapa,Klik Peta untuk Memilih,انقر على الخريطة
-amap.select_valid_address,请选择有效的地址,請選擇有效的地址,Please select a valid address,Sélectionner une adresse valide,有効な住所を選択してください,유효한 주소를 선택하세요,Выберите действительный адрес,Seleccione una dirección válida,Bitte eine gültige Adresse wählen,Selecione um endereço válido,Pilih alamat yang valid,اختر عنوانًا صحيحًا
-amap.select_address_first,请先选择地址,請先選擇地址,Please select an address first,Veuillez sélectionner une adresse,先に住所を選択してください,먼저 주소를 선택하세요,Сначала выберите адрес,Primero seleccione una dirección,Bitte zuerst Adresse wählen,Por favor selecione um endereço,Pilih alamat terlebih dahulu,الرجاء اختيار عنوان أولاً
-amap.location_not_found,找不到该位置信息,找不到該位置資訊,Location not found,Lieu introuvable,位置が見つかりません,위치를 찾을 수 없습니다,Место не найдено,Ubicación no encontrada,Ort nicht gefunden,Localização não encontrada,Lokasi tidak ditemukan,تعذر العثور على الموقع
-amap.info.name,名称：,名稱：,Name:,Nom :,名前：,이름:,Название:,Nombre:,Name:,Nome:,Nama:,الاسم:
-amap.info.address,地址：,地址：,Address:,Adresse :,住所：,주소:,Адрес:,Dirección:,Adresse:,Endereço:,Alamat:,العنوان:
-amap.info.phone,电话：,電話：,Phone:,Téléphone :,電話：,전화:,Телефон:,Teléfono:,Telefon:,Telefone:,Telepon:,الهاتف:
-amap.info.type,类型：,類型：,Type:,Type :,種類：,유형:,Тип:,Tipo:,Typ:,Tipo:,Tipe:,النوع:
-amap.info.lng,经度：,經度：,Lng:,Long. :,経度：,경도:,Долгота:,Longitud:,Länge:,Longitude:,Bujur:,خط الطول:
-amap.info.lat,纬度：,緯度：,Lat:,Lat. :,緯度：,위도:,Широта:,Latitud:,Breite:,Latitude:,Lintang:,خط العرض:
+map.close_point_select,关闭点选,關閉點選,Disable Point Select,Désactiver la sélection,点選を無効化,점 선택 비활성화,Отключить выбор точки,Desactivar selección,Punktauswahl deaktivieren,Desativar seleção,Nonaktifkan Pemilihan,تعطيل التحديد
+map.point_select,点击地图选点,點擊地圖選點,Click Map to Select,Cliquer sur la carte,地図をクリックして選択,지도 클릭으로 선택,Клик на карте для выбора,Clic en mapa para seleccionar,Auf Karte klicken,Clique no mapa,Klik Peta untuk Memilih,انقر على الخريطة
+map.select_valid_address,请选择有效的地址,請選擇有效的地址,Please select a valid address,Sélectionner une adresse valide,有効な住所を選択してください,유효한 주소를 선택하세요,Выберите действительный адрес,Seleccione una dirección válida,Bitte eine gültige Adresse wählen,Selecione um endereço válido,Pilih alamat yang valid,اختر عنوانًا صحيحًا
+map.select_address_first,请先选择地址,請先選擇地址,Please select an address first,Veuillez sélectionner une adresse,先に住所を選択してください,먼저 주소를 선택하세요,Сначала выберите адрес,Primero seleccione una dirección,Bitte zuerst Adresse wählen,Por favor selecione um endereço,Pilih alamat terlebih dahulu,الرجاء اختيار عنوان أولاً
+map.location_not_found,找不到该位置信息,找不到該位置資訊,Location not found,Lieu introuvable,位置が見つかりません,위치를 찾을 수 없습니다,Место не найдено,Ubicación no encontrada,Ort nicht gefunden,Localização não encontrada,Lokasi tidak ditemukan,تعذر العثور على الموقع
+map.info.name,名称：,名稱：,Name:,Nom :,名前：,이름:,Название:,Nombre:,Name:,Nome:,Nama:,الاسم:
+map.info.address,地址：,地址：,Address:,Adresse :,住所：,주소:,Адрес:,Dirección:,Adresse:,Endereço:,Alamat:,العنوان:
+map.info.phone,电话：,電話：,Phone:,Téléphone :,電話：,전화:,Телефон:,Teléfono:,Telefon:,Telefone:,Telepon:,الهاتف:
+map.info.type,类型：,類型：,Type:,Type :,種類：,유형:,Тип:,Tipo:,Typ:,Tipo:,Tipe:,النوع:
+map.info.lng,经度：,經度：,Lng:,Long. :,経度：,경도:,Долгота:,Longitud:,Länge:,Longitude:,Bujur:,خط الطول:
+map.info.lat,纬度：,緯度：,Lat:,Lat. :,緯度：,위도:,Широта:,Latitud:,Breite:,Latitude:,Lintang:,خط العرض:
 excel.import_success,导入成功,匯入成功,Import successful,Importation réussie,インポート成功,가져오기 성공,Импорт выполнен,Importación exitosa,Import erfolgreich,Importação bem-sucedida,Impor berhasil,تم الاستيراد بنجاح
 gantt.scroll_to_today,定位到今天,定位到今天,Scroll to Today,"Aller à aujourd'hui",今日に移動,오늘로 이동,Перейти к сегодняшнему дню,Ir a hoy,Zum heutigen Tag,Ir para hoje,Gulir ke Hari Ini,الانتقال إلى اليوم
 bi.auto_refresh_resume,恢复自动刷新,恢復自動刷新,Resume Auto Refresh,Reprendre le rafraîchissement,自動更新を再開,자동 새로고침 재개,Возобновить автообновление,Reanudar actualización,Auto-Aktualisierung fortsetzen,Retomar atualização,Lanjutkan Refresh Otomatis,استئناف التحديث التلقائي
@@ -1385,3 +1388,313 @@ profile.avatar_image_only,请选择图片文件,請選擇圖片文件,Please cho
 global.lock_screen,锁屏,鎖屏,Lock screen,Verrouiller l'écran,画面ロック,화면 잠금,Заблокировать экран,Bloquear pantalla,Bildschirm sperren,Bloquear ecrã,Kunci layar,قفل الشاشة
 lock.tip,屏幕已锁定，输入密码继续,屏幕已鎖定，輸入密碼繼續,"Screen locked, enter your password to continue","Écran verrouillé, saisissez votre mot de passe pour continuer",画面はロックされています。続けるにはパスワードを入力してください,화면이 잠겨 있습니다. 계속하려면 비밀번호를 입력하세요,"Экран заблокирован, введите пароль для продолжения","Pantalla bloqueada, introduzca su contraseña para continuar","Bildschirm gesperrt, Passwort eingeben um fortzufahren","Ecrã bloqueado, introduza a sua palavra-passe para continuar","Layar terkunci, masukkan kata sandi untuk melanjutkan",الشاشة مقفلة، أدخل كلمة المرور للمتابعة
 lock.unlock,解锁,解鎖,Unlock,Déverrouiller,ロック解除,잠금 해제,Разблокировать,Desbloquear,Entsperren,Desbloquear,Buka kunci,إلغاء القفل
+cube.vis.unavailable,图表不可用：请确认已引入 erupt-cube 且模型已声明 @EruptCube,圖表不可用：請確認已引入 erupt-cube 且模型已宣告 @EruptCube,Charts unavailable: make sure erupt-cube is on the classpath and the model declares @EruptCube,Graphiques indisponibles : vérifiez que erupt-cube est présent et que le modèle déclare @EruptCube,グラフを利用できません：erupt-cube が導入され、モデルに @EruptCube が宣言されているか確認してください,차트를 사용할 수 없습니다: erupt-cube가 포함되어 있고 모델에 @EruptCube가 선언되어 있는지 확인하세요,"Диаграммы недоступны: убедитесь, что подключён erupt-cube и модель объявляет @EruptCube",Gráficos no disponibles: compruebe que erupt-cube está incluido y que el modelo declara @EruptCube,Diagramme nicht verfügbar: erupt-cube muss eingebunden sein und das Modell @EruptCube deklarieren,Gráficos indisponíveis: verifique se erupt-cube está incluído e se o modelo declara @EruptCube,Grafik tidak tersedia: pastikan erupt-cube tersedia dan model mendeklarasikan @EruptCube,الرسوم غير متاحة: تأكد من وجود erupt-cube وأن النموذج يعلن @EruptCube
+map.no_location,没有带位置信息的记录,沒有帶位置資訊的記錄,No rows carry a location,Aucune ligne ne contient de position,位置情報を持つレコードがありません,위치 정보가 있는 행이 없습니다,Нет строк с координатами,Ninguna fila tiene ubicación,Keine Zeilen mit Standort,Nenhuma linha possui localização,Tidak ada baris dengan lokasi,لا توجد صفوف تحتوي على موقع
+map.not_configured,未配置地图厂商（eruptSiteConfig.map）,未配置地圖廠商（eruptSiteConfig.map）,Map vendor not configured (eruptSiteConfig.map),Fournisseur de carte non configuré (eruptSiteConfig.map),地図ベンダーが未設定です（eruptSiteConfig.map）,지도 공급자가 설정되지 않았습니다 (eruptSiteConfig.map),Поставщик карт не настроен (eruptSiteConfig.map),Proveedor de mapas no configurado (eruptSiteConfig.map),Kartenanbieter nicht konfiguriert (eruptSiteConfig.map),Provedor de mapas não configurado (eruptSiteConfig.map),Vendor peta belum dikonfigurasi (eruptSiteConfig.map),لم يتم ضبط مزود الخرائط (eruptSiteConfig.map)
+map.fit,全览,全覽,Fit all,Tout afficher,全体表示,전체 보기,Показать все,Ver todo,Alles anzeigen,Ver tudo,Tampilkan semua,عرض الكل
+setting.skin-material,Material,Material,Material,Material,Material,Material,Material,Material,Material,Material,Material,Material
+setting.skin-terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal,Terminal
+setting.skin-classic,Classic,Classic,Classic,Classic,Classic,Classic,Classic,Classic,Classic,Classic,Classic,Classic
+setting.skin-workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace,Workspace
+setting.skin-liquid-glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass,Liquid Glass
+setting.skin-brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist,Brutalist
+calendar.month,月,月,Month,Mois,月,월,Месяц,Mes,Monat,Mês,Bulan,شهر
+calendar.week,周,週,Week,Semaine,週,주,Неделя,Semana,Woche,Semana,Minggu,أسبوع
+calendar.year,年,年,Year,Année,年,년,Год,Año,Jahr,Ano,Tahun,سنة
+calendar.today,今天,今天,Today,Aujourd'hui,今日,오늘,Сегодня,Hoy,Heute,Hoje,Hari ini,اليوم
+board.sum,合计,合計,Sum,Total,合計,합계,Сумма,Suma,Summe,Soma,Jumlah,المجموع
+board.wip_over,超出在制上限,超出在製上限,Over WIP limit,Limite WIP dépassée,WIP上限超過,WIP 한도 초과,Превышен лимит WIP,Límite WIP superado,WIP-Limit überschritten,Limite WIP excedido,Melebihi batas WIP,تجاوز حد العمل الجاري
+group.expand_all,全部展开,全部展開,Expand all,Tout développer,すべて展開,모두 펼치기,Развернуть все,Expandir todo,Alle aufklappen,Expandir tudo,Perluas semua,توسيع الكل
+group.collapse_all,全部折叠,全部折疊,Collapse all,Tout réduire,すべて折りたたむ,모두 접기,Свернуть все,Contraer todo,Alle zuklappen,Recolher tudo,Lipat semua,طي الكل
+group.unset,未分组,未分組,Ungrouped,Non groupé,未分類,미분류,Без группы,Sin grupo,Ohne Gruppe,Sem grupo,Tanpa grup,بدون مجموعة
+gantt.remove_link,移除前置依赖？,移除前置依賴？,Remove this dependency?,Supprimer cette dépendance ?,この依存関係を削除しますか？,이 종속성을 제거하시겠습니까?,Удалить эту зависимость?,¿Eliminar esta dependencia?,Diese Abhängigkeit entfernen?,Remover esta dependência?,Hapus dependensi ini?,إزالة هذه التبعية؟
+form.revisions,历史版本,歷史版本,History,Historique,履歴,변경 이력,История,Historial,Verlauf,Histórico,Riwayat,السجل
+revision.empty,还没有变更记录,還沒有變更記錄,No changes yet,Aucune modification,変更履歴はまだありません,아직 변경 이력이 없습니다,Изменений пока нет,Aún no hay cambios,Noch keine Änderungen,Ainda sem alterações,Belum ada perubahan,لا توجد تغييرات بعد
+revision.empty_hint,保存这条记录后，每次变更都会记录在这里,儲存這條記錄後，每次變更都會記錄在這裡,Every change saved on this record will show up here,Chaque modification de cet enregistrement apparaîtra ici,このレコードの変更はここに記録されます,이 레코드의 모든 변경 사항이 여기에 표시됩니다,Каждое изменение этой записи появится здесь,Cada cambio guardado en este registro aparecerá aquí,Jede gespeicherte Änderung dieses Datensatzes erscheint hier,Cada alteração guardada neste registo aparecerá aqui,Setiap perubahan pada data ini akan muncul di sini,ستظهر هنا كل التغييرات المحفوظة على هذا السجل
+revision.op.ADD,新增,新增,Added,Ajouté,追加,추가,Добавлено,Añadido,Hinzugefügt,Adicionado,Ditambahkan,أُضيف
+revision.op.UPDATE,修改,修改,Updated,Modifié,更新,수정,Изменено,Modificado,Geändert,Alterado,Diubah,عُدّل
+revision.op.DELETE,删除,刪除,Deleted,Supprimé,削除,삭제,Удалено,Eliminado,Gelöscht,Eliminado,Dihapus,حُذف
+revision.rollback,回滚,回滾,Roll back,Restaurer,ロールバック,롤백,Откатить,Revertir,Zurücksetzen,Reverter,Kembalikan,تراجع
+revision.rollback_hint,将这次变更的字段恢复为变更前的值？,將這次變更的欄位恢復為變更前的值？,Restore the fields of this change to their previous values?,Restaurer les champs de cette modification à leurs valeurs précédentes ?,この変更のフィールドを変更前の値に戻しますか？,이 변경의 필드를 이전 값으로 되돌릴까요?,Вернуть полям этого изменения прежние значения?,¿Restaurar los campos de este cambio a sus valores anteriores?,Die Felder dieser Änderung auf ihre vorherigen Werte zurücksetzen?,Repor os campos desta alteração para os valores anteriores?,Kembalikan kolom perubahan ini ke nilai sebelumnya?,هل تريد استعادة حقول هذا التغيير إلى قيمها السابقة؟
+scope.pick,请选择,請選擇,Select,Sélectionner,選択してください,선택하세요,Выберите,Seleccionar,Auswählen,Selecionar,Pilih,اختر
+scope.all,全部,全部,All,Tous,すべて,전체,Все,Todos,Alle,Todos,Semua,الكل
+scope.switch,切换,切換,Switch,Changer,切り替え,전환,Переключить,Cambiar,Wechseln,Mudar,Ganti,تبديل
+scope.switched,已切换到,已切換到,Switched to,Basculé vers,切り替えました：,전환됨:,Переключено на,Cambiado a,Gewechselt zu,Mudado para,Beralih ke,تم التبديل إلى
+scope.required,请先选择,請先選擇,Pick a,Choisissez :,選択してください：,선택하세요:,Выберите:,Seleccione:,Bitte wählen:,Selecione:,Pilih,اختر
+print.form_style,表单样式,表單樣式,Form Style,Style du formulaire,フォーム形式,양식 스타일,Стиль формы,Estilo de formulario,Formularstil,Estilo do formulário,Gaya Formulir,نمط النموذج
+print.label_top,标签在上,標籤在上,Label Above,Libellé au-dessus,ラベル上,레이블 위,Метка сверху,Etiqueta arriba,Beschriftung oben,Rótulo acima,Label di Atas,التسمية أعلى
+print.label_left,标签在左,標籤在左,Label Left,Libellé à gauche,ラベル左,레이블 왼쪽,Метка слева,Etiqueta a la izquierda,Beschriftung links,Rótulo à esquerda,Label di Kiri,التسمية يسار
+print.columns,每行列数,每行列數,Columns,Colonnes,列数,열 수,Столбцы,Columnas,Spalten,Colunas,Kolom,الأعمدة
+print.border,边框,邊框,Border,Bordure,枠線,테두리,Рамка,Borde,Rahmen,Borda,Garis Tepi,الحدود
+print.border_color,线框颜色,線框顏色,Border Color,Couleur de bordure,枠線の色,테두리 색상,Цвет рамки,Color del borde,Rahmenfarbe,Cor da borda,Warna Garis,لون الحدود
+print.font_size,字号,字號,Font Size,Taille de police,文字サイズ,글꼴 크기,Размер шрифта,Tamaño de fuente,Schriftgröße,Tamanho da fonte,Ukuran Huruf,حجم الخط
+print.show_title,标题,標題,Title,Titre,タイトル,제목,Заголовок,Título,Titel,Título,Judul,العنوان
+print.margin,页边距 (mm),頁邊距 (mm),Margin (mm),Marge (mm),余白 (mm),여백 (mm),Поля (мм),Margen (mm),Rand (mm),Margem (mm),Margin (mm),الهامش (مم)
+file.stores,存储,儲存,Stores,Stockages,ストレージ,저장소,Хранилища,Almacenes,Speicher,Armazenamentos,Penyimpanan,المخازن
+file.upload,上传,上傳,Upload,Téléverser,アップロード,업로드,Загрузить,Subir,Hochladen,Enviar,Unggah,رفع
+file.new_folder,新建文件夹,新建資料夾,New folder,Nouveau dossier,新しいフォルダ,새 폴더,Новая папка,Nueva carpeta,Neuer Ordner,Nova pasta,Folder baru,مجلد جديد
+file.rename,重命名,重新命名,Rename,Renommer,名前を変更,이름 바꾸기,Переименовать,Renombrar,Umbenennen,Renomear,Ganti nama,إعادة تسمية
+file.delete,删除,刪除,Delete,Supprimer,削除,삭제,Удалить,Eliminar,Löschen,Excluir,Hapus,حذف
+file.download,下载,下載,Download,Télécharger,ダウンロード,다운로드,Скачать,Descargar,Herunterladen,Baixar,Unduh,تنزيل
+file.copy_link,复制链接,複製連結,Copy link,Copier le lien,リンクをコピー,링크 복사,Копировать ссылку,Copiar enlace,Link kopieren,Copiar link,Salin tautan,نسخ الرابط
+file.open,新窗口打开,新視窗開啟,Open,Ouvrir,開く,열기,Открыть,Abrir,Öffnen,Abrir,Buka,فتح
+file.search,搜索当前目录,搜尋目前目錄,Search this folder,Rechercher dans ce dossier,このフォルダを検索,이 폴더 검색,Поиск в папке,Buscar en esta carpeta,In diesem Ordner suchen,Pesquisar nesta pasta,Cari di folder ini,بحث في هذا المجلد
+file.empty,空文件夹,空資料夾,Empty folder,Dossier vide,空のフォルダ,빈 폴더,Пустая папка,Carpeta vacía,Leerer Ordner,Pasta vazia,Folder kosong,مجلد فارغ
+file.size,大小,大小,Size,Taille,サイズ,크기,Размер,Tamaño,Größe,Tamanho,Ukuran,الحجم
+file.modified,修改时间,修改時間,Modified,Modifié le,更新日時,수정일,Изменён,Modificado,Geändert,Modificado,Diubah,تاريخ التعديل
+file.type,类型,類型,Type,Type,種類,유형,Тип,Tipo,Typ,Tipo,Jenis,النوع
+file.confirm_delete,确定删除选中的项目？文件夹会连同内容一起删除。,確定刪除所選項目？資料夾會連同內容一起刪除。,Delete the selected item? A folder goes with everything in it.,Supprimer l’élément sélectionné ? Un dossier est supprimé avec son contenu.,選択した項目を削除しますか？フォルダは中身ごと削除されます。,선택한 항목을 삭제할까요? 폴더는 내용과 함께 삭제됩니다.,Удалить выбранный элемент? Папка удаляется со всем содержимым.,¿Eliminar el elemento seleccionado? Una carpeta se elimina con todo su contenido.,Ausgewähltes Element löschen? Ein Ordner wird mit allem Inhalt gelöscht.,Excluir o item selecionado? Uma pasta é excluída com todo o conteúdo.,Hapus item yang dipilih? Folder dihapus beserta isinya.,حذف العنصر المحدد؟ يُحذف المجلد مع كل محتوياته.
+file.name,名称,名稱,Name,Nom,名前,이름,Имя,Nombre,Name,Nome,Nama,الاسم
+file.link_copied,链接已复制,連結已複製,Link copied,Lien copié,リンクをコピーしました,링크가 복사됨,Ссылка скопирована,Enlace copiado,Link kopiert,Link copiado,Tautan disalin,تم نسخ الرابط
+file.items,项,項,items,éléments,件,개,элементов,elementos,Einträge,itens,item,عنصر
+file.read_only,没有写入权限,沒有寫入權限,No write permission,Pas de permission d’écriture,書き込み権限がありません,쓰기 권한 없음,Нет прав на запись,Sin permiso de escritura,Keine Schreibberechtigung,Sem permissão de escrita,Tidak ada izin tulis,لا توجد صلاحية كتابة
+file.too_large,文件太大，不预览,檔案太大，不預覽,Too large to preview,Trop volumineux pour l’aperçu,大きすぎてプレビューできません,미리보기에 너무 큼,Слишком большой для предпросмотра,Demasiado grande para la vista previa,Zu groß für die Vorschau,Grande demais para pré-visualizar,Terlalu besar untuk pratinjau,كبير جدًا للمعاينة
+home.morning,早上好,早上好,Good morning,Bonjour,おはようございます,좋은 아침입니다,Доброе утро,Buenos días,Guten Morgen,Bom dia,Selamat pagi,صباح الخير
+home.noon,中午好,中午好,Good noon,Bon midi,こんにちは,안녕하세요,Добрый день,Buenas tardes,Guten Tag,Boa tarde,Selamat siang,ظهيرة سعيدة
+home.afternoon,下午好,下午好,Good afternoon,Bon après-midi,こんにちは,좋은 오후입니다,Добрый день,Buenas tardes,Guten Nachmittag,Boa tarde,Selamat sore,مساء الخير
+home.evening,晚上好,晚上好,Good evening,Bonsoir,こんばんは,좋은 저녁입니다,Добрый вечер,Buenas noches,Guten Abend,Boa noite,Selamat malam,مساء الخير
+home.night,夜深了,夜深了,Still up,Encore debout,夜更かしですね,늦은 밤이네요,Поздняя ночь,Aún despierto,Noch wach,Ainda acordado,Masih terjaga,ما زلت مستيقظاً
+home.menus,可访问菜单,可存取選單,Menus,Menus,メニュー,메뉴,Меню,Menús,Menüs,Menus,Menu,القوائم
+home.security,账号安全,帳號安全,Account security,Sécurité du compte,アカウントの安全,계정 보안,Безопасность аккаунта,Seguridad de la cuenta,Kontosicherheit,Segurança da conta,Keamanan akun,أمان الحساب
+home.days_ago,天前,天前,days ago,jours,日前,일 전,дн. назад,días,Tage,dias,hari lalu,يوماً
+home.pwd_changed,密码更新,密碼更新,Password changed,Mot de passe modifié,パスワード更新,비밀번호 변경,Пароль изменён,Contraseña cambiada,Passwort geändert,Senha alterada,Kata sandi diubah,تغيير كلمة المرور
+home.pwd_unchanged,密码未修改,密碼未修改,Pwd unchanged,Mot de passe inchangé,パスワード未変更,비밀번호 미변경,Пароль не менялся,Contraseña sin cambiar,Passwort unverändert,Senha não alterada,Sandi belum diubah,لم تُغيَّر كلمة المرور
+home.mfa_on,MFA 已开启,MFA 已開啟,MFA on,MFA activée,MFA 有効,MFA 사용 중,MFA включена,MFA activada,MFA aktiv,MFA ativada,MFA aktif,MFA مفعّل
+home.mfa_off,MFA 未开启,MFA 未開啟,MFA off,MFA désactivée,MFA 無効,MFA 미사용,MFA выключена,MFA desactivada,MFA inaktiv,MFA desativada,MFA nonaktif,MFA غير مفعّل
+home.unread,未读通知,未讀通知,Unread notices,Notifications non lues,未読通知,읽지 않은 알림,Непрочитанные уведомления,Avisos sin leer,Ungelesene Mitteilungen,Avisos não lidos,Notifikasi belum dibaca,إشعارات غير مقروءة
+home.pinned,常用菜单,常用選單,Pinned menus,Menus épinglés,ピン留めメニュー,고정 메뉴,Закреплённые меню,Menús fijados,Angeheftete Menüs,Menus fixados,Menu disematkan,القوائم المثبتة
+home.ai,AI 助手 · 回车发送,AI 助手 · Enter 送出,AI assistant · Enter ↵,Assistant IA · Entrée ↵,AI アシスタント · Enter ↵,AI 어시스턴트 · Enter ↵,ИИ-ассистент · Enter ↵,Asistente IA · Intro ↵,KI-Assistent · Enter ↵,Assistente IA · Enter ↵,Asisten AI · Enter ↵,مساعد الذكاء الاصطناعي · Enter ↵
+home.ask,问问 AI…,問問 AI…,Ask AI…,Demander à l'IA…,AI に聞く…,AI에게 묻기…,Спросить ИИ…,Pregunta a la IA…,KI fragen…,Perguntar à IA…,Tanya AI…,اسأل الذكاء الاصطناعي…
+home.quick,常用,常用,Pinned,Épinglés,ピン留め,고정,Закреплённые,Fijados,Angeheftet,Fixados,Disematkan,المثبتة
+home.frequent,常去,常去,Frequent,Fréquents,よく使う,자주 사용,Частые,Frecuentes,Häufig,Frequentes,Sering,المتكررة
+home.recent,快捷入口,快捷入口,Quick access,Accès rapide,クイックアクセス,빠른 액세스,Быстрый доступ,Acceso rápido,Schnellzugriff,Acesso rápido,Akses cepat,وصول سريع
+home.none,在左侧菜单点击图钉，把常用功能钉在这里,在左側選單點擊圖釘，把常用功能釘在這裡,Pin a menu from the sidebar to keep it here,Épinglez un menu depuis la barre latérale pour le garder ici,サイドバーのメニューをピン留めするとここに表示されます,사이드바에서 메뉴를 고정하면 여기에 표시됩니다,Закрепите меню в боковой панели и оно появится здесь,Fija un menú desde la barra lateral para tenerlo aquí,Hefte ein Menü aus der Seitenleiste an und es erscheint hier,Fixe um menu na barra lateral para o manter aqui,Sematkan menu dari bilah samping agar muncul di sini,ثبّت قائمة من الشريط الجانبي لتظهر هنا
+home.opened,最近打开,最近開啟,Recently opened,Ouverts récemment,最近開いた,최근 열어본,Недавно открытые,Abiertos recientemente,Zuletzt geöffnet,Abertos recentemente,Baru dibuka,فُتحت مؤخراً
+home.opened_none,打开过的菜单会出现在这里,開啟過的選單會出現在這裡,Menus you open will show up here,Les menus ouverts apparaîtront ici,開いたメニューがここに表示されます,열어본 메뉴가 여기에 표시됩니다,Открытые меню появятся здесь,Los menús que abras aparecerán aquí,Geöffnete Menüs erscheinen hier,Os menus que abrir aparecem aqui,Menu yang dibuka akan muncul di sini,ستظهر القوائم التي تفتحها هنا
+home.today,今天,今天,Today,Aujourd'hui,今日,오늘,Сегодня,Hoy,Heute,Hoje,Hari ini,اليوم
+home.yesterday,昨天,昨天,Yesterday,Hier,昨日,어제,Вчера,Ayer,Gestern,Ontem,Kemarin,أمس
+home.earlier,更早,更早,Earlier,Plus tôt,それ以前,이전,Ранее,Antes,Früher,Antes,Sebelumnya,أقدم
+home.dark,深色模式,深色模式,Dark mode,Mode sombre,ダークモード,다크 모드,Тёмная тема,Modo oscuro,Dunkler Modus,Modo escuro,Mode gelap,الوضع الداكن
+home.light,浅色模式,淺色模式,Light mode,Mode clair,ライトモード,라이트 모드,Светлая тема,Modo claro,Heller Modus,Modo claro,Mode terang,الوضع الفاتح
+home.skin,主题风格,主題風格,Skin,Thème,スキン,스킨,Оформление,Tema,Design,Tema,Tema,المظهر
+home.skin_default,默认,預設,Default,Par défaut,デフォルト,기본,По умолчанию,Predeterminado,Standard,Padrão,Bawaan,الافتراضي
+table.batch_edit,批量修改,批次修改,Batch edit,Modification groupée,一括編集,일괄 편집,Массовое изменение,Edición masiva,Stapelbearbeitung,Edição em lote,Edit massal,تعديل جماعي
+table.batch_edit.hint,选中的 {} 条数据的该字段将被设为同一个值,選中的 {} 條資料的該欄位將被設為同一個值,This field of the {} selected rows will be set to the same value,Ce champ des {} lignes sélectionnées prendra la même valeur,選択した {} 件のこのフィールドが同じ値に設定されます,선택한 {}개 행의 이 필드가 같은 값으로 설정됩니다,Это поле у {} выбранных строк получит одно значение,Este campo de las {} filas seleccionadas tendrá el mismo valor,Dieses Feld der {} ausgewählten Zeilen erhält denselben Wert,Este campo das {} linhas selecionadas receberá o mesmo valor,Bidang ini dari {} baris terpilih akan diisi nilai yang sama,سيتم تعيين هذا الحقل لـ {} صفًا محددًا إلى نفس القيمة
+table.batch_edit.field,请选择要修改的字段,請選擇要修改的欄位,Select the field to change,Sélectionnez le champ à modifier,変更するフィールドを選択してください,변경할 필드를 선택하세요,Выберите поле для изменения,Seleccione el campo a modificar,Zu änderndes Feld wählen,Selecione o campo a alterar,Pilih bidang yang akan diubah,اختر الحقل المراد تعديله
+table.batch_edit.select,选中的数据均不可修改,選中的資料均不可修改,None of the selected rows may be edited,Aucune des lignes sélectionnées n'est modifiable,選択した行はいずれも編集できません,선택한 행은 모두 편집할 수 없습니다,Ни одна из выбранных строк не может быть изменена,Ninguna de las filas seleccionadas puede editarse,Keine der ausgewählten Zeilen ist bearbeitbar,Nenhuma das linhas selecionadas pode ser editada,Tidak ada baris terpilih yang dapat diedit,لا يمكن تعديل أي من الصفوف المحددة
+table.batch_edit.success,已更新 {} 条数据,已更新 {} 條資料,{} rows updated,{} lignes mises à jour,{} 件を更新しました,{}개 행이 업데이트되었습니다,Обновлено строк: {},{} filas actualizadas,{} Zeilen aktualisiert,{} linhas atualizadas,{} baris diperbarui,تم تحديث {} صفًا
+designer.power_batch_edit,批量修改,批次修改,Batch edit,Modification groupée,一括編集,일괄 편집,Массовое изменение,Edición masiva,Stapelbearbeitung,Edição em lote,Edit massal,تعديل جماعي
+aidev.pool,需求池,需求池,Requirement pool,Réservoir d'exigences,要件プール,요구사항 풀,Пул требований,Bolsa de requisitos,Anforderungspool,Conjunto de requisitos,Kumpulan kebutuhan,مجموعة المتطلبات
+aidev.project,项目,專案,Project,Projet,プロジェクト,프로젝트,Проект,Proyecto,Projekt,Projeto,Proyek,المشروع
+aidev.new,新建需求,新建需求,New requirement,Nouvelle exigence,新しい要件,새 요구사항,Новое требование,Nuevo requisito,Neue Anforderung,Novo requisito,Kebutuhan baru,متطلب جديد
+aidev.create,创建,建立,Create,Créer,作成,만들기,Создать,Crear,Anlegen,Criar,Buat,إنشاء
+aidev.filter.all,全部,全部,All,Tout,すべて,전체,Все,Todo,Alle,Todos,Semua,الكل
+aidev.filter.mine,我发起的,我發起的,Mine,Les miens,自分が作成,내가 만든,Мои,Míos,Meine,Meus,Milik saya,الخاصة بي
+aidev.filter.review,待我评审,待我評審,To review,À relire,レビュー待ち,검토 대기,На проверку,Por revisar,Zu prüfen,Por rever,Perlu ditinjau,بانتظار مراجعتي
+aidev.group.pending,待处理,待處理,To do,À traiter,未着手,대기,К выполнению,Pendiente,Offen,Por fazer,Belum dikerjakan,قيد الانتظار
+aidev.group.running,进行中,進行中,In progress,En cours,進行中,진행 중,В работе,En curso,In Arbeit,Em curso,Berjalan,قيد التنفيذ
+aidev.group.acceptance,待验收,待驗收,Awaiting acceptance,En attente de recette,受け入れ待ち,인수 대기,Ждёт приёмки,Pendiente de aceptación,Wartet auf Abnahme,A aguardar aceitação,Menunggu penerimaan,بانتظار القبول
+aidev.group.failed,失败,失敗,Failed,En échec,失敗,실패,С ошибкой,Fallidos,Fehlgeschlagen,Falhados,Gagal,فشل
+aidev.group.delivered,已交付,已交付,Delivered,Livrées,デリバリー済み,전달됨,Поставлено,Entregados,Ausgeliefert,Entregues,Terkirim,تم التسليم
+aidev.group.cancelled,已取消,已取消,Cancelled,Annulées,キャンセル,취소됨,Отменено,Cancelados,Abgebrochen,Cancelados,Dibatalkan,ملغاة
+aidev.stage.DRAFT,草稿,草稿,Draft,Brouillon,下書き,초안,Черновик,Borrador,Entwurf,Rascunho,Draf,مسودة
+aidev.stage.REVIEW,待评审,待評審,In review,En revue,レビュー中,검토 중,На рассмотрении,En revisión,In Prüfung,Em revisão,Ditinjau,قيد المراجعة
+aidev.stage.QUEUED,排队中,排隊中,Queued,En file,待機中,대기열,В очереди,En cola,Wartend,Em fila,Antre,في الانتظار
+aidev.stage.RUNNING,执行中,執行中,Running,En cours,実行中,실행 중,Выполняется,En ejecución,Läuft,Em execução,Berjalan,قيد التنفيذ
+aidev.stage.VERIFYING,QA 验收中,QA 驗收中,QA checking,Vérification QA,QA 検証中,QA 검증 중,Проверка QA,QA verificando,QA-Prüfung,QA a verificar,QA memeriksa,تحقق الجودة
+aidev.stage.ACCEPTANCE,待验收,待驗收,Acceptance,Recette,受け入れ待ち,인수 대기,Приёмка,Aceptación,Abnahme,Aceitação,Penerimaan,القبول
+aidev.stage.DELIVERED,已交付,已交付,Delivered,Livré,デリバリー済み,전달됨,Поставлено,Entregado,Ausgeliefert,Entregue,Terkirim,تم التسليم
+aidev.stage.FAILED,执行失败,執行失敗,Failed,Échec,失敗,실패,Ошибка,Fallido,Fehlgeschlagen,Falhou,Gagal,فشل
+aidev.stage.CANCELLED,已取消,已取消,Cancelled,Annulé,キャンセル,취소됨,Отменено,Cancelado,Abgebrochen,Cancelado,Dibatalkan,ملغى
+aidev.priority,优先级,優先級,Priority,Priorité,優先度,우선순위,Приоритет,Prioridad,Priorität,Prioridade,Prioritas,الأولوية
+aidev.priority.HIGH,高,高,High,Haute,高,높음,Высокий,Alta,Hoch,Alta,Tinggi,عالية
+aidev.priority.MEDIUM,中,中,Medium,Moyenne,中,보통,Средний,Media,Mittel,Média,Sedang,متوسطة
+aidev.priority.LOW,低,低,Low,Basse,低,낮음,Низкий,Baja,Niedrig,Baixa,Rendah,منخفضة
+aidev.creator,创建人,建立人,Creator,Créateur,作成者,작성자,Автор,Creador,Ersteller,Criador,Pembuat,المنشئ
+aidev.reviewer,审批人,審批人,Reviewer,Relecteur,承認者,승인자,Утверждающий,Revisor,Prüfer,Revisor,Peninjau,المراجع
+aidev.agent,执行 Agent,執行 Agent,Agent,Agent,実行エージェント,실행 에이전트,Агент,Agente,Agent,Agente,Agen,الوكيل
+aidev.unassigned,未指定,未指定,Unassigned,Non attribué,未指定,미지정,Не назначен,Sin asignar,Nicht zugewiesen,Não atribuído,Belum ditentukan,غير محدد
+aidev.created,创建于,建立於,Created,Créé le,作成,생성,Создано,Creado,Erstellt,Criado,Dibuat,أُنشئ
+aidev.updated,更新于,更新於,Updated,Mis à jour,更新,업데이트,Обновлено,Actualizado,Aktualisiert,Atualizado,Diperbarui,حُدّث
+aidev.initiated,发起,發起,opened,a ouvert,が作成,작성,открыл,abrió,eröffnet,abriu,membuka,فتح
+aidev.no_project,还没有可访问的项目，请先在「研发项目」中创建,還沒有可存取的專案，請先在「研發專案」中建立,No project yet: create one under Dev Project first,Aucun projet : créez-en un dans Projet de développement,プロジェクトがありません。まず開発プロジェクトで作成してください,프로젝트가 없습니다. 먼저 개발 프로젝트에서 만드세요,Проектов нет: сначала создайте его в «Проект разработки»,Aún no hay proyectos: crea uno en Proyecto de desarrollo,Noch kein Projekt: zuerst unter Entwicklungsprojekt anlegen,Ainda sem projetos: crie um em Projeto de desenvolvimento,Belum ada proyek: buat dulu di Proyek pengembangan,لا توجد مشاريع: أنشئ مشروعًا في مشروع التطوير أولًا
+aidev.no_requirement,还没有需求，新建一个开始吧,還沒有需求，新建一個開始吧,No requirements yet: create the first one,Aucune exigence : créez la première,要件はまだありません。最初の要件を作成しましょう,아직 요구사항이 없습니다. 첫 요구사항을 만드세요,Требований пока нет: создайте первое,Aún no hay requisitos: crea el primero,Noch keine Anforderungen: legen Sie die erste an,Ainda sem requisitos: crie o primeiro,Belum ada kebutuhan: buat yang pertama,لا توجد متطلبات بعد: أنشئ الأول
+aidev.no_match,没有符合条件的需求,沒有符合條件的需求,Nothing matches this filter,Rien ne correspond à ce filtre,条件に合う要件はありません,조건에 맞는 요구사항이 없습니다,Ничего не найдено,Nada coincide con este filtro,Nichts passt zu diesem Filter,Nada corresponde a este filtro,Tidak ada yang cocok,لا شيء يطابق هذا التصفية
+aidev.run.not_started,未启动,未啟動,Not started,Non démarré,未開始,시작 전,Не запущено,Sin iniciar,Nicht gestartet,Não iniciado,Belum dimulai,لم يبدأ
+aidev.run.done,已完成,已完成,Done,Terminé,完了,완료,Готово,Hecho,Fertig,Concluído,Selesai,مكتمل
+aidev.run.qa_failed,QA 未通过,QA 未通過,QA failed,QA en échec,QA 不合格,QA 불합격,QA не пройдена,QA no superada,QA nicht bestanden,QA falhou,QA gagal,فشل اختبار الجودة
+aidev.run.pushed,已推送,已推送,Pushed,Poussé,プッシュ済み,푸시됨,Отправлено,Enviado,Gepusht,Enviado,Didorong,تم الدفع
+aidev.run.failed,执行失败,執行失敗,Run failed,Échec du lancement,実行失敗,실행 실패,Запуск не удался,Ejecución fallida,Lauf fehlgeschlagen,Execução falhou,Eksekusi gagal,فشل التشغيل
+aidev.phase.assess,需求评估,需求評估,Assess,Évaluation,要件評価,요구 분석,Оценка,Evaluación,Bewertung,Avaliação,Penilaian,التقييم
+aidev.phase.design,方案设计,方案設計,Design,Conception,方針設計,설계,Проектирование,Diseño,Entwurf,Desenho,Desain,التصميم
+aidev.phase.implement,实现,實作,Implement,Implémentation,実装,구현,Реализация,Implementación,Umsetzung,Implementação,Implementasi,التنفيذ
+aidev.phase.verify,验证,驗證,Verify,Vérification,検証,검증,Проверка,Verificación,Prüfung,Verificação,Verifikasi,التحقق
+aidev.phase.release,发布,發佈,Release,Publication,リリース,릴리스,Выпуск,Publicación,Freigabe,Lançamento,Rilis,الإصدار
+aidev.step.define,定义,定義,Define,Définir,定義,정의,Описание,Definir,Definieren,Definir,Definisi,التعريف
+aidev.step.review,评审,評審,Review,Revue,レビュー,검토,Рассмотрение,Revisión,Prüfung,Revisão,Tinjauan,المراجعة
+aidev.step.run,执行,執行,Run,Exécution,実行,실행,Выполнение,Ejecución,Ausführung,Execução,Eksekusi,التشغيل
+aidev.step.deliver,交付,交付,Deliver,Livraison,デリバリー,전달,Поставка,Entrega,Auslieferung,Entrega,Pengiriman,التسليم
+aidev.act.submit,提交评审,提交評審,Submit for review,Soumettre,レビューに提出,검토 요청,На рассмотрение,Enviar a revisión,Zur Prüfung,Enviar para revisão,Ajukan tinjauan,إرسال للمراجعة
+aidev.act.approve,批准并执行,批准並執行,Approve and run,Approuver et lancer,承認して実行,승인 후 실행,Утвердить и запустить,Aprobar y ejecutar,Genehmigen und ausführen,Aprovar e executar,Setujui dan jalankan,الموافقة والتشغيل
+aidev.act.reject,驳回,駁回,Reject,Rejeter,却下,반려,Отклонить,Rechazar,Ablehnen,Rejeitar,Tolak,رفض
+aidev.act.stop,停止执行,停止執行,Stop,Arrêter,停止,중지,Остановить,Detener,Stoppen,Parar,Hentikan,إيقاف
+aidev.act.retry,重新执行,重新執行,Run again,Relancer,再実行,다시 실행,Запустить снова,Volver a ejecutar,Erneut ausführen,Executar de novo,Jalankan lagi,إعادة التشغيل
+aidev.act.deliver,验收并推送,驗收並推送,Accept and push,Accepter et pousser,承認してプッシュ,수락 후 푸시,Принять и отправить,Aceptar y enviar,Abnehmen und pushen,Aceitar e enviar,Terima dan dorong,القبول والدفع
+aidev.act.cancel,取消需求,取消需求,Cancel requirement,Annuler l'exigence,要件をキャンセル,요구사항 취소,Отменить требование,Cancelar requisito,Anforderung abbrechen,Cancelar requisito,Batalkan kebutuhan,إلغاء المتطلب
+aidev.confirm_stop,确定停止 Agent？之后可以重新执行接着做,確定停止 Agent？之後可以重新執行接著做,Stop the agent? Run again later to continue,Arrêter l'agent ? Relancez plus tard pour continuer,エージェントを停止しますか？後で再実行して続行できます,에이전트를 중지할까요? 나중에 다시 실행해 이어갈 수 있습니다,Остановить агента? Позже можно продолжить,¿Detener el agente? Vuelve a ejecutarlo luego para continuar,"Agent stoppen? Später erneut ausführen, um fortzusetzen",Parar o agente? Execute de novo mais tarde para continuar,Hentikan agen? Jalankan lagi nanti untuk melanjutkan,إيقاف الوكيل؟ أعد التشغيل لاحقًا للمتابعة
+aidev.confirm_deliver,确认验收，并把改动推送到远端仓库？,確認驗收，並把變更推送到遠端倉庫？,Accept the change and push it to the remote repositories?,Accepter la modification et la pousser vers les dépôts distants ?,変更を承認してリモートにプッシュしますか？,변경을 수락하고 원격 저장소에 푸시할까요?,Принять изменения и отправить в удалённые репозитории?,¿Aceptar el cambio y enviarlo a los repositorios remotos?,Änderung abnehmen und in die Remote-Repositories pushen?,Aceitar a alteração e enviá-la para os repositórios remotos?,Terima perubahan dan dorong ke repositori remote?,قبول التغيير ودفعه إلى المستودعات البعيدة؟
+aidev.confirm_cancel,确定取消这个需求？,確定取消這個需求？,Cancel this requirement?,Annuler cette exigence ?,この要件をキャンセルしますか？,이 요구사항을 취소할까요?,Отменить это требование?,¿Cancelar este requisito?,Diese Anforderung abbrechen?,Cancelar este requisito?,Batalkan kebutuhan ini?,إلغاء هذا المتطلب؟
+aidev.approved,已批准,已批准,approved,a approuvé,が承認,승인함,утвердил,aprobó,genehmigt,aprovou,menyetujui,وافق
+aidev.waiting_review,等待评审,等待評審,Waiting for review,En attente de revue,レビュー待ち,검토 대기,Ожидает рассмотрения,Esperando revisión,Wartet auf Prüfung,A aguardar revisão,Menunggu tinjauan,بانتظار المراجعة
+aidev.review_hint,确认需求清楚、验收标准可检查后批准，Agent 随即开始执行,確認需求清楚、驗收標準可檢查後批准，Agent 隨即開始執行,Approve once the requirement is clear and its acceptance criteria can be checked: the agent starts right away,Approuvez quand l'exigence est claire et ses critères vérifiables : l'agent démarre aussitôt,要件が明確で受け入れ基準を確認できるなら承認してください。エージェントがすぐ開始します,요구사항이 명확하고 인수 기준을 확인할 수 있으면 승인하세요. 에이전트가 바로 시작합니다,"Утвердите, когда требование понятно и критерии проверяемы: агент сразу начнёт",Aprueba cuando el requisito sea claro y sus criterios verificables: el agente empieza enseguida,"Genehmigen, wenn die Anforderung klar und prüfbar ist: der Agent startet sofort",Aprove quando o requisito estiver claro e verificável: o agente começa logo,Setujui bila kebutuhan jelas dan kriteria bisa diperiksa: agen langsung mulai,وافق عندما يكون المتطلب واضحًا ومعاييره قابلة للتحقق: يبدأ الوكيل فورًا
+aidev.review_wait_hint,等待评审人、负责人或维护者处理,等待評審人、負責人或維護者處理,"Waiting for a reviewer, owner or maintainer","En attente d’un relecteur, propriétaire ou mainteneur",レビュアー・オーナー・メンテナーの対応待ち,"검토자, 소유자 또는 관리자 처리 대기","Ждёт рецензента, владельца или сопровождающего","Esperando a un revisor, propietario o mantenedor","Wartet auf Prüfer, Eigentümer oder Betreuer","A aguardar revisor, proprietário ou mantenedor","Menunggu peninjau, pemilik atau pengelola",بانتظار مراجع أو مالك أو مشرف
+aidev.not_submitted,尚未提交评审,尚未提交評審,Not submitted for review yet,Pas encore soumise,まだレビューに提出されていません,아직 검토 요청 전,Ещё не отправлено на рассмотрение,Aún no enviado a revisión,Noch nicht zur Prüfung eingereicht,Ainda não enviado para revisão,Belum diajukan untuk ditinjau,لم يُرسل للمراجعة بعد
+aidev.submit_hint,完善需求定义后提交评审,完善需求定義後提交評審,"Complete the definition, then submit it for review","Complétez la définition, puis soumettez-la",定義を仕上げてからレビューに提出してください,정의를 완성한 뒤 검토를 요청하세요,Доработайте описание и отправьте на рассмотрение,Completa la definición y envíala a revisión,"Definition vervollständigen, dann einreichen",Complete a definição e envie para revisão,"Lengkapi definisi, lalu ajukan tinjauan",أكمل التعريف ثم أرسله للمراجعة
+aidev.session,会话,會話,Session,Session,セッション,세션,Сеанс,Sesión,Sitzung,Sessão,Sesi,جلسة
+aidev.session.RUNNING,执行中,執行中,Running,En cours,実行中,실행 중,Выполняется,En ejecución,Läuft,Em execução,Berjalan,قيد التنفيذ
+aidev.session.SUCCEEDED,已完成,已完成,Completed,Terminée,完了,완료,Завершён,Completada,Abgeschlossen,Concluída,Selesai,مكتملة
+aidev.session.FAILED,失败,失敗,Failed,Échec,失敗,실패,Ошибка,Fallida,Fehlgeschlagen,Falhou,Gagal,فشلت
+aidev.session.STOPPED,已停止,已停止,Stopped,Arrêtée,停止,중지됨,Остановлен,Detenida,Gestoppt,Parada,Dihentikan,متوقفة
+aidev.history,执行历史,執行歷史,Run history,Historique d'exécution,実行履歴,실행 기록,История запусков,Historial de ejecuciones,Laufverlauf,Histórico de execuções,Riwayat eksekusi,سجل التشغيل
+aidev.prompt,需求指令,需求指令,Instruction,Instruction,指示,지시,Задание,Instrucción,Anweisung,Instrução,Instruksi,التعليمات
+aidev.tool_calls,执行过程 · 工具调用,執行過程 · 工具呼叫,Tool calls,Appels d'outils,ツール呼び出し,도구 호출,Вызовы инструментов,Llamadas a herramientas,Werkzeugaufrufe,Chamadas de ferramentas,Panggilan alat,استدعاءات الأدوات
+aidev.result_ok,执行完成,執行完成,Run complete,Exécution terminée,実行完了,실행 완료,Запуск завершён,Ejecución completada,Lauf abgeschlossen,Execução concluída,Eksekusi selesai,اكتمل التشغيل
+aidev.result_failed,执行失败,執行失敗,Run failed,Échec de l'exécution,実行失敗,실행 실패,Запуск не удался,Ejecución fallida,Lauf fehlgeschlagen,Execução falhou,Eksekusi gagal,فشل التشغيل
+aidev.working,Agent 正在工作…,Agent 正在工作…,The agent is working…,L'agent travaille…,エージェントが作業中…,에이전트가 작업 중…,Агент работает…,El agente está trabajando…,Der Agent arbeitet…,O agente está a trabalhar…,Agen sedang bekerja…,الوكيل يعمل…
+aidev.queued_hint,已排队，等待执行器领取,已排隊，等待執行器領取,Queued: waiting for the executor,En file : en attente de l'exécuteur,待機中：エクゼキューターの取得待ち,대기열: 실행기를 기다리는 중,В очереди: ждёт исполнителя,En cola: esperando al ejecutor,Wartend: auf den Ausführer,Em fila: a aguardar o executor,Antre: menunggu pelaksana,في الانتظار: بانتظار المنفّذ
+aidev.no_session,批准后 Agent 会在这里开始工作,批准後 Agent 會在這裡開始工作,"Once approved, the agent works here","Une fois approuvée, l'agent travaille ici",承認されると、エージェントがここで作業を始めます,승인되면 에이전트가 여기서 작업합니다,После утверждения агент начнёт работу здесь,"Tras la aprobación, el agente trabaja aquí",Nach der Genehmigung arbeitet der Agent hier,"Após aprovação, o agente trabalha aqui","Setelah disetujui, agen bekerja di sini",بعد الموافقة يعمل الوكيل هنا
+aidev.composer.retry,补充说明后重新执行，Agent 会接着上次的会话（Enter 发送，Shift+Enter 换行）,補充說明後重新執行，Agent 會接著上次的會話（Enter 傳送，Shift+Enter 換行）,"Add guidance and run again: the agent continues its last session (Enter to send, Shift+Enter for a new line)",Ajoutez des indications et relancez : l'agent reprend sa dernière session (Entrée pour envoyer),補足して再実行します。エージェントは前回のセッションを続けます（Enter で送信）,안내를 덧붙여 다시 실행합니다. 에이전트가 지난 세션을 이어갑니다(Enter 전송),Добавьте указания и запустите снова: агент продолжит прошлый сеанс (Enter — отправить),Añade indicaciones y vuelve a ejecutar: el agente sigue su última sesión (Enter para enviar),Hinweise ergänzen und erneut ausführen: der Agent setzt seine letzte Sitzung fort (Enter sendet),Acrescente indicações e execute de novo: o agente continua a última sessão (Enter para enviar),Tambahkan arahan lalu jalankan lagi: agen melanjutkan sesi terakhir (Enter untuk kirim),أضف توجيهات وأعد التشغيل: يواصل الوكيل جلسته الأخيرة (Enter للإرسال)
+aidev.composer.rework,写明需要修改的地方，Agent 会接着改（Enter 发送，Shift+Enter 换行）,寫明需要修改的地方，Agent 會接著改（Enter 傳送，Shift+Enter 換行）,"Say what to change: the agent picks up from where it stopped (Enter to send, Shift+Enter for a new line)",Indiquez ce qu'il faut changer : l'agent reprend là où il s'est arrêté (Entrée pour envoyer),修正点を書いてください。エージェントが続けて修正します（Enter で送信）,수정할 점을 적어 주세요. 에이전트가 이어서 수정합니다(Enter 전송),"Опишите, что изменить: агент продолжит с того места (Enter — отправить)",Indica qué cambiar: el agente sigue donde lo dejó (Enter para enviar),"Beschreiben Sie, was sich ändern soll: der Agent macht dort weiter (Enter sendet)",Indique o que mudar: o agente continua onde parou (Enter para enviar),Tuliskan apa yang harus diubah: agen melanjutkan dari sana (Enter untuk kirim),اذكر ما يجب تغييره: يكمل الوكيل من حيث توقف (Enter للإرسال)
+aidev.composer.running,正在执行，结束后可以继续追问,正在執行，結束後可以繼續追問,Running: you can follow up once it ends,En cours : vous pourrez relancer à la fin,実行中：終了後に追加の指示ができます,실행 중: 끝나면 이어서 요청할 수 있습니다,Выполняется: после завершения можно продолжить,En ejecución: podrás continuar cuando termine,Läuft: danach können Sie nachfassen,Em execução: pode continuar quando terminar,Sedang berjalan: Anda dapat melanjutkan setelah selesai,قيد التنفيذ: يمكنك المتابعة بعد الانتهاء
+aidev.composer.closed,当前阶段不能给 Agent 发消息,目前階段不能給 Agent 傳訊息,The agent cannot take messages at this stage,L'agent ne prend pas de messages à cette étape,このステージではエージェントにメッセージを送れません,현재 단계에서는 에이전트에게 메시지를 보낼 수 없습니다,На этом этапе агенту нельзя писать,En esta etapa el agente no admite mensajes,In dieser Phase nimmt der Agent keine Nachrichten an,Nesta etapa o agente não aceita mensagens,Agen tidak menerima pesan pada tahap ini,لا يستقبل الوكيل رسائل في هذه المرحلة
+aidev.composer.keys,Enter 发送 · Shift+Enter 换行,Enter 傳送 · Shift+Enter 換行,Enter to send · Shift+Enter for a new line,Entrée pour envoyer · Maj+Entrée pour une ligne,Enter で送信 · Shift+Enter で改行,Enter 전송 · Shift+Enter 줄바꿈,Enter — отправить · Shift+Enter — новая строка,Enter para enviar · Shift+Enter nueva línea,Enter sendet · Umschalt+Enter neue Zeile,Enter envia · Shift+Enter nova linha,Enter kirim · Shift+Enter baris baru,Enter للإرسال · Shift+Enter لسطر جديد
+aidev.send,发送,傳送,Send,Envoyer,送信,보내기,Отправить,Enviar,Senden,Enviar,Kirim,إرسال
+aidev.sessions,会话,會話,Sessions,Sessions,セッション,세션,Сеансы,Sesiones,Sitzungen,Sessões,Sesi,الجلسات
+aidev.elapsed,耗时,耗時,Time spent,Durée,所要時間,소요 시간,Затрачено,Tiempo,Dauer,Duração,Durasi,المدة
+aidev.cost,费用,費用,Cost,Coût,コスト,비용,Стоимость,Coste,Kosten,Custo,Biaya,التكلفة
+aidev.verdict,QA 结论,QA 結論,QA verdict,Verdict QA,QA 判定,QA 판정,Вердикт QA,Veredicto QA,QA-Urteil,Veredicto QA,Putusan QA,حكم الجودة
+aidev.changes,代码改动,程式碼變更,Code changes,Modifications du code,コード変更,코드 변경,Изменения кода,Cambios de código,Codeänderungen,Alterações de código,Perubahan kode,تغييرات الشيفرة
+aidev.files,个文件,個檔案,files,fichiers,ファイル,개 파일,файлов,archivos,Dateien,ficheiros,file,ملفات
+aidev.no_changes,没有改动,沒有變更,No changes,Aucune modification,変更なし,변경 없음,Изменений нет,Sin cambios,Keine Änderungen,Sem alterações,Tidak ada perubahan,لا توجد تغييرات
+aidev.diff_truncated,改动过大，只显示开头部分,變更過大，只顯示開頭部分,The diff is large: only its beginning is shown,Le diff est volumineux : seul le début est affiché,差分が大きいため先頭のみ表示しています,변경이 커서 앞부분만 표시합니다,Diff большой: показано только начало,El diff es grande: solo se muestra el principio,Der Diff ist groß: nur der Anfang wird gezeigt,O diff é grande: só é mostrado o início,Diff besar: hanya bagian awal ditampilkan,الفرق كبير: يُعرض جزؤه الأول فقط
+aidev.deliveries,交付记录,交付紀錄,Deliveries,Livraisons,デリバリー履歴,전달 기록,Поставки,Entregas,Auslieferungen,Entregas,Riwayat pengiriman,سجل التسليم
+aidev.delivery.PENDING,未推送,未推送,Not pushed,Non poussé,未プッシュ,푸시 안 됨,Не отправлено,Sin enviar,Nicht gepusht,Não enviado,Belum didorong,لم يُدفع
+aidev.delivery.PUSHED,已推送,已推送,Pushed,Poussé,プッシュ済み,푸시됨,Отправлено,Enviado,Gepusht,Enviado,Didorong,تم الدفع
+aidev.delivery.SKIPPED,无改动,無變更,No changes,Aucune modification,変更なし,변경 없음,Без изменений,Sin cambios,Keine Änderungen,Sem alterações,Tanpa perubahan,بلا تغييرات
+aidev.delivery.CONFLICT,冲突,衝突,Conflict,Conflit,競合,충돌,Конфликт,Conflicto,Konflikt,Conflito,Konflik,تعارض
+aidev.delivery.REJECTED,被拒绝,被拒絕,Rejected,Rejeté,拒否,거부됨,Отклонено,Rechazado,Abgelehnt,Rejeitado,Ditolak,مرفوض
+aidev.delivery.FAILED,失败,失敗,Failed,Échec,失敗,실패,Ошибка,Fallido,Fehlgeschlagen,Falhou,Gagal,فشل
+aidev.next_title,下一步：验收并推送,下一步：驗收並推送,Next: accept and push,Suite : accepter et pousser,次へ：承認してプッシュ,다음: 수락 후 푸시,Далее: принять и отправить,Siguiente: aceptar y enviar,Weiter: abnehmen und pushen,A seguir: aceitar e enviar,Berikutnya: terima dan dorong,التالي: القبول والدفع
+aidev.next_hint,核对上面的代码改动与 QA 结论，通过后推送到各仓库；需要调整就回到执行视图继续让 Agent 修改,核對上面的程式碼變更與 QA 結論，通過後推送到各倉庫；需要調整就回到執行檢視繼續讓 Agent 修改,"Check the changes and the QA verdict above, then push to every repository; to adjust, go back to the run view and ask the agent","Vérifiez les modifications et le verdict QA, puis poussez ; pour ajuster, revenez à l'exécution et demandez à l'agent",上の変更と QA 判定を確認してプッシュします。修正が必要なら実行ビューでエージェントに依頼してください,위의 변경과 QA 판정을 확인한 뒤 푸시하세요. 조정이 필요하면 실행 화면에서 에이전트에게 요청하세요,"Проверьте изменения и вердикт QA, затем отправьте; для правок вернитесь к выполнению","Revisa los cambios y el veredicto QA y envía; para ajustar, vuelve a la ejecución y pídeselo al agente","Änderungen und QA-Urteil prüfen, dann pushen; für Anpassungen zur Ausführung zurück und den Agenten bitten","Verifique as alterações e o veredicto QA e envie; para ajustar, volte à execução e peça ao agente","Periksa perubahan dan putusan QA, lalu dorong; untuk menyesuaikan, kembali ke eksekusi dan minta agen",راجع التغييرات وحكم الجودة ثم ادفع؛ للتعديل عد إلى التشغيل واطلب من الوكيل
+aidev.next_rework,回到执行视图要求修改,回到執行檢視要求修改,Request changes in the run view,Demander des modifications dans l'exécution,実行ビューで修正を依頼,실행 화면에서 수정 요청,Запросить правки в выполнении,Pedir cambios en la ejecución,Änderungen in der Ausführung anfordern,Pedir alterações na execução,Minta perubahan di tampilan eksekusi,طلب تعديلات في عرض التشغيل
+aidev.progress,执行进度,執行進度,Progress,Progression,進捗,진행률,Прогресс,Progreso,Fortschritt,Progresso,Kemajuan,التقدم
+aidev.status,状态,狀態,Status,Statut,ステータス,상태,Статус,Estado,Status,Estado,Status,الحالة
+aidev.repos,涉及仓库,涉及倉庫,Repositories,Dépôts,リポジトリ,저장소,Репозитории,Repositorios,Repositories,Repositórios,Repositori,المستودعات
+aidev.participants,参与者,參與者,Participants,Participants,参加者,참여자,Участники,Participantes,Beteiligte,Participantes,Peserta,المشاركون
+aidev.role.initiator,发起人,發起人,Initiator,Initiateur,起票者,요청자,Инициатор,Solicitante,Initiator,Requerente,Pemrakarsa,المبادر
+aidev.role.reviewer,评审人,評審人,Reviewer,Relecteur,レビュアー,검토자,Рецензент,Revisor,Prüfer,Revisor,Peninjau,المراجع
+aidev.role.agent,执行 Agent,執行 Agent,Developer agent,Agent développeur,開発エージェント,개발 에이전트,Агент-разработчик,Agente desarrollador,Entwickler-Agent,Agente programador,Agen pengembang,وكيل التطوير
+aidev.role.qa,QA Agent,QA Agent,QA agent,Agent QA,QA エージェント,QA 에이전트,Агент QA,Agente QA,QA-Agent,Agente QA,Agen QA,وكيل الجودة
+aidev.doc_locked,执行期间文档只读，要修改需求请先停止执行,執行期間文件唯讀，要修改需求請先停止執行,Read-only while it runs: stop the run to change the requirement,En lecture seule pendant l'exécution : arrêtez-la pour modifier,実行中は読み取り専用です。変更するには実行を停止してください,실행 중에는 읽기 전용입니다. 수정하려면 먼저 중지하세요,"Во время выполнения только чтение: остановите запуск, чтобы изменить",Solo lectura durante la ejecución: detenla para cambiar el requisito,Während des Laufs schreibgeschützt: zum Ändern den Lauf stoppen,Só de leitura durante a execução: pare-a para alterar,Hanya-baca selama berjalan: hentikan untuk mengubah,للقراءة فقط أثناء التشغيل: أوقفه لتعديل المتطلب
+aidev.chars,字,字,characters,caractères,文字,자,символов,caracteres,Zeichen,caracteres,karakter,حرفًا
+aidev.copy,复制,複製,Copy,Copier,コピー,복사,Копировать,Copiar,Kopieren,Copiar,Salin,نسخ
+aidev.copied,已复制,已複製,Copied,Copié,コピーしました,복사됨,Скопировано,Copiado,Kopiert,Copiado,Disalin,تم النسخ
+aidev.no_description,还没有描述,還沒有描述,No description yet,Pas encore de description,説明はまだありません,아직 설명이 없습니다,Описания пока нет,Aún sin descripción,Noch keine Beschreibung,Ainda sem descrição,Belum ada deskripsi,لا يوجد وصف بعد
+aidev.title,标题,標題,Title,Titre,タイトル,제목,Название,Título,Titel,Título,Judul,العنوان
+aidev.title_hint,一句话说明要做什么,一句話說明要做什麼,"What should change, in one sentence","Ce qui doit changer, en une phrase",何を変えるかを一文で,무엇을 바꿀지 한 문장으로,"Что нужно изменить, одной фразой","Qué debe cambiar, en una frase","Was sich ändern soll, in einem Satz","O que deve mudar, numa frase","Apa yang harus berubah, dalam satu kalimat",ما الذي يجب تغييره في جملة واحدة
+aidev.description,需求描述,需求描述,Description,Description,説明,설명,Описание,Descripción,Beschreibung,Descrição,Deskripsi,الوصف
+aidev.description_hint,背景、期望效果与验收标准，Agent 以此为依据工作,背景、期望效果與驗收標準，Agent 以此為依據工作,"Background, expected behaviour and acceptance criteria: the agent works from this","Contexte, comportement attendu et critères d'acceptation : l'agent s'en sert",背景・期待動作・受け入れ基準（エージェントはこれをもとに作業）,"배경, 기대 동작, 인수 기준(에이전트가 이를 바탕으로 작업)","Контекст, ожидаемое поведение и критерии приёмки: агент работает по ним","Contexto, comportamiento esperado y criterios de aceptación: el agente trabaja con esto","Hintergrund, erwartetes Verhalten und Abnahmekriterien: danach arbeitet der Agent","Contexto, comportamento esperado e critérios de aceitação: o agente trabalha a partir disto","Latar belakang, perilaku yang diharapkan dan kriteria penerimaan: agen bekerja dari sini",الخلفية والسلوك المتوقع ومعايير القبول: يعمل الوكيل وفقها
+aidev.create_incomplete,请填写标题并至少选择一个仓库,請填寫標題並至少選擇一個倉庫,Enter a title and pick at least one repository,Saisissez un titre et choisissez au moins un dépôt,タイトルを入力し、リポジトリを1つ以上選んでください,제목을 입력하고 저장소를 하나 이상 선택하세요,Введите название и выберите хотя бы один репозиторий,Escribe un título y elige al menos un repositorio,Titel eingeben und mindestens ein Repository wählen,Escreva um título e escolha pelo menos um repositório,Isi judul dan pilih setidaknya satu repositori,أدخل عنوانًا واختر مستودعًا واحدًا على الأقل
+aidev.edit,编辑,編輯,Edit,Modifier,編集,편집,Изменить,Editar,Bearbeiten,Editar,Ubah,تعديل
+aidev.save,保存,儲存,Save,Enregistrer,保存,저장,Сохранить,Guardar,Speichern,Guardar,Simpan,حفظ
+aidev.cancel,取消,取消,Cancel,Annuler,キャンセル,취소,Отмена,Cancelar,Abbrechen,Cancelar,Batal,إلغاء
+aidev.merged_into,已合入,已合入,Merged into,Fusionné dans,マージ先,병합됨:,Влито в,Integrado en,Gemergt in,Integrado em,Digabung ke,دُمج في
+aidev.collapse,收起,收起,Collapse,Réduire,閉じる,접기,Свернуть,Contraer,Einklappen,Recolher,Ciutkan,طي
+aidev.view,查看,查看,View,Voir,表示,보기,Открыть,Ver,Ansehen,Ver,Lihat,عرض
+aidev.activity,近 24 小时活跃度,近 24 小時活躍度,"Activity, last 24 hours",Activité des dernières 24 h,直近 24 時間のアクティビティ,최근 24시간 활동,Активность за 24 часа,Actividad de las últimas 24 h,Aktivität der letzten 24 Std.,Atividade nas últimas 24 h,Aktivitas 24 jam terakhir,النشاط خلال آخر 24 ساعة
+aidev.hours_ago,24 小时前,24 小時前,24h ago,il y a 24 h,24 時間前,24시간 전,24 ч назад,hace 24 h,vor 24 Std.,há 24 h,24 jam lalu,قبل 24 ساعة
+aidev.now,现在,現在,Now,Maintenant,現在,지금,Сейчас,Ahora,Jetzt,Agora,Sekarang,الآن
+aidev.progress_report,进度,進度,Progress,Progression,進捗,진행률,Прогресс,Progreso,Fortschritt,Progresso,Kemajuan,التقدم
+aidev.code,编号,編號,Code,Code,コード,코드,Код,Código,Code,Código,Kode,الرمز
+aidev.approval,审批,審批,Approval,Approbation,承認,승인,Утверждение,Aprobación,Genehmigung,Aprovação,Persetujuan,الموافقة
+aidev.run,执行,執行,Run,Exécution,実行,실행,Выполнение,Ejecución,Ausführung,Execução,Eksekusi,التشغيل
+aidev.info,基本信息,基本資訊,Details,Détails,基本情報,기본 정보,Сведения,Detalles,Details,Detalhes,Detail,التفاصيل
+aidev.no_delivery,还没有推送记录,還沒有推送紀錄,Nothing pushed yet,Rien de poussé pour l’instant,まだプッシュされていません,아직 푸시 기록이 없습니다,Пока ничего не отправлено,Aún no se ha enviado nada,Noch nichts gepusht,Ainda nada enviado,Belum ada yang didorong,لم يُدفع شيء بعد
+aidev.repo,仓库,倉庫,Repository,Dépôt,リポジトリ,저장소,Репозиторий,Repositorio,Repository,Repositório,Repositori,المستودع
+aidev.branch,分支,分支,Branch,Branche,ブランチ,브랜치,Ветка,Rama,Branch,Ramo,Cabang,الفرع
+aidev.commit,提交,提交,Commit,Commit,コミット,커밋,Коммит,Commit,Commit,Commit,Commit,الإيداع
+aidev.message,信息,訊息,Message,Message,メッセージ,메시지,Сообщение,Mensaje,Meldung,Mensagem,Pesan,الرسالة
+aidev.time,时间,時間,Time,Heure,時刻,시각,Время,Hora,Zeit,Hora,Waktu,الوقت
+aidev.not_reached.deliver,还未到交付阶段，验收通过后可在这里推送,還未到交付階段，驗收通過後可在這裡推送,Not at delivery yet. Once accepted you can push from here,Pas encore à la livraison. Une fois accepté vous pourrez pousser ici,まだ納品段階ではありません。受け入れ後ここからプッシュできます,아직 전달 단계가 아닙니다. 승인 후 여기서 푸시할 수 있습니다,Ещё не этап поставки. После приёмки отправка будет здесь,Aún no está en entrega. Tras la aceptación podrá hacer push aquí,Noch nicht in der Auslieferung. Nach der Abnahme hier pushen,Ainda não está na entrega. Após aceitar pode fazer push aqui,Belum tahap pengiriman. Setelah diterima Anda bisa push di sini,لم تصل إلى مرحلة التسليم بعد. بعد القبول يمكنك الدفع من هنا
+aidev.search_hint,搜索编号或标题,搜尋編號或標題,Search code or title,Rechercher code ou titre,番号やタイトルを検索,번호 또는 제목 검색,Поиск по коду или названию,Buscar código o título,Code oder Titel suchen,Pesquisar código ou título,Cari kode atau judul,ابحث بالرمز أو العنوان
+aidev.ago.now,刚刚,剛剛,Just now,À l'instant,たった今,방금,Только что,Ahora mismo,Gerade eben,Agora mesmo,Baru saja,الآن
+aidev.ago.minutes,{0} 分钟前,{0} 分鐘前,{0} min ago,il y a {0} min,{0} 分前,{0}분 전,{0} мин назад,hace {0} min,vor {0} Min.,há {0} min,{0} menit lalu,منذ {0} دقيقة
+aidev.ago.hours,{0} 小时前,{0} 小時前,{0} h ago,il y a {0} h,{0} 時間前,{0}시간 전,{0} ч назад,hace {0} h,vor {0} Std.,há {0} h,{0} jam lalu,منذ {0} ساعة
+aidev.to_accept,待我验收,待我驗收,To accept,À accepter,受け入れ待ち,승인 대기,На приёмку,Por aceptar,Abzunehmen,Por aceitar,Perlu diterima,بانتظار قبولي
+aidev.hint.approved,{0} 已批准,{0} 已批准,Approved by {0},Approuvé par {0},{0} が承認,{0} 승인,Одобрено: {0},Aprobado por {0},Freigegeben von {0},Aprovado por {0},Disetujui {0},وافق {0}
+aidev.hint.waiting,等待 {0} 评审,等待 {0} 評審,Waiting for {0},En attente de {0},{0} のレビュー待ち,{0} 검토 대기,Ждёт {0},Esperando a {0},Wartet auf {0},Aguardando {0},Menunggu {0},بانتظار {0}
+aidev.hint.not_submitted,未提交,未提交,Not submitted,Non soumis,未提出,미제출,Не отправлено,No enviado,Nicht eingereicht,Não enviado,Belum diajukan,لم يُرسل
+aidev.hint.sessions,{0} 次会话,{0} 次會話,{0} sessions,{0} sessions,{0} セッション,세션 {0}개,Сессий: {0},{0} sesiones,{0} Sitzungen,{0} sessões,{0} sesi,{0} جلسات
+aidev.hint.pushed,{0} 个仓库已推送,{0} 個倉庫已推送,{0} repos pushed,{0} dépôts poussés,{0} リポジトリをプッシュ,저장소 {0}개 푸시됨,Отправлено репозиториев: {0},{0} repos enviados,{0} Repos gepusht,{0} repos enviados,{0} repo didorong,تم دفع {0} مستودعات
+aidev.flow,流程,流程,Flow,Parcours,フロー,흐름,Ход,Flujo,Ablauf,Fluxo,Alur,المسار
+aidev.change_priority,调整优先级,調整優先級,Change priority,Changer la priorité,優先度を変更,우선순위 변경,Изменить приоритет,Cambiar prioridad,Priorität ändern,Alterar prioridade,Ubah prioritas,تغيير الأولوية
+aidev.refresh,刷新,重新整理,Refresh,Actualiser,更新,새로고침,Обновить,Actualizar,Aktualisieren,Atualizar,Muat ulang,تحديث
+aidev.executor,执行器,執行器,Executor,Exécuteur,実行器,실행기,Исполнитель,Ejecutor,Executor,Executor,Eksekutor,المنفذ
+aidev.model,模型,模型,Model,Modèle,モデル,모델,Модель,Modelo,Modell,Modelo,Model,النموذج
+aidev.model_hint,留空用默认模型,留空用預設模型,Blank uses the default,Vide : modèle par défaut,空欄で既定モデル,비우면 기본 모델,Пусто — модель по умолчанию,Vacío usa el predeterminado,Leer = Standard,Vazio usa o padrão,Kosong memakai bawaan,فارغ للافتراضي
+aidev.no_executor,服务器上未找到编码 CLI,伺服器上未找到編碼 CLI,No coding CLI found on the server,Aucun CLI de code trouvé sur le serveur,サーバーにコーディング CLI がありません,서버에 코딩 CLI가 없습니다,На сервере нет CLI для кода,No hay CLI de código en el servidor,Kein Coding-CLI auf dem Server,Nenhum CLI de código no servidor,Tidak ada CLI koding di server,لا توجد أداة CLI للبرمجة على الخادم
+aidev.qa_review,QA 复核,QA 複核,QA review,Revue QA,QA レビュー,QA 검토,Проверка QA,Revisión QA,QA-Prüfung,Revisão QA,Tinjauan QA,مراجعة الجودة
+aidev.qa_review_hint,开发完成后再跑一轮检查是否满足需求,開發完成後再跑一輪檢查是否滿足需求,a second run checks the change before acceptance,une seconde exécution vérifie avant acceptation,受け入れ前にもう一度確認,승인 전에 한 번 더 확인,второй запуск проверяет до приёмки,una segunda ejecución revisa antes de aceptar,ein zweiter Lauf prüft vor der Abnahme,uma segunda execução verifica antes de aceitar,proses kedua memeriksa sebelum diterima,تشغيل ثانٍ يتحقق قبل القبول
+aidev.no_executor_hint,在服务器上安装 Claude Code、Codex、OpenCode、Kimi Code、Cursor CLI 或 Qwen Code 其中之一,在伺服器上安裝 Claude Code、Codex、OpenCode、Kimi Code、Cursor CLI 或 Qwen Code 其中之一,Install Claude Code; Codex; OpenCode; Kimi Code; Cursor CLI or Qwen Code on the server,Installez Claude Code; Codex; OpenCode; Kimi Code; Cursor CLI ou Qwen Code sur le serveur,サーバーに Claude Code・Codex・OpenCode・Kimi Code・Cursor CLI・Qwen Code のいずれかをインストール,서버에 Claude Code / Codex / OpenCode / Kimi Code / Cursor CLI / Qwen Code 중 하나를 설치,Установите на сервер Claude Code; Codex; OpenCode; Kimi Code; Cursor CLI или Qwen Code,Instale Claude Code; Codex; OpenCode; Kimi Code; Cursor CLI o Qwen Code en el servidor,Installieren Sie Claude Code; Codex; OpenCode; Kimi Code; Cursor CLI oder Qwen Code auf dem Server,Instale Claude Code; Codex; OpenCode; Kimi Code; Cursor CLI ou Qwen Code no servidor,Pasang Claude Code; Codex; OpenCode; Kimi Code; Cursor CLI atau Qwen Code di server,ثبّت Claude Code أو Codex أو OpenCode أو Kimi Code أو Cursor CLI أو Qwen Code على الخادم
+aidev.default_model,默认模型,預設模型,default model,modèle par défaut,既定モデル,기본 모델,модель по умолчанию,modelo predeterminado,Standardmodell,modelo padrão,model bawaan,النموذج الافتراضي
+aidev.workspace,工作区,工作區,Workspace,Espace de travail,ワークスペース,작업 공간,Рабочая область,Espacio de trabajo,Arbeitsbereich,Área de trabalho,Ruang kerja,مساحة العمل
+aidev.ws.from,基于,基於,from,depuis,起点,기준,от,desde,von,a partir de,dari,من
+aidev.ws.ahead,领先 {0} 个提交,領先 {0} 個提交,{0} commits ahead,{0} commits d'avance,{0} コミット先行,{0}개 커밋 앞섬,впереди на {0} коммитов,{0} commits por delante,{0} Commits voraus,{0} commits à frente,unggul {0} commit,متقدم بـ {0} إيداعات
+aidev.ws.changed,{0} 个未提交文件,{0} 個未提交檔案,{0} uncommitted files,{0} fichiers non validés,未コミット {0} ファイル,커밋 안 된 파일 {0}개,{0} незакоммиченных файлов,{0} archivos sin confirmar,{0} nicht committete Dateien,{0} ficheiros por confirmar,{0} berkas belum di-commit,{0} ملفات غير مودعة
+aidev.ws.none,无（未运行或已清理）,無（未執行或已清理）,none (not run yet or cleaned up),aucun (pas encore exécuté ou nettoyé),なし（未実行か整理済み）,없음 (아직 실행 안 함 또는 정리됨),нет (не запускалось или очищено),ninguno (sin ejecutar o limpiado),keiner (noch nicht gelaufen oder aufgeräumt),nenhum (não executado ou limpo),tidak ada (belum dijalankan atau dibersihkan),لا شيء (لم يُشغَّل أو نُظّف)
+aidev.act.cleanup,清理工作区,清理工作區,Clean up workspace,Nettoyer l'espace,ワークスペースを整理,작업 공간 정리,Очистить рабочую область,Limpiar espacio,Arbeitsbereich aufräumen,Limpar área,Bersihkan ruang kerja,تنظيف مساحة العمل
+aidev.confirm_cleanup,删除这个需求的 worktree、未提交的改动和本地分支？下次执行会从最新的基础分支重新开始，已推送的内容不受影响,刪除這個需求的 worktree、未提交的改動和本地分支？下次執行會從最新的基礎分支重新開始，已推送的內容不受影響,Delete this requirement's worktrees; uncommitted changes and local branch? The next run starts from the latest base; nothing pushed is touched,Supprimer les worktrees; les modifications non validées et la branche locale ? La prochaine exécution repart de la base; rien de poussé n'est touché,この要件の worktree・未コミットの変更・ローカルブランチを削除しますか？次回は最新のベースから始まり、プッシュ済みの内容は残ります,이 요구사항의 worktree / 커밋 안 된 변경 / 로컬 브랜치를 삭제할까요? 다음 실행은 최신 기준에서 시작하며 푸시된 내용은 유지됩니다,Удалить worktree; незакоммиченные изменения и локальную ветку? Следующий запуск начнётся с последней базы; отправленное не затрагивается,¿Eliminar los worktrees; los cambios sin confirmar y la rama local? La próxima ejecución parte de la base más reciente; lo enviado no se toca,Worktrees; nicht committete Änderungen und lokalen Branch löschen? Der nächste Lauf startet von der neuesten Basis; Gepushtes bleibt,Eliminar os worktrees; as alterações por confirmar e o ramo local? A próxima execução parte da base mais recente; o enviado não é afetado,Hapus worktree; perubahan yang belum di-commit dan branch lokal? Proses berikutnya mulai dari basis terbaru; yang sudah didorong tidak tersentuh,حذف أشجار العمل والتغييرات غير المودعة والفرع المحلي؟ يبدأ التشغيل التالي من أحدث أساس ولا يُمس ما دُفع
+aidev.view.table,表格,表格,Table,Tableau,テーブル,표,Таблица,Tabla,Tabelle,Tabela,Tabel,جدول
+aidev.view.board,看板,看板,Board,Tableau kanban,ボード,보드,Доска,Tablero,Board,Quadro,Papan,لوحة
+aidev.view.more,还有 {0} 条,還有 {0} 條,{0} more,{0} de plus,ほか {0} 件,{0}개 더,ещё {0},{0} más,{0} weitere,mais {0},{0} lagi,{0} أخرى
+aidev.cost_hint,各次运行（开发、QA、重试）由 CLI 自己上报的费用之和；只有 Claude Code 会上报，其他执行器显示 —,各次執行（開發、QA、重試）由 CLI 自己回報的費用總和；只有 Claude Code 會回報，其他執行器顯示 —,The sum of what the CLI reported for each run (developer; QA; retries); only Claude Code reports one; other executors show —,Somme des coûts déclarés par le CLI pour chaque exécution; seul Claude Code en déclare,各実行で CLI が報告した費用の合計。報告するのは Claude Code のみ,각 실행에서 CLI가 보고한 비용의 합; Claude Code만 보고합니다,Сумма затрат по каждому запуску со слов CLI; сообщает только Claude Code,Suma de lo que el CLI informó por ejecución; solo Claude Code lo informa,Summe der vom CLI je Lauf gemeldeten Kosten; nur Claude Code meldet sie,Soma do que o CLI reportou por execução; só o Claude Code reporta,Jumlah biaya yang dilaporkan CLI per proses; hanya Claude Code yang melaporkan,مجموع ما أبلغ عنه CLI لكل تشغيل؛ يبلغ Claude Code فقط
+aidev.actions,操作,操作,Actions,Actions,操作,작업,Действия,Acciones,Aktionen,Ações,Aksi,إجراءات
+aidev.act.delete,删除,刪除,Delete,Supprimer,削除,삭제,Удалить,Eliminar,Löschen,Eliminar,Hapus,حذف
+aidev.confirm_delete,删除 {0}？它的会话记录、执行日志、交付记录和工作区会一起删除，已推送到仓库的内容不受影响,刪除 {0}？它的會話記錄、執行日誌、交付記錄和工作區會一併刪除，已推送到倉庫的內容不受影響,Delete {0}? Its sessions; logs; deliveries and workspace go with it; nothing pushed is touched,Supprimer {0} ? Ses sessions; journaux; livraisons et espace partent avec; rien de poussé n'est touché,{0} を削除しますか？セッション・ログ・納品記録・ワークスペースも削除され、プッシュ済みの内容は残ります,{0}을(를) 삭제할까요? 세션 / 로그 / 전달 기록 / 작업 공간도 함께 삭제되며 푸시된 내용은 유지됩니다,Удалить {0}? Сессии; журналы; поставки и рабочая область удалятся вместе с ним; отправленное не затрагивается,¿Eliminar {0}? Sus sesiones; registros; entregas y espacio se eliminan; lo enviado no se toca,{0} löschen? Sitzungen; Logs; Auslieferungen und Arbeitsbereich gehen mit; Gepushtes bleibt,Eliminar {0}? As sessões; registos; entregas e área vão junto; o enviado não é afetado,Hapus {0}? Sesi; log; pengiriman dan ruang kerjanya ikut terhapus; yang sudah didorong tidak tersentuh,حذف {0}؟ تُحذف جلساته وسجلاته وتسليماته ومساحة عمله معه ولا يُمس ما دُفع
+aidev.deleted,已删除 {0},已刪除 {0},{0} deleted,{0} supprimé,{0} を削除しました,{0} 삭제됨,{0} удалено,{0} eliminado,{0} gelöscht,{0} eliminado,{0} dihapus,تم حذف {0}
+aidev.diff.unified,统一,統一,Unified,Unifiée,統合,통합,Единый,Unificada,Einheitlich,Unificada,Terpadu,موحّد
+aidev.diff.split,左右,左右,Split,Côte à côte,左右,좌우,Рядом,En paralelo,Nebeneinander,Lado a lado,Berdampingan,جنبًا إلى جنب
+aidev.review.history,评审记录,評審記錄,Reviews,Revues,レビュー履歴,검토 기록,История рецензий,Revisiones,Prüfungen,Revisões,Riwayat tinjauan,سجل المراجعات
+aidev.review.APPROVED,批准,批准,Approved,Approuvée,承認,승인,Утверждено,Aprobado,Genehmigt,Aprovado,Disetujui,معتمد
+aidev.review.REJECTED,驳回,駁回,Rejected,Rejetée,却下,반려,Отклонено,Rechazado,Abgelehnt,Rejeitado,Ditolak,مرفوض
+aidev.review.rejected_by,{0} 驳回了需求,{0} 駁回了需求,{0} sent it back,{0} l'a renvoyée,{0} が差し戻しました,{0}님이 반려했습니다,{0} вернул(а) требование,{0} lo devolvió,{0} hat sie zurückgegeben,{0} devolveu-o,{0} mengembalikannya,أعاده {0}
+aidev.review.reason_hint,驳回原因（必填）：哪里需要改、为什么,駁回原因（必填）：哪裡需要改、為什麼,Reason (required): what needs to change and why,Raison (obligatoire) : ce qui doit changer et pourquoi,理由（必須）：どこをなぜ直すか,사유 (필수): 무엇을 왜 바꿔야 하는지,"Причина (обязательно): что изменить и почему",Motivo (obligatorio): qué debe cambiar y por qué,Grund (Pflicht): was sich ändern muss und warum,Motivo (obrigatório): o que deve mudar e porquê,Alasan (wajib): apa yang perlu diubah dan mengapa,السبب (إلزامي): ما الذي يجب تغييره ولماذا
+aidev.review.note_hint,给 agent 的补充说明（可选），随需求一起交给它,給 agent 的補充說明（可選），隨需求一起交給它,"A note for the agent (optional), handed over with the requirement","Une note pour l'agent (facultatif), transmise avec l'exigence",agent への補足（任意）、要件と一緒に渡されます,"agent에게 줄 메모 (선택), 요구사항과 함께 전달됩니다","Заметка для агента (необязательно), передаётся вместе с требованием","Una nota para el agente (opcional), entregada con el requisito","Eine Notiz für den Agenten (optional), mit der Anforderung übergeben","Uma nota para o agente (opcional), entregue com o requisito","Catatan untuk agent (opsional), diserahkan bersama kebutuhan","ملاحظة للوكيل (اختيارية) تُسلَّم مع المتطلب"
+aidev.diff.filter,筛选文件,篩選檔案,Filter files,Filtrer les fichiers,ファイルを絞り込む,파일 필터,Фильтр файлов,Filtrar archivos,Dateien filtern,Filtrar ficheiros,Saring berkas,تصفية الملفات
+share.unavailable,链接不可用,連結不可用,Link unavailable,Lien indisponible,リンクは利用できません,링크를 사용할 수 없습니다,Ссылка недоступна,Enlace no disponible,Link nicht verfügbar,Link indisponível,Tautan tidak tersedia,الرابط غير متاح
+share.type.form,对外填表,對外填表,Public Form,Formulaire public,公開フォーム,공개 양식,Публичная форма,Formulario público,Öffentliches Formular,Formulário público,Formulir publik,نموذج عام
+share.type.page,对外页面,對外頁面,Public Page,Page publique,公開ページ,공개 페이지,Публичная страница,Página pública,Öffentliche Seite,Página pública,Halaman publik,صفحة عامة
+share.issuer,分享人,分享人,Shared by,Partagé par,共有者,공유자,Поделился,Compartido por,Geteilt von,Partilhado por,Dibagikan oleh,تمت المشاركة بواسطة
+share.password.placeholder,请输入访问密码,請輸入存取密碼,Enter the access password,Saisir le mot de passe d'accès,アクセスパスワードを入力,접근 비밀번호를 입력하세요,Введите пароль доступа,Introduzca la contraseña de acceso,Zugangspasswort eingeben,Introduza a senha de acesso,Masukkan kata sandi akses,أدخل كلمة مرور الوصول
+share.open.form,开始填写,開始填寫,Start filling,Commencer à remplir,入力を開始,작성 시작,Начать заполнение,Empezar a rellenar,Ausfüllen starten,Começar a preencher,Mulai mengisi,ابدأ التعبئة
+share.open.page,打开页面,開啟頁面,Open page,Ouvrir la page,ページを開く,페이지 열기,Открыть страницу,Abrir página,Seite öffnen,Abrir página,Buka halaman,فتح الصفحة
+share.submit,提交,提交,Submit,Envoyer,送信,제출,Отправить,Enviar,Absenden,Submeter,Kirim,إرسال
+share.submit.success,提交成功，感谢您的填写,提交成功，感謝您的填寫,"Submitted, thank you","Envoyé, merci",送信しました。ご記入ありがとうございます,제출되었습니다. 작성해 주셔서 감사합니다,"Отправлено, спасибо","Enviado, gracias","Gesendet, danke","Submetido, obrigado","Terkirim, terima kasih",تم الإرسال، شكرًا لك
+share.submit.again,再填一份,再填一份,Fill another,Remplir un autre,もう一度記入する,하나 더 작성,Заполнить ещё,Rellenar otro,Noch eines ausfüllen,Preencher outro,Isi lagi,تعبئة نموذج آخر
+share.session_expired,分享会话已结束，请重新打开分享链接,分享會話已結束，請重新開啟分享連結,"Share session ended, open the share link again","Session de partage terminée, rouvrez le lien",共有セッションが終了しました。共有リンクを再度開いてください,공유 세션이 종료되었습니다. 공유 링크를 다시 여세요,"Сеанс завершён, откройте ссылку снова","Sesión finalizada, vuelva a abrir el enlace","Sitzung beendet, Link erneut öffnen","Sessão terminada, abra o link novamente","Sesi berakhir, buka tautan lagi",انتهت الجلسة، افتح رابط المشاركة مجددًا
+module.group.platform,平台,平台,Platform,Plateforme,プラットフォーム,플랫폼,Платформа,Plataforma,Plattform,Plataforma,Platform,المنصة
+module.group.business,业务,業務,Business,Métier,業務,업무,Бизнес,Negocio,Fachlich,Negócio,Bisnis,الأعمال
+module.group.ai,AI,AI,AI,IA,AI,AI,ИИ,IA,KI,IA,AI,الذكاء الاصطناعي
+module.group.dev_tools,开发工具,開發工具,Developer tools,Outils de développement,開発ツール,개발 도구,Инструменты разработки,Herramientas de desarrollo,Entwicklerwerkzeuge,Ferramentas de desenvolvimento,Alat pengembang,أدوات التطوير
+module.group.ops,运维,維運,Operations,Exploitation,運用,운영,Эксплуатация,Operaciones,Betrieb,Operações,Operasional,التشغيل
+module.group.data,数据源,資料來源,Data sources,Sources de données,データソース,데이터 소스,Источники данных,Fuentes de datos,Datenquellen,Fontes de dados,Sumber data,مصادر البيانات
+module.group.demo,演示,演示,Demo,Démo,デモ,데모,Демо,Demo,Demo,Demo,Demo,عرض توضيحي
+module.group.other,其他,其他,Other,Autres,その他,기타,Прочее,Otros,Sonstige,Outros,Lainnya,أخرى
+module.intro,已安装的模块按用途分组。关闭一个模块会隐藏它的菜单，重新打开即恢复。,已安裝的模組按用途分組。關閉一個模組會隱藏它的選單，重新開啟即恢復。,Installed modules by purpose. Switching a module off hides its menus; switching it on brings them back.,Modules installés par usage. Désactiver un module masque ses menus ; le réactiver les rétablit.,インストール済みモジュールを用途別に表示します。モジュールを無効にするとそのメニューが隠れ、有効にすると戻ります。,"설치된 모듈을 용도별로 표시합니다. 모듈을 끄면 메뉴가 숨겨지고, 켜면 다시 나타납니다.","Установленные модули по назначению. Отключение модуля скрывает его меню, включение возвращает их.",Módulos instalados por finalidad. Desactivar un módulo oculta sus menús; activarlo los devuelve.,"Installierte Module nach Zweck. Ein abgeschaltetes Modul verbirgt seine Menüs, ein eingeschaltetes zeigt sie wieder.",Módulos instalados por finalidade. Desativar um módulo oculta os seus menus; ativá-lo repõe-nos.,Modul terpasang menurut kegunaan. Mematikan modul menyembunyikan menunya; menyalakannya mengembalikan menu.,الوحدات المثبتة حسب الغرض. إيقاف وحدة يخفي قوائمها، وتشغيلها يعيدها.
+module.search,搜索模块,搜尋模組,Search modules,Rechercher des modules,モジュールを検索,모듈 검색,Поиск модулей,Buscar módulos,Module suchen,Pesquisar módulos,Cari modul,البحث في الوحدات
+module.docs,文档,文件,Docs,Documentation,ドキュメント,문서,Документация,Documentación,Dokumentation,Documentação,Dokumentasi,التوثيق
+module.menus,个菜单,個選單,menus,menus,件のメニュー,개 메뉴,меню,menús,Menüs,menus,menu,قوائم
+module.off,已关闭,已關閉,Off,Désactivé,無効,꺼짐,Выключен,Desactivado,Aus,Desligado,Nonaktif,متوقف
+module.core,核心模块,核心模組,Core module,Module central,コアモジュール,핵심 모듈,Базовый модуль,Módulo central,Kernmodul,Módulo central,Modul inti,وحدة أساسية
+setting.menu-groups,菜单分组标题,選單分組標題,Menu section titles,Titres de sections du menu,メニューのセクション見出し,메뉴 섹션 제목,Заголовки разделов меню,Títulos de sección del menú,Menü-Abschnittstitel,Títulos de secção do menu,Judul bagian menu,عناوين أقسام القائمة
+global.copy_failed,无法写入剪贴板（非 HTTPS 页面或浏览器限制），请手动选中复制,無法寫入剪貼簿（非 HTTPS 頁面或瀏覽器限制），請手動選取複製,"Cannot write to the clipboard (page not served over HTTPS, or blocked by the browser); select and copy by hand",Impossible d'écrire dans le presse-papiers (page non HTTPS ou bloqué par le navigateur) ; sélectionnez et copiez manuellement,クリップボードに書き込めません（HTTPS でないページ、またはブラウザの制限）。手動で選択してコピーしてください,클립보드에 쓸 수 없습니다(HTTPS가 아닌 페이지이거나 브라우저 제한). 직접 선택해 복사하세요,Не удалось записать в буфер обмена (страница не по HTTPS или запрет браузера); выделите и скопируйте вручную,No se puede escribir en el portapapeles (página sin HTTPS o bloqueado por el navegador); seleccione y copie manualmente,Zwischenablage nicht beschreibbar (Seite nicht über HTTPS oder vom Browser blockiert); bitte markieren und von Hand kopieren,Não é possível escrever na área de transferência (página sem HTTPS ou bloqueada pelo navegador); selecione e copie manualmente,Tidak dapat menulis ke papan klip (halaman bukan HTTPS atau diblokir browser); pilih dan salin secara manual,تعذّر الكتابة إلى الحافظة (الصفحة ليست عبر HTTPS أو منعها المتصفح)؛ حدّد النص وانسخه يدويًا

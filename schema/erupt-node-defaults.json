@@ -1,0 +1,1578 @@
+{
+  "erupt": {
+    "dataProxyParams": [],
+    "desc": "",
+    "drills": [],
+    "extra": {},
+    "layout": {
+      "collapseActionButton": false,
+      "formSize": "DEFAULT",
+      "formSteps": false,
+      "pageSize": 10,
+      "pageSizes": [
+        10,
+        20,
+        30,
+        50,
+        100,
+        300,
+        500
+      ],
+      "pagingType": "BACKEND",
+      "refreshTime": -1,
+      "tableLeftFixed": 0,
+      "tableOperatorWidth": "",
+      "tableRightFixed": 0,
+      "tableTruncate": true,
+      "tableWidth": ""
+    },
+    "primaryKeyCol": "id",
+    "rowOperation": [],
+    "tree": {
+      "expandLevel": 999,
+      "id": "id",
+      "label": "name",
+      "maxLevel": 0,
+      "pid": ""
+    },
+    "vis": [],
+    "visRawTable": true
+  },
+  "fields": {
+    "ATTACHMENT": {
+      "eruptFieldJson": {
+        "edit": {
+          "attachmentType": {
+            "fileSeparator": "|",
+            "fileTypes": [],
+            "imageType": {
+              "maxHeight": 2147483647,
+              "maxWidth": 2147483647,
+              "minHeight": 0,
+              "minWidth": 0
+            },
+            "maxLimit": 1,
+            "path": "",
+            "size": -1,
+            "type": "BASE"
+          },
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "ATTACHMENT"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "AUTO_COMPLETE": {
+      "eruptFieldJson": {
+        "edit": {
+          "autoCompleteType": {
+            "triggerLength": 1
+          },
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": true
+          },
+          "show": true,
+          "title": "-",
+          "type": "AUTO_COMPLETE"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "BOOLEAN": {
+      "eruptFieldJson": {
+        "edit": {
+          "boolType": {
+            "falseText": "no",
+            "trueText": "yes",
+            "type": "RADIO"
+          },
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": true
+          },
+          "show": true,
+          "title": "-",
+          "type": "BOOLEAN"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "BOOLEAN",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "Boolean"
+    },
+    "BUTTON": {
+      "eruptFieldJson": {
+        "edit": {
+          "buttonType": {
+            "confirm": "",
+            "danger": false,
+            "fullSpan": false,
+            "icon": "",
+            "style": "default"
+          },
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "BUTTON"
+        },
+        "views": []
+      },
+      "fieldReturnName": "String"
+    },
+    "CHECKBOX": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "CHECKBOX"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "name",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "NodeDefaultsRef"
+    },
+    "CHOICE": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "choiceType": {
+            "dependField": "",
+            "fetchHandler": [],
+            "type": "SELECT",
+            "validate": true
+          },
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": true
+          },
+          "show": true,
+          "title": "-",
+          "type": "CHOICE"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "CODE_EDITOR": {
+      "eruptFieldJson": {
+        "edit": {
+          "ai": true,
+          "cellEdit": true,
+          "codeEditType": {
+            "height": 300,
+            "hintHandler": [],
+            "hints": [],
+            "language": "text"
+          },
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "CODE_EDITOR"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "COLOR": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "colorType": {
+            "alpha": false,
+            "presets": [],
+            "showText": true
+          },
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "COLOR"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "DATE": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "dateType": {
+            "max": "",
+            "min": "",
+            "pickerMode": "ALL",
+            "type": "DATE"
+          },
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "RANGE",
+            "value": true
+          },
+          "show": true,
+          "title": "-",
+          "type": "DATE"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "DATE_TIME",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "Date"
+    },
+    "DATE_TIME": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "dateType": {
+            "max": "",
+            "min": "",
+            "pickerMode": "ALL",
+            "type": "DATE_TIME"
+          },
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "RANGE",
+            "value": true
+          },
+          "show": true,
+          "title": "-",
+          "type": "DATE"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "DATE_TIME",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "Date"
+    },
+    "HIDDEN": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "HIDDEN"
+        },
+        "views": []
+      },
+      "fieldReturnName": "String"
+    },
+    "HTML_EDITOR": {
+      "eruptFieldJson": {
+        "edit": {
+          "ai": true,
+          "cellEdit": true,
+          "desc": "",
+          "htmlEditorType": {
+            "path": "",
+            "value": "CKEDITOR"
+          },
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "HTML_EDITOR"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "ICON": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "ICON"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "INPUT": {
+      "eruptFieldJson": {
+        "edit": {
+          "ai": true,
+          "cellEdit": true,
+          "desc": "",
+          "inputType": {
+            "fullSpan": false,
+            "length": 255,
+            "prefix": [],
+            "regex": "",
+            "suffix": [],
+            "type": "text"
+          },
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": true
+          },
+          "show": true,
+          "title": "-",
+          "type": "INPUT"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "MAP": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "MAP"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "MARKDOWN": {
+      "eruptFieldJson": {
+        "edit": {
+          "ai": true,
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "MARKDOWN"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "MULTI_CHOICE": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "multiChoiceType": {
+            "dependField": "",
+            "fetchHandler": [],
+            "type": "CHECKBOX",
+            "validate": true
+          },
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": true
+          },
+          "show": true,
+          "title": "-",
+          "type": "MULTI_CHOICE"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "NUMBER": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "numberType": {
+            "max": 2147483647,
+            "min": -2147483647,
+            "precision": -1,
+            "prefix": "",
+            "step": 1.0,
+            "suffix": "",
+            "thousandsSeparator": false
+          },
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": true
+          },
+          "show": true,
+          "title": "-",
+          "type": "NUMBER"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "NUMBER",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "number"
+    },
+    "RATE": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "rateType": {
+            "allowHalf": false,
+            "character": "",
+            "count": 5
+          },
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "RATE"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "NUMBER",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "number"
+    },
+    "REFERENCE_TABLE": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "referenceTableType": {
+            "dependField": "",
+            "id": "id",
+            "label": "name"
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": true
+          },
+          "show": true,
+          "title": "-",
+          "type": "REFERENCE_TABLE"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "name",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "NodeDefaultsRef"
+    },
+    "REFERENCE_TREE": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "referenceTreeType": {
+            "dependField": "",
+            "expandLevel": 999,
+            "id": "id",
+            "label": "name",
+            "leafOnly": false,
+            "pid": "",
+            "rootPid": {
+              "value": ""
+            }
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": true
+          },
+          "show": true,
+          "title": "-",
+          "type": "REFERENCE_TREE"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "name",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "NodeDefaultsRef"
+    },
+    "SIGNATURE": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "SIGNATURE"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "SLIDER": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "sliderType": {
+            "dots": false,
+            "markPoints": [],
+            "max": 999,
+            "min": 0,
+            "step": 1.0
+          },
+          "title": "-",
+          "type": "SLIDER"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "NUMBER",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "number"
+    },
+    "TAB_TREE": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "TAB_TREE"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "name",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "NodeDefaultsRef"
+    },
+    "TAGS": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": true
+          },
+          "show": true,
+          "tagsType": {
+            "allowExtension": true,
+            "fetchHandler": [],
+            "joinSeparator": "[]",
+            "maxTagCount": 9999,
+            "tags": []
+          },
+          "title": "-",
+          "type": "TAGS"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "TEXTAREA": {
+      "eruptFieldJson": {
+        "edit": {
+          "ai": true,
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": true
+          },
+          "show": true,
+          "textareaType": {
+            "length": 2147483647,
+            "maxRows": 20,
+            "mentionFetchHandler": [],
+            "mentionPrefix": [],
+            "minRows": 3
+          },
+          "title": "-",
+          "type": "TEXTAREA"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "String"
+    },
+    "TRANSFER": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "-",
+          "type": "TRANSFER"
+        },
+        "views": [
+          {
+            "className": "",
+            "column": "name",
+            "desc": "",
+            "export": true,
+            "group": "",
+            "show": true,
+            "sortable": false,
+            "statistic": "NONE",
+            "template": "",
+            "title": "-",
+            "tpl": {
+              "drawerPlacement": "RIGHT",
+              "embedType": "IFRAME",
+              "enable": false,
+              "height": "",
+              "openWay": "MODAL",
+              "path": "",
+              "width": ""
+            },
+            "type": "TEXT",
+            "width": ""
+          }
+        ]
+      },
+      "fieldReturnName": "NodeDefaultsRef"
+    },
+    "id": {
+      "eruptFieldJson": {
+        "edit": {
+          "cellEdit": true,
+          "desc": "",
+          "notNull": false,
+          "numberType": {
+            "max": 2147483647,
+            "min": -2147483647,
+            "precision": -1,
+            "prefix": "",
+            "step": 1.0,
+            "suffix": "",
+            "thousandsSeparator": false
+          },
+          "onchange": "OnChange",
+          "placeHolder": "",
+          "readOnly": {
+            "add": false,
+            "allowChange": true,
+            "edit": false
+          },
+          "search": {
+            "lockOperator": false,
+            "notNull": false,
+            "operator": "EQ",
+            "value": false
+          },
+          "show": true,
+          "title": "",
+          "type": "NUMBER"
+        },
+        "views": []
+      },
+      "fieldReturnName": "number"
+    }
+  },
+  "power": {
+    "add": true,
+    "ai": true,
+    "batchEdit": true,
+    "cellEdit": true,
+    "comment": true,
+    "copy": true,
+    "delete": true,
+    "edit": true,
+    "export": true,
+    "importable": true,
+    "print": true,
+    "query": true,
+    "revision": true,
+    "viewDetails": true
+  },
+  "rowOperation": {
+    "callHint": "Confirm whether to perform this operation",
+    "code": "-",
+    "eruptClass": "NodeDefaultsRef",
+    "fold": false,
+    "icon": "fa fa-dot-circle-o",
+    "ifExpr": "",
+    "ifExprBehavior": "DISABLE",
+    "mode": "MULTI",
+    "tip": "",
+    "title": "-",
+    "tpl": {
+      "drawerPlacement": "RIGHT",
+      "embedType": "IFRAME",
+      "enable": true,
+      "height": "",
+      "openWay": "MODAL",
+      "path": "",
+      "width": ""
+    },
+    "type": "ERUPT"
+  }
+}

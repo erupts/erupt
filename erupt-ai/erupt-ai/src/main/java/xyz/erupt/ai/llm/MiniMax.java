@@ -13,7 +13,7 @@ public class MiniMax extends OpenAI {
 
     @Override
     public String api() {
-        return "https://api.minmax.io";
+        return "https://api.minimax.io";
     }
 
 }

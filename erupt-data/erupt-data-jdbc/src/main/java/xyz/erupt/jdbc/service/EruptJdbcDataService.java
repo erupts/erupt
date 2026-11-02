@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProcessorManager;
+import xyz.erupt.core.query.Aggregate;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.IEruptDataService;
@@ -56,6 +57,11 @@ public class EruptJdbcDataService implements IEruptDataService {
     @Override
     public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery eruptQuery) {
         return table.queryColumn(eruptModel, columns, eruptQuery);
+    }
+
+    @Override
+    public Map<String, Object> aggregate(EruptModel eruptModel, EruptQuery eruptQuery, List<Aggregate> aggregates) {
+        return table.aggregate(eruptModel, eruptQuery, aggregates);
     }
 
     @Override

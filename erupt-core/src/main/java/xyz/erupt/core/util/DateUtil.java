@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -101,6 +102,8 @@ public class DateUtil {
             return parseLocalDate(str);
         } else if (targetDateType == LocalDateTime.class) {
             return parseLocalDateTime(str);
+        } else if (targetDateType == LocalTime.class) {
+            return LocalTime.parse(str);
         } else {
             throw new EruptWebApiRuntimeException("Unsupported date type");
         }

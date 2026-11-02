@@ -1,5 +1,7 @@
 package xyz.erupt.core.service;
 
+import xyz.erupt.annotation.EruptScope;
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.fusesource.jansi.Ansi;
@@ -49,6 +51,12 @@ public class EruptCoreService implements ApplicationRunner {
 
     private static final List<String> MODULES = new ArrayList<>();
 
+    // Read once at startup: getErupt is the hottest lookup in the framework and must not touch the bean factory
+    private static volatile boolean hotBuild;
+
+    @Resource
+    private EruptProp eruptProp;
+
     public static List<String> getModules() {
         return MODULES;
     }
@@ -62,7 +70,7 @@ public class EruptCoreService implements ApplicationRunner {
     }
 
     public static EruptModel getErupt(String eruptName) {
-        if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
+        if (hotBuild) {
             if (null == ERUPTS.get(eruptName) || RUNTIME_ERUPTS.contains(eruptName.toLowerCase())) {
                 return ERUPTS.get(eruptName);
             } else {
@@ -87,11 +95,29 @@ public class EruptCoreService implements ApplicationRunner {
     }
 
     /**
+     * Like {@link #getErupt}, but an erupt-cloud node erupt comes back read from its node's build: its field
+     * annotations are there, its class is not. For the endpoints the server answers for a node itself.
+     */
+    public static EruptModel getEruptWithRemoteModel(String eruptName) {
+        EruptModel eruptModel = getErupt(eruptName);
+        if (null == eruptModel && EruptRemoteRouterManager.isRemote(eruptName)) {
+            return EruptRemoteRouterManager.get().resolveEruptModel(eruptName);
+        }
+        return eruptModel;
+    }
+
+    /**
      * Whether {@code eruptName} is reachable from {@code parentModel} through nested structures:
      * fields whose return type is a registered erupt (tab / multi-form / combine / reference)
      * and rowOperation forms. The security layer uses this to authorize sub-erupt requests
      * against the menu-bound ancestor erupt, so nesting depth is not limited to one level.
      */
+    // Name form for callers that only need the verdict; an unknown parent nests nothing
+    public static boolean isEruptNested(String parentName, String eruptName) {
+        EruptModel parentModel = getErupt(parentName);
+        return null != parentModel && isEruptNested(parentModel, eruptName);
+    }
+
     public static boolean isEruptNested(EruptModel parentModel, String eruptName) {
         Set<String> visited = new HashSet<>();
         Deque<EruptModel> queue = new ArrayDeque<>();
@@ -102,6 +128,9 @@ public class EruptCoreService implements ApplicationRunner {
             for (EruptFieldModel fieldModel : node.getEruptFieldModels()) {
                 if (nestedMatchOrEnqueue(fieldModel.getFieldReturnName(), eruptName, visited, queue)) return true;
             }
+            // A scope form is part of every model that declares it, so its options load under that model's menu
+            EruptScope scope = null == node.getClazz() ? null : node.getClazz().getAnnotation(EruptScope.class);
+            if (null != scope && nestedMatchOrEnqueue(scope.value().getSimpleName(), eruptName, visited, queue)) return true;
             for (RowOperation operation : node.getErupt().rowOperation()) {
                 if (void.class != operation.eruptClass()
                         && nestedMatchOrEnqueue(operation.eruptClass().getSimpleName(), eruptName, visited, queue)) {
@@ -161,7 +190,7 @@ public class EruptCoreService implements ApplicationRunner {
         for (EruptFieldModel fieldModel : em.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
             if (edit.type() == EditType.CHOICE || edit.type() == EditType.MULTI_CHOICE) {
-                fieldModel.setComponentValue(EruptUtil.getChoiceList(em, edit));
+                fieldModel.setComponentValue(EruptUtil.getChoiceList(em, fieldModel));
             }else if (edit.type() == EditType.TAGS){
                 fieldModel.setComponentValue(edit.tagsType().tags());
             }
@@ -192,6 +221,7 @@ public class EruptCoreService implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        hotBuild = eruptProp.isHotBuild();
         TimeRecorder totalRecorder = new TimeRecorder();
         TimeRecorder timeRecorder = new TimeRecorder();
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
@@ -208,7 +238,7 @@ public class EruptCoreService implements ApplicationRunner {
         });
         String sep = ansi().fgBright(Ansi.Color.BLACK).a("─".repeat(54)).reset().toString();
         log.info(sep);
-        if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
+        if (hotBuild) {
             log.warn(ansi().fg(Ansi.Color.RED).a("  ⚠ Hot build enabled").reset().toString());
         }
         EruptModuleInvoke.invoke(it -> {

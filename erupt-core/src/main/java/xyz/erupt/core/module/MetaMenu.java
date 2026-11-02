@@ -34,6 +34,15 @@ public class MetaMenu {
 
     private MetaMenu parentMenu;
 
+    // code of the sibling this menu is placed right after; its order then wins over sort
+    private String after;
+
+    /** Places this menu right after the sibling with that code, wherever the admin has moved it. */
+    public MetaMenu after(String code) {
+        this.after = code;
+        return this;
+    }
+
     public static MetaMenu createRootMenu(String code, String name, String icon, Integer sort) {
         MetaMenu metaMenu = new MetaMenu();
         metaMenu.code = code;

@@ -1,7 +1,5 @@
 package xyz.erupt.decision.service;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -73,26 +71,6 @@ public class DecisionService {
         DecisionModel config = null != override ? override
                 : null == def.getDecisionModel() ? this.defaultModel() : def.getDecisionModel();
         return this.evaluate(config, state, questions(def));
-    }
-
-    public JsonObject raw(DecisionModel config, JsonObject request) {
-        return this.core(config).raw(config, request);
-    }
-
-    /**
-     * Runs a stored decision and hands back the provider's own answer body, so an HTTP caller
-     * gets the documented System One shape and never has to hold a provider key.
-     */
-    public JsonObject rawRun(String code, JsonElement state, DecisionModel override) {
-        DecisionDef def = this.def(code);
-        DecisionModel config = null != override ? override
-                : null == def.getDecisionModel() ? this.defaultModel() : def.getDecisionModel();
-        JsonObject asked = new JsonObject();
-        questions(def).forEach((id, question) -> asked.add(id, question.toJson()));
-        JsonObject request = new JsonObject();
-        request.add("state", state);
-        request.add("questions", asked);
-        return this.raw(config, request);
     }
 
     private static Map<String, Question<?>> questions(DecisionDef def) {

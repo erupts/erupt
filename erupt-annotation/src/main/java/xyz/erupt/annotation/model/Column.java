@@ -13,10 +13,13 @@ import lombok.Setter;
 @Builder
 public class Column {
 
+    /** Cell content, HTML allowed */
     private String value;
 
+    /** Columns the cell spans */
     private int colspan = 1;
 
+    /** CSS class of the cell */
     private String className;
 
     public Column(String value) {

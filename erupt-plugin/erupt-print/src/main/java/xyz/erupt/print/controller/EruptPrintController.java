@@ -7,8 +7,11 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.service.EruptService;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
@@ -31,13 +34,22 @@ public class EruptPrintController {
     @Resource
     private EruptPrintService eruptPrintService;
 
+    @Resource
+    private EruptService eruptService;
+
     @PostMapping("/{erupt}/{id}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
-    public R<String> print(@PathVariable("erupt") String erupt, @PathVariable("id") String id, @RequestBody(required = false) String content) {
-        if (content == null) content = "";
+    public R<String> print(@PathVariable("erupt") String erupt, @PathVariable("id") String id, @RequestParam("config") Long configId) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
+        // the template is one a print manager saved for this model: a request names it, it never carries it
+        EruptPrintConfig config = eruptDao.lambdaQuery(EruptPrintConfig.class)
+                .eq(EruptPrintConfig::getId, configId).eq(EruptPrintConfig::getErupt, erupt).one();
+        Erupts.requireNonNull(config, I18nTranslate.$translate("print.config_not_found"));
+        // a printout is the record's details: the same powers and row scope as reading it by id
+        Erupts.powerLegal(eruptModel, power -> power.isPrint() && (power.isEdit() || power.isViewDetails()));
+        eruptService.verifyIdPermissions(eruptModel, id);
         Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
-        AtomicReference<String> contentReference = new AtomicReference<>(eruptPrintService.render(content, EruptUtil.generateEruptDataMap(eruptModel, data, true)));
+        AtomicReference<String> contentReference = new AtomicReference<>(eruptPrintService.render(config.getContent(), EruptUtil.generateEruptDataMap(eruptModel, data, true)));
         DataProxyInvoke.invoke(eruptModel, dataProxy -> contentReference.set(dataProxy.print(data, contentReference.get())));
         return R.ok(contentReference.get());
     }

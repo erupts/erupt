@@ -56,7 +56,7 @@ public class DecisionDef extends MetaModelUpdateVo {
     @EruptField(
             views = @View(title = "Decision Code", sortable = true),
             edit = @Edit(title = "Decision Code", notNull = true, search = @Search(operator = QueryExpression.LIKE),
-                    desc = "The name the API and Decisions.run() address this decision by")
+                    desc = "The name Decisions.run() addresses this decision by")
     )
     private String code;
 

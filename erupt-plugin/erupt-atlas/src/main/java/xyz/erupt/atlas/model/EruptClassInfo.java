@@ -45,7 +45,7 @@ import xyz.erupt.upms.model.input.MenuPublishModal;
                 link = @Link(column = "name", linkErupt = EruptFieldInfo.class, joinColumn = "eruptName")
         ),
         rowOperation = {
-                @RowOperation(
+                @RowOperation(code = "publishToMenu",
                         title = "Publish to Menu",
                         icon = "fa fa-paper-plane",
                         mode = RowOperation.Mode.SINGLE,
@@ -56,7 +56,7 @@ import xyz.erupt.upms.model.input.MenuPublishModal;
                         operationHandler = EruptClassPublishMenu.class
                 ),
                 // Jump to the graph page with this model preselected; the frontend fills {name} from the row
-                @RowOperation(
+                @RowOperation(code = "openAtlas",
                         title = "Open in Atlas",
                         icon = "fa fa-diagram-project",
                         mode = RowOperation.Mode.SINGLE,
