@@ -19,5 +19,7 @@ public enum ModuleGroup {
     // running and observing the installation
     OPS,
     // data source connectors
-    DATA
+    DATA,
+    // sample models that show what the framework can do, such as erupt-demo
+    DEMO
 }
