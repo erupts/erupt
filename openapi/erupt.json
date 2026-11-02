@@ -95,6 +95,10 @@
     {
       "name": "Page scope",
       "description": "Page scope"
+    },
+    {
+      "name": "Module center",
+      "description": "Module center"
     }
   ],
   "paths": {
@@ -5476,10 +5480,150 @@
           }
         ]
       }
+    },
+    "/erupt-api/modules": {
+      "get": {
+        "summary": "Every registered module.",
+        "deprecated": false,
+        "tags": [
+          "Module center"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModuleVo"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/R"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token missing or expired"
+          },
+          "403": {
+            "description": "The session has no permission on this menu or erupt"
+          }
+        },
+        "operationId": "modules",
+        "parameters": [],
+        "security": [
+          {
+            "tokenHeader": []
+          }
+        ]
+      }
+    },
+    "/erupt-api/modules/{name}/enabled": {
+      "post": {
+        "summary": "Switch a module's menus on or off.",
+        "deprecated": false,
+        "tags": [
+          "Module center"
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RVoid"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/R"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token missing or expired"
+          },
+          "403": {
+            "description": "The session has no permission on this menu or erupt"
+          }
+        },
+        "operationId": "enabled",
+        "parameters": [
+          {
+            "schema": {
+              "format": "string",
+              "type": "string"
+            },
+            "in": "path",
+            "description": " module name",
+            "required": true,
+            "name": "name"
+          },
+          {
+            "schema": {
+              "format": "boolean",
+              "type": "boolean"
+            },
+            "in": "query",
+            "description": "true to switch on",
+            "required": true,
+            "example": true,
+            "name": "value"
+          }
+        ],
+        "security": [
+          {
+            "tokenHeader": []
+          }
+        ]
+      }
     }
   },
   "components": {
     "schemas": {
+      "DataProxyInvokeChain": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "format": "int32",
+            "description": "No comments found.",
+            "type": "integer",
+            "example": 0
+          },
+          "entries": {
+            "description": "No comments found.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataProxyInvokeEntry"
+            }
+          }
+        }
+      },
       "EruptGanttControllerGanttLinksCommand": {
         "type": "object",
         "properties": {
@@ -5607,6 +5751,19 @@
           "editExpr": {
             "description": "Field name to edit expression to apply(object)",
             "$ref": "#/components/schemas/String"
+          }
+        }
+      },
+      "DataProxyInvokeEntry": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "description": "No comments found.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": "\"\"\",\"\"\""
           }
         }
       },
@@ -6134,6 +6291,53 @@
             "format": "string",
             "description": "Avatar path as returned by profile/avatar",
             "type": "string"
+          }
+        }
+      },
+      "ModuleVo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "format": "string",
+            "description": "No comments found.",
+            "type": "string"
+          },
+          "group": {
+            "format": "enum",
+            "description": "Null for a module that does not say where it belongs<br/>[Enum: PLATFORM, BUSINESS, AI, DEV_TOOLS, OPS, DATA, DEMO]",
+            "type": "string",
+            "enum": [
+              "PLATFORM",
+              "BUSINESS",
+              "AI",
+              "DEV_TOOLS",
+              "OPS",
+              "DATA",
+              "DEMO"
+            ],
+            "example": "PLATFORM"
+          },
+          "description": {
+            "format": "string",
+            "description": "Translated for the current session",
+            "type": "string"
+          },
+          "docs": {
+            "format": "string",
+            "description": "Documentation URL, may hold a {lang} placeholder for the reader's language",
+            "type": "string"
+          },
+          "menus": {
+            "format": "int32",
+            "description": "Menus the module declares, buttons left out; null when it declares none",
+            "type": "integer",
+            "example": 0
+          },
+          "enabled": {
+            "format": "boolean",
+            "description": "Whether its menus are switched on; null when the module cannot be switched off",
+            "type": "boolean",
+            "example": true
           }
         }
       },
@@ -7233,6 +7437,11 @@
             "description": "Parent menu id",
             "type": "number",
             "example": 0
+          },
+          "group": {
+            "format": "string",
+            "description": "Group of the module declaring a root menu, the sidebar's section title; null for a user's own menu",
+            "type": "string"
           }
         }
       },
@@ -7371,6 +7580,7 @@
       "tags": [
         "Template pages",
         "Developer tools",
+        "Module center",
         "Framework"
       ]
     }

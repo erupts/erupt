@@ -40,7 +40,7 @@ public class OpenApiSpec {
         GROUPS.put("Data", List.of("Page build", "Data query", "Data modify", "Tab rows", "Form view", "Page scope"));
         GROUPS.put("Widgets and files", List.of("Form components", "Files", "Import and export"));
         GROUPS.put("Views", List.of("Board view", "Calendar view", "Gantt view"));
-        GROUPS.put("Platform", List.of("Template pages", "Developer tools", "Framework"));
+        GROUPS.put("Platform", List.of("Template pages", "Developer tools", "Module center", "Framework"));
     }
 
     private static final String DESCRIPTION = """
