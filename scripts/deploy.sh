@@ -22,6 +22,10 @@ fi
 
 cd "$ERUPT_DIR"
 
+# Bundle the latest erupt-web frontend into erupt-web/src/main/resources/public before packaging
+echo "Building erupt-web frontend..."
+(cd erupt-web && bash build.sh)
+
 # The committed OpenAPI spec must describe the artifacts being published:
 # regenerate it from the controller Javadoc and stop if it drifted from git.
 echo "Regenerating openapi/erupt.json..."

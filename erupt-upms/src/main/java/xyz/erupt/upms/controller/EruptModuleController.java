@@ -13,7 +13,10 @@ import xyz.erupt.upms.vo.ModuleVo;
 import java.util.List;
 
 /**
- * The module center page's API; every call is checked against the page's menu.
+ * Module center
+ *
+ * @order 20
+ * @apiNote The module center page: installed modules by group, switched on and off. Every call is checked against the page's menu.
  *
  * @author YuePeng
  * date 2026-11-01
