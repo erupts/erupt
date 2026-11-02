@@ -1,82 +1,97 @@
 ---
-description: Ship a new erupt version — frontend bundle, bump, Maven Central, Docker Hub, merge develop→master + tags on erupt/erupt-web/erupt-pro, GitHub + gitee sync
-argument-hint: <version, e.g. 2.1.2>
+description: Ship a new erupt version — merge develop→master on erupt/erupt-web and tag them with the changelog from erupt-docs, tag erupt-cube/erupt-flow/erupt-tenant
+argument-hint: <version, e.g. 2.4.0>
 allowed-tools: Bash, Read, Grep
 ---
 
 # erupt release SOP
 
-Release version: **$ARGUMENTS**
+Release version: **$ARGUMENTS** (call it `VER` below).
 
-If no version was given above, read the current one from `pom.xml`, propose the next patch version,
-and ask the user to confirm before continuing.
+If no version was given above, read it from `<version>` in `erupt/pom.xml` and ask the user to confirm.
 
-All mechanical work lives in `scripts/release.sh <phase> [version]`. Run the phases **in the order
-below, one at a time**, read each phase's output before starting the next, and stop on the first
-failure. Every phase is idempotent, so re-running after a fix is safe. Never skip `preflight`.
+Publishing to Maven Central is done by the user, not by this command.
 
-Repos involved (siblings under `~/git`, override with `CODE_DIR`):
+Repos are siblings under `~/Code`:
 
-| Repo | Role | Branches | Pushed to |
-|------|------|----------|-----------|
-| `erupt` | backend, publishes `xyz.erupt:*` | develop → master | GitHub + gitee (both push URLs on `origin`) |
-| `erupt-web` | Angular frontend, bundled into `erupt/erupt-web` | develop → master | GitHub + gitee |
-| `erupt-pro` | commercial modules | master only | GitHub + gitee |
-| `erupt-start` | landing page, shows `ERUPT_VER` | main | GitHub |
-| `erupt-cube` / `erupt-flow` / `erupt-tenant` / `erupt-demo` | satellites, consume erupt | own trains | bumped here, released separately |
+| Repo | Branches | What happens |
+|------|----------|--------------|
+| `erupt` | develop → master | merge, tag `VER` with the changelog |
+| `erupt-web` | develop → master | merge, tag `VER` with the changelog |
+| `erupt-cube` | main | tag `VER` |
+| `erupt-flow` | main | tag `VER` |
+| `erupt-tenant` | master | tag `VER` |
 
-## Phases
+## Step 1 — merge and tag
 
-1. **`preflight <version>`** — tools, Central credentials, GPG key, Docker login, every tag repo
-   clean and on develop, tag unused on both remotes. Read-only. Fix anything it reports before
-   continuing; do not work around a red check.
+### 1.1 Preflight (read-only, stop on any red check)
 
-2. **`frontend`** — runs `erupt-web/build.sh` (pulls `~/git/erupt-web`, production build into
-   `erupt/erupt-web/src/main/resources/public`) and commits `update erupt-web` if the bundle changed.
-   Skip only if the user says the frontend is already current in this release.
+- `gh auth status` succeeds.
+- Every repo above has a clean working tree, is on the branch in the table and is level with its remote
+  after `git fetch`. Untracked `.flattened-pom.xml` files do not count.
+- Tag `VER` exists neither locally nor on `origin` (`git ls-remote --tags origin VER`) in any repo.
+- `erupt-cube`, `erupt-flow` and `erupt-tenant` already depend on erupt `VER` in their `pom.xml`, and
+  each has commits since its previous tag (`git log --oneline $(git describe --tags --abbrev=0)..HEAD`).
+- `~/Code/erupt-docs/en/guide/changelog.md` has a `## VER (` section. Read the local file as it is; do
+  not pull or edit erupt-docs. If the section is missing, stop and ask the user.
 
-3. **`bump <version>`** — runs `scripts/bump-erupt.sh` (main repo via `versions:set`, satellite
-   poms by text edit) and commits `upgrade to <version>` in erupt. Satellites are left **bumped but
-   uncommitted**; tell the user they need their own commit/tag/push and list them.
+### 1.2 Extract the changelog
 
-4. **`maven`** — runs `scripts/deploy.sh` with `AUTO_PUBLISH=1` (`mvn clean deploy -P release`
-   plus `-Dcentral.autoPublish=true -Dcentral.waitUntil=validated`). Runs the test suite; `SKIP_TESTS=1` only if the user asks. Takes several minutes; run it in the
-   background and wait for the notification. On a validation failure, the Central Portal shows the
-   reason at https://central.sonatype.com/publishing/deployments — quote it to the user. Never
-   re-run bump between maven and docker: both must ship the same version.
+Take the section from `## VER (` up to the next `## <digit>` heading, turn the docs-relative links into
+absolute ones, and put the version line on top:
 
-5. **`docker`** — starts Docker Desktop if it is down, then runs `erupt-deploy/erupt-docker/deploy.sh`,
-   which packages the module, builds `erupts/erupt:<version>` and `:latest` and pushes both. If it reports no Docker Hub login,
-   ask the user to run `! docker login` and re-run the phase.
+```bash
+DOCS=~/Code/erupt-docs/en/guide/changelog.md
+NOTES=<scratchpad>/release-notes-$VER.md
+awk -v v="$VER" 'index($0, "## " v " (") == 1 {f = 1; print "erupt " substr($0, 4); next}
+                 f && /^## [0-9]/ {exit} f' "$DOCS" \
+  | sed -E 's#<Badge [^>]*text="([^"]*)"[^>]*/>#(\1)#; s#\]\(/(en|zh)/#](https://docs.erupt.xyz/\1/#g' > "$NOTES"
+```
 
-6. **`publish <version>`** — for each repo in `TAG_REPOS` (default `erupt erupt-web erupt-pro`):
-   pull develop, merge `--no-ff` into master, tag `<version>`, push master + tag to `origin`, which
-   fans out to GitHub and gitee. Repos without a develop branch are tagged at master HEAD.
-   **Confirm with the user before this phase** — it is the point of no return (tags on public
-   remotes). Before confirming, check that erupt-pro actually has commits since its last tag
-   (`git -C ~/git/erupt-pro log --oneline $(git -C ~/git/erupt-pro describe --tags --abbrev=0)..HEAD`);
-   if it has none, run with `TAG_REPOS="erupt erupt-web"` and say so.
+Show the user the first lines of `$NOTES` and its line count.
 
-7. **`start <version>`** — rewrites `const ERUPT_VER` in `erupt-start/index.html`, commits
-   `Bump ERUPT_VER to <version>`, pushes.
+### 1.3 Merge develop → master (erupt, erupt-web)
 
-8. **`verify <version>`** — tags on every push remote, `repo1.maven.org` serving the new pom,
-   Docker Hub tag present. Central sync takes 10–30 minutes; a Central WARN right after publish is
-   expected, tell the user to re-run `verify` later rather than treating it as a failure.
+For each of the two repos, through a pull request, never a direct push to master:
+
+```bash
+gh pr create --repo <owner/repo> --base master --head develop --title "erupt $VER" --body-file "$NOTES"
+gh pr view <number> --json mergeable,mergeStateStatus
+gh pr merge <number> --merge          # merge commit; never --delete-branch, develop stays
+git checkout master && git pull && git checkout develop
+```
+
+If the PR is not mergeable (conflicts, failing required checks), stop and report — do not resolve
+conflicts on master by hand without the user.
+
+### 1.4 Tag
+
+**Confirm with the user before pushing any tag** — tags on public remotes are the point of no return.
+Show the commit each tag will point at.
+
+- `erupt`, `erupt-web`: annotated tag on the master merge commit, message = the changelog.
+  `--cleanup=verbatim` is required, otherwise git drops the `###` headings as comments.
+
+  ```bash
+  git tag -a "$VER" origin/master --cleanup=verbatim -F "$NOTES"
+  git push origin "$VER"
+  ```
+
+- `erupt-cube`, `erupt-flow`, `erupt-tenant`: annotated tag on the current HEAD of their branch.
+
+  ```bash
+  git tag -a "$VER" -m "<repo> $VER"
+  git push origin "$VER"
+  ```
+
+Tags are `VER` without a `v` prefix.
 
 ## Rules
 
-- Do the phases strictly in order. Publishing tags before Central has the artifacts means users
-  see a version they cannot download.
-- One version per run. If a phase fails after `bump`, fix and continue with the **same** version;
-  never bump again to "get a clean number".
-- Do not `--force` push, delete, or move a tag. If a tag went out wrong, tell the user and let them
-  decide on a follow-up patch release.
-- Chinese is fine in the conversation; commit messages and tags follow the existing conventions
-  (`update erupt-web`, `upgrade to x.y.z`, tag `x.y.z` without a `v` prefix).
+- One version per run; never re-tag with another number to "get a clean one".
+- Never `--force` push, delete or move a tag. If a tag went out wrong, tell the user and let them decide.
+- Chinese is fine in the conversation; PR titles, commit and tag messages stay English.
 
 ## Final report
 
-Summarize: version, commit hashes for the frontend and bump commits, Central deployment status,
-Docker tags pushed, per-repo tag + remote table from `verify`, and the list of satellite repos
-whose poms were bumped but not yet released.
+Version, the two merge PR links and merge commits, and a table of repo → tag → commit → pushed.
