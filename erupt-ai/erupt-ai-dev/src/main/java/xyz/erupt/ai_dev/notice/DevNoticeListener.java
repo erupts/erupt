@@ -11,6 +11,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.ai_dev.constant.DeliveryStatus;
 import xyz.erupt.ai_dev.constant.MemberRole;
+import xyz.erupt.ai_dev.controller.DevPoolController;
 import xyz.erupt.ai_dev.model.DevProjectMember;
 import xyz.erupt.ai_dev.model.DevRequirement;
 import xyz.erupt.ai_dev.model.DevRequirementReview;
@@ -93,7 +94,8 @@ public class DevNoticeListener {
         String content = StringUtils.defaultIfBlank(this.detail(r, event.kind()),
                 I18nTranslate.$translate("ai_dev.notice." + event.kind().name().toLowerCase() + ".body"));
         message.setContent(content.length() > PREVIEW_LENGTH ? content.substring(0, PREVIEW_LENGTH) + "…" : content);
-        message.setUrl("/#/ai-dev/pool/" + r.getId());
+        // the full-screen route, like the comment mention notice
+        message.setUrl("/#/fill" + DevPoolController.PAGE + "/" + r.getId());
         message.getParams().put("project", r.getProject().getCode());
         message.getParams().put("requirement", r.getCode());
         message.getParams().put("stage", r.getStage().name());
