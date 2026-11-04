@@ -13,7 +13,7 @@
 
 <p align="center"><b>注解驱动的 JAVA 管理后台框架 · AI HARNESS</b></p>
 
-<p align="center"><code>一个类 = 一套后台页面 · 零前端 · 2~5s 启动 · 50+ 大模型 · MCP 原生 · A2A</code></p>
+<p align="center"><code>一个类 = 一套后台页面 · 9 种语言 · 零前端 · 2~5s 启动 · 50+ 大模型 · MCP 原生 · A2A</code></p>
 
 <p align="center">
   <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt?style=flat&color=007ec6&label=MAVEN" alt="maven-central"></a>
@@ -51,7 +51,8 @@
 | `内置全家桶`       | RBAC、审计日志、Excel 导入导出、OpenAPI。每个 `@Erupt` 实体自动是一个带权限的 REST 接口。 |
 | `AI NATIVE`      | 50+ 大模型、MCP 原生工具、70 万+ Skills。全部通过管理界面配置。 |
 | `多数据库`         | JPA：MySQL · PostgreSQL · Oracle · SQL Server · 达梦。MongoDB 走 `erupt-mongodb`。 |
-| `生态`            | `erupt-cloud` 分布式配置。商业模块 Chart / Flow / Tenant / Cube 覆盖报表、工作流、SaaS、BI。 |
+| `多语言`          | Java / Kotlin 不绑定 Spring：同一个 `@Erupt` 类可跑在 Spring Boot、Solon、Quarkus、Micronaut、Vert.x、Ktor 或任意 Servlet 容器；Python、Go、TypeScript、PHP、.NET、Rust、Ruby、Swift 服务通过 [erupt-sdk](https://github.com/plinian/erupt-sdk) 作为节点接入 —— 同一套后台、权限与 Excel，大多数语言零运行时依赖。 |
+| `生态`            | `erupt-cloud` + `erupt-sdk` 多语言分布式节点。商业模块 Chart / Flow / Tenant / Cube 覆盖报表、工作流、SaaS、BI。 |
 
 ---
 
@@ -308,32 +309,46 @@ Claw 与 AI Harness 共享同一套基于 Role 的 Tool 安全机制 —— 非�
 
 ## 05 · CLOUD
 
-> `erupt-cloud` —— 把注解驱动的后台体验带到分布式 Spring Boot 部署。集中配置、服务拓扑、节点级后台 —— 同一套 `@Erupt` 模型。
+> `erupt-cloud` —— 把注解驱动的后台体验带到**任意语言**的分布式服务。登录、菜单、权限全由 Server 代办；节点可以是 Spring Boot，也可以是 Python / Go / TypeScript / PHP / .NET / Rust / Ruby / Swift 进程，只需描述模型、读写数据。
 
 ```
 ┌────────────────────────────┐
-│  erupt-cloud-server        │   中心控制台
+│  erupt-cloud-server        │   中心控制台 · 登录 · 菜单 · 权限
 │  配置 · 节点 · 拓扑          │
 └──────────────┬─────────────┘
-               │  注册 / 拉取配置
-   ┌───────────┼───────────┐
-   ▼           ▼           ▼
-┌───────┐  ┌───────┐  ┌───────┐
-│ node  │  │ node  │  │ node  │   erupt-cloud-node
-│ + own │  │ + own │  │ + own │   每个服务自带后台
-│ admin │  │ admin │  │ admin │
-└───────┘  └───────┘  └───────┘
+               │  注册 / 心跳 / 转发
+   ┌───────────┼───────────┬───────────┐
+   ▼           ▼           ▼           ▼
+┌───────┐  ┌────────┐  ┌───────┐  ┌───────┐
+│ Java  │  │ Python │  │  Go   │  │ TS …  │   9 种语言任选
+│ node  │  │  node  │  │ node  │  │ node  │   节点只管模型与数据
+└───────┘  └────────┘  └───────┘  └───────┘
+```
+
+```python
+# pip install erupt-sdk  —— Python 服务即可成为 erupt 后台节点
+from erupt import Field, Node, SqliteRepository, erupt
+
+@erupt("Article")
+class Article:
+    id: int = Field(pk=True)
+    title: str = Field("Title", search=True, not_null=True)
+
+node = Node("blog", os.environ["ERUPT_ACCESS_TOKEN"], "http://erupt-server:8080")
+node.register(Article, SqliteRepository("blog.db", "article"))
+node.serve(port=9090)
 ```
 
 | | |
 |---|---|
+| `多语言节点` | Java / Kotlin（Spring Boot · Solon · Quarkus · Micronaut · Vert.x · Ktor · Servlet）· Python · Go · TypeScript · PHP · .NET · Rust · Ruby · Swift —— 同一份协议、同一套一致性测试。[erupt-sdk →](https://github.com/plinian/erupt-sdk) |
 | `配置中心` | 多维度：配置结构、节点、发布策略。实例按需同步。 |
 | `轻依赖` | 对 Spring Boot / 微服务栈侵入极小。版本与 Erupt 主线保持一致。 |
 | `拓扑` | 集群拓扑、调用关系、配置发布 —— 一个控制台看全。 |
 | `集群内后台` | 每个业务服务都能挂载自己的 Erupt 后台。无需为每个子系统重复搭脚手架。 |
 | `审计` | 每次配置变更都有迹可循。比版本级回滚更细粒度。 |
 
-[docs.erupt.xyz/modules/erupt-cloud](https://docs.erupt.xyz/modules/erupt-cloud) · [erupt.xyz/#!/cloud](https://www.erupt.xyz/#!/cloud)
+[docs.erupt.xyz/modules/erupt-cloud](https://docs.erupt.xyz/modules/erupt-cloud) · [erupt.xyz/#!/cloud](https://www.erupt.xyz/#!/cloud) · [erupt.xyz/#!/sdk](https://www.erupt.xyz/#!/sdk)
 
 ---
 

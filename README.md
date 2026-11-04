@@ -13,7 +13,7 @@ English &nbsp;|&nbsp; [中文](README-zh.md)
 
 <p align="center"><b>ANNOTATION-DRIVEN JAVA ADMIN FRAMEWORK · AI HARNESS</b></p>
 
-<p align="center"><code>one class = one admin page · zero front-end · 2–5s startup · 50+ LLM · MCP-native · A2A</code></p>
+<p align="center"><code>one class = one admin page · 9 languages · zero front-end · 2–5s startup · 50+ LLM · MCP-native · A2A</code></p>
 
 <p align="center">
   <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt?style=flat&color=007ec6&label=MAVEN" alt="maven-central"></a>
@@ -46,12 +46,13 @@ English &nbsp;|&nbsp; [中文](README-zh.md)
 |                        | |
 |------------------------|---|
 | `ONE CLASS = ONE PAGE` | Annotate a JPA entity. Get a full admin page. Zero controllers, zero front-end build, zero scaffolding. |
+| `POLYGLOT`             | Java / Kotlin on Spring Boot, Solon, Quarkus, Micronaut, Vert.x, Ktor or any servlet container — the same `@Erupt` class, unchanged; Python, Go, TypeScript, PHP, .NET, Rust, Ruby and Swift services join as [erupt-sdk](https://github.com/plinian/erupt-sdk) nodes — same admin UI, RBAC and Excel, mostly zero runtime deps. |
 | `FAST STARTUP`         | 2–5 seconds to a running admin UI. Java 17 + Spring Boot 3.x. |
 | `30+ COMPONENTS`       | Date, slider, tree, code editor, reference table, autocomplete, map, signature, Markdown — out of the box. |
 | `BATTERIES INCLUDED`   | RBAC, audit logs, Excel import/export, OpenAPI. Every `@Erupt` entity is a permission-aware REST endpoint. |
 | `AI-NATIVE`            | 50+ LLM providers, MCP-native tools, 700k+ skills. All configurable from the admin UI. |
 | `MULTI-DATABASE`       | JPA: MySQL · PostgreSQL · Oracle · SQL Server · DM. MongoDB via `erupt-mongodb`. |
-| `ECOSYSTEM`            | `erupt-cloud` for distributed config. Commercial Chart / Flow / Tenant / Cube modules for reporting, workflow, SaaS, BI. |
+| `ECOSYSTEM`            | `erupt-cloud` + `erupt-sdk` for polyglot distributed nodes. Commercial Chart / Flow / Tenant / Cube modules for reporting, workflow, SaaS, BI. |
 
 ---
 
@@ -308,32 +309,46 @@ Claw shares the same role-based tool security as AI Harness — only whitelisted
 
 ## 05 · CLOUD
 
-> `erupt-cloud` — the annotation-driven admin experience for distributed Spring Boot deployments. Centralized config, service topology, per-node admin UIs — same `@Erupt` model.
+> `erupt-cloud` — the annotation-driven admin experience for distributed services **in any language**. One server handles login, menus and permissions; each node — Spring Boot or a Python / Go / TypeScript / PHP / .NET / Rust / Ruby / Swift process — only describes its models and serves their data.
 
 ```
 ┌────────────────────────────┐
-│  erupt-cloud-server        │   central console
+│  erupt-cloud-server        │   console · login · menus · RBAC
 │  config · nodes · topology │
 └──────────────┬─────────────┘
-               │  register / pull config
-   ┌───────────┼───────────┐
-   ▼           ▼           ▼
-┌───────┐  ┌───────┐  ┌───────┐
-│ node  │  │ node  │  │ node  │   erupt-cloud-node
-│ + own │  │ + own │  │ + own │   per-service admin UI
-│ admin │  │ admin │  │ admin │
-└───────┘  └───────┘  └───────┘
+               │  register / heartbeat / forward
+   ┌───────────┼───────────┬───────────┐
+   ▼           ▼           ▼           ▼
+┌───────┐  ┌────────┐  ┌───────┐  ┌───────┐
+│ Java  │  │ Python │  │  Go   │  │ TS …  │   nodes in any of 9 languages
+│ node  │  │  node  │  │ node  │  │ node  │   each owns its models + data
+└───────┘  └────────┘  └───────┘  └───────┘
+```
+
+```python
+# pip install erupt-sdk  — a Python service becomes an erupt admin node
+from erupt import Field, Node, SqliteRepository, erupt
+
+@erupt("Article")
+class Article:
+    id: int = Field(pk=True)
+    title: str = Field("Title", search=True, not_null=True)
+
+node = Node("blog", os.environ["ERUPT_ACCESS_TOKEN"], "http://erupt-server:8080")
+node.register(Article, SqliteRepository("blog.db", "article"))
+node.serve(port=9090)
 ```
 
 | | |
 |---|---|
+| `POLYGLOT NODES` | Java / Kotlin (Spring Boot · Solon · Quarkus · Micronaut · Vert.x · Ktor · Servlet) · Python · Go · TypeScript · PHP · .NET · Rust · Ruby · Swift — one protocol, one conformance suite. [erupt-sdk →](https://github.com/plinian/erupt-sdk) |
 | `CONFIG CENTER` | Multi-dimensional: schemas, nodes, rollout policies. Instances sync on demand. |
 | `LIGHT` | Minimal intrusion. Versions aligned with the main Erupt release train. |
 | `TOPOLOGY` | Cluster topology, call graphs, config rollouts — one console. |
 | `IN-CLUSTER ADMIN` | Every business service hosts its own Erupt admin. No per-subsystem scaffolding. |
 | `AUDIT` | Every config change leaves a trace. Finer-grained rollback than version-level. |
 
-[docs.erupt.xyz/modules/erupt-cloud](https://docs.erupt.xyz/modules/erupt-cloud) · [erupt.xyz/#!/cloud](https://www.erupt.xyz/#!/cloud)
+[docs.erupt.xyz/modules/erupt-cloud](https://docs.erupt.xyz/modules/erupt-cloud) · [erupt.xyz/#!/cloud](https://www.erupt.xyz/#!/cloud) · [erupt.xyz/#!/sdk](https://www.erupt.xyz/#!/sdk)
 
 ---
 
