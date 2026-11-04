@@ -46,15 +46,16 @@ English &nbsp;|&nbsp; [中文](README-zh.md)
 > **Make the model your single source of truth.** Describe a business object once — its fields, types, relations and rules — and Erupt builds the rest of the system from it at runtime. Nothing is generated, so nothing drifts: change the model, and the UI, APIs, permissions and data layer change with it, instantly.
 
 ```
-                 ┌──────────────────────────┐
-  Admin UI  ◄────┤                          ├────►  REST · OpenAPI
-  9 views   ◄────┤   ◆ Task          model  ├────►  RBAC · row / column
-  Search    ◄────┤   title     text         ├────►  Data · DDL · 15 sources
-  Excel I/O ◄────┤   priority  choice       ├────►  Audit · revision
-  i18n      ◄────┤   due       date         ├────►  AI agent · MCP
-                 │   owner     → User       │
-                 └──────────────────────────┘
-           one model  →  the whole system, rebuilt live on every change
+              ┌──────────────────────────────────────────┐
+              │ Task                              model  │
+              │ title  · text      priority · choice     │
+              │ due    · date      owner    · → User     │
+              └─────────────────────┬────────────────────┘
+                                    │   read at runtime — nothing is generated
+      ┌───────────┬───────────┬─────┴─────┬───────────┬───────────┐
+      ▼           ▼           ▼           ▼           ▼           ▼
+   Admin UI    REST API      RBAC        Data       Audit      AI Agent
+   9 views     OpenAPI    row · col   15 sources   revision      MCP
 ```
 
 | WHAT THE MODEL BUILDS | WHAT YOU NO LONGER WRITE |

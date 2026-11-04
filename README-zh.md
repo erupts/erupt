@@ -46,15 +46,16 @@
 > **让模型成为唯一的事实来源。** 只需描述一次业务对象——字段、类型、关系与规则——Erupt 就在运行时据此构建出整个系统。没有生成的代码，也就不会产生偏差：改动模型，界面、接口、权限与数据层随之即时生效。
 
 ```
-                 ┌──────────────────────────┐
-  Admin UI  ◄────┤                          ├────►  REST · OpenAPI
-  9 views   ◄────┤   ◆ Task          model  ├────►  RBAC · row / column
-  Search    ◄────┤   title     text         ├────►  Data · DDL · 15 sources
-  Excel I/O ◄────┤   priority  choice       ├────►  Audit · revision
-  i18n      ◄────┤   due       date         ├────►  AI agent · MCP
-                 │   owner     → User       │
-                 └──────────────────────────┘
-           一份模型  →  整个系统，每次改动实时重建
+              ┌──────────────────────────────────────────┐
+              │ Task                              model  │
+              │ title  · text      priority · choice     │
+              │ due    · date      owner    · → User     │
+              └─────────────────────┬────────────────────┘
+                                    │   read at runtime — nothing is generated
+      ┌───────────┬───────────┬─────┴─────┬───────────┬───────────┐
+      ▼           ▼           ▼           ▼           ▼           ▼
+   Admin UI    REST API      RBAC        Data       Audit      AI Agent
+   9 views     OpenAPI    row · col   15 sources   revision      MCP
 ```
 
 | 模型构建出的能力 | 不必再写的代码 |
