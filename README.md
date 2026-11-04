@@ -11,9 +11,9 @@ English &nbsp;|&nbsp; [中文](README-zh.md)
 
 <h1 align="center">ERUPT</h1>
 
-<p align="center"><b>ANNOTATION-DRIVEN JAVA ADMIN FRAMEWORK · AI HARNESS</b></p>
+<p align="center"><b>MODEL-DRIVEN ENGINE FOR ENTERPRISE APPLICATIONS · AI HARNESS</b></p>
 
-<p align="center"><code>one class = one admin page · 9 languages · zero front-end · 2–5s startup · 50+ LLM · MCP-native · A2A</code></p>
+<p align="center"><code>make the model your single source of truth · built at runtime, not generated · zero front-end · 9 languages · 50+ LLM · MCP · A2A</code></p>
 
 <p align="center">
   <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt?style=flat&color=007ec6&label=MAVEN" alt="maven-central"></a>
@@ -37,26 +37,59 @@ English &nbsp;|&nbsp; [中文](README-zh.md)
 
 ---
 
-<p align="center"><img src="readme/hero.png" alt="Erupt · Annotation-Driven Java Admin Framework · AI Harness" width="100%"/></p>
+<p align="center"><img src="readme/hero.png" alt="Erupt · Model-Driven Engine for Enterprise Applications · AI Harness" width="100%"/></p>
 
 ---
 
-## 00 · WHY ERUPT
+## 00 · THE IDEA
 
-|                        | |
-|------------------------|---|
-| `ONE CLASS = ONE PAGE` | Annotate a JPA entity. Get a full admin page. Zero controllers, zero front-end build, zero scaffolding. |
-| `POLYGLOT`             | Java / Kotlin on Spring Boot, Solon, Quarkus, Micronaut, Vert.x, Ktor or any servlet container — the same `@Erupt` class, unchanged; Python, Go, TypeScript, PHP, .NET, Rust, Ruby and Swift services join as [erupt-sdk](https://github.com/plinian/erupt-sdk) nodes — same admin UI, RBAC and Excel, mostly zero runtime deps. |
-| `FAST STARTUP`         | 2–5 seconds to a running admin UI. Java 17 + Spring Boot 3.x. |
-| `30+ COMPONENTS`       | Date, slider, tree, code editor, reference table, autocomplete, map, signature, Markdown — out of the box. |
-| `BATTERIES INCLUDED`   | RBAC, audit logs, Excel import/export, OpenAPI. Every `@Erupt` entity is a permission-aware REST endpoint. |
-| `AI-NATIVE`            | 50+ LLM providers, MCP-native tools, 700k+ skills. All configurable from the admin UI. |
-| `MULTI-DATABASE`       | JPA: MySQL · PostgreSQL · Oracle · SQL Server · DM. MongoDB via `erupt-mongodb`. |
-| `ECOSYSTEM`            | `erupt-cloud` + `erupt-sdk` for polyglot distributed nodes. Commercial Chart / Flow / Tenant / Cube modules for reporting, workflow, SaaS, BI. |
+> **Make the model your single source of truth.** Describe a business object once — its fields, types, relations and rules — and Erupt builds the rest of the system from it at runtime. Nothing is generated, so nothing drifts: change the model, and the UI, APIs, permissions and data layer change with it, instantly.
+
+```
+                 ┌──────────────────────────┐
+  Admin UI  ◄────┤                          ├────►  REST · OpenAPI
+  9 views   ◄────┤   ◆ Task          model  ├────►  RBAC · row / column
+  Search    ◄────┤   title     text         ├────►  Data · DDL · 15 sources
+  Excel I/O ◄────┤   priority  choice       ├────►  Audit · revision
+  i18n      ◄────┤   due       date         ├────►  AI agent · MCP
+                 │   owner     → User       │
+                 └──────────────────────────┘
+           one model  →  the whole system, rebuilt live on every change
+```
+
+| WHAT THE MODEL BUILDS | WHAT YOU NO LONGER WRITE |
+|---|---|
+| `TABLE · FORM` — 30+ field components | ~~html · js · css~~ |
+| `SEARCH · SORT · PAGE` | ~~query code~~ |
+| `REST · OPENAPI` — permission-aware | ~~Controller~~ |
+| `DATAPROXY` — lifecycle hooks | ~~Service~~ |
+| `AUTO DDL` | ~~DDL · Mapper~~ |
+| `RBAC` — menu · row · column · button | ~~permission code~~ |
+| `ROW ACTIONS` — with forms and confirm | ~~action endpoints~~ |
+| `EXCEL I/O` | ~~POI glue~~ |
+| `9 VIEWS` — table · gantt · board · calendar · timeline · map · card … | ~~custom pages~~ |
+| `REVISION` — field-level history, rollback | ~~history tables~~ |
+| `I18N` | ~~*.properties~~ |
+| `AI TOOLS · MCP` — every model is agent-operable | ~~tool glue~~ |
 
 ---
 
-## 01 · QUICKSTART
+## 01 · WHY ERUPT
+
+|                          | |
+|--------------------------|---|
+| `RUNTIME, NOT CODEGEN`   | The model is read at runtime. No generated code to maintain, no template drift — edit the model and the system follows. |
+| `FAST`                   | 2–5 seconds to a running system. Java 17 + Spring Boot 3.x. |
+| `BATTERIES INCLUDED`     | Login, users, roles, menus, audit, Excel, OpenAPI, 30+ components — production-ready on day one. |
+| `AI-NATIVE`              | 50+ LLM providers, MCP-native tools, A2A, 700k+ skills. Every model is something an agent can query and operate. |
+| `ANY DATA SOURCE`        | JPA (MySQL · PostgreSQL · Oracle · SQL Server · DM) · JDBC · MongoDB · Elasticsearch · Redis · S3 · HTTP · files · LDAP · Kubernetes · Feishu · DingTalk · Notion · Airtable. |
+| `ANY FRAMEWORK`          | Not tied to Spring: the same model runs on Spring Boot, Solon, Quarkus, Micronaut, Vert.x, Ktor or any servlet container. |
+| `ANY LANGUAGE`           | Python, Go, TypeScript, PHP, .NET, Rust, Ruby and Swift services join as [erupt-sdk](https://github.com/plinian/erupt-sdk) nodes — same admin, same permissions. |
+| `FREE CORE`              | Apache 2.0, forever. Commercial Flow / SaaS / Cube modules are optional. |
+
+---
+
+## 02 · QUICKSTART
 
 ### A — SOURCE
 
@@ -94,7 +127,7 @@ Production: switch to MySQL / Redis via `-e` env vars — [image guide →](./de
 
 Bundles everything a runnable admin needs (`erupt-admin` + `erupt-web`). Want every optional module too (designer, job, generator, monitor, magic-api, websocket, notice, print, terminal, AI, cloud-server)? Use `erupt-spring-boot-starter-all`.
 
-**2 · Annotate a JPA entity. This IS the UI.**
+**2 · Describe the model. This IS the system.**
 
 ```java
 @Erupt(name = "User")
@@ -200,7 +233,7 @@ More scenarios — [erupt.xyz/#!/contrast](https://www.erupt.xyz/#!/contrast)
 
 ---
 
-## 02 · OUT OF THE BOX
+## 03 · OUT OF THE BOX
 
 <p align="center"><img src="readme/workbench.jpg" alt="Erupt · Workbench" width="100%"/></p>
 
@@ -209,15 +242,15 @@ More scenarios — [erupt.xyz/#!/contrast](https://www.erupt.xyz/#!/contrast)
 | `UI GENERATION` | Tables, forms, search, pagination, tree views, Gantt, card views, 20+ field components — driven by `@View` / `@Edit` / `@Search`. |
 | `PERMISSIONS · UPMS` | Users, roles, menus, row-level filters, column-level visibility. SpEL on `@Filter`. OAuth2 / LDAP / SSO. |
 | `OPENAPI` | Every `@Erupt` entity is a REST endpoint, governed by the same permission rules as the UI. |
-| `MULTI-DATABASE` | JPA: MySQL · PostgreSQL · Oracle · SQL Server · DM. MongoDB via `erupt-mongodb`. |
+| `ANY DATA SOURCE` | 15 data modules — JPA databases, JDBC, MongoDB, Elasticsearch, Redis, S3, HTTP, files, LDAP, Kubernetes and SaaS tables. |
 | `EXCEL` | Import/export via `erupt-excel`. Override `excelImport` / `excelExport` on `DataProxy`. |
-| `AI HARNESS` | `erupt-ai` — 50+ LLM providers, MCP-native tools, built-in RBAC. [→ 03](#03--ai-harness) |
-| `AI CLAW` | `erupt-ai-claw` — drive entities, shell, files, browser through natural language. [→ 04](#04--ai-claw) |
-| `CLUSTER` | `erupt-cloud` distributed config. Commercial `erupt-tenant` for full SaaS. [→ 05](#05--cloud) |
+| `AI HARNESS` | `erupt-ai` — 50+ LLM providers, MCP-native tools, built-in RBAC. [→ 04](#04--ai-harness) |
+| `AI FAMILY` | Claw, RAG, Staff, Dev, Canvas and Decision agents on top of `erupt-ai`. [→ 05](#05--ai-family) |
+| `CLUSTER` | `erupt-cloud` nodes in any language. Commercial `erupt-tenant` for full SaaS. [→ 06](#06--any-language--cloud) |
 
 > `WHICH AI MODULE?` — Pick `erupt-ai` for raw LLM / MCP access to build your own agent. Pick `erupt-ai-claw` for a turn-key admin agent (it depends on `erupt-ai`; add only this one).
 
-Module catalog — [erupt.xyz/#!/module](https://www.erupt.xyz/#!/module) · API reference — [javadoc.erupt.xyz](https://javadoc.erupt.xyz)
+All modules — [07](#07--modules) · API reference — [javadoc.erupt.xyz](https://javadoc.erupt.xyz)
 
 ### MODEL ATLAS
 
@@ -237,10 +270,9 @@ Module catalog — [erupt.xyz/#!/module](https://www.erupt.xyz/#!/module) · API
   </tr>
 </table>
 
-
 ---
 
-## 03 · AI HARNESS
+## 04 · AI HARNESS
 
 > `erupt-ai` — production-grade AI agents on JVM. 50+ LLM providers · MCP-native · built-in RBAC · role-aware system prompts · chat history. All configurable through the admin UI. Zero boilerplate.
 
@@ -288,10 +320,11 @@ LLM providers, MCP servers, agents — all managed through the built-in admin UI
   </tr>
 </table>
 
-
 ---
 
-## 04 · AI CLAW
+## 05 · AI FAMILY
+
+### AI CLAW
 
 > `erupt-ai-claw` — drive your server through natural language, like talking to a colleague.
 
@@ -305,11 +338,21 @@ LLM providers, MCP servers, agents — all managed through the built-in admin UI
 
 Claw shares the same role-based tool security as AI Harness — only whitelisted tools reach non-admin users. Skills live in `~/.erupt/skills/` and can also be created through chat.
 
+### MORE AGENTS
+
+| MODULE | WHAT IT DOES |
+|---|---|
+| `erupt-ai-rag` | Knowledge base and retrieval-augmented generation — Qdrant / Milvus / in-memory vector stores, document ingestion, agentic RAG. |
+| `erupt-ai-staff` | Digital employees: an agent with a system account, a duty persona, cron-scheduled tasks and work reports. |
+| `erupt-ai-dev` | AI software delivery: projects with git repositories, a requirement pool and per-requirement worktrees for coding agents. |
+| `erupt-ai-canvas` | Describe a page in plain language; the LLM writes a self-contained page over the Erupt REST API, served as a menu. |
+| `erupt-ai-decision` | Typed, calibrated judgements (choice / score / yes-no) that business code can branch on. |
+
 ---
 
-## 05 · CLOUD
+## 06 · ANY LANGUAGE · CLOUD
 
-> `erupt-cloud` — the annotation-driven admin experience for distributed services **in any language**. One server handles login, menus and permissions; each node — Spring Boot or a Python / Go / TypeScript / PHP / .NET / Rust / Ruby / Swift process — only describes its models and serves their data.
+> `erupt-cloud` — one model-driven admin for distributed services **in any language**. One server handles login, menus and permissions; each node — Spring Boot or a Python / Go / TypeScript / PHP / .NET / Rust / Ruby / Swift process — only describes its models and serves their data.
 
 ```
 ┌────────────────────────────┐
@@ -352,7 +395,23 @@ node.serve(port=9090)
 
 ---
 
-## 06 · COMMERCIAL MODULES
+## 07 · MODULES
+
+> One core, fifty-odd modules. Each is one dependency and shares the same model, permissions and UI.
+
+| GROUP | MODULES |
+|---|---|
+| `AI · 7` | `erupt-ai` · `ai-claw` · `ai-rag` · `ai-staff` · `ai-dev` · `ai-canvas` · `ai-decision` |
+| `DATA · 15` | `jpa` · `jdbc` · `mongodb` · `es` · `redis` · `s3` · `http` · `file` · `ldap` · `k8s` · `memory` · `feishu` · `dingtalk` · `notion` · `airtable` |
+| `PLUGINS · 19` | `job` · `monitor` · `notice` · `report` · `print` · `revision` · `comment` · `share` · `sso` · `webhook` · `config` · `file-center` · `terminal` · `remote` · `magic-api` · `designer` · `generator` · `atlas` · `template` |
+| `PLATFORM` | `cloud` · `erupt-sdk` (9 languages) · `excel` · `websocket` · `git` · UI themes `ant-design` / `element-plus` / `element-ui` · `docker` |
+| `PRO · 3` | `flow` · `saas` · `cube` — see [08](#08--commercial-modules) |
+
+Full list — [erupt.xyz](https://www.erupt.xyz) · API reference — [javadoc.erupt.xyz](https://javadoc.erupt.xyz)
+
+---
+
+## 08 · COMMERCIAL MODULES
 
 > `CORE IS FREE, FOREVER` — `erupt-core` / `erupt-annotation` / `erupt-web` / `erupt-jpa` / `erupt-upms` / `erupt-ai` and other core modules are Apache 2.0 forever. No license restrictions · no project-count limits · no commercial restrictions ([governance commitment →](./.github/GOVERNANCE.md)). Commercial modules are optional enterprise extensions that evolve independently.
 
@@ -368,7 +427,7 @@ Source-code delivery · one-time purchase · perpetual use.
 
 ---
 
-## 07 · TELEMETRY
+## 09 · TELEMETRY
 
 Erupt reports anonymous usage statistics — erupt version, installed modules, JDK, OS and database type, Spring Boot version, timezone — to guide compatibility and roadmap decisions. It never sends business data, credentials, hostnames, or anything IP-derived, and requests fail silently without ever blocking startup.
 
@@ -376,7 +435,7 @@ Opt out with `erupt.telemetry.enabled: false` or the `ERUPT_TELEMETRY_DISABLED=1
 
 ---
 
-## 08 · CONTRIBUTING
+## 10 · CONTRIBUTING
 
 Free and open source. Code, bug reports, ideas, use cases, blog posts — all welcome.
 
@@ -386,17 +445,17 @@ Read the [contribution guidelines](./.github/CONTRIBUTING.md), then open an [iss
 
 > `IF ERUPT SAVES YOU TIME — STAR IT.` It really helps the project grow.
 
-<a href="https://star-history.dera.page/#erupts/erupt&type=date&legend=top-left" target="_blank">
+<a href="https://www.star-history.com/#erupts/erupt&Date" target="_blank">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=erupts/erupt&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=erupts/erupt&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=erupts/erupt&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=erupts/erupt&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=erupts/erupt&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=erupts/erupt&type=Date" />
  </picture>
 </a>
 
 ---
 
-## 09 · LICENSE
+## 11 · LICENSE
 
 ![license.svg](readme/license.svg)
 
