@@ -11,9 +11,9 @@
 
 <h1 align="center">ERUPT</h1>
 
-<p align="center"><b>注解驱动的 JAVA 管理后台框架 · AI HARNESS</b></p>
+<p align="center"><b>模型驱动的企业级应用引擎 · AI HARNESS</b></p>
 
-<p align="center"><code>一个类 = 一套后台页面 · 零前端 · 2~5s 启动 · 50+ 大模型 · MCP 原生 · A2A</code></p>
+<p align="center"><code>让模型成为唯一的事实来源 · 运行时构建，而非代码生成 · 零前端 · 9 种语言 · 50+ 大模型 · MCP · A2A</code></p>
 
 <p align="center">
   <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt?style=flat&color=007ec6&label=MAVEN" alt="maven-central"></a>
@@ -37,25 +37,59 @@
 
 ---
 
-<p align="center"><img src="readme/hero-zh.png" alt="Erupt · 注解驱动的 Java 管理后台框架 · AI Harness" width="100%"/></p>
+<p align="center"><img src="readme/hero-zh.png" alt="Erupt · 模型驱动的企业级应用引擎 · AI Harness" width="100%"/></p>
 
 ---
 
-## 00 · 为什么选 ERUPT
+## 00 · 核心理念
+
+> **让模型成为唯一的事实来源。** 只需描述一次业务对象——字段、类型、关系与规则——Erupt 就在运行时据此构建出整个系统。没有生成的代码，也就不会产生偏差：改动模型，界面、接口、权限与数据层随之即时生效。
+
+```
+                 ┌──────────────────────────┐
+  Admin UI  ◄────┤                          ├────►  REST · OpenAPI
+  9 views   ◄────┤   ◆ Task          model  ├────►  RBAC · row / column
+  Search    ◄────┤   title     text         ├────►  Data · DDL · 15 sources
+  Excel I/O ◄────┤   priority  choice       ├────►  Audit · revision
+  i18n      ◄────┤   due       date         ├────►  AI agent · MCP
+                 │   owner     → User       │
+                 └──────────────────────────┘
+           一份模型  →  整个系统，每次改动实时重建
+```
+
+| 模型构建出的能力 | 不必再写的代码 |
+|---|---|
+| `表格 · 表单` —— 30+ 字段组件 | ~~html · js · css~~ |
+| `搜索 · 排序 · 分页` | ~~查询代码~~ |
+| `REST · OPENAPI` —— 自带权限 | ~~Controller~~ |
+| `DATAPROXY` —— 生命周期钩子 | ~~Service~~ |
+| `自动建表` | ~~DDL · Mapper~~ |
+| `RBAC` —— 菜单 · 行 · 列 · 按钮 | ~~权限代码~~ |
+| `行操作` —— 支持表单与确认 | ~~操作接口~~ |
+| `EXCEL 导入导出` | ~~POI 胶水代码~~ |
+| `9 种视图` —— 表格 · 甘特 · 看板 · 日历 · 时间线 · 地图 · 卡片 … | ~~自定义页面~~ |
+| `修订历史` —— 字段级变更与回滚 | ~~历史表~~ |
+| `国际化` | ~~*.properties~~ |
+| `AI 工具 · MCP` —— 每个模型都可被智能体操作 | ~~tool 胶水代码~~ |
+
+---
+
+## 01 · 为什么选 ERUPT
 
 |                  | |
 |------------------|---|
-| `一个类 = 一套页面`  | 在 JPA 实体上写注解，直接得到完整后台页面。零 Controller、零前端打包、零脚手架。 |
-| `极速启动`         | 2~5 秒起一个完整管理后台。Java 17 + Spring Boot 3.x。 |
-| `30+ 组件`        | 日期、滑块、树、代码编辑器、参照表格、自动补全、地图、签名、Markdown —— 开箱即用。 |
-| `内置全家桶`       | RBAC、审计日志、Excel 导入导出、OpenAPI。每个 `@Erupt` 实体自动是一个带权限的 REST 接口。 |
-| `AI NATIVE`      | 50+ 大模型、MCP 原生工具、70 万+ Skills。全部通过管理界面配置。 |
-| `多数据库`         | JPA：MySQL · PostgreSQL · Oracle · SQL Server · 达梦。MongoDB 走 `erupt-mongodb`。 |
-| `生态`            | `erupt-cloud` 分布式配置。商业模块 Chart / Flow / Tenant / Cube 覆盖报表、工作流、SaaS、BI。 |
+| `运行时，而非代码生成` | 模型在运行时被解析。没有需要维护的生成代码，也没有模板漂移——改模型，系统随之而变。 |
+| `极速`           | 2~5 秒起一个完整系统。Java 17 + Spring Boot 3.x。 |
+| `开箱即用`        | 登录、用户、角色、菜单、审计、Excel、OpenAPI、30+ 组件，上线即可用于生产。 |
+| `AI 原生`        | 50+ 大模型、MCP 原生工具、A2A、70 万+ Skills。每个模型都能被智能体查询与操作。 |
+| `任意数据源`      | JPA（MySQL · PostgreSQL · Oracle · SQL Server · 达梦）· JDBC · MongoDB · Elasticsearch · Redis · S3 · HTTP · 文件 · LDAP · Kubernetes · 飞书 · 钉钉 · Notion · Airtable。 |
+| `任意框架`        | 不绑定 Spring：同一份模型可运行在 Spring Boot、Solon、Quarkus、Micronaut、Vert.x、Ktor 或任意 Servlet 容器。 |
+| `任意语言`        | Python、Go、TypeScript、PHP、.NET、Rust、Ruby、Swift 服务通过 [erupt-sdk](https://github.com/plinian/erupt-sdk) 作为节点接入——同一套后台，同一套权限。 |
+| `核心永久免费`     | Apache 2.0，永久开源。Flow / SaaS / Cube 商业模块按需选用。 |
 
 ---
 
-## 01 · 快速开始
+## 02 · 快速开始
 
 ### A — 源码启动
 
@@ -93,7 +127,7 @@ docker run -p 8080:8080 erupts/erupt
 
 这一个 starter 已包含跑起来一个 admin 所需的全部依赖（`erupt-admin` + `erupt-web`）。想要全部可选模块（designer、job、generator、monitor、magic-api、websocket、notice、print、terminal、AI、cloud-server）？改用 `erupt-spring-boot-starter-all`。
 
-**2 · 在 JPA 实体上写注解。这就是整个 UI。**
+**2 · 描述模型。这就是整个系统。**
 
 ```java
 @Erupt(name = "用户")
@@ -199,7 +233,7 @@ List<EruptUser> list = eruptDao.lambdaQuery(EruptUser.class)
 
 ---
 
-## 02 · 开箱即用
+## 03 · 开箱即用
 
 <p align="center"><img src="readme/workbench.jpg" alt="Erupt · 工作台" width="100%"/></p>
 
@@ -208,15 +242,15 @@ List<EruptUser> list = eruptDao.lambdaQuery(EruptUser.class)
 | `UI 自动生成` | 表格、表单、搜索、分页、树视图、甘特图、卡片视图、20+ 表单组件 —— 全部由 `@View` / `@Edit` / `@Search` 驱动。 |
 | `权限管控 · UPMS` | 用户、角色、菜单、行级筛选、列级可见性。`@Filter` 上写 SpEL。OAuth2 / LDAP / SSO。 |
 | `OPENAPI` | 每个 `@Erupt` 实体自动成为 REST 接口，权限规则与界面完全一致。 |
-| `多数据库` | JPA：MySQL · PostgreSQL · Oracle · SQL Server · 达梦。MongoDB 走 `erupt-mongodb`。 |
+| `任意数据源` | 15 个数据模块——JPA 数据库、JDBC、MongoDB、Elasticsearch、Redis、S3、HTTP、文件、LDAP、Kubernetes 及飞书 / 钉钉等在线表格。 |
 | `EXCEL` | 导入导出走 `erupt-excel`。自定义就覆盖 `DataProxy` 的 `excelImport` / `excelExport`。 |
-| `AI HARNESS` | `erupt-ai` —— 50+ 大模型、MCP 原生工具、内置 RBAC。[→ 03](#03--ai-harness) |
-| `AI CLAW` | `erupt-ai-claw` —— 用自然语言驱动实体、Shell、文件、浏览器。[→ 04](#04--ai-claw) |
-| `集群` | `erupt-cloud` 分布式配置。商业模块 `erupt-tenant` 提供完整 SaaS。[→ 05](#05--cloud) |
+| `AI HARNESS` | `erupt-ai` —— 50+ 大模型、MCP 原生工具、内置 RBAC。[→ 04](#04--ai-harness) |
+| `AI 家族` | 基于 `erupt-ai` 的 Claw、RAG、Staff、Dev、Canvas、Decision 智能体。[→ 05](#05--ai-家族) |
+| `集群` | `erupt-cloud` 任意语言节点。商业模块 `erupt-tenant` 提供完整 SaaS。[→ 06](#06--任意语言--cloud) |
 
 > `该引入哪个 AI 模块？` —— 要原生 LLM / MCP 能力、自己写 agent，选 `erupt-ai`；想直接给 admin 装个开箱即用的 AI 助手，选 `erupt-ai-claw`（已传递依赖 `erupt-ai`，只需引这一个）。
 
-模块列表 —— [erupt.xyz/#!/module](https://www.erupt.xyz/#!/module) · API 文档 —— [javadoc.erupt.xyz](https://javadoc.erupt.xyz)
+全部模块 —— [07](#07--模块全景) · API 文档 —— [javadoc.erupt.xyz](https://javadoc.erupt.xyz)
 
 ### 模型图谱
 
@@ -236,10 +270,9 @@ List<EruptUser> list = eruptDao.lambdaQuery(EruptUser.class)
   </tr>
 </table>
 
-
 ---
 
-## 03 · AI HARNESS
+## 04 · AI HARNESS
 
 > `erupt-ai` —— JVM 上的生产级 AI Agent。50+ 大模型 · MCP 原生 · 内置 RBAC · 角色级 system prompt · 会话历史。全部通过管理界面配置。零样板代码。
 
@@ -287,10 +320,11 @@ LLM 提供商、MCP 服务器、Agent —— 全部通过内置管理界面配�
   </tr>
 </table>
 
-
 ---
 
-## 04 · AI CLAW
+## 05 · AI 家族
+
+### AI CLAW
 
 > `erupt-ai-claw` —— 通过自然语言直接驱动服务器，像与同事对话一样简单。
 
@@ -304,40 +338,80 @@ LLM 提供商、MCP 服务器、Agent —— 全部通过内置管理界面配�
 
 Claw 与 AI Harness 共享同一套基于 Role 的 Tool 安全机制 —— 非管理员账号只能调用被白名单的工具。Skills 存放于 `~/.erupt/skills/`，也可在对话中动态创建。
 
+### 更多智能体
+
+| 模块 | 用途 |
+|---|---|
+| `erupt-ai-rag` | 知识库与检索增强生成——Qdrant / Milvus / 内存向量库、文档入库、Agentic RAG。 |
+| `erupt-ai-staff` | 数字员工：绑定系统账号与岗位人设，按 Cron 定时执行任务并汇报。 |
+| `erupt-ai-dev` | AI 软件交付：带 Git 仓库的项目、需求池，以及每个需求独立的 worktree 供编码智能体工作。 |
+| `erupt-ai-canvas` | 用自然语言描述页面，大模型基于 Erupt REST API 生成独立页面，并作为菜单挂载。 |
+| `erupt-ai-decision` | 结构化、可校准的 AI 判断（选择 / 打分 / 是否），业务代码可直接据此分支。 |
+
 ---
 
-## 05 · CLOUD
+## 06 · 任意语言 · CLOUD
 
-> `erupt-cloud` —— 把注解驱动的后台体验带到分布式 Spring Boot 部署。集中配置、服务拓扑、节点级后台 —— 同一套 `@Erupt` 模型。
+> `erupt-cloud` —— 用同一套模型驱动的后台管理**任意语言**的分布式服务。登录、菜单、权限全由 Server 代办；节点可以是 Spring Boot，也可以是 Python / Go / TypeScript / PHP / .NET / Rust / Ruby / Swift 进程，只需描述模型、读写数据。
 
 ```
 ┌────────────────────────────┐
-│  erupt-cloud-server        │   中心控制台
+│  erupt-cloud-server        │   中心控制台 · 登录 · 菜单 · 权限
 │  配置 · 节点 · 拓扑          │
 └──────────────┬─────────────┘
-               │  注册 / 拉取配置
-   ┌───────────┼───────────┐
-   ▼           ▼           ▼
-┌───────┐  ┌───────┐  ┌───────┐
-│ node  │  │ node  │  │ node  │   erupt-cloud-node
-│ + own │  │ + own │  │ + own │   每个服务自带后台
-│ admin │  │ admin │  │ admin │
-└───────┘  └───────┘  └───────┘
+               │  注册 / 心跳 / 转发
+   ┌───────────┼───────────┬───────────┐
+   ▼           ▼           ▼           ▼
+┌───────┐  ┌────────┐  ┌───────┐  ┌───────┐
+│ Java  │  │ Python │  │  Go   │  │ TS …  │   9 种语言任选
+│ node  │  │  node  │  │ node  │  │ node  │   节点只管模型与数据
+└───────┘  └────────┘  └───────┘  └───────┘
+```
+
+```python
+# pip install erupt-sdk  —— Python 服务即可成为 erupt 后台节点
+from erupt import Field, Node, SqliteRepository, erupt
+
+@erupt("Article")
+class Article:
+    id: int = Field(pk=True)
+    title: str = Field("Title", search=True, not_null=True)
+
+node = Node("blog", os.environ["ERUPT_ACCESS_TOKEN"], "http://erupt-server:8080")
+node.register(Article, SqliteRepository("blog.db", "article"))
+node.serve(port=9090)
 ```
 
 | | |
 |---|---|
+| `多语言节点` | Java / Kotlin（Spring Boot · Solon · Quarkus · Micronaut · Vert.x · Ktor · Servlet）· Python · Go · TypeScript · PHP · .NET · Rust · Ruby · Swift —— 同一份协议、同一套一致性测试。[erupt-sdk →](https://github.com/plinian/erupt-sdk) |
 | `配置中心` | 多维度：配置结构、节点、发布策略。实例按需同步。 |
 | `轻依赖` | 对 Spring Boot / 微服务栈侵入极小。版本与 Erupt 主线保持一致。 |
 | `拓扑` | 集群拓扑、调用关系、配置发布 —— 一个控制台看全。 |
 | `集群内后台` | 每个业务服务都能挂载自己的 Erupt 后台。无需为每个子系统重复搭脚手架。 |
 | `审计` | 每次配置变更都有迹可循。比版本级回滚更细粒度。 |
 
-[docs.erupt.xyz/modules/erupt-cloud](https://docs.erupt.xyz/modules/erupt-cloud) · [erupt.xyz/#!/cloud](https://www.erupt.xyz/#!/cloud)
+[docs.erupt.xyz/modules/erupt-cloud](https://docs.erupt.xyz/modules/erupt-cloud) · [erupt.xyz/#!/cloud](https://www.erupt.xyz/#!/cloud) · [erupt.xyz/#!/sdk](https://www.erupt.xyz/#!/sdk)
 
 ---
 
-## 06 · 商业模块
+## 07 · 模块全景
+
+> 一个内核，五十多个模块。每个都是一个依赖，共享同一套模型、权限与界面。
+
+| 分组 | 模块 |
+|---|---|
+| `AI · 7` | `erupt-ai` · `ai-claw` · `ai-rag` · `ai-staff` · `ai-dev` · `ai-canvas` · `ai-decision` |
+| `数据源 · 15` | `jpa` · `jdbc` · `mongodb` · `es` · `redis` · `s3` · `http` · `file` · `ldap` · `k8s` · `memory` · `feishu` · `dingtalk` · `notion` · `airtable` |
+| `插件 · 19` | `job` · `monitor` · `notice` · `report` · `print` · `revision` · `comment` · `share` · `sso` · `webhook` · `config` · `file-center` · `terminal` · `remote` · `magic-api` · `designer` · `generator` · `atlas` · `template` |
+| `平台` | `cloud` · `erupt-sdk`（9 种语言）· `excel` · `websocket` · `git` · UI 主题 `ant-design` / `element-plus` / `element-ui` · `docker` |
+| `商业 · 3` | `flow` · `saas` · `cube` —— 见 [08](#08--商业模块) |
+
+完整介绍 —— [erupt.xyz](https://www.erupt.xyz) · API 文档 —— [javadoc.erupt.xyz](https://javadoc.erupt.xyz)
+
+---
+
+## 08 · 商业模块
 
 > `核心永久免费开源` —— `erupt-core` / `erupt-annotation` / `erupt-web` / `erupt-jpa` / `erupt-upms` / `erupt-ai` 等核心模块永久遵循 Apache 2.0 协议。无 License 限制 · 无项目数限制 · 无商用限制（[官方治理承诺 →](./.github/GOVERNANCE.md)）。商业模块是核心之外可选的企业级扩展，与开源核心独立演进。
 
@@ -353,7 +427,7 @@ Claw 与 AI Harness 共享同一套基于 Role 的 Tool 安全机制 —— 非�
 
 ---
 
-## 07 · 匿名统计
+## 09 · 匿名统计
 
 Erupt 会上报匿名使用统计 —— erupt 版本、已装模块、JDK、操作系统与数据库类型、Spring Boot 版本、时区 —— 用于指导兼容性与路线图决策。绝不上报业务数据、凭据、主机名或任何可定位身份的信息，请求失败静默处理，绝不阻塞启动。
 
@@ -361,7 +435,7 @@ Erupt 会上报匿名使用统计 —— erupt 版本、已装模块、JDK、操
 
 ---
 
-## 08 · 参与贡献
+## 10 · 参与贡献
 
 免费且开源。提交代码、反馈缺陷、交流想法、分享案例、撰写博客 —— 一切贡献都欢迎。
 
@@ -371,17 +445,17 @@ Erupt 会上报匿名使用统计 —— erupt 版本、已装模块、JDK、操
 
 > `觉得 Erupt 帮到了你？请给个 Star。` 开源不易，对项目成长帮助很大。
 
-<a href="https://star-history.dera.page/#erupts/erupt&type=date&legend=top-left" target="_blank">
+<a href="https://www.star-history.com/#erupts/erupt&Date" target="_blank">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=erupts/erupt&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=erupts/erupt&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=erupts/erupt&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=erupts/erupt&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=erupts/erupt&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=erupts/erupt&type=Date" />
  </picture>
 </a>
 
 ---
 
-## 09 · LICENSE
+## 11 · LICENSE
 
 [Apache 2.0](./LICENSE) —— 免费 · 开源 · 可商用 · 可二次开发。
 
