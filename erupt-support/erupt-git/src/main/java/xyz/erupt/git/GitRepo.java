@@ -5,9 +5,11 @@ import xyz.erupt.git.model.*;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A bare repository and the worktrees hung off it. Remote branches are read as {@code origin/<name>};
@@ -51,6 +53,19 @@ public class GitRepo {
      */
     public void setOriginUrl(String url) {
         cli.run(dir, "remote", "set-url", ORIGIN, cli.url(url));
+    }
+
+    /**
+     * Whether the repository at {@code url} carries the history of every given branch: each shares a root
+     * commit with the remote's default branch. A moved host passes, another repository does not. Only
+     * FETCH_HEAD is written, so a foreign repository leaves no ref behind.
+     */
+    public boolean sharesHistory(String url, GitAuth auth, List<String> branches) {
+        if (branches.isEmpty()) return true;
+        cli.run(dir, auth, Map.of(), "fetch", "--no-tags", "--", cli.url(url), "HEAD");
+        Set<String> roots = Set.of(cli.run(dir, "rev-list", "--max-parents=0", "FETCH_HEAD").split("\n"));
+        return branches.stream().allMatch(branch -> Arrays.stream(cli.run(dir, "rev-list", "--max-parents=0",
+                GitCli.ref(branch)).split("\n")).anyMatch(roots::contains));
     }
 
     /**

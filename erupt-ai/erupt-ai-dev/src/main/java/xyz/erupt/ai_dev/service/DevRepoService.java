@@ -13,10 +13,12 @@ import xyz.erupt.ai_dev.model.DevProject;
 import xyz.erupt.ai_dev.model.DevProjectRepo;
 import xyz.erupt.ai_dev.prop.EruptAiDevProp;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.git.EruptGit;
 import xyz.erupt.git.GitAuth;
 import xyz.erupt.git.GitException;
 import xyz.erupt.git.GitRepo;
+import xyz.erupt.git.model.GitWorktree;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.helper.UpmsTenant;
 import xyz.erupt.upms.tenant.UpmsTenantSessions;
@@ -124,7 +126,16 @@ public class DevRepoService {
                 return;
             }
             GitRepo gitRepo = eruptGit.open(dir);
-            if (!repo.url().equals(gitRepo.originUrl())) gitRepo.setOriginUrl(repo.url());
+            if (!repo.url().equals(gitRepo.originUrl())) {
+                // a new URL may be the same repository on another host, never another repository: the work
+                // branches checked out here would lose their base and every diff against it
+                List<String> work = gitRepo.worktrees().stream().filter(w -> !w.bare() && null != w.branch())
+                        .map(GitWorktree::branch).toList();
+                if (!gitRepo.sharesHistory(repo.url(), auth, work)) {
+                    throw new GitException(I18nTranslate.$translate("ai_dev.repo_unrelated"));
+                }
+                gitRepo.setOriginUrl(repo.url());
+            }
             gitRepo.fetch(auth);
         }
     }
