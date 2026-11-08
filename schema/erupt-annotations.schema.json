@@ -1635,6 +1635,10 @@
     "Search": {
       "type": "object",
       "properties": {
+        "fillAdd": {
+          "type": "boolean",
+          "default": false
+        },
         "lockOperator": {
           "type": "boolean",
           "default": false
@@ -1653,6 +1657,7 @@
         }
       },
       "required": [
+        "fillAdd",
         "lockOperator",
         "notNull",
         "operator",
