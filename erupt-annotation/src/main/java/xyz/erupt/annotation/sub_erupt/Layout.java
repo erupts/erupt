@@ -38,6 +38,10 @@ public @interface Layout {
     //Collapse delete/edit/view buttons into a dropdown menu in the toolbar
     boolean collapseActionButton() default false;
 
+    //Query the table as soon as a pick-type search condition (choice, boolean, date, reference) changes;
+    //typed conditions (text, number) still wait for Enter or the query button
+    boolean autoQuery() default false;
+
     enum FormSize {
         //Default
         DEFAULT,

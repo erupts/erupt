@@ -1149,6 +1149,10 @@
     "Layout": {
       "type": "object",
       "properties": {
+        "autoQuery": {
+          "type": "boolean",
+          "default": false
+        },
         "collapseActionButton": {
           "type": "boolean",
           "default": false
@@ -1210,6 +1214,7 @@
         }
       },
       "required": [
+        "autoQuery",
         "collapseActionButton",
         "formSize",
         "formSteps",

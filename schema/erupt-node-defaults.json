@@ -5,6 +5,7 @@
     "drills": [],
     "extra": {},
     "layout": {
+      "autoQuery": false,
       "collapseActionButton": false,
       "formSize": "DEFAULT",
       "formSteps": false,
