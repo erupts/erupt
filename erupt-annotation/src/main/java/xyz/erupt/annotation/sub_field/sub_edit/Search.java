@@ -20,4 +20,7 @@ public @interface Search {
     @Comment("Lock the operator: hide the operator selector on the frontend and force the configured operator server-side, ignoring any client-supplied one")
     boolean lockOperator() default false;
 
+    @Comment("Fill the add form: a new record opened from the list takes this field's value from an equals condition in the search bar")
+    boolean fillAdd() default false;
+
 }
