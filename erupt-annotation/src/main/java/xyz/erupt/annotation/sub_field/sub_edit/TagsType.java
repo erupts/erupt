@@ -5,6 +5,18 @@ import xyz.erupt.annotation.fun.TagsFetchHandler;
 
 import java.beans.Transient;
 
+/**
+ * A TAGS field binds to a {@code String} (tags joined by {@link #joinSeparator()}, a JSON array string
+ * for {@code "[]"}) or to a {@code String[]} / {@code List<String>}, which travels as a JSON array and
+ * ignores the separator. On JPA, store the array or list as JSON so the dialect picks the column type
+ * (jsonb, json, or a character column where the database has no JSON type):
+ * <pre>
+ * &#64;JdbcTypeCode(SqlTypes.JSON)
+ * &#64;EruptField(views = &#64;View(title = "Stack"), edit = &#64;Edit(title = "Stack", type = EditType.TAGS))
+ * private List&lt;String&gt; stack;
+ * </pre>
+ * Such a field is not searchable by tag (a JSON column takes no LIKE), so give it {@code search = false}.
+ */
 public @interface TagsType {
 
     @Comment("Separator character when storing multiple tags")
