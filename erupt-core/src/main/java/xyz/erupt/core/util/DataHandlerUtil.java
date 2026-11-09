@@ -37,17 +37,6 @@ public class DataHandlerUtil {
         return resultTreeModels;
     }
 
-    private static EruptFieldModel cycleFindFieldByKey(EruptModel eruptModel, String key) {
-        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(key);
-        if (null != fieldModel) {
-            return fieldModel;
-        }
-        if (key.contains("_")) {
-            return cycleFindFieldByKey(eruptModel, key.substring(0, key.lastIndexOf("_")));
-        }
-        return null;
-    }
-
     /**
      * Prepare queried rows for the client. Values stay raw — the wording of a BOOLEAN or the label
      * of a CHOICE belongs to whoever displays them, and a client that has to edit, filter or sort
@@ -55,19 +44,30 @@ public class DataHandlerUtil {
      * never leave the server.
      */
     public static void convertDataToEruptView(EruptModel eruptModel, Collection<Map<String, Object>> list) {
+        Set<String> passwords = passwordKeys(eruptModel);
+        if (passwords.isEmpty()) return;
         for (Map<String, Object> map : list) {
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                EruptFieldModel fieldModel = cycleFindFieldByKey(eruptModel, entry.getKey());
-                if (null == fieldModel || null == entry.getValue()) {
-                    continue;
-                }
-                for (View view : fieldModel.getEruptField().views()) {
-                    if (ViewType.PASSWORD == view.type()) {
-                        map.put(entry.getKey(), EruptConst.PASSWORD_PLACEHOLDER);
-                    }
-                }
+            for (String key : passwords) {
+                if (null != map.get(key)) map.put(key, EruptConst.PASSWORD_PLACEHOLDER);
             }
         }
+    }
+
+    /**
+     * The row keys a PASSWORD view is read from, taken from the model rather than guessed from a key: the field itself,
+     * or field_column for a column of the referenced erupt, as the query aliases it. Splitting a key at its last "_"
+     * found the wrong field for snake_case names and masked every view of the field it found.
+     */
+    static Set<String> passwordKeys(EruptModel eruptModel) {
+        Set<String> keys = new HashSet<>();
+        for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+            for (View view : fieldModel.getEruptField().views()) {
+                if (ViewType.PASSWORD != view.type()) continue;
+                keys.add(view.column().isEmpty() ? fieldModel.getFieldName()
+                        : fieldModel.getFieldName() + "_" + view.column().replace(EruptConst.DOT, "_"));
+            }
+        }
+        return keys;
     }
 
 }
