@@ -64,6 +64,8 @@ public class AnnotationProcess {
             }
             String returnType = method.getReturnType().getSimpleName();
             Object result = method.invoke(annotation);
+            // only an annotation read back from JSON answers null: a required attribute it lacks, or a class it names
+            if (null == result) continue;
             Match match = method.getAnnotation(Match.class);
             if (null != match) {
                 EvaluationContext evaluationContext = new StandardEvaluationContext();
@@ -152,7 +154,7 @@ public class AnnotationProcess {
                 String key = null != property && !property.alias().isEmpty() ? property.alias() : method.getName();
                 JsonElement value = null == json ? null : json.get(key);
                 if (null == value || value.isJsonNull() || isClass(method.getReturnType())) yield method.getDefaultValue();
-                yield fromJson(method.getReturnType(), value, type.getSimpleName() + "." + key);
+                yield fromJson(method.getReturnType(), fromMap(method, value), type.getSimpleName() + "." + key);
             }
         });
     }
@@ -164,13 +166,53 @@ public class AnnotationProcess {
      */
     public static <A extends Annotation> JsonObject completeJson(Class<A> type, JsonObject json) {
         try {
-            JsonObject complete = json.deepCopy();
-            fillDefaults(complete, annotationToJsonByReflect(jsonToAnnotation(type, json)));
-            return complete;
+            return completeJsonStrict(type, json);
         } catch (Exception e) {
             // reading an attribute back fails through Method.invoke, so it arrives as a (sneaky) checked exception
             return json;
         }
+    }
+
+    /**
+     * {@link #completeJson} that refuses a JSON which does not read back as the annotation: an enum value it does not
+     * declare, a number where a boolean goes, an object where an array goes. Every attribute is read, so this is the
+     * check of the JSON against the annotation types {@code schema/erupt-annotations.schema.json} is generated from.
+     *
+     * @throws AnnotationJsonException naming the attribute path and the offending value
+     */
+    public static <A extends Annotation> JsonObject completeJsonStrict(Class<A> type, JsonObject json) {
+        JsonObject complete = json.deepCopy();
+        try {
+            fillDefaults(complete, annotationToJsonByReflect(jsonToAnnotation(type, json)));
+        } catch (java.lang.reflect.UndeclaredThrowableException e) {
+            throw unwrap(e);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw unwrap(e);
+        }
+        return complete;
+    }
+
+    // An attribute read through Method.invoke fails wrapped once or twice; the AnnotationJsonException inside names it
+    private static RuntimeException unwrap(Throwable e) {
+        for (Throwable cause = e; null != cause; cause = cause.getCause()) {
+            if (cause instanceof AnnotationJsonException json) return json;
+        }
+        return new AnnotationJsonException(String.valueOf(e.getMessage()), e);
+    }
+
+    // A @ToMap array travels as an object keyed by the member's key attribute: read it back as the array it stands for
+    private static JsonElement fromMap(Method method, JsonElement value) {
+        ToMap toMap = method.getAnnotation(ToMap.class);
+        if (null == toMap || !value.isJsonObject()) return value;
+        JsonArray array = new JsonArray();
+        for (Map.Entry<String, JsonElement> entry : value.getAsJsonObject().entrySet()) {
+            JsonObject member = entry.getValue().isJsonObject() ? entry.getValue().getAsJsonObject().deepCopy() : new JsonObject();
+            member.addProperty(toMap.key(), entry.getKey());
+            array.add(member);
+        }
+        return array;
     }
 
     private static void fillDefaults(JsonObject target, JsonObject defaults) {
