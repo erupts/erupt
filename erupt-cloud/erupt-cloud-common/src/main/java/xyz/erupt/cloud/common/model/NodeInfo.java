@@ -49,6 +49,9 @@ public class NodeInfo implements Serializable {
     //Optional endpoints the node serves beyond the required ones, by NodeCapability wire name (PROTOCOL.md §3.3)
     private Set<String> capabilities = new LinkedHashSet<>();
 
+    //The protocol version the instance speaks, CloudProtocol wire value; null for version 1 (PROTOCOL.md §12.2)
+    private Integer protocolVersion;
+
     public boolean can(NodeCapability capability) {
         return null != capabilities && capabilities.contains(capability.wire());
     }

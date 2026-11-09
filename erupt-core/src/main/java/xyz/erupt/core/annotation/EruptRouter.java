@@ -123,7 +123,9 @@ public @interface EruptRouter {
         @Comment("TableQuery against the erupt in the path: search conditions, sort and paging")
         TABLE_QUERY,
         @Comment("One record of the erupt in the path, as added or updated")
-        RECORD
+        RECORD,
+        @Comment("One row of the TAB_TABLE_ADD field last in the path, a record of the erupt that field holds")
+        TAB_RECORD
     }
 
     enum VerifyMethod {

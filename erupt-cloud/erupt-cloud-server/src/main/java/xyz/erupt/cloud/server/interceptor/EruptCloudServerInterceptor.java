@@ -1,5 +1,11 @@
 package xyz.erupt.cloud.server.interceptor;
 
+import xyz.erupt.cloud.common.node.CloudProtocol;
+import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.cloud.server.service.NodeDrillService;
+import xyz.erupt.cloud.server.util.NodeBuilds;
+import xyz.erupt.cloud.server.util.NodeRequestNormalizer;
+
 import java.net.URI;
 import xyz.erupt.cloud.common.http.CloudHttp;
 import org.springframework.web.client.RestClient;
@@ -40,7 +46,6 @@ import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.http.CloudSignature;
-import xyz.erupt.cloud.common.node.NodeCapability;
 import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.service.CloudNodeRouter;
 import xyz.erupt.cloud.server.service.NodeCellService;
@@ -141,6 +146,9 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
 
     @Resource
     private NodeInvokeService nodeInvokeService;
+
+    @Resource
+    private NodeDrillService nodeDrillService;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -256,6 +264,11 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             if (!NodePowerService.allows(userPower, eruptRouter.power())) {
                 throw new EruptNoLegalPowerException();
             }
+            // and, for a v2 node, the rights the node declares: a model that switches delete off is not deleted from
+            if (metaNode.thin() && !NodePowerService.allows(Optional.ofNullable(remoteBuild(erupt).getPower()).orElseGet(PowerObject::new),
+                    eruptRouter.power())) {
+                throw new EruptNoLegalPowerException();
+            }
             // Uploads, and options a field does not fetch on the node, are the server's: its own controller
             // answers them from the node's build, nothing is forwarded
             if (serverAnswers(eruptRouter.resolve(), erupt, request)) {
@@ -279,7 +292,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 return false;
             }
             // A node that serves invoke runs all its own code through it, and leaves the reference picker to the server
-            if (metaNode.can(NodeCapability.INVOKE)) {
+            if (metaNode.invokes()) {
                 if (INVOKED.containsKey(eruptRouter.resolve())) {
                     Object answer = this.invoke(eruptRouter.resolve(), erupt, request, body);
                     operationService.record(handler, null);
@@ -312,9 +325,12 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             }
             Set<CloudSignature.Enforced> enforced = EnumSet.of(CloudSignature.Enforced.POWER);
             if (eruptRouter.payload() != EruptRouter.Payload.NONE) {
-                validatePayload(eruptRouter.payload(), erupt, body);
+                EruptBuildModel target = payloadBuild(eruptRouter.payload(), erupt, request);
+                validatePayload(eruptRouter.payload(), target, body);
                 enforced.add(eruptRouter.payload() == EruptRouter.Payload.TABLE_QUERY
                         ? CloudSignature.Enforced.QUERY : CloudSignature.Enforced.RECORD);
+                // a v2 node is sent the checked body normalized, a drill as a condition (PROTOCOL.md §12.4)
+                if (metaNode.thin()) body = thinPayload(eruptRouter.payload(), nodeName, erupt, target, request, body, enforced);
             }
             return proxyAndRespond(request, response, handler, metaNode, nodeName, erupt, eruptName,
                     new Forward(body, userPower, enforced, eruptRouter.resolve()));
@@ -337,7 +353,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             int status = httpResponse.getStatusCode().value();
             EruptRouter.Resolve resolve = null == forward ? EruptRouter.Resolve.NONE : forward.resolve();
-            // A node that leaves the reference tree or Excel to the server answers 404
+            // A node that leaves the reference tree, Excel or column totals to the server answers 404
             if (status == HttpStatus.NOT_FOUND.value() && FALLBACKS.contains(resolve)) {
                 operationService.record(handler, null);
                 this.fallback(resolve, request, response, nodeName, erupt, forward);
@@ -356,7 +372,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             if (null != erupt && (EruptRestPath.ERUPT_BUILD + "/" + erupt).equals(request.getServletPath())) {
                 // Build: must buffer to rewrite node-name prefixes into the model
                 EruptBuildModel eruptBuildModel = GsonFactory.getGson().fromJson(httpResponse.bodyTo(String.class), EruptBuildModel.class);
-                this.eruptBuildProcess(eruptBuildModel, nodeName);
+                this.eruptBuildProcess(eruptBuildModel, nodeName, metaNode.protocol());
                 // buttons follow the user's rights whatever the node answered
                 if (null != forward && null != eruptBuildModel.getPower()) {
                     NodePowerService.restrict(eruptBuildModel.getPower(), forward.userPower());
@@ -452,11 +468,14 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             case FIELD_BUILD -> {
                 EruptFieldModel field = remoteField(erupt, lastPathSegment(request));
                 if (null == field) return false;
-                // as the node's own answer was: names stay node-local, the picker keeps asking under the host erupt
-                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-                response.getOutputStream().write(cloudNodeRouter.proxy(nodeName + EruptConst.DOT + field.getFieldReturnName(), HttpMethod.GET,
-                        EruptRestPath.ERUPT_BUILD + EruptRestPath.ERUPT_NAME_HOLDER, null, VOUCHED).getBytes(StandardCharsets.UTF_8));
+                // names stay node-local as the node answered them (the picker keeps asking under the host erupt), but the
+                // build is made whole as the erupt's own build is: a v2 node declares only what it sets (PROTOCOL.md §12.3)
+                EruptBuildModel target = GsonFactory.getGson().fromJson(cloudNodeRouter.proxy(nodeName + EruptConst.DOT + field.getFieldReturnName(),
+                        HttpMethod.GET, EruptRestPath.ERUPT_BUILD + EruptRestPath.ERUPT_NAME_HOLDER, null, VOUCHED), EruptBuildModel.class);
+                CloudProtocol protocol = Optional.ofNullable(nodeManager.getNode(nodeName)).map(MetaNode::protocol).orElse(CloudProtocol.V1);
+                NodeBuilds.complete(target, protocol);
+                if (protocol == CloudProtocol.V2) NodeBuilds.hideServerOnly(target);
+                writeJson(response, target);
             }
             default -> {
                 return false;
@@ -475,7 +494,9 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             // .../operator/{code} or .../operator/{code}/form-value
             String[] segments = request.getRequestURI().split("/");
             String code = UriUtils.decode(segments[segments.length - (kind == NodeInvokeService.Kind.OPERATION ? 1 : 2)], StandardCharsets.UTF_8);
-            R<JsonElement> answer = nodeInvokeService.invoke(erupt, kind, code, null == form ? new JsonObject() : form);
+            JsonElement operationBody = null == form ? new JsonObject() : form;
+            if (kind == NodeInvokeService.Kind.OPERATION && NodeContext.get().thin()) operationBody = operationParam(erupt, code, operationBody);
+            R<JsonElement> answer = nodeInvokeService.invoke(erupt, kind, code, operationBody);
             if (kind == NodeInvokeService.Kind.OPERATION) return answer;
             JsonElement values = nodeInvokeService.data(answer);
             return null == values || values.isJsonNull() ? null : values;
@@ -600,8 +621,12 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         if (null != enforced) headers.put(CloudSignature.HEADER_ENFORCED, enforced);
         headers.put(CloudSignature.HEADER_SIGNATURE, CloudSignature.sign(metaNode.getAccessToken(), method.name(), path + query,
                 timestamp, enforced, headers.get(EruptMutualConst.USER), multipart ? null : body));
-        if (!eruptCloudServerProp.isPlainAccessToken()) {
+        if (!eruptCloudServerProp.isPlainAccessToken() || metaNode.thin()) {
             headers.remove(CloudCommonConst.HEADER_ACCESS_TOKEN);
+        }
+        // a v2 node gets a drill as a condition in the body, never as headers (PROTOCOL.md §12.4)
+        if (metaNode.thin()) {
+            Stream.of(EruptReqHeader.DRILL, EruptReqHeader.DRILL_VALUE, EruptReqHeader.DRILL_SOURCE_ERUPT).forEach(headers::remove);
         }
         List<String> locations = nodeManager.pickLocations(metaNode);
         Exception lastError = null;
@@ -640,7 +665,16 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         return cloudNodeRouter.resolveBuild(erupt);
     }
 
-    private void validatePayload(EruptRouter.Payload payload, String erupt, byte[] body) {
+    // The build a body is checked against: the erupt in the path, or for a sub-table row the erupt its field holds
+    private EruptBuildModel payloadBuild(EruptRouter.Payload payload, String erupt, HttpServletRequest request) {
+        EruptBuildModel build = remoteBuild(erupt);
+        if (payload != EruptRouter.Payload.TAB_RECORD) return build;
+        EruptBuildModel tab = null == build.getTabErupts() ? null : build.getTabErupts().get(lastPathSegment(request));
+        if (null == tab) throw new EruptNoLegalPowerException();
+        return tab;
+    }
+
+    private void validatePayload(EruptRouter.Payload payload, EruptBuildModel build, byte[] body) {
         JsonElement json;
         try {
             json = null == body || body.length == 0 ? new JsonObject() : JsonParser.parseString(new String(body, StandardCharsets.UTF_8));
@@ -650,7 +684,6 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         if (!json.isJsonObject()) {
             throw new EruptApiErrorTip(R.error(I18nTranslate.$translate("erupt.incorrect_format")));
         }
-        EruptBuildModel build = remoteBuild(erupt);
         if (payload == EruptRouter.Payload.TABLE_QUERY) {
             String problem = RemoteRequestValidator.validateQuery(build, json.getAsJsonObject());
             if (null != problem) throw new EruptApiErrorTip(R.error(problem));
@@ -660,31 +693,64 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         }
     }
 
+    // The body a v2 node is sent: a query with the drill's condition, then normalized; a record normalized
+    private byte[] thinPayload(EruptRouter.Payload payload, String nodeName, String erupt, EruptBuildModel build, HttpServletRequest request,
+                               byte[] body, Set<CloudSignature.Enforced> enforced) {
+        JsonObject json = null == body || body.length == 0 ? new JsonObject() : JsonParser.parseString(new String(body, StandardCharsets.UTF_8)).getAsJsonObject();
+        if (payload == EruptRouter.Payload.TABLE_QUERY) json = nodeDrillService.apply(nodeName, erupt, request, json);
+        return GsonFactory.getGson().toJson(cloudNodeRouter.normalize(erupt, build, json, enforced)).getBytes(StandardCharsets.UTF_8);
+    }
+
+    // A row operation's form values checked as a record of its form and normalized, for a v2 node (PROTOCOL.md §12.4)
+    private JsonElement operationParam(String erupt, String code, JsonElement body) {
+        EruptBuildModel build = remoteBuild(erupt);
+        EruptModel form = Optional.ofNullable(build.getOperationErupts()).map(it -> it.get(code)).orElse(null);
+        JsonElement param = body.isJsonObject() ? body.getAsJsonObject().get(PARAM) : null;
+        if (null == form || null == param || !param.isJsonObject()) return body;
+        EruptBuildModel formBuild = new EruptBuildModel();
+        formBuild.setEruptModel(form);
+        R<?> problem = RemoteRequestValidator.validateRecord(formBuild, param.getAsJsonObject());
+        if (null != problem) throw new EruptApiErrorTip(problem);
+        String prefix = erupt.substring(0, erupt.lastIndexOf(EruptConst.DOT) + 1);
+        JsonObject normalized = body.getAsJsonObject().deepCopy();
+        normalized.add(PARAM, NodeRequestNormalizer.record(formBuild, param.getAsJsonObject(), target -> remoteBuild(prefix + target)));
+        return normalized;
+    }
+
+    // the form values in a row operation's body {ids, param}
+    private static final String PARAM = "param";
+
     // What the server established about a forwarded call: the body it read, the user's rights, the checks it ran,
     // and what it completes in the answer
     private record Forward(byte[] body, PowerObject userPower, Set<CloudSignature.Enforced> enforced, EruptRouter.Resolve resolve) {
     }
 
-    // A node may send a field's JSON with only what it declared: the attributes it leaves out get the defaults a
-    // local erupt's build carries, so the UI finds every array and sub-type it reads
-    private static void completeFields(EruptBuildModel build) {
-        List<EruptModel> models = new ArrayList<>();
-        models.add(build.getEruptModel());
-        Optional.ofNullable(build.getOperationErupts()).ifPresent(it -> models.addAll(it.values()));
-        Optional.ofNullable(build.getCombineErupts()).ifPresent(it -> models.addAll(it.values()));
-        Optional.ofNullable(build.getTabErupts()).ifPresent(it -> it.values().forEach(EruptCloudServerInterceptor::completeFields));
-        for (EruptModel model : models) {
-            for (EruptFieldModel field : Optional.ofNullable(model.getEruptFieldModels()).orElse(List.of())) {
-                if (null != field.getEruptFieldJson()) {
-                    field.setEruptFieldJson(AnnotationProcess.completeJson(EruptField.class, field.getEruptFieldJson()));
-                }
-            }
+    /**
+     * A TAB_TREE lists the records of the erupt it points at, and the browser reads that erupt's model from the build's
+     * tabErupts, as a local build carries it (EruptBuildController). A node does not send it: the model comes from the
+     * node's own build of that erupt, copied so the cached one stays untouched, under its node-local name.
+     */
+    private void tabTreeErupts(EruptBuildModel eruptBuildModel, String prefix) {
+        String editKey = LambdaSee.method(EruptField::edit), typeKey = LambdaSee.method(Edit::type);
+        for (EruptFieldModel field : Optional.ofNullable(eruptBuildModel.getEruptModel().getEruptFieldModels()).orElse(List.of())) {
+            JsonObject edit = null == field.getEruptFieldJson() ? null : field.getEruptFieldJson().getAsJsonObject(editKey);
+            JsonElement type = null == edit ? null : edit.get(typeKey);
+            if (null == type || !EditType.TAB_TREE.name().equals(type.getAsString())) continue;
+            if (null != eruptBuildModel.getTabErupts() && eruptBuildModel.getTabErupts().containsKey(field.getFieldName())) continue;
+            EruptModel target = GsonFactory.getGson().fromJson(GsonFactory.getGson().toJson(
+                    cloudNodeRouter.resolveBuild(prefix + field.getFieldReturnName()).getEruptModel()), EruptModel.class);
+            if (target.getEruptName().startsWith(prefix)) target.setEruptName(target.getEruptName().substring(prefix.length()));
+            EruptBuildModel tab = new EruptBuildModel();
+            tab.setEruptModel(target);
+            if (null == eruptBuildModel.getTabErupts()) eruptBuildModel.setTabErupts(new LinkedHashMap<>());
+            eruptBuildModel.getTabErupts().put(field.getFieldName(), tab);
         }
     }
 
-    private void eruptBuildProcess(EruptBuildModel eruptBuildModel, String nodeName) {
+    private void eruptBuildProcess(EruptBuildModel eruptBuildModel, String nodeName, CloudProtocol protocol) {
         String prefix = nodeName + EruptConst.DOT;
-        completeFields(eruptBuildModel);
+        NodeBuilds.complete(eruptBuildModel, protocol);
+        if (protocol == CloudProtocol.V2) NodeBuilds.hideServerOnly(eruptBuildModel);
         eruptBuildModel.getEruptModel().setEruptName(prefix + eruptBuildModel.getEruptModel().getEruptName());
         //Modify the Drill value
         JsonArray drills = eruptBuildModel.getEruptModel().getEruptJson().getAsJsonArray(LambdaSee.method(Erupt::drills));
@@ -700,6 +766,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 value.setEruptName(prefix + value.getEruptName());
             }
         });
+        this.tabTreeErupts(eruptBuildModel, prefix);
         Optional.ofNullable(eruptBuildModel.getTabErupts()).ifPresent(it -> {
             for (EruptBuildModel value : it.values()) {
                 value.getEruptModel().setEruptName(prefix + value.getEruptModel().getEruptName());

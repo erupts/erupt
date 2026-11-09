@@ -64,7 +64,8 @@ public class EruptFormViewController {
      */
     @PostMapping("/{erupt}")
     @EruptRecordOperate(value = "FORM-VIEW", dynamicConfig = EruptRecordNaming.class)
-    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true)
+    @EruptRouter(skipAuthIndex = 3, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT, highSafe = true,
+            power = {EruptRouter.Power.ADD, EruptRouter.Power.EDIT}, payload = EruptRouter.Payload.RECORD)
     @SneakyThrows
     public R<Void> saveFormView(@PathVariable("erupt") String eruptName, @RequestBody JsonObject data) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);

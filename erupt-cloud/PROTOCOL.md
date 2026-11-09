@@ -2,7 +2,8 @@
 
 > Status: **draft**. Describes the wire contract between an erupt cloud **server** and a **node** as
 > implemented today by `erupt-cloud-server` / `erupt-cloud-node`, so that a node can be written in any
-> language. Sections marked **[v1 proposal]** are not implemented yet.
+> language. Sections marked **[v1 proposal]** are not implemented yet. §12 is protocol **v2**: a thinner node
+> that leaves validation and translation to the server. The server side is implemented; no node SDK speaks it yet.
 
 ## 1. Roles
 
@@ -66,7 +67,7 @@ Content-Type: application/json
 | Field | Meaning |
 |-------|---------|
 | `instanceId` | Random id per process start. |
-| `version` | Erupt version the node speaks. Today this doubles as the protocol version (see §9). |
+| `version` | The node's own release (an SDK's `python-0.2.0`, a Java node's erupt version), shown for diagnosis. The protocol is `protocolVersion` (§9). |
 | `nodeAddress` | Base URLs the server should call. Must be reachable from the server. |
 | `erupts` | Node-local erupt names. Unique within the node, no `.` allowed. |
 | `eruptModules` / `resources` | Informational, shown on the server's node page. May be empty. |
@@ -425,12 +426,14 @@ traces, SQL or secrets.
 
 ## 9. Versioning
 
-Today the only version signal is `NodeInfo.version` (the erupt version). **[v1 proposal]**:
+`NodeInfo.protocolVersion` (integer) names the protocol a node instance speaks; the server refuses a version it
+does not know and answers every registration with the newest it speaks (§12.2).
 
-- Add `protocolVersion` (integer, starting at `1`) to `NodeInfo`. The server rejects a version it does not support.
 - Within one `protocolVersion`, only additive changes: new optional request fields, new response
   fields, new Level 1/2 endpoints. Nodes ignore unknown fields.
 - Removing or renaming a field, or changing its meaning, bumps `protocolVersion`.
+
+A node that sends no `protocolVersion` speaks version 1, everything above §12. Version 2 is §12.
 
 ## 10. Security checklist for node SDKs
 
@@ -446,10 +449,226 @@ A Docker image bundling an erupt server and a protocol test suite. A node SDK pa
 registers, survives heartbeat expiry, and round-trips a reference model (table, search on every
 `QueryExpression`, add, update, delete, power denial, nesting denial, origin rejection).
 
-## 12. Open questions
+## 12. Protocol v2 — thin nodes **[v2: the server and every erupt-sdk node; the Java node speaks v1]**
+
+### 12.1 Goal
+
+In version 1 every node SDK repeats what the server already does for its own erupts: it validates its
+annotation JSON against `schema/` and completes it with defaults, checks the user's power, checks queries and
+records, coerces values, and turns drills and link trees into conditions. The server does all of that too
+whenever it sends `Erupt-Enforced` (§4.2); the node keeps its copy only for servers that do not.
+
+In version 2 the server always does it, once, in Java, and a node receives **signed, checked and
+normalized commands**. What remains on a node is what only the node can do:
+
+| Node (v2) | Server (v2) |
+|-----------|-------------|
+| Declare models in its own language; resolve `EditType.AUTO` and `DateType.AUTO`; evaluate its expressions | Complete the declared JSON with defaults and validate it against `schema/` (§12.3) |
+| Verify the signature | Sign every call; never send `Access-Token` to a v2 node |
+| Store and read rows; apply tenant / row scope (§6.2) | Enforce the user's power **and** the node's declared power (§12.5) |
+| Apply a `@Vis` view's `filter` / `orderBy`, a drill's `linkCondition`, `Erupt.orderBy`: the node's query language | Check queries and records; normalize every value (§12.4) |
+| Run DataProxy hooks, row operations and `invoke` code | Turn drills, link trees and dependent pickers into plain conditions (§12.4) |
+
+Everything else in this document holds for v2 unless §12 says otherwise: lifecycle (§3), naming (§4.4),
+the endpoint list (§5), the endpoints the server answers itself (§5.4), `Page` and `R` (§7), errors (§8).
+
+### 12.2 Negotiation
+
+- A v2 node registers with `"protocolVersion": 2` (§3.3). A server that speaks v2 answers every register call
+  with the newest version it speaks, `{"protocolVersion": 2}`, and refuses a version it does not know. A node
+  that gets no such answer is talking to an older server: it logs an error naming the server version it needs
+  and stops registering. It never falls back to v1.
+- Every instance of a node speaks the same version. While a node has live instances, the server refuses to
+  register an instance speaking another one: upgrade a node by replacing its instances (stop the old ones, which
+  deregister, then start the new), not by mixing versions.
+- Every call to a v2 node is signed (§4.3) and carries no `Access-Token`. A v2 node refuses (403) an unsigned
+  call, and one whose `Erupt-Enforced` lacks what the endpoint needs:
+
+  | Endpoint | Required in `Erupt-Enforced` |
+  |----------|------------------------------|
+  | `GET /build/{erupt}` | nothing: the server reads builds on its own account |
+  | `POST /data/table/{erupt}`, `aggregate`, `extra-row`, Excel export | `power,query` |
+  | `POST /data/modify/{erupt}`, `.../update`, `.../tab-add`, `.../tab-update`, `POST /data/form-view/{erupt}` | `power,record` |
+  | everything else | `power` |
+
+  This per-call check is what makes it safe for a node to skip the work below; a node never relies on the
+  negotiation alone.
+- The `erupt-power` callback (§6) stays available but a v2 node has no reason to call it.
+
+### 12.3 Build
+
+A v2 node answers `GET /build/{erupt}` with only what it **declares**: in `eruptJson` and every
+`eruptFieldJson`, the attributes it sets; in `power`, the rights it switches off. The server:
+
+1. completes every object from `erupt-node-defaults.json` and the annotation defaults
+   (`AnnotationProcess.completeJson`, today applied to fields only by `completeFields`), including
+   `eruptJson`, `power`, `rowOperation` and the `operationErupts`, `tabErupts` and `combineErupts`;
+2. reads every attribute back as the annotation it encodes, the types `erupt-annotations.schema.json` is
+   generated from: an enum value the annotation does not declare, a number where a boolean goes, an object
+   where an array goes fails. An invalid build is a node bug: the erupt answers an error naming the model, the
+   attribute path and the offending value, and nothing is cached;
+3. keeps the attributes the browser must not see (below) for itself and strips them from the build it sends on;
+4. caches the result as today (§5.4, one minute per language).
+
+A `@ToMap` attribute (`Erupt.param`, `EruptField.params`) is declared as the object it travels as.
+
+Attributes that are `@Transient` in Java and that a v2 node now **sends** in the build, because the server acts
+on them:
+
+| Attribute | Used for |
+|-----------|----------|
+| `drills[].link.column`, `drills[].link.joinColumn` | Drill conditions (§12.4) |
+| `referenceTableType.dependColumn` (as today, §5.4) | Dependent picker conditions |
+
+`drills[].link.linkCondition`, a `@Vis` view's `filter` and `orderBy` and `Erupt.orderBy` stay on the node:
+they are written in the node's query language.
+
+The node still resolves `EditType.AUTO` and `DateType.AUTO` from its own types, evaluates the `show` of its
+row operations for the acting user (§7.4), and fills `componentValue` for options it computes. The other AUTO
+values a local erupt's proxies resolve are the server's, resolved by the same rules after completion: a view's
+`type` by the edit (`ViewProxy`), then by `fieldReturnName` (`Boolean`, `Date` by `dateType`, `number`, else
+`TEXT`); `search.operator` (`RANGE` for a date, `EQ` otherwise, `SearchProxy`); `boolType.type` (`SWITCH` when
+`notNull`, `RADIO` otherwise, `BoolTypeProxy`). A node declares none of them unless it means a specific value.
+
+### 12.4 Normalized requests
+
+The bodies keep their v1 shape; their **values** arrive normalized, and a few headers and fields are replaced
+by plain conditions.
+
+**Values.** In a search condition, a record, an operation's `param` and its `ids`, every value is the JSON type
+its field stores:
+
+| Field | Value |
+|-------|-------|
+| Primary key in a record | Typed like the primary key column (`fieldReturnName`): a number for `"number"`, a string otherwise |
+| `NUMBER`, `RATE`, `SLIDER` | JSON number |
+| `BOOLEAN` | `true` / `false` |
+| `DATE` by `dateType.type` | String: `DATE` `yyyy-MM-dd`, `DATE_TIME` `yyyy-MM-dd HH:mm:ss`, `TIME` `HH:mm:ss`, `MONTH` `yyyy-MM`, `YEAR` `yyyy`. A fraction of a second is dropped, a time zone refused. `WEEK`, `QUARTER` and a type left `AUTO` travel as the picker wrote them (§13) |
+| `REFERENCE_TABLE`, `REFERENCE_TREE` | The referenced key alone (the `id` of `referenceTableType` / `referenceTreeType`), typed like the target's primary key; never `{id, label}` (§7.3 for v1). A target the node does not serve keeps the key as sent |
+| `CHECKBOX`, `TAB_TREE` | The array of picked keys, typed like the target's primary key (the browser's `[{id: key}]` unwrapped) |
+| `MULTI_CHOICE`, `TAGS`, `TRANSFER` | The array of values, each a scalar |
+| `TAB_TABLE_ADD`, `TAB_TABLE_REFER`, `MULTI_FORM` rows, a `COMBINE` form | As the browser sent it (§13) |
+| Anything else | String |
+
+A value is never an object or an array where the table above has one value: the server refuses the request
+(`incorrect format` for a record, `Illegal search condition` for a query) rather than pass on something a node
+could read as part of its query.
+
+A primary key in a path segment (`GET /data/{erupt}/{id}`), the `delete` body and an operation's `ids` arrive as
+the browser sent them: the node reads them as its key type.
+
+**Conditions.** `expression` keeps its meaning, with fixed value shapes:
+
+| `expression` | `value` |
+|--------------|---------|
+| `EQ` `NEQ` `GT` `GTE` `LT` `LTE` | One value |
+| `LIKE` `NOT_LIKE` | The text the user typed. The node adds the wildcards and escapes it (§10); a `%` it holds is a literal |
+| `RANGE` | `[low, high]`, both present |
+| `IN` `NOT_IN` | A non-empty array (a single value is wrapped) |
+| `NULL` `NOT_NULL` | Absent |
+
+`expression` is always present: a condition the browser sends without one (or with `AUTO`) gets the field's
+`search.operator`, and `AUTO` there means `RANGE` for a date and `EQ` otherwise, as for a local erupt. A
+condition with an empty value matches everything and is left out. The browser's conditions are only on
+searchable fields (§4.2); the ones the server adds (below) may be on any stored field.
+
+**Translated by the server.** A v2 node no longer receives these; the server reads what it needs through the
+node's own endpoints and sends plain conditions instead:
+
+| v1 input | v2 |
+|----------|----|
+| `Drill`, `DrillValue`, `DrillSourceErupt` headers | The server checks the drill against the source erupt's build (declared under that code, `linkErupt` the table read, both on this node), reads the source row (`GET /data/{source}/{id}`, signed `power`), and adds `EQ` on `link.joinColumn` with the row's `link.column` (`NULL` when the row has none; a source row the node does not return, `null` or `{}`, refuses the drill);
+a `joinColumn` written through the reference (`author.id`) names the reference field (`author`), which a node stores as the key. The body carries `"drill": {"erupt": "<source>", "code": "<code>"}` so the node adds that drill's `linkCondition` itself; the headers are not sent. |
+| `linkTreeVal` | `IN` on `linkTree.field` with the picked keys. With `linkTree.dependNode` and nothing picked, `NULL` on the primary key, which no row matches. `linkTreeVal` is not sent. |
+| `dependValue` of a reference picker | `EQ` on `dependColumn`, as for a node with `invoke` (§5.4); a v2 node always counts as one |
+
+**Table query.**
+
+```json
+{ "pageIndex": 1, "pageSize": 10,
+  "sort": [{ "field": "createTime", "direction": "DESC" }],
+  "condition": [{ "key": "category", "expression": "IN", "value": [2, 3] }],
+  "vis": "board", "drill": { "erupt": "Category", "code": "articles" } }
+```
+
+`sort` is checked as in v1 (§4.2): a sortable column, the primary key, or `field.column` of a reference. Without
+`sort`, the node orders by the `@Vis` view's `orderBy`, then `Erupt.orderBy`, then the primary key ascending.
+
+`drill` is the server's alone: one the browser writes into the body is dropped, and a query carries only
+`pageIndex`, `pageSize`, `sort`, `condition`, `vis` and `drill`.
+
+**Records.** An add or update body carries the model's stored fields only, normalized; the primary key is
+present for an update and absent or ignored for an add. Unknown keys are dropped by the server. The same holds,
+signed `power,record`, for a form view's save (`POST /data/form-view/{erupt}`, which also needs `add` or `edit`)
+and a sub-table row (`POST /data/modify/tab-add|tab-update/{erupt}/{field}`), checked against the erupt the
+`TAB_TABLE_ADD` field holds (`build.tabErupts[field]`).
+
+**Row operations.** A v2 node serves them through `invoke` (§5.5), whatever its `capabilities` list. `param`
+has been checked as a record against the operation's form (`build.operationErupts[code]`) and normalized. A node
+still refuses an operation whose `show` hides it from the acting user (§7.4).
+
+### 12.5 Power
+
+The server enforces, on every call, the user's rights **and** the rights the node declares in its build: a
+model whose build switches `delete` off cannot be deleted from, whatever the user holds. In v1 the declared
+half is the node's job (§4.2). The declared rights are read from the server's cached build, which is per
+language and not per user: a node that switches rights per user still checks those itself.
+
+This holds for the server's in-process callers too (AI tools, workflows reaching a node erupt through
+`EruptRemoteRouter`): for a v2 node the server checks the acting user's rights, the query or the record, and
+for an update the stored row patched with the values sent, before it forwards.
+
+### 12.6 What a v2 node keeps doing
+
+- Verify the signature and the `Erupt-Enforced` values of §12.2; reject an `Origin` header (§10).
+- Check every field name it puts into a query (`condition.key`, `sort.field`, record keys, `{field}` path
+  segments) against its stored fields, and bind every value as a parameter. This is a membership test, not a
+  validation: the server has already validated. It stays because a node never trusts a name into SQL.
+- Apply tenant and row scope (§6.2), a `@Vis` view's `filter`, a drill's `linkCondition`, the default order.
+- Run DataProxy hooks and row operations; answer rows with references as their key (§7.3).
+
+### 12.7 What a v2 node drops
+
+| v1 duty | Where it went |
+|---------|---------------|
+| Validating its annotation JSON against `schema/`, merging `erupt-node-defaults.json` (an SDK no longer embeds either file at run time) | Server, §12.3 |
+| `Access-Token` comparison | Signature only, §12.2 |
+| `erupt-power` callback and the §6.1 checks | Server, §12.5 |
+| Checking a query's fields, expressions and page size; checking a record (not-null, numbers, length, choices) | Server, §4.2 |
+| Coercing values (dates, numbers, reference objects to keys, `RANGE` / `IN` shapes), resolving an omitted operator | Server, §12.4 |
+| Drill headers, `linkTreeVal`, `dependValue` | Server, §12.4 |
+
+### 12.8 Server implementation
+
+| Part | Where |
+|------|-------|
+| Version on the wire, one per node; the register answer | `CloudProtocol`, `NodeInfo.protocolVersion`, `RegisterAnswer` (erupt-cloud-common); `MetaNode.protocol()`, `EruptMicroserviceController`, `EruptNodeMicroservice` |
+| Build completion and check | `AnnotationProcess.completeJsonStrict` (erupt-core, `@ToMap` read back), `NodeBuilds` (with the AUTO values of `ViewProxy.byEdit`, `SearchProxy.byDate`, `BoolTypeProxy.byNotNull`); applied in `CloudNodeRouter.resolveBuild` and the forwarded build |
+| Values, conditions, link trees | `NodeRequestNormalizer`, applied in the interceptor for the browser's calls and in `CloudNodeRouter` for every call the server makes |
+| Drills | `NodeDrillService` |
+| Declared power; in-process callers | `EruptCloudServerInterceptor`, `CloudNodeRouter` (`tableQuery`, `findById`, `insert`, `update`, `delete`) |
+| No `Access-Token`, no drill headers | `EruptCloudServerInterceptor.httpProxy`, `CloudNodeRouter.exchange` |
+
+Tests: `NodeRequestNormalizerTest`, `NodeBuildsTest`, `NodeDrillServiceTest`, `NodeManagerTest` (erupt-cloud-server).
+
+### 12.9 Conformance
+
+`conformance/run.py` (in erupt-sdk) checks a node registering with `protocolVersion: 2` as a v2 node: it answers
+the registration with `{"protocolVersion": 2}`, sends only signed, normalized calls, and checks that the node
+refuses an unsigned call and one missing a required `Erupt-Enforced` value. Search, drill and link tree checks
+send the conditions of §12.4 instead of headers and `linkTreeVal`. The declared build is checked against the
+annotation schema and completed as `NodeBuilds` does (`conformance/annotations.py`) before the build assertions.
+Any other node is checked against v1, as the Java node is.
+
+## 13. Open questions
 
 1. Should `init-value` be optional (empty form) rather than Level 0?
 2. `erupts` in the heartbeat is the only model inventory. Should a node also report a per-model hash so the server can tell when a model changed?
 3. ~~Excel import / export~~: done by the server on a 404 (§5.3). Open: an optional batch add, so an import
    can be all-or-nothing on a node.
 4. ~~Attachments~~: stored by the server, the node only references the path (§5.4).
+5. v2: a wire format for `WEEK` and `QUARTER` dates, sent today as the picker writes them.
+6. v2: `MULTI_CHOICE` / `TAGS` travel as the browser sends them. A Java node stores one joined string; a fixed
+   wire form (an array) would need the build to say which the node stores.
+7. v2: should the server also compute `componentValue` for static options and evaluate the `show` of row
+   operations, if a node sends those expressions in a form the server can run? Today both need node code.

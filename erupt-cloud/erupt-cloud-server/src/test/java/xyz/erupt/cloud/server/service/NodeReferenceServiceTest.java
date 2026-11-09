@@ -86,6 +86,8 @@ class NodeReferenceServiceTest {
             public String proxy(String eruptName, HttpMethod method, String pathTemplate, Object body, Set<CloudSignature.Enforced> enforced) {
                 assertEquals("blog.Category", eruptName);
                 assertTrue(enforced.contains(CloudSignature.Enforced.POWER));
+                // a v2 node refuses a table read the server does not vouch for as a checked query (PROTOCOL.md §12.2)
+                if (pathTemplate.contains("/table/")) assertTrue(enforced.contains(CloudSignature.Enforced.QUERY), pathTemplate);
                 calls.add(pathTemplate);
                 bodies.add(body);
                 if (method == HttpMethod.GET) {

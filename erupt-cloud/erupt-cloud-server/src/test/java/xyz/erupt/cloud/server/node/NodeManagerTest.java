@@ -1,6 +1,7 @@
 package xyz.erupt.cloud.server.node;
 
 import org.junit.jupiter.api.Test;
+import xyz.erupt.cloud.common.node.CloudProtocol;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 
 import java.util.List;
@@ -60,6 +61,13 @@ class NodeManagerTest {
         MetaNode node = new MetaNode();
         node.setNodeName("demo");
         assertThrows(EruptWebApiRuntimeException.class, () -> manager.pickLocations(node));
+    }
+
+    @Test
+    void anUnknownVersionIsNotRead() {
+        assertEquals(CloudProtocol.V1, CloudProtocol.of(null));
+        assertEquals(CloudProtocol.V2, CloudProtocol.of(2));
+        assertNull(CloudProtocol.of(3));
     }
 
 }

@@ -261,7 +261,8 @@ public class NodeReferenceService {
         return labels;
     }
 
-    // The records of a referenced erupt, page by page, at most MAX_TARGET_RECORDS
+    // The records of a referenced erupt, page by page, at most MAX_TARGET_RECORDS. The query is the server's own (paging
+    // only), so it vouches for it as checked: a v2 node refuses a table read without "query" (PROTOCOL.md §12.2)
     private List<JsonObject> targets(String nodeName, String target) {
         List<JsonObject> records = new ArrayList<>();
         for (int index = 1; records.size() < MAX_TARGET_RECORDS; index++) {
@@ -269,7 +270,7 @@ public class NodeReferenceService {
             query.setPageIndex(index);
             query.setPageSize(TARGET_PAGE_SIZE);
             JsonObject page = JsonParser.parseString(cloudNodeRouter.proxy(nodeName + EruptConst.DOT + target, HttpMethod.POST,
-                    EruptRestPath.ERUPT_DATA + "/table" + EruptRestPath.ERUPT_NAME_HOLDER, query, VOUCHED)).getAsJsonObject();
+                    EruptRestPath.ERUPT_DATA + "/table" + EruptRestPath.ERUPT_NAME_HOLDER, query, QUERIED)).getAsJsonObject();
             JsonArray list = Optional.ofNullable(page.getAsJsonArray(LIST)).orElseGet(JsonArray::new);
             for (JsonElement row : list) if (row.isJsonObject()) records.add(row.getAsJsonObject());
             if (list.size() < TARGET_PAGE_SIZE) break;

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
+import xyz.erupt.cloud.common.model.RegisterAnswer;
+import xyz.erupt.cloud.common.node.CloudProtocol;
 import xyz.erupt.cloud.server.model.CloudNode;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.service.EruptNodeMicroservice;
@@ -33,7 +35,12 @@ public class EruptMicroserviceController {
     private final EruptNodeMicroservice eruptNodeMicroservice;
 
     @PostMapping(CloudRestApiConst.REGISTER_NODE)
-    public void registerNode(@RequestBody MetaNode metaNode, HttpServletRequest request, HttpServletResponse response) {
+    public RegisterAnswer registerNode(@RequestBody MetaNode metaNode, HttpServletRequest request, HttpServletResponse response) {
+        if (null == CloudProtocol.of(metaNode.getProtocolVersion())) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            throw new RuntimeException(metaNode.getNodeName() + " speaks protocol version " + metaNode.getProtocolVersion()
+                    + ", this server speaks up to " + CloudProtocol.latest().wire());
+        }
         CloudNode cloudNode = eruptNodeMicroservice.findNodeByAppName(metaNode.getNodeName(), metaNode.getAccessToken());
         if (!cloudNode.getStatus()) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -46,6 +53,8 @@ public class EruptMicroserviceController {
             }
         }
         eruptNodeMicroservice.registerNode(cloudNode, metaNode);
+        // the newest version spoken here: a v2 node refuses to run against a server that answers less (PROTOCOL.md §12.2)
+        return new RegisterAnswer(CloudProtocol.latest().wire());
     }
 
     //Remove instance. When the node reports its own locations (graceful shutdown) they are dropped

@@ -11,12 +11,12 @@ import xyz.erupt.core.util.EruptSpringUtil;
  *
  * @author YuePeng
  */
-final class TestContext {
+public final class TestContext {
 
     private TestContext() {
     }
 
-    static void init() {
+    public static void init() {
         if (null != EruptSpringUtil.getApplicationContext()) return;
         StaticApplicationContext context = new StaticApplicationContext();
         // EruptValueValidator reads erupt.choice-validate from EruptProp

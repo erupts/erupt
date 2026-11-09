@@ -7,6 +7,7 @@ import xyz.erupt.cloud.server.model.CloudNode;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeManager;
 import xyz.erupt.cloud.server.node.NodeWorker;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import java.util.Arrays;
@@ -47,7 +48,14 @@ public class EruptNodeMicroservice {
     }
 
     public void registerNode(CloudNode cloudNode, MetaNode metaNode) {
-        Optional.ofNullable(nodeManager.getNode(metaNode.getNodeName())).ifPresent(it -> metaNode.getLocations().addAll(it.getLocations()));
+        Optional.ofNullable(nodeManager.getNode(metaNode.getNodeName())).ifPresent(it -> {
+            // every instance of a node speaks one version: an upgrade replaces the instances, it does not mix them
+            if (!it.getLocations().isEmpty() && it.protocol() != metaNode.protocol()) {
+                throw new EruptWebApiRuntimeException(metaNode.getNodeName() + " is served with protocol version " + it.protocol().wire()
+                        + " by " + it.getLocations() + ", an instance speaking " + metaNode.protocol().wire() + " cannot join it");
+            }
+            metaNode.getLocations().addAll(it.getLocations());
+        });
         metaNode.getLocations().addAll(Arrays.asList(metaNode.getNodeAddress()));
         metaNode.setRegisterTime(new Date());
         nodeManager.putNode(metaNode);
