@@ -25,51 +25,8 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
     protected Object invocation(MethodInvocation invocation) {
         if (super.matchMethod(invocation, View::type)) {
             if (ViewType.AUTO == this.rawAnnotation.type()) {
-                Edit edit = this.parent.proxyAnnotation.edit();
-                if (!AnnotationConst.EMPTY_STR.equals(edit.title())) {
-                    switch (edit.type()) {
-                        case ATTACHMENT:
-                            if (edit.attachmentType().type() == AttachmentType.Type.IMAGE) {
-                                return ViewType.IMAGE;
-                            } else {
-                                return ViewType.ATTACHMENT;
-                            }
-                        case CHOICE:
-                            return ViewType.TEXT;
-                        case SIGNATURE:
-                            return ViewType.IMAGE_BASE64;
-                        case DATE:
-                            if (edit.dateType().type() == DateType.Type.DATE_TIME) {
-                                return ViewType.DATE_TIME;
-                            } else {
-                                return ViewType.DATE;
-                            }
-                        case HTML_EDITOR:
-                            return ViewType.HTML;
-                        case CODE_EDITOR:
-                            return ViewType.CODE;
-                        case MAP:
-                            return ViewType.MAP;
-                        case COLOR:
-                            return ViewType.COLOR;
-                        case ICON:
-                            return ViewType.ICON;
-                        case KEY_VALUE:
-                            return ViewType.KEY_VALUE;
-                        case TAB_TABLE_ADD:
-                        case MULTI_FORM:
-                        case TAB_TREE:
-                        case TAB_TABLE_REFER:
-                        case CHECKBOX:
-                        case TRANSFER:
-                        case MULTI_CHOICE:
-                            return ViewType.TAB_VIEW;
-                        case MARKDOWN:
-                            return ViewType.MARKDOWN;
-                        case PASSWORD:
-                            return ViewType.PASSWORD;
-                    }
-                }
+                ViewType byEdit = byEdit(this.parent.proxyAnnotation.edit());
+                if (null != byEdit) return byEdit;
                 Field field = ProxyContext.get().getField();
                 String returnType = field.getType().getSimpleName();
                 if (boolean.class.getSimpleName().equalsIgnoreCase(returnType.toLowerCase())) {
@@ -89,6 +46,57 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
             return ProxyContext.translate(this.rawAnnotation.group());
         }
         return this.invoke(invocation);
+    }
+
+    /**
+     * The type an AUTO view takes from its field's edit, or null when the edit leaves it to the field's Java type.
+     * Shared with the completion of a node's build, which has no Java field (PROTOCOL.md §12.3).
+     */
+    public static ViewType byEdit(Edit edit) {
+        if (AnnotationConst.EMPTY_STR.equals(edit.title())) return null;
+        switch (edit.type()) {
+            case ATTACHMENT:
+                if (edit.attachmentType().type() == AttachmentType.Type.IMAGE) {
+                    return ViewType.IMAGE;
+                } else {
+                    return ViewType.ATTACHMENT;
+                }
+            case CHOICE:
+                return ViewType.TEXT;
+            case SIGNATURE:
+                return ViewType.IMAGE_BASE64;
+            case DATE:
+                if (edit.dateType().type() == DateType.Type.DATE_TIME) {
+                    return ViewType.DATE_TIME;
+                } else {
+                    return ViewType.DATE;
+                }
+            case HTML_EDITOR:
+                return ViewType.HTML;
+            case CODE_EDITOR:
+                return ViewType.CODE;
+            case MAP:
+                return ViewType.MAP;
+            case COLOR:
+                return ViewType.COLOR;
+            case ICON:
+                return ViewType.ICON;
+            case KEY_VALUE:
+                return ViewType.KEY_VALUE;
+            case TAB_TABLE_ADD:
+            case MULTI_FORM:
+            case TAB_TREE:
+            case TAB_TABLE_REFER:
+            case CHECKBOX:
+            case TRANSFER:
+            case MULTI_CHOICE:
+                return ViewType.TAB_VIEW;
+            case MARKDOWN:
+                return ViewType.MARKDOWN;
+            case PASSWORD:
+                return ViewType.PASSWORD;
+        }
+        return null;
     }
 
 }

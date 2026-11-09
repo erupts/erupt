@@ -29,12 +29,19 @@ public class SearchProxy extends AnnotationProxy<Search, Edit> {
     protected Object invocation(MethodInvocation invocation) {
         if (super.matchMethod(invocation, Search::operator)) {
             if (QueryExpression.AUTO == this.rawAnnotation.operator()) {
-                // Keep the legacy defaults: range picker for dates, exact match for everything else.
-                return isDateEdit() ? QueryExpression.RANGE : QueryExpression.EQ;
+                return byDate(isDateEdit());
             }
             return this.rawAnnotation.operator();
         }
         return this.invoke(invocation);
+    }
+
+    /**
+     * What an AUTO operator stands for: the legacy defaults, a range picker for dates, an exact match for everything
+     * else. Shared with the completion of a node's build (PROTOCOL.md §12.3).
+     */
+    public static QueryExpression byDate(boolean date) {
+        return date ? QueryExpression.RANGE : QueryExpression.EQ;
     }
 
     private boolean isDateEdit() {

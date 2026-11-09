@@ -20,14 +20,20 @@ public class BoolTypeProxy extends AnnotationProxy<BoolType, Edit> {
             return I18nTranslate.$translate(this.rawAnnotation.falseText());
         } else if (super.matchMethod(invocation, BoolType::type)) {
             if (BoolType.Type.AUTO == this.rawAnnotation.type()) {
-                // A required bool has no unset state left to express, so it renders as a two-state
-                // switch; an optional one keeps radios so "not answered" stays distinguishable.
-                // The client only ever sees RADIO or SWITCH.
-                return this.parent.rawAnnotation.notNull() ? BoolType.Type.SWITCH : BoolType.Type.RADIO;
+                return byNotNull(this.parent.rawAnnotation.notNull());
             }
             return this.rawAnnotation.type();
         }
         return this.invoke(invocation);
+    }
+
+    /**
+     * What an AUTO bool type stands for. A required bool has no unset state left to express, so it renders as a
+     * two-state switch; an optional one keeps radios so "not answered" stays distinguishable. The client only ever
+     * sees RADIO or SWITCH. Shared with the completion of a node's build (PROTOCOL.md §12.3).
+     */
+    public static BoolType.Type byNotNull(boolean notNull) {
+        return notNull ? BoolType.Type.SWITCH : BoolType.Type.RADIO;
     }
 
 }
