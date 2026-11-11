@@ -23,8 +23,11 @@ mvn test -pl erupt-test -Dtest=LambdaQueryTest
 # Run a specific test method
 mvn test -pl erupt-test -Dtest=LambdaQueryTest#lambdaQueryTest
 
-# Run the sample application for local testing
-cd erupt-sample && mvn spring-boot:run
+# Run the sample application for local testing (http://localhost:8080, login erupt / erupt), or start
+# EruptSampleApplication from the IDE. erupt-sample does not declare the Spring Boot plugin, so the
+# `spring-boot:` prefix does not resolve; the siblings come from ~/.m2, so install them first
+mvn clean install -DskipTests
+mvn -pl erupt-sample org.springframework.boot:spring-boot-maven-plugin:3.5.16:run
 
 # Regenerate the OpenAPI spec (openapi/erupt.json) from controller Javadoc via smart-doc; commit the result
 mvn -pl erupt-test -Popenapi process-classes
@@ -33,16 +36,24 @@ mvn -pl erupt-test -Popenapi process-classes
 # annotation change; a plain `mvn test` fails while these files are stale. Commit the result
 mvn -pl erupt-test -Pnode-schema test
 
-# Publish to Maven Central (GPG signing, Javadoc; wraps `mvn clean deploy -P release`)
+# Publish to Maven Central (GPG signing, Javadoc; wraps `mvn clean deploy -P release`). It first rebuilds the
+# frontend through erupt-web/build.sh (needs the sibling ../erupt-web checkout and yarn) and regenerates
+# openapi/erupt.json, stopping if the committed spec drifted. SKIP_TESTS=1 / AUTO_PUBLISH=1 are optional
 ./scripts/deploy.sh
 
-# Bump version across this repo AND satellite repos (erupt-web etc.)
-./scripts/bump-erupt.sh [--dry-run] x.x.x
+# Bump version across this repo AND the satellite repos that consume it (erupt-cube, erupt-flow,
+# erupt-k8s-dashboard, erupt-tenant, erupt-demo). The repos are looked up under CODE_DIR, which defaults
+# to $HOME/git — pass it when they live elsewhere
+CODE_DIR=<parent of the repos> ./scripts/bump-erupt.sh [--dry-run] x.x.x
 
-# Full release SOP (frontend build, bump, Maven Central, Docker Hub, merge+tag, gitee sync)
-# Driven phase by phase by the /release command (.claude/commands/release.md)
-./scripts/release.sh <preflight|frontend|bump|maven|docker|publish|start|verify> [x.x.x]
+# Build the all-in-one Docker image and push it to Docker Hub (tag = pom version, plus :latest)
+./erupt-deploy/erupt-docker/deploy.sh
 ```
+
+Releasing is the `/release <version>` command (`.claude/commands/release.md`): it merges develop → master
+through a pull request on erupt and erupt-web, tags both with the changelog section from erupt-docs and tags
+erupt-cube, erupt-flow and erupt-tenant. Publishing to Maven Central is not part of it; the user runs
+`deploy.sh`.
 
 Java 17 required. Spring Boot 3.5.x (pinned via `spring.boot.version` in the parent pom). No Maven wrapper — use system `mvn`.
 
@@ -142,7 +153,7 @@ Erupt is a **low-code platform framework** that auto-generates admin UIs from Ja
 
 ### Module Structure
 
-The project is a multi-module Maven project (~50 modules):
+The project is a multi-module Maven project (~70 modules):
 
 | Group | Modules |
 |-------|---------|
@@ -150,10 +161,10 @@ The project is a multi-module Maven project (~50 modules):
 | Data | `erupt-data/erupt-data-{jpa,mongodb,memory,http,jdbc,es,ldap,k8s,s3,redis,file,feishu,notion,dingtalk,airtable}` — JPA is the default; the rest are pluggable connectors |
 | Platform | `erupt-upms` (user/permissions), `erupt-security`, `erupt-admin`, `erupt-web` (frontend assets) |
 | Starter | `erupt-starter/{erupt-spring-boot-starter,erupt-spring-boot-starter-all}` |
-| Templates | `erupt-tpl/erupt-tpl` (engine) + `erupt-tpl/{ant-design,element-ui,element-plus,amis}` (skins) |
-| AI | `erupt-ai/{erupt-ai,erupt-ai-canvas,erupt-ai-claw,erupt-ai-staff,erupt-ai-rag,erupt-ai-dev}` (LLM + MCP via langchain4j; RAG knowledge base with Qdrant/Milvus; erupt-ai-dev is AI software delivery: projects with git repos, a requirement pool scoped by `@EruptScope`, worktrees read live from git) |
+| Templates | `erupt-tpl/erupt-tpl` (engine) + `erupt-tpl/{ant-design,element-ui,element-plus}` (skins) |
+| AI | `erupt-ai/{erupt-ai,erupt-ai-canvas,erupt-ai-claw,erupt-ai-staff,erupt-ai-rag,erupt-ai-decision,erupt-ai-dev}` (LLM + MCP via langchain4j; RAG knowledge base with Qdrant/Milvus; erupt-ai-decision gives typed judgements (choice / score / yes-no) a program can branch on; erupt-ai-dev is AI software delivery: projects with git repos, a requirement pool scoped by `@EruptScope`, worktrees read live from git) |
 | Support | `erupt-support/{erupt-toolkit,erupt-excel,erupt-websocket,erupt-git}` (shared capabilities: cache/notify, import/export, realtime transport, git over the CLI: bare repos, worktrees, rebase/push) |
-| Plugin | `erupt-plugin/{erupt-report,erupt-designer,erupt-job,erupt-generator,erupt-monitor,erupt-magic-api,erupt-notice,erupt-print,erupt-terminal,erupt-remote,erupt-comment,erupt-revision,erupt-file-center}` — erupt-file-center is a Finder-style file center over the upload directory, extra folders and the S3 bucket — the ready-made Kubernetes admin built on erupt-data-k8s lives in its own repo, github.com/erupt-io/erupt-k8s-dashboard |
+| Plugin | `erupt-plugin/{erupt-report,erupt-designer,erupt-job,erupt-generator,erupt-monitor,erupt-magic-api,erupt-notice,erupt-print,erupt-terminal,erupt-remote,erupt-comment,erupt-revision,erupt-file-center,erupt-webhook,erupt-atlas,erupt-sso,erupt-config,erupt-share}` — erupt-file-center is a Finder-style file center over the upload directory, extra folders and the S3 bucket; erupt-webhook fires outbound webhooks on data events; erupt-atlas is a model atlas (relations, lineage, structural audit) built from the live erupt registry; erupt-sso is single sign-on with external identity providers; erupt-config holds runtime settings per Spring profile, read by `@Value` and refreshed at runtime; erupt-share issues public links that open a form or a page without an account — the ready-made Kubernetes admin built on erupt-data-k8s lives in its own repo, github.com/erupt-io/erupt-k8s-dashboard |
 | Cloud | `erupt-cloud/{erupt-cloud-common,erupt-cloud-server,erupt-cloud-node,erupt-cloud-node-jpa}`; `erupt-cloud-node-lite` is a node without Spring (only `erupt-annotation`, `erupt-cloud-common` and `linq.j`; common's `spring-web` is optional for that reason), mounted by `erupt-cloud-node-{solon,quarkus,micronaut,vertx,ktor,servlet}` (`-ktor` is Kotlin, built by `kotlin-maven-plugin`) |
 | Deploy | `erupt-deploy/erupt-docker` (all-in-one Docker image; has its own `deploy.sh`) |
 | Dev | `erupt-test` (JUnit 5 + H2), `erupt-sample` (runnable demo) |
@@ -205,6 +216,13 @@ Implement these interfaces and reference them in annotations for custom behavior
 - `FilterHandler` — custom query filters
 - `PowerHandler` — custom permission logic
 - `AutoCompleteHandler` — search auto-complete
+
+`EruptModifyGate` (`erupt-core/.../service/EruptModifyGate.java`) is not referenced from an annotation: every
+Spring bean implementing it is asked in order by `EruptModifyController`, after the power check and before an
+insert, update or delete reaches the table. The first gate to return a message owns the change — the table
+is left untouched and the response is `R.Status.INFO` with that message in a dialog, so the frontend does not
+report it as done; `null` lets the change proceed. erupt-flow (`../erupt-flow`, `FlowModifyGate`) uses it to
+launch the change as an approval instance; `StandInModifyGate` in `erupt-test` is the stand-in for tests.
 
 A session narrowed to one target (an erupt-share link) may call a login-level route only if the route
 declares the right it exercises: give a read-only `@EruptRouter(verifyType = LOGIN)` endpoint
