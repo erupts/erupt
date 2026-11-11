@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.PowerObject;
@@ -16,6 +17,7 @@ import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.naming.EruptRecordNaming;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.service.EruptModifyGate;
 import xyz.erupt.core.service.EruptModifyService;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.Erupts;
@@ -46,6 +48,8 @@ public class EruptModifyController {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
+    private final ObjectProvider<EruptModifyGate> eruptModifyGates;
+
     /**
      * Insert a record.
      *
@@ -60,6 +64,10 @@ public class EruptModifyController {
     public R<Void> addEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Erupts.powerLegal(eruptModel, PowerObject::isAdd);
+        for (EruptModifyGate gate : eruptModifyGates.orderedStream().toList()) {
+            String message = gate.add(eruptModel, data);
+            if (null != message) return takenOver(message);
+        }
         eruptModifyService.insertEruptData(eruptModel, data);
         return R.ok();
     }
@@ -93,6 +101,10 @@ public class EruptModifyController {
     public R<Void> updateEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Erupts.powerLegal(eruptModel, PowerObject::isEdit);
+        for (EruptModifyGate gate : eruptModifyGates.orderedStream().toList()) {
+            String message = gate.update(eruptModel, data);
+            if (null != message) return takenOver(message);
+        }
         eruptModifyService.updateEruptData(eruptModel, data);
         return R.ok();
     }
@@ -158,8 +170,20 @@ public class EruptModifyController {
     public R<Void> deleteEruptData(@PathVariable("erupt") String erupt, @RequestBody List<Object> ids) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Erupts.powerLegal(eruptModel, PowerObject::isDelete);
+        for (EruptModifyGate gate : eruptModifyGates.orderedStream().toList()) {
+            String message = gate.delete(eruptModel, ids);
+            if (null != message) return takenOver(message);
+        }
         eruptModifyService.deleteEruptData(eruptModel, ids, true);
         return R.ok();
+    }
+
+    // A change a gate took over is not applied yet: INFO tells the frontend not to report it as done
+    private static R<Void> takenOver(String message) {
+        R<Void> r = R.success(message, null);
+        r.setStatus(R.Status.INFO);
+        r.setPromptWay(R.PromptWay.DIALOG);
+        return r;
     }
 
 

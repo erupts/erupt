@@ -245,6 +245,52 @@ public class EruptControllerTest extends EruptApplicationTests {
     }
 
     /**
+     * A change an EruptModifyGate takes over does not reach the table: the answer is INFO with the gate's
+     * message in a dialog, so the frontend does not report it as done; other models are not affected.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    void aChangeAGateTakesOverLeavesTheTableUntouched() {
+        String erupt = AuthVerifyModel.class.getSimpleName();
+        String name = "gate-test-" + System.nanoTime();
+        post("/erupt-api/data/modify/" + erupt, "{\"key\":\"" + name + "\",\"value\":\"v\"}");
+        Long id = findIdByName(erupt, name, "key");
+        assertNotNull(id, "the gate lets a change through while it is not asked to take over");
+
+        StandInModifyGate.TAKEN.clear();
+        StandInModifyGate.takeOver = erupt;
+        try {
+            Map<String, Object> add = getBody(post("/erupt-api/data/modify/" + erupt, "{\"key\":\"" + name + "-2\",\"value\":\"v\"}"));
+            assertEquals("INFO", add.get("status"));
+            assertEquals("DIALOG", add.get("promptWay"));
+            assertEquals(StandInModifyGate.MESSAGE, add.get("message"));
+            assertNull(findIdByName(erupt, name + "-2", "key"), "a taken-over insert must not be written");
+
+            Map<String, Object> update = getBody(post("/erupt-api/data/modify/" + erupt + "/update",
+                    "{\"id\":" + id + ",\"key\":\"" + name + "-updated\",\"value\":\"v2\"}"));
+            assertEquals("INFO", update.get("status"));
+            assertEquals(name, getBody(get("/erupt-api/data/" + erupt + "/" + id)).get("key"), "a taken-over update must not be written");
+
+            Map<String, Object> delete = getBody(post("/erupt-api/data/modify/" + erupt + "/delete", "[" + id + "]"));
+            assertEquals("INFO", delete.get("status"));
+            assertNotNull(findIdByName(erupt, name, "key"), "a taken-over delete must not remove the row");
+
+            assertEquals(List.of("add", "update", "delete:1"), StandInModifyGate.TAKEN);
+
+            // the model's power is checked before any gate is asked
+            StandInModifyGate.takeOver = CellEditOffModel.class.getSimpleName();
+            StandInModifyGate.TAKEN.clear();
+            post("/erupt-api/data/modify/NoSuchModel", "{}");
+            assertTrue(StandInModifyGate.TAKEN.isEmpty());
+        } finally {
+            StandInModifyGate.takeOver = null;
+        }
+        // back to the table once the gate steps aside
+        assertTrue((Boolean) getBody(post("/erupt-api/data/modify/" + erupt + "/delete", "[" + id + "]")).get("success"));
+        assertNull(findIdByName(erupt, name, "key"));
+    }
+
+    /**
      * In-table cell editing: one field of one row is updated without submitting the whole form,
      * every other field is left untouched, and the same validation rules still apply.
      */

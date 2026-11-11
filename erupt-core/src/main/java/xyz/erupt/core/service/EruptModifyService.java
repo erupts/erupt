@@ -238,9 +238,16 @@ public class EruptModifyService {
         }
     }
 
-    @SneakyThrows
     @Transactional
     public void updateEruptData(EruptModel eruptModel, JsonObject data) {
+        this.updateEruptData(eruptModel, data, true);
+    }
+
+    // verifyIdPermissions false: the caller checked the row against the user who asked for the change
+    // (an approved edit is applied in the approver's session, whose data scope is not the one that counts)
+    @SneakyThrows
+    @Transactional
+    public void updateEruptData(EruptModel eruptModel, JsonObject data, boolean verifyIdPermissions) {
         if (eruptModel.isRemote()) {
             EruptRemoteRouterManager.get().update(eruptModel.getEruptName(), data);
             return;
@@ -250,7 +257,9 @@ public class EruptModifyService {
         if (!validation.isSuccess()) {
             throw new EruptApiErrorTip(validation.getMessage(), R.PromptWay.MESSAGE);
         }
-        eruptService.verifyIdPermissions(eruptModel, data.get(eruptModel.getErupt().primaryKeyCol()).getAsString());
+        if (verifyIdPermissions) {
+            eruptService.verifyIdPermissions(eruptModel, data.get(eruptModel.getErupt().primaryKeyCol()).getAsString());
+        }
         Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
         EruptUtil.clearObjectDefaultValueByJson(o, data);
         Object old = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol()).get(o));
