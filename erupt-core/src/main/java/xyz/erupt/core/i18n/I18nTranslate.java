@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.constant.EruptMutualConst;
+import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptSpringUtil;
 
@@ -55,6 +56,9 @@ public class I18nTranslate {
      * and the caller settles on the configured default.
      */
     public String getLang() {
+        // Off the request thread (AI tool execution, async generation) the language the request
+        // arrived with is the one MetaContext carries
+        if (!EruptSpringUtil.isMvcContext()) return MetaContext.getLang();
         try {
             String lang = request.getHeader(EruptMutualConst.LANG);
             if (!I18nRunner.langs().contains(lang)) {

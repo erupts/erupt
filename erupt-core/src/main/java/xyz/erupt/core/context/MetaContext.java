@@ -40,6 +40,7 @@ public class MetaContext {
         metaContext.metaUser = null == metaUser ? null : new MetaUser(metaUser.getUid(), metaUser.getAccount(), metaUser.getName(), metaUser.getTenantId());
         metaContext.token = token;
         metaContext.lang = lang;
+        metaContext.scope = scope;
         metaContext.vars = new HashMap<>(vars);
         return metaContext;
     }
@@ -63,6 +64,10 @@ public class MetaContext {
     // tool execution - can still answer in the language the user picked
     private String lang;
 
+    // The @EruptScope picks the request arrived with, still encoded and unchecked. Carried here for
+    // the same reason as the language: a tool running off the request thread has no header to read
+    private String scope;
+
     private Map<String, Object> vars = new HashMap<>();
 
     public static MetaErupt getErupt() {
@@ -79,6 +84,10 @@ public class MetaContext {
 
     public static String getLang() {
         return threadLocal.get().lang;
+    }
+
+    public static String getScope() {
+        return threadLocal.get().scope;
     }
 
     public static Map<String, Object> getVars() {
@@ -101,6 +110,10 @@ public class MetaContext {
 
     public static void registerLang(String lang) {
         threadLocal.get().setLang(lang);
+    }
+
+    public static void registerScope(String scope) {
+        threadLocal.get().setScope(scope);
     }
 
     public static void registerVar(String key, Object value) {

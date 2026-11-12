@@ -149,6 +149,30 @@ class EruptScopeTest extends EruptApplicationTests {
         assertThrows(EruptWebApiRuntimeException.class, () -> EruptScopes.get(ProjectScope.class), "a model without the scope ignores it in the header");
     }
 
+    // An AI tool runs on a worker thread that holds no request: the pick travels in MetaContext
+    @Test
+    void thePickReachesWorkOffTheRequestThread() {
+        this.request(null, 1L);
+        RequestContextHolder.resetRequestAttributes();
+        assertThrows(EruptWebApiRuntimeException.class, this::names, "no request and no carried pick: still refused");
+
+        this.request(null, 1L);
+        RequestContextHolder.resetRequestAttributes();
+        MetaContext.registerScope(pick("beta"));
+        assertEquals(List.of("b1", "b2"), this.names());
+    }
+
+    // One AI turn calls tool after tool in one context: what the first model resolved must not
+    // stand in for the next
+    @Test
+    void eachModelOfOneContextReadsItsOwnScope() {
+        this.request(pick("beta"), 1L);
+        MetaContext.register(new MetaErupt(RefTargetModel.class.getSimpleName()));
+        assertThrows(EruptWebApiRuntimeException.class, () -> EruptScopes.get(ProjectScope.class));
+        MetaContext.register(new MetaErupt(ScopedTask.class.getSimpleName()));
+        assertEquals(List.of("b1", "b2"), this.names());
+    }
+
     @Test
     void idsOutsideTheScopeAreRefused() {
         this.request(pick("beta"), 1L);

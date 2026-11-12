@@ -191,7 +191,12 @@ public abstract class LlmCore {
     }
 
     private ToolProvider buildTools(Consumer<SseListener> listener) {
+        // A tool runs on whichever thread delivers the model's response. That thread holds the
+        // context it was created with, another chat's, unless the model streams partial tool calls
+        // (see streamingChat), so every tool starts by restoring the context of this chat
+        MetaContext metaContext = MetaContext.get();
         return (request) -> {
+            MetaContext.set(metaContext);
             ToolProviderResult.Builder builder = ToolProviderResult.builder();
             Set<String> allowedTools = EruptSpringUtil.getBean(LLMRoleService.class)
                     .getAllowedToolsByUid(MetaContext.getUser().getUid());
@@ -200,6 +205,7 @@ public abstract class LlmCore {
                     ToolSpecifications.toolSpecificationsFrom(obj).forEach(spec -> {
                         if (allowedTools.contains(spec.name())) {
                             builder.add(spec, (executionRequest, memoryId) -> {
+                                MetaContext.set(metaContext);
                                 if (chatStopRequested()) return CHAT_STOPPED_RESULT;
                                 Object result = AiToolboxManager.invoke(executionRequest);
                                 String resultStr = null == result ? "" : result.toString();
@@ -217,6 +223,7 @@ public abstract class LlmCore {
                 if (null != value.getMcpClient()) {
                     value.getMcpClient().listTools().forEach(spec ->
                             builder.add(spec, (executionRequest, memoryId) -> {
+                                MetaContext.set(metaContext);
                                 if (chatStopRequested()) return CHAT_STOPPED_RESULT;
                                 String result = value.getMcpClient().executeTool(executionRequest).toString();
                                 if (listener != null) {
