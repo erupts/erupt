@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.DataProxyInvoke;
@@ -61,7 +63,8 @@ public class EruptScopeService {
     // ------------------------------------------------------------------ declaration
 
     public static EruptScope scopeOf(EruptModel eruptModel) {
-        return null == eruptModel ? null : eruptModel.getClazz().getAnnotation(EruptScope.class);
+        // a remote (erupt-cloud) model has no class here: its node scopes its own data
+        return null == eruptModel || null == eruptModel.getClazz() ? null : eruptModel.getClazz().getAnnotation(EruptScope.class);
     }
 
     public static EruptModel scopeModel(Class<?> scope) {
@@ -94,11 +97,15 @@ public class EruptScopeService {
      * required field still empty refuses the request: running it unscoped would reach every scope.
      */
     public JsonObject current(Class<?> scope) {
+        // Resolved once per model and scope: one context serves several models when an AI turn
+        // calls tool after tool, and each of them reads its own scope
+        // (no computeIfAbsent: an option handler may read a scope of its own while this one resolves)
         Map<String, JsonObject> resolved = this.resolved();
-        JsonObject values = resolved.get(scope.getSimpleName());
+        String key = eruptName() + "/" + scope.getSimpleName();
+        JsonObject values = resolved.get(key);
         if (null == values) {
-            values = this.defaults(scope);
-            resolved.put(scope.getSimpleName(), values);
+            values = Optional.ofNullable(this.picked(scope)).orElseGet(() -> this.defaults(scope));
+            resolved.put(key, values);
         }
         for (EruptFieldModel field : scopeFields(scopeModel(scope))) {
             Edit edit = field.getEruptField().edit();
@@ -115,34 +122,46 @@ public class EruptScopeService {
 
     @SuppressWarnings("unchecked")
     private Map<String, JsonObject> resolved() {
-        Map<String, Object> vars = MetaContext.getVars();
-        Object cached = vars.get(VARS_KEY);
-        if (cached instanceof Map) return (Map<String, JsonObject>) cached;
-        Map<String, JsonObject> resolved = new HashMap<>();
-        String header = null;
-        if (RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attrs) {
-            header = attrs.getRequest().getHeader(HEADER);
-            if (StringUtils.isBlank(header)) header = attrs.getRequest().getParameter(PARAM);
-        }
-        // Only the scope the requested model declares is read; any other key in the header is ignored
-        String eruptName = MetaContext.getErupt().getName();
+        return (Map<String, JsonObject>) MetaContext.getVars().computeIfAbsent(VARS_KEY, key -> new HashMap<String, JsonObject>());
+    }
+
+    private static String eruptName() {
+        MetaErupt erupt = MetaContext.getErupt();
+        return null == erupt ? null : erupt.getName();
+    }
+
+    /**
+     * The picks a request carries, still encoded: the header, else the URL parameter. The
+     * interceptor stores it in {@link MetaContext} on arrival, which is all a thread working for the
+     * request without holding it (AI tool execution, async generation) has to go by.
+     */
+    public static String raw(HttpServletRequest request) {
+        String header = request.getHeader(HEADER);
+        return StringUtils.isBlank(header) ? request.getParameter(PARAM) : header;
+    }
+
+    private static String raw() {
+        String raw = RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attrs ? raw(attrs.getRequest()) : null;
+        return StringUtils.isBlank(raw) ? MetaContext.getScope() : raw;
+    }
+
+    // The checked pick of a scope, null when the request carries none the user may make. Only the
+    // scope the requested model declares is read; any other key in the header is ignored
+    private JsonObject picked(Class<?> scope) {
+        String eruptName = eruptName();
         EruptScope declared = null == eruptName ? null : scopeOf(EruptCoreService.getErupt(eruptName));
-        if (null != declared && StringUtils.isNotBlank(header)) {
-            JsonElement pick;
-            try {
-                pick = JsonParser.parseString(URLDecoder.decode(header, StandardCharsets.UTF_8)).getAsJsonObject()
-                        .get(declared.value().getSimpleName());
-            } catch (RuntimeException e) {
-                pick = null;
-            }
-            if (null != pick && pick.isJsonObject()) {
-                JsonObject values = this.only(scopeModel(declared.value()), pick.getAsJsonObject());
-                // values the user may not pick are dropped: the request runs on the defaults instead
-                if (this.allowed(declared.value(), values)) resolved.put(declared.value().getSimpleName(), values);
-            }
+        String raw = raw();
+        if (null == declared || declared.value() != scope || StringUtils.isBlank(raw)) return null;
+        JsonElement pick;
+        try {
+            pick = JsonParser.parseString(URLDecoder.decode(raw, StandardCharsets.UTF_8)).getAsJsonObject().get(scope.getSimpleName());
+        } catch (RuntimeException e) {
+            return null;
         }
-        vars.put(VARS_KEY, resolved);
-        return resolved;
+        if (null == pick || !pick.isJsonObject()) return null;
+        JsonObject values = this.only(scopeModel(scope), pick.getAsJsonObject());
+        // values the user may not pick are dropped: the request runs on the defaults instead
+        return this.allowed(scope, values) ? values : null;
     }
 
     /**

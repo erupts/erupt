@@ -12,6 +12,7 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaUser;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaUserinfo;
+import xyz.erupt.core.scope.EruptScopeService;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.annotation.EruptMenuAuth;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
@@ -48,6 +49,7 @@ public class EruptSuperInterceptor implements AsyncHandlerInterceptor {
             // and anything downstream reads it without having to hold on to the request. Async
             // work (SSE generation, tool execution) gets it with the MetaContext it restores.
             MetaContext.registerLang(i18nTranslate.currentLang());
+            MetaContext.registerScope(EruptScopeService.raw(request));
             EruptLoginAuth eruptAuth = handlerMethod.getMethodAnnotation(EruptLoginAuth.class);
             EruptMenuAuth eruptMenuAuth = handlerMethod.getMethodAnnotation(EruptMenuAuth.class);
             if (null != eruptAuth || null != eruptMenuAuth) {
