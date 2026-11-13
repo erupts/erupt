@@ -61,3 +61,11 @@ erupt.scope.out_of_scope,不在当前工作区范围内,不在目前工作區範
 erupt.scope.not_found,工作区不存在或无权访问,工作區不存在或無權存取,Scope not found or not accessible,Périmètre introuvable ou inaccessible,スコープが存在しないかアクセスできません,범위가 없거나 접근할 수 없습니다,Область не найдена или недоступна,Ámbito no encontrado o inaccesible,Bereich nicht gefunden oder nicht zugänglich,Âmbito não encontrado ou inacessível,Cakupan tidak ditemukan atau tidak dapat diakses,النطاق غير موجود أو لا يمكن الوصول إليه
 erupt.scope.required,未选择，请先在页头选择,未選擇，請先在頁首選擇,is not picked: pick it in the page header first,n’est pas choisi : choisissez-le d’abord dans l’en-tête,が未選択です。先にヘッダーで選択してください,이(가) 선택되지 않았습니다. 먼저 헤더에서 선택하세요,не выбрано: сначала выберите в заголовке страницы,no está seleccionado: selecciónelo primero en la cabecera,ist nicht gewählt: zuerst in der Kopfzeile wählen,não está selecionado: selecione-o primeiro no cabeçalho,belum dipilih: pilih dulu di header halaman,غير محدد: اختره أولاً في رأس الصفحة
 erupt.value.out_of_range,超出允许范围,超出允許範圍,is out of the allowed range,est hors de la plage autorisée,は許容範囲外です,은(는) 허용 범위를 벗어났습니다,вне допустимого диапазона,está fuera del rango permitido,liegt außerhalb des zulässigen Bereichs,está fora do intervalo permitido,di luar rentang yang diizinkan,خارج النطاق المسموح
+Platform,平台,平台,Platform,Plateforme,プラットフォーム,플랫폼,Платформа,Plataforma,Plattform,Plataforma,Platform,المنصة
+Business,业务,業務,Business,Métier,業務,업무,Бизнес,Negocio,Fachlich,Negócio,Bisnis,الأعمال
+AI,AI,AI,AI,IA,AI,AI,ИИ,IA,KI,IA,AI,الذكاء الاصطناعي
+Developer tools,开发工具,開發工具,Developer tools,Outils de développement,開発ツール,개발 도구,Инструменты разработки,Herramientas de desarrollo,Entwicklerwerkzeuge,Ferramentas de desenvolvimento,Alat pengembang,أدوات التطوير
+Operations,运维,維運,Operations,Exploitation,運用,운영,Эксплуатация,Operaciones,Betrieb,Operações,Operasional,التشغيل
+Data sources,数据源,資料來源,Data sources,Sources de données,データソース,데이터 소스,Источники данных,Fuentes de datos,Datenquellen,Fontes de dados,Sumber data,مصادر البيانات
+Demo,演示,演示,Demo,Démo,デモ,데모,Демо,Demo,Demo,Demo,Demo,عرض توضيحي
+Other,其他,其他,Other,Autres,その他,기타,Прочее,Otros,Sonstige,Outros,Lainnya,أخرى

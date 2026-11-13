@@ -2,7 +2,6 @@ package xyz.erupt.upms.vo;
 
 import lombok.Getter;
 import lombok.Setter;
-import xyz.erupt.core.module.ModuleGroup;
 
 /**
  * One card of the module center.
@@ -16,8 +15,8 @@ public class ModuleVo {
 
     private String name;
 
-    /** Null for a module that does not say where it belongs */
-    private ModuleGroup group;
+    /** Translated group title, ready to display; the list arrives sorted by it */
+    private String group;
 
     /** Translated for the current session */
     private String description;

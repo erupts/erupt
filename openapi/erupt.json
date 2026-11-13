@@ -6303,19 +6303,9 @@
             "type": "string"
           },
           "group": {
-            "format": "enum",
-            "description": "Null for a module that does not say where it belongs<br/>[Enum: PLATFORM, BUSINESS, AI, DEV_TOOLS, OPS, DATA, DEMO]",
-            "type": "string",
-            "enum": [
-              "PLATFORM",
-              "BUSINESS",
-              "AI",
-              "DEV_TOOLS",
-              "OPS",
-              "DATA",
-              "DEMO"
-            ],
-            "example": "PLATFORM"
+            "format": "string",
+            "description": "Translated group title, ready to display; the list arrives sorted by it",
+            "type": "string"
           },
           "description": {
             "format": "string",
@@ -7440,7 +7430,7 @@
           },
           "group": {
             "format": "string",
-            "description": "Group of the module declaring a root menu, the sidebar's section title; null for a user's own menu",
+            "description": "Translated title of the section the root menu belongs to; null for the untitled platform section and a user's own menus",
             "type": "string"
           }
         }

@@ -184,7 +184,10 @@ Every module implements `EruptModule` (defines `info()`, `run()`, `initMenus()`,
 
 `ModuleInfo` describes the module to its users: `group` (a `ModuleGroup`: PLATFORM, BUSINESS, AI, DEV_TOOLS,
 OPS, DATA), a one-sentence `description` of what it solves (an i18n key: add its row to the module's CSV) and
-`docs` (`ModuleInfo.eruptDocs("modules/<slug>")` for a page on docs.erupt.xyz). The module center under
+`docs` (`ModuleInfo.eruptDocs("modules/<slug>")` for a page on docs.erupt.xyz). `ModuleGroup` is a value object:
+an application declares its own group with `ModuleGroup.of("CRM")` — the English title doubles as the i18n key,
+so it shows as is until a CSV row translates it — and the group's title reaches the front end already
+translated, in the menu view and the module center alike. The module center under
 System Management lists modules by group and lets an administrator switch a module's menus off
 (`EruptMenuSeeder.disable`, kept in `e_upms_module`), and the sidebar titles root menus by the declaring
 module's group; a module without one lands in the untitled first section with the user's own menus.

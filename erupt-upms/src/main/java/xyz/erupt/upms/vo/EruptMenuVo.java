@@ -31,7 +31,7 @@ public class EruptMenuVo {
     /** Parent menu id */
     private Long pid;
 
-    /** Group of the module declaring a root menu, the sidebar's section title; null for a user's own menu */
+    /** Translated title of the section the root menu belongs to; null for the untitled platform section and a user's own menus */
     private String group;
 
     public EruptMenuVo(Long id, String code, String name, String type, String value, String icon, Long pid) {
