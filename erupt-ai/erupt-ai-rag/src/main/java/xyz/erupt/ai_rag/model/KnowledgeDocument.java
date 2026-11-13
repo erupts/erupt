@@ -5,17 +5,19 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.ai_rag.constants.DocStatus;
 import xyz.erupt.ai_rag.handler.KnowledgeDocumentDataProxy;
+import xyz.erupt.ai_rag.scope.KbScope;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.EruptScope;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
-import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
@@ -27,12 +29,12 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 @Erupt(
         name = "Knowledge Document", dataProxy = KnowledgeDocumentDataProxy.class,
         orderBy = "id desc",
-        linkTree = @LinkTree(field = "kb", dependNode = true),
         drills = @Drill(title = "Knowledge Chunk", icon = "fa fa-puzzle-piece",
                 link = @Link(linkErupt = KnowledgeChunk.class, joinColumn = "document.id")),
         rowOperation = @RowOperation(code = "reEmbed", title = "Re-embed", icon = "fa fa-refresh",
                 mode = RowOperation.Mode.MULTI, operationHandler = KnowledgeDocumentDataProxy.class)
 )
+@EruptScope(KbScope.class)
 @Getter
 @Setter
 @Table(name = "e_ai_kb_document")
@@ -43,7 +45,10 @@ public class KnowledgeDocument extends MetaModelUpdateVo {
     @ManyToOne
     @JoinColumn(name = "kb_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @EruptField(
-            views = @View(title = "Knowledge Base", column = "name")
+            views = @View(title = "Knowledge Base", column = "name"),
+            // the scope picked in the page header owns this field: lists follow it, adds land in it
+            edit = @Edit(title = "Knowledge Base", notNull = true, type = EditType.REFERENCE_TABLE,
+                    readonly = @Readonly)
     )
     private KnowledgeBase kb;
 
