@@ -42,7 +42,7 @@ public class EruptModuleController implements EruptRouter.VerifyHandler {
     /**
      * Every registered module.
      *
-     * @return modules in registration order
+     * @return modules in the groups' order, the group given as a translated title
      */
     @GetMapping
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, verifyHandler = EruptModuleController.class)

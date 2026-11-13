@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleGroup;
@@ -13,6 +14,7 @@ import xyz.erupt.upms.EruptUpmsAutoConfiguration;
 import xyz.erupt.upms.vo.ModuleVo;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,12 +40,18 @@ public class EruptModuleCenterService {
     private volatile Map<String, ModuleGroup> rootGroups;
 
     public List<ModuleVo> modules() {
+        List<EruptModule> registered = new ArrayList<>();
+        EruptModuleInvoke.invoke(registered::add);
+        // the groups' order is the page's section order, custom groups behind the built-ins, none last
+        registered.sort(Comparator.comparing(module -> module.info().getGroup(),
+                Comparator.nullsLast(Comparator.naturalOrder())));
         List<ModuleVo> modules = new ArrayList<>();
-        EruptModuleInvoke.invoke(module -> {
+        for (EruptModule module : registered) {
             ModuleInfo info = module.info();
             ModuleVo vo = new ModuleVo();
             vo.setName(info.getName());
-            vo.setGroup(info.getGroup());
+            // the group arrives as a translated title, so the page renders it as is
+            vo.setGroup(null == info.getGroup() ? I18nTranslate.$translate("Other") : info.getGroup().title());
             vo.setDocs(info.getDocs());
             if (null != info.getDescription()) vo.setDescription(I18nTranslate.$translate(info.getDescription()));
             List<MetaMenu> menus = module.initMenus();
@@ -53,7 +61,7 @@ public class EruptModuleCenterService {
                 if (!ESSENTIAL.contains(info.getName())) vo.setEnabled(!menuSeeder.disabled(info.getName()));
             }
             modules.add(vo);
-        });
+        }
         return modules;
     }
 

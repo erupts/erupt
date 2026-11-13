@@ -9,6 +9,7 @@ import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.MetaUserinfo;
+import xyz.erupt.core.module.ModuleGroup;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptMenu;
@@ -49,7 +50,11 @@ public class EruptTokenService {
                 if (menu.getStatus() == MenuStatus.OPEN) {
                     EruptMenuVo vo = EruptMenuVo.fromMetaMenu(menu);
                     if (null == menu.getParentMenu()) {
-                        Optional.ofNullable(moduleCenterService.groupOf(menu.getCode())).ifPresent(it -> vo.setGroup(it.name()));
+                        // the platform's own menus sit in the untitled section above the groups:
+                        // only a titled group goes out, cached by its title and translated on read
+                        Optional.ofNullable(moduleCenterService.groupOf(menu.getCode()))
+                                .filter(group -> !ModuleGroup.PLATFORM.equals(group))
+                                .ifPresent(group -> vo.setGroup(group.getTitle()));
                     }
                     eruptMenuVos.add(vo);
                 }
@@ -67,7 +72,10 @@ public class EruptTokenService {
     public List<EruptMenuVo> menuView(String token) {
         List<EruptMenuVo> menus = eruptSessionService.get(SessionKey.MENU_VIEW + token, new TypeToken<List<EruptMenuVo>>() {
         }.getType());
-        if (null != menus) menus.forEach(it -> it.setName(I18nTranslate.$translate(it.getName())));
+        if (null != menus) menus.forEach(it -> {
+            it.setName(I18nTranslate.$translate(it.getName()));
+            if (null != it.getGroup()) it.setGroup(I18nTranslate.$translate(it.getGroup()));
+        });
         return menus;
     }
 

@@ -48,7 +48,7 @@ class ModuleCenterTest extends EruptApplicationTests {
     @Test
     void everyModuleIsListedWithItsGroupAndSwitch() {
         ModuleVo job = module(JOB);
-        assertEquals(ModuleGroup.OPS, job.getGroup());
+        assertEquals(ModuleGroup.OPS.title(), job.getGroup());
         assertNotNull(job.getDescription());
         assertNotNull(job.getDocs());
         assertEquals(4, job.getMenus(), "the root and three tables, buttons left out");
@@ -76,6 +76,17 @@ class ModuleCenterTest extends EruptApplicationTests {
     void upmsCannotBeSwitchedOff() {
         assertThrows(RuntimeException.class, () -> moduleCenter.enabled(EruptUpmsAutoConfiguration.ERUPT_UPMS, false));
         assertThrows(RuntimeException.class, () -> moduleCenter.enabled("no-such-module", false));
+    }
+
+    @Test
+    void aCustomGroupFormsItsOwnTitledSection() {
+        // the same title is the same group
+        assertEquals(ModuleGroup.of("CRM"), ModuleGroup.of("CRM"));
+        // no translation row: the title is its own fallback
+        assertEquals("CRM", ModuleGroup.of("CRM").title());
+        // custom groups list behind the built-ins, alphabetically among themselves
+        assertTrue(ModuleGroup.OPS.compareTo(ModuleGroup.of("CRM")) < 0);
+        assertTrue(ModuleGroup.of("Zulu").compareTo(ModuleGroup.of("Alpha")) > 0);
     }
 
 }
