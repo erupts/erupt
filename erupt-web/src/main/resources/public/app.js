@@ -46,7 +46,7 @@ window.eruptSiteConfig = {
         // headerColor: 'primary',   // "primary" (follow the primary color) or any CSS color
         dark: false,        // false | true | "auto" (follow the OS color scheme)
         compact: false,     // denser spacing across the UI
-        skin: "default",    // "default" | "brutalist" | "liquid-glass" | "workspace" (chat-app frame: dark brand-tinted sidebar + header, content as a rounded card) | "classic" (Ant Design Pro: navy sidebar, white header) | "terminal" (phosphor console: black canvas, monospace, one glowing accent) | "material" (Material 3 / Gmail: brand-tinted tonal chrome, rounded sheet, pill rows)
+        skin: "default",    // "default" | "brutalist" | "liquid-glass" | "workspace" (chat-app frame: dark brand-tinted sidebar + header, content as a rounded card) | "classic" (Ant Design Pro: navy sidebar, white header) | "terminal" (phosphor console: black canvas, monospace, one glowing accent) | "material" (Material 3 / Gmail: brand-tinted tonal chrome, rounded sheet, pill rows) | "polaris" (Shopify admin: near-black bar, gray workbench, ink beveled buttons) | "linear" (Linear / Vercel: bar, sidebar and canvas as one surface cut by hairlines, dense rows, dark first)
         // workspaceFrame: "sky", // workspace skin only — navigation frame preset (unset = derived from primaryColor):
         //   light: "mist" | "sky" | "azure" | "salt" | "gray" | "mint" | "mint-chip" | "lime" | "citrus" | "banana" | "brass" | "almond" | "peach"
         //          | "dawn" | "blush" | "raspberry" | "mauve" | "lilac" | "lavender-mint"

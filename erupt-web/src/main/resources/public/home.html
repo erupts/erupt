@@ -401,6 +401,28 @@
             background: linear-gradient(#1e1f20, #1e1f20) 5px 3px / 6px 7px no-repeat,
                         color-mix(in srgb, var(--accent) 12%, #131314);
         }
+        /* polaris: near-black bar over the gray workbench */
+        .sw.polaris i {
+            border-color: #1a1a1a;
+            border-radius: 3px;
+            background: linear-gradient(#1a1a1a, #1a1a1a) 0 0 / 100% 3px no-repeat, #ebebeb;
+        }
+        html.dark .sw.polaris i {
+            border-color: #434343;
+            background: linear-gradient(#1a1a1a, #1a1a1a) 0 0 / 100% 3px no-repeat, #000;
+        }
+        /* linear: one surface cut by hairlines */
+        .sw.linear i {
+            border-color: rgba(0, 0, 0, 0.25);
+            border-radius: 3px;
+            background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)) 4px 0 / 1px 100% no-repeat,
+                        linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)) 0 3px / 100% 1px no-repeat, #fafafa;
+        }
+        html.dark .sw.linear i {
+            border-color: rgba(255, 255, 255, 0.3);
+            background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) 4px 0 / 1px 100% no-repeat,
+                        linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) 0 3px / 100% 1px no-repeat, #0c0d0e;
+        }
         /* classic: navy column beside a white bar */
         .sw.classic i {
             border-color: #001529;
@@ -476,6 +498,8 @@
                     <button class="sw classic" data-skin="classic" type="button"><i></i></button>
                     <button class="sw workspace" data-skin="workspace" type="button"><i></i></button>
                     <button class="sw material" data-skin="material" type="button"><i></i></button>
+                    <button class="sw polaris" data-skin="polaris" type="button"><i></i></button>
+                    <button class="sw linear" data-skin="linear" type="button"><i></i></button>
                     <button class="sw glass" data-skin="liquid-glass" type="button"><i></i></button>
                     <button class="sw brutalist" data-skin="brutalist" type="button"><i></i></button>
                     <button class="sw terminal" data-skin="terminal" type="button"><i></i></button>
@@ -695,6 +719,8 @@
                 {value: "classic", cls: "classic", key: "classic", label: "Classic"},
                 {value: "workspace", cls: "workspace", key: "workspace", label: "Workspace"},
                 {value: "material", cls: "material", key: "material", label: "Material"},
+                {value: "polaris", cls: "polaris", key: "polaris", label: "Polaris"},
+                {value: "linear", cls: "linear", key: "linear", label: "Linear"},
                 {value: "liquid-glass", cls: "liquid-glass", key: "liquid-glass", label: "Liquid Glass"},
                 {value: "brutalist", cls: "brutalist-theme", key: "brutalist-theme", label: "Brutalist"},
                 {value: "terminal", cls: "terminal", key: "terminal", label: "Terminal"}
