@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.ai_rag.handler.KnowledgeChunkDataProxy;
+import xyz.erupt.ai_rag.scope.KbScope;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.EruptScope;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -20,6 +22,9 @@ import xyz.erupt.jpa.model.BaseModel;
 /**
  * Chunk text is the single source of truth here; the vector store only holds
  * id + vector. Editing the text re-embeds it, so both never drift apart.
+ * <p>
+ * Follows the knowledge base picked in the page header: no kb field of its own, the filter walks
+ * {@code document.kb} instead, so existing rows need no backfill.
  *
  * @author YuePeng
  * date 2026/8/17
@@ -29,6 +34,7 @@ import xyz.erupt.jpa.model.BaseModel;
         power = @Power(add = false),
         orderBy = "id"
 )
+@EruptScope(value = KbScope.class, bind = false)
 @Getter
 @Setter
 @Table(name = "e_ai_kb_chunk")
