@@ -39,7 +39,8 @@ public class EruptAiDevAutoConfiguration implements EruptModule {
     @Override
     public ModuleInfo info() {
         return ModuleInfo.builder().name("erupt-ai-dev").group(ModuleGroup.AI)
-                .description("AI software delivery: projects, requirement pool and worktrees").build();
+                .description("AI software delivery: projects, requirement pool and worktrees")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-ai-dev")).build();
     }
 
     @Resource

@@ -52,7 +52,8 @@ public class EruptRevisionAutoConfiguration implements EruptModule {
     @Override
     public ModuleInfo info() {
         return ModuleInfo.builder().name(ERUPT_REVISION).group(ModuleGroup.PLATFORM)
-                .description("Record history: every change kept and restorable").build();
+                .description("Record history: every change kept and restorable")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-revision")).build();
     }
 
     @Override

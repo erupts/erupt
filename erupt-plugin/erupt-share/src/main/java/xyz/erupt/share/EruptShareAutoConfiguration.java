@@ -55,7 +55,8 @@ public class EruptShareAutoConfiguration implements EruptModule {
     @Override
     public ModuleInfo info() {
         return ModuleInfo.builder().name(ERUPT_SHARE).group(ModuleGroup.PLATFORM)
-                .description("Public links that open a form or a page without an account").build();
+                .description("Public links that open a form or a page without an account")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-share")).build();
     }
 
     @Override

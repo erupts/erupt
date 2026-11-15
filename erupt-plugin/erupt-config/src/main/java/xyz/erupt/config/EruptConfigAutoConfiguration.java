@@ -38,7 +38,8 @@ public class EruptConfigAutoConfiguration implements EruptModule {
     @Override
     public ModuleInfo info() {
         return ModuleInfo.builder().name("erupt-config").group(ModuleGroup.DEV_TOOLS)
-                .description("Runtime settings per Spring profile, edited in the admin").build();
+                .description("Runtime settings per Spring profile, edited in the admin")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-config")).build();
     }
 
     @Override

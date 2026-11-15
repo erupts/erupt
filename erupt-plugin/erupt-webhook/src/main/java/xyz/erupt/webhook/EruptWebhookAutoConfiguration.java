@@ -40,7 +40,8 @@ public class EruptWebhookAutoConfiguration implements EruptModule {
     @Override
     public ModuleInfo info() {
         return ModuleInfo.builder().name(ERUPT_WEBHOOK).group(ModuleGroup.PLATFORM)
-                .description("Outbound webhooks fired by data events").build();
+                .description("Outbound webhooks fired by data events")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-webhook")).build();
     }
 
     @Override
