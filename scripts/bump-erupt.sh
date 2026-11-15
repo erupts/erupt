@@ -27,7 +27,7 @@
 set -euo pipefail
 
 # ---------- config ----------
-CODE_DIR="${CODE_DIR:-$HOME/git}"
+CODE_DIR="${CODE_DIR:-$HOME/Code}"
 MAIN_REPO="${MAIN_REPO:-erupt}"
 ERUPT_GROUP="${ERUPT_GROUP:-xyz.erupt}"
 VERSIONS_PLUGIN="${VERSIONS_PLUGIN:-org.codehaus.mojo:versions-maven-plugin:2.16.2}"
@@ -37,7 +37,6 @@ REPOS=(
     erupt
     erupt-cube
     erupt-flow
-    erupt-k8s-dashboard
     erupt-tenant
     erupt-demo
 )
