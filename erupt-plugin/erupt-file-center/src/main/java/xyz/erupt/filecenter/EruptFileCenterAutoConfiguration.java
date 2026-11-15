@@ -34,7 +34,8 @@ public class EruptFileCenterAutoConfiguration implements EruptModule {
     @Override
     public ModuleInfo info() {
         return ModuleInfo.builder().name("erupt-file-center").group(ModuleGroup.BUSINESS)
-                .description("Finder-style browsing of uploads, folders and object storage").build();
+                .description("Finder-style browsing of uploads, folders and object storage")
+                .docs(ModuleInfo.eruptDocs("modules/erupt-file-center")).build();
     }
 
     @Override
