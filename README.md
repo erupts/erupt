@@ -35,6 +35,10 @@ English &nbsp;|&nbsp; [中文](README-zh.md)
   <a href="https://docs.erupt.xyz"><code><b>[ DOCS ]</b></code></a>
 </p>
 
+<p align="center">
+  <a href="https://www.producthunt.com/products/erupt?utm_source=badge-follow&utm_medium=badge"><img src="https://api.producthunt.com/widgets/embed-image/v1/follow.svg?product_id=1116483&theme=light" alt="Erupt on Product Hunt" width="200" height="43"></a>
+</p>
+
 ---
 
 <p align="center"><img src="readme/hero.png" alt="Erupt · Model-Driven Engine for Enterprise Applications · AI Harness" width="100%"/></p>

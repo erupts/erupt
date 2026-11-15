@@ -35,6 +35,10 @@
   <a href="https://www.erupt.xyz"><code><b>[ 官网 ]</b></code></a>
 </p>
 
+<p align="center">
+  <a href="https://www.producthunt.com/products/erupt?utm_source=badge-follow&utm_medium=badge"><img src="https://api.producthunt.com/widgets/embed-image/v1/follow.svg?product_id=1116483&theme=light" alt="Erupt on Product Hunt" width="200" height="43"></a>
+</p>
+
 ---
 
 <p align="center"><img src="readme/hero-zh.png" alt="Erupt · 模型驱动的企业级应用引擎 · AI Harness" width="100%"/></p>
