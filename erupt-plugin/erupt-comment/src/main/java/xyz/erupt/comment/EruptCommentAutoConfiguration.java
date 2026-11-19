@@ -57,11 +57,11 @@ public class EruptCommentAutoConfiguration implements EruptModule {
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
         // Comments are written inside the records themselves; this table is the administrative view
-        // of them, so it belongs next to the other logs under System Management rather than behind a
-        // root menu of its own.
-        MetaMenu manager = EruptUpmsAutoConfiguration.managerMenu();
-        menus.add(manager);
-        menus.add(MetaMenu.createEruptClassMenu(EruptRecordComment.class, manager, 85));
+        // of them, so it belongs next to the other logs under Audit & Logs rather than behind a root
+        // menu of its own.
+        MetaMenu audit = EruptUpmsAutoConfiguration.auditMenu();
+        menus.add(audit);
+        menus.add(MetaMenu.createEruptClassMenu(EruptRecordComment.class, audit, 50));
         return menus;
     }
 }

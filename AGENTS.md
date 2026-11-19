@@ -191,8 +191,14 @@ translated, in the menu view and the module center alike. The module center unde
 System Management lists modules by group and lets an administrator switch a module's menus off
 (`EruptMenuSeeder.disable`, kept in `e_upms_module`), and the sidebar titles root menus by the declaring
 module's group; a module without one lands in the untitled first section with the user's own menus.
-Root menus sort by group as well: 0 Home, 10 System Management, 20 tenant, 30–80 business, 100–150 AI,
-200–240 dev tools, 300–340 ops; a new root menu takes the next free tens slot of its group.
+Root menus sort by group as well: 0 Home, 10 System Management, 12 Integrations, 14 Audit & Logs,
+15 Identity & Access (erupt-iam), 20 tenant, 30–80 business, 100–150 AI, 200–240 dev tools, 300–340 ops;
+a new root menu takes the next free tens slot of its group. A module whose page is administrative rather
+than a feature of its own hangs it under one of the three shared upms roots — `managerMenu()` (people,
+permissions, platform settings), `integrationMenu()` (open API, SSO, webhooks, share links) or
+`auditMenu()` (sessions and logs) — instead of adding a root. Roles and tenant packages grant menus by
+id, so `EruptMenuService.getUserAllMenu` adds the pure folders (no type, no value) above every granted
+menu: moving pages under a new root never hides them from users whose grants predate it.
 
 **4. Thread-Local Request Context**
 `MetaContext` (InheritableThreadLocal) carries per-request user info, token, and erupt entity metadata through the call stack. Located in `erupt-core/.../context/MetaContext.java`.

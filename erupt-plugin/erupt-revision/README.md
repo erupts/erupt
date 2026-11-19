@@ -25,7 +25,7 @@ a new revision), fields the revision did not touch keep their current value.
 
 ## Recycle bin
 
-*System Management → Record Revision* is the recycle bin too: filter on operation DELETE and every
+*Audit & Logs → Record Revision* is the recycle bin too: filter on operation DELETE and every
 record deleted through erupt is there, with a short summary of what the row held (a delete that was
 restored since is marked). The Restore row button is enabled on delete revisions only.
 

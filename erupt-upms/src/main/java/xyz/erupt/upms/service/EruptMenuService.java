@@ -19,10 +19,14 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.spi.UpmsMenuScope;
 import xyz.erupt.upms.util.UPMSUtil;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -63,7 +67,38 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         for (UpmsMenuScope scope : menuScope) {
             menus = menus.stream().filter(menu -> scope.allows(eruptUser, menu)).collect(Collectors.toList());
         }
-        return menus;
+        return this.withFolders(menus);
+    }
+
+    /**
+     * Add the folders above the given menus that the list lacks. A role or a tenant package grants
+     * menus by id, and the sidebar is built down from the roots, so a granted page whose folder was
+     * not granted too would vanish: a folder added by a later release (a new root a module moved
+     * its pages under) never is. Only pure folders (no type, no value) are added — they open
+     * nothing, so this grants no access — and the walk stops at a disabled one, which hides its
+     * branch on purpose.
+     */
+    private List<EruptMenu> withFolders(List<EruptMenu> menus) {
+        Set<Long> ids = menus.stream().map(EruptMenu::getId).collect(Collectors.toSet());
+        List<EruptMenu> result = new ArrayList<>(menus);
+        Map<Long, EruptMenu> all = null;
+        for (EruptMenu menu : menus) {
+            EruptMenu parent = menu.getParentMenu();
+            while (null != parent && !ids.contains(parent.getId())) {
+                if (null == all) {
+                    all = eruptDao.lambdaQuery(EruptMenu.class).list().stream().collect(Collectors.toMap(EruptMenu::getId, Function.identity()));
+                }
+                EruptMenu folder = all.get(parent.getId());
+                if (null == folder || StringUtils.isNotBlank(folder.getType()) || StringUtils.isNotBlank(folder.getValue())
+                        || Objects.equals(folder.getStatus(), MenuStatus.DISABLE.getValue())) {
+                    break;
+                }
+                ids.add(folder.getId());
+                result.add(folder);
+                parent = folder.getParentMenu();
+            }
+        }
+        return result;
     }
 
     @Override

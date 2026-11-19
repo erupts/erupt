@@ -62,12 +62,12 @@ public class EruptSsoAutoConfiguration implements EruptModule {
         List<MetaMenu> menus = new ArrayList<>();
         // an administrative view of the existing system, so it hangs off the shared root
         // rather than adding one of its own
-        MetaMenu manager = EruptUpmsAutoConfiguration.managerMenu();
-        menus.add(manager);
-        menus.add(MetaMenu.createEruptClassMenu(EruptSso.class, manager, 45));
+        MetaMenu integration = EruptUpmsAutoConfiguration.integrationMenu();
+        menus.add(integration);
+        menus.add(MetaMenu.createEruptClassMenu(EruptSso.class, integration, 20));
         // Hidden: a binding is made by signing in and only ever read to investigate one.
         // Show it from Menu Management when someone has to be unbound.
-        menus.add(MetaMenu.createEruptClassMenu(EruptSsoBind.class, manager, 46, MenuStatus.HIDE));
+        menus.add(MetaMenu.createEruptClassMenu(EruptSsoBind.class, integration, 21, MenuStatus.HIDE));
         return menus;
     }
 

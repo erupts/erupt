@@ -62,9 +62,9 @@ public class EruptShareAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        MetaMenu manager = EruptUpmsAutoConfiguration.managerMenu();
-        menus.add(manager);
-        menus.add(MetaMenu.createEruptClassMenu(EruptShareLink.class, manager, 64));
+        MetaMenu integration = EruptUpmsAutoConfiguration.integrationMenu();
+        menus.add(integration);
+        menus.add(MetaMenu.createEruptClassMenu(EruptShareLink.class, integration, 40));
         return menus;
     }
 }

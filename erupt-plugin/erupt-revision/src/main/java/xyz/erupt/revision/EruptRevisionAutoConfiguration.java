@@ -60,10 +60,10 @@ public class EruptRevisionAutoConfiguration implements EruptModule {
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
         // Revisions are read inside the records themselves; this table is the administrative view
-        // of them, so it sits next to the other logs under System Management.
-        MetaMenu manager = EruptUpmsAutoConfiguration.managerMenu();
-        menus.add(manager);
-        menus.add(MetaMenu.createEruptClassMenu(EruptRecordRevision.class, manager, 86));
+        // of them, so it sits next to the other logs under Audit & Logs.
+        MetaMenu audit = EruptUpmsAutoConfiguration.auditMenu();
+        menus.add(audit);
+        menus.add(MetaMenu.createEruptClassMenu(EruptRecordRevision.class, audit, 40));
         return menus;
     }
 }

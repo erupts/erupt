@@ -42,6 +42,10 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
 
     public static final String MANAGER_MENU = "$manager";
 
+    public static final String INTEGRATION_MENU = "$integration";
+
+    public static final String AUDIT_MENU = "$audit";
+
     /**
      * The System Management root. A module whose menu is an administrative view rather than a
      * feature of its own hangs its table here instead of adding another root: menus are persisted
@@ -50,6 +54,22 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
      */
     public static MetaMenu managerMenu() {
         return MetaMenu.createRootMenu(MANAGER_MENU, "System Management", "fa fa-cogs", 10);
+    }
+
+    /**
+     * The Integrations root: what connects erupt to the outside — open API keys, single sign-on,
+     * webhooks, share links. Shared like {@link #managerMenu()}; build it through this method.
+     */
+    public static MetaMenu integrationMenu() {
+        return MetaMenu.createRootMenu(INTEGRATION_MENU, "Integrations", "fa fa-plug", 12);
+    }
+
+    /**
+     * The Audit &amp; Logs root: who is online and what happened — login, operation, revision and
+     * comment trails, the system log. Shared like {@link #managerMenu()}; build it through this method.
+     */
+    public static MetaMenu auditMenu() {
+        return MetaMenu.createRootMenu(AUDIT_MENU, "Audit & Logs", "fa fa-clipboard-list", 14);
     }
 
     @Override
@@ -62,22 +82,28 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(managerMenu());
+        MetaMenu manager = managerMenu(), integration = integrationMenu(), audit = auditMenu();
+        menus.add(manager);
+        menus.add(integration);
+        menus.add(audit);
         menus.add(MetaMenu.createSimpleMenu("$home", "Home", "/", null, 0, "fa fa-home", MenuTypeEnum.ROUTER.getCode(), MenuStatus.OPEN));
-        menus.add(MetaMenu.createEruptClassMenu(EruptMenu.class, menus.get(0), 0, MenuTypeEnum.TREE));
-        menus.add(MetaMenu.createEruptClassMenu(EruptRole.class, menus.get(0), 10));
-        menus.add(MetaMenu.createEruptClassMenu(EruptOrg.class, menus.get(0), 20, MenuTypeEnum.TREE));
-        menus.add(MetaMenu.createEruptClassMenu(EruptPost.class, menus.get(0), 30, MenuTypeEnum.TREE));
-        menus.add(MetaMenu.createEruptClassMenu(EruptUser.class, menus.get(0), 40));
-        menus.add(MetaMenu.createEruptClassMenu(EruptDict.class, menus.get(0), 50));
-        menus.add(MetaMenu.createEruptClassMenu(EruptDictItem.class, menus.get(0), 51, MenuStatus.HIDE));
-        menus.add(MetaMenu.createEruptClassMenu(EruptOpenApi.class, menus.get(0), 60));
-        menus.add(MetaMenu.createEruptClassMenu(EruptOnline.class, menus.get(0), 65));
-        menus.add(MetaMenu.createEruptClassMenu(EruptLoginLog.class, menus.get(0), 70));
-        menus.add(MetaMenu.createEruptClassMenu(EruptOperateLog.class, menus.get(0), 80));
-        menus.add(MetaMenu.createEruptClassMenu(EruptSiteSetting.class, menus.get(0), 90, MenuTypeEnum.FORM));
-        menus.add(MetaMenu.createSimpleMenu(EruptConst.ERUPT_LOG, "System Log", EruptConst.ERUPT_LOG, menus.get(0), 90, EruptTplService.TPL));
-        menus.add(MetaMenu.createSimpleMenu("$modules", "Module Center", EruptModuleController.PAGE, menus.get(0), 95, MenuTypeEnum.ROUTER.getCode()));
+        // System Management: people, permissions and the platform itself
+        menus.add(MetaMenu.createEruptClassMenu(EruptMenu.class, manager, 0, MenuTypeEnum.TREE));
+        menus.add(MetaMenu.createEruptClassMenu(EruptRole.class, manager, 10));
+        menus.add(MetaMenu.createEruptClassMenu(EruptOrg.class, manager, 20, MenuTypeEnum.TREE));
+        menus.add(MetaMenu.createEruptClassMenu(EruptPost.class, manager, 30, MenuTypeEnum.TREE));
+        menus.add(MetaMenu.createEruptClassMenu(EruptUser.class, manager, 40));
+        menus.add(MetaMenu.createEruptClassMenu(EruptDict.class, manager, 50));
+        menus.add(MetaMenu.createEruptClassMenu(EruptDictItem.class, manager, 51, MenuStatus.HIDE));
+        menus.add(MetaMenu.createEruptClassMenu(EruptSiteSetting.class, manager, 60, MenuTypeEnum.FORM));
+        menus.add(MetaMenu.createSimpleMenu("$modules", "Module Center", EruptModuleController.PAGE, manager, 70, MenuTypeEnum.ROUTER.getCode()));
+        // Integrations: erupt-sso 20, erupt-webhook 30, erupt-share 40
+        menus.add(MetaMenu.createEruptClassMenu(EruptOpenApi.class, integration, 10));
+        // Audit & Logs: erupt-revision 40, erupt-comment 50
+        menus.add(MetaMenu.createEruptClassMenu(EruptOnline.class, audit, 10));
+        menus.add(MetaMenu.createEruptClassMenu(EruptLoginLog.class, audit, 20));
+        menus.add(MetaMenu.createEruptClassMenu(EruptOperateLog.class, audit, 30));
+        menus.add(MetaMenu.createSimpleMenu(EruptConst.ERUPT_LOG, "System Log", EruptConst.ERUPT_LOG, audit, 60, EruptTplService.TPL));
         return menus;
     }
 

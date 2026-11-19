@@ -47,11 +47,11 @@ public class EruptWebhookAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        MetaMenu manager = EruptUpmsAutoConfiguration.managerMenu();
-        menus.add(manager);
-        menus.add(MetaMenu.createEruptClassMenu(EruptWebhook.class, manager, 62));
+        MetaMenu integration = EruptUpmsAutoConfiguration.integrationMenu();
+        menus.add(integration);
+        menus.add(MetaMenu.createEruptClassMenu(EruptWebhook.class, integration, 30));
         // reached through the "Deliveries" drill of a webhook; the hidden menu only grants the permission
-        menus.add(MetaMenu.createEruptClassMenu(EruptWebhookLog.class, manager, 63, MenuStatus.HIDE));
+        menus.add(MetaMenu.createEruptClassMenu(EruptWebhookLog.class, integration, 31, MenuStatus.HIDE));
         return menus;
     }
 
