@@ -82,6 +82,9 @@ public class EruptUserController {
         String pwd = loginBody.getPwd();
         // A locked pair is told so at once, whatever else the request carries
         if (eruptUserService.isLoginLocked(account)) return eruptUserService.lockedLoginModel();
+        // Login policies may refuse the attempt before the account is even looked up
+        String refusedByPolicy = eruptUserService.refusedByPolicy(account);
+        if (null != refusedByPolicy) return new LoginModel(false, refusedByPolicy);
         if (!eruptUserService.checkVerifyCode(account, loginBody.getVerifyCode(), loginBody.getVerifyCodeMark())) {
             return eruptUserService.loginFailure(account, "upms.verify_code_error");
         }

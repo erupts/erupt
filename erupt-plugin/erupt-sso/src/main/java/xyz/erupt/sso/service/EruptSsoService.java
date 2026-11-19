@@ -247,8 +247,12 @@ public class EruptSsoService {
         if (scope.isPlatform()) {
             String reason = eruptUserService.checkAccountUsable(eruptUser);
             if (null != reason) throw new EruptWebApiRuntimeException(reason);
+            reason = eruptUserService.refusedByPolicy(eruptUser.getAccount());
+            if (null != reason) throw new EruptWebApiRuntimeException(reason);
             loginModel = new LoginModel(true, eruptUser);
             eruptUserService.completeLogin(loginModel, EruptUserService.findEruptLogin());
+            // a login policy may refuse the session at the last moment, e.g. a mandatory MFA the account never enrolled
+            if (!loginModel.isPass()) throw new EruptWebApiRuntimeException(loginModel.getReason());
         } else {
             // the tenant module decides whether the tenant may sign in and what its session is
             loginModel = this.requireTenantLogin().login(scope.tenantId(), eruptUser);

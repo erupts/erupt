@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import eu.bitwalker.useragentutils.UserAgent;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -34,10 +35,12 @@ import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.tenant.UpmsTenantSessions;
+import xyz.erupt.upms.spi.LoginPolicy;
 import xyz.erupt.upms.util.IpUtil;
 import xyz.erupt.upms.util.IpWhiteListMatcher;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +83,10 @@ public class EruptUserService {
     @Resource
     private UpmsTenantSessions upmsTenantSessions;
 
+    // Login policies asked in order; the first refusal wins. None registered is the common case
+    @Autowired(required = false)
+    private List<LoginPolicy> loginPolicies = Collections.emptyList();
+
     private final Gson gson = GsonFactory.getGson();
 
     public static LoginProxy findEruptLogin() {
@@ -121,6 +128,20 @@ public class EruptUserService {
         String reason = I18nTranslate.$translate("upms.login_locked")
                 .replace("{0}", String.valueOf(eruptUpmsProp.getLoginLock().getLockMinutes()));
         return new LoginModel(false, reason, true);
+    }
+
+    /**
+     * The first {@link LoginPolicy} refusal for a login attempt from the current request, in
+     * order, or null when every policy abstains. Consulted by the login controller and by
+     * delegated sign-on paths before the account is looked up; a refusal here is not a
+     * credential failure and does not feed the login lock.
+     */
+    public String refusedByPolicy(String account) {
+        for (LoginPolicy policy : loginPolicies) {
+            String refused = policy.beforeLogin(account, request);
+            if (null != refused) return refused;
+        }
+        return null;
     }
 
     /**
@@ -170,17 +191,32 @@ public class EruptUserService {
      * Mint the session token and record the login. Called once every factor has passed,
      * by whichever flow got the user this far. Transactional because the login log is
      * written from here, and a self call would never reach the proxy that opens one.
+     * <p>
+     * {@link LoginPolicy#beforeIssueToken} runs first: a policy may refuse the session
+     * outright — this method then marks the login model refused and returns false — or
+     * flag it, as the password-expiry policy does by setting {@code resetPwd}. The flag is
+     * only ever raised here, never lowered, so a policy decision survives the built-in
+     * resetPwdTime check.
      */
     @Transactional
-    public void completeLogin(LoginModel loginModel, LoginProxy loginProxy) {
+    public boolean completeLogin(LoginModel loginModel, LoginProxy loginProxy) {
         EruptUser eruptUser = loginModel.getEruptUser();
+        for (LoginPolicy policy : loginPolicies) {
+            String refused = policy.beforeIssueToken(eruptUser, loginModel, request);
+            if (null != refused) {
+                loginModel.setPass(false);
+                loginModel.setReason(refused);
+                return false;
+            }
+        }
         loginModel.setToken(Erupts.generateCode(22)); // 22 alphanumerics ~ 131 bits, meets the 128-bit session id guideline
         loginModel.setExpire(LocalDateTime.now().plusMinutes(eruptUpmsProp.getExpireTimeByLogin()));
-        loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
+        if (null == eruptUser.getResetPwdTime()) loginModel.setResetPwd(true);
         loginModel.setAccount(eruptUser.getAccount());
         if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
         eruptTokenService.loginToken(eruptUser, loginModel.getToken());
         this.saveLoginLog(eruptUser, loginModel.getToken()); //Record login log
+        return true;
     }
 
     public boolean checkPwd(EruptUser eruptUser, String inputPwd) {
@@ -270,6 +306,14 @@ public class EruptUserService {
             if (checkPwd(eruptUser, newPwd)) {
                 return R.error(I18nTranslate.$translate("upms.change_pwd_same_as_old"));
             }
+            // Login policies may refuse the new password: the change is not applied at all
+            for (LoginPolicy policy : loginPolicies) {
+                String violation = policy.validateNewPassword(eruptUser, newPwd);
+                if (null != violation) return R.error(violation);
+            }
+            // The outgoing pair is handed to the policies before the entity is rewritten
+            String supersededPassword = eruptUser.getPassword();
+            String supersededSalt = eruptUser.getSalt();
             if (eruptUser.getEncrypt()) {
                 String salt = EncryptUtil.generateSalt();
                 eruptUser.setSalt(salt);
@@ -287,6 +331,9 @@ public class EruptUserService {
             eruptTokenService.logoutOtherTokens(account, eruptContextService.getCurrentToken());
             if (null != loginProxy) {
                 loginProxy.afterChangePwd(eruptUser, pwd, newPwd);
+            }
+            for (LoginPolicy policy : loginPolicies) {
+                policy.afterPasswordChange(eruptUser, supersededPassword, supersededSalt, newPwd);
             }
             return R.ok();
         } else {

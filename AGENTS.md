@@ -227,6 +227,16 @@ is left untouched and the response is `R.Status.INFO` with that message in a dia
 report it as done; `null` lets the change proceed. erupt-flow (`../erupt-flow`, `FlowModifyGate`) uses it to
 launch the change as an approval instance; `StandInModifyGate` in `erupt-test` is the stand-in for tests.
 
+`LoginPolicy` (`erupt-upms/.../spi/LoginPolicy.java`) is the identity-side counterpart, also consulted as
+ordered beans, at four moments: `beforeLogin` (the `/login` controller and erupt-sso, before the account is
+looked up), `beforeIssueToken` (inside `completeLogin`, so every login path — password, MFA ticket exchange,
+delegated SSO — passes it; a policy may refuse or raise `resetPwd`, which the flag logic only ever raises,
+never lowers), and `validateNewPassword` / `afterPasswordChange` (the self-service change, the admin reset,
+the new-user form, and any module setting a password). A policy refusal is a verdict, not a credential
+failure: it never feeds the login lock or the captcha counter. erupt-iam (`../erupt-iam`) layers its password
+policy, login risk control, session ceiling and mandatory MFA on this SPI; there is no stand-in in erupt-test
+because the default methods abstain and an absent bean list means "no policies".
+
 A session narrowed to one target (an erupt-share link) may call a login-level route only if the route
 declares the right it exercises: give a read-only `@EruptRouter(verifyType = LOGIN)` endpoint
 `power = EruptRouter.Power.QUERY` (the semantic layer's reads, a published canvas page) and leave a
