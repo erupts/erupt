@@ -87,8 +87,24 @@ public class ChatController {
             llmModel = eruptDao.find(LLM.class, llmId);
         }
         SseEmitter emitter = new SseEmitter(aiProp.getSseTimeout());
-        if (null == llmModel) {
-            llmService.sendSseMessage(emitter, "No LLM available");
+        if (message.isBlank() && StringUtils.isBlank(images)) {
+            llmService.sendSseMessage(emitter, "Please enter a prompt");
+            llmService.completeSse(emitter);
+            return emitter;
+        }
+        String llmCode = null == llmModel ? null : llmModel.getLlm();
+        String modelName = null == llmModel ? null : llmModel.getModel();
+        // The user message is kept even when no model can answer it, so the chat history
+        // never silently drops a turn
+        AiChatMessage chatMessage = AiChatMessage.create(chatId, llmCode, modelName, ChatSenderType.USER, message, 0);
+        chatMessage.setAgentId(agentId);
+        chatMessage.setImages(checkImages(images));
+        eruptDao.persist(chatMessage);
+        LlmCore llm = null == llmCode ? null : LlmCore.getLLM(llmCode);
+        if (null == llm) {
+            String reason = null == llmModel ? "No LLM available" : "Unsupported LLM: " + llmCode;
+            eruptDao.persist(AiChatMessage.create(chatId, llmCode, modelName, ChatSenderType.MODEL, reason, 0));
+            llmService.sendSseMessage(emitter, reason);
             llmService.completeSse(emitter);
             return emitter;
         }
@@ -98,20 +114,8 @@ public class ChatController {
             llmService.sendSseMessage(emitter, "Request timed out, please try again");
         });
         emitter.onError((throwable) -> log.error("Sse Request failed chatId: {}", chatId, throwable));
-        if (message.isBlank() && StringUtils.isBlank(images)) {
-            llmService.sendSseMessage(emitter, "Please enter a prompt");
-            llmService.completeSse(emitter);
-            return emitter;
-        } else {
-            LlmCore llm = LlmCore.getLLM(llmModel.getLlm());
-            AiChatMessage chatMessage = AiChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0);
-            chatMessage.setAgentId(agentId);
-            chatMessage.setImages(checkImages(images));
-            eruptDao.persist(chatMessage);
-            llmService.sendSse(MetaContext.get(), autoToolCall, llmAgent, emitter, llm, llmModel, chatMessage,
-                    message, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()), contextPrompt);
-        }
-
+        llmService.sendSse(MetaContext.get(), autoToolCall, llmAgent, emitter, llm, llmModel, chatMessage,
+                message, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()), contextPrompt);
         return emitter;
     }
 

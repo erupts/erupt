@@ -33,7 +33,6 @@ import xyz.erupt.core.util.EruptSpringUtil;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -243,7 +242,6 @@ public abstract class LlmCore {
 
     private void streamingChat(EruptAiChat eruptAiChat, String userMessage, List<ImageContent> images, MetaContext metaContext, Consumer<SseListener> listener) {
         MetaContext.set(metaContext);
-        AtomicBoolean toolCalling = new AtomicBoolean(false);
         TokenStream tokenStream;
         if (null == images || images.isEmpty()) {
             tokenStream = eruptAiChat.streamChat(userMessage);
@@ -253,25 +251,18 @@ public abstract class LlmCore {
             contents.addAll(images);
             tokenStream = eruptAiChat.streamChat(contents);
         }
-        tokenStream.onPartialResponse(partialResponse -> {
-                    toolCalling.set(true);
-                    listener.accept(SseListener.builder().currMessage(partialResponse).build());
-                })
-                .onCompleteResponse(chatResponse -> {
-                    toolCalling.set(false);
-                    listener.accept(SseListener.builder()
-                            .isFinish(true)
-                            .usage(chatResponse.tokenUsage())
-                            .finishReason(chatResponse.finishReason())
-                            .aiMessage(chatResponse.aiMessage()).build());
-                })
+        tokenStream.onPartialResponse(partialResponse -> listener.accept(SseListener.builder().currMessage(partialResponse).build()))
+                .onCompleteResponse(chatResponse -> listener.accept(SseListener.builder()
+                        .isFinish(true)
+                        .usage(chatResponse.tokenUsage())
+                        .finishReason(chatResponse.finishReason())
+                        .aiMessage(chatResponse.aiMessage()).build()))
+                // Tool failures are turned into tool results by toolExecutionErrorHandler, so an error
+                // here always ends the stream; forward it even mid-stream, or listeners never finish
                 .onError(e -> {
                     log.error("Failed to get response from server", e);
-                    if (!toolCalling.get()) {
-                        listener.accept(SseListener.builder().isFinish(true).throwable(e).build());
-                    }
+                    listener.accept(SseListener.builder().isFinish(true).throwable(e).build());
                 }).onPartialToolCall(toolCall -> {
-                    toolCalling.set(true);
                     MetaContext.set(metaContext);
                     String callMsg = toolCall.name();
                     listener.accept(SseListener.builder().call(callMsg).build());

@@ -206,8 +206,13 @@ public class LLMService {
                     toolCallList.add(new ToolCallRecord(it.getToolName(), it.getToolArgs(), it.getToolResult(), LocalDateTime.now()));
                 } else if (null != it.getThrowable()) {
                     String message = it.getThrowable().getMessage();
+                    // A mid-stream failure keeps what was already generated, followed by the error
+                    if (!partialText.isEmpty()) message = "\n\n" + message;
                     if (!emitterClosed.get()) this.sendSseMessage(emitter, message);
-                    eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModel.getLlm(), llmModel.getModel(), ChatSenderType.MODEL, message, 0));
+                    String content = partialText + message;
+                    String toolCalls = toolCallList.isEmpty() ? null : GsonFactory.getGson().toJson(toolCallList);
+                    eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModel.getLlm(), llmModel.getModel(), ChatSenderType.MODEL,
+                            content, partialThinking.isEmpty() ? null : partialThinking.toString(), toolCalls, 0));
                     this.completeSse(emitter);
                 } else if (it.isFinish()) {
                     String message = it.getAiMessage() != null && it.getAiMessage().text() != null ? it.getAiMessage().text() : "";
