@@ -1,7 +1,10 @@
 package xyz.erupt.cloud.node.lite;
 
+import xyz.erupt.annotation.sub_field.View;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -11,7 +14,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -185,6 +191,29 @@ final class Values {
         if (d instanceof java.sql.Timestamp ts) return ts.toLocalDateTime();
         if (d instanceof java.sql.Date sd) return sd.toLocalDate().atStartOfDay();
         return LocalDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault());
+    }
+
+    /** A column's {@code @View(statistic)} over its values, as erupt-core's AggregateUtil computes it. */
+    static Object aggregate(List<Object> column, View.Statistic statistic) {
+        List<Object> values = column.stream().filter(Objects::nonNull).toList();
+        List<BigDecimal> numbers = new ArrayList<>();
+        for (Object v : values) {
+            try {
+                numbers.add(new BigDecimal(text(v)));
+            } catch (NumberFormatException ignored) {
+                // not a number: counted, never summed
+            }
+        }
+        return switch (statistic) {
+            case COUNT -> (long) values.size();
+            case DISTINCT_COUNT -> values.stream().map(Values::text).distinct().count();
+            case SUM -> numbers.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+            case AVG -> numbers.isEmpty() ? null : numbers.stream().reduce(BigDecimal.ZERO, BigDecimal::add)
+                    .divide(BigDecimal.valueOf(numbers.size()), 6, RoundingMode.HALF_UP);
+            case MAX -> numbers.stream().max(Comparator.naturalOrder()).orElse(null);
+            case MIN -> numbers.stream().min(Comparator.naturalOrder()).orElse(null);
+            case NONE -> null;
+        };
     }
 
     static boolean same(Object a, Object b) {

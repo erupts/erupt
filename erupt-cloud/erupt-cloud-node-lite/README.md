@@ -16,7 +16,10 @@ declared with the very annotations a Spring erupt application uses, so a class m
 | `erupt-cloud-node-servlet` | any servlet container, jakarta.servlet 5+ or javax.servlet 3.1+ |
 | `erupt-cloud-node` / `-jpa` | Spring Boot: the full erupt-core pipeline, not this module |
 
-It is released with erupt, so its version is erupt's and the annotations always match the server.
+It is released with erupt, so its version is erupt's and the annotations always match the server. It speaks node
+protocol v2 ([PROTOCOL.md](../PROTOCOL.md) §12): the server checks rights, queries and records and normalizes
+values before a call reaches the node, which stores rows and runs your handlers. It needs an erupt server of 2.4.1
+or later; against an older one it logs that the server needs an upgrade and stops registering.
 
 ```xml
 <dependency>
@@ -59,8 +62,9 @@ named like the member; the primary key is `@Erupt(primaryKeyCol)` (`id`), declar
 A field shows in the form when its `@Edit` has a title. `AUTO` types are inferred from the member type as the
 erupt proxies do (`String` INPUT, numbers NUMBER, `Boolean` BOOLEAN, `LocalDate` / `LocalDateTime` / `Date` DATE,
 an enum CHOICE, another `@Erupt` class a reference). The build JSON is serialized from the annotations by
-erupt's own rules (`AnnotationProcess`): `@Transient` attributes left out, `@Match` branches evaluated, enums
-by name, classes by simple name.
+erupt's own rules (`AnnotationProcess`): `@Transient` attributes left out (but a drill's `link.column` /
+`joinColumn` and a dependent picker's `dependColumn`, which the server turns into conditions), `@Match` branches
+evaluated, enums by name, classes by simple name.
 
 `@Erupt(orderBy)` is the default sort, written `"field [asc|desc], ..."`.
 
@@ -86,7 +90,8 @@ The erupt-annotation interfaces, named in the annotations, work as in a Spring a
 |-----------|-------------|-|
 | `DataProxy<T>` | `@Erupt(dataProxy)` | `validate`, `before/afterAdd`, `before/afterUpdate`, `before/afterDelete`, `afterFetch`, `addBehavior`, `editBehavior`, `searchCondition` |
 | `OperationHandler<T, Form>` | `@RowOperation(operationHandler)` | `exec(rows, form, params)`; a returned string runs as JavaScript in the browser, so return only code you wrote. `eruptFormValue` fills the form |
-| `ChoiceFetchHandler` | `@ChoiceType(fetchHandler)` | dynamic CHOICE options |
+| `ChoiceFetchHandler` | `@ChoiceType(fetchHandler)` | dynamic CHOICE options, asked for each time the form opens |
+| `EruptButtonHandler<T>` | `@ButtonType(handler)` of a `BUTTON` field | `click` (JavaScript for the browser), `populateForm`, `buildEditExpr` |
 | `PowerHandler` | `@Power(powerHandler)` | narrows the declared power |
 | `ExprBool.ExprHandler` | `show` / `ifRender` | per-user visibility of operations, views, edits |
 | `Readonly.ReadonlyHandler` | `@Readonly(exprHandler)` | |
@@ -229,13 +234,13 @@ resp.setStatus(r.status()); resp.setContentType(r.contentType()); resp.getOutput
 
 ## Security
 
-Server calls are verified by `Erupt-Signature` (`.requireSignature(true)` refuses the plain access token);
-`Erupt-Enforced` is trusted only under a valid signature. Calls with an `Origin` header are refused. Without
-`Erupt-Enforced: power` the node asks the server for the user's rights (`erupt-power`, cached 5 s) and fails
-closed. Condition keys and sort fields are whitelisted against the model.
+Every server call must carry a valid `Erupt-Signature`, keyed by the access token, and an `Erupt-Enforced` listing
+what the endpoint relies on the server for (`power`; `query` for a table, `record` for an add or update); anything
+else is refused with 403, as is a call with an `Origin` header. The server enforces the user's rights and the
+declared `@Power`; a `PowerHandler` that narrows power per user is applied again on the node. Condition keys and
+sort fields still reach SQL only as the model's columns, and every value is bound.
 
-Not yet: sub-tables (TAB_*), MULTI_CHOICE / collection members, TPL operations, tree models, depend fields of
-references, file upload, Excel, `@Erupt(filter)`, i18n of messages.
+Not yet: sub-tables (TAB_*), MULTI_CHOICE / collection members, TPL operations, tree models, file upload, Excel, `@Erupt(filter)`, i18n of messages.
 
 ## Development
 

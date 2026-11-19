@@ -4,8 +4,11 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.Vis;
 import xyz.erupt.annotation.expr.ExprBool;
+import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.fun.EruptButtonHandler;
 import xyz.erupt.annotation.fun.OperationHandler;
+import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.query.Direction;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Filter;
@@ -17,6 +20,7 @@ import xyz.erupt.annotation.sub_erupt.Sort;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.ButtonType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
@@ -75,7 +79,7 @@ final class Models {
         String status;
         @EruptField(views = @View(title = "Level"), edit = @Edit(title = "Level", search = @Search))
         Level level;
-        @EruptField(views = @View(title = "Views", sortable = true), edit = @Edit(title = "Views"))
+        @EruptField(views = @View(title = "Views", sortable = true, statistic = View.Statistic.SUM), edit = @Edit(title = "Views"))
         Integer views;
         @EruptField(views = @View(title = "Featured"), edit = @Edit(title = "Featured", search = @Search))
         Boolean featured;
@@ -98,6 +102,29 @@ final class Models {
         Long id;
         @EruptField(views = @View(title = "Text"), edit = @Edit(title = "Text"))
         String text;
+        @EruptField(views = @View(title = "Mood"), edit = @Edit(title = "Mood", type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = Moods.class)))
+        String mood;
+        @EruptField(edit = @Edit(title = "Ping", type = EditType.BUTTON, buttonType = @ButtonType(handler = Ping.class, handlerParams = "!")))
+        Object ping;
+    }
+
+    static class Ping implements EruptButtonHandler<Note> {
+        @Override
+        public String click(Note note, String[] params) {
+            return "pong:" + note.text + params[0];
+        }
+
+        @Override
+        public java.util.Map<String, Object> populateForm(Note note, String[] params) {
+            return java.util.Map.of("text", "pinged");
+        }
+    }
+
+    static class Moods implements ChoiceFetchHandler {
+        @Override
+        public List<VLModel> fetch(String[] params) {
+            return List.of(new VLModel("calm", "Calm"), new VLModel("busy", "Busy"));
+        }
     }
 
     static class Stamp implements DataProxy<Article> {

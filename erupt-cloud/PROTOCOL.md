@@ -3,7 +3,8 @@
 > Status: **draft**. Describes the wire contract between an erupt cloud **server** and a **node** as
 > implemented today by `erupt-cloud-server` / `erupt-cloud-node`, so that a node can be written in any
 > language. Sections marked **[v1 proposal]** are not implemented yet. §12 is protocol **v2**: a thinner node
-> that leaves validation and translation to the server. The server side is implemented; no node SDK speaks it yet.
+> that leaves validation and translation to the server, spoken by `erupt-cloud-node-lite` and every erupt-sdk node;
+> the Spring node (`erupt-cloud-node`) speaks v1.
 
 ## 1. Roles
 
@@ -180,7 +181,7 @@ A node that implements only these gets a working table, search, detail view and 
 | `rowOperation` | `invoke` kinds `operation` / `operation-form` (§5.5); a node without the `invoke` capability serves `POST /erupt-api/data/{erupt}/operator/{code}` and `POST .../operator/{code}/form-value` |
 | `REFERENCE_TABLE` | none for a node with the `invoke` capability, the server reads the picker (§5.4); otherwise `POST /erupt-api/data/{erupt}/reference-table/{field}` (§7.3) |
 | `TAB_TABLE_ADD` / tab editing | `POST /erupt-api/data/modify/tab-add|tab-update|tab-delete/{erupt}/{field}` |
-| Options fetched by the node (`fetchHandler` named), `AUTO_COMPLETE`, `onchange`, `BUTTON` | `POST /erupt-api/invoke/{erupt}/{kind}/{field}` (§5.5), for a node registered with the `invoke` capability. A node without it (a Java node) is sent the Java endpoints instead: `comp/choice-item`, `comp/choice-item-filter`, `comp/tags-item`, `comp/auto-complete`, `data/onchange`, `comp/button` |
+| Options fetched by the node (`fetchHandler` named), `AUTO_COMPLETE`, `onchange`, `BUTTON` | `POST /erupt-api/invoke/{erupt}/{kind}/{field}` (§5.5), for a node registered with the `invoke` capability. A node without it (the Spring node) is sent the Java endpoints instead: `comp/choice-item`, `comp/choice-item-filter`, `comp/tags-item`, `comp/auto-complete`, `data/onchange`, `comp/button` |
 | view `statistic` | `POST /erupt-api/data/aggregate/{erupt}` |
 | extra rows | `POST /erupt-api/data/extra-row/{erupt}` |
 | form-view layout | `GET`/`POST /erupt-api/data/form-view/{erupt}` |
@@ -449,7 +450,7 @@ A Docker image bundling an erupt server and a protocol test suite. A node SDK pa
 registers, survives heartbeat expiry, and round-trips a reference model (table, search on every
 `QueryExpression`, add, update, delete, power denial, nesting denial, origin rejection).
 
-## 12. Protocol v2 — thin nodes **[v2: the server and every erupt-sdk node; the Java node speaks v1]**
+## 12. Protocol v2 — thin nodes **[v2: the server, `erupt-cloud-node-lite` and every erupt-sdk node; the Spring node speaks v1]**
 
 ### 12.1 Goal
 
@@ -658,7 +659,7 @@ the registration with `{"protocolVersion": 2}`, sends only signed, normalized ca
 refuses an unsigned call and one missing a required `Erupt-Enforced` value. Search, drill and link tree checks
 send the conditions of §12.4 instead of headers and `linkTreeVal`. The declared build is checked against the
 annotation schema and completed as `NodeBuilds` does (`conformance/annotations.py`) before the build assertions.
-Any other node is checked against v1, as the Java node is.
+Any other node is checked against v1, as the Spring node is.
 
 ## 13. Open questions
 

@@ -141,11 +141,12 @@ public final class Model<T> implements AnnotationJson.Resolver {
 
     Map<String, Object> toRow(T record) {
         Map<String, Object> row = new LinkedHashMap<>();
-        for (FieldDef f : fields.values()) row.put(f.name, f.toJson(record));
+        // a form-only element (DIVIDE, GROUP, BUTTON...) has no value and no column
+        for (FieldDef f : fields.values()) if (f.stored) row.put(f.name, f.toJson(record));
         return row;
     }
 
-    /** Writes the form fields of {@code body} into {@code record}; a missing or illegal value fails with the field's title. */
+    /** Writes the form fields of {@code body} into {@code record}; a value that does not convert fails with the field's title. */
     T fill(T record, Map<?, ?> body) {
         for (FieldDef f : fields.values()) {
             if (!f.writable()) continue;
@@ -155,8 +156,24 @@ public final class Model<T> implements AnnotationJson.Resolver {
             } catch (IllegalArgumentException e) {
                 throw new EruptException(f.title() + ": " + e.getMessage());
             }
-            if (value == null && f.edit.notNull()) throw new EruptException(f.title() + " cannot be empty");
             f.set(record, value);
+        }
+        return record;
+    }
+
+    /**
+     * The form being filled, as a record for the node's own code (onchange, fetched options, buttons): every value that
+     * converts, the rest left unset. Unlike a saved record, a form in progress is not checked.
+     */
+    T form(Map<?, ?> values) {
+        T record = newInstance();
+        for (FieldDef f : fields.values()) {
+            if (!f.stored || !values.containsKey(f.name)) continue;
+            try {
+                f.set(record, f.fromJson(values.get(f.name)));
+            } catch (RuntimeException ignored) {
+                // a half-typed value: left unset
+            }
         }
         return record;
     }

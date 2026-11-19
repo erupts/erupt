@@ -94,13 +94,9 @@ class JsonFieldsTest {
         assertEquals(Map.of("env", "prod"), row.get("attrs"));
 
         // a MULTI_CHOICE matches by one element
-        assertEquals(1, rows(node, List.of(Map.of("key", "roles", "value", "ADMIN"))).size());
-        assertEquals(0, rows(node, List.of(Map.of("key", "roles", "value", "GUEST"))).size());
+        assertEquals(1, rows(node, List.of(Map.of("key", "roles", "expression", "EQ", "value", "ADMIN"))).size());
+        assertEquals(0, rows(node, List.of(Map.of("key", "roles", "expression", "EQ", "value", "GUEST"))).size());
         assertEquals(0, rows(node, List.of(Map.of("key", "langs", "expression", "IN", "value", List.of("GO")))).size());
-
-        Map<String, Object> illegal = (Map<String, Object>) call(node, "POST", "/erupt-api/data/modify/Profile",
-                Map.of("name", "B", "langs", List.of("RUST")));
-        assertEquals(false, illegal.get("success"), "an option the field does not offer");
 
         Map<String, Object> update = new HashMap<>(row);
         update.put("langs", List.of("GO"));
@@ -123,14 +119,16 @@ class JsonFieldsTest {
         return (List<Map<String, Object>>) page.get("list");
     }
 
-    // a signed call with power vouched for, so the node does not ask the (absent) server
+    // a signed call, vouching for what a v2 server checks (PROTOCOL.md §12.2)
+    private static final String ENFORCED = "power,query,record";
+
     private static Object call(Node node, String method, String target, Object body) {
         byte[] raw = body == null ? new byte[0] : Json.write(body).getBytes(StandardCharsets.UTF_8);
         String user = Base64.getEncoder().encodeToString("{\"uid\":1,\"account\":\"admin\"}".getBytes(StandardCharsets.UTF_8));
         long now = System.currentTimeMillis() / 1000;
         // looked up lower-cased, as the node asks for them case-insensitively
-        Map<String, String> headers = Map.of("erupt", "Profile", "user", user, "erupt-timestamp", String.valueOf(now), "erupt-enforced", "power",
-                "erupt-signature", CloudSignature.sign(TOKEN, method, target, now, "power", user, raw));
+        Map<String, String> headers = Map.of("erupt", "Profile", "user", user, "erupt-timestamp", String.valueOf(now), "erupt-enforced", ENFORCED,
+                "erupt-signature", CloudSignature.sign(TOKEN, method, target, now, ENFORCED, user, raw));
         Node.Response r = node.handle(new Node.Request(method, target, k -> headers.get(k.toLowerCase()), raw));
         assertEquals(200, r.status(), new String(r.body(), StandardCharsets.UTF_8));
         return Json.parse(new String(r.body(), StandardCharsets.UTF_8));

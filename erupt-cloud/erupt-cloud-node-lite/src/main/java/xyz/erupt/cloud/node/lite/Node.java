@@ -5,19 +5,25 @@ import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.Vis;
 import xyz.erupt.annotation.exception.EruptException;
 import xyz.erupt.annotation.sub_erupt.Drill;
+import xyz.erupt.annotation.fun.AutoCompleteHandler;
+import xyz.erupt.annotation.fun.EruptButtonHandler;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.query.Direction;
 import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.annotation.sub_erupt.Filter;
-import xyz.erupt.annotation.sub_erupt.LinkTree;
-import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
+import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.OnChange;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
 import xyz.erupt.cloud.common.http.CloudSignature;
 import xyz.erupt.cloud.common.model.NodeInfo;
+import xyz.erupt.cloud.common.node.CloudProtocol;
+import xyz.erupt.cloud.common.node.NodeCapability;
 import xyz.erupt.cloud.common.node.NodeRegistrar;
 import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.linq.lambda.SFunction;
@@ -27,13 +33,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +45,7 @@ import java.util.Base64;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -54,8 +59,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * An erupt cloud node: registers with the server, then answers the requests it forwards (erupt-cloud/PROTOCOL.md,
- * Level 0 plus references and row operations). Serve it with the JDK's HTTP server ({@link #serve}), or mount
+ * An erupt cloud node speaking protocol v2 (erupt-cloud/PROTOCOL.md §12): registers with the server, then answers
+ * the signed, checked and normalized requests it forwards (Level 0, row operations, fetched options and buttons through
+ * {@code invoke}). The server enforces rights, checks queries and records and reads reference pickers itself. Serve it with the JDK's HTTP server ({@link #serve}), or mount
  * {@link #handle} in any other HTTP stack and call {@link #connect}: erupt-cloud-node-solon, -quarkus and -vertx do
  * that for their frameworks.
  *
@@ -67,7 +73,7 @@ import java.util.regex.Pattern;
  */
 public final class Node implements AutoCloseable, Model.Registry {
 
-    /** The erupt version this node is built with, which is the protocol version it speaks. */
+    /** The erupt version this node is built with. */
     public static final String VERSION = version();
 
     /** The prefix of every model endpoint the server forwards to a node. */
@@ -76,11 +82,13 @@ public final class Node implements AutoCloseable, Model.Registry {
     // request headers the server forwards (EruptMutualConst in erupt-core)
     private static final String HEADER_ERUPT = "erupt", HEADER_ERUPT_PARENT = "eruptParent", HEADER_USER = "user", HEADER_TOKEN = "token";
 
-    // a drill into a table: the drill's code, the source row's key and the source erupt
-    private static final String HEADER_DRILL = "Drill", HEADER_DRILL_VALUE = "DrillValue", HEADER_DRILL_SOURCE = "DrillSourceErupt";
+    // the query param naming the parent erupt, when not sent as the eruptParent header
+    private static final String PARAM_ERUPT_PARENT = "_eruptParent";
 
-    // parameters of the server's cloud API that NodeInfo does not name
-    private static final String PARAM_ERUPT_NAME = "eruptName", PARAM_ERUPT_PARENT = "_eruptParent";
+    // what Erupt-Enforced must list for an endpoint (§12.2)
+    private static final Set<CloudSignature.Enforced> POWER = EnumSet.of(CloudSignature.Enforced.POWER),
+            QUERY = EnumSet.of(CloudSignature.Enforced.POWER, CloudSignature.Enforced.QUERY),
+            RECORD = EnumSet.of(CloudSignature.Enforced.POWER, CloudSignature.Enforced.RECORD);
 
     private static final System.Logger LOG = System.getLogger("erupt");
 
@@ -90,25 +98,20 @@ public final class Node implements AutoCloseable, Model.Registry {
      */
     private static final Set<Right> UNSUPPORTED_POWER = EnumSet.of(Right.PRINT, Right.AI);
 
-    /** Rights the server decides per user; the node ANDs them onto the declared power. */
-    private static final Set<Right> SERVER_POWER = EnumSet.of(Right.ADD, Right.EDIT, Right.DELETE, Right.VIEW_DETAILS, Right.EXPORT, Right.IMPORTABLE);
-
-    private static final int MAX_PAGE_SIZE = 1000;
+    private static final int MAX_PAGE_SIZE = 1000, MAX_AGGREGATE_ROWS = 10_000;
 
     private static final ThreadLocal<Scope> SCOPE = new ThreadLocal<>();
 
     private final String name, accessToken;
     private final NodeRegistrar registrar;
     private final Map<String, Entry<?>> entries = new LinkedHashMap<>();
+    private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
     private final Map<Class<?>, Model<?>> models = new ConcurrentHashMap<>();
     private final Map<Class<?>, Object> instances = new ConcurrentHashMap<>();
-    private final Map<String, Object[]> powerCache = new ConcurrentHashMap<>();
-    private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
     private final List<Route> routes = new ArrayList<>();
     private final CountDownLatch stopped = new CountDownLatch(1);
     private String address;
     private Duration heartbeat = Duration.ofSeconds(15);
-    private boolean requireSignature;
     private Function<Class<?>, Object> factory = type -> null;
     private HttpServer server;
     private ExecutorService executor;
@@ -121,17 +124,16 @@ public final class Node implements AutoCloseable, Model.Registry {
         this.name = name;
         this.accessToken = accessToken;
         this.registrar = new NodeRegistrar(name, accessToken, List.of(servers));
-        route("GET", ERUPT_API + "/build/([^/]+)", this::build);
-        route("GET", ERUPT_API + "/build/([^/]+)/([^/]+)", this::buildByField);
-        route("POST", ERUPT_API + "/data/table/([^/]+)", this::table);
-        route("POST", ERUPT_API + "/data/([^/]+)/reference-table/([^/]+)", this::referenceTable);
-        route("POST", ERUPT_API + "/data/([^/]+)/operator/([^/]+)/form-value", this::operationFormValue);
-        route("POST", ERUPT_API + "/data/([^/]+)/operator/([^/]+)", this::operation);
-        route("GET", ERUPT_API + "/data/init-value/([^/]+)", this::initValue);
-        route("GET", ERUPT_API + "/data/([^/]+)/([^/]+)", this::get);
-        route("POST", ERUPT_API + "/data/modify/([^/]+)", this::add);
-        route("POST", ERUPT_API + "/data/modify/([^/]+)/update", this::update);
-        route("POST", ERUPT_API + "/data/modify/([^/]+)/delete", this::delete);
+        // the server reads builds on its own account: no Erupt-Enforced needed
+        route("GET", ERUPT_API + "/build/([^/]+)", Set.of(), this::build);
+        route("POST", ERUPT_API + "/data/table/([^/]+)", QUERY, this::table);
+        route("POST", ERUPT_API + "/data/aggregate/([^/]+)", QUERY, this::aggregate);
+        route("POST", ERUPT_API + "/invoke/([^/]+)/([^/]+)/([^/]+)", POWER, this::invoke);
+        route("GET", ERUPT_API + "/data/init-value/([^/]+)", POWER, this::initValue);
+        route("GET", ERUPT_API + "/data/([^/]+)/([^/]+)", POWER, this::get);
+        route("POST", ERUPT_API + "/data/modify/([^/]+)", RECORD, this::add);
+        route("POST", ERUPT_API + "/data/modify/([^/]+)/update", RECORD, this::update);
+        route("POST", ERUPT_API + "/data/modify/([^/]+)/delete", POWER, this::delete);
     }
 
     // ---------------------------------------------------------------- configuration
@@ -149,12 +151,6 @@ public final class Node implements AutoCloseable, Model.Registry {
 
     public Node heartbeat(Duration heartbeat) {
         this.heartbeat = heartbeat;
-        return this;
-    }
-
-    /** Refuses server calls without a valid Erupt-Signature, so the plain access token alone no longer passes. */
-    public Node requireSignature(boolean requireSignature) {
-        this.requireSignature = requireSignature;
         return this;
     }
 
@@ -190,6 +186,37 @@ public final class Node implements AutoCloseable, Model.Registry {
     public static Node current() {
         Scope s = SCOPE.get();
         return s == null ? null : s.node;
+    }
+
+    /**
+     * The acting user's full information from the server (account, name, roles, org...), for code inside a request;
+     * PROTOCOL.md §6. Fails outside a request or when the server cannot be reached.
+     */
+    public static Map<?, ?> userInfo() throws IOException, InterruptedException {
+        Scope s = scope();
+        return Json.parse(s.node.serverGet(CloudRestApiConst.ERUPT_USER_INFO + "/" + s.node.name, s.token)) instanceof Map<?, ?> m ? m : Map.of();
+    }
+
+    /** The node's config text, set on its node record on the server (empty when none); PROTOCOL.md §6. */
+    public static String config() throws IOException, InterruptedException {
+        Scope s = scope();
+        return s.node.serverGet(CloudRestApiConst.NODE_CONFIG + "/" + s.node.name, null);
+    }
+
+    private static Scope scope() {
+        Scope s = SCOPE.get();
+        if (s == null) throw new IllegalStateException("not inside a request of an erupt node");
+        return s;
+    }
+
+    // a call back into the server, authenticated by the access token (and the user's session token, when given)
+    private String serverGet(String path, String token) throws IOException, InterruptedException {
+        HttpRequest.Builder req = HttpRequest.newBuilder(URI.create(registrar.nextServer() + path)).timeout(Duration.ofSeconds(5))
+                .header(CloudCommonConst.HEADER_ACCESS_TOKEN, accessToken).GET();
+        if (token != null) req.header(HEADER_TOKEN, token);
+        HttpResponse<String> resp = http.send(req.build(), HttpResponse.BodyHandlers.ofString());
+        if (resp.statusCode() != 200) throw new IOException("HTTP " + resp.statusCode() + " from " + path);
+        return resp.body();
     }
 
     /** The acting user of the current request; null outside one or when the server sent none. */
@@ -271,6 +298,7 @@ public final class Node implements AutoCloseable, Model.Registry {
         for (Route route : routes) {
             Matcher m = route.pattern.matcher(path);
             if (!route.method.equals(req.method()) || !m.matches()) continue;
+            if (!enforced.containsAll(route.enforced)) throw new Reply(403);
             String eruptName = decode(m.group(1));
             Entry<?> entry = entries.get(eruptName);
             if (!eruptName.equals(erupt) || entry == null) throw new Reply(404);
@@ -281,7 +309,7 @@ public final class Node implements AutoCloseable, Model.Registry {
             String userHeader = req.header().apply(HEADER_USER);
             User user = userHeader == null || userHeader.isEmpty() ? null
                     : User.of(Json.parse(new String(Base64.getDecoder().decode(userHeader.strip()), StandardCharsets.UTF_8)));
-            SCOPE.set(new Scope(this, user, enforced, req.header().apply(HEADER_TOKEN), req.header()));
+            SCOPE.set(new Scope(this, user, req.header().apply(HEADER_TOKEN)));
             List<String> args = new ArrayList<>();
             for (int i = 2; i <= m.groupCount(); i++) args.add(decode(m.group(i)));
             return route.handler.handle(entry, req.body(), args);
@@ -289,16 +317,10 @@ public final class Node implements AutoCloseable, Model.Registry {
         throw new Reply(404);
     }
 
-    /** A signed call must verify, and then stands for the token; its Erupt-Enforced is trusted only then. */
+    /** Every call must carry a valid signature (§12.2); its Erupt-Enforced is what it vouches for. */
     private Set<CloudSignature.Enforced> authenticate(Request req) {
         String signature = req.header().apply(CloudSignature.HEADER_SIGNATURE);
-        if (signature == null) {
-            String token = req.header().apply(CloudCommonConst.HEADER_ACCESS_TOKEN);
-            if (requireSignature || token == null || !MessageDigest.isEqual(token.getBytes(StandardCharsets.UTF_8), accessToken.getBytes(StandardCharsets.UTF_8))) {
-                throw new Reply(403);
-            }
-            return Set.of();
-        }
+        if (signature == null) throw new Reply(403);
         String contentType = req.header().apply("Content-Type");
         boolean multipart = contentType != null && contentType.contains("multipart/form-data");
         String enforced = req.header().apply(CloudSignature.HEADER_ENFORCED);
@@ -316,46 +338,58 @@ public final class Node implements AutoCloseable, Model.Registry {
         return e.model.buildModel(power(e.model));
     }
 
-    private Object buildByField(Entry<?> e, byte[] body, List<String> args) {
-        // the reference picker: build of the referenced model, requested under the host model's name
-        Model<?> target = referenceField(e.model, args.get(0), false).target();
-        return target.buildModel(power(target));
-    }
-
     private Object table(Entry<?> e, byte[] body, List<String> args) {
         require(e.model, Right.QUERY);
         return page(e, readMap(body));
     }
 
-    private Object referenceTable(Entry<?> e, byte[] body, List<String> args) {
-        FieldDef f = referenceField(e.model, args.get(0), true);
-        return page(entry(f.target()), readMap(body));
-    }
-
-    private static FieldDef referenceField(Model<?> model, String field, boolean tableOnly) {
-        FieldDef f = model.fields.get(field);
-        if (f == null || !f.isReference() || tableOnly && f.type != xyz.erupt.annotation.sub_field.EditType.REFERENCE_TABLE) throw new Reply(404);
-        return f;
-    }
-
-    private Entry<?> entry(Model<?> model) {
-        Entry<?> e = entries.get(model.name);
-        if (e == null || e.model != model) throw new IllegalStateException("referenced erupt '" + model.name + "' is not registered on this node");
-        return e;
-    }
-
     private <T> Object page(Entry<T> e, Map<?, ?> body) {
-        Model<T> model = e.model;
         int pageIndex = Math.max(toInt(body.get(LambdaSee.field(PageView::pageIndex)), 1), 1);
         int pageSize = Math.min(Math.max(toInt(body.get(LambdaSee.field(PageView::pageSize)), 10), 1), MAX_PAGE_SIZE);
+        Repository.Page<T> page = e.repo.page(query(e.model, body, (pageIndex - 1) * pageSize, pageSize));
+        List<Map<String, Object>> rows = rows(e.model, page);
+        return new PageView(pageIndex, pageSize, page.total(), (page.total() + pageSize - 1) / pageSize, rows, null, null, null);
+    }
+
+    // the rows of a page as the table shows them: after DataProxy.afterFetch
+    private static <T> List<Map<String, Object>> rows(Model<T> model, Repository.Page<T> page) {
+        List<Map<String, Object>> rows = new ArrayList<>(page.records().stream().map(model::toRow).toList());
+        model.proxies(p -> p.afterFetch(rows));
+        return rows;
+    }
+
+    /**
+     * {@code POST /data/aggregate/{erupt}}: the {@code @View(statistic)} of each column over every row the table query
+     * matches, not only the page shown; a column's total is null beyond {@link #MAX_AGGREGATE_ROWS} rows rather than
+     * computed over a part of them. As erupt-core's EruptService.getEruptAggregate answers it.
+     */
+    private <T> Object aggregate(Entry<T> e, byte[] body, List<String> args) {
+        require(e.model, Right.QUERY);
+        Map<String, View.Statistic> statistics = new LinkedHashMap<>();
+        for (FieldDef f : e.model.fields.values()) {
+            for (View v : f.eruptField.views()) {
+                if (v.statistic() != View.Statistic.NONE && v.column().isEmpty()) statistics.put(f.name, v.statistic());
+            }
+        }
+        if (statistics.isEmpty()) return Map.of();
+        Repository.Page<T> page = e.repo.page(query(e.model, readMap(body), 0, MAX_AGGREGATE_ROWS));
+        List<Map<String, Object>> rows = page.total() > MAX_AGGREGATE_ROWS ? null : rows(e.model, page);
+        Map<String, Object> totals = new LinkedHashMap<>();
+        statistics.forEach((field, statistic) -> totals.put(field, rows == null ? null : Values.aggregate(rows.stream().map(r -> r.get(field)).toList(), statistic)));
+        return totals;
+    }
+
+    // what the table query asks of the repository: conditions, sort (asked, else the view's, else the model's), filters
+    private <T> Query query(Model<T> model, Map<?, ?> body, int offset, int limit) {
         List<Condition> conditions = new ArrayList<>();
         for (Object c : list(body.get(LambdaSee.field(TableQuery::condition)))) conditions.add(condition(model, c instanceof Map<?, ?> m ? m : Map.of()));
         List<Sort> sort = new ArrayList<>();
         for (Object o : list(body.get(LambdaSee.field(TableQuery::sort)))) {
             Map<?, ?> s = o instanceof Map<?, ?> m ? m : Map.of();
             Object field = s.get(LambdaSee.field(Sort::getField));
+            // the server checked the sort; a name still only reaches the query as one of the model's columns
             FieldDef f = model.fields.get(String.valueOf(field));
-            if (f == null || !f.sortable()) throw new EruptException("illegal sort field '" + field + "'");
+            if (f == null || !f.stored) throw new EruptException("illegal sort field '" + field + "'");
             sort.add(new Sort(f.name, Direction.DESC.name().equalsIgnoreCase(String.valueOf(s.get(LambdaSee.field(Sort::getDirection)))) ? Direction.DESC : Direction.ASC));
         }
         // the @Vis view the table is read for: its filter, and its order when none is asked for
@@ -365,55 +399,38 @@ public final class Node implements AutoCloseable, Model.Registry {
         }
         if (sort.isEmpty()) sort.addAll(model.orderBy);
         List<String> filters = new ArrayList<>();
-        drill(model, conditions, filters);
+        drill(body.get(LambdaSee.field(TableQuery::drill))).ifPresent(filters::add);
         if (vis != null) for (Filter f : vis.filter()) filters.add(f.value());
         model.proxies(p -> Optional.ofNullable(p.beforeFetch(conditions)).filter(s -> !s.isBlank()).ifPresent(filters::add));
-        // a @LinkTree table shows the rows under the picked tree keys; with dependNode, none until one is picked
-        LinkTree linkTree = model.erupt.linkTree();
-        Object picked = body.get(LambdaSee.field(TableQuery::linkTreeVal));
-        FieldDef tree = model.fields.get(linkTree.field());
-        if (tree != null && picked != null) conditions.add(new Condition(tree.name, list(picked).stream().map(tree::toCondition).toList(), QueryExpression.IN));
-        Repository.Page<T> page = tree != null && linkTree.dependNode() && picked == null ? new Repository.Page<>(0, List.of())
-                : e.repo.page(new Query(conditions, sort, (pageIndex - 1) * pageSize, pageSize, filters));
-        List<Map<String, Object>> rows = new ArrayList<>(page.records().stream().map(model::toRow).toList());
-        model.proxies(p -> p.afterFetch(rows));
-        return new PageView(pageIndex, pageSize, page.total(), (page.total() + pageSize - 1) / pageSize, rows, null, null, null);
+        return new Query(conditions, sort, offset, limit, filters);
     }
 
-    // A drill into this table from a row of another erupt: the rows whose joinColumn holds the source row's column
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private void drill(Model<?> model, List<Condition> conditions, List<String> filters) {
-        Scope scope = SCOPE.get();
-        String code = null == scope ? null : scope.header().apply(HEADER_DRILL);
-        if (code == null) return;
-        Entry source = entries.get(String.valueOf(scope.header().apply(HEADER_DRILL_SOURCE)));
-        Drill drill = source == null ? null : Arrays.stream(source.model.erupt.drills()).filter(d -> code.equals(Model.code(d))).findFirst().orElse(null);
-        if (drill == null) throw new Reply(403);
-        Link link = drill.link();
-        FieldDef join = model.fields.get(link.joinColumn().split("\\.")[0]);
-        if (link.linkErupt() != model.type || join == null) throw new EruptException("illegal erupt from drill '" + code + "'");
-        Object row = source.repo.get(pk(source.model, scope.header().apply(HEADER_DRILL_VALUE)));
-        if (row == null) throw new EruptException("record not found");
-        conditions.add(new Condition(join.name, join.toCondition(source.model.get(row, link.column())), QueryExpression.EQ));
-        if (!link.linkCondition().isEmpty()) filters.add(link.linkCondition());
+    /**
+     * A drill into this table (§12.4): the server already added the join condition, the drill's {@code linkCondition}
+     * is the node's query language. {@code drill} is {@code {erupt, code}}, null for none.
+     */
+    private Optional<String> drill(Object drill) {
+        if (!(drill instanceof Map<?, ?> d)) return Optional.empty();
+        Entry<?> source = entries.get(String.valueOf(d.get(LambdaSee.field(DrillRef::erupt))));
+        String code = String.valueOf(d.get(LambdaSee.field(DrillRef::code)));
+        Drill declared = source == null ? null : Arrays.stream(source.model.erupt.drills()).filter(it -> code.equals(Model.code(it))).findFirst().orElse(null);
+        if (declared == null) throw new Reply(403);
+        return Optional.of(declared.link().linkCondition()).filter(s -> !s.isEmpty());
     }
 
+    // the server checked the condition and normalized its value (§12.4); the key still only reaches the query as a column
     private static Condition condition(Model<?> model, Map<?, ?> c) {
         Object key = c.get(LambdaSee.field(Condition::getKey)), expression = c.get(LambdaSee.field(Condition::getExpression));
         FieldDef f = model.fields.get(String.valueOf(key));
-        if (f == null || !f.searchable()) throw new EruptException("illegal search field '" + key + "'");
+        if (f == null || !f.stored) throw new EruptException("illegal search field '" + key + "'");
         QueryExpression op;
         try {
-            op = expression == null || "".equals(expression) ? QueryExpression.EQ : QueryExpression.valueOf(String.valueOf(expression));
+            op = QueryExpression.valueOf(String.valueOf(expression));
         } catch (IllegalArgumentException e) {
-            op = QueryExpression.AUTO;
+            throw new EruptException("illegal operator '" + expression + "'");
         }
-        if (op == QueryExpression.AUTO) throw new EruptException("illegal operator '" + expression + "'");
         Object value = c.get(LambdaSee.field(Condition::getValue));
         if (op == QueryExpression.NULL || op == QueryExpression.NOT_NULL) return new Condition(f.name, null, op);
-        if (f.isReference() && !Set.of(QueryExpression.EQ, QueryExpression.NEQ, QueryExpression.IN, QueryExpression.NOT_IN).contains(op)) {
-            throw new EruptException("illegal operator '" + op + "' for a reference");
-        }
         // a List / Map field matches its JSON text, one option (or fragment) at a time
         if (f.json) {
             List<?> l = value instanceof List<?> list ? list : List.of(value);
@@ -428,13 +445,8 @@ public final class Node implements AutoCloseable, Model.Registry {
         }
         if (op == QueryExpression.LIKE || op == QueryExpression.NOT_LIKE) return new Condition(f.name, Values.text(value), op);
         try {
-            if (op == QueryExpression.RANGE) {
-                if (!(value instanceof List<?> l) || l.size() != 2) throw new IllegalArgumentException("range needs two values");
-                return new Condition(f.name, l.stream().map(f::toCondition).toList(), op);
-            }
-            if (op == QueryExpression.IN || op == QueryExpression.NOT_IN) {
-                List<?> l = value instanceof List<?> list ? list : List.of(value);
-                return new Condition(f.name, l.stream().map(f::toCondition).toList(), op);
+            if (op == QueryExpression.RANGE || op == QueryExpression.IN || op == QueryExpression.NOT_IN) {
+                return new Condition(f.name, list(value).stream().map(f::toCondition).toList(), op);
             }
             return new Condition(f.name, f.toCondition(value), op);
         } catch (IllegalArgumentException e) {
@@ -498,6 +510,64 @@ public final class Node implements AutoCloseable, Model.Registry {
         return r(true, null, null);
     }
 
+    /**
+     * {@code POST /invoke/{erupt}/{kind}/{field}} (§5.5): the node's own code for a field (fetched options, onchange,
+     * auto-complete, a button's click), run on the form being filled, and row operations.
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private <T> Object invoke(Entry<T> e, byte[] body, List<String> args) {
+        String kind = args.get(0), target = args.get(1);
+        Map<?, ?> data = readMap(body);
+        if (kind.equals("operation")) return operation(e, data, target);
+        if (kind.equals("operation-form")) return operationFormValue(e, target);
+        FieldDef f = e.model.fields.get(target);
+        if (f == null) throw new Reply(404);
+        T form = e.model.form(data.get("form") instanceof Map<?, ?> m ? m : Map.of());
+        Edit edit = f.edit;
+        return switch (kind) {
+            case "options" -> {
+                if (!f.fetchesOptions()) throw new Reply(404);
+                yield r(true, null, f.type == EditType.TAGS ? f.tags(form)
+                        : f.choices(form).stream().map(o -> Map.of("value", o.get("value"), "label", o.get("label"))).toList());
+            }
+            case "onchange" -> {
+                if (edit.onchange().isInterface()) throw new Reply(404);
+                OnChange handler = (OnChange) instance(edit.onchange());
+                yield r(true, null, change(null, handler.populateForm(form, edit.onchangeParams()), handler.buildEditExpr(form, edit.onchangeParams())));
+            }
+            case "autocomplete" -> {
+                if (f.type != EditType.AUTO_COMPLETE) throw new Reply(404);
+                String typed = Values.text(data.get("value")).toLowerCase(Locale.ROOT);
+                List<Object> found = new ArrayList<>();
+                for (String v : edit.autoCompleteType().values()) if (v.toLowerCase(Locale.ROOT).contains(typed)) found.add(v);
+                if (!edit.autoCompleteType().handler().isInterface()) {
+                    List<Object> more = ((AutoCompleteHandler) instance(edit.autoCompleteType().handler()))
+                            .completeHandler(form, Values.text(data.get("value")), edit.autoCompleteType().param());
+                    if (more != null) found.addAll(more);
+                }
+                yield r(true, null, found);
+            }
+            case "button" -> {
+                if (f.type != EditType.BUTTON || edit.buttonType().handler().isInterface()) throw new Reply(404);
+                EruptButtonHandler handler = (EruptButtonHandler) instance(edit.buttonType().handler());
+                String[] params = edit.buttonType().handlerParams();
+                yield r(true, null, change(handler.click(form, params), handler.populateForm(form, params), handler.buildEditExpr(form, params)));
+            }
+            default -> throw new Reply(404);
+        };
+    }
+
+    // what the browser does after a field's code ran: a script to evaluate, form values to set, edit expressions; null
+    // when the code changes nothing
+    private static Map<String, Object> change(String eval, Object formData, Object editExpr) {
+        if (eval == null && formData == null && editExpr == null) return null;
+        Map<String, Object> change = new LinkedHashMap<>();
+        if (eval != null) change.put("eval", eval);
+        change.put("formData", formData);
+        change.put("editExpr", editExpr);
+        return change;
+    }
+
     private RowOperation operationOf(Model<?> model, String code) {
         RowOperation op = model.operations().get(code);
         if (op != null) return op;
@@ -507,22 +577,21 @@ public final class Node implements AutoCloseable, Model.Registry {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private <T> Object operationFormValue(Entry<T> e, byte[] body, List<String> args) {
-        RowOperation op = operationOf(e.model, args.get(0));
-        if (op.eruptClass() == void.class) throw new Reply(404); // the browser ignores a 404 here and opens an empty form
+    private <T> Object operationFormValue(Entry<T> e, String code) {
+        RowOperation op = operationOf(e.model, code);
+        if (op.eruptClass() == void.class) return r(true, null, null);
         Model form = model(op.eruptClass());
         Object value = form.newInstance();
         if (!op.operationHandler().isInterface()) {
             Object given = ((OperationHandler) instance(op.operationHandler())).eruptFormValue(List.of(), value, op.operationParam());
             if (given != null) value = given;
         }
-        return form.toRow(value);
+        return r(true, null, form.toRow(value));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private <T> Object operation(Entry<T> e, byte[] body, List<String> args) {
-        RowOperation op = operationOf(e.model, args.get(0));
-        Map<?, ?> data = readMap(body);
+    private <T> Object operation(Entry<T> e, Map<?, ?> data, String code) {
+        RowOperation op = operationOf(e.model, code);
         Object form = null;
         if (op.eruptClass() != void.class) {
             Model formModel = model(op.eruptClass());
@@ -553,36 +622,18 @@ public final class Node implements AutoCloseable, Model.Registry {
         }
     }
 
-    // ---------------------------------------------------------------- permissions (PROTOCOL.md §6.1)
+    // ---------------------------------------------------------------- permissions (PROTOCOL.md §12.5)
 
+    // The server enforces the user's rights and the declared ones from its cached build; what a powerHandler
+    // switches per user is checked here again
     private void require(Model<?> model, Right right) {
         if (!(Boolean) power(model).get(right.key)) throw new Reply(403);
     }
 
-    @SuppressWarnings("unchecked")
     private Map<String, Object> power(Model<?> model) {
         Map<String, Object> power = powerMap(model.power());
         UNSUPPORTED_POWER.forEach(it -> power.put(it.key, false));
-        Scope scope = SCOPE.get();
-        // the server checked the user's rights and restricts the build's power itself: the model's own
-        // declaration is all that is left to apply here
-        if (scope.enforced.contains(CloudSignature.Enforced.POWER)) return power;
-        String token = scope.token == null ? "" : scope.token;
-        String key = token + "\n" + model.name;
-        Object[] cached = powerCache.get(key);
-        if (cached != null && (long) cached[0] > System.nanoTime()) return new LinkedHashMap<>((Map<String, Object>) cached[1]);
-        Map<?, ?> remote;
-        try {
-            remote = serverGet(CloudRestApiConst.ERUPT_POWER + "?" + LambdaSee.field(NodeInfo::getNodeName) + "=" + encode(name)
-                    + "&" + PARAM_ERUPT_NAME + "=" + encode(model.name), token);
-        } catch (Exception e) { // fail closed: without the server's verdict nothing is writable
-            LOG.log(System.Logger.Level.WARNING, "erupt-power unavailable: " + e);
-            remote = Map.of();
-        }
-        for (Right right : SERVER_POWER) power.put(right.key, (Boolean) power.get(right.key) && Boolean.TRUE.equals(remote.get(right.key)));
-        if (powerCache.size() > 10_000) powerCache.clear();
-        powerCache.put(key, new Object[]{System.nanoTime() + 5_000_000_000L, power});
-        return new LinkedHashMap<>(power);
+        return power;
     }
 
     /** Every right PowerObject carries, whatever the erupt-annotation version. */
@@ -600,14 +651,7 @@ public final class Node implements AutoCloseable, Model.Registry {
         return m;
     }
 
-    // ---------------------------------------------------------------- server calls and lifecycle
-
-    private Map<?, ?> serverGet(String pathAndQuery, String token) throws IOException, InterruptedException {
-        HttpRequest req = HttpRequest.newBuilder(URI.create(registrar.nextServer() + pathAndQuery)).timeout(Duration.ofSeconds(5)).header(HEADER_TOKEN, token).GET().build();
-        HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
-        if (resp.statusCode() != 200) throw new IOException("HTTP " + resp.statusCode());
-        return Json.parse(resp.body()) instanceof Map<?, ?> m ? m : Map.of();
-    }
+    // ---------------------------------------------------------------- lifecycle
 
     /**
      * {@link #connect()} for a node mounted on {@code port} of another HTTP stack; when no {@link #address} is set, the
@@ -630,6 +674,8 @@ public final class Node implements AutoCloseable, Model.Registry {
         info.setVersion(VERSION);
         info.setNodeAddress(new String[]{address});
         info.setErupts(List.copyOf(entries.keySet()));
+        info.setProtocolVersion(CloudProtocol.V2.wire());
+        info.getCapabilities().add(NodeCapability.INVOKE.wire());
         registrar.start(heartbeat, () -> info);
         return this;
     }
@@ -731,10 +777,6 @@ public final class Node implements AutoCloseable, Model.Registry {
         return URLDecoder.decode(s.replace("+", "%2B"), StandardCharsets.UTF_8);
     }
 
-    private static String encode(String s) {
-        return URLEncoder.encode(s, StandardCharsets.UTF_8);
-    }
-
     private static String queryParam(String query, String key) {
         for (String pair : query.split("&")) {
             int eq = pair.indexOf('=');
@@ -743,8 +785,8 @@ public final class Node implements AutoCloseable, Model.Registry {
         return null;
     }
 
-    private void route(String method, String regex, Handler handler) {
-        routes.add(new Route(method, Pattern.compile(regex), handler));
+    private void route(String method, String regex, Set<CloudSignature.Enforced> enforced, Handler handler) {
+        routes.add(new Route(method, Pattern.compile(regex), enforced, handler));
     }
 
     @FunctionalInterface
@@ -752,7 +794,7 @@ public final class Node implements AutoCloseable, Model.Registry {
         Object handle(Entry<?> entry, byte[] body, List<String> args) throws Exception;
     }
 
-    private record Route(String method, Pattern pattern, Handler handler) {
+    private record Route(String method, Pattern pattern, Set<CloudSignature.Enforced> enforced, Handler handler) {
     }
 
     private record Entry<T>(Model<T> model, Repository<T> repo) {
@@ -761,7 +803,11 @@ public final class Node implements AutoCloseable, Model.Registry {
     // wire shapes of erupt-core's classes, which this node cannot depend on; Json writes a record as an object
 
     /** erupt-core's TableQuery, of which the paging is read with PageView's keys. */
-    private record TableQuery(List<?> condition, List<?> sort, String vis, List<?> linkTreeVal) {
+    private record TableQuery(List<?> condition, List<?> sort, String vis, DrillRef drill) {
+    }
+
+    /** The drill a v2 table query is read for (§12.4). */
+    private record DrillRef(String erupt, String code) {
     }
 
     /** erupt-core's Page. */
@@ -793,7 +839,7 @@ public final class Node implements AutoCloseable, Model.Registry {
         }
     }
 
-    private record Scope(Node node, User user, Set<CloudSignature.Enforced> enforced, String token, Function<String, String> header) {
+    private record Scope(Node node, User user, String token) {
     }
 
     private static final class Reply extends RuntimeException {

@@ -24,6 +24,8 @@ class NodeRegistrarTest {
 
     final BlockingQueue<String> registered = new LinkedBlockingQueue<>(), removed = new LinkedBlockingQueue<>();
     HttpServer server;
+    // the body the fake server answers a register call with
+    volatile String answer = "";
 
     @AfterEach
     void tearDown() {
@@ -34,7 +36,9 @@ class NodeRegistrarTest {
         server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         server.createContext(CloudRestApiConst.REGISTER_NODE, ex -> {
             registered.add(new String(ex.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
-            ex.sendResponseHeaders(200, -1);
+            byte[] body = answer.getBytes(StandardCharsets.UTF_8);
+            ex.sendResponseHeaders(200, body.length == 0 ? -1 : body.length);
+            if (body.length > 0) ex.getResponseBody().write(body);
             ex.close();
         });
         server.createContext(CloudRestApiConst.REMOVE_INSTANCE_NODE, ex -> {
@@ -71,6 +75,27 @@ class NodeRegistrarTest {
         registrar.close();
         assertEquals("nodeName=blog&accessToken=secret&locations=http://10.0.0.1:8080/app,http://10.0.0.2:8080/app",
                 removed.poll(5, TimeUnit.SECONDS));
+    }
+
+    // A node asking for protocol v2 keeps beating only while the server answers it, and stops for good otherwise (§12.2)
+    @Test
+    void stopsAtAServerThatDoesNotSpeakItsVersion() throws Exception {
+        String url = start();
+        for (Map.Entry<String, Boolean> it : Map.of("{\"protocolVersion\": 2}", true, "", false, "{\"protocolVersion\":1}", false).entrySet()) {
+            answer = it.getKey();
+            registered.clear();
+            NodeRegistrar registrar = new NodeRegistrar("blog", "secret", List.of(url));
+            registrar.start(Duration.ofMillis(50), () -> {
+                NodeInfo info = new NodeInfo();
+                info.setProtocolVersion(2);
+                return info;
+            });
+            String first = registered.poll(5, TimeUnit.SECONDS);
+            assertNotNull(first);
+            assertTrue(first.contains("\"protocolVersion\":2"), first);
+            assertEquals(it.getValue(), registered.poll(500, TimeUnit.MILLISECONDS) != null, "answer '" + it.getKey() + "'");
+            registrar.close();
+        }
     }
 
     @Test

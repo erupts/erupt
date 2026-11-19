@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The node's side of registration (PROTOCOL.md §3): registers with the erupt server and heart-beats, round-robin
@@ -37,6 +39,9 @@ public final class NodeRegistrar implements AutoCloseable {
 
     // the form of REMOVE_INSTANCE_NODE
     private static final String PARAM_NODE_NAME = "nodeName", PARAM_ACCESS_TOKEN = "accessToken", PARAM_LOCATIONS = "locations";
+
+    // the version a register answer names (RegisterAnswer)
+    private static final Pattern PROTOCOL_VERSION = Pattern.compile("\"protocolVersion\"\\s*:\\s*(\\d+)");
 
     private final String nodeName, accessToken;
     private final List<String> servers;
@@ -120,6 +125,12 @@ public final class NodeRegistrar implements AutoCloseable {
                         .timeout(Duration.ofSeconds(10)).header("Content-Type", "application/json")
                         .POST(HttpRequest.BodyPublishers.ofString(json(nodeInfo))).build(), HttpResponse.BodyHandlers.ofString());
                 if (resp.statusCode() / 100 != 2) throw new IOException("HTTP " + resp.statusCode() + " " + resp.body());
+                // a node asking for a version must hear it back, else the server is older and it stops for good (§12.2)
+                Integer asked = nodeInfo.getProtocolVersion();
+                if (asked != null && !asked.equals(answeredVersion(resp.body()))) {
+                    LOG.log(System.Logger.Level.ERROR, server + " does not speak node protocol v" + asked + ": upgrade the erupt server; registration stopped");
+                    return;
+                }
                 if (failures > 0) LOG.log(System.Logger.Level.INFO, server + " -> connection success");
                 failures = 0;
             } catch (InterruptedException e) {
@@ -156,6 +167,12 @@ public final class NodeRegistrar implements AutoCloseable {
         } catch (Exception e) {
             LOG.log(System.Logger.Level.ERROR, "deregister failed: " + e);
         }
+    }
+
+    /** The version a register answer names ({@code RegisterAnswer}), null when it names none. */
+    static Integer answeredVersion(String body) {
+        Matcher m = PROTOCOL_VERSION.matcher(body == null ? "" : body);
+        return m.find() ? Integer.valueOf(m.group(1)) : null;
     }
 
     private static String encode(String s) {
@@ -204,6 +221,8 @@ public final class NodeRegistrar implements AutoCloseable {
             sb.append('}');
         } else if (value == null) {
             sb.append("null");
+        } else if (value instanceof Number || value instanceof Boolean) {
+            sb.append(value);
         } else {
             sb.append('"');
             for (char ch : value.toString().toCharArray()) {

@@ -4,6 +4,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
+import xyz.erupt.annotation.fun.TagsFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -54,6 +55,9 @@ final class FieldDef implements AnnotationJson.Resolver {
         }
     }
 
+    // what the build names a handler by: the node's own code, run through invoke
+    private static final String INVOKE = "invoke";
+
     final Model<?> owner;
     final Field field;
     final String name;
@@ -62,7 +66,10 @@ final class FieldDef implements AnnotationJson.Resolver {
     /** The resolved edit type: never AUTO. */
     final EditType type;
     final boolean pk;
-    /** A List / Set / Map member: stored as JSON text, travels as a JSON array / object (MULTI_CHOICE, KEY_VALUE). */
+    /**
+     * A List / Set / Map member: stored as JSON text, travels as a JSON array / object (MULTI_CHOICE, KEY_VALUE). A
+     * collection of another {@code @Erupt} class (CHECKBOX, TRANSFER, TAB_TREE) holds the referenced keys.
+     */
     final boolean json;
     /** A column of the repository: not a layout control, not a transient member. */
     final boolean stored;
@@ -121,6 +128,22 @@ final class FieldDef implements AnnotationJson.Resolver {
         return type == EditType.REFERENCE_TREE ? edit.referenceTreeType().id() : edit.referenceTableType().id();
     }
 
+    /** A CHOICE / MULTI_CHOICE / TAGS whose options come from a fetch handler, which the server asks for through invoke. */
+    boolean fetchesOptions() {
+        Class<?>[] handlers = switch (type) {
+            case CHOICE -> edit.choiceType().fetchHandler();
+            case MULTI_CHOICE -> edit.multiChoiceType().fetchHandler();
+            case TAGS -> edit.tagsType().fetchHandler();
+            default -> new Class<?>[0];
+        };
+        return Arrays.stream(handlers).anyMatch(h -> !h.isInterface());
+    }
+
+    /** A collection of another {@code @Erupt} class: CHECKBOX, TRANSFER, TAB_TREE, held as the referenced keys. */
+    boolean refs() {
+        return json && Collection.class.isAssignableFrom(field.getType()) && element().isAnnotationPresent(Erupt.class);
+    }
+
     boolean dateOnly() {
         return dateType() != DateType.Type.DATE_TIME;
     }
@@ -130,19 +153,24 @@ final class FieldDef implements AnnotationJson.Resolver {
     Map<String, Object> build() {
         Map<String, Object> json = new LinkedHashMap<>();
         json.put("fieldName", name);
-        json.put("fieldReturnName", Values.isNumber(field.getType()) ? "number" : field.getType().getSimpleName());
+        json.put("fieldReturnName", refs() ? element().getSimpleName() : Values.isNumber(field.getType()) ? "number" : field.getType().getSimpleName());
         json.put("eruptFieldJson", AnnotationJson.toJson(eruptField, this));
         json.put("componentValue", type == EditType.CHOICE || type == EditType.MULTI_CHOICE ? choices()
                 : type == EditType.TAGS ? List.of(edit.tagsType().tags()) : null);
         return json;
     }
 
+    List<Map<String, Object>> choices() {
+        return choices(null);
+    }
+
     /**
      * The options of a CHOICE / MULTI_CHOICE: {@code vl}, then every fetch handler, else the constants of an enum
-     * member (of an enum element, for a MULTI_CHOICE).
+     * member (of an enum element, for a MULTI_CHOICE). With the form being filled ({@code form}, a record of the
+     * model), a handler answers {@code fetchFilter}, so options can follow other fields; without one, {@code fetch}.
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    List<Map<String, Object>> choices() {
+    List<Map<String, Object>> choices(Object form) {
         boolean multi = type == EditType.MULTI_CHOICE;
         VL[] declared = multi ? edit.multiChoiceType().vl() : edit.choiceType().vl();
         Class<? extends ChoiceFetchHandler>[] handlers = multi ? edit.multiChoiceType().fetchHandler() : edit.choiceType().fetchHandler();
@@ -152,7 +180,8 @@ final class FieldDef implements AnnotationJson.Resolver {
         for (VL vl : declared) vls.add(new VLModel(vl));
         for (Class<? extends ChoiceFetchHandler> handler : handlers) {
             if (handler.isInterface()) continue;
-            List<VLModel> fetched = ((ChoiceFetchHandler<Object>) owner.registry.instance(handler)).fetch(params);
+            ChoiceFetchHandler<Object> h = (ChoiceFetchHandler<Object>) owner.registry.instance(handler);
+            List<VLModel> fetched = form == null ? h.fetch(params) : h.fetchFilter(form, params);
             if (fetched != null) vls.addAll(fetched);
         }
         if (vls.isEmpty() && option.isEnum()) {
@@ -172,6 +201,18 @@ final class FieldDef implements AnnotationJson.Resolver {
         return options;
     }
 
+    /** The tags of a TAGS field: the declared ones, then every fetch handler's for the form being filled. */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    List<String> tags(Object form) {
+        List<String> tags = new ArrayList<>(List.of(edit.tagsType().tags()));
+        for (Class<? extends TagsFetchHandler> handler : edit.tagsType().fetchHandler()) {
+            if (handler.isInterface()) continue;
+            List<String> fetched = ((TagsFetchHandler<Object>) owner.registry.instance(handler)).fetchTags(form, edit.tagsType().fetchHandlerParams());
+            if (fetched != null) tags.addAll(fetched);
+        }
+        return tags;
+    }
+
     private static String blankToNull(String s) {
         return s == null || s.isEmpty() ? null : s;
     }
@@ -187,6 +228,11 @@ final class FieldDef implements AnnotationJson.Resolver {
         // @Edit(ifRender) off renders an edit without a title, left unresolved as erupt does
         if (a instanceof EruptField && attr.equals("edit")) return expr(edit.ifRender()) ? raw : BLANK_EDIT;
         if (a instanceof Edit && attr.equals("type")) return a == edit ? type : raw;
+        // code the node runs is named "invoke", as every node SDK names it: the server calls invoke for it (§5.5)
+        if (attr.equals("fetchHandler") && raw instanceof Class<?>[] handlers) {
+            return Arrays.stream(handlers).anyMatch(h -> !h.isInterface()) ? new String[]{INVOKE} : new String[0];
+        }
+        if (a instanceof Edit && attr.equals("onchange") && raw instanceof Class<?> c && !c.isInterface()) return INVOKE;
         if (a instanceof DateType && attr.equals("type")) return dateType();
         if (a instanceof BoolType b && attr.equals("type") && b.type() == BoolType.Type.AUTO) {
             return edit.notNull() ? BoolType.Type.SWITCH : BoolType.Type.RADIO;
@@ -211,7 +257,7 @@ final class FieldDef implements AnnotationJson.Resolver {
     private EditType inferType() {
         Class<?> t = field.getType();
         if (t.isEnum()) return EditType.CHOICE;
-        if (Collection.class.isAssignableFrom(t)) return EditType.MULTI_CHOICE;
+        if (Collection.class.isAssignableFrom(t)) return element().isAnnotationPresent(Erupt.class) ? EditType.CHECKBOX : EditType.MULTI_CHOICE;
         if (t.isAnnotationPresent(Erupt.class)) {
             return t.getAnnotation(Erupt.class).tree().pid().isEmpty() ? EditType.REFERENCE_TABLE : EditType.REFERENCE_TREE;
         }
@@ -341,6 +387,10 @@ final class FieldDef implements AnnotationJson.Resolver {
 
     /** A member value as JSON: a collection as an array, a map as an object, elements in erupt's wire formats. */
     private Object jsonValue(Object value) {
+        if (value instanceof Collection<?> c && refs()) {
+            FieldDef key = owner.registry.model(element()).pkField();
+            return c.stream().map(e -> Values.toJson(key.get(e), false)).toList();
+        }
         if (value instanceof Collection<?> c) return c.stream().map(e -> Values.toJson(e, false)).toList();
         Map<String, Object> out = new LinkedHashMap<>();
         ((Map<?, ?>) value).forEach((k, v) -> out.put(Values.text(k), Values.toJson(v, false)));
@@ -360,8 +410,17 @@ final class FieldDef implements AnnotationJson.Resolver {
         if (!(json instanceof List<?> l)) throw new IllegalArgumentException("illegal list '" + Values.text(json) + "'");
         Collection<Object> out = t.isAssignableFrom(ArrayList.class) ? new ArrayList<>()
                 : t.isAssignableFrom(LinkedHashSet.class) ? new LinkedHashSet<>() : (Collection<Object>) instantiate(t);
-        for (Object e : l) out.add(Values.convert(e, element()));
+        for (Object e : l) out.add(refs() ? reference(e) : Values.convert(e, element()));
         return out;
+    }
+
+    // a referenced record of a collection, holding only its key ({@code {<pk>: key}} is read too)
+    private Object reference(Object key) {
+        Model<?> target = owner.registry.model(element());
+        if (key instanceof Map<?, ?> m) key = m.get(target.pk());
+        Object ref = target.newInstance();
+        target.pkField().set(ref, target.pkField().fromJson(key));
+        return ref;
     }
 
     private static Object instantiate(Class<?> type) {
@@ -380,7 +439,10 @@ final class FieldDef implements AnnotationJson.Resolver {
         }
     }
 
-    /** A value from the browser as the member value; throws IllegalArgumentException when it is illegal. */
+    /**
+     * A value the server normalized (§12.4) as the member value; throws IllegalArgumentException when it does not
+     * convert. The server checked it against the field (not-null, options, length): only the conversion is left.
+     */
     Object fromJson(Object value) {
         if (isReference()) {
             // the browser sends the picked record as {<id>: ..., <label>: ...}
@@ -389,33 +451,9 @@ final class FieldDef implements AnnotationJson.Resolver {
         }
         if (json) {
             if (value == null || "".equals(value)) return null;
-            Object member = member(value instanceof String text ? parse(text) : value);
-            if (type == EditType.MULTI_CHOICE && !element().isEnum()) {
-                List<Map<String, Object>> options = choices();
-                for (Object e : (Collection<?>) member) {
-                    String text = Values.text(e);
-                    if (!options.isEmpty() && options.stream().noneMatch(o -> text.equals(o.get("value")))) {
-                        throw new IllegalArgumentException("illegal option '" + text + "'");
-                    }
-                }
-            }
-            return member;
+            return member(value instanceof String text ? parse(text) : value);
         }
-        Object converted = Values.convert(value, field.getType());
-        if (converted != null && type == EditType.CHOICE && choiceValidate() && !field.getType().isEnum()) {
-            String text = Values.text(converted);
-            if (choices().stream().noneMatch(o -> text.equals(o.get("value")))) throw new IllegalArgumentException("illegal option '" + text + "'");
-        }
-        return converted;
-    }
-
-    /** {@code @ChoiceType(validate)}, on unless switched off (the attribute exists from erupt-annotation 2.3.1). */
-    private boolean choiceValidate() {
-        try {
-            return !Boolean.FALSE.equals(edit.choiceType().annotationType().getMethod("validate").invoke(edit.choiceType()));
-        } catch (ReflectiveOperationException e) {
-            return true;
-        }
+        return Values.convert(value, field.getType());
     }
 
     /** A stored value as JSON. A reference travels as its key: the server resolves labels (PROTOCOL.md §7.3). */
@@ -433,6 +471,7 @@ final class FieldDef implements AnnotationJson.Resolver {
      */
     Object toCondition(Object value) {
         if (json) {
+            if (refs()) return Json.write(Values.toJson(owner.registry.model(element()).pkField().fromJson(value), false));
             if (type != EditType.MULTI_CHOICE) return Values.text(value);
             return Json.write(Values.toJson(Values.convert(value, element()), false));
         }

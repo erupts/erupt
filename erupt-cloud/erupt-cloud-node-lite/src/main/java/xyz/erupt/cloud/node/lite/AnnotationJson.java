@@ -3,6 +3,7 @@ package xyz.erupt.cloud.node.lite;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.config.ToMap;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 
 import java.beans.Transient;
 import java.lang.annotation.Annotation;
@@ -13,12 +14,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Annotation to wire JSON by the rules of erupt's {@code AnnotationProcess.annotationToJsonByReflect}: one key per
- * attribute ({@code @EruptProperty} alias applied), {@code @Transient} attributes skipped, {@code @Match} attributes
+ * attribute ({@code @EruptProperty} alias applied), {@code @Transient} attributes skipped but those the server acts on
+ * for a v2 node ({@link #SERVER_READS}), {@code @Match} attributes
  * only when their condition holds, enums by name, classes by simple name, {@code @ToMap} arrays as objects.
  * Attribute values come through a {@link Resolver}, which plays the part of erupt's annotation proxies.
  */
@@ -33,7 +36,16 @@ final class AnnotationJson {
     // the @Match conditions erupt-annotation declares: "#item.x().toString()=='V'" joined by ||, "#value.x() != ''"
     private static final Pattern TERM = Pattern.compile("#(item|value)\\.(\\w+)\\(\\)(?:\\.toString\\(\\))?\\s*(==|!=)\\s*'([^']*)'");
 
+    // @Transient in Java, sent anyway: the server turns drills and dependent pickers into conditions (PROTOCOL.md §12.3)
+    private static final Set<String> SERVER_READS = Set.of("Link.column", "Link.joinColumn", "ReferenceTableType.dependColumn");
+
     private AnnotationJson() {
+    }
+
+    // a dependColumn only means something beside a dependField
+    private static boolean serverReads(Annotation annotation, Method attribute) {
+        if (annotation instanceof ReferenceTableType r && r.dependField().isEmpty()) return false;
+        return SERVER_READS.contains(annotation.annotationType().getSimpleName() + "." + attribute.getName());
     }
 
     static Object raw(Annotation annotation, Method attribute) {
@@ -48,7 +60,7 @@ final class AnnotationJson {
         Map<String, Object> json = new LinkedHashMap<>();
         for (Method m : annotation.annotationType().getDeclaredMethods()) {
             Transient t = m.getAnnotation(Transient.class);
-            if (t != null && t.value()) continue;
+            if (t != null && t.value() && !serverReads(annotation, m)) continue;
             EruptProperty property = m.getAnnotation(EruptProperty.class);
             String key = property != null && !property.alias().isEmpty() ? property.alias() : m.getName();
             Object value = resolver.value(annotation, m);

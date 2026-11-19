@@ -1,8 +1,5 @@
 package xyz.erupt.cloud.node.lite;
 
-import com.sun.net.httpserver.HttpServer;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import xyz.erupt.cloud.common.http.CloudSignature;
@@ -10,8 +7,6 @@ import xyz.erupt.cloud.node.lite.Models.Article;
 import xyz.erupt.cloud.node.lite.Models.Category;
 import xyz.erupt.cloud.node.lite.Models.Note;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
@@ -25,39 +20,23 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** The node through its framework-neutral handler, against an in-process fake of the server's erupt-power. */
+/**
+ * The node through its framework-neutral handler, called the way a v2 server calls it: signed, vouching for
+ * power, query and record (PROTOCOL.md §12), with values already normalized.
+ */
 abstract class NodeTest {
 
     static final String TOKEN = "node-secret";
-    static HttpServer server;
-    static final Map<String, Boolean> REMOTE = new HashMap<>();
+    static final String ENFORCED = "Erupt-Enforced";
 
     Node node;
 
     abstract Repository<Article> articles();
 
-    @BeforeAll
-    static void fakeServer() throws IOException {
-        server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
-        server.createContext("/erupt-cloud-api/erupt-power", ex -> {
-            byte[] body = (ex.getRequestHeaders().getFirst("token").equals("down") ? "x" : Json.write(REMOTE)).getBytes(StandardCharsets.UTF_8);
-            ex.sendResponseHeaders(ex.getRequestHeaders().getFirst("token").equals("down") ? 500 : 200, body.length);
-            ex.getResponseBody().write(body);
-            ex.close();
-        });
-        server.start();
-    }
-
-    @AfterAll
-    static void stopServer() {
-        server.stop(0);
-    }
-
     @BeforeEach
     void setUp() {
-        for (String r : List.of("add", "edit", "delete", "viewDetails", "export", "importable")) REMOTE.put(r, true);
         Models.CALLS.clear();
-        node = new Node("blog", TOKEN, "http://127.0.0.1:" + server.getAddress().getPort())
+        node = new Node("blog", TOKEN, "http://127.0.0.1:1")
                 .register(Category.class, new MemoryRepository<>(Category.of("Tech", null), Category.of("Python", 1L), Category.of("Life", null)))
                 .register(Article.class, articles())
                 .register(Note.class, new MemoryRepository<>());
@@ -70,14 +49,23 @@ abstract class NodeTest {
         }
     }
 
+    /** Signed for {@code headers}' Erupt-Enforced (power,query,record unless given); an empty one is sent unsigned. */
     Answer call(String method, String path, Object body, String erupt, String account, Map<String, String> headers) {
         Map<String, String> h = new LinkedHashMap<>();
-        h.put("access-token", TOKEN);
         h.put("token", "t1");
         h.put("user", Base64.getEncoder().encodeToString(("{\"uid\":1,\"account\":\"" + account + "\"}").getBytes(StandardCharsets.UTF_8)));
         if (erupt != null) h.put("erupt", erupt);
+        h.put(ENFORCED.toLowerCase(), "power,query,record");
         headers.forEach((k, v) -> h.put(k.toLowerCase(), v));
         byte[] raw = body == null ? new byte[0] : (body instanceof byte[] b ? b : Json.write(body).getBytes(StandardCharsets.UTF_8));
+        String enforced = h.get(ENFORCED.toLowerCase());
+        if (enforced.isEmpty()) {
+            h.remove(ENFORCED.toLowerCase());
+        } else if (!h.containsKey("erupt-signature")) {
+            long now = System.currentTimeMillis() / 1000;
+            h.put("erupt-timestamp", String.valueOf(now));
+            h.put("erupt-signature", CloudSignature.sign(TOKEN, method, path, now, enforced, h.get("user"), raw));
+        }
         Node.Response r = node.handle(new Node.Request(method, path, k -> h.get(k.toLowerCase()), raw));
         String text = new String(r.body(), StandardCharsets.UTF_8);
         return new Answer(r.status(), text.startsWith("{") || text.startsWith("[") ? Json.parse(text) : text);
@@ -129,6 +117,10 @@ abstract class NodeTest {
         Map<String, Object> erupt = (Map<String, Object>) model.get("eruptJson");
         assertFalse(erupt.containsKey("name"), "@Transient name");
         assertFalse(erupt.containsKey("orderBy"), "@Transient orderBy");
+        Map<String, Object> link = (Map<String, Object>) ((List<Map<String, Object>>) ((Map<String, Object>) ((Map<String, Object>) call("GET",
+                "/erupt-api/build/Category", null, "Category", "admin", Map.of()).map().get("eruptModel")).get("eruptJson")).get("drills")).get(0).get("link");
+        assertEquals("category", link.get("joinColumn"), "@Transient, read by the server (§12.3)");
+        assertEquals("id", link.get("column"));
         Map<String, Map<String, Object>> fields = new LinkedHashMap<>();
         for (Object f : (List<Object>) model.get("eruptFieldModels")) fields.put((String) ((Map<String, Object>) f).get("fieldName"), (Map<String, Object>) f);
         assertEquals(List.of("id", "title", "status", "level", "views", "featured", "day", "at", "stamp", "category", "topic"), List.copyOf(fields.keySet()));
@@ -160,12 +152,16 @@ abstract class NodeTest {
     @Test
     void guards() {
         assertEquals(403, call("GET", "/erupt-api/build/Article", null, "Article", "admin", Map.of("Origin", "http://evil")).status());
-        assertEquals(403, call("GET", "/erupt-api/build/Article", null, "Article", "admin", Map.of("Access-Token", "bad")).status());
+        assertEquals(403, call("GET", "/erupt-api/build/Article", null, "Article", "admin", Map.of(ENFORCED, "")).status(), "unsigned");
+        assertEquals(403, call("POST", "/erupt-api/data/table/Article", Map.of(), "Article", "admin", Map.of(ENFORCED, "power")).status(), "query not vouched for");
+        assertEquals(403, call("POST", "/erupt-api/data/modify/Article", Map.of("title", "x"), "Article", "admin", Map.of(ENFORCED, "power,query")).status(),
+                "record not vouched for");
+        assertEquals(200, call("GET", "/erupt-api/build/Article", null, "Article", "admin", Map.of(ENFORCED, "none")).status(), "a build needs nothing");
         assertEquals(404, call("GET", "/erupt-api/build/Missing", null, "Missing", "admin", Map.of()).status());
         assertEquals(404, call("GET", "/erupt-api/build/Article", null, "Note", "admin", Map.of()).status());
         assertEquals(404, call("GET", "/erupt-api/build/Article", null, "Article", "admin", Map.of("eruptParent", "blog.Note")).status());
         assertEquals(200, call("GET", "/erupt-api/build/Article", null, "Article", "admin", Map.of("eruptParent", "blog.Article")).status());
-        Answer health = call("GET", "/node-health", null, null, "admin", Map.of("Access-Token", ""));
+        Answer health = call("GET", "/node-health", null, null, "admin", Map.of(ENFORCED, ""));
         assertEquals(new Answer(200, "blog"), health);
     }
 
@@ -174,17 +170,15 @@ abstract class NodeTest {
         String user = Base64.getEncoder().encodeToString("{\"uid\":1,\"account\":\"admin\"}".getBytes(StandardCharsets.UTF_8));
         long now = System.currentTimeMillis() / 1000;
         String sig = CloudSignature.sign(TOKEN, "GET", "/erupt-api/build/Article?x=1", now, "power", user, new byte[0]);
-        Map<String, String> h = Map.of("Access-Token", "", "Erupt-Signature", sig, "Erupt-Timestamp", String.valueOf(now), "Erupt-Enforced", "power", "token", "down");
-        assertEquals(200, call("GET", "/erupt-api/build/Article?x=1", null, "Article", "admin", h).status(), "enforced power skips the callback");
+        Map<String, String> h = Map.of("Erupt-Signature", sig, "Erupt-Timestamp", String.valueOf(now), ENFORCED, "power");
+        assertEquals(200, call("GET", "/erupt-api/build/Article?x=1", null, "Article", "admin", h).status());
         assertEquals(403, call("GET", "/erupt-api/build/Article?x=2", null, "Article", "admin", h).status(), "signed another target");
     }
 
     @Test
     void power() {
-        REMOTE.put("add", false);
-        assertEquals(403, call("POST", "/erupt-api/data/modify/Article", Map.of("title", "x")).status());
         assertEquals(403, call("POST", "/erupt-api/data/modify/Note/delete", List.of(1), "Note", "admin", Map.of()).status(), "declared delete off");
-        assertEquals(403, call("POST", "/erupt-api/data/modify/Note", Map.of("text", "x"), "Note", "admin", Map.of("token", "down")).status(), "fails closed");
+        ok(call("POST", "/erupt-api/data/modify/Note", Map.of("text", "x"), "Note", "admin", Map.of()));
     }
 
     @Test
@@ -220,41 +214,47 @@ abstract class NodeTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    void references() {
-        Answer b = call("GET", "/erupt-api/build/Article/category", null);
-        assertEquals("Category", ((Map<String, Object>) b.map().get("eruptModel")).get("eruptName"));
-        assertEquals(404, call("GET", "/erupt-api/build/Article/title", null).status());
-        Answer picker = call("POST", "/erupt-api/data/Article/reference-table/category", Map.of("condition", List.of(cond("name", "LIKE", "py"))));
-        assertEquals(List.of(Map.of("id", 2L, "name", "Python", "parent", 1L)), picker.map().get("list"));
-        assertEquals(404, call("POST", "/erupt-api/data/Article/reference-table/topic", Map.of()).status());
-        add(Map.of("title", "Ref", "category", Map.of("id", "2", "name", "Python"), "topic", Map.of("id", 1, "name", "Tech")));
-        Map<String, Object> row = rows(List.of(), List.of()).get(0);
-        assertEquals(2L, row.get("category"), "a reference travels as its key");
-        assertEquals(1L, row.get("topic"));
-        assertEquals(1, titles(List.of(cond("category", "EQ", Map.of("id", 2)))).size());
-        assertEquals(0, titles(List.of(cond("category", "IN", List.of(Map.of("id", 1), Map.of("id", 3))))).size());
-        fail(call("POST", "/erupt-api/data/table/Article", Map.of("condition", List.of(cond("category", "LIKE", "x")))));
-        assertEquals(404, call("GET", "/erupt-api/data/Article/reference-tree/topic", null).status());
-        // a drill from Category 1 opens its articles
-        Answer drilled = call("POST", "/erupt-api/data/table/Article", Map.of(), "Article", "admin",
-                Map.of("Drill", "articles", "DrillSourceErupt", "Category", "DrillValue", "2"));
-        assertEquals(List.of("Ref"), ((List<Map<String, Object>>) drilled.map().get("list")).stream().map(r -> r.get("title")).toList());
-        assertEquals(403, call("POST", "/erupt-api/data/table/Article", Map.of(), "Article", "admin",
-                Map.of("Drill", "nope", "DrillSourceErupt", "Category", "DrillValue", "2")).status());
-        // the @LinkTree beside the table: the rows under the picked tree keys
-        add(Map.of("title", "Other", "topic", Map.of("id", 3, "name", "Life")));
-        Answer picked = call("POST", "/erupt-api/data/table/Article", Map.of("linkTreeVal", List.of(3)));
-        assertEquals(List.of("Other"), ((List<Map<String, Object>>) picked.map().get("list")).stream().map(r -> r.get("title")).toList());
+    void aggregate() {
+        add(Map.of("title", "A", "views", 10));
+        add(Map.of("title", "B", "views", 3));
+        add(Map.of("title", "C"));
+        // over every row the query matches, not the page: a page of one still totals all
+        Answer all = call("POST", "/erupt-api/data/aggregate/Article", Map.of("pageIndex", 1, "pageSize", 1));
+        assertEquals(200, all.status(), String.valueOf(all.body()));
+        assertEquals(13L, ((Number) all.map().get("views")).longValue());
+        Answer some = call("POST", "/erupt-api/data/aggregate/Article", Map.of("condition", List.of(cond("title", "EQ", "B"))));
+        assertEquals(3L, ((Number) some.map().get("views")).longValue());
+        assertEquals(Map.of(), call("POST", "/erupt-api/data/aggregate/Note", Map.of(), "Note", "admin", Map.of()).map(), "no statistic declared");
+        assertEquals(403, call("POST", "/erupt-api/data/aggregate/Article", Map.of(), "Article", "admin", Map.of(ENFORCED, "power")).status());
     }
 
     @Test
+    @SuppressWarnings("unchecked")
+    void references() {
+        // the server reads pickers and builds of references itself (§5.4): not served here
+        assertEquals(404, call("GET", "/erupt-api/build/Article/category", null).status());
+        assertEquals(404, call("POST", "/erupt-api/data/Article/reference-table/category", Map.of()).status());
+        add(Map.of("title", "Ref", "category", 2, "topic", 1));
+        Map<String, Object> row = rows(List.of(), List.of()).get(0);
+        assertEquals(2L, row.get("category"), "a reference travels as its key");
+        assertEquals(1L, row.get("topic"));
+        assertEquals(1, titles(List.of(cond("category", "EQ", 2))).size());
+        assertEquals(0, titles(List.of(cond("category", "IN", List.of(1, 3)))).size());
+        // a drill from Category 2: the server sends the join as a condition, the body names the drill (§12.4)
+        Answer drilled = call("POST", "/erupt-api/data/table/Article", Map.of("condition", List.of(cond("category", "EQ", 2)),
+                "drill", Map.of("erupt", "Category", "code", "articles")));
+        assertEquals(List.of("Ref"), ((List<Map<String, Object>>) drilled.map().get("list")).stream().map(r -> r.get("title")).toList());
+        assertEquals(403, call("POST", "/erupt-api/data/table/Article", Map.of("drill", Map.of("erupt", "Category", "code", "nope"))).status());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
     void operations() {
         add(Map.of("title", "A"));
         add(Map.of("title", "B"));
         List<Object> ids = rows(List.of(), List.of()).stream().map(r -> r.get("id")).toList();
-        String path = "/erupt-api/data/Article/operator/";
-        fail(call("POST", path + "publish", Map.of("ids", ids, "param", Map.of())));
+        String path = "/erupt-api/invoke/Article/operation/";
+        assertEquals(404, call("POST", "/erupt-api/data/Article/operator/publish", Map.of("ids", ids)).status(), "operator is invoke's");
         Answer r = call("POST", path + "publish", Map.of("ids", ids, "param", Map.of("note", "go")));
         ok(r);
         assertEquals("Executed successfully", r.map().get("message"));
@@ -267,24 +267,47 @@ abstract class NodeTest {
         ok(call("POST", path + "rebuild", Map.of(), "Article", "root", Map.of()));
         assertEquals("rebuild 0", Models.CALLS.get(1));
         assertEquals(404, call("POST", path + "missing", Map.of()).status());
-        Answer form = call("POST", path + "publish/form-value", null);
-        assertEquals(200, form.status());
-        assertTrue(form.map().containsKey("note"));
-        assertNull(form.map().get("note"));
-        assertEquals(404, call("POST", path + "feature/form-value", null).status());
+        Answer form = call("POST", "/erupt-api/invoke/Article/operation-form/publish", null);
+        ok(form);
+        Map<String, Object> values = (Map<String, Object>) form.map().get("data");
+        assertTrue(values.containsKey("note"));
+        assertNull(values.get("note"));
+        Answer none = call("POST", "/erupt-api/invoke/Article/operation-form/feature", null);
+        ok(none);
+        assertNull(none.map().get("data"), "no form");
+        assertEquals(404, call("POST", "/erupt-api/invoke/Article/onchange/title", Map.of()).status());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void options() {
+        Answer a = call("POST", "/erupt-api/invoke/Note/options/mood", Map.of("form", Map.of()), "Note", "admin", Map.of());
+        ok(a);
+        assertEquals(List.of(Map.of("value", "calm", "label", "Calm"), Map.of("value", "busy", "label", "Busy")), a.map().get("data"));
+        assertEquals(404, call("POST", "/erupt-api/invoke/Note/options/text", Map.of(), "Note", "admin", Map.of()).status(), "fetches nothing");
+        assertEquals(404, call("POST", "/erupt-api/invoke/Note/options/missing", Map.of(), "Note", "admin", Map.of()).status());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void button() {
+        Answer a = call("POST", "/erupt-api/invoke/Note/button/ping", Map.of("form", Map.of("text", "hi")), "Note", "admin", Map.of());
+        ok(a);
+        Map<String, Object> click = (Map<String, Object>) a.map().get("data");
+        assertEquals("pong:hi!", click.get("eval"));
+        assertEquals(Map.of("text", "pinged"), click.get("formData"));
+        assertEquals(404, call("POST", "/erupt-api/invoke/Note/button/text", Map.of(), "Note", "admin", Map.of()).status(), "not a button");
     }
 
     @Test
     void illegalInput() {
-        fail(call("POST", "/erupt-api/data/modify/Article", Map.of("status", "draft")));
-        fail(call("POST", "/erupt-api/data/modify/Article", Map.of("title", "x", "status", "deleted")));
+        // not-null, options and searchable fields are the server's (§12.7); what is left is what does not convert
         fail(call("POST", "/erupt-api/data/modify/Article", Map.of("title", "x", "level", "MEDIUM")));
         fail(call("POST", "/erupt-api/data/modify/Article", Map.of("title", "x", "views", "many")));
         fail(call("POST", "/erupt-api/data/modify/Article", Map.of("title", "x", "views", 1.5)));
         fail(call("POST", "/erupt-api/data/modify/Article", Map.of("title", "x", "day", "someday")));
-        fail(call("POST", "/erupt-api/data/table/Article", Map.of("condition", List.of(cond("views", "EQ", 1)))));
         fail(call("POST", "/erupt-api/data/table/Article", Map.of("condition", List.of(cond("title\" OR 1=1 --", "EQ", 1)))));
-        fail(call("POST", "/erupt-api/data/table/Article", Map.of("sort", List.of(Map.of("field", "stamp", "direction", "ASC")))));
+        fail(call("POST", "/erupt-api/data/table/Article", Map.of("sort", List.of(Map.of("field", "title\" --", "direction", "ASC")))));
         fail(call("POST", "/erupt-api/data/table/Article", Map.of("condition", List.of(cond("title", "DROP", 1)))));
         fail(call("POST", "/erupt-api/data/modify/Article", "{not json".getBytes(StandardCharsets.UTF_8)));
         fail(call("POST", "/erupt-api/data/modify/Article/delete", Map.of("id", 1)));
@@ -295,6 +318,6 @@ abstract class NodeTest {
     void declaration() {
         assertThrows(IllegalArgumentException.class, () -> Model.of(String.class), "not an @Erupt class");
         assertThrows(IllegalArgumentException.class, () -> node.register(Article.class, new MemoryRepository<>()), "registered twice");
-        assertEquals(List.of("id", "text"), Model.of(Note.class).columns());
+        assertEquals(List.of("id", "text", "mood"), Model.of(Note.class).columns());
     }
 }
