@@ -112,6 +112,11 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
             return false;
         }
         MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
+        if (null == metaUserinfo) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.sendError(HttpStatus.UNAUTHORIZED.value());
+            return false;
+        }
         MetaContext.registerToken(token);
         MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername(), metaUserinfo.getTenantId()));
         if (!this.scopeAllows(token, request, eruptRouter)) {

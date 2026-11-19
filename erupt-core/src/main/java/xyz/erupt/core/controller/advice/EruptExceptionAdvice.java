@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
+
+import java.io.IOException;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.exception.EruptSessionInvalidException;
 import xyz.erupt.core.view.EruptExceptionVo;
 import xyz.erupt.core.view.R;
 
@@ -33,6 +36,13 @@ public class EruptExceptionAdvice {
     public R<?> eruptApiErrorTip(EruptApiErrorTip e) {
         log.error(ERE, e);
         return e.r;
+    }
+
+    // The session's user is gone: a 401 sends the client back to sign-in
+    @ExceptionHandler(EruptSessionInvalidException.class)
+    public void sessionInvalid(EruptSessionInvalidException e, HttpServletResponse response) throws IOException {
+        log.warn("Session invalid: {}", e.getMessage());
+        if (!response.isCommitted()) response.sendError(HttpStatus.UNAUTHORIZED.value());
     }
 
     // Client disconnected (e.g. SSE stream closed by browser) — nothing can be written back

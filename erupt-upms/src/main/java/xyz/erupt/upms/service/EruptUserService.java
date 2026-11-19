@@ -31,6 +31,7 @@ import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.helper.UpmsSecurityHelper;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.core.exception.EruptSessionInvalidException;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.prop.EruptUpmsProp;
@@ -433,7 +434,15 @@ public class EruptUserService {
     //Get the current logged-in user object (from database)
     public EruptUser getCurrentEruptUser() {
         Long uid = this.getCurrentUid();
-        return null == uid ? null : eruptDao.getEntityManager().find(EruptUser.class, uid);
+        if (null == uid) return null;
+        EruptUser eruptUser = eruptDao.getEntityManager().find(EruptUser.class, uid);
+        if (null == eruptUser) {
+            // the token outlived its user (deleted, or the database rebuilt under a persistent session store)
+            String token = eruptContextService.getCurrentToken();
+            eruptTokenService.logoutToken("uid:" + uid, token);
+            throw new EruptSessionInvalidException("user of the session no longer exists, uid: " + uid);
+        }
+        return eruptUser;
     }
 
 }
