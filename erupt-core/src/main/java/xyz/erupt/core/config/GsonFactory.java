@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -38,6 +39,11 @@ public class GsonFactory implements ToNumberStrategy {
                     -> DateUtil.parseLocalDateTime(json.getAsJsonPrimitive().getAsString()))
             .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext)
                     -> DateUtil.parseLocalDate(json.getAsJsonPrimitive().getAsString()))
+            // LocalTime travels as the time picker's HH:mm:ss; without these Gson reflects into java.time and fails
+            .registerTypeAdapter(LocalTime.class, (JsonSerializer<LocalTime>) (src, typeOfSrc, context)
+                    -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern("HH:mm:ss"))))
+            .registerTypeAdapter(LocalTime.class, (JsonDeserializer<LocalTime>) (json, type, jsonDeserializationContext)
+                    -> LocalTime.parse(json.getAsJsonPrimitive().getAsString()))
             .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
             .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> serializeDoubleValue(src))
             .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
