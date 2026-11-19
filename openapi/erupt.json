@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Erupt",
-    "version": "2.4.0",
+    "version": "2.4.1",
     "description": "REST API of the erupt framework: every endpoint the admin UI calls, usable by any client.\n\n**Authentication.** `POST /erupt-api/login` returns a token (`token` field when `pass` is true). Server-to-server callers use `GET /erupt-api/open-api/create-token` with an appid and secret instead. Send the token in the `token` request header. Endpoints opened by the browser or by an editor (template pages, editor uploads) cannot set headers and take the same value as the `_token` query parameter. An expired or missing token answers 401, a missing menu or erupt permission answers 403.\n\n**The `erupt` header.** Data, build, component, file and export endpoints are scoped to one `@Erupt` class. The `erupt` header carries its simple class name and must match the `{erupt}` path segment, or name the parent erupt when the path addresses a nested erupt (tab, sub-form, reference).\n\n**Errors.** Business errors come back as HTTP 500 with an `R` body: `success` is false, `message` holds the text to show and `promptWay` tells the UI how to show it.\n",
     "license": {
       "name": "Apache-2.0",
@@ -1037,7 +1037,7 @@
       "get": {
         "summary": "Public application settings.",
         "deprecated": false,
-        "description": "Read by the frontend before login: title, login options, password transfer encoding, version and the attachment file domain. No session needed.",
+        "description": "Read by the frontend before login: title, login options, password transfer encoding, version, the attachment file domain and the site settings patch (site) laid over window.eruptSiteConfig. No session needed.",
         "tags": [
           "Permission and app settings"
         ],
@@ -6058,6 +6058,10 @@
             "format": "string",
             "description": "Domain that hosts uploaded attachments, from the registered AttachmentProxy; null when erupt serves them itself",
             "type": "string"
+          },
+          "site": {
+            "description": "Site settings saved in the admin UI, as a patch over window.eruptSiteConfig: only the keys an\nadministrator filled in. Rendered per request by /erupt-app, not bound from configuration.(object)",
+            "$ref": "#/components/schemas/Object"
           }
         }
       },

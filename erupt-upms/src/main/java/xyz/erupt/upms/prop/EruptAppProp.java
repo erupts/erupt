@@ -73,6 +73,12 @@ public class EruptAppProp {
     /** Domain that hosts uploaded attachments, from the registered AttachmentProxy; null when erupt serves them itself */
     private String fileDomain;
 
+    /**
+     * Site settings saved in the admin UI, as a patch over window.eruptSiteConfig: only the keys an
+     * administrator filled in. Rendered per request by /erupt-app, not bound from configuration.
+     */
+    private Map<String, Object> site;
+
     public void setLocales(String[] locales) {
         if (null == locales || locales.length == 0) {
             this.locales = new String[]{"en-US"};

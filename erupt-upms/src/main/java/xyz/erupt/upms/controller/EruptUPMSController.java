@@ -10,6 +10,7 @@ import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.upms.prop.EruptAppProp;
+import xyz.erupt.upms.service.EruptSiteSettingService;
 import xyz.erupt.upms.service.EruptUserService;
 
 /**
@@ -29,6 +30,8 @@ public class EruptUPMSController {
 
     private final EruptAppProp eruptAppProp;
 
+    private final EruptSiteSettingService eruptSiteSettingService;
+
     /**
      * Whether the current user holds a menu permission.
      *
@@ -44,7 +47,7 @@ public class EruptUPMSController {
     /**
      * Public application settings.
      *
-     * @apiNote Read by the frontend before login: title, login options, password transfer encoding, version and the attachment file domain. No session needed.
+     * @apiNote Read by the frontend before login: title, login options, password transfer encoding, version, the attachment file domain and the site settings patch (site) laid over window.eruptSiteConfig. No session needed.
      * @return application properties
      */
     @GetMapping(EruptRestPath.ERUPT_API + "/erupt-app")
@@ -53,6 +56,7 @@ public class EruptUPMSController {
         eruptAppProp.setVersion(EruptInformation.getEruptVersion());
         AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
         eruptAppProp.setFileDomain(null == attachmentProxy ? null : attachmentProxy.fileDomain());
+        eruptAppProp.setSite(eruptSiteSettingService.siteConfig());
         return eruptAppProp;
     }
 

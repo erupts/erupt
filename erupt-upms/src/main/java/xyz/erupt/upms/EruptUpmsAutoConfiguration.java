@@ -75,6 +75,7 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
         menus.add(MetaMenu.createEruptClassMenu(EruptOnline.class, menus.get(0), 65));
         menus.add(MetaMenu.createEruptClassMenu(EruptLoginLog.class, menus.get(0), 70));
         menus.add(MetaMenu.createEruptClassMenu(EruptOperateLog.class, menus.get(0), 80));
+        menus.add(MetaMenu.createEruptClassMenu(EruptSiteSetting.class, menus.get(0), 90, MenuTypeEnum.FORM));
         menus.add(MetaMenu.createSimpleMenu(EruptConst.ERUPT_LOG, "System Log", EruptConst.ERUPT_LOG, menus.get(0), 90, EruptTplService.TPL));
         menus.add(MetaMenu.createSimpleMenu("$modules", "Module Center", EruptModuleController.PAGE, menus.get(0), 95, MenuTypeEnum.ROUTER.getCode()));
         return menus;
