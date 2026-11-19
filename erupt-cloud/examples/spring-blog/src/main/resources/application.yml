@@ -1,0 +1,23 @@
+server:
+  port: ${PORT:9090}
+
+spring:
+  datasource:
+    url: jdbc:h2:file:${ERUPT_DB:./blog};MODE=MySQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+
+erupt:
+  cloud-node:
+    node-name: ${ERUPT_NODE_NAME:blog}
+    # Generated on the server: Node Config -> add node "blog" -> View Token. Never commit it.
+    access-token: ${ERUPT_ACCESS_TOKEN}
+    server-addresses: ${ERUPT_SERVER:http://localhost:8080}

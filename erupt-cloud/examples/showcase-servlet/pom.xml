@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>xyz.erupt</groupId>
+        <artifactId>erupt-cloud-examples</artifactId>
+        <version>2.4.1</version>
+    </parent>
+
+    <!-- the showcase in a servlet container, embedded Tomcat: java -jar target/erupt-showcase-servlet.jar -->
+    <artifactId>erupt-cloud-example-showcase-servlet</artifactId>
+
+    <properties>
+        <main.class>xyz.erupt.cloud.example.showcase.ShowcaseServlet</main.class>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-cloud-example-showcase</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-cloud-node-servlet</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>10.1.55</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>erupt-showcase-servlet</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

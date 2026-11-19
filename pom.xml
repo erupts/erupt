@@ -276,6 +276,13 @@
     </build>
 
     <profiles>
+        <!-- example nodes (erupt-cloud/examples): mvn -P node-examples package; never published -->
+        <profile>
+            <id>node-examples</id>
+            <modules>
+                <module>erupt-cloud/examples</module>
+            </modules>
+        </profile>
         <profile>
             <id>release</id>
             <properties>

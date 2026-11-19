@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>xyz.erupt</groupId>
+        <artifactId>erupt-cloud-examples</artifactId>
+        <version>2.4.1</version>
+    </parent>
+
+    <!-- erupt-sdk SHOWCASE.md on erupt-cloud-node-lite over SQLite: java -jar target/erupt-showcase.jar -->
+    <artifactId>erupt-cloud-example-showcase</artifactId>
+
+    <properties>
+        <main.class>xyz.erupt.cloud.example.showcase.Showcase</main.class>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.49.1.0</version>
+        </dependency>
+    </dependencies>
+
+    <!-- the runnable jar goes to target/erupt-showcase.jar beside the plain one, which the framework launchers
+         (showcase-solon, -quarkus, ...) depend on -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <outputFile>${project.build.directory}/erupt-showcase.jar</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

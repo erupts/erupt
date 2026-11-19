@@ -250,5 +250,6 @@ ERUPT_TEST_DATABASES=1 mvn test -pl erupt-cloud/erupt-cloud-node-lite -Dtest=Dat
 mvn test -pl erupt-cloud/erupt-cloud-node-vertx -Dvertx.version=5.2.1  # the Vert.x 5 line
 ```
 
-The cross-language conformance suite and the Kotlin blog example live in
-[erupt-sdk](https://github.com/erupt-io/erupt-sdk) (`jvm/`), built against this module.
+Example nodes, among them the showcase on every adapter and the Kotlin blog, are in [`../examples`](../examples); CI runs
+[erupt-sdk](https://github.com/erupt-io/erupt-sdk)'s cross-language conformance suite against them
+(`.github/workflows/node-examples.yml`).

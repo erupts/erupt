@@ -1,0 +1,56 @@
+name: node examples
+
+# The example nodes in erupt-cloud/examples against the cross-language checks of erupt-sdk: conformance/run.py on the
+# lite fixture, conformance/showcase.py on the showcase served by every lite adapter. The suites read the annotation
+# schema, which erupt generates: this checkout's schema/ replaces erupt-sdk's, so the two always match.
+on:
+  push:
+    branches: [ master, develop ]
+    paths: [ "erupt-annotation/**", "erupt-cloud/**", "schema/**", "pom.xml", ".github/workflows/node-examples.yml" ]
+  pull_request:
+    branches: [ master, develop ]
+    paths: [ "erupt-annotation/**", "erupt-cloud/**", "schema/**", "pom.xml", ".github/workflows/node-examples.yml" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: erupt-io/erupt-sdk
+          path: erupt-sdk
+      - name: Set up JDK 17
+        uses: actions/setup-java@v6
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build the examples and the modules they use
+        run: |
+          examples=$(ls -d erupt-cloud/examples/*/ | sed 's#/$##' | paste -sd, -)
+          mvn -B -P node-examples package -DskipTests -pl "$examples" -am
+      - name: Use this checkout's annotation schema
+        run: cp schema/*.json erupt-sdk/schema/
+      - name: Conformance (lite fixture)
+        run: python3 erupt-sdk/conformance/run.py -- java -jar erupt-cloud/examples/conformance/target/erupt-conformance.jar
+      - name: Showcase on every lite adapter
+        run: |
+          examples=erupt-cloud/examples
+          failed=0
+          for jar in "$examples/showcase/target/erupt-showcase.jar" \
+                     "$examples/showcase-quarkus/target/quarkus-app/quarkus-run.jar" \
+                     "$examples"/showcase-{solon,micronaut,vertx,ktor,servlet}/target/erupt-showcase-*.jar; do
+            case "$jar" in */original-*) continue ;; esac
+            echo "::group::$jar"
+            python3 erupt-sdk/conformance/showcase.py -- java -jar "$jar" || failed=1
+            echo "::endgroup::"
+          done
+          exit $failed
