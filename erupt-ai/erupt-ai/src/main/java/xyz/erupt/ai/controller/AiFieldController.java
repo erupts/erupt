@@ -19,6 +19,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.i18n.I18nTranslate;
@@ -71,8 +72,12 @@ public class AiFieldController {
         SseEmitter emitter = new SseEmitter(aiProp.getSseTimeout());
         EruptModel eruptModel = EruptCoreService.getEruptView(eruptName);
         Erupts.requireTrue(null != eruptModel, I18nTranslate.$translate("Model not found"));
-        // Drafting a value is a write-side affordance: only someone who could type it may ask for it
-        Erupts.powerLegal(eruptModel, power -> power.isAdd() || power.isEdit());
+        // Drafting a value is a write-side affordance: only someone who could type it may ask for it. A flow's form is
+        // typed by whoever may launch or approve the flow, with no write right on the model needed (the security
+        // interceptor lets them reach it, erupt-flow decides the submission); the draft is built from the request only
+        if (null == eruptModel.getTags() || null == eruptModel.getTags().get(EruptConst.FLOW_TAG)) {
+            Erupts.powerLegal(eruptModel, power -> power.isAdd() || power.isEdit());
+        }
         // @Power(ai = false) bars AI from the model entirely, and this hands it the whole form
         Erupts.requireTrue(null == eruptModel.getErupt() || eruptModel.getErupt().power().ai(),
                 I18nTranslate.$translate("AI is disabled for this model"));

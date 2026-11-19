@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.context.MetaUser;
@@ -161,7 +162,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                 }
                 if (null == eruptUserService.getEruptMenuByValue(eruptModel.getEruptName())) {
                     if (!eruptRouter.highSafe()) {
-                        if (null != eruptModel.getTags().get("EruptFlow")) {
+                        if (null != eruptModel.getTags().get(EruptConst.FLOW_TAG)) {
                             return true;
                         }
                     }

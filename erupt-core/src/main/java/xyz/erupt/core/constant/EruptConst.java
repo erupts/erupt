@@ -24,6 +24,12 @@ public class EruptConst {
     public static final String AN = "abcdef0123456789";
 
     /**
+     * The tag erupt-flow's {@code @EruptFlow} puts on a model (tags are keyed by the annotation's simple name): its form
+     * is filled by whoever may launch or approve the flow, who may hold no menu or write right on the model itself.
+     */
+    public static final String FLOW_TAG = "EruptFlow";
+
+    /**
      * Sentinel value returned to the client instead of stored PASSWORD field values.
      * When an edit form is submitted with this exact value, the stored value is preserved.
      */
