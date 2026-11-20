@@ -1,5 +1,6 @@
 package xyz.erupt.core.controller.advice;
 
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +12,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.io.IOException;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptSessionInvalidException;
+import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.service.EruptUploadCeiling;
 import xyz.erupt.core.view.EruptExceptionVo;
 import xyz.erupt.core.view.R;
 
@@ -30,6 +34,9 @@ public class EruptExceptionAdvice {
 
     private static final String ERE = "erupt exception";
 
+    @Resource
+    private EruptUploadCeiling uploadCeiling;
+
     @ExceptionHandler(EruptApiErrorTip.class)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
@@ -43,6 +50,16 @@ public class EruptExceptionAdvice {
     public void sessionInvalid(EruptSessionInvalidException e, HttpServletResponse response) throws IOException {
         log.warn("Session invalid: {}", e.getMessage());
         if (!response.isCommitted()) response.sendError(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    // Over Spring Boot's multipart limit: refused by the container before any upload code ran.
+    // Answered like the upload rules' own refusals, a dialog in a 200, naming the limit
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public R<?> uploadTooLarge(MaxUploadSizeExceededException e) {
+        log.warn("Upload over the multipart limit: {}", e.getMessage());
+        return R.errorDialog(I18nTranslate.$translate("erupt.upload_error.size") + ": " + uploadCeiling.describe());
     }
 
     // Client disconnected (e.g. SSE stream closed by browser) — nothing can be written back
