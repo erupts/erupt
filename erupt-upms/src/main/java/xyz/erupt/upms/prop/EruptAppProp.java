@@ -1,6 +1,7 @@
 package xyz.erupt.upms.prop;
 
 import lombok.Getter;
+import xyz.erupt.core.i18n.EruptLanguage;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -36,21 +37,8 @@ public class EruptAppProp {
     /** Custom login page path, supports an HTTP URL */
     private String loginPagePath;
 
-    /** Languages offered by the UI, as locale tags */
-    private String[] locales = {
-            "en-US",      // 🇬🇧 English
-            "fr-FR",      // 🇫🇷 En français
-            "de-DE",      // 🇩🇪 Deutsch
-            "zh-CN",      // 🇨🇳 Simplified Chinese
-            "zh-TW",      // 🇭🇰 Traditional Chinese
-            "ja-JP",      // 🇯🇵 Japanese
-            "ko-KR",      // 🇰🇷 Korean
-            "ru-RU",      // 🇷🇺 русск
-            "es-ES",      // 🇪🇸 español
-            "pt-PT",      // 🇵🇹 Português
-            "id-ID",      // 🇮🇩 Bahasa Indonesia
-            "ar-SA",      // 🇸🇦 العربية
-    };
+    /** Languages offered by the UI, as locale tags; every language erupt ships by default (EruptLanguage) */
+    private String[] locales = EruptLanguage.tags();
 
     /** Custom configuration handed to the frontend */
     private Map<String, Object> properties = new HashMap<>();
@@ -81,7 +69,7 @@ public class EruptAppProp {
 
     public void setLocales(String[] locales) {
         if (null == locales || locales.length == 0) {
-            this.locales = new String[]{"en-US"};
+            this.locales = new String[]{EruptLanguage.EN_US.tag()};
         } else {
             this.locales = locales;
         }
