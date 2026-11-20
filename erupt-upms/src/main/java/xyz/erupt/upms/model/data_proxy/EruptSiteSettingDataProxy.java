@@ -54,13 +54,23 @@ public class EruptSiteSettingDataProxy implements DataProxy<EruptSiteSetting> {
         }
         if (null != model.getLinks()) {
             for (EruptSiteLink link : model.getLinks()) {
-                String url = StringUtils.trimToEmpty(link.getUrl()).toLowerCase();
-                if (!(url.startsWith("http://") || url.startsWith("https://") || (url.startsWith("/") && !url.startsWith("//"))
-                        || url.startsWith("mailto:") || url.startsWith("tel:"))) {
+                if (!safeUrl(link.getUrl(), true)) {
                     throw new EruptException(I18nTranslate.$translate("upms.site_link_url_invalid") + ": " + link.getUrl());
                 }
             }
         }
+        for (String url : new String[]{model.getRegisterPage(), model.getPrivacyUrl(), model.getTermsUrl()}) {
+            if (StringUtils.isNotBlank(url) && !safeUrl(url, false)) {
+                throw new EruptException(I18nTranslate.$translate("upms.site_link_url_invalid") + ": " + url);
+            }
+        }
+    }
+
+    // http(s) or a path on this site; mailto: and tel: too for a header link. Nothing that runs script
+    private static boolean safeUrl(String raw, boolean contact) {
+        String url = StringUtils.trimToEmpty(raw).toLowerCase();
+        return url.startsWith("http://") || url.startsWith("https://") || (url.startsWith("/") && !url.startsWith("//"))
+                || contact && (url.startsWith("mailto:") || url.startsWith("tel:"));
     }
 
     // the table API stays reachable to a caller holding the add power: never a second row

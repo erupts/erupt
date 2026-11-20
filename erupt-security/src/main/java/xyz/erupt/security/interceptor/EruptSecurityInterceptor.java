@@ -27,6 +27,8 @@ import xyz.erupt.security.service.OperationService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.service.EruptUpmsSettings;
+import xyz.erupt.upms.service.EruptTokenService;
+import xyz.erupt.upms.service.EruptSiteSettingService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -52,6 +54,12 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
 
     @Resource
     private EruptUpmsSettings eruptUpmsSettings;
+
+    @Resource
+    private EruptSiteSettingService eruptSiteSettingService;
+
+    @Resource
+    private EruptTokenService eruptTokenService;
 
     @Resource
     private OperationService operationService;
@@ -113,6 +121,13 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         }
         MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
         if (null == metaUserinfo) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.sendError(HttpStatus.UNAUTHORIZED.value());
+            return false;
+        }
+        // maintenance mode (site settings): a non-administrator's session ends at its next request
+        if (eruptSiteSettingService.maintenanceActive() && !metaUserinfo.isSuperAdmin()) {
+            eruptTokenService.logoutToken(metaUserinfo.getAccount(), token);
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.sendError(HttpStatus.UNAUTHORIZED.value());
             return false;

@@ -33,6 +33,9 @@ class SiteSettingTest extends EruptApplicationTests {
     private EruptSiteSettingService eruptSiteSettingService;
 
     @Resource
+    private xyz.erupt.upms.service.MaintenanceLoginPolicy maintenancePolicy;
+
+    @Resource
     private xyz.erupt.upms.model.data_proxy.EruptSiteSettingDataProxy dataProxy;
 
     @AfterEach
@@ -125,6 +128,21 @@ class SiteSettingTest extends EruptApplicationTests {
         script.setLinks(new java.util.ArrayList<>(java.util.List.of(link)));
         org.junit.jupiter.api.Assertions.assertThrows(xyz.erupt.annotation.exception.EruptException.class, () -> dataProxy.formSave(script));
 
+    }
+
+    @Test
+    void maintenanceRefusesEveryoneButAdministrators() {
+        EruptSiteSetting setting = new EruptSiteSetting();
+        setting.setMaintenance("on");
+        setting.setMaintenanceMessage("Back at 22:00");
+        Map<String, Object> site = save(setting);
+        assertEquals("Back at 22:00", site.get("maintenance"));
+
+        xyz.erupt.upms.model.EruptUser user = new xyz.erupt.upms.model.EruptUser();
+        user.setIsAdmin(false);
+        assertEquals("Back at 22:00", maintenancePolicy.beforeIssueToken(user, null, null));
+        user.setIsAdmin(true);
+        assertEquals(null, maintenancePolicy.beforeIssueToken(user, null, null), "administrators keep working");
     }
 
 }

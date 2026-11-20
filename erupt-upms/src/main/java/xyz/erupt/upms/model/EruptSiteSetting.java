@@ -88,6 +88,10 @@ public class EruptSiteSetting extends MetaModelUpdateVo {
             attachmentType = @AttachmentType(type = AttachmentType.Type.IMAGE)))
     private String faviconPath;
 
+    @EruptField(edit = @Edit(title = "App Icon", desc = "Icon of the installed app (PWA): svg, or a png / jpg / webp of 512px or more", type = EditType.ATTACHMENT,
+            attachmentType = @AttachmentType(type = AttachmentType.Type.IMAGE)))
+    private String pwaIcon;
+
     @EruptField(edit = @Edit(title = "Footer Text", desc = "Plain text at the foot of the login page, replacing the default copyright line"))
     private String footerText;
 
@@ -124,6 +128,21 @@ public class EruptSiteSetting extends MetaModelUpdateVo {
     @EruptField(edit = @Edit(title = "Notice Until", desc = "Blank means until removed", dateType = @DateType(type = DateType.Type.DATE_TIME)))
     private LocalDateTime loginNoticeEnd;
 
+    @EruptField(edit = @Edit(title = "Registration Page", desc = "Shows a sign-up link on the login page; http(s) or a path on this site"))
+    private String registerPage;
+
+    @EruptField(edit = @Edit(title = "Privacy Policy", desc = "Link shown on the login page; http(s) or a path on this site"))
+    private String privacyUrl;
+
+    @EruptField(edit = @Edit(title = "Terms of Service", desc = "Link shown on the login page; http(s) or a path on this site"))
+    private String termsUrl;
+
+    @EruptField(edit = @Edit(title = "Require Consent", desc = "On: users must tick their agreement to the linked documents before signing in", type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
+                    @VL(value = "on", label = "On"),
+                    @VL(value = "off", label = "Off")
+            })))
+    private String requireConsent;
+
     @Transient
     @EruptField(edit = @Edit(title = "Appearance", type = EditType.DIVIDE))
     private String appearanceSection;
@@ -131,6 +150,9 @@ public class EruptSiteSetting extends MetaModelUpdateVo {
     @EruptField(edit = @Edit(title = "Primary Color", desc = "Applies until a user picks a color of their own, unless app.js locks the appearance",
             type = EditType.COLOR))
     private String primaryColor;
+
+    @EruptField(edit = @Edit(title = "Header Color", desc = "Header bar color, until a user picks one; blank follows the primary color", type = EditType.COLOR))
+    private String headerColor;
 
     // values are the frontend's Skin keys (theme.util.ts)
     @EruptField(edit = @Edit(title = "Skin", desc = "Default until a user picks one; locked appearance forces it", type = EditType.CHOICE,
@@ -181,6 +203,25 @@ public class EruptSiteSetting extends MetaModelUpdateVo {
             })))
     private String appearanceLock;
 
+    @EruptField(edit = @Edit(title = "Compact Mode", desc = "Denser spacing by default, until a user picks", type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
+                    @VL(value = "on", label = "On"),
+                    @VL(value = "off", label = "Off")
+            })))
+    private String compact;
+
+    @EruptField(edit = @Edit(title = "Menu Group Titles", desc = "Section titles in the sidebar by module group, until a user picks", type = EditType.CHOICE,
+            choiceType = @ChoiceType(vl = {
+                    @VL(value = "show", label = "Show"),
+                    @VL(value = "hide", label = "Hide")
+            })))
+    private String menuGroups;
+
+    @EruptField(edit = @Edit(title = "Multiple Tabs", desc = "Open pages as tabs by default, until a user picks", type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
+                    @VL(value = "on", label = "On"),
+                    @VL(value = "off", label = "Off")
+            })))
+    private String tabReuse;
+
     @Transient
     @EruptField(edit = @Edit(title = "Language", type = EditType.DIVIDE))
     private String languageSection;
@@ -210,6 +251,19 @@ public class EruptSiteSetting extends MetaModelUpdateVo {
     @OrderBy("id")
     @EruptField(edit = @Edit(title = "Header Links", desc = "Plain links in the header toolbar, next to those app.js adds", type = EditType.MULTI_FORM))
     private List<EruptSiteLink> links = new ArrayList<>();
+
+    @Transient
+    @EruptField(edit = @Edit(title = "Maintenance", type = EditType.DIVIDE))
+    private String maintenanceSection;
+
+    @EruptField(edit = @Edit(title = "Maintenance Mode", desc = "On: only administrators can sign in or keep working; everyone else is signed out at their next request and sees the message", type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
+                    @VL(value = "on", label = "On"),
+                    @VL(value = "off", label = "Off")
+            })))
+    private String maintenance;
+
+    @EruptField(edit = @Edit(title = "Maintenance Message", desc = "Shown on the login page and to refused users; blank uses a standard text", type = EditType.TEXTAREA))
+    private String maintenanceMessage;
 
     @Transient
     @EruptField(edit = @Edit(title = "Watermark", type = EditType.DIVIDE))

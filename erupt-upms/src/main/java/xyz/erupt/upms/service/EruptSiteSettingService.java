@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptSiteSetting;
 import xyz.erupt.upms.prop.EruptAppProp;
@@ -94,6 +95,15 @@ public class EruptSiteSettingService {
         put(config, "logoFoldPath", setting, EruptSiteSetting::getLogoFoldPath);
         put(config, "loginLogoPath", setting, EruptSiteSetting::getLoginLogoPath);
         put(config, "faviconPath", setting, EruptSiteSetting::getFaviconPath);
+        if (StringUtils.isNotBlank(setting.getPwaIcon())) config.put("pwa", Map.of("icon", setting.getPwaIcon().trim()));
+        put(config, "registerPage", setting, EruptSiteSetting::getRegisterPage);
+        put(config, "privacyUrl", setting, EruptSiteSetting::getPrivacyUrl);
+        put(config, "termsUrl", setting, EruptSiteSetting::getTermsUrl);
+        if (StringUtils.isNotBlank(setting.getPrivacyUrl()) || StringUtils.isNotBlank(setting.getTermsUrl())) {
+            flag(config, "requireConsent", setting.getRequireConsent(), "on", "off");
+        }
+        flag(config, "tabReuse", setting.getTabReuse(), "on", "off");
+        if (this.maintenanceActive(setting)) config.put("maintenance", this.maintenanceMessage(setting));
         put(config, "footerText", setting, EruptSiteSetting::getFooterText);
         flag(config, "copyright", setting.getCopyright(), "show", "hide");
         if (StringUtils.isNotBlank(setting.getLoginNotice()) && this.within(setting.getLoginNoticeStart(), setting.getLoginNoticeEnd())) {
@@ -102,6 +112,9 @@ public class EruptSiteSettingService {
         Map<String, Object> theme = new LinkedHashMap<>();
         put(theme, "primaryColor", setting, EruptSiteSetting::getPrimaryColor);
         put(theme, "skin", setting, EruptSiteSetting::getSkin);
+        put(theme, "headerColor", setting, EruptSiteSetting::getHeaderColor);
+        flag(theme, "compact", setting.getCompact(), "on", "off");
+        flag(theme, "menuGroups", setting.getMenuGroups(), "show", "hide");
         put(theme, "loginLayout", setting, EruptSiteSetting::getLoginLayout);
         put(theme, "loginBackground", setting, EruptSiteSetting::getLoginBackground);
         put(theme, "menuMode", setting, EruptSiteSetting::getMenuMode);
@@ -137,6 +150,25 @@ public class EruptSiteSettingService {
         flag(app, "waterMarkDate", setting.getWaterMarkDate(), "on", "off");
         if (!app.isEmpty()) config.put("app", app);
         return config;
+    }
+
+    /** Whether maintenance mode is on: only administrators may sign in or keep a session */
+    public boolean maintenanceActive() {
+        return this.maintenanceActive(this.setting());
+    }
+
+    private boolean maintenanceActive(EruptSiteSetting setting) {
+        return null != setting && "on".equals(setting.getMaintenance());
+    }
+
+    /** The maintenance text shown to refused users, the standard one when none was written */
+    public String maintenanceMessage() {
+        return this.maintenanceMessage(this.setting());
+    }
+
+    private String maintenanceMessage(EruptSiteSetting setting) {
+        return null != setting && StringUtils.isNotBlank(setting.getMaintenanceMessage())
+                ? setting.getMaintenanceMessage().trim() : I18nTranslate.$translate("upms.maintenance_default");
     }
 
     private boolean within(LocalDateTime start, LocalDateTime end) {
