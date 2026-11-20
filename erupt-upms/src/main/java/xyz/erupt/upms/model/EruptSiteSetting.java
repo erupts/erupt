@@ -1,27 +1,48 @@
 package xyz.erupt.upms.model;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.sub_erupt.Layout;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
+import xyz.erupt.annotation.sub_field.sub_edit.InputType;
+import xyz.erupt.annotation.sub_field.sub_edit.MultiChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.NumberType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.core.i18n.EruptLanguage;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.model.data_proxy.EruptSiteSettingDataProxy;
+import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
- * Site settings an administrator edits at runtime: brand (title, logos, favicon, footer, ICP
- * number), login page (layout, background, a timed notice), appearance defaults and the watermark. A supplement to {@code app.js}, not a replacement: a value saved here wins over the same
+ * Site settings an administrator edits at runtime: brand (title, logos, favicon, footer), login page (layout, background, a timed notice), appearance defaults, language, navigation
+ * (default home, header links) and the watermark. A supplement to {@code app.js}, not a replacement: a value saved here wins over the same
  * key in {@code window.eruptSiteConfig}, a blank one leaves the {@code app.js} value in place, and
  * everything this form does not cover (map vendor, domain, tools...) stays in {@code app.js}. One
  * row, edited through a form view; delivered with {@code /erupt-app} before login, and a tenant's
@@ -32,14 +53,14 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "e_upms_site_setting")
-@Erupt(name = "Site Settings", dataProxy = EruptSiteSettingDataProxy.class)
+@Erupt(name = "Site Settings", layout = @Layout(formSteps = true), dataProxy = EruptSiteSettingDataProxy.class)
 @EruptI18n
 @Getter
 @Setter
 public class EruptSiteSetting extends MetaModelUpdateVo {
 
     @Transient
-    @EruptField(edit = @Edit(title = "Brand", desc = "Leave a field blank to keep the value from app.js", type = EditType.DIVIDE))
+    @EruptField(edit = @Edit(title = "Brand", type = EditType.DIVIDE))
     private String brandSection;
 
     @EruptField(edit = @Edit(title = "Site Title", desc = "Browser tab and login page title"))
@@ -69,9 +90,6 @@ public class EruptSiteSetting extends MetaModelUpdateVo {
 
     @EruptField(edit = @Edit(title = "Footer Text", desc = "Plain text at the foot of the login page, replacing the default copyright line"))
     private String footerText;
-
-    @EruptField(edit = @Edit(title = "ICP Number", desc = "Shown at the foot of the login page, linked to beian.miit.gov.cn; required for sites served in mainland China"))
-    private String icpNumber;
 
     @EruptField(edit = @Edit(title = "Copyright Line", desc = "Blank follows app.js", type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
             @VL(value = "show", label = "Show"),
@@ -114,6 +132,21 @@ public class EruptSiteSetting extends MetaModelUpdateVo {
             type = EditType.COLOR))
     private String primaryColor;
 
+    // values are the frontend's Skin keys (theme.util.ts)
+    @EruptField(edit = @Edit(title = "Skin", desc = "Default until a user picks one; locked appearance forces it", type = EditType.CHOICE,
+            choiceType = @ChoiceType(vl = {
+                    @VL(value = "default", label = "Default"),
+                    @VL(value = "classic", label = "Classic"),
+                    @VL(value = "workspace", label = "Workspace"),
+                    @VL(value = "material", label = "Material"),
+                    @VL(value = "polaris", label = "Polaris"),
+                    @VL(value = "linear", label = "Linear"),
+                    @VL(value = "liquid-glass", label = "Liquid Glass"),
+                    @VL(value = "brutalist", label = "Brutalist"),
+                    @VL(value = "terminal", label = "Terminal")
+            })))
+    private String skin;
+
     @EruptField(edit = @Edit(title = "Color Scheme", desc = "Default until a user picks light or dark", type = EditType.CHOICE,
             choiceType = @ChoiceType(vl = {
                     @VL(value = "light", label = "Light"),
@@ -149,7 +182,37 @@ public class EruptSiteSetting extends MetaModelUpdateVo {
     private String appearanceLock;
 
     @Transient
-    @EruptField(edit = @Edit(title = "Watermark", desc = "Blank follows erupt-app.water-mark in the application configuration", type = EditType.DIVIDE))
+    @EruptField(edit = @Edit(title = "Language", type = EditType.DIVIDE))
+    private String languageSection;
+
+    @EruptField(edit = @Edit(title = "Default Language", desc = "For users who have not picked one; must be among the offered languages",
+            type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = EruptLanguage.Choice.class)))
+    private String defaultLang;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
+    @EruptField(edit = @Edit(title = "Offered Languages", desc = "Languages users can switch to; one hides the language switch",
+            type = EditType.MULTI_CHOICE, multiChoiceType = @MultiChoiceType(type = MultiChoiceType.Type.SELECT, fetchHandler = EruptLanguage.Choice.class)))
+    private Set<String> locales;
+
+    @Transient
+    @EruptField(edit = @Edit(title = "Navigation", type = EditType.DIVIDE))
+    private String navigationSection;
+
+    @ManyToOne
+    @EruptField(edit = @Edit(title = "Default Home", desc = "Opened after login for users without a home menu of their own, when they may open it",
+            type = EditType.REFERENCE_TREE, referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id"),
+            filter = @Filter(conditionHandler = EruptMenuViewFilter.class)))
+    private EruptMenu homeMenu;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "site_setting_id", foreignKey = @ForeignKey(name = "fk_upms_site_link_setting"))
+    @OrderBy("id")
+    @EruptField(edit = @Edit(title = "Header Links", desc = "Plain links in the header toolbar, next to those app.js adds", type = EditType.MULTI_FORM))
+    private List<EruptSiteLink> links = new ArrayList<>();
+
+    @Transient
+    @EruptField(edit = @Edit(title = "Watermark", type = EditType.DIVIDE))
     private String watermarkSection;
 
     @EruptField(edit = @Edit(title = "Watermark", type = EditType.CHOICE, choiceType = @ChoiceType(vl = {

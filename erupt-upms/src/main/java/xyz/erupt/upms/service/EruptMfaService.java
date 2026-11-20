@@ -48,6 +48,9 @@ public class EruptMfaService {
     private EruptAppProp eruptAppProp;
 
     @Resource
+    private EruptUpmsSettings eruptUpmsSettings;
+
+    @Resource
     private EruptSessionService sessionService;
 
     @Resource
@@ -57,7 +60,7 @@ public class EruptMfaService {
     private String applicationName;
 
     public boolean isEnable() {
-        return eruptAppProp.getMfa().isEnable();
+        return eruptUpmsSettings.mfaEnable();
     }
 
     /**

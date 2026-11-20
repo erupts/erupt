@@ -14,6 +14,8 @@ import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.util.SecretUtil;
 import xyz.erupt.core.view.R;
 import xyz.erupt.upms.base.ChangePwdBody;
+import xyz.erupt.upms.model.EruptMenu;
+import xyz.erupt.upms.model.EruptSiteSetting;
 import xyz.erupt.upms.base.VerifyPwdBody;
 import xyz.erupt.upms.base.LoginBody;
 import xyz.erupt.upms.base.LoginModel;
@@ -55,6 +57,12 @@ public class EruptUserController {
 
     @Resource
     private EruptAppProp eruptAppProp;
+
+    @Resource
+    private EruptUpmsSettings eruptUpmsSettings;
+
+    @Resource
+    private EruptSiteSettingService eruptSiteSettingService;
 
     @Resource
     private EruptContextService eruptContextService;
@@ -107,7 +115,7 @@ public class EruptUserController {
                     loginModel.setPass(true);
                 }
             } catch (Exception e) {
-                if (0 == eruptAppProp.getVerifyCodeCount()) loginModel.setUseVerifyCode(true);
+                if (0 == eruptUpmsSettings.verifyCodeCount()) loginModel.setUseVerifyCode(true);
                 loginModel.setReason(e.getMessage());
                 loginModel.setPass(false);
             }
@@ -229,7 +237,16 @@ public class EruptUserController {
         Optional.ofNullable(eruptUser.getEruptOrg()).ifPresent(it -> userinfoVo.setOrg(it.getCode()));
         Optional.ofNullable(eruptUser.getEruptPost()).ifPresent(it -> userinfoVo.setPost(it.getCode()));
         Optional.ofNullable(eruptUser.getRoles()).ifPresent(it -> userinfoVo.setRoles(it.stream().map(EruptRole::getCode).collect(Collectors.toList())));
-        Optional.ofNullable(eruptUser.getEruptMenu()).ifPresent(it -> {
+        // the user's own home menu, else the site default when this user may open it
+        EruptMenu home = eruptUser.getEruptMenu();
+        if (null == home) {
+            EruptSiteSetting site = eruptSiteSettingService.setting();
+            EruptMenu siteHome = null == site ? null : site.getHomeMenu();
+            if (null != siteHome && null != siteHome.getValue() && null != eruptUserService.getEruptMenuByValue(siteHome.getValue())) {
+                home = siteHome;
+            }
+        }
+        Optional.ofNullable(home).ifPresent(it -> {
             userinfoVo.setIndexMenuType(it.getType());
             userinfoVo.setIndexMenuValue(it.getValue());
         });

@@ -26,7 +26,7 @@ import xyz.erupt.core.interceptor.SessionScopeGuard;
 import xyz.erupt.security.service.OperationService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
-import xyz.erupt.upms.prop.EruptUpmsProp;
+import xyz.erupt.upms.service.EruptUpmsSettings;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -51,7 +51,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
     private EruptProp eruptProp;
 
     @Resource
-    private EruptUpmsProp eruptUpmsProp;
+    private EruptUpmsSettings eruptUpmsSettings;
 
     @Resource
     private OperationService operationService;
@@ -179,7 +179,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         }
         if (eruptProp.isRedisSessionRefresh()) {
             for (String uk : SessionKey.USER_KEY_GROUP) {
-                sessionService.expire(uk + token, eruptUpmsProp.getExpireTimeByLogin(), TimeUnit.MINUTES);
+                sessionService.expire(uk + token, eruptUpmsSettings.sessionMinutes(), TimeUnit.MINUTES);
             }
         }
         return true;

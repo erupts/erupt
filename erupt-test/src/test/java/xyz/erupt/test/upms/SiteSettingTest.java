@@ -32,6 +32,9 @@ class SiteSettingTest extends EruptApplicationTests {
     @Resource
     private EruptSiteSettingService eruptSiteSettingService;
 
+    @Resource
+    private xyz.erupt.upms.model.data_proxy.EruptSiteSettingDataProxy dataProxy;
+
     @AfterEach
     void clear() {
         transactionTemplate.executeWithoutResult(s -> eruptDao.lambdaQuery(EruptSiteSetting.class).delete());
@@ -50,7 +53,6 @@ class SiteSettingTest extends EruptApplicationTests {
         EruptSiteSetting setting = new EruptSiteSetting();
         setting.setTitle(" Acme ");
         setting.setLogoText("");
-        setting.setIcpNumber("ICP 12345678");
         setting.setCopyright("hide");
         setting.setColorScheme("auto");
         setting.setAppearanceLock("lock");
@@ -60,7 +62,6 @@ class SiteSettingTest extends EruptApplicationTests {
 
         assertEquals("Acme", site.get("title"));
         assertFalse(site.containsKey("logoText"), "a blank field keeps the app.js value");
-        assertEquals("ICP 12345678", site.get("icpNumber"));
         assertEquals(false, site.get("copyright"));
         Map<String, Object> theme = (Map<String, Object>) site.get("theme");
         assertEquals("auto", theme.get("dark"));
@@ -91,6 +92,39 @@ class SiteSettingTest extends EruptApplicationTests {
         expired.setLoginNotice("Maintenance tonight");
         expired.setLoginNoticeEnd(LocalDateTime.now().minusMinutes(1));
         assertFalse(save(expired).containsKey("loginNotice"), "not shown after its end");
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void languagesAndLinksReachTheFrontend() {
+        EruptSiteSetting setting = new EruptSiteSetting();
+        setting.setDefaultLang("zh-CN");
+        setting.setLocales(new java.util.HashSet<>(java.util.List.of("zh-CN", "en-US")));
+        xyz.erupt.upms.model.EruptSiteLink link = new xyz.erupt.upms.model.EruptSiteLink();
+        link.setName("Help");
+        link.setUrl("https://docs.example.com");
+        setting.setLinks(new java.util.ArrayList<>(java.util.List.of(link)));
+        Map<String, Object> site = save(setting);
+
+        assertEquals("zh-CN", site.get("defaultLang"));
+        assertEquals(java.util.List.of("en-US", "zh-CN"), ((Map<String, Object>) site.get("app")).get("locales"), "in the configured order");
+        assertEquals(1, ((java.util.List<?>) site.get("links")).size());
+    }
+
+    @Test
+    void savingRefusesSettingsTheFrontendCannotHonour() {
+        EruptSiteSetting lang = new EruptSiteSetting();
+        lang.setDefaultLang("ja-JP");
+        lang.setLocales(new java.util.HashSet<>(java.util.List.of("en-US")));
+        org.junit.jupiter.api.Assertions.assertThrows(xyz.erupt.annotation.exception.EruptException.class, () -> dataProxy.formSave(lang));
+
+        EruptSiteSetting script = new EruptSiteSetting();
+        xyz.erupt.upms.model.EruptSiteLink link = new xyz.erupt.upms.model.EruptSiteLink();
+        link.setName("x");
+        link.setUrl("javascript:alert(1)");
+        script.setLinks(new java.util.ArrayList<>(java.util.List.of(link)));
+        org.junit.jupiter.api.Assertions.assertThrows(xyz.erupt.annotation.exception.EruptException.class, () -> dataProxy.formSave(script));
+
     }
 
 }

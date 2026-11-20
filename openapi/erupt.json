@@ -6016,7 +6016,7 @@
             "type": "string"
           },
           "locales": {
-            "description": "Languages offered by the UI, as locale tags",
+            "description": "Languages offered by the UI, as locale tags; every language erupt ships by default (EruptLanguage)",
             "type": "array",
             "items": {
               "type": "string"

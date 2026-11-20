@@ -243,6 +243,15 @@ failure: it never feeds the login lock or the captcha counter. erupt-iam (`../er
 policy, login risk control, session ceiling and mandatory MFA on this SPI; there is no stand-in in erupt-test
 because the default methods abstain and an absent bean list means "no policies".
 
+`UpmsSettingsOverride` (`erupt-upms/.../spi/UpmsSettingsOverride.java`) lets a module override the login and
+session settings that otherwise come from the configuration — session minutes, the login lock, the captcha
+threshold, the initial password prompt, the MFA switch — at runtime; erupt-iam answers from its security
+policy. Read those settings through `EruptUpmsSettings`, never from `EruptUpmsProp` / `EruptAppProp`
+directly, or an override is silently ignored. `/erupt-app` returns a copy carrying the effective values.
+
+Spring Boot's multipart limit refuses a larger upload before erupt runs; `EruptUploadCeiling` reads it, and
+a `MaxUploadSizeExceededException` is answered as an upload error naming the limit instead of a 500.
+
 A session narrowed to one target (an erupt-share link) may call a login-level route only if the route
 declares the right it exercises: give a read-only `@EruptRouter(verifyType = LOGIN)` endpoint
 `power = EruptRouter.Power.QUERY` (the semantic layer's reads, a published canvas page) and leave a
@@ -294,4 +303,7 @@ tagged `@Tag("own-context")`, which surefire runs in a separate JVM (see `erupt-
 - **CSV key = English text.** The key doubles as the en-US fallback, so `I18nTranslate.$translate(key)` degrades gracefully when no translation is found.
 - **Key case is significant.** The inner lookup map is a plain `HashMap` — `"Name"` and `"name"` are different keys. Match the exact string used in the annotation or code.
 - **Wrap runtime error messages.** Any `EruptWebApiRuntimeException` (or similar) message shown to the frontend must go through `I18nTranslate.$translate("module.key")`. Static/internal developer errors do not need translation.
+- **One list of languages.** `EruptLanguage` (erupt-core) is the only place the shipped languages are
+  listed: the default of `erupt-app.locales` and every language field (`fetchHandler = EruptLanguage.Choice.class`)
+  read it. Never spell the languages out again in `@VL` lists; a new language is a constant there and a CSV column.
 - **No Chinese hard-coded anywhere.** Java source files must contain zero CJK characters — including test assertion literals. Use `assertNotEquals` / language-neutral checks instead of hard-coded translated values.

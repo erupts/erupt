@@ -1,6 +1,7 @@
 package xyz.erupt.upms.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.service.EruptSiteSettingService;
+import xyz.erupt.upms.service.EruptUpmsSettings;
 import xyz.erupt.upms.service.EruptUserService;
 
 /**
@@ -32,6 +34,8 @@ public class EruptUPMSController {
 
     private final EruptSiteSettingService eruptSiteSettingService;
 
+    private final EruptUpmsSettings eruptUpmsSettings;
+
     /**
      * Whether the current user holds a menu permission.
      *
@@ -52,12 +56,21 @@ public class EruptUPMSController {
      */
     @GetMapping(EruptRestPath.ERUPT_API + "/erupt-app")
     public EruptAppProp eruptApp() {
-        eruptAppProp.setHash(this.hashCode());
-        eruptAppProp.setVersion(EruptInformation.getEruptVersion());
+        // a copy: the settings a runtime override changed must not be written back into the configuration bean
+        EruptAppProp app = new EruptAppProp();
+        BeanUtils.copyProperties(eruptAppProp, app);
+        EruptAppProp.Mfa mfa = new EruptAppProp.Mfa();
+        BeanUtils.copyProperties(eruptAppProp.getMfa(), mfa);
+        mfa.setEnable(eruptUpmsSettings.mfaEnable());
+        app.setMfa(mfa);
+        app.setVerifyCodeCount(eruptUpmsSettings.verifyCodeCount());
+        app.setResetPwdPrompt(eruptUpmsSettings.resetPwdPrompt());
+        app.setHash(this.hashCode());
+        app.setVersion(EruptInformation.getEruptVersion());
         AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
-        eruptAppProp.setFileDomain(null == attachmentProxy ? null : attachmentProxy.fileDomain());
-        eruptAppProp.setSite(eruptSiteSettingService.siteConfig());
-        return eruptAppProp;
+        app.setFileDomain(null == attachmentProxy ? null : attachmentProxy.fileDomain());
+        app.setSite(eruptSiteSettingService.siteConfig());
+        return app;
     }
 
 }

@@ -33,8 +33,6 @@ import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.core.exception.EruptSessionInvalidException;
 import xyz.erupt.upms.model.log.EruptLoginLog;
-import xyz.erupt.upms.prop.EruptAppProp;
-import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.tenant.UpmsTenantSessions;
 import xyz.erupt.upms.spi.LoginPolicy;
 import xyz.erupt.upms.util.IpUtil;
@@ -69,11 +67,7 @@ public class EruptUserService {
     @Resource
     private EruptFileService eruptFileService;
 
-    @Resource
-    private EruptAppProp eruptAppProp;
 
-    @Resource
-    private EruptUpmsProp eruptUpmsProp;
 
     @Resource
     private EruptContextService eruptContextService;
@@ -83,6 +77,9 @@ public class EruptUserService {
 
     @Resource
     private UpmsTenantSessions upmsTenantSessions;
+
+    @Resource
+    private EruptUpmsSettings eruptUpmsSettings;
 
     // Login policies asked in order; the first refusal wins. None registered is the common case
     @Autowired(required = false)
@@ -108,26 +105,26 @@ public class EruptUserService {
         if (null != loginError) {
             loginErrorCount = Integer.parseInt(loginError.toString());
         }
-        sessionService.put(key, ++loginErrorCount + "", eruptUpmsProp.getExpireTimeByLogin(), TimeUnit.MINUTES);
-        EruptUpmsProp.LoginLock lock = eruptUpmsProp.getLoginLock();
-        if (lock.isEnable() && loginErrorCount >= lock.getMaxFailures()) {
+        sessionService.put(key, ++loginErrorCount + "", eruptUpmsSettings.sessionMinutes(), TimeUnit.MINUTES);
+        int lockMinutes = eruptUpmsSettings.loginLockMinutes();
+        if (eruptUpmsSettings.loginLockEnable() && loginErrorCount >= eruptUpmsSettings.loginLockMaxFailures()) {
             // the counter is dropped with the lock so the next window starts clean when it lifts
-            sessionService.put(SessionKey.LOGIN_LOCK + account + ":" + ip, "1", lock.getLockMinutes(), TimeUnit.MINUTES);
+            sessionService.put(SessionKey.LOGIN_LOCK + account + ":" + ip, "1", lockMinutes, TimeUnit.MINUTES);
             sessionService.remove(key);
-            log.warn("login locked for {} minutes after {} failures: {} @ {}", lock.getLockMinutes(), loginErrorCount, account, ip);
+            log.warn("login locked for {} minutes after {} failures: {} @ {}", lockMinutes, loginErrorCount, account, ip);
         }
-        return loginErrorCount >= eruptAppProp.getVerifyCodeCount();
+        return loginErrorCount >= eruptUpmsSettings.verifyCodeCount();
     }
 
     // Whether this account is still serving a lock from earlier failures made from the requesting IP
     public boolean isLoginLocked(String account) {
-        return eruptUpmsProp.getLoginLock().isEnable()
+        return eruptUpmsSettings.loginLockEnable()
                 && sessionService.exist(SessionKey.LOGIN_LOCK + account + ":" + IpUtil.getIpAddr(request));
     }
 
     public LoginModel lockedLoginModel() {
         String reason = I18nTranslate.$translate("upms.login_locked")
-                .replace("{0}", String.valueOf(eruptUpmsProp.getLoginLock().getLockMinutes()));
+                .replace("{0}", String.valueOf(eruptUpmsSettings.loginLockMinutes()));
         return new LoginModel(false, reason, true);
     }
 
@@ -211,7 +208,7 @@ public class EruptUserService {
             }
         }
         loginModel.setToken(Erupts.generateCode(22)); // 22 alphanumerics ~ 131 bits, meets the 128-bit session id guideline
-        loginModel.setExpire(LocalDateTime.now().plusMinutes(eruptUpmsProp.getExpireTimeByLogin()));
+        loginModel.setExpire(LocalDateTime.now().plusMinutes(eruptUpmsSettings.sessionMinutes()));
         if (null == eruptUser.getResetPwdTime()) loginModel.setResetPwd(true);
         loginModel.setAccount(eruptUser.getAccount());
         if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
@@ -233,7 +230,7 @@ public class EruptUserService {
         Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
         long loginErrorCount = 0;
         if (null != loginError) loginErrorCount = Long.parseLong(loginError.toString());
-        if (loginErrorCount >= eruptAppProp.getVerifyCodeCount()) {
+        if (loginErrorCount >= eruptUpmsSettings.verifyCodeCount()) {
             if (StringUtils.isBlank(verifyCode)) return false;
             String key = SessionKey.VERIFY_CODE + verifyCodeMark;
             Object vc = sessionService.get(key);

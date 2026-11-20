@@ -14,7 +14,6 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
-import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.vo.EruptMenuVo;
 
 import java.util.*;
@@ -29,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 public class EruptTokenService {
 
     @Resource
-    private EruptUpmsProp eruptUpmsProp;
+    private EruptUpmsSettings eruptUpmsSettings;
 
     @Resource
     private EruptSessionService eruptSessionService;
@@ -84,7 +83,7 @@ public class EruptTokenService {
         MetaUserinfo metaUserinfo = eruptSessionService.get(SessionKey.USER_INFO + token, MetaUserinfo.class);
         if (null == metaUserinfo) return;
         metaUserinfo.setUsername(username);
-        eruptSessionService.put(SessionKey.USER_INFO + token, GsonFactory.getGson().toJson(metaUserinfo), eruptUpmsProp.getExpireTimeByLogin() - 1, TimeUnit.MINUTES);
+        eruptSessionService.put(SessionKey.USER_INFO + token, GsonFactory.getGson().toJson(metaUserinfo), eruptUpmsSettings.sessionMinutes() - 1, TimeUnit.MINUTES);
     }
 
     public boolean tokenExist(String token) {
@@ -99,7 +98,7 @@ public class EruptTokenService {
     }
 
     public void loginToken(EruptUser eruptUser, String token) {
-        this.loginToken(eruptUser, token, eruptUpmsProp.getExpireTimeByLogin());
+        this.loginToken(eruptUser, token, eruptUpmsSettings.sessionMinutes());
     }
 
     public void logoutToken(String name, String token) {
