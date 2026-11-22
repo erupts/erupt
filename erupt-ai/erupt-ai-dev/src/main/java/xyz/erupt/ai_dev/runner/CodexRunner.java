@@ -40,10 +40,11 @@ public class CodexRunner extends AbstractCliRunner {
         return "Codex";
     }
 
-    // edits inside the workspace, no approval prompts
+    // edits inside the workspace; exec is non-interactive already, so no approval flag is needed.
+    // --full-auto was removed in codex-cli 0.147 and now fails the whole command line
     @Override
     protected List<String> defaultArgs() {
-        return List.of("--full-auto");
+        return List.of("--sandbox", "workspace-write");
     }
 
     @Override
