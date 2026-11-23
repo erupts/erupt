@@ -1,25 +1,13 @@
 package xyz.erupt.upms.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
-import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Layout;
+import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
@@ -32,6 +20,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.i18n.EruptLanguage;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
+import xyz.erupt.upms.handler.PlatformOnly;
 import xyz.erupt.upms.model.data_proxy.EruptSiteSettingDataProxy;
 import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
 
@@ -44,22 +33,30 @@ import java.util.Set;
  * Site settings an administrator edits at runtime: brand (title, logos, favicon, footer), login page (layout, background, a timed notice), appearance defaults, language, navigation
  * (default home, header links) and the watermark. A supplement to {@code app.js}, not a replacement: a value saved here wins over the same
  * key in {@code window.eruptSiteConfig}, a blank one leaves the {@code app.js} value in place, and
- * everything this form does not cover (map vendor, domain, tools...) stays in {@code app.js}. One
- * row, edited through a form view; delivered with {@code /erupt-app} before login, and a tenant's
+ * everything this form does not cover (map vendor, domain, tools...) stays in {@code app.js}.
+ * Edited through a form view; delivered with {@code /erupt-app} before login, and a tenant's
  * own branding (erupt-tenant) still applies on top of it.
+ * <p>
+ * A form, not an entity: the whole of it is stored as one JSON document in
+ * {@link EruptSiteSettingStore}, so a new setting is a field here and nothing else — no column, no
+ * DDL. The audit fields are filled from the stored row when the form opens.
  *
  * @author YuePeng
  * date 2026/11/20
  */
-@Entity
-@Table(name = "e_upms_site_setting")
 @Erupt(name = "Site Settings", layout = @Layout(formSteps = true), dataProxy = EruptSiteSettingDataProxy.class)
 @EruptI18n
 @Getter
 @Setter
 public class EruptSiteSetting extends MetaModelUpdateVo {
 
-    @Transient
+    // The whole-page color filters; "none" lets a tenant lift the platform's
+    public static final String FILTER_NONE = "none", FILTER_GRAYSCALE = "grayscale", FILTER_CONTRAST = "contrast";
+
+    // The built-in header buttons an administrator may hide
+    public static final String TOOL_SEARCH = "search", TOOL_NOTICE = "notice", TOOL_REFRESH = "refresh",
+            TOOL_FULLSCREEN = "fullscreen", TOOL_LANGUAGE = "language", TOOL_SETTINGS = "settings";
+
     @EruptField(edit = @Edit(title = "Brand", type = EditType.DIVIDE))
     private String brandSection;
 
@@ -101,7 +98,6 @@ public class EruptSiteSetting extends MetaModelUpdateVo {
     })))
     private String copyright;
 
-    @Transient
     @EruptField(edit = @Edit(title = "Login Page", type = EditType.DIVIDE))
     private String loginSection;
 
@@ -143,7 +139,6 @@ public class EruptSiteSetting extends MetaModelUpdateVo {
             })))
     private String requireConsent;
 
-    @Transient
     @EruptField(edit = @Edit(title = "Appearance", type = EditType.DIVIDE))
     private String appearanceSection;
 
@@ -177,16 +172,14 @@ public class EruptSiteSetting extends MetaModelUpdateVo {
             })))
     private String colorScheme;
 
-    @EruptField(edit = @Edit(title = "Menu Mode", desc = "Default until a user picks one", type = EditType.CHOICE,
+    // Forced on every page, the login page included; not a default a user can change
+    @EruptField(edit = @Edit(title = "Page Filter", desc = "A color filter over the whole site, e.g. grayscale for a day of mourning; applies to everyone", type = EditType.CHOICE,
             choiceType = @ChoiceType(vl = {
-                    @VL(value = "normal", label = "Sidebar"),
-                    @VL(value = "split", label = "Categories in the header"),
-                    @VL(value = "dual", label = "Two-column sidebar"),
-                    @VL(value = "top", label = "Header only"),
-                    @VL(value = "group", label = "Group titles"),
-                    @VL(value = "top-split", label = "Header with second row")
+                    @VL(value = FILTER_NONE, label = "No Filter"),
+                    @VL(value = FILTER_GRAYSCALE, label = "Grayscale"),
+                    @VL(value = FILTER_CONTRAST, label = "High Contrast")
             })))
-    private String menuMode;
+    private String pageFilter;
 
     @EruptField(edit = @Edit(title = "Form Panel", desc = "How record forms open, until a user picks one", type = EditType.CHOICE,
             choiceType = @ChoiceType(vl = {
@@ -209,6 +202,36 @@ public class EruptSiteSetting extends MetaModelUpdateVo {
             })))
     private String compact;
 
+    @EruptField(edit = @Edit(title = "Language", type = EditType.DIVIDE))
+    private String languageSection;
+
+    @EruptField(edit = @Edit(title = "Default Language", desc = "For users who have not picked one; must be among the offered languages",
+            type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = EruptLanguage.Choice.class)))
+    private String defaultLang;
+
+    @EruptField(edit = @Edit(title = "Offered Languages", desc = "Languages users can switch to; one hides the language switch",
+            type = EditType.MULTI_CHOICE, multiChoiceType = @MultiChoiceType(type = MultiChoiceType.Type.SELECT, fetchHandler = EruptLanguage.Choice.class)))
+    private Set<String> locales;
+
+    @EruptField(edit = @Edit(title = "Navigation", type = EditType.DIVIDE))
+    private String navigationSection;
+
+    @EruptField(edit = @Edit(title = "Default Home", desc = "Opened after login for users without a home menu of their own, when they may open it",
+            type = EditType.REFERENCE_TREE, referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id"),
+            filter = @Filter(conditionHandler = EruptMenuViewFilter.class)))
+    private EruptMenu homeMenu;
+
+    @EruptField(edit = @Edit(title = "Menu Mode", desc = "Default until a user picks one", type = EditType.CHOICE,
+            choiceType = @ChoiceType(vl = {
+                    @VL(value = "normal", label = "Sidebar"),
+                    @VL(value = "split", label = "Categories in the header"),
+                    @VL(value = "dual", label = "Two-column sidebar"),
+                    @VL(value = "top", label = "Header only"),
+                    @VL(value = "group", label = "Group titles"),
+                    @VL(value = "top-split", label = "Header with second row")
+            })))
+    private String menuMode;
+
     @EruptField(edit = @Edit(title = "Menu Group Titles", desc = "Section titles in the sidebar by module group, until a user picks", type = EditType.CHOICE,
             choiceType = @ChoiceType(vl = {
                     @VL(value = "show", label = "Show"),
@@ -222,50 +245,48 @@ public class EruptSiteSetting extends MetaModelUpdateVo {
             })))
     private String tabReuse;
 
-    @Transient
-    @EruptField(edit = @Edit(title = "Language", type = EditType.DIVIDE))
-    private String languageSection;
+    @EruptField(edit = @Edit(title = "Hidden Header Tools", desc = "Built-in header buttons to hide; blank shows them all",
+            type = EditType.MULTI_CHOICE, multiChoiceType = @MultiChoiceType(vl = {
+                    @VL(value = TOOL_SEARCH, label = "Menu Search"),
+                    @VL(value = TOOL_NOTICE, label = "Notifications"),
+                    @VL(value = TOOL_REFRESH, label = "Refresh"),
+                    @VL(value = TOOL_FULLSCREEN, label = "Fullscreen"),
+                    @VL(value = TOOL_LANGUAGE, label = "Language Switch"),
+                    @VL(value = TOOL_SETTINGS, label = "Appearance Settings")
+            })))
+    private Set<String> hiddenTools;
 
-    @EruptField(edit = @Edit(title = "Default Language", desc = "For users who have not picked one; must be among the offered languages",
-            type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = EruptLanguage.Choice.class)))
-    private String defaultLang;
-
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(length = AnnotationConst.CONFIG_LENGTH)
-    @EruptField(edit = @Edit(title = "Offered Languages", desc = "Languages users can switch to; one hides the language switch",
-            type = EditType.MULTI_CHOICE, multiChoiceType = @MultiChoiceType(type = MultiChoiceType.Type.SELECT, fetchHandler = EruptLanguage.Choice.class)))
-    private Set<String> locales;
-
-    @Transient
-    @EruptField(edit = @Edit(title = "Navigation", type = EditType.DIVIDE))
-    private String navigationSection;
-
-    @ManyToOne
-    @EruptField(edit = @Edit(title = "Default Home", desc = "Opened after login for users without a home menu of their own, when they may open it",
-            type = EditType.REFERENCE_TREE, referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id"),
-            filter = @Filter(conditionHandler = EruptMenuViewFilter.class)))
-    private EruptMenu homeMenu;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "site_setting_id", foreignKey = @ForeignKey(name = "fk_upms_site_link_setting"))
-    @OrderBy("id")
-    @EruptField(edit = @Edit(title = "Header Links", desc = "Plain links in the header toolbar, next to those app.js adds", type = EditType.MULTI_FORM))
+    // Shown in list order; each link picks where it shows
+    @EruptField(edit = @Edit(title = "Links", desc = "Plain links; each one picks where it shows and how it opens", type = EditType.MULTI_FORM))
     private List<EruptSiteLink> links = new ArrayList<>();
 
-    @Transient
-    @EruptField(edit = @Edit(title = "Maintenance", type = EditType.DIVIDE))
+    @EruptField(edit = @Edit(title = "Read-only Mode", type = EditType.DIVIDE))
+    private String readOnlySection;
+
+    // Server side only, never delivered with /erupt-app. The platform's switch holds for every tenant;
+    // a tenant may also switch its own on
+    @EruptField(edit = @Edit(title = "Read-only Mode", desc = "On: nobody can add, edit or delete records, queries go on; for a data migration or an audit", type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
+                    @VL(value = "on", label = "On"),
+                    @VL(value = "off", label = "Off")
+            })))
+    private String readOnly;
+
+    @EruptField(edit = @Edit(title = "Read-only Message", desc = "Shown to a user whose change was refused; blank uses a standard text", type = EditType.TEXTAREA))
+    private String readOnlyMessage;
+
+    // The maintenance fields are the platform's alone: a tenant neither sees nor overrides them
+    @EruptField(edit = @Edit(title = "Maintenance", type = EditType.DIVIDE, ifRender = @ExprBool(exprHandler = PlatformOnly.class)))
     private String maintenanceSection;
 
     @EruptField(edit = @Edit(title = "Maintenance Mode", desc = "On: only administrators can sign in or keep working; everyone else is signed out at their next request and sees the message", type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
                     @VL(value = "on", label = "On"),
                     @VL(value = "off", label = "Off")
-            })))
+            }), ifRender = @ExprBool(exprHandler = PlatformOnly.class)))
     private String maintenance;
 
-    @EruptField(edit = @Edit(title = "Maintenance Message", desc = "Shown on the login page and to refused users; blank uses a standard text", type = EditType.TEXTAREA))
+    @EruptField(edit = @Edit(title = "Maintenance Message", desc = "Shown on the login page and to refused users; blank uses a standard text", type = EditType.TEXTAREA, ifRender = @ExprBool(exprHandler = PlatformOnly.class)))
     private String maintenanceMessage;
 
-    @Transient
     @EruptField(edit = @Edit(title = "Watermark", type = EditType.DIVIDE))
     private String watermarkSection;
 

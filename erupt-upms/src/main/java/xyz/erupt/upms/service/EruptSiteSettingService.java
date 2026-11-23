@@ -1,30 +1,52 @@
 package xyz.erupt.upms.service;
 
+import com.google.gson.JsonObject;
 import jakarta.annotation.Resource;
+import jakarta.persistence.EntityManager;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.transaction.support.TransactionTemplate;
+import xyz.erupt.annotation.EruptField;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.linq.lambda.LambdaSee;
+import xyz.erupt.upms.handler.PlatformOnly;
+import xyz.erupt.upms.helper.UpmsTenant;
+import xyz.erupt.upms.model.EruptMenu;
+import xyz.erupt.upms.model.EruptSiteLink;
 import xyz.erupt.upms.model.EruptSiteSetting;
+import xyz.erupt.upms.model.EruptSiteSettingStore;
 import xyz.erupt.upms.prop.EruptAppProp;
+import xyz.erupt.upms.tenant.UpmsTenantIdentifierResolver;
+import xyz.erupt.upms.tenant.UpmsTenantSessions;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Reads the site settings row and renders it as the patch the frontend lays over
+ * Reads the stored site settings (a JSON document, see {@link EruptSiteSettingStore}) and renders them as the patch the frontend lays over
  * {@code window.eruptSiteConfig}: only the keys an administrator filled in, so a blank field keeps
  * the {@code app.js} value. The row is read on every page load before login, hence the short
  * cache; a save evicts it on this node and other nodes catch up within the cache
  * window. Time-bound keys (the login notice) are evaluated per request from the cached row.
+ * <p>
+ * Rows are per tenant (see {@link EruptSiteSettingStore}): a session is served the platform's settings
+ * with its tenant's own laid over them field by field, while maintenance mode is always the
+ * platform's and holds for everyone.
  *
  * @author YuePeng
  * date 2026/11/20
@@ -33,6 +55,18 @@ import java.util.stream.Stream;
 public class EruptSiteSettingService {
 
     private static final long CACHE_MILLIS = 30_000;
+
+    // Fields of the form that describe the row, not the site: kept in its own columns
+    private static final List<String> NOT_SETTINGS = List.of(
+            LambdaSee.field(EruptSiteSetting::getId), LambdaSee.field(EruptSiteSetting::getCreateBy),
+            LambdaSee.field(EruptSiteSetting::getCreateTime), LambdaSee.field(EruptSiteSetting::getUpdateBy),
+            LambdaSee.field(EruptSiteSetting::getUpdateTime));
+
+    // Fields only the platform decides, marked on the form by the handler that hides them from a tenant
+    private static final Set<String> PLATFORM_ONLY = Stream.of(EruptSiteSetting.class.getDeclaredFields())
+            .filter(field -> Optional.ofNullable(field.getAnnotation(EruptField.class))
+                    .map(it -> it.edit().ifRender().exprHandler() == PlatformOnly.class).orElse(false))
+            .map(Field::getName).collect(Collectors.toUnmodifiableSet());
 
     @Resource
     private EruptDao eruptDao;
@@ -43,37 +77,128 @@ public class EruptSiteSettingService {
     @Resource
     private EruptAppProp eruptAppProp;
 
-    private final AtomicLong loadedAt = new AtomicLong(0);
+    @Resource
+    private UpmsTenantSessions tenantSessions;
 
-    private volatile EruptSiteSetting cached;
+    @Resource
+    private UpmsTenantIdentifierResolver tenantResolver;
+
+    // Per tenant: a null setting is a tenant that saved none, cached like any other answer
+    private final Map<String, Cached> cache = new ConcurrentHashMap<>();
+
+    private record Cached(EruptSiteSetting setting, long loadedAt) {
+    }
 
     /**
-     * The row straight from the database, its header links loaded inside the transaction so the
-     * detached copy stays readable later; null when the form was never saved
+     * The settings the current tenant saved itself, with the audit fields of their row; null when it
+     * never saved the form. A home menu deleted since it was chosen reads as none.
      */
     public EruptSiteSetting load() {
-        return transactionTemplate.execute(status -> {
-            EruptSiteSetting row = eruptDao.lambdaQuery(EruptSiteSetting.class).one();
-            if (null != row) Hibernate.initialize(row.getLinks());
-            return row;
+        return this.read(eruptDao.getEntityManager());
+    }
+
+    // Hibernate narrows the query to the tenant of the entity manager's session
+    private EruptSiteSetting read(EntityManager em) {
+        EruptSiteSettingStore store = eruptDao.lambdaQuery(em, EruptSiteSettingStore.class).one();
+        if (null == store) return null;
+        EruptSiteSetting setting = StringUtils.isBlank(store.getSettings()) ? new EruptSiteSetting()
+                : GsonFactory.getGson().fromJson(store.getSettings(), EruptSiteSetting.class);
+        setting.setId(store.getId());
+        setting.setCreateBy(store.getCreateBy());
+        setting.setCreateTime(store.getCreateTime());
+        setting.setUpdateBy(store.getUpdateBy());
+        setting.setUpdateTime(store.getUpdateTime());
+        if (null != setting.getHomeMenu()) {
+            Long menuId = setting.getHomeMenu().getId();
+            setting.setHomeMenu(null == menuId ? null : em.find(EruptMenu.class, menuId));
+        }
+        if (null == setting.getLinks()) setting.setLinks(new ArrayList<>());
+        return setting;
+    }
+
+    /** Writes the settings into the current tenant's row, creating it the first time, and evicts the cache */
+    public void save(EruptSiteSetting setting) {
+        EruptMenu home = setting.getHomeMenu();
+        JsonObject document;
+        try {
+            // a menu is an entity with relations of its own: only its id belongs in the document
+            setting.setHomeMenu(null);
+            document = GsonFactory.getGson().toJsonTree(setting).getAsJsonObject();
+        } finally {
+            setting.setHomeMenu(home);
+        }
+        NOT_SETTINGS.forEach(document::remove);
+        // a tenant's document never carries what only the platform decides
+        if (!UpmsTenant.isPlatform(tenantResolver.resolveCurrentTenantIdentifier())) PLATFORM_ONLY.forEach(document::remove);
+        if (null != home && null != home.getId()) {
+            JsonObject menu = new JsonObject();
+            menu.addProperty(LambdaSee.field(EruptMenu::getId), home.getId());
+            document.add(LambdaSee.field(EruptSiteSetting::getHomeMenu), menu);
+        }
+        transactionTemplate.executeWithoutResult(status -> {
+            EruptSiteSettingStore store = Optional.ofNullable(eruptDao.lambdaQuery(EruptSiteSettingStore.class).one())
+                    .orElseGet(EruptSiteSettingStore::new);
+            store.setSettings(document.toString());
+            eruptDao.merge(store);
         });
+        this.evict();
     }
 
     public void evict() {
-        loadedAt.set(0);
+        cache.clear();
     }
 
-    /** The cached row (see {@link #load()}), or null when the form was never saved */
+    /**
+     * The settings in force for the current tenant: the platform's, overridden field by field by
+     * what the tenant filled in itself; null when neither saved the form. Cached per tenant.
+     */
     public EruptSiteSetting setting() {
-        if (System.currentTimeMillis() - loadedAt.get() >= CACHE_MILLIS) {
-            synchronized (this) {
-                if (System.currentTimeMillis() - loadedAt.get() >= CACHE_MILLIS) {
-                    cached = this.load();
-                    loadedAt.set(System.currentTimeMillis());
-                }
-            }
+        return this.cached(tenantResolver.resolveCurrentTenantIdentifier());
+    }
+
+    // Maintenance is the platform's call and holds for every tenant
+    private EruptSiteSetting platform() {
+        return this.cached(UpmsTenant.PLATFORM);
+    }
+
+    private EruptSiteSetting cached(String tenant) {
+        Cached hit = cache.get(tenant);
+        if (null == hit || System.currentTimeMillis() - hit.loadedAt() >= CACHE_MILLIS) {
+            EruptSiteSetting own = tenantSessions.callAs(tenant, this::read);
+            hit = new Cached(UpmsTenant.isPlatform(tenant) ? own : overlay(this.platform(), own), System.currentTimeMillis());
+            cache.put(tenant, hit);
         }
-        return cached;
+        return hit.setting();
+    }
+
+    /**
+     * A tenant's settings laid over the platform's: a field the tenant left blank keeps the platform's
+     * value, the header links of both are shown (the platform's first), and a platform-only field
+     * is never the tenant's to set.
+     */
+    private static EruptSiteSetting overlay(EruptSiteSetting platform, EruptSiteSetting own) {
+        if (null == own) return platform;
+        EruptSiteSetting merged = new EruptSiteSetting();
+        ReflectionUtils.doWithLocalFields(EruptSiteSetting.class, field -> {
+            if (Modifier.isStatic(field.getModifiers())) return;
+            ReflectionUtils.makeAccessible(field);
+            Object base = null == platform ? null : field.get(platform);
+            Object mine = field.get(own);
+            if (PLATFORM_ONLY.contains(field.getName())) {
+                field.set(merged, base);
+            } else if (base instanceof List<?> first && mine instanceof List<?> second) {
+                field.set(merged, Stream.concat(first.stream(), second.stream()).collect(Collectors.toList()));
+            } else {
+                field.set(merged, filled(mine) ? mine : base);
+            }
+        });
+        return merged;
+    }
+
+    private static boolean filled(Object value) {
+        if (value instanceof CharSequence text) return StringUtils.isNotBlank(text);
+        if (value instanceof Collection<?> items) return !items.isEmpty();
+        return null != value;
     }
 
     /**
@@ -87,6 +212,7 @@ public class EruptSiteSettingService {
 
     private Map<String, Object> render(EruptSiteSetting setting) {
         Map<String, Object> config = new LinkedHashMap<>();
+        if (this.maintenanceActive()) config.put("maintenance", this.maintenanceMessage());
         if (null == setting) return config;
         put(config, "title", setting, EruptSiteSetting::getTitle);
         put(config, "desc", setting, EruptSiteSetting::getDescription);
@@ -103,7 +229,6 @@ public class EruptSiteSettingService {
             flag(config, "requireConsent", setting.getRequireConsent(), "on", "off");
         }
         flag(config, "tabReuse", setting.getTabReuse(), "on", "off");
-        if (this.maintenanceActive(setting)) config.put("maintenance", this.maintenanceMessage(setting));
         put(config, "footerText", setting, EruptSiteSetting::getFooterText);
         flag(config, "copyright", setting.getCopyright(), "show", "hide");
         if (StringUtils.isNotBlank(setting.getLoginNotice()) && this.within(setting.getLoginNoticeStart(), setting.getLoginNoticeEnd())) {
@@ -117,6 +242,7 @@ public class EruptSiteSettingService {
         flag(theme, "menuGroups", setting.getMenuGroups(), "show", "hide");
         put(theme, "loginLayout", setting, EruptSiteSetting::getLoginLayout);
         put(theme, "loginBackground", setting, EruptSiteSetting::getLoginBackground);
+        put(theme, "filter", setting, EruptSiteSetting::getPageFilter);
         put(theme, "menuMode", setting, EruptSiteSetting::getMenuMode);
         put(theme, "formPanelMode", setting, EruptSiteSetting::getFormPanelMode);
         if ("auto".equals(setting.getColorScheme())) {
@@ -134,9 +260,13 @@ public class EruptSiteSettingService {
                 item.put("name", link.getName());
                 item.put("url", link.getUrl());
                 item.put("icon", link.getIcon());
-                item.put("newWindow", !Boolean.FALSE.equals(link.getNewWindow()));
+                item.put("openWay", StringUtils.defaultIfBlank(link.getOpenWay(), EruptSiteLink.BLANK));
+                item.put("position", StringUtils.defaultIfBlank(link.getPosition(), EruptSiteLink.HEADER));
                 return item;
             }).toList());
+        }
+        if (null != setting.getHiddenTools() && !setting.getHiddenTools().isEmpty()) {
+            config.put("hiddenTools", setting.getHiddenTools().stream().sorted().toList());
         }
         Map<String, Object> app = new LinkedHashMap<>();
         if (null != setting.getLocales() && !setting.getLocales().isEmpty()) {
@@ -154,21 +284,30 @@ public class EruptSiteSettingService {
 
     /** Whether maintenance mode is on: only administrators may sign in or keep a session */
     public boolean maintenanceActive() {
-        return this.maintenanceActive(this.setting());
-    }
-
-    private boolean maintenanceActive(EruptSiteSetting setting) {
-        return null != setting && "on".equals(setting.getMaintenance());
+        EruptSiteSetting platform = this.platform();
+        return null != platform && "on".equals(platform.getMaintenance());
     }
 
     /** The maintenance text shown to refused users, the standard one when none was written */
     public String maintenanceMessage() {
-        return this.maintenanceMessage(this.setting());
+        EruptSiteSetting platform = this.platform();
+        return null != platform && StringUtils.isNotBlank(platform.getMaintenanceMessage())
+                ? platform.getMaintenanceMessage().trim() : I18nTranslate.$translate("upms.maintenance_default");
     }
 
-    private String maintenanceMessage(EruptSiteSetting setting) {
-        return null != setting && StringUtils.isNotBlank(setting.getMaintenanceMessage())
-                ? setting.getMaintenanceMessage().trim() : I18nTranslate.$translate("upms.maintenance_default");
+    /**
+     * Whether read-only mode is on for the current tenant: the platform's switch holds for everyone,
+     * and a tenant may switch its own on, never the platform's off
+     */
+    public boolean readOnlyActive() {
+        return Stream.of(this.platform(), this.setting()).anyMatch(it -> null != it && "on".equals(it.getReadOnly()));
+    }
+
+    /** The text shown to a user whose change was refused, the standard one when none was written */
+    public String readOnlyMessage() {
+        EruptSiteSetting setting = this.setting();
+        return null != setting && StringUtils.isNotBlank(setting.getReadOnlyMessage())
+                ? setting.getReadOnlyMessage().trim() : I18nTranslate.$translate("upms.read_only_default");
     }
 
     private boolean within(LocalDateTime start, LocalDateTime end) {
