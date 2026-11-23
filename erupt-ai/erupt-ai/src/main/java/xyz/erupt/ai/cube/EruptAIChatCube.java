@@ -13,7 +13,7 @@ import java.util.Date;
 @EruptCube(
         name = "Erupt AI Chat",
         sql = """
-                select user.name,
+                select u.name,
                        message.sender_type as senderType,
                        message.llm,
                        message.model,
@@ -22,7 +22,7 @@ import java.util.Date;
                        agent.name          as agent
                 from e_ai_chat_message message
                          inner join e_ai_chat chat on chat.id = message.chat_id
-                         left join e_upms_user user on chat.user_id = user.id
+                         left join e_upms_user u on chat.user_id = u.id
                          left join e_ai_llm_agent agent on agent.id = message.agent_id
                 """
 )
