@@ -3,7 +3,6 @@ Job Manager,任务管理,工作管理員,Job Manager,Gestionnaire de tâches,ジ
 Job Config,任务配置,任務配置,Job Config,Configuration des tâches,ジョブ設定,작업 구성,Конфигурация задания,Configuración de tareas,Aufgabenkonfiguration,Configuração de tarefas,Konfigurasi Pekerjaan,إعداد المهمة
 Log,日志,日誌,Log,Journal,ログ,로그,Журнал,Registro,Protokoll,Log,Log,سجل
 Execute Once,执行一次任务,執行一次任務,Execute Once,Exécuter une fois,一度実行,한 번 실행,Выполнить один раз,Ejecutar una vez,Einmal ausführen,Executar uma vez,Jalankan sekali,تنفيذ مرة واحدة
-Code,任务编码,任務編碼,Code,Code,コード,코드,Код,Código,Code,Código,Kode,رمز
 Job Handler,执行处理器,執行處理器,Job Handler,Gestionnaire de tâches,ジョブハンドラー,작업 핸들러,Обработчик задания,Manejador de tareas,Aufgaben-Handler,Manipulador de tarefas,Penanganan Pekerjaan,معالج المهمة
 Job Name,任务名称,任務名稱,Job Name,Nom de la tâche,ジョブ名,작업 이름,Название задания,Nombre de la tarea,Aufgabenname,Nome da tarefa,Nama Pekerjaan,اسم المهمة
 Cron Expression,cron表达式,Cron表達式,Cron Expression,Expression Cron,Cron式,Cron 식,Выражение Cron,Expresión Cron,Cron-Ausdruck,Expressão Cron,Ekspresi Cron,تعبير Cron

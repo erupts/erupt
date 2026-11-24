@@ -6,6 +6,10 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.core.constant.MenuTypeEnum;
 
 /**
+ * Function permissions of a table menu, seeded as its button sub-menus.
+ * The name is stored as the button's menu name (e_upms_menu.name) and doubles as its
+ * i18n key: translations live in erupt-upms.i18n.csv, keyed by the exact name value.
+ *
  * @author YuePeng
  * date 2022/1/14 21:30
  */
