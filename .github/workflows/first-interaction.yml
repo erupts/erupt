@@ -16,15 +16,14 @@ jobs:
     steps:
       - uses: actions/first-interaction@v3
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-message: |
+          issue_message: |
             Thanks for opening your first issue in Erupt!
 
             A few things that speed up a reply:
             - Usage questions are best asked in [Discussions](https://github.com/erupts/erupt/discussions); the [docs](https://docs.erupt.xyz) and [FAQ](https://docs.erupt.xyz/en/guide/faq) answer most "how do I" questions.
             - For bugs, a minimal entity with its annotations plus the Erupt / Spring Boot / database versions is usually all we need.
             - You can try the latest version on the [live demo](https://demo.erupt.xyz) to confirm the behaviour.
-          pr-message: |
+          pr_message: |
             Thanks for your first pull request to Erupt!
 
             Please make sure the PR checklist is filled in, in particular:
