@@ -123,7 +123,7 @@ setting.fixed-header,固定头和侧边栏,固定頭和側邊欄,Fixed Header & 
 setting.tab-reuse,多页签,多頁簽,Multiple tabs,Plusieurs onglets de page,何枚かのくじです,다중 탭,Подпиши несколько страниц.,Múltiples pestañas,Signatur? - ja.,Várias guias de página,Tanda tangan banyak halaman,صفحات عديدة
 setting.nav,面包屑导航,面包屑導航,Breadcrumb nav,Navigation sur breadcrumb,パン粉ナビゲーション,빵부스러기내비게이션,Навигация по хлебным крошкам,Navegación por breadcrumb,Klein wie brot.,Navegação por breadcrumb,Navigasi remah roti,فتات الخبز الملاحة
 setting.table-border,表格边框,表格邊框,Table bordered,Bordure de table,表の境界線,표테두리,Табличная боковая рама,Borde de tabla,Tabelle im rahmen,Borda da tabela,Batas tabel,إطار الجدول
-setting.color-weak,色弱模式,色弱模式,Color weak mode,Mode faible couleur,色弱モードです,색약 패턴,Слабая модель цвета,Modo débil de color,Das zerstörerische muster,Modo fraco da cor,Pola afektif,وضع ضعيف
+setting.color-weak,反色模式,反色模式,Invert colors,Inverser les couleurs,色を反転,색상 반전,Инверсия цветов,Invertir colores,Farben umkehren,Inverter cores,Balik warna,عكس الألوان
 setting.color-gray,灰色模式,灰色模式,Grey mode,Le mode gris,グレーパターンです ,그레이 모드,Серая модель.,Andamento grigio,Das graue muster.,O modo cinzento,Mode abu,الوضع الرمادي
 setting.theme-color,主题色,主題色,Theme color,Couleur du thème,テーマカラー,테마 색상,Цвет темы,Color del tema,Themenfarbe,Cor do tema,Warna tema,لون السمة
 setting.header-color,顶栏颜色,頂欄顏色,Header color,Couleur de la barre,ヘッダーカラー,상단바 색상,Цвет шапки,Color de la barra,Kopfleistenfarbe,Cor da barra,Warna bilah atas,لون الشريط العلوي
@@ -1746,3 +1746,8 @@ login.consent_notice,登录即表示同意,登入即表示同意,By signing in y
 login.privacy_policy,隐私政策,隱私權政策,Privacy Policy,Politique de confidentialité,プライバシーポリシー,개인정보 처리방침,Политика конфиденциальности,Política de privacidad,Datenschutzerklärung,Política de privacidade,Kebijakan Privasi,سياسة الخصوصية
 login.terms,用户协议,使用者協議,Terms of Service,Conditions d'utilisation,利用規約,서비스 약관,Условия использования,Términos del servicio,Nutzungsbedingungen,Termos de serviço,Ketentuan Layanan,شروط الخدمة
 global.clear,清除,清除,Clear,Effacer,クリア,지우기,Очистить,Borrar,Löschen,Limpar,Hapus,مسح
+setting.color-assist,色弱辅助,色弱輔助,Color vision assist,Aide à la vision des couleurs,色覚補助,색각 보조,Помощь при цветовой слепоте,Ayuda de visión del color,Farbsehhilfe,Auxílio de visão das cores,Bantuan penglihatan warna,مساعدة رؤية الألوان
+setting.color-assist.off,关闭,關閉,Off,Désactivée,オフ,끔,Выкл.,Desactivada,Aus,Desligado,Mati,إيقاف
+setting.color-assist.protan,红色弱,紅色弱,Red-weak,Protan (rouge),赤色弱,적색약,Протаномалия,Protanomalía,Rotschwäche,Protanomalia,Lemah merah,ضعف الأحمر
+setting.color-assist.deutan,绿色弱,綠色弱,Green-weak,Deutan (vert),緑色弱,녹색약,Дейтераномалия,Deuteranomalía,Grünschwäche,Deuteranomalia,Lemah hijau,ضعف الأخضر
+setting.color-assist.tritan,蓝黄色弱,藍黃色弱,Blue-yellow,Tritan (bleu-jaune),青黄色弱,청황색약,Тританомалия,Tritanomalía,Blau-Gelb-Schwäche,Tritanomalia,Lemah biru-kuning,ضعف الأزرق والأصفر
