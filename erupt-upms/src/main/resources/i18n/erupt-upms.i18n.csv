@@ -51,6 +51,12 @@ Email,邮箱,郵箱,Email,La boîte aux lettres,メールボックスです,메�
 Home Menu,首页菜单,首頁菜單,Home menu,Accueil menu menu,トップページのメニューです,홈페이지 메뉴,Меню на первой странице,Página principal menú,Das titelblatt.,Página inicial menu,Menu rumah,القائمة الرئيسية
 Operation Permissions,操作权限,操作權限,Operation permissions,Autorisations de fonctionnement,操作権限です,작업 권한,Доступ к операции,Permisos de operación,Zugriff gewährt,Permissões de operação,Hak operasi,الدخول
 Menu Permission,菜单权限,菜單權限,Menu permissions,Accès au menu,メニュー権限です,메뉴 권한,Доступ к меню,Permisos de menú,Menü berechne,Permissões no menu,Hak akses menu,دخول القائمة
+ADD,新增,新增,Add,Ajout,追加,추가,Добавление,Alta,Hinzufügen,Adição,Tambah,إضافة
+EDIT,修改,修改,Edit,Modification,編集,편집,Изменение,Modificación,Änderung,Alteração,Ubah,تعديل
+DELETE,删除,刪除,Delete,Suppression,削除,삭제,Удаление,Baja,Löschen,Eliminação,Hapus,حذف
+EXPORT,导出,匯出,Export,Exporter,エクスポート,내보내기,Экспорт,Exportar,Exportieren,Exportar,Ekspor,تصدير
+IMPORT,导入,匯入,Import,Importer,インポート,가져오기,Импорт,Importar,Importieren,Importar,Impor,استيراد
+DETAIL,详情,詳情,Detail,Détail,詳細,세부 정보,Подробности,Detalle,Detail,Detalhe,Detail,تفاصيل
 Contain User,包含用户,包含用戶,Contain user,Inclure un utilisateur,ユーザーを含みます,사용자 포함,Включать пользователей,Incluye un usuario,Inklusive benutzer?,Incluir um usuário,Termasuk pengguna,يشمل المستخدمين
 Menu Type,菜单类型,菜單類型,Menu type,Type de menu,メニュータイプです。,메뉴 종류,Тип меню,Tipo de menú,Typ 3: menütypen,Tipo de menu,Jenis menu,نوع القائمة
 Menu Value,类型值,類型值,Menu value,Type valeur valeur,型値です,형식 값,Значение типа,Tipo valor valor,Art werte.,Tipo valor valor,Nilai jenis,قيمة النوع

@@ -6,6 +6,7 @@ import xyz.erupt.core.i18n.I18nRunner;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.test.EruptApplicationTests;
+import xyz.erupt.upms.enums.EruptFunPermissions;
 
 import java.util.List;
 
@@ -93,6 +94,23 @@ public class I18nTest extends EruptApplicationTests {
         assertNotEquals("upms.pwd_required", value,
                 "upms.pwd_required must be translated, not returned as-is");
         assertEquals("Password required", value, "zh-CN upms.pwd_required must be 'Password required'");
+    }
+
+    /**
+     * Function permission button names (EruptFunPermissions) are stored as menu names and
+     * translate through them: every enum value must ship a row keyed by its exact name.
+     */
+    @Test
+    void testFunPermissionNamesTranslate() {
+        for (EruptFunPermissions permission : EruptFunPermissions.values()) {
+            String key = permission.getName();
+            assertNotEquals(key, I18nRunner.getI18nValue("zh-CN", key),
+                    "Fun permission '" + key + "' must have a zh-CN translation");
+            assertNotEquals(key, I18nRunner.getI18nValue("en-US", key),
+                    "Fun permission '" + key + "' must have an en-US display word, not the raw key");
+        }
+        assertEquals("Add", I18nRunner.getI18nValue("en-US", EruptFunPermissions.ADD.getName()));
+        assertEquals("Detail", I18nRunner.getI18nValue("en-US", EruptFunPermissions.VIEW_DETAIL.getName()));
     }
 
     /** Every real language (excluding the "key" pseudo-entry) must translate key "Y". */
