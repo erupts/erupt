@@ -55,8 +55,6 @@ global.select_all,全选,全選,Select All,Tout sélectionner,すべて選択,�
 global.transfer.source,可选,可選,Available,Disponibles,選択可能,선택 가능,Доступные,Disponibles,Verfügbar,Disponíveis,Tersedia,المتاح
 global.transfer.target,已选,已選,Selected,Sélectionnés,選択済み,선택됨,Выбранные,Seleccionados,Ausgewählt,Selecionados,Terpilih,المحدد
 board.unset,未设置,未設置,Unset,Non défini,未設定,미설정,Не задано,Sin definir,Nicht gesetzt,Não definido,Belum diatur,غير محدد
-
-
 component.attachment.upload_hint,单击或拖动文件到此区域上传,單擊或拖動文件到此區域上傳,Click or drag the file to this area to upload,Cliquez ou faites glisser les fichiers dans cette zone pour les télécharger,ファイルをクリックまたはドラッグしてアップロードします,파일을이 영역으로 업로드하려면 누르거나 드래그하십시오,Нажмите или перетащите файл в эту область,Haga clic o arrastre los archivos a esta área para subir,Klicken Oder ziehen sie die datei in diese region zum aufladen,Clique ou arraste os arquivos para esta área para fazer upload,Klik atau tarik berkas untuk diunggah ke area ini,انقر أو اسحب الملف لتحميل في هذه المنطقة
 component.attachment.upload_format,文件格式,文件格式,File format,Format du fichier,ファイル形式です。,파일 형식,Формат файла,Formato de archivo,Format der dateien,Formato do arquivo,Format berkasname,تنسيق الملف
 table.totalLeft,共,共,Total,Total,合計,총계,всего,Total,Insgesamt.,Total,Total,مجموع
@@ -174,13 +172,11 @@ START_WITH,以**开始,以**開始,Starts with,Commence par,で始まる,로 시
 END_WITH,以**结尾,以**結尾,Ends with,Se termine par,で終わる,로 끝남,Заканчивается на,Termina en,Endet mit,Termina com,Berakhir dengan,ينتهي ب
 IN,包含于,包含於,Contains,Contient,含まれる,포함,Содержит,Contiene,Enthält,Contém,Mengandung,يحتوي على
 NOT_IN,不包含于,不包含於,Not contains,Ne contient pas,含まれない,포함하지 않음,Не содержит,No contiene,Enthält nicht,Não contém,Tidak mengandung,لا يحتوي على
-
 print.preview,打印预览,列印預覽,Print Preview,Aperçu avant impression,印刷プレビュー,인쇄 미리보기,Предпросмотр печати,Vista previa de impresión,Druckvorschau,Pré-visualizar impressão,Pratinjau Cetak,معاينة الطباعة
 print.layout,打印排版,列印排版,Print Layout,Mise en page,印刷レイアウト,인쇄 레이아웃,Макет печати,Diseño de impresión,Drucklayout,Layout de impressão,Tata Letak Cetak,تخطيط الطباعة
 print.select_layout,选择打印排版,選擇列印排版,Select Print Layout,Sélectionner la mise en page,印刷レイアウトを選択,인쇄 레이아웃 선택,Выберите макет печати,Seleccionar diseño,Drucklayout auswählen,Selecionar layout,Pilih Tata Letak,اختر تخطيط الطباعة
 print.input_title,请输入排版名称,請輸入排版名稱,Enter layout name,Nom de la mise en page,レイアウト名を入力,레이아웃 이름 입력,Введите название макета,Nombre del diseño,Layoutname eingeben,Nome do layout,Nama tata letak,أدخل اسم التخطيط
 print.default,默认排版,預設排版,Default Layout,Mise en page par défaut,デフォルトレイアウト,기본 레이아웃,Макет по умолчанию,Diseño predeterminado,Standardlayout,Layout padrão,Tata Letak Default,التخطيط الافتراضي
-
 [flow]
 VIEW_FLOW,查看流程,檢視流程,View Flow,Voir le flux,フローを見る,플로우 보기,Просмотр потока,Ver flujo,Fluss anzeigen,Ver fluxo,Lihat Aliran,عرض التدفق
 table.flow_pending,审批中,審批中,Pending approval,En attente d'approbation,承認待ち,승인 대기,На согласовании,Pendiente de aprobación,Genehmigung ausstehend,Aguarda aprovação,Menunggu persetujuan,بانتظار الموافقة
@@ -199,7 +195,6 @@ START,发起流程,發起流程,Start Process,Démarrer le processus,プロセ�
 USER_APPROVAL,或签审批,或簽審批,Sequential Approval,Approbation Séquentielle,順次承認,순차 승인,Последовательное утверждение,Aprobación Secuencial,Sequentielle Genehmigung,Aprovação Sequencial,Persetujuan Berurutan,الموافقة التسلسلية
 USER_APPROVAL_PARALLEL,会签审批,會簽審批,Parallel Approval,Approbation Parallèle,並列承認,병렬 승인,Параллельное утверждение,Aprobación Paralela,Parallele Genehmigung,Aprovação Paralela,Persetujuan Paralel,الموافقة المتوازية
 CC,抄送,副本,CC,Cc,CC,참조,Копия,CC,CC,CC,CC,نسخة
-
 PRE_SIGN,前加签,前加簽,Pre-sign,Pré-signature,事前署名,사전 서명,Предварительная подпись,Firma previa,Vorunterschrift,Pré-assinatura,Tanda tangan awal,التوقيع المسبق
 POST_SIGN,后加签,後加簽,Post-sign,Post-signature,事後署名,사후 서명,Последующая подпись,Firma posterior,Nachunterschrift,Pós-assinatura,Tanda tangan akhir,التوقيع اللاحق
 FINISH,已完成,已完成,Finished,Terminé,完了,완료,Завершено,Finalizado,Abgeschlossen,Concluído,Selesai,منتهي
@@ -211,27 +206,22 @@ REVOKED,已撤销,已撤銷,Revoked,Révoqué,取消,취소됨,Аннулиро�
 TRANSFER,已转交,已轉交,Transferred,Transféré,転送済み,전송됨,Передано,Transferido,Übertragen,Transferido,Transfer,تم النقل
 TIMEOUT_AUTO_PASS,超时自动通过,逾時自動通過,Auto pass on timeout,Passer automatiquement en cas de délai d'attente,タイムアウト時に自動承認,시간 초과 시 자동 승인,Автоматическое подтверждение по истечении времени,Autorizar automáticamente al alcanzar el tiempo de espera,Automatische Genehmigung nach Zeitablauf,Aprovação automática ao atingir o tempo limite,Setujui otomatis saat waktu habilit,تجاوز تلقائي عند انتهاء المهلة
 TIMEOUT_AUTO_REJECT,超时自动拒绝,逾時自動拒絕,Auto reject on timeout,Rejeter automatiquement en cas de délai d'attente,タイムアウト時に自動拒否,시간 초과 시 자동 거부,Автоматический отказ по истечении времени,Rechazar automáticamente al alcanzar el tiempo de espera,Automatische Ablehnung nach Zeitablauf,Rejeição automática ao atingir o tempo limite,Tolak otomatis saat waktu habilit,رفض تلقائي عند انتهاء المهلة
-
-
 PENDING,审批中,審批中,Pending,En attente,審査中,대기 중,На рассмотрении,Pendiente,Ausstehend,Pendente,Menunggu,قيد الانتظار
 AGREED,已同意,已同意,Agreed,Accepté,同意,동의됨,Принято,Acertado,Aprovado,Acertado,Diterima,تم الموافقة
 REJECTED,已拒绝,已拒絕,Rejected,Rejeté,拒否,거부됨,Отклонено,Rechazado,Abgelehnt,Rejeitado,Ditolak,مرفوض
 SKIPPED,已跳过,已跳過,Skipped,Sautéé,跳過,건너뛰어짐,Пропущено,Saltado,Lewati,Dipulihkan,Lewati,لقد قفزت
-
 NEXT,成功,成功,Success,Succès,成功,성공,Успех,Éxito,Erfolg,Sucesso,Sukses,نجاح
 WAIT,等待执行,等待執行,Waiting,En attente,待機 중,대기 중,Ожидание,Esperando,Warten,Aguardando,Menunggu,في الانتظار
 WAIT_API_TRIGGER,等待审批,等待審批,Waiting for approval,En attente d'approbation,承認待ち,승인 대기 중,Ожидание подтверждения,Esperando aprobación,Warten auf Genehmigung,Aguardando aprovação,Menunggu persetujuan,في انتظار الموافقة
 ERROR,执行错误,執行錯誤,Execution error,Erreur d'exécution,実行エラー,실행 오шибка,Ошибка выполнения,Error de ejecución,Ausführungsfehler,Erro de execução,Kesalahan eksekusi,خطأ في التنفيذ
 REENTRY,重试中,重試中,Retrying,Recommencement,再試行 중,재시도 중,Повтор,Reintentando,Wiederholen,Repetindo,Mencoba lagi,إعادة المحاولة
 END,结束,結束,End,Fin,終了,끝,Конец,Fin,Ende,Fim,Akhir,نهاية
-
 SUB_FLOW,子流程,子流程,Sub Flow,Sous-flux,サブフロー,서브 플로,Подпоток,Subflujo,Subflow,Subfluxo,Sub Alur,التدفق الفرعي
 FLOW_TODO,待办,待辦,Todo,À faire,やること,할 일,Сделать,Por hacer,Machen,Fazer,Yang harus dilakukan,للقيام
 FLOW_DONE,已办,已辦,Done,Fait,完了,완료,Выполнено,Hecho,Erledigt,Concluído,Selesai,تم
 CREATED,已创建,已創建,Created,Créé,作成済,생성됨,Создано,Creado,Erstellt,Criado,Dibuat,تم الإنشاء
 CC,抄送我,抄送我,CC Me,Me mettre en CC,私にCC,나에게 참조,Отправить копию мне,CC a mí,CC mich,CC para mim,CC saya,نسخة لي
 ASSIGNEE,办理,辦理,Assignee,Assigné,担当者,담당자,Исполнитель,Asignado,Zuständiger,Responsável,Penanggung jawab,المكلف
-
 ORG,组织,組織,Organization,Organisation,組織,조직,Организация,Organización,Organisation,Organização,Organisasi,منظمة
 USER,用户,用戶,User,Utilisateur,ユーザー,사용자,Пользователь,Usuario,Benutzer,Utilizador,Pengguna,مستخدم
 POST,岗位,崗位,Position,Poste,ポスト,직위,Должность,Puesto,Position,Cargo,Jabatan,منصب
@@ -246,7 +236,6 @@ DIRECT_ORG_HEAD,直属组织负责人,直屬組織負責人,Direct Organization 
 flow.node_select,节点选择,節點選擇,Node Selection,Sélection de nœud,ノード選択,노드 선택,Выбор узла,Selección de nodo,Knotenauswahl,Seleção de nó,Pemilihan Simpul,اختيار العقدة
 flow.permission_scopes,人员范围,人員範圍,Permission Scopes,Périmètres de permission,権限範囲,권한 범위,Сферы полномочий,Ámbitos de permiso,Berechtigungsbereiche,Escopos de permissão,Cakupan Izin,نطاقات الإذن
 flow.submitter_of,提交人的,提交人的,Submitter of,Soumetteur de,提出者の,제출자의,Отправитель de,Remitente de,Einreicher von,Remetente de,Penyerah dari,مقدم من
-
 [ai]
 ai.chat.sessions,会话,會話,Chats,Conversations,チャット,대화,Чаты,Conversaciones,Chats,Conversas,Percakapan,المحادثات
 ai.chat.collapse_sidebar,收起侧边栏,收起側邊欄,Collapse sidebar,Réduire le panneau,サイドバーを閉じる,사이드바 접기,Свернуть панель,Cerrar panel,Seitenleiste schließen,Recolher painel,Sembunyikan panel,طي الشريط الجانبي
@@ -285,7 +274,6 @@ ai.chat.rename_empty_error,会话名称不能为空,會話名稱不能為空,Ses
 ai.chat.rename_success,重命名成功,重命名成功,Renamed successfully,Renommé avec succès,名前を変更しました,이름 변경 성공,Переименовано успешно,Renombrado con éxito,Erfolgreich umbenannt,Renomeado com sucesso,Berhasil diubah nama,تمت إعادة التسمية بنجاح
 ai.chat.deleted,已删除,已刪除,Deleted,Supprimé,削除しました,삭제되었습니다,Удалено,Eliminado,Gelöscht,Excluído,Dihapus,تم الحذف
 ai.chat.stopped,(已停止),(已停止),(Stopped),(Arrêté),(停止済み),(중지됨),(Остановлено),(Detenido),(Gestoppt),(Parado),(Dihentikan),(توقف)
-
 [cube]
 cube.dashboard.config.bg_color,背景颜色,背景顏色,Background color,Couleur de fond,背景色,배경색,Цвет фона,Color de fondo,Hintergrundfarbe,Cor de fundo,Warna latar,لون الخلفية
 cube.dashboard.config.bg_image,背景图 (URL),背景圖 (URL),Background image (URL),Image de fond (URL),背景画像 (URL),배경 이미지 (URL),Фоновое изображение (URL),Imagen de fondo (URL),Hintergrundbild (URL),Imagem de fundo (URL),Gambar latar (URL),صورة الخلفية (URL)
@@ -1751,3 +1739,96 @@ setting.color-assist.off,关闭,關閉,Off,Désactivée,オフ,끔,Выкл.,Des
 setting.color-assist.protan,红色弱,紅色弱,Red-weak,Protan (rouge),赤色弱,적색약,Протаномалия,Protanomalía,Rotschwäche,Protanomalia,Lemah merah,ضعف الأحمر
 setting.color-assist.deutan,绿色弱,綠色弱,Green-weak,Deutan (vert),緑色弱,녹색약,Дейтераномалия,Deuteranomalía,Grünschwäche,Deuteranomalia,Lemah hijau,ضعف الأخضر
 setting.color-assist.tritan,蓝黄色弱,藍黃色弱,Blue-yellow,Tritan (bleu-jaune),青黄色弱,청황색약,Тританомалия,Tritanomalía,Blau-Gelb-Schwäche,Tritanomalia,Lemah biru-kuning,ضعف الأزرق والأصفر
+cube.screen.size,设计分辨率 (px),設計解析度 (px),Design resolution (px),Résolution de conception (px),デザイン解像度 (px),디자인 해상도 (px),Проектное разрешение (px),Resolución de diseño (px),Entwurfsauflösung (px),Resolução de design (px),Resolusi desain (px),دقة التصميم (px)
+cube.screen.fit,适配方式,適配方式,Fit,Ajustement,フィット方法,맞춤 방식,Подгонка,Ajuste,Anpassung,Ajuste,Penyesuaian,الملاءمة
+cube.screen.fit.contain,等比适应,等比適應,Fit screen,Adapter à l'écran,画面に合わせる,화면에 맞춤,По экрану,Ajustar a pantalla,An Bildschirm anpassen,Ajustar ao ecrã,Sesuaikan layar,ملاءمة الشاشة
+cube.screen.fit.width,宽度铺满,寬度鋪滿,Fit width,Adapter à la largeur,幅に合わせる,너비에 맞춤,По ширине,Ajustar al ancho,An Breite anpassen,Ajustar à largura,Sesuaikan lebar,ملاءمة العرض
+cube.screen.fit.stretch,拉伸铺满,拉伸鋪滿,Stretch,Étirer,引き伸ばし,늘이기,Растянуть,Estirar,Strecken,Esticar,Regangkan,تمديد
+cube.screen.panel,面板样式,面板樣式,Panel style,Style des panneaux,パネルスタイル,패널 스타일,Стиль панелей,Estilo de panel,Panelstil,Estilo do painel,Gaya panel,نمط اللوحة
+cube.screen.panel.none,无,無,None,Aucun,なし,없음,Нет,Ninguno,Keiner,Nenhum,Tidak ada,بدون
+cube.screen.panel.border,边框,邊框,Border,Bordure,枠線,테두리,Рамка,Borde,Rahmen,Borda,Bingkai,إطار
+cube.screen.panel.corner,角标,角標,Corners,Coins,コーナー,모서리,Уголки,Esquinas,Ecken,Cantos,Sudut,زوايا
+cube.screen.header,标题栏,標題欄,Title bar,Barre de titre,タイトルバー,제목 표시줄,Строка заголовка,Barra de título,Titelleiste,Barra de título,Bilah judul,شريط العنوان
+cube.screen.title,大屏标题，留空使用看板名称,大屏標題，留空使用看板名稱,"Screen title, blank uses the dashboard name","Titre de l'écran, vide = nom du tableau de bord",スクリーンタイトル（空欄はダッシュボード名）,"스크린 제목, 비우면 대시보드 이름 사용","Заголовок экрана, пусто — имя дашборда","Título de la pantalla, vacío usa el nombre del panel","Bildschirmtitel, leer = Dashboard-Name","Título do ecrã, vazio usa o nome do painel","Judul layar, kosong memakai nama dasbor",عنوان الشاشة، فارغ يستخدم اسم اللوحة
+cube.screen.layers,图层,圖層,Layers,Calques,レイヤー,레이어,Слои,Capas,Ebenen,Camadas,Lapisan,الطبقات
+cube.screen.layer.front,置于顶层,置於頂層,Bring to front,Mettre au premier plan,最前面へ,맨 앞으로,На передний план,Traer al frente,In den Vordergrund,Trazer para a frente,Bawa ke depan,إحضار إلى الأمام
+cube.screen.layer.back,置于底层,置於底層,Send to back,Mettre à l'arrière-plan,最背面へ,맨 뒤로,На задний план,Enviar al fondo,In den Hintergrund,Enviar para trás,Kirim ke belakang,إرسال إلى الخلف
+cube.screen.add_widget,添加组件,添加組件,Add Widget,Ajouter un widget,ウィジェット追加,위젯 추가,Добавить виджет,Agregar widget,Widget hinzufügen,Adicionar widget,Tambah widget,إضافة عنصر
+cube.widget.LABEL,文字,文字,Text,Texte,テキスト,텍스트,Текст,Texto,Text,Texto,Teks,نص
+cube.widget.IMAGE,图片,圖片,Image,Image,画像,이미지,Изображение,Imagen,Bild,Imagem,Gambar,صورة
+cube.widget.BORDER,边框,邊框,Border,Bordure,枠,테두리,Рамка,Borde,Rahmen,Borda,Bingkai,إطار
+cube.widget.DIVIDER,装饰线,裝飾線,Divider,Séparateur,区切り線,구분선,Разделитель,Divisor,Trennlinie,Divisor,Garis pemisah,فاصل
+cube.widget.CLOCK,时钟,時鐘,Clock,Horloge,時計,시계,Часы,Reloj,Uhr,Relógio,Jam,ساعة
+cube.widget.IFRAME,网页,網頁,Web page,Page web,Web ページ,웹 페이지,Веб-страница,Página web,Webseite,Página web,Halaman web,صفحة ويب
+cube.widget.VIDEO,视频,影片,Video,Vidéo,動画,동영상,Видео,Vídeo,Video,Vídeo,Video,فيديو
+cube.screen.props,属性,屬性,Properties,Propriétés,プロパティ,속성,Свойства,Propiedades,Eigenschaften,Propriedades,Properti,الخصائص
+cube.screen.props.empty,选中一个组件以编辑属性,選中一個組件以編輯屬性,Select an item to edit its properties,Sélectionnez un élément pour modifier ses propriétés,項目を選択してプロパティを編集,항목을 선택하여 속성을 편집하세요,"Выберите элемент, чтобы изменить его свойства",Seleccione un elemento para editar sus propiedades,"Element auswählen, um seine Eigenschaften zu bearbeiten",Selecione um item para editar as propriedades,Pilih item untuk mengedit propertinya,حدد عنصرًا لتعديل خصائصه
+cube.screen.props.position,位置与尺寸,位置與尺寸,Position & size,Position et taille,位置とサイズ,위치 및 크기,Положение и размер,Posición y tamaño,Position und Größe,Posição e tamanho,Posisi & ukuran,الموضع والحجم
+cube.screen.props.rotate,旋转,旋轉,Rotation,Rotation,回転,회전,Поворот,Rotación,Drehung,Rotação,Rotasi,الدوران
+cube.screen.props.opacity,不透明度,不透明度,Opacity,Opacité,不透明度,불투명도,Непрозрачность,Opacidad,Deckkraft,Opacidade,Opasitas,العتامة
+cube.screen.props.appearance,外观,外觀,Appearance,Apparence,外観,모양,Внешний вид,Apariencia,Darstellung,Aparência,Tampilan,المظهر
+cube.screen.props.content,内容,內容,Content,Contenu,コンテンツ,콘텐츠,Содержимое,Contenido,Inhalt,Conteúdo,Konten,المحتوى
+cube.screen.props.edit_data,数据与图表配置,數據與圖表配置,Data & chart settings,Données et graphique,データとグラフの設定,데이터 및 차트 설정,Данные и диаграмма,Datos y gráfico,Daten und Diagramm,Dados e gráfico,Data & grafik,البيانات والمخطط
+cube.screen.panel.inherit,跟随大屏,跟隨大屏,Same as screen,Comme l'écran,スクリーンに従う,스크린 설정 따름,Как у экрана,Igual que la pantalla,Wie Bildschirm,Igual ao ecrã,Ikuti layar,مثل الشاشة
+cube.widget.text,文本,文本,Text,Texte,テキスト,텍스트,Текст,Texto,Text,Texto,Teks,النص
+cube.widget.align,对齐,對齊,Align,Alignement,配置,정렬,Выравнивание,Alineación,Ausrichtung,Alinhamento,Perataan,المحاذاة
+cube.widget.bold,加粗,加粗,Bold,Gras,太字,굵게,Жирный,Negrita,Fett,Negrito,Tebal,غامق
+cube.widget.letter_spacing,字间距,字間距,Letter spacing,Espacement des lettres,文字間隔,자간,Межбуквенный интервал,Espaciado,Zeichenabstand,Espaçamento,Jarak huruf,تباعد الأحرف
+cube.widget.src,地址 (URL),地址 (URL),Address (URL),Adresse (URL),アドレス (URL),주소 (URL),Адрес (URL),Dirección (URL),Adresse (URL),Endereço (URL),Alamat (URL),العنوان (URL)
+cube.widget.fit,填充方式,填充方式,Fit,Ajustement,フィット,맞춤,Заполнение,Ajuste,Anpassung,Ajuste,Penyesuaian,الملاءمة
+cube.widget.fit.contain,完整显示,完整顯示,Contain,Contenir,全体表示,전체 표시,Вписать,Contener,Einpassen,Conter,Muat,احتواء
+cube.widget.fit.cover,裁剪铺满,裁剪鋪滿,Cover,Couvrir,切り抜き,채우기,Обрезать,Cubrir,Abdecken,Cobrir,Tutupi,تغطية
+cube.widget.fit.fill,拉伸,拉伸,Stretch,Étirer,引き伸ばし,늘이기,Растянуть,Estirar,Strecken,Esticar,Regangkan,تمديد
+cube.widget.style,样式,樣式,Style,Style,スタイル,스타일,Стиль,Estilo,Stil,Estilo,Gaya,النمط
+cube.widget.style.glow,发光,發光,Glow,Lueur,グロー,글로우,Свечение,Resplandor,Leuchten,Brilho,Bercahaya,توهج
+cube.widget.color,颜色,顏色,Color,Couleur,色,색상,Цвет,Color,Farbe,Cor,Warna,اللون
+cube.widget.vertical,竖向,豎向,Vertical,Vertical,縦方向,세로,Вертикально,Vertical,Vertikal,Vertical,Vertikal,عمودي
+cube.widget.format,时间格式,時間格式,Time format,Format de l'heure,時刻形式,시간 형식,Формат времени,Formato de hora,Zeitformat,Formato de hora,Format waktu,تنسيق الوقت
+cube.widget.loop,循环播放,循環播放,Loop,Boucle,ループ,반복,Повтор,Bucle,Schleife,Repetir,Ulangi,تكرار
+cube.widget.muted,静音,靜音,Muted,Muet,ミュート,음소거,Без звука,Silenciado,Stumm,Sem som,Bisu,كتم الصوت
+cube.screen.zoom.fit,适应画布,適應畫布,Fit to view,Ajuster à la vue,全体表示,화면에 맞추기,По размеру окна,Ajustar a la vista,An Ansicht anpassen,Ajustar à vista,Sesuaikan tampilan,ملاءمة العرض
+cube.screen.redo,重做,重做,Redo,Rétablir,やり直す,다시 실행,Повторить,Rehacer,Wiederholen,Refazer,Ulangi,إعادة
+cube.screen.align.left,左对齐,左對齊,Align left,Aligner à gauche,左揃え,왼쪽 정렬,По левому краю,Alinear a la izquierda,Links ausrichten,Alinhar à esquerda,Rata kiri,محاذاة لليسار
+cube.screen.align.center,水平居中,水平置中,Align horizontal centers,Centrer horizontalement,左右中央揃え,가로 가운데 정렬,По центру по горизонтали,Centrar horizontalmente,Horizontal zentrieren,Centrar horizontalmente,Rata tengah horizontal,توسيط أفقي
+cube.screen.align.right,右对齐,右對齊,Align right,Aligner à droite,右揃え,오른쪽 정렬,По правому краю,Alinear a la derecha,Rechts ausrichten,Alinhar à direita,Rata kanan,محاذاة لليمين
+cube.screen.align.top,顶对齐,頂端對齊,Align top,Aligner en haut,上揃え,위쪽 정렬,По верхнему краю,Alinear arriba,Oben ausrichten,Alinhar ao topo,Rata atas,محاذاة للأعلى
+cube.screen.align.middle,垂直居中,垂直置中,Align vertical centers,Centrer verticalement,上下中央揃え,세로 가운데 정렬,По центру по вертикали,Centrar verticalmente,Vertikal zentrieren,Centrar verticalmente,Rata tengah vertikal,توسيط عمودي
+cube.screen.align.bottom,底对齐,底端對齊,Align bottom,Aligner en bas,下揃え,아래쪽 정렬,По нижнему краю,Alinear abajo,Unten ausrichten,Alinhar em baixo,Rata bawah,محاذاة للأسفل
+cube.screen.distribute.horizontal,水平等距分布,水平等距分佈,Distribute horizontally,Répartir horizontalement,左右に等間隔,가로 간격 균등,Распределить по горизонтали,Distribuir horizontalmente,Horizontal verteilen,Distribuir horizontalmente,Sebar horizontal,توزيع أفقي
+cube.screen.distribute.vertical,垂直等距分布,垂直等距分佈,Distribute vertically,Répartir verticalement,上下に等間隔,세로 간격 균등,Распределить по вертикали,Distribuir verticalmente,Vertikal verteilen,Distribuir verticalmente,Sebar vertikal,توزيع عمودي
+cube.format.title,数值格式,數值格式,Number format,Format des nombres,数値形式,숫자 형식,Формат числа,Formato numérico,Zahlenformat,Formato numérico,Format angka,تنسيق الأرقام
+cube.format.thousands,千分位,千分位,Thousands separator,Séparateur de milliers,桁区切り,천 단위 구분,Разделитель тысяч,Separador de miles,Tausendertrennung,Separador de milhares,Pemisah ribuan,فاصل الآلاف
+cube.format.unit,单位,單位,Unit,Unité,単位,단위,Единица,Unidad,Einheit,Unidade,Satuan,الوحدة
+cube.format.decimals,小数位,小數位,Decimals,Décimales,小数桁,소수 자릿수,Знаков после запятой,Decimales,Dezimalstellen,Casas decimais,Desimal,المنازل العشرية
+cube.format.prefix,前缀,前綴,Prefix,Préfixe,接頭辞,접두사,Префикс,Prefijo,Präfix,Prefixo,Awalan,بادئة
+cube.format.suffix,后缀,後綴,Suffix,Suffixe,接尾辞,접미사,Суффикс,Sufijo,Suffix,Sufixo,Akhiran,لاحقة
+cube.screen.group,成组,成組,Group,Grouper,グループ化,그룹,Сгруппировать,Agrupar,Gruppieren,Agrupar,Kelompokkan,تجميع
+cube.screen.ungroup,解组,解組,Ungroup,Dissocier,グループ解除,그룹 해제,Разгруппировать,Desagrupar,Gruppierung aufheben,Desagrupar,Pisahkan,فك التجميع
+cube.screen.layer.lock,锁定,鎖定,Lock,Verrouiller,ロック,잠금,Заблокировать,Bloquear,Sperren,Bloquear,Kunci,قفل
+cube.screen.layer.hide,隐藏,隱藏,Hide,Masquer,非表示,숨기기,Скрыть,Ocultar,Ausblenden,Ocultar,Sembunyikan,إخفاء
+cube.screen.panel.bracket,四角,四角,Brackets,Crochets,四隅ブラケット,네 모서리,Скобки,Corchetes,Klammern,Colchetes,Braket,أقواس
+cube.screen.panel.glow,发光,發光,Glow,Lueur,グロー,글로우,Свечение,Resplandor,Leuchten,Brilho,Bercahaya,توهج
+cube.screen.panel.chamfer,切角,切角,Chamfer,Chanfrein,面取り,모따기,Срезанные углы,Chaflán,Fase,Chanfro,Sudut potong,شطب
+cube.screen.panel.headline,标题带,標題帶,Headline,Bandeau,見出し帯,헤드라인,Заголовок,Titular,Titelband,Faixa de título,Pita judul,شريط العنوان
+cube.screen.panel.glass,毛玻璃,毛玻璃,Glass,Verre,ガラス,글래스,Стекло,Cristal,Glas,Vidro,Kaca,زجاج
+cube.screen.tab.basic,基础,基礎,Basics,Général,基本,기본,Основное,Básico,Allgemein,Básico,Dasar,أساسي
+cube.screen.header_style,版式,版式,Layout,Disposition,レイアウト,레이아웃,Макет,Disposición,Layout,Disposição,Tata letak,التخطيط
+cube.screen.header_style.left,靠左,靠左,Left,À gauche,左寄せ,왼쪽,Слева,Izquierda,Links,Esquerda,Kiri,يسار
+cube.screen.header_style.center,居中,置中,Centered,Centré,中央,가운데,По центру,Centrado,Zentriert,Centrado,Tengah,وسط
+cube.screen.header_style.plate,标题牌,標題牌,Plate,Plaque,プレート,플레이트,Плашка,Placa,Schild,Placa,Pelat,لوحة
+cube.screen.header_style.lines,两侧线条,兩側線條,Side lines,Lignes latérales,サイドライン,양쪽 선,Боковые линии,Líneas laterales,Seitenlinien,Linhas laterais,Garis samping,خطوط جانبية
+cube.screen.title_size,标题字号,標題字號,Title size,Taille du titre,タイトルサイズ,제목 크기,Размер заголовка,Tamaño del título,Titelgröße,Tamanho do título,Ukuran judul,حجم العنوان
+cube.screen.logo,Logo 图片,Logo 圖片,Logo image,Image du logo,ロゴ画像,로고 이미지,Логотип,Imagen del logo,Logo-Bild,Imagem do logótipo,Gambar logo,صورة الشعار
+cube.screen.accent,主题色,主題色,Accent color,Couleur d'accent,アクセントカラー,강조 색,Акцентный цвет,Color de acento,Akzentfarbe,Cor de destaque,Warna aksen,لون التمييز
+cube.screen.palette,图表色板,圖表色板,Chart palette,Palette des graphiques,グラフのパレット,차트 팔레트,Палитра диаграмм,Paleta de gráficos,Diagrammpalette,Paleta dos gráficos,Palet grafik,لوحة ألوان المخططات
+cube.screen.palette.tech,科技,科技,Tech,Tech,テック,테크,Техно,Tecnología,Tech,Tecnologia,Teknologi,تقني
+cube.screen.palette.neon,霓虹,霓虹,Neon,Néon,ネオン,네온,Неон,Neón,Neon,Néon,Neon,نيون
+cube.screen.palette.ocean,海洋,海洋,Ocean,Océan,オーシャン,오션,Океан,Océano,Ozean,Oceano,Samudra,محيط
+cube.screen.palette.warm,暖色,暖色,Warm,Chaud,ウォーム,웜,Тёплая,Cálida,Warm,Quente,Hangat,دافئ
+cube.screen.palette.accent,主题色渐变,主題色漸變,Accent tints,Nuances de l'accent,アクセントの濃淡,강조 색 농담,Оттенки акцента,Tonos del acento,Akzenttöne,Tons do destaque,Gradasi aksen,تدرجات التمييز
+cube.screen.panel_title_size,面板标题字号,面板標題字號,Panel title size,Taille des titres de panneau,パネルタイトルサイズ,패널 제목 크기,Размер заголовков панелей,Tamaño de título de panel,Paneltitelgröße,Tamanho do título do painel,Ukuran judul panel,حجم عنوان اللوحة
+cube.screen.number_font,数字字体,數字字體,Number font,Police des chiffres,数字フォント,숫자 글꼴,Шрифт чисел,Fuente de números,Zahlenschrift,Fonte dos números,Font angka,خط الأرقام
+cube.screen.number_font.mono,等宽,等寬,Monospace,Chasse fixe,等幅,고정폭,Моноширинный,Monoespaciada,Festbreite,Monoespaçada,Monospasi,ثابت العرض
+cube.screen.number_font.condensed,窄体,窄體,Condensed,Condensée,コンデンス,좁은 글꼴,Узкий,Condensada,Schmal,Condensada,Rapat,مضغوط
+cube.screen.number_font.sans,默认,預設,Default,Par défaut,デフォルト,기본,По умолчанию,Predeterminada,Standard,Predefinida,Bawaan,افتراضي
+cube.screen.chart_font_size,图表字号,圖表字號,Chart font size,Taille de police des graphiques,グラフの文字サイズ,차트 글꼴 크기,Размер шрифта диаграмм,Tamaño de fuente de gráficos,Diagrammschriftgröße,Tamanho da fonte dos gráficos,Ukuran font grafik,حجم خط المخططات
