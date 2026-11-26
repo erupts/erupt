@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Tools that read the shared skill library; writing it is {@link EruptSkillAuthorTools}.
+ */
 @AiToolbox(platform = true)
 @Component
 @ConditionalOnProperty(name = "erupt.ai.claw.enabled", havingValue = "true")
@@ -44,7 +47,7 @@ public class EruptSkillTools {
             "Call this before executing any skill script to understand its structure and usage.")
     public String getSkillDetail(
             @P("Skill name (folder name, e.g. check_disk)") String skillName) {
-        if (isUnsafePath(skillName)) return "Error: invalid skill name.";
+        if (SkillStore.isUnsafeName(skillName)) return "Error: invalid skill name.";
         File skillDir = new File(SKILL_DIR, skillName);
         if (!skillDir.isDirectory()) return "Skill not found: " + skillName;
 
@@ -80,92 +83,12 @@ public class EruptSkillTools {
     public String readSkillFile(
             @P("Skill name (folder name)") String skillName,
             @P("Relative file path inside the skill folder, e.g. references/api_docs.md or scripts/run.sh") String relativePath) {
-        if (isUnsafePath(skillName) || relativePath == null || relativePath.contains("..")) {
+        if (SkillStore.isUnsafeName(skillName) || relativePath == null || relativePath.contains("..")) {
             return "Error: invalid path.";
         }
         File file = new File(SKILL_DIR + skillName + "/" + relativePath);
         if (!file.exists()) return "File not found: " + relativePath;
         return readFileContent(file);
-    }
-
-    @Tool("Create or update a skill following the Agent Skills open standard. " +
-            "Creates the skill folder and SKILL.md. " +
-            "To add scripts or references, use writeSkillFile. " +
-            "Add 'pinned: true' to the frontmatter to protect a skill from background archiving.")
-    public String saveSkill(
-            @P("Skill name (folder name, e.g. check_disk)") String skillName,
-            @P("Full content of SKILL.md including YAML frontmatter:\n---\nname: skill-name\ndescription: when to use this skill\n---\n\n# Instructions\n...") String skillMdContent) {
-        if (isUnsafePath(skillName)) return "Error: invalid skill name.";
-        try {
-            File skillDir = new File(SKILL_DIR, skillName);
-            skillDir.mkdirs();
-            Files.writeString(new File(skillDir, SkillStore.SKILL_MD).toPath(), skillMdContent);
-            return "Skill saved: " + skillName + " (use writeSkillFile to add scripts/ or references/)";
-        } catch (Exception e) {
-            return "Error: " + e.getMessage();
-        }
-    }
-
-    @Tool("Patch SKILL.md of an existing skill with an exact find-and-replace. " +
-            "Use this to fix a wrong or outdated instruction the moment you discover it while following a skill — " +
-            "cheaper and safer than rewriting the whole file. oldText must match exactly once; " +
-            "if it matches multiple places, retry with a longer anchor.")
-    public String patchSkill(
-            @P("Skill name (folder name)") String skillName,
-            @P("Exact text to find in SKILL.md (must be unique in the file)") String oldText,
-            @P("Replacement text") String newText) {
-        if (isUnsafePath(skillName)) return "Error: invalid skill name.";
-        if (oldText == null || oldText.isEmpty()) return "Error: oldText is empty.";
-        File skillMd = new File(SKILL_DIR + skillName, SkillStore.SKILL_MD);
-        if (!skillMd.exists()) return "Skill not found: " + skillName;
-        try {
-            String content = Files.readString(skillMd.toPath());
-            int first = content.indexOf(oldText);
-            if (first < 0) return "Error: oldText not found in SKILL.md.";
-            if (content.indexOf(oldText, first + 1) >= 0) {
-                return "Error: oldText matches more than once — use a longer, unique anchor.";
-            }
-            Files.writeString(skillMd.toPath(), content.substring(0, first) + (null == newText ? "" : newText)
-                    + content.substring(first + oldText.length()));
-            SkillStore.recordPatch(skillMd.getParentFile().toPath());
-            return "Skill patched: " + skillName;
-        } catch (Exception e) {
-            return "Error: " + e.getMessage();
-        }
-    }
-
-    @Tool("Write a file inside a skill directory, e.g. scripts/run.sh or references/api_docs.md. " +
-            "Creates parent directories automatically and overwrites the file if it already exists.")
-    public String writeSkillFile(
-            @P("Skill name (folder name)") String skillName,
-            @P("Relative file path inside the skill folder, e.g. scripts/run.sh") String relativePath,
-            @P("Text content to write") String content) {
-        if (isUnsafePath(skillName)) return "Error: invalid skill name.";
-        if (isUnsafeRelativePath(relativePath)) return "Error: invalid file path.";
-        File skillDir = new File(SKILL_DIR, skillName);
-        if (!skillDir.isDirectory()) return "Skill not found: " + skillName + " (create it with saveSkill first)";
-        try {
-            File file = new File(skillDir, relativePath);
-            if (null != file.getParentFile()) file.getParentFile().mkdirs();
-            Files.writeString(file.toPath(), null == content ? "" : content);
-            return "File written: " + skillName + "/" + relativePath;
-        } catch (Exception e) {
-            return "Error: " + e.getMessage();
-        }
-    }
-
-    @Tool("Delete a skill folder and all its contents.")
-    public String deleteSkill(
-            @P("Skill name to delete (folder name)") String skillName) {
-        if (isUnsafePath(skillName)) return "Error: invalid skill name.";
-        File skillDir = new File(SKILL_DIR, skillName);
-        if (!skillDir.isDirectory()) return "Skill not found: " + skillName;
-        try {
-            deleteRecursively(skillDir);
-            return "Skill deleted: " + skillName;
-        } catch (Exception e) {
-            return "Error: " + e.getMessage();
-        }
     }
 
     // ======================== Private helpers ========================
@@ -176,27 +99,5 @@ public class EruptSkillTools {
         } catch (Exception e) {
             return "(unreadable: " + e.getMessage() + ")";
         }
-    }
-
-    // Dot-prefixed names are reserved for library internals (.archive, .usage.json, .curator_ledger.jsonl)
-    private boolean isUnsafePath(String name) {
-        return name == null || name.contains("..") || name.contains("\\") || name.startsWith("/") || name.startsWith(".");
-    }
-
-    private boolean isUnsafeRelativePath(String path) {
-        if (path == null || path.isBlank() || path.contains("..") || path.contains("\\") || path.startsWith("/")) {
-            return true;
-        }
-        for (String segment : path.split("/")) {
-            if (segment.startsWith(".")) return true;
-        }
-        return false;
-    }
-
-    private void deleteRecursively(File file) {
-        if (file.isDirectory() && file.listFiles() != null) {
-            for (File child : file.listFiles()) deleteRecursively(child);
-        }
-        file.delete();
     }
 }

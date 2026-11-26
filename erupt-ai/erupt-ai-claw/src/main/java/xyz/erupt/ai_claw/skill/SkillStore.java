@@ -145,6 +145,23 @@ public class SkillStore {
         return false;
     }
 
+    // A skill name a tool may resolve under the root. Dot-prefixed names are reserved for library internals
+    // (.archive, .usage.json, .curator_ledger.jsonl)
+    public static boolean isUnsafeName(String name) {
+        return name == null || name.contains("..") || name.contains("\\") || name.startsWith("/") || name.startsWith(".");
+    }
+
+    // A file path inside a skill folder; no segment may climb out or name a hidden file
+    public static boolean isUnsafeRelativePath(String path) {
+        if (path == null || path.isBlank() || path.contains("..") || path.contains("\\") || path.startsWith("/")) {
+            return true;
+        }
+        for (String segment : path.split("/")) {
+            if (segment.startsWith(".")) return true;
+        }
+        return false;
+    }
+
     // Append-only curator audit trail; one JSON object per line
     public static void ledger(String action, String skill, String reason) {
         JsonObject entry = new JsonObject();

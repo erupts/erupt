@@ -4,9 +4,16 @@ import jakarta.annotation.Resource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import xyz.erupt.ai.core.AiToolboxManager;
 import xyz.erupt.ai.service.LLMRoleService;
 import xyz.erupt.ai_claw.prompt.ClawSystemPrompt;
 import xyz.erupt.ai_claw.tool.EruptModelTools;
+import xyz.erupt.ai_claw.tool.EruptRunTimeTools;
+import xyz.erupt.ai_claw.tool.EruptSkillAuthorTools;
+import xyz.erupt.ai_claw.tool.EruptSkillTools;
+import xyz.erupt.ai_claw.tool.EruptSystemTools;
+import xyz.erupt.comment.tool.CommentTools;
+import xyz.erupt.notice.tool.NoticeTools;
 import xyz.erupt.ai_claw.util.ClawSandbox;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaUser;
@@ -29,6 +36,7 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -48,6 +56,13 @@ class TenantAiAccessTest extends EruptApplicationTests {
     private static final String ORDERS = OrderByModel.class.getSimpleName();
 
     private static final String OPERATIONS = RowOperationModel.class.getSimpleName();
+
+    private static final String INSTALLED_SKILLS = "## Installed Skills";
+
+    // the platform toolboxes a tenant user is never handed, nor prompted towards
+    private static final Set<String> PLATFORM_TOOLS = Stream.of(EruptRunTimeTools.class, EruptSystemTools.class,
+                    EruptSkillTools.class, EruptSkillAuthorTools.class)
+            .flatMap(it -> AiToolboxManager.toolNames(it).stream()).collect(Collectors.toSet());
 
     @Resource
     private UpmsTenantSessions sessions;
@@ -109,13 +124,15 @@ class TenantAiAccessTest extends EruptApplicationTests {
     void aTenantsAdministratorIsGrantedTheToolsOfItsTenantButNoneOfThePlatforms() {
         this.asTenantAdmin(List.of());
         Set<String> tenantTools = llmRoleService.getAllowedToolsByUid(tenantAdminId);
-        assertTrue(tenantTools.containsAll(List.of("eruptDataQuery", "sendNotice", "listRecordComments")), tenantTools.toString());
-        for (String platform : List.of("getProperty", "execShell", "listSkills", "writeSkillFile")) {
+        for (Class<?> tenantBox : List.of(EruptModelTools.class, NoticeTools.class, CommentTools.class)) {
+            assertTrue(tenantTools.containsAll(AiToolboxManager.toolNames(tenantBox)), tenantBox.getSimpleName());
+        }
+        for (String platform : PLATFORM_TOOLS) {
             assertFalse(tenantTools.contains(platform), platform + " acts on the deployment, not on the tenant");
         }
 
         MetaContext.remove();
-        assertTrue(llmRoleService.getAllowedToolsByUid(platformAdminId).containsAll(List.of("getProperty", "listSkills")),
+        assertTrue(llmRoleService.getAllowedToolsByUid(platformAdminId).containsAll(PLATFORM_TOOLS),
                 "the platform's administrator keeps them");
     }
 
@@ -138,14 +155,17 @@ class TenantAiAccessTest extends EruptApplicationTests {
     void aTenantsAdministratorIsNotPromptedTowardsThePlatformsTools() {
         this.asTenantAdmin(List.of());
         String tenant = clawSystemPrompt.getPrompt();
-        assertTrue(tenant.contains("eruptSchema"), "the data tools it holds are still explained");
-        for (String platform : List.of("## Installed Skills", "listSkills", "execShell", "saveSkill")) {
+        assertTrue(AiToolboxManager.toolNames(EruptModelTools.class).stream().anyMatch(tenant::contains),
+                "the data tools it holds are still explained");
+        assertFalse(tenant.contains(INSTALLED_SKILLS), "the platform's skill library is not listed");
+        for (String platform : PLATFORM_TOOLS) {
             assertFalse(tenant.contains(platform), platform + " is the platform's");
         }
 
         this.login(platformAdminId, null, List.of());
         String platform = clawSystemPrompt.getPrompt();
-        assertTrue(platform.contains("## Installed Skills") && platform.contains("execShell"), platform);
+        assertTrue(platform.contains(INSTALLED_SKILLS), platform);
+        assertTrue(AiToolboxManager.toolNames(EruptSystemTools.class).stream().allMatch(platform::contains), platform);
     }
 
     @Test

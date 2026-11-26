@@ -53,6 +53,15 @@ public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler<V
     private static final Set<String> platformTools = new HashSet<>();
 
 
+    // the tools of a toolbox, named as a grant and the model name them: its @Tool methods
+    public static Set<String> toolNames(Class<?> toolbox) {
+        Set<String> names = new HashSet<>();
+        for (Method method : toolbox.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(Tool.class)) names.add(method.getName());
+        }
+        return Collections.unmodifiableSet(names);
+    }
+
     public static Object invoke(ToolExecutionRequest request) {
         return invoke(aiMethodMap.get(request.name()), request);
     }

@@ -5,7 +5,10 @@ import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.service.LLMRoleService;
+import xyz.erupt.ai.core.AiToolboxManager;
+import xyz.erupt.ai_claw.tool.EruptSkillAuthorTools;
 import xyz.erupt.ai_claw.tool.EruptSkillTools;
+import xyz.erupt.ai_claw.tool.EruptSystemTools;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.prompt.SystemPromptProvider;
 
@@ -16,12 +19,12 @@ import java.util.Set;
 public class ClawSystemPrompt implements SystemPromptProvider {
 
     // Skill-authoring tools; holding any one of them means the user may grow/curate the shared library
-    private static final Set<String> AUTHORING_TOOLS = Set.of("saveSkill", "patchSkill", "writeSkillFile", "deleteSkill");
+    private static final Set<String> AUTHORING_TOOLS = AiToolboxManager.toolNames(EruptSkillAuthorTools.class);
 
     // Skill-reading tools; the skills section and the installed list are written only for a holder of one
-    private static final Set<String> READING_TOOLS = Set.of("listSkills", "getSkillDetail", "readSkillFile");
+    private static final Set<String> READING_TOOLS = AiToolboxManager.toolNames(EruptSkillTools.class);
 
-    private static final Set<String> SHELL_TOOLS = Set.of("execShell");
+    private static final Set<String> SHELL_TOOLS = AiToolboxManager.toolNames(EruptSystemTools.class);
 
     @Resource
     private EruptSkillTools eruptSkillTools;
