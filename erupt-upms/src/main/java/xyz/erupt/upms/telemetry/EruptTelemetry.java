@@ -16,8 +16,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.prop.EruptProp;
+import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptInformation;
+import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.upms.service.EruptModuleStore;
 
 import javax.sql.DataSource;
@@ -70,7 +72,7 @@ public class EruptTelemetry implements ApplicationListener<ApplicationReadyEvent
     // Plain Gson on purpose: no MetaContext coupling, and null fields are dropped instead of sent
     private static final Gson GSON = new Gson();
 
-    private static final int SCHEMA_VERSION = 2;
+    private static final int SCHEMA_VERSION = 3;
 
     // Let the startup sequence finish before touching the network or the connection pool
     private static final long BOOT_DELAY_SECONDS = 15;
@@ -203,14 +205,27 @@ public class EruptTelemetry implements ApplicationListener<ApplicationReadyEvent
         return StringUtils.isBlank(endpoint) ? TelemetryProp.DEFAULT_ENDPOINT : endpoint;
     }
 
+    // The application's own package wins over erupt's: erupt-demo lives under xyz.erupt and its models are its own
+    private boolean writtenByApplication(Class<?> clazz) {
+        Class<?> primarySource = EruptApplication.getPrimarySource();
+        if (null != primarySource && clazz.getName().startsWith(primarySource.getPackageName() + ".")) return true;
+        return !clazz.getName().startsWith(EruptConst.BASE_PACKAGE + ".");
+    }
+
     private TelemetryPayload buildPayload(String instanceId, String eventType) {
+        List<EruptModel> erupts = EruptCoreService.getErupts();
+        long designerErupts = erupts.stream().filter(it -> EruptCoreService.isRuntimeErupt(it.getEruptName())).count();
+        long userErupts = erupts.stream().filter(it -> !EruptCoreService.isRuntimeErupt(it.getEruptName())
+                && null != it.getClazz() && this.writtenByApplication(it.getClazz())).count();
         TelemetryPayload.TelemetryPayloadBuilder builder = TelemetryPayload.builder()
                 .schema(SCHEMA_VERSION)
                 .eventType(eventType)
                 .instanceId(instanceId)
                 .eruptVersion(EruptInformation.getEruptVersion())
                 .modules(EruptCoreService.getModules())
-                .eruptCount(EruptCoreService.getErupts().size())
+                .eruptCount(erupts.size())
+                .userEruptCount((int) userErupts)
+                .designerEruptCount((int) designerErupts)
                 .javaVersion(System.getProperty("java.version"))
                 .javaVendor(System.getProperty("java.vendor"))
                 .os(System.getProperty("os.name"))

@@ -2,6 +2,7 @@ package xyz.erupt.test.telemetry;
 
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.test.EruptApplicationTests;
 import xyz.erupt.upms.telemetry.EruptTelemetry;
 import xyz.erupt.upms.telemetry.TelemetryPayload;
@@ -52,6 +53,22 @@ public class TelemetryPayloadTest extends EruptApplicationTests {
         // the test context runs on H2, proving the datasource probe still resolves from upms
         assertNotNull(payload.getDbType());
         assertTrue(payload.getEruptCount() > 0, "registered @Erupt classes must be counted");
+    }
+
+    @Test
+    public void eruptCountSplitsIntoItsOrigins() throws Exception {
+        TelemetryPayload payload = build("boot");
+        long runtime = EruptCoreService.getErupts().stream()
+                .filter(it -> EruptCoreService.isRuntimeErupt(it.getEruptName())).count();
+        assertEquals(runtime, payload.getDesignerEruptCount(), "runtime models are the designer's share");
+        // the suite's models sit under erupt's package, but in the test application's own: they are its code
+        String own = EruptApplicationTests.class.getPackageName() + ".";
+        long written = EruptCoreService.getErupts().stream()
+                .filter(it -> !EruptCoreService.isRuntimeErupt(it.getEruptName()))
+                .filter(it -> null != it.getClazz() && it.getClazz().getName().startsWith(own)).count();
+        assertTrue(written > 0, "the suite declares models of its own");
+        assertEquals(written, payload.getUserEruptCount());
+        assertTrue(payload.getUserEruptCount() + payload.getDesignerEruptCount() <= payload.getEruptCount());
     }
 
 }
