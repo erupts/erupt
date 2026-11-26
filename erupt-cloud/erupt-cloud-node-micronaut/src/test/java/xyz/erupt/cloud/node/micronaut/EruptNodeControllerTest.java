@@ -12,6 +12,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.cloud.common.http.CloudSignature;
+import xyz.erupt.cloud.common.http.CloudSignature.Enforced;
 import xyz.erupt.cloud.node.lite.MemoryRepository;
 import xyz.erupt.cloud.node.lite.Node;
 
@@ -22,6 +23,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -93,14 +95,16 @@ class EruptNodeControllerTest {
         return signed(port, target, "POST", json.getBytes(StandardCharsets.UTF_8));
     }
 
-    // signed over the target below the context path, as the server signs it, with the user's power enforced there
+    // signed over the target below the context path, as the server signs it, vouching for the user's power and
+    // the query: what a table read asks for
     String signed(int port, String target, String method, byte[] body) throws Exception {
         long now = System.currentTimeMillis() / 1000;
         String user = Base64.getEncoder().encodeToString("{\"uid\":1,\"account\":\"admin\"}".getBytes(StandardCharsets.UTF_8));
+        String enforced = Enforced.header(EnumSet.of(Enforced.POWER, Enforced.QUERY));
         HttpRequest req = HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + port + CONTEXT + target))
                 .header(CloudSignature.HEADER_TIMESTAMP, String.valueOf(now))
-                .header(CloudSignature.HEADER_SIGNATURE, CloudSignature.sign(TOKEN, method, target, now, "power", user, body))
-                .header(CloudSignature.HEADER_ENFORCED, "power").header("user", user)
+                .header(CloudSignature.HEADER_SIGNATURE, CloudSignature.sign(TOKEN, method, target, now, enforced, user, body))
+                .header(CloudSignature.HEADER_ENFORCED, enforced).header("user", user)
                 .header("Content-Type", "application/json")
                 .header("erupt", "Item").method(method, HttpRequest.BodyPublishers.ofByteArray(body)).build();
         HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
