@@ -4,6 +4,8 @@ public enum SseEvent {
 
     CALL,
     TOKEN,
-    DONE
+    DONE,
+    // The chat was renamed (a title generated from its first message); data is the new title
+    TITLE
 
 }

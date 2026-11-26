@@ -75,7 +75,9 @@ public abstract class LlmCore {
 
     public String chat(LlmRequest llmRequest, List<ChatMessage> chatMessages) {
         String userMessage = ((dev.langchain4j.data.message.UserMessage) chatMessages.get(chatMessages.size() - 1)).singleText();
-        List<ChatMessage> historyMessages = chatMessages.subList(0, chatMessages.size() - 1);
+        // A copy: the memory adds the system message and the reply to this list, which must
+        // neither fail on an immutable argument (List.of) nor leak back into the caller's list
+        List<ChatMessage> historyMessages = new ArrayList<>(chatMessages.subList(0, chatMessages.size() - 1));
         ChatModel chatModel = this.buildChatModel(llmRequest, chatMessages);
         ChatMemory chatMemory = creatMemory(historyMessages);
         AiServices<EruptAiChat> eruptAiServices = AiServices.builder(EruptAiChat.class)

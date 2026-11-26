@@ -17,6 +17,7 @@ import xyz.erupt.ai.model.AiChat;
 import xyz.erupt.ai.model.AiChatMessage;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
+import xyz.erupt.ai.service.ChatTitleService;
 import xyz.erupt.ai.service.LLMService;
 import xyz.erupt.ai.vo.LlmVo;
 import xyz.erupt.core.config.GsonFactory;
@@ -35,6 +36,7 @@ import xyz.erupt.upms.service.EruptUserService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author YuePeng
@@ -53,6 +55,9 @@ public class ChatController {
 
     @Resource
     private LLMService llmService;
+
+    @Resource
+    private ChatTitleService chatTitleService;
 
     @Resource
     private EruptUserService eruptUserService;
@@ -96,6 +101,7 @@ public class ChatController {
         String modelName = null == llmModel ? null : llmModel.getModel();
         // The user message is kept even when no model can answer it, so the chat history
         // never silently drops a turn
+        boolean firstTurn = null == eruptDao.lambdaQuery(AiChatMessage.class).eq(AiChatMessage::getChatId, chatId).limit(1).one();
         AiChatMessage chatMessage = AiChatMessage.create(chatId, llmCode, modelName, ChatSenderType.USER, message, 0);
         chatMessage.setAgentId(agentId);
         chatMessage.setImages(checkImages(images));
@@ -114,8 +120,12 @@ public class ChatController {
             llmService.sendSseMessage(emitter, "Request timed out, please try again");
         });
         emitter.onError((throwable) -> log.error("Sse Request failed chatId: {}", chatId, throwable));
+        // An image-only first message leaves nothing to name the chat after
+        CompletableFuture<String> title = firstTurn && aiProp.isAutoTitle() && !message.isBlank()
+                ? chatTitleService.generate(MetaContext.get(), llmModel, chatId, chat.getTitle(), message)
+                : CompletableFuture.completedFuture(null);
         llmService.sendSse(MetaContext.get(), autoToolCall, llmAgent, emitter, llm, llmModel, chatMessage,
-                message, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()), contextPrompt);
+                message, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()), contextPrompt, title);
         return emitter;
     }
 
