@@ -1,20 +1,26 @@
 package xyz.erupt.ai_claw.tool;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import jakarta.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.ai.AiToolbox;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.query.Sort;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
+import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.controller.EruptDataController;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.invoke.EruptRemoteRouterManager;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaUserinfo;
@@ -22,12 +28,15 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptModifyService;
 import xyz.erupt.core.service.EruptService;
 import xyz.erupt.core.util.Erupts;
+import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
+import xyz.erupt.core.view.R;
 import xyz.erupt.core.view.TableQuery;
 import xyz.erupt.upms.service.EruptUserService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -56,6 +65,11 @@ public class EruptModelTools {
     private static final int DEFAULT_PAGE_SIZE = 20;
 
     private static final int MAX_PAGE_SIZE = 200;
+
+    // keys of the body the operation route reads
+    private static final String OPERATION_IDS = "ids";
+
+    private static final String OPERATION_PARAM = "param";
 
     public static final String ERUPT_NAME_PARAM_HINT = "Erupt model name (call eruptModelList first if unknown)";
 
@@ -159,6 +173,78 @@ public class EruptModelTools {
         checkErupt(eruptName, PowerObject::isDelete);
         eruptModifyService.deleteEruptData(EruptCoreService.getEruptWithRemote(eruptName), ids, false);
         return "success";
+    }
+
+    @Tool("List the row operations of an erupt model: its business actions, such as approve or ship, which plain " +
+            "insert/update/delete cannot perform. Each has a code, a mode (SINGLE: exactly one row, MULTI and MULTI_ONLY: " +
+            "one or more rows, BUTTON: no row), an optional condition a row must meet (ifExpr, JavaScript over `item`), " +
+            "an optional confirmation prompt and the fields of the form it asks for.")
+    public String eruptOperations(@P(ERUPT_NAME_PARAM_HINT) String eruptName) {
+        return GsonFactory.getGson().toJson(Arrays.stream(this.operable(eruptName).getErupt().rowOperation())
+                .filter(EruptModelTools::callable).map(Operation::of).toList());
+    }
+
+    @Tool("Run a row operation of an erupt model. This performs a real business action: call eruptOperations first, " +
+            "pass the rows its mode asks for, check its ifExpr against each row, and when it carries a confirmation " +
+            "prompt ask the user before running it.")
+    public String invokeEruptOperation(
+            @P(ERUPT_NAME_PARAM_HINT) String eruptName,
+            @P("Operation code, from eruptOperations") String code,
+            @P(value = "Primary keys of the rows to act on; omit for a BUTTON operation", required = false) List<String> ids,
+            @P(value = "Form values, for an operation that asks for a form", required = false) Map<String, Object> form) {
+        RowOperation operation = Arrays.stream(this.operable(eruptName).getErupt().rowOperation())
+                .filter(it -> it.code().equals(code)).filter(EruptModelTools::callable).findFirst()
+                .orElseThrow(() -> new EruptWebApiRuntimeException("No such row operation: " + code));
+        int rows = null == ids ? 0 : ids.size();
+        // the route answers success without running anything when a row operation is sent no row
+        Erupts.requireTrue(switch (operation.mode()) {
+            case BUTTON -> true;
+            case SINGLE -> rows == 1;
+            case MULTI, MULTI_ONLY -> rows >= 1;
+        }, "Operation " + code + " is " + operation.mode() + ", it was given " + rows + " row(s)");
+        JsonObject body = new JsonObject();
+        body.add(OPERATION_IDS, GsonFactory.getGson().toJsonTree(operation.mode() == RowOperation.Mode.BUTTON || null == ids ? List.of() : ids));
+        body.add(OPERATION_PARAM, void.class == operation.eruptClass() ? JsonNull.INSTANCE
+                : GsonFactory.getGson().toJsonTree(null == form ? Map.of() : form));
+        R<?> result = eruptDataController.eruptOperatorExec(eruptName, code, body);
+        Erupts.requireTrue(result.isSuccess(), result.getMessage());
+        return StringUtils.defaultIfBlank(result.getMessage(), "success");
+    }
+
+    // What the page would offer as a button that reaches a handler: a TPL operation only renders a template
+    private static boolean callable(RowOperation operation) {
+        return RowOperation.Type.ERUPT == operation.type() && !operation.operationHandler().isInterface()
+                && ExprInvoke.getExpr(operation.show());
+    }
+
+    // The operation route asks for the model's menu and nothing more, so no single power is checked here.
+    // An operation of a cloud node model runs on its node, behind the node's own handler: not reachable from here
+    private EruptModel operable(String eruptName) {
+        this.checkErupt(eruptName, power -> true);
+        EruptModel model = EruptCoreService.getEruptWithRemote(eruptName);
+        Erupts.requireTrue(null != model && !model.isRemote(), "Row operations of a cloud node model are not available to AI tools: " + eruptName);
+        return model;
+    }
+
+    private record Operation(String code, String title, String tip, RowOperation.Mode mode, String ifExpr,
+                             String confirm, List<FormField> form) {
+
+        static Operation of(RowOperation operation) {
+            return new Operation(operation.code(), operation.title(), StringUtils.trimToNull(operation.tip()), operation.mode(),
+                    StringUtils.trimToNull(operation.ifExpr()),
+                    StringUtils.isBlank(operation.callHint()) ? null : I18nTranslate.$translate(operation.callHint()),
+                    void.class == operation.eruptClass() ? null
+                            : EruptCoreService.getErupt(operation.eruptClass().getSimpleName()).getEruptFieldModels().stream()
+                            .filter(it -> StringUtils.isNotBlank(it.getEruptField().edit().title())).map(FormField::of).toList());
+        }
+    }
+
+    private record FormField(String name, String title, String type, boolean required) {
+
+        static FormField of(EruptFieldModel field) {
+            Edit edit = field.getEruptField().edit();
+            return new FormField(field.getFieldName(), edit.title(), edit.type().name(), edit.notNull());
+        }
     }
 
     // Enforce menu access + per-erupt power for the current user. Super admins bypass user checks,

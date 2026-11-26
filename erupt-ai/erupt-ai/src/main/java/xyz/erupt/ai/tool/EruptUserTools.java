@@ -1,7 +1,9 @@
 package xyz.erupt.ai.tool;
 
+import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import jakarta.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.ai.AiToolbox;
 import xyz.erupt.core.config.GsonFactory;
@@ -9,6 +11,7 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptMenuService;
 
 import java.time.ZonedDateTime;
@@ -19,6 +22,11 @@ import java.util.stream.Collectors;
 @AiToolbox
 @Component
 public class EruptUserTools {
+
+    private static final int MAX_USERS = 50;
+
+    private record UserBrief(Long id, String name) {
+    }
 
     @Resource
     private EruptDao eruptDao;
@@ -62,6 +70,15 @@ public class EruptUserTools {
         result.put("roles", roleList);
         result.put("menus", menuList);
         return GsonFactory.getGson().toJson(result);
+    }
+
+    @Tool("Find enabled users by name, returning id and name. Use it before any tool that takes user ids.")
+    public String findUsers(@P(value = "Part of the user's name; omit to list the first users", required = false) String keyword) {
+        return GsonFactory.getGson().toJson(eruptDao.lambdaQuery(EruptUserVo.class)
+                .eq(EruptUserVo::getStatus, true)
+                .like(StringUtils.isNotBlank(keyword), EruptUserVo::getName, keyword)
+                .orderByAsc(EruptUserVo::getName).limit(MAX_USERS)
+                .list().stream().map(it -> new UserBrief(it.getId(), it.getName())).toList());
     }
 
     @Tool("Get current date and time of the server with timezone information.")
