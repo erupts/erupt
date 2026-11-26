@@ -222,6 +222,12 @@ public class EruptCoreService implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         hotBuild = eruptProp.isHotBuild();
+        // The registries are static and outlive the context: a restart in the same JVM (devtools, a cloud
+        // context refresh) runs this again, so start from empty instead of appending to the previous run
+        ERUPTS.clear();
+        ERUPT_LIST.clear();
+        RUNTIME_ERUPTS.clear();
+        MODULES.clear();
         TimeRecorder totalRecorder = new TimeRecorder();
         TimeRecorder timeRecorder = new TimeRecorder();
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
