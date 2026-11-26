@@ -48,6 +48,10 @@ public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler<V
     @Getter
     private static final List<Object> tools = new ArrayList<>();
 
+    // tools of @AiToolbox(platform = true): never granted to a tenant user
+    @Getter
+    private static final Set<String> platformTools = new HashSet<>();
+
 
     public static Object invoke(ToolExecutionRequest request) {
         return invoke(aiMethodMap.get(request.name()), request);
@@ -103,12 +107,14 @@ public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler<V
         applicationContext.getBeansWithAnnotation(AiToolbox.class).values().forEach(bean -> {
             Object target = AopProxyUtils.getSingletonTarget(bean);
             Object realBean = target != null ? target : bean;
-            boolean exposed = realBean.getClass().getAnnotation(AiToolbox.class).exposed();
+            AiToolbox toolbox = realBean.getClass().getAnnotation(AiToolbox.class);
+            boolean exposed = toolbox.exposed();
             if (exposed) tools.add(realBean);
             for (Method method : realBean.getClass().getDeclaredMethods()) {
                 if (method.isAnnotationPresent(Tool.class)) {
                     (exposed ? aiMethodMap : grantedMethodMap).put(method.getName(), method);
                     aiMethodBeanMap.put(method.getName(), realBean);
+                    if (toolbox.platform()) platformTools.add(method.getName());
                 }
             }
         });

@@ -33,7 +33,7 @@ import java.util.Map;
  *
  * @author YuePeng
  */
-@AiToolbox
+@AiToolbox(platform = true)
 @Component
 public class DecisionTools implements SystemPromptProvider {
 

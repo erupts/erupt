@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
-@AiToolbox
+@AiToolbox(platform = true)
 @Component
 @ConditionalOnProperty(name = "erupt.ai.claw.enabled", havingValue = "true")
 public class EruptRunTimeTools {

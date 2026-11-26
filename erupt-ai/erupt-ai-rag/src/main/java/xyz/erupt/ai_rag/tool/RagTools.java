@@ -22,7 +22,7 @@ import java.util.List;
  * @author YuePeng
  * date 2026/8/17
  */
-@AiToolbox
+@AiToolbox(platform = true)
 @Component
 public class RagTools implements SystemPromptProvider {
 

@@ -17,4 +17,11 @@ public @interface AiToolbox {
      */
     boolean exposed() default true;
 
+    /**
+     * Whether the tools act on what the whole deployment shares — the server, its configuration, or tables
+     * no tenant owns (knowledge bases, skills, decisions, A2A agents). Such tools are granted to platform
+     * users only; a tenant user, its administrator included, is never handed them.
+     */
+    boolean platform() default false;
+
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.ai.core.AiToolboxManager;
 import xyz.erupt.ai.model.LLMRole;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.helper.UpmsTenant;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 
@@ -32,15 +33,23 @@ public class LLMRoleService {
         if (uid == null) return Set.of();
         EruptUser user = eruptDao.find(EruptUser.class, uid);
         if (user == null) return Set.of();
-        if (Boolean.TRUE.equals(user.getIsAdmin())) return AiToolboxManager.getAiMethodMap().keySet();
-        List<String> roleCodes = user.getRoles().stream().map(EruptRole::getCode).collect(Collectors.toList());
-        if (roleCodes.isEmpty()) return Set.of();
-        List<LLMRole> configs = this.queryByRoleCodes(roleCodes);
-        if (configs.isEmpty()) return Set.of();
-        return configs.stream()
-                .filter(c -> c.getTools() != null)
-                .flatMap(c -> c.getTools().stream())
-                .collect(Collectors.toSet());
+        boolean tenant = !UpmsTenant.isPlatform(user.getTenantId());
+        Set<String> tools;
+        if (Boolean.TRUE.equals(user.getIsAdmin())) {
+            // an administrator gets every tool; a tenant's administrator is one inside the tenant only, so the
+            // tools themselves still hold it to the menus of its package
+            tools = AiToolboxManager.getAiMethodMap().keySet();
+        } else {
+            List<String> roleCodes = user.getRoles().stream().map(EruptRole::getCode).collect(Collectors.toList());
+            if (roleCodes.isEmpty()) return Set.of();
+            tools = this.queryByRoleCodes(roleCodes).stream()
+                    .filter(c -> c.getTools() != null)
+                    .flatMap(c -> c.getTools().stream())
+                    .collect(Collectors.toSet());
+        }
+        if (!tenant) return tools;
+        // what the whole deployment shares is the platform's to act on, whatever a tenant's role says
+        return tools.stream().filter(it -> !AiToolboxManager.getPlatformTools().contains(it)).collect(Collectors.toSet());
     }
 
     /**

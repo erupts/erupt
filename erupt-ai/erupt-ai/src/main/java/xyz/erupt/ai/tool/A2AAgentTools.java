@@ -21,7 +21,7 @@ import java.util.Map;
  * @author YuePeng
  * date 2026/5/15
  */
-@AiToolbox
+@AiToolbox(platform = true)
 @Component
 public class A2AAgentTools implements SystemPromptProvider {
 

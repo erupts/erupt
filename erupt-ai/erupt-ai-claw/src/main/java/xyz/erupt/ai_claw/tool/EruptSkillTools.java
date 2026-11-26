@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@AiToolbox
+@AiToolbox(platform = true)
 @Component
 @ConditionalOnProperty(name = "erupt.ai.claw.enabled", havingValue = "true")
 public class EruptSkillTools {

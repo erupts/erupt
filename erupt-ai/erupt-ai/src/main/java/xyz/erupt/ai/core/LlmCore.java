@@ -24,6 +24,7 @@ import xyz.erupt.ai.service.LLMRoleService;
 import xyz.erupt.ai.service.LLMService;
 import xyz.erupt.ai.service.McpServerService;
 import xyz.erupt.ai.vo.mcp.McpClientInfo;
+import xyz.erupt.annotation.ai.AiToolbox;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.context.MetaContext;
@@ -140,8 +141,13 @@ public abstract class LlmCore {
             // Provider prompts advertise toolbox tools; injecting them into calls that
             // did not opt in makes the model call tools that do not exist there
             if (Boolean.TRUE.equals(llmRequest.getSystemPromptProviders())) {
-                SystemPromptProvider.getRegisteredProviders().forEach(provider ->
-                        systemPrompt.append("\n\n").append(provider.getPrompt()));
+                // a tenant user is never granted a platform toolbox, so its prompt would only point at tools it lacks
+                boolean tenant = null != MetaContext.getUser() && null != MetaContext.getUser().getTenantId();
+                SystemPromptProvider.getRegisteredProviders().forEach(provider -> {
+                    AiToolbox toolbox = provider.getClass().getAnnotation(AiToolbox.class);
+                    if (tenant && null != toolbox && toolbox.platform()) return;
+                    systemPrompt.append("\n\n").append(provider.getPrompt());
+                });
             }
             String rolePrompt = EruptSpringUtil.getBean(LLMRoleService.class).getSystemPromptByUid(MetaContext.getUser().getUid());
             if (rolePrompt != null && !rolePrompt.isBlank()) {
