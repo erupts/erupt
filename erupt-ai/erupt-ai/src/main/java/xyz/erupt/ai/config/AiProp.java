@@ -29,6 +29,9 @@ public class AiProp {
 
     private int messageDelay = 30;
 
+    // Name a new chat after its first message with a short extra call to the model answering it
+    private boolean autoTitle = true;
+
     // Browser-facing SSE emitter timeout (milliseconds)
     private Long sseTimeout = 15L * 60 * 1000;
 

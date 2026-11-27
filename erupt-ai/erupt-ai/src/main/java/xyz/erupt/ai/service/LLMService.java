@@ -49,6 +49,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -64,6 +65,9 @@ public class LLMService {
 
     // Min interval between stop-signal lookups, so redis is not hit on every token
     private static final long STOP_CHECK_INTERVAL_MS = 500;
+
+    // How long a finished reply keeps its stream open for a chat title still being generated
+    private static final long TITLE_WAIT_SECONDS = 20;
 
     @Resource
     private AiProp aiProp;
@@ -172,7 +176,8 @@ public class LLMService {
     @SneakyThrows
     public void sendSse(MetaContext metaContext, Boolean autoToolCall, LLMAgent llmAgent, SseEmitter emitter,
                         LlmCore llm, LLM llmModel, AiChatMessage chatMessage,
-                        String userMessage, List<ChatMessage> chatContext, String contextPrompt) {
+                        String userMessage, List<ChatMessage> chatContext, String contextPrompt,
+                        CompletableFuture<String> title) {
         try {
             MetaContext.set(metaContext);
             // Expose the current chat session ID to AI tools; vars travel with MetaContext
@@ -199,6 +204,11 @@ public class LLMService {
             emitter.onCompletion(() -> emitterClosed.set(true));
             emitter.onTimeout(() -> emitterClosed.set(true));
             emitter.onError(t -> emitterClosed.set(true));
+            // The generated chat title goes out the moment it is ready; a reply that finishes
+            // first holds the stream open for it (see the finish branch), bounded by the timeout
+            CompletableFuture<Void> titleSent = title.completeOnTimeout(null, TITLE_WAIT_SECONDS, TimeUnit.SECONDS).thenAccept(it -> {
+                if (null != it && !emitterClosed.get()) this.sendSseBody(emitter, new SseBody(SseEvent.TITLE, it));
+            });
             llm.chatSse(llmRequest, userMessage, this.readImages(chatMessage.getImages()), chatContext, it -> {
                 // Stopped by user: the upstream stream may keep emitting, discard everything
                 if (stopped.get()) return;
@@ -223,7 +233,7 @@ public class LLMService {
                     eruptDao.mergeAndFlush(chatMessage);
                     eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModel.getLlm(),
                             llmModel.getModel(), ChatSenderType.MODEL, message, thinking, toolCalls, it.getUsage().outputTokenCount()));
-                    this.completeSse(emitter);
+                    titleSent.whenComplete((v, e) -> this.completeSse(emitter));
                 } else if (null != it.getCurrMessage()) {
                     (it.isThinking() ? partialThinking : partialText).append(it.getCurrMessage());
                     boolean clientGone = emitterClosed.get();
