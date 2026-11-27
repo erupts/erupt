@@ -39,6 +39,12 @@ public class TelemetryPayload {
     // Number of registered @Erupt classes, separates real deployments from tutorial demos
     private int eruptCount;
 
+    // The part of eruptCount the application wrote itself, the rest ships with erupt and its modules
+    private int userEruptCount;
+
+    // The part of eruptCount drawn in erupt-designer, tells how much the designer is really used
+    private int designerEruptCount;
+
     // Decides when JDK baselines can be raised
     private String javaVersion;
 
