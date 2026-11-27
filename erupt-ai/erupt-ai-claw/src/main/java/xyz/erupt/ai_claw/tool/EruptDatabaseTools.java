@@ -20,7 +20,7 @@
 ///**
 // * @author YuePeng
 // */
-//@AiToolbox
+//@AiToolbox(platform = true)
 //@Component
 //@ConditionalOnProperty(name = "erupt.ai.claw.enabled", havingValue = "true")
 //public class EruptDatabaseTools {

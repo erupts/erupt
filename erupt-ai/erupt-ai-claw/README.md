@@ -9,6 +9,7 @@ Built on top of [`erupt-ai`](../erupt-ai), this module ships a preconfigured age
 - **`EruptModelTools`** — discover Erupt models, inspect schemas, read and mutate data
 - **`EruptRunTimeTools`** — inspect runtime state (scheduled tasks, environment, Spring beans)
 - **`EruptSkillTools`** — discover and execute installed Erupt skills
+- **`EruptSkillAuthorTools`** — create, patch, extend and delete skills in the shared library
 - **`EruptSystemTools`** — execute shell commands (permission-gated)
 - **`ClawSystemPrompt`** — opinionated system prompt that wires the tools above into a coherent agent
 - **UPMS-aware execution** — every action respects the current user's permissions via `erupt-upms`

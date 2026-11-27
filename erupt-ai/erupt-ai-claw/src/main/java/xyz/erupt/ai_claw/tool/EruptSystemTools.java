@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * @author YuePeng
  * date 2026/8/20
  */
-@AiToolbox
+@AiToolbox(platform = true)
 @Component
 @ConditionalOnProperty(name = "erupt.ai.claw.enabled", havingValue = "true")
 public class EruptSystemTools {

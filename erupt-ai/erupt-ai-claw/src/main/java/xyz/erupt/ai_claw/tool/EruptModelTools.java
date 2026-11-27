@@ -87,7 +87,8 @@ public class EruptModelTools {
     @Tool("Erupt data model list")
     public String eruptModelList() {
         String token = requireToken();
-        boolean superAdmin = requireLogin(token).isSuperAdmin();
+        // a tenant's administrator lists what its package's menus offer, not every model of the deployment
+        boolean superAdmin = requireLogin(token).isPlatformAdmin();
         // One Redis round trip: read all allowed menu values up front, then match in-memory.
         // Menu keys are stored lower-cased (see EruptTokenService#loginToken).
         Map<String, Boolean> allowedMenus = superAdmin ? null : eruptUserService.getEruptMenuValuesMap(token);
@@ -247,7 +248,7 @@ public class EruptModelTools {
         }
     }
 
-    // Enforce menu access + per-erupt power for the current user. Super admins bypass user checks,
+    // Enforce menu access + per-erupt power for the current user. Platform admins bypass user checks,
     // but the model-level power.ai() opt-out still blocks AI usage regardless of role.
     // Remote erupts skip the local power check — the owning node runs its own permission pipeline.
     private void checkErupt(String eruptName, Function<PowerObject, Boolean> powerCheck) {
@@ -261,7 +262,7 @@ public class EruptModelTools {
         if (null != eruptModel && !eruptModel.isRemote() && !eruptModel.getErupt().power().ai()) {
             throw new EruptWebApiRuntimeException("AI access is disabled for this Erupt model: " + eruptName);
         }
-        if (user.isSuperAdmin()) return;
+        if (user.isPlatformAdmin()) return;
         if (null == eruptUserService.getEruptMenuByValue(eruptName, token)) {
             throw new EruptWebApiRuntimeException("Current user has no access to this Erupt model: " + eruptName);
         }

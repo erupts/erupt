@@ -29,4 +29,12 @@ public class MetaUserinfo {
 
     private String tenantId;
 
+    /**
+     * An administrator of the platform. A tenant's administrator is a super admin inside its tenant only:
+     * its menus are narrowed to its package, so a check that skips the menus must ask this instead.
+     */
+    public boolean isPlatformAdmin() {
+        return superAdmin && null == tenantId;
+    }
+
 }
