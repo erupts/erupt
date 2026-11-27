@@ -112,8 +112,9 @@ class EruptNodeKtorTest {
     private fun signed(port: Int, mount: String, method: String, target: String, body: String?): String {
         val now = System.currentTimeMillis() / 1000
         val bytes = body?.toByteArray() ?: ByteArray(0)
-        // the power callback is skipped, as the server does when it has checked the user's power itself
-        val enforced = CloudSignature.Enforced.header(setOf(CloudSignature.Enforced.POWER))
+        // what the server vouches for when it has checked the user's power and the submitted record itself: the
+        // power callback is skipped, and a modify is let through
+        val enforced = CloudSignature.Enforced.header(setOf(CloudSignature.Enforced.POWER, CloudSignature.Enforced.RECORD))
         val req = HttpRequest.newBuilder(URI.create("http://127.0.0.1:$port$mount$target")).timeout(TIMEOUT)
             .method(method, if (body == null) HttpRequest.BodyPublishers.noBody() else HttpRequest.BodyPublishers.ofByteArray(bytes))
             .header("Content-Type", "application/json")
