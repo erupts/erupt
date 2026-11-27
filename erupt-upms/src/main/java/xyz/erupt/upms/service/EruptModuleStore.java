@@ -37,6 +37,10 @@ public class EruptModuleStore {
     @Resource
     private PlatformTransactionManager transactionManager;
 
+    // Whether the database had users the first time a marker was asked about, before this start seeded any:
+    // asked again later, a new database would hold the admin just created and pass for an old install
+    private volatile Boolean legacyDatabase;
+
     public EruptModuleSeed find(String module) {
         return eruptDao.lambdaQuery(EruptModuleSeed.class).eq(EruptModuleSeed::getModule, module).one();
     }
@@ -104,7 +108,8 @@ public class EruptModuleStore {
      * database that is gone, which is what the marker files used to get wrong.
      */
     public boolean legacyMarked(String module) {
-        return ProjectUtil.loaded(module) && eruptDao.lambdaQuery(EruptUser.class).count() > 0;
+        if (null == legacyDatabase) legacyDatabase = eruptDao.lambdaQuery(EruptUser.class).count() > 0;
+        return legacyDatabase && ProjectUtil.loaded(module);
     }
 
     void markSeeded(EruptModuleSeed seed) {
