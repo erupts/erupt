@@ -21,6 +21,10 @@ erupt:
     db-path: target/designer-test.db
   config:
     refresh-seconds: 0
+  ai:
+    claw:
+      # the model tools (CRUD, row operations) are part of the toolbox under test
+      enabled: true
   ai-dev:
     # keep bare clones and worktrees out of the user's home directory
     root: target/ai-dev-test

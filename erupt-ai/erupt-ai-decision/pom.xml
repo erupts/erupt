@@ -19,5 +19,12 @@
             <artifactId>erupt-data-jpa</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <!-- @Tool / @P on the AI toolbox: annotations only, so the module runs unchanged without erupt-ai -->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-core</artifactId>
+            <version>${langchain4j.version}</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>

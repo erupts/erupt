@@ -20,6 +20,10 @@ import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EncryptUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.Erupts;
+import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.context.MetaErupt;
+import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
@@ -392,6 +396,26 @@ public class EruptUserService {
 
     public EruptMenu getEruptMenuByValue(String menuValue, String token) {
         return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + token, menuValue.toLowerCase(), EruptMenu.class);
+    }
+
+    // The verdict @EruptMenuAuth gives, for a caller no interceptor stands in front of (an AI tool on a worker thread)
+    public void requireMenu(String menuValue) {
+        Erupts.powerLegal(null != this.getEruptMenuByValue(menuValue));
+    }
+
+    /**
+     * What an AI tool asks before it touches a model on the user's behalf: the model's menu and the
+     * model's own {@code @Power(ai)} opt-out. A cloud node model has no local annotation to opt out
+     * with; its node gates AI access itself. The model becomes the current erupt, which is where the
+     * power handlers further down read it from — on a tool thread the context still names the chat request.
+     */
+    public EruptModel requireAiModel(String eruptName) {
+        EruptModel model = EruptCoreService.getEruptWithRemote(eruptName);
+        Erupts.requireNonNull(model, "No such Erupt model: " + eruptName);
+        this.requireMenu(eruptName);
+        Erupts.requireTrue(model.isRemote() || model.getErupt().power().ai(), "AI access is disabled for this Erupt model: " + eruptName);
+        MetaContext.register(new MetaErupt(eruptName, eruptName));
+        return model;
     }
 
     public List<String> getEruptMenuValues() {
